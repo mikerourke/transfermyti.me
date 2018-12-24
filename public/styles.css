@@ -1,0 +1,18 @@
+@import url("https://fonts.googleapis.com/css?family=Quicksand");
+
+:root {
+  --text-color: #333;
+}
+
+* {
+  font-family: "Quicksand", Arial, sans-serif;
+}
+
+body {
+  height: 100vh;
+  overflow: hidden;
+}
+
+#root {
+  height: inherit;
+}

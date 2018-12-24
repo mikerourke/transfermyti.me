@@ -1,0 +1,29 @@
+{
+  "globals": {
+    "window": true
+  },
+  "roots": [
+    "<rootDir>/src/"
+  ],
+  "coverageReporters": [
+    "lcov",
+    "text"
+  ],
+  "collectCoverageFrom": [
+    "src/**/*.{ts,tsx}"
+  ],
+  "setupTestFrameworkScriptFile": "<rootDir>/config/jest/setupJest.js",
+  "testMatch": [
+    "<rootDir>/src/**/__tests__/**/*.{ts,tsx}",
+    "<rootDir>/src/**/?(*.)(spec|test).{ts,tsx}"
+  ],
+  "testEnvironment": "node",
+  "transform": {
+    "^.+\\.(ts|tsx)$": "<rootDir>/node_modules/ts-jest"
+  },
+  "moduleFileExtensions": [
+    "json",
+    "js",
+    "ts"
+  ]
+}
