@@ -2,6 +2,12 @@
 
 :root {
   --text-color: #333;
+  --info: #209cee;
+  --primary: #01d1b2;
+  --success: #23d160;
+  --warning: #ffdc57;
+  --dark-gray: #4a4a4a;
+  --white: #fff;
 }
 
 * {
@@ -10,7 +16,7 @@
 
 body {
   height: 100vh;
-  overflow: hidden;
+  overflow: auto;
 }
 
 #root {

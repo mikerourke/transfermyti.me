@@ -1,22 +1,24 @@
 import { handleActions } from 'redux-actions';
 import {
   dismissNotification,
-  hideNotifications,
-  showNotification,
+  dismissAllNotifications,
+  notificationShown,
 } from './appActions';
-import { NotificationModel } from '../../types/app';
+import { NotificationModel } from '../../types/appTypes';
 
 export interface AppState {
   readonly notifications: NotificationModel[];
+  readonly activeWorkspaceId: string;
 }
 
 export const initialState: AppState = {
   notifications: [],
+  activeWorkspaceId: '',
 };
 
 export default handleActions(
   {
-    [showNotification]: (
+    [notificationShown]: (
       state: AppState,
       { payload: notification }: any,
     ): AppState => ({
@@ -34,7 +36,7 @@ export default handleActions(
       ),
     }),
 
-    [hideNotifications]: (state: AppState): AppState => ({
+    [dismissAllNotifications]: (state: AppState): AppState => ({
       ...state,
       notifications: [],
     }),

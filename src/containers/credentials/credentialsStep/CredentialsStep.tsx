@@ -14,8 +14,8 @@ import {
 } from '../../../redux/credentials/credentialsSelectors';
 import StepPage from '../../../components/stepPage/StepPage';
 import InputField from './components/InputField';
-import { ReduxDispatch, ReduxState } from '../../../types/common';
-import { CredentialsModel, CredentialsField } from '../../../types/credentials';
+import { ReduxDispatch, ReduxState } from '../../../types/commonTypes';
+import { CredentialsModel, CredentialsField } from '../../../types/credentialsTypes';
 
 interface ConnectStateProps {
   credentials: CredentialsModel;

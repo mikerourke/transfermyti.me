@@ -1,13 +1,13 @@
 import { handleActions, combineActions } from 'redux-actions';
 import {
-  fetchClockifyUserDetailsStarted,
-  fetchClockifyUserDetailsSuccess,
-  fetchClockifyUserDetailsFailure,
-  fetchTogglUserDetailsStarted,
-  fetchTogglUserDetailsSuccess,
-  fetchTogglUserDetailsFailure,
+  clockifyUserDetailsFetchStarted,
+  clockifyUserDetailsFetchSuccess,
+  clockifyUserDetailsFetchFailure,
+  togglUserDetailsFetchStarted,
+  togglUserDetailsFetchSuccess,
+  togglUserDetailsFetchFailure,
 } from './userActions';
-import { UserModel } from '../../../types/user';
+import { UserModel } from '../../../types/userTypes';
 
 export interface UserState {
   readonly clockify: UserModel;
@@ -29,7 +29,7 @@ export const initialState: UserState = {
 
 export default handleActions(
   {
-    [fetchClockifyUserDetailsSuccess]: (
+    [clockifyUserDetailsFetchSuccess]: (
       state: UserState,
       { payload: { id, email } }: any,
     ): UserState => ({
@@ -41,7 +41,7 @@ export default handleActions(
       },
     }),
 
-    [fetchTogglUserDetailsSuccess]: (
+    [togglUserDetailsFetchSuccess]: (
       state: UserState,
       { payload: { id, email } }: any,
     ): UserState => ({
@@ -54,18 +54,18 @@ export default handleActions(
     }),
 
     [combineActions(
-      fetchClockifyUserDetailsStarted,
-      fetchTogglUserDetailsStarted,
+      clockifyUserDetailsFetchStarted,
+      togglUserDetailsFetchStarted,
     )]: (state: UserState): UserState => ({
       ...state,
       isFetching: true,
     }),
 
     [combineActions(
-      fetchClockifyUserDetailsSuccess,
-      fetchClockifyUserDetailsFailure,
-      fetchTogglUserDetailsSuccess,
-      fetchTogglUserDetailsFailure,
+      clockifyUserDetailsFetchSuccess,
+      clockifyUserDetailsFetchFailure,
+      togglUserDetailsFetchSuccess,
+      togglUserDetailsFetchFailure,
     )]: (state: UserState): UserState => ({
       ...state,
       isFetching: false,

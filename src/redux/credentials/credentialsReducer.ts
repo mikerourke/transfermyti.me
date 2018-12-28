@@ -6,7 +6,7 @@ import {
   credentialsValidationFailure,
   allCredentialsStored,
 } from './credentialsActions';
-import { CredentialsModel } from '../../types/credentials';
+import { CredentialsModel } from '../../types/credentialsTypes';
 
 export interface CredentialsState extends CredentialsModel {
   readonly isValid: boolean;

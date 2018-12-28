@@ -4,8 +4,8 @@ import { css } from 'emotion';
 import { dismissNotification } from '../../../redux/app/appActions';
 import { selectNotifications } from '../../../redux/app/appSelectors';
 import NotificationDisplay from './components/NotificationDisplay';
-import { NotificationModel } from '../../../types/app';
-import { ReduxDispatch, ReduxState } from '../../../types/common';
+import { NotificationModel } from '../../../types/appTypes';
+import { ReduxDispatch, ReduxState } from '../../../types/commonTypes';
 
 interface ConnectStateProps {
   notifications: NotificationModel[];
@@ -17,7 +17,10 @@ interface ConnectDispatchProps {
 
 type Props = ConnectStateProps & ConnectDispatchProps;
 
-const NotificationsDisplayComponent: React.FunctionComponent<Props> = props => (
+const NotificationsDisplayComponent: React.FunctionComponent<Props> = ({
+  notifications,
+  onDismissNotification,
+}) => (
   <div
     className={css`
       align-items: center;
@@ -30,11 +33,11 @@ const NotificationsDisplayComponent: React.FunctionComponent<Props> = props => (
       width: 100%;
     `}
   >
-    {props.notifications.map(notification => (
+    {notifications.map(notification => (
       <NotificationDisplay
         key={notification.id}
         notification={notification}
-        onDismiss={props.onDismissNotification}
+        onDismiss={onDismissNotification}
       />
     ))}
   </div>

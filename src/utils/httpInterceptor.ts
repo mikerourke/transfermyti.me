@@ -5,8 +5,8 @@ import {
   TOGGL_API_URL,
   TOGGL_REPORTS_URL,
 } from '../constants';
-import { ToolName } from '../types/common';
-import { CredentialsModel } from '../types/credentials';
+import { ToolName } from '../types/commonTypes';
+import { CredentialsModel } from '../types/credentialsTypes';
 
 enum Context {
   Api = 'api',
@@ -84,10 +84,12 @@ export default (store: Store) =>
           ? ToolName.Clockify
           : ToolName.Toggl;
 
+        const { url, status, statusText } = response;
+
         return response
           .json()
           .then(result => Promise.reject({ ...result, toolName }))
-          .catch(() => Promise.reject({ ...response, toolName }));
+          .catch(() => Promise.reject({ url, status, statusText, toolName }));
       }
       const type = response.headers.get('content-type') || 'json';
       if (type.includes('json')) {

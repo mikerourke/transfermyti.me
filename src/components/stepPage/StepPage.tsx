@@ -12,16 +12,23 @@ interface Props {
   onPreviousClick?: () => void;
 }
 
-const StepPage: React.FunctionComponent<Props> = props => (
+const StepPage: React.FunctionComponent<Props> = ({
+  children,
+  title,
+  subtitle,
+  isNextLoading,
+  onNextClick,
+  onPreviousClick,
+}) => (
   <Container>
-    <Title isSize={4}>{props.title}</Title>
-    <Subtitle isSize={3}>{props.subtitle}</Subtitle>
+    <Title isSize={4}>{title}</Title>
+    <Subtitle isSize={3}>{subtitle}</Subtitle>
     <div
       className={css`
         min-height: 300px;
       `}
     >
-      {props.children}
+      {children}
     </div>
     <div
       className={css`
@@ -32,25 +39,25 @@ const StepPage: React.FunctionComponent<Props> = props => (
     >
       <ShowIf
         as={Button}
-        isShown={!isNil(props.onPreviousClick)}
+        isShown={!isNil(onPreviousClick)}
         isSize="medium"
-        onClick={props.onPreviousClick}
-        isColor="info"
+        onClick={onPreviousClick}
+        isColor="dark"
       >
         Previous
       </ShowIf>
       <ShowIf
-        isShown={!isNil(props.onPreviousClick) && !isNil(props.onNextClick)}
+        isShown={!isNil(onPreviousClick) && !isNil(onNextClick)}
         className={css`
           margin-right: 1rem;
         `}
       />
       <ShowIf
         as={Button}
-        isShown={!isNil(props.onNextClick)}
+        isShown={!isNil(onNextClick)}
         isSize="medium"
-        isLoading={props.isNextLoading}
-        onClick={props.onNextClick}
+        isLoading={isNextLoading}
+        onClick={onNextClick}
         isColor="success"
       >
         Next

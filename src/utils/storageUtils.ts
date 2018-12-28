@@ -1,6 +1,6 @@
 import storage from 'store';
 import { initialState } from '../redux/credentials/credentialsReducer';
-import { CredentialsModel } from '../types/credentials';
+import { CredentialsModel } from '../types/credentialsTypes';
 
 const STORAGE_KEY = 'togglToClockify';
 

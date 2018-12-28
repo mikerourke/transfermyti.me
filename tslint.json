@@ -7,19 +7,13 @@
   "rules": {
     "import-name": false,
     "variable-name": false,
-    "max-line-length": [
-      true,
-      {
-        "limit": 80,
-        "ignore-pattern": "^import |^export {(.*?)}|http/g"
-      }
-    ],
+    "max-line-length": false,
     "ter-max-len": [
       true,
       80,
       {
         "ignoreComments": true,
-        "ignorePattern": "^import |^export {(.*?)}|http|\\s*it\\(",
+        "ignorePattern": "\/|^import |^export {(.*?)}|http|\\s*it\\(",
         "ignoreTrailingComments": true,
         "ignoreUrls": true,
         "ignoreStrings": true,

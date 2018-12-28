@@ -2,7 +2,7 @@ import React from 'react';
 import startCase from 'lodash/startCase';
 import drop from 'lodash/drop';
 import { Tab, TabLink, TabList, Tabs } from 'bloomer';
-import { EntityGroup } from '../../../../types/common';
+import { EntityGroup } from '../../../../types/commonTypes';
 
 interface State {
   activeTab: EntityGroup;

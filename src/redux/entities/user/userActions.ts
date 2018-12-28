@@ -5,64 +5,66 @@ import {
   apiFetchTogglUserDetails,
 } from '../api/user';
 import { apiFetchClockifyWorkspaces } from '../api/workspaces';
-import { showErrorNotification } from '../../app/appActions';
 import {
-  fetchClockifyWorkspacesSuccess,
-  fetchTogglWorkspacesSuccess,
+  clockifyWorkspacesFetchSuccess,
+  togglWorkspacesFetchSuccess,
 } from '../workspaces/workspacesActions';
+import { ClockifyUser, TogglMeResponse } from '../../../types/userTypes';
 import { Dispatch } from '../../rootReducer';
 
-export const fetchClockifyUserDetailsStarted = createAction(
-  '@user/FETCH_CLOCKIFY_DETAILS_STARTED',
+export const clockifyUserDetailsFetchStarted = createAction(
+  '@user/CLOCKIFY_USER_DETAILS_FETCH_STARTED',
 );
-export const fetchClockifyUserDetailsSuccess = createAction(
-  '@user/FETCH_CLOCKIFY_DETAILS_SUCCESS',
+export const clockifyUserDetailsFetchSuccess = createAction(
+  '@user/CLOCKIFY_USER_DETAILS_FETCH_SUCCESS',
+  (response: ClockifyUser) => response,
 );
-export const fetchClockifyUserDetailsFailure = createAction(
-  '@user/FETCH_CLOCKIFY_DETAILS_FAILURE',
+export const clockifyUserDetailsFetchFailure = createAction(
+  '@user/CLOCKIFY_USER_DETAILS_FETCH_FAILURE',
 );
-export const fetchTogglUserDetailsStarted = createAction(
-  '@user/FETCH_TOGGL_DETAILS_STARTED',
+export const togglUserDetailsFetchStarted = createAction(
+  '@user/TOGGL_USER_DETAILS_FETCH_STARTED',
 );
-export const fetchTogglUserDetailsSuccess = createAction(
-  '@user/FETCH_TOGGL_DETAILS_SUCCESS',
+export const togglUserDetailsFetchSuccess = createAction(
+  '@user/TOGGL_USER_DETAILS_FETCH_SUCCESS',
+  (response: TogglMeResponse) => response,
 );
-export const fetchTogglUserDetailsFailure = createAction(
-  '@user/FETCH_TOGGL_DETAILS_FAILURE',
+export const togglUserDetailsFetchFailure = createAction(
+  '@user/TOGGL_USER_DETAILS_FETCH_FAILURE',
 );
 
 export const fetchClockifyUserDetails = () => async (
   dispatch: Dispatch<any>,
 ) => {
-  dispatch(fetchClockifyUserDetailsStarted());
+  dispatch(clockifyUserDetailsFetchStarted());
   try {
     const workspaces = await apiFetchClockifyWorkspaces();
     const validMemberships = first(workspaces).memberships.filter(
       ({ membershipType }) => membershipType === 'WORKSPACE',
     );
     if (validMemberships.length === 0) {
-      return dispatch(fetchClockifyUserDetailsFailure());
+      return dispatch(clockifyUserDetailsFetchFailure());
     }
-    dispatch(fetchClockifyWorkspacesSuccess(workspaces));
+    dispatch(clockifyWorkspacesFetchSuccess(workspaces));
 
     const [{ userId }] = validMemberships;
     const userDetails = await apiFetchClockifyUserDetails(userId);
-    return dispatch(fetchClockifyUserDetailsSuccess(userDetails));
+    return dispatch(clockifyUserDetailsFetchSuccess(userDetails));
   } catch (error) {
-    dispatch(showErrorNotification(error));
-    return dispatch(fetchClockifyUserDetailsFailure());
+    dispatch(clockifyUserDetailsFetchFailure());
+    throw error;
   }
 };
 
 export const fetchTogglUserDetails = () => async (dispatch: Dispatch<any>) => {
-  dispatch(fetchTogglUserDetailsStarted());
+  dispatch(togglUserDetailsFetchStarted());
   try {
     const { data } = await apiFetchTogglUserDetails();
     const { id, email, workspaces } = data;
-    dispatch(fetchTogglWorkspacesSuccess(workspaces));
-    return dispatch(fetchTogglUserDetailsSuccess({ id, email }));
+    dispatch(togglWorkspacesFetchSuccess(workspaces));
+    return dispatch(togglUserDetailsFetchSuccess({ id, email }));
   } catch (error) {
-    dispatch(showErrorNotification(error));
-    return dispatch(fetchTogglUserDetailsFailure());
+    dispatch(togglUserDetailsFetchFailure());
+    throw error;
   }
 };

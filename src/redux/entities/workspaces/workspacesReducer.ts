@@ -1,16 +1,22 @@
 import { handleActions, combineActions } from 'redux-actions';
 import { normalize, schema } from 'normalizr';
+import cloneDeep from 'lodash/cloneDeep';
+import get from 'lodash/get';
 import isNil from 'lodash/isNil';
 import {
-  fetchClockifyWorkspacesStarted,
-  fetchClockifyWorkspacesSuccess,
-  fetchClockifyWorkspacesFailure,
-  fetchTogglWorkspacesStarted,
-  fetchTogglWorkspacesSuccess,
-  fetchTogglWorkspacesFailure,
-  updateIsWorkspaceSelected,
+  clockifyWorkspacesFetchStarted,
+  clockifyWorkspacesFetchSuccess,
+  clockifyWorkspacesFetchFailure,
+  togglWorkspacesFetchStarted,
+  togglWorkspacesFetchSuccess,
+  togglWorkspacesFetchFailure,
+  togglWorkspaceSummaryFetchStarted,
+  togglWorkspaceSummaryFetchSuccess,
+  togglWorkspaceSummaryFetchFailure,
+  updateIsWorkspaceIncluded,
+  updateIsWorkspaceYearIncluded,
 } from './workspacesActions';
-import { WorkspaceModel } from '../../../types/workspaces';
+import { WorkspaceModel } from '../../../types/workspacesTypes';
 
 interface WorkspacesEntryForTool {
   readonly workspacesById: Record<string, WorkspaceModel>;
@@ -39,18 +45,20 @@ const workspacesSchema = new schema.Entity(
   'workspaces',
   {},
   {
-    processStrategy: ({ id, name, admin = null }) => ({
-      id: id.toString(),
-      name,
-      isAdmin: admin,
-      isSelected: isNil(admin) ? null : false,
+    idAttribute: value => value.id.toString(),
+    processStrategy: value => ({
+      id: value.id.toString(),
+      name: value.name,
+      inclusionsByYear: {},
+      isAdmin: 'admin' in value ? value.admin : false,
+      isIncluded: true,
     }),
   },
 );
 
 export default handleActions(
   {
-    [fetchClockifyWorkspacesSuccess]: (
+    [clockifyWorkspacesFetchSuccess]: (
       state: WorkspacesState,
       { payload }: any,
     ): WorkspacesState => {
@@ -65,7 +73,7 @@ export default handleActions(
       };
     },
 
-    [fetchTogglWorkspacesSuccess]: (
+    [togglWorkspacesFetchSuccess]: (
       state: WorkspacesState,
       { payload }: any,
     ): WorkspacesState => {
@@ -80,25 +88,53 @@ export default handleActions(
       };
     },
 
+    [togglWorkspaceSummaryFetchSuccess]: (
+      state: WorkspacesState,
+      { payload: { workspaceId, inclusionsByYear } }: any,
+    ): WorkspacesState => {
+      const workspacesById = cloneDeep(state.toggl.workspacesById);
+      const updatedWorkspacesById = Object.entries(workspacesById).reduce(
+        (acc, [workspaceId, workspaceRecord]) => ({
+          ...acc,
+          [workspaceId]: {
+            ...workspaceRecord,
+            inclusionsByYear,
+          },
+        }),
+        {},
+      );
+
+      return {
+        ...state,
+        toggl: {
+          ...state.toggl,
+          workspacesById: updatedWorkspacesById,
+        },
+      };
+    },
+
     [combineActions(
-      fetchClockifyWorkspacesStarted,
-      fetchTogglWorkspacesStarted,
+      clockifyWorkspacesFetchStarted,
+      togglWorkspacesFetchStarted,
+      togglWorkspaceSummaryFetchStarted,
     )]: (state: WorkspacesState): WorkspacesState => ({
       ...state,
       isFetching: true,
     }),
 
     [combineActions(
-      fetchClockifyWorkspacesSuccess,
-      fetchClockifyWorkspacesFailure,
-      fetchTogglWorkspacesSuccess,
-      fetchTogglWorkspacesFailure,
+      clockifyWorkspacesFetchSuccess,
+      clockifyWorkspacesFetchFailure,
+      togglWorkspacesFetchSuccess,
+      togglWorkspacesFetchFailure,
+      togglWorkspaceSummaryFetchSuccess,
+      togglWorkspaceSummaryFetchFailure,
     )]: (state: WorkspacesState): WorkspacesState => ({
       ...state,
       isFetching: false,
     }),
 
-    [updateIsWorkspaceSelected]: (
+    [updateIsWorkspaceIncluded]: (
       state: WorkspacesState,
       { payload: workspaceId }: any,
     ): WorkspacesState => ({
@@ -109,11 +145,39 @@ export default handleActions(
           ...state.toggl.workspacesById,
           [workspaceId]: {
             ...state.toggl.workspacesById[workspaceId],
-            isSelected: !state.toggl.workspacesById[workspaceId].isSelected,
+            isIncluded: !state.toggl.workspacesById[workspaceId].isIncluded,
           },
         },
       },
     }),
+
+    [updateIsWorkspaceYearIncluded]: (
+      state: WorkspacesState,
+      { payload: { workspaceId, year } }: any,
+    ): WorkspacesState => {
+      const inclusionsByYear = get(
+        state,
+        ['toggl', 'workspacesById', workspaceId, 'inclusionsByYear'],
+        {},
+      );
+
+      return {
+        ...state,
+        toggl: {
+          ...state.toggl,
+          workspacesById: {
+            ...state.toggl.workspacesById,
+            [workspaceId]: {
+              ...state.toggl.workspacesById[workspaceId],
+              inclusionsByYear: {
+                ...inclusionsByYear,
+                [year]: !inclusionsByYear[year],
+              },
+            },
+          },
+        },
+      };
+    },
   },
   initialState,
 );

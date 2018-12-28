@@ -2253,6 +2253,11 @@ data-urls@^1.0.0:
     whatwg-mimetype "^2.2.0"
     whatwg-url "^7.0.0"
 
+date-fns@^1.30.1:
+  version "1.30.1"
+  resolved "https://registry.yarnpkg.com/date-fns/-/date-fns-1.30.1.tgz#2e71bf0b119153dbb4cc4e88d9ea5acfb50dc05c"
+  integrity sha512-hBSVCvSmWC+QypYObzwGOd9wqdDpOt+0wl0KbU+R+uuZBS1jN8VsD1ss3irQDknRj5NvxiTF6oj/nDRnN/UQNw==
+
 date-now@^0.1.4:
   version "0.1.4"
   resolved "https://registry.yarnpkg.com/date-now/-/date-now-0.1.4.tgz#eaf439fd4d4848ad74e5cc7dbef200672b9e345b"
@@ -5863,6 +5868,11 @@ process@^0.11.10:
   version "0.11.10"
   resolved "https://registry.yarnpkg.com/process/-/process-0.11.10.tgz#7332300e840161bda3e69a1d1d91a7d4bc16f182"
   integrity sha1-czIwDoQBYb2j5podHZGn1LwW8YI=
+
+promise-throttle@^1.0.0:
+  version "1.0.0"
+  resolved "https://registry.yarnpkg.com/promise-throttle/-/promise-throttle-1.0.0.tgz#6ab608b743b20f6db2c8f8050108ac9d33bbb25c"
+  integrity sha512-pNX5XbCcuy97pZMqFfqCQTLe9oClKYoju2A3veEGvIEFDZKj1+vEbOWrO2IBN0OGhq5UpZ9RHXHnjFk+pm437g==
 
 promise@^7.1.1:
   version "7.3.1"

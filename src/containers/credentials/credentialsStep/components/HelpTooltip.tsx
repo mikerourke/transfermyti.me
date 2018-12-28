@@ -17,7 +17,12 @@ interface Props {
   color?: string;
 }
 
-const HelpTooltip: React.FunctionComponent<Props> = props => (
+const HelpTooltip: React.FunctionComponent<Props> = ({
+  children,
+  tipId,
+  size,
+  color,
+}) => (
   <span
     className={css`
       margin-left: 8px;
@@ -25,10 +30,10 @@ const HelpTooltip: React.FunctionComponent<Props> = props => (
   >
     <svg
       viewBox="929 882 46 46"
-      width={props.size}
-      height={props.size}
+      width={size}
+      height={size}
       data-tip
-      data-for={props.tipId}
+      data-for={tipId}
     >
       <g
         strokeOpacity={1}
@@ -66,12 +71,12 @@ const HelpTooltip: React.FunctionComponent<Props> = props => (
             C 960 900.76 959.29 902.35 958.13 903.51
             Z
           `}
-          fill={props.color}
+          fill={color}
         />
       </g>
     </svg>
     <CustomTooltip
-      id={props.tipId}
+      id={tipId}
       border
       effect="solid"
       delayHide={500}
@@ -80,7 +85,7 @@ const HelpTooltip: React.FunctionComponent<Props> = props => (
       place="right"
       type="light"
     >
-      {props.children}
+      {children}
     </CustomTooltip>
   </span>
 );

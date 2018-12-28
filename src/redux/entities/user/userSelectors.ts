@@ -1,17 +1,12 @@
 import { createSelector } from 'reselect';
 import { State } from '../../rootReducer';
 
-export const selectClockifyUserDetails = createSelector(
+export const selectClockifyUserId = createSelector(
   (state: State) => state.entities.user.clockify,
-  userDetails => userDetails,
+  ({ userId }): string => userId,
 );
 
-export const selectTogglUserDetails = createSelector(
+export const selectTogglUserEmail = createSelector(
   (state: State) => state.entities.user.toggl,
-  userDetails => userDetails,
-);
-
-export const selectUserDetails = createSelector(
-  (state: State) => state.entities.user,
-  userDetails => userDetails,
+  ({ email }): string => email,
 );
