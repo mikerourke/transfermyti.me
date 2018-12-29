@@ -1,14 +1,22 @@
-import { handleActions, combineActions } from 'redux-actions';
-import { normalize, schema } from 'normalizr';
+import { combineActions, handleActions } from 'redux-actions';
+import get from 'lodash/get';
+import ReduxEntity from '../../../utils/ReduxEntity';
 import {
+  clockifyProjectsFetchFailure,
   clockifyProjectsFetchStarted,
   clockifyProjectsFetchSuccess,
-  clockifyProjectsFetchFailure,
+  togglProjectsFetchFailure,
   togglProjectsFetchStarted,
   togglProjectsFetchSuccess,
-  togglProjectsFetchFailure,
+  updateIsProjectIncluded,
 } from './projectsActions';
-import { ProjectModel } from '../../../types/projectsTypes';
+import { EntityType, ToolName } from '../../../types/commonTypes';
+import {
+  ClockifyProject,
+  ProjectModel,
+  TogglProject,
+} from '../../../types/projectsTypes';
+import { ReduxAction } from '../../rootReducer';
 
 interface ProjectsEntryForTool {
   readonly projectsById: Record<string, ProjectModel>;
@@ -33,56 +41,44 @@ export const initialState: ProjectsState = {
   isFetching: false,
 };
 
-const projectsSchema = new schema.Entity(
-  'projects',
-  {},
-  {
-    idAttribute: value => value.id.toString(),
-    processStrategy: value => ({
-      id: value.id.toString(),
-      name: value.name,
-      workspaceId: 'wid' in value ? value.wid.toString() : value.workspaceId,
-      clientId: 'cid' in value ? value.cid.toString() : value.clientId,
-      isBillable: value.billable,
-      isPublic: 'public' in value ? value.public : !value.is_private,
-      isActive: 'archived' in value ? value.archived : value.active,
-      color: 'hex_color' in value ? value.hex_color : value.color,
-      isIncluded: true,
-    }),
-  },
-);
+const schemaProcessStrategy = (
+  value: ClockifyProject | TogglProject,
+): ProjectModel => ({
+  id: value.id.toString(),
+  name: value.name,
+  workspaceId: ReduxEntity.getIdFieldValue(value, EntityType.Workspace),
+  clientId: ReduxEntity.getIdFieldValue(value, EntityType.Client),
+  isBillable: value.billable,
+  isPublic: 'public' in value ? value.public : !value.is_private,
+  isActive: 'archived' in value ? value.archived : value.active,
+  color: 'hex_color' in value ? value.hex_color : value.color,
+  users: get(value, 'users', []),
+  isIncluded: true,
+});
+
+const reduxEntity = new ReduxEntity(EntityType.Project, schemaProcessStrategy);
 
 export default handleActions(
   {
     [clockifyProjectsFetchSuccess]: (
       state: ProjectsState,
-      { payload }: any,
-    ): ProjectsState => {
-      const { entities, result } = normalize(payload, [projectsSchema]);
-      return {
-        ...state,
-        clockify: {
-          ...state.clockify,
-          projectsById: entities.projects,
-          projectIds: result,
-        },
-      };
-    },
+      { payload }: ReduxAction<ClockifyProject[]>,
+    ): ProjectsState =>
+      reduxEntity.getNormalizedState<ProjectsState, ClockifyProject[]>(
+        ToolName.Clockify,
+        state,
+        payload,
+      ),
 
     [togglProjectsFetchSuccess]: (
       state: ProjectsState,
-      { payload }: any,
-    ): ProjectsState => {
-      const { entities, result } = normalize(payload, [projectsSchema]);
-      return {
-        ...state,
-        toggl: {
-          ...state.toggl,
-          projectsById: entities.projects,
-          projectIds: result,
-        },
-      };
-    },
+      { payload }: ReduxAction<TogglProject[]>,
+    ): ProjectsState =>
+      reduxEntity.getNormalizedState<ProjectsState, TogglProject[]>(
+        ToolName.Toggl,
+        state,
+        payload,
+      ),
 
     [combineActions(clockifyProjectsFetchStarted, togglProjectsFetchStarted)]: (
       state: ProjectsState,
@@ -100,6 +96,12 @@ export default handleActions(
       ...state,
       isFetching: false,
     }),
+
+    [updateIsProjectIncluded]: (
+      state: ProjectsState,
+      { payload: projectId }: ReduxAction<string>,
+    ): ProjectsState =>
+      reduxEntity.updateIsIncluded<ProjectsState>(state, projectId),
   },
   initialState,
 );

@@ -1,5 +1,6 @@
-import { ClockifyUser } from './userTypes';
+import { TogglTotalCurrencyModel } from './commonTypes';
 import { ClockifyProject } from './projectsTypes';
+import { ClockifyUser } from './userTypes';
 
 export interface ClockifyTimeInterval {
   start: string;
@@ -46,6 +47,15 @@ export interface TogglTimeEntry {
   tags: string[];
 }
 
+export interface TogglTimeEntriesFetchResponse {
+  total_grand: number;
+  total_billable: number | null;
+  total_currencies: TogglTotalCurrencyModel[];
+  total_count: number;
+  per_page: number;
+  data: TogglTimeEntry[];
+}
+
 export interface TimeEntryModel {
   id: string;
   description: string;
@@ -55,7 +65,8 @@ export interface TimeEntryModel {
   userId: string | null;
   client: string | null;
   isBillable: boolean;
-  start: Date;
-  end: Date;
+  start: Date | null;
+  end: Date | null;
   tags: string[];
+  isIncluded: boolean;
 }

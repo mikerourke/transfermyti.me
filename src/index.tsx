@@ -1,5 +1,6 @@
 import 'whatwg-fetch';
 import 'bulma/css/bulma.min.css';
+import 'react-virtualized/styles.css';
 import React from 'react';
 import { render } from 'react-dom';
 import { Provider } from 'react-redux';

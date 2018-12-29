@@ -7,9 +7,9 @@ import {
   fetchClockifyUserDetails,
   fetchTogglUserDetails,
 } from '../entities/user/userActions';
+import { NotificationType } from '../../types/appTypes';
 import { CredentialsField } from '../../types/credentialsTypes';
 import { Dispatch, GetState } from '../rootReducer';
-import { NotificationType } from '../../types/appTypes';
 
 export const allCredentialsStored = createAction('@credentials/STORED');
 export const credentialsValidationStarted = createAction(

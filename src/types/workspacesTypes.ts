@@ -1,4 +1,11 @@
+import { ClientModel } from './clientsTypes';
+import { TogglTotalCurrencyModel } from './commonTypes';
+import { ProjectModel } from './projectsTypes';
+import { TagModel } from './tagsTypes';
+import { TaskModel } from './tasksTypes';
+import { TimeEntryModel } from './timeEntriesTypes';
 import { ClockifyMembership } from './userTypes';
+import { UserGroupModel } from './userGroupsTypes';
 
 interface ClockifyWorkspaceSettings {
   timeRoundingInReports: boolean;
@@ -55,9 +62,16 @@ export interface TogglWorkspace {
   ical_enabled: boolean;
 }
 
-interface TogglTotalCurrencyModel {
-  currency: string | null;
-  amount: number | null;
+export interface TogglWorkspaceUser {
+  id: number;
+  uid: number;
+  wid: number;
+  admin: boolean;
+  active: boolean;
+  email: string;
+  at: string;
+  name: string;
+  invite_url: string;
 }
 
 interface TogglSummaryReportDataItemModel {
@@ -90,15 +104,41 @@ export interface TogglSummaryReport {
   data: TogglSummaryReportDataModel[];
 }
 
+export interface WorkspaceUserModel {
+  id: string;
+  email: string;
+  name: string;
+  isAdmin: boolean | null;
+  isActive: boolean;
+}
+
 export interface WorkspaceModel {
   id: string;
   name: string;
+  inclusionsByYear?: Record<string, boolean>;
+  users: WorkspaceUserModel[];
   isAdmin: boolean | null;
   isIncluded: boolean | null;
-  inclusionsByYear?: Record<string, boolean>;
 }
 
-export interface WorkspaceAndYearModel {
-  id: string;
-  year: number;
+export interface WorkspaceEntitiesFetchDetailsModel {
+  entityName: string | null;
+  workspaceName?: string | null;
+}
+
+export type EntityModel =
+  | ClientModel
+  | ProjectModel
+  | TagModel
+  | TaskModel
+  | TimeEntryModel
+  | UserGroupModel;
+
+export interface WorkspaceEntitiesModel {
+  clients: ClientModel[];
+  projects: ProjectModel[];
+  tags: TagModel[];
+  tasks: TaskModel[];
+  timeEntries: TimeEntryModel[];
+  userGroups: UserGroupModel[];
 }

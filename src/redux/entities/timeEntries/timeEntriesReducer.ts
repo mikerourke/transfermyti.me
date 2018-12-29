@@ -1,17 +1,23 @@
-import { handleActions, combineActions } from 'redux-actions';
-import { normalize, schema } from 'normalizr';
+import { combineActions, handleActions } from 'redux-actions';
 import get from 'lodash/get';
 import isNil from 'lodash/isNil';
 import isString from 'lodash/isString';
+import ReduxEntity from '../../../utils/ReduxEntity';
 import {
+  clockifyTimeEntriesFetchFailure,
   clockifyTimeEntriesFetchStarted,
   clockifyTimeEntriesFetchSuccess,
-  clockifyTimeEntriesFetchFailure,
+  togglTimeEntriesFetchFailure,
   togglTimeEntriesFetchStarted,
   togglTimeEntriesFetchSuccess,
-  togglTimeEntriesFetchFailure,
 } from './timeEntriesActions';
-import { TimeEntryModel } from '../../../types/timeEntriesTypes';
+import { EntityType, ToolName } from '../../../types/commonTypes';
+import {
+  ClockifyTimeEntry,
+  TimeEntryModel,
+  TogglTimeEntry,
+} from '../../../types/timeEntriesTypes';
+import { ReduxAction } from '../../rootReducer';
 
 interface TimeEntriesEntryForTool {
   readonly timeEntriesById: Record<string, TimeEntryModel>;
@@ -36,94 +42,62 @@ export const initialState: TimeEntriesState = {
   isFetching: false,
 };
 
-const getTimeValue = (value: any, field: string) => {
+const getTimeValue = (value: any, field: string): Date | null => {
   const timeValue =
-    'timeInterval' in value ? value.timeInterval[field] : value[field];
-  return new Date(timeValue);
+    'timeInterval' in value
+      ? get(value, ['timeInterval', field], null)
+      : get(value, field, null);
+  return isNil(timeValue) ? null : new Date(timeValue);
 };
 
-const getStringValue = (fieldValue: any) => {
-  try {
-    return isNil(fieldValue) ? null : fieldValue.toString();
-  } catch (error) {
-    return fieldValue;
-  }
-};
+const schemaProcessStrategy = (
+  value: ClockifyTimeEntry | TogglTimeEntry,
+): TimeEntryModel => ({
+  id: value.id.toString(),
+  description: value.description,
+  projectId: ReduxEntity.getIdFieldValue(value, EntityType.Project),
+  taskId: ReduxEntity.getIdFieldValue(value, EntityType.Task),
+  userId: ReduxEntity.getIdFieldValue(value, EntityType.User),
+  workspaceId: ReduxEntity.getIdFieldValue(value, EntityType.Workspace),
+  client:
+    'client' in value
+      ? value.client
+      : get(value, ['project', 'clientName'], null),
+  isBillable: 'is_billable' in value ? value.is_billable : value.billable,
+  start: getTimeValue(value, 'start'),
+  end: getTimeValue(value, 'end'),
+  tags: isNil(value.tags)
+    ? []
+    : value.tags.map((tag: any) => (isString(tag) ? tag : get(tag, 'name'))),
+  isIncluded: true,
+});
 
-const timeEntriesSchema = new schema.Entity(
-  'timeEntries',
-  {},
-  {
-    idAttribute: value => value.id.toString(),
-    processStrategy: value => ({
-      id: value.id.toString(),
-      description: value.description,
-      projectId:
-        'pid' in value
-          ? value.pid.toString()
-          : get(value, ['project', 'id'], null),
-      taskId:
-        'tid' in value
-          ? getStringValue(value.tid)
-          : get(value, ['task', 'id'], null),
-      userId:
-        'uid' in value
-          ? value.uid.toString()
-          : get(value, ['user', 'id'], null),
-      workspaceId: 'wid' in value ? value.wid.toString() : value.workspaceId,
-      client: isString(value.client)
-        ? value.client
-        : get(value, ['project', 'clientName'], null),
-      isBillable: 'is_billable' in value ? value.is_billable : value.billable,
-      start: getTimeValue(value, 'start'),
-      end: getTimeValue(value, 'end'),
-      tags: isNil(value.tags)
-        ? []
-        : value.tags.map((tag: any) =>
-            isString(tag) ? tag : get(tag, 'name'),
-          ),
-      isIncluded: true,
-    }),
-  },
+const reduxEntity = new ReduxEntity(
+  EntityType.TimeEntry,
+  schemaProcessStrategy,
 );
 
 export default handleActions(
   {
     [clockifyTimeEntriesFetchSuccess]: (
       state: TimeEntriesState,
-      { payload }: any,
-    ): TimeEntriesState => {
-      const { entities, result } = normalize(payload, [timeEntriesSchema]);
-      return {
-        ...state,
-        clockify: {
-          ...state.clockify,
-          timeEntriesById: {
-            ...state.clockify.timeEntriesById,
-            ...entities.timeEntries,
-          },
-          timeEntryIds: [...state.clockify.timeEntryIds, ...result],
-        },
-      };
-    },
+      { payload }: ReduxAction<ClockifyTimeEntry[]>,
+    ): TimeEntriesState =>
+      reduxEntity.getNormalizedState<TimeEntriesState, ClockifyTimeEntry[]>(
+        ToolName.Clockify,
+        state,
+        payload,
+      ),
 
     [togglTimeEntriesFetchSuccess]: (
       state: TimeEntriesState,
-      { payload }: any,
-    ): TimeEntriesState => {
-      const { entities, result } = normalize(payload, [timeEntriesSchema]);
-      return {
-        ...state,
-        toggl: {
-          ...state.toggl,
-          timeEntriesById: {
-            ...state.toggl.timeEntriesById,
-            ...entities.timeEntries,
-          },
-          timeEntryIds: [...state.toggl.timeEntryIds, ...result],
-        },
-      };
-    },
+      { payload }: ReduxAction<TogglTimeEntry[]>,
+    ): TimeEntriesState =>
+      reduxEntity.getNormalizedState<TimeEntriesState, TogglTimeEntry[]>(
+        ToolName.Toggl,
+        state,
+        payload,
+      ),
 
     [combineActions(
       clockifyTimeEntriesFetchStarted,

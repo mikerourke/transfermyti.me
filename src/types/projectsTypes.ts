@@ -1,4 +1,5 @@
 import { ClockifyMembership } from './userTypes';
+import { ClockifyTask } from './tasksTypes';
 
 export enum ClockifyEstimateType {
   Auto = 'AUTO',
@@ -22,7 +23,7 @@ export interface ClockifyProject {
   color: string;
   estimate: ClockifyEstimate;
   archived: boolean;
-  tasks: any[]; // TODO: Change to Task
+  tasks: ClockifyTask[];
   public: boolean;
 }
 
@@ -43,6 +44,20 @@ export interface TogglProject {
   hex_color: string;
 }
 
+export interface TogglProjectUser {
+  id: number;
+  pid: number;
+  uid: number;
+  wid: number;
+  manager: boolean;
+  rate: number;
+}
+
+export interface ProjectUserModel {
+  id: string;
+  isManager: boolean | null;
+}
+
 export interface ProjectModel {
   id: string;
   name: string;
@@ -52,5 +67,6 @@ export interface ProjectModel {
   isPublic: boolean;
   isActive: boolean;
   color: string;
+  users: ProjectUserModel[];
   isIncluded: boolean;
 }

@@ -15,7 +15,10 @@ import {
 import StepPage from '../../../components/stepPage/StepPage';
 import InputField from './components/InputField';
 import { ReduxDispatch, ReduxState } from '../../../types/commonTypes';
-import { CredentialsModel, CredentialsField } from '../../../types/credentialsTypes';
+import {
+  CredentialsModel,
+  CredentialsField,
+} from '../../../types/credentialsTypes';
 
 interface ConnectStateProps {
   credentials: CredentialsModel;
@@ -111,8 +114,8 @@ export class CredentialsStepComponent extends React.Component<Props, State> {
           `}
         >
           Enter your credentials in the form below. If you need help, hover over
-          the help icon. Press the <strong>Next</strong> button when
-          you're done.
+          the help icon. Press the <strong>Next</strong> button when you're
+          done.
         </p>
         <form>
           <InputField

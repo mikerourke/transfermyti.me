@@ -8,12 +8,10 @@ import { NotificationModel } from '../../types/appTypes';
 
 export interface AppState {
   readonly notifications: NotificationModel[];
-  readonly activeWorkspaceId: string;
 }
 
 export const initialState: AppState = {
   notifications: [],
-  activeWorkspaceId: '',
 };
 
 export default handleActions(

@@ -33,3 +33,8 @@ export enum EntityGroup {
   Users = 'users',
   UserGroups = 'userGroups',
 }
+
+export interface TogglTotalCurrencyModel {
+  currency: string | null;
+  amount: number | null;
+}

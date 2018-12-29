@@ -4,8 +4,12 @@ import {
   apiFetchClockifyUserDetails,
   apiFetchTogglUserDetails,
 } from '../api/user';
-import { apiFetchClockifyWorkspaces } from '../api/workspaces';
 import {
+  apiFetchClockifyWorkspaces,
+  apiFetchClockifyWorkspaceUsers, apiFetchTogglWorkspaceUsers
+} from '../api/workspaces';
+import {
+  appendUsersToWorkspace,
   clockifyWorkspacesFetchSuccess,
   togglWorkspacesFetchSuccess,
 } from '../workspaces/workspacesActions';
@@ -45,6 +49,7 @@ export const fetchClockifyUserDetails = () => async (
     if (validMemberships.length === 0) {
       return dispatch(clockifyUserDetailsFetchFailure());
     }
+    await appendUsersToWorkspace(workspaces, apiFetchClockifyWorkspaceUsers);
     dispatch(clockifyWorkspacesFetchSuccess(workspaces));
 
     const [{ userId }] = validMemberships;
@@ -61,6 +66,7 @@ export const fetchTogglUserDetails = () => async (dispatch: Dispatch<any>) => {
   try {
     const { data } = await apiFetchTogglUserDetails();
     const { id, email, workspaces } = data;
+    await appendUsersToWorkspace(workspaces, apiFetchTogglWorkspaceUsers);
     dispatch(togglWorkspacesFetchSuccess(workspaces));
     return dispatch(togglUserDetailsFetchSuccess({ id, email }));
   } catch (error) {

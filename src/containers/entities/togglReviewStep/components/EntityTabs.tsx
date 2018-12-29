@@ -1,39 +1,34 @@
 import React from 'react';
+import omit from 'lodash/omit';
 import startCase from 'lodash/startCase';
-import drop from 'lodash/drop';
 import { Tab, TabLink, TabList, Tabs } from 'bloomer';
 import { EntityGroup } from '../../../../types/commonTypes';
 
-interface State {
+interface Props {
   activeTab: EntityGroup;
+  onTabClick: (entityGroup: EntityGroup) => void;
 }
 
-class EntityTabs extends React.Component<any, State> {
-  state = {
-    activeTab: EntityGroup.Projects,
-  };
-
-  private handleTabClick = (tabEntity: EntityGroup) => () => {
-    this.setState({ activeTab: tabEntity });
-  };
-
-  public render() {
-    return (
-      <Tabs>
-        <TabList>
-          {drop(Object.entries(EntityGroup)).map(([key, value]) => (
-            <Tab
-              key={value}
-              isActive={value === this.state.activeTab}
-              onClick={this.handleTabClick(value)}
-            >
-              <TabLink>{startCase(key)}</TabLink>
-            </Tab>
-          ))}
-        </TabList>
-      </Tabs>
-    );
-  }
-}
+const EntityTabs: React.FunctionComponent<Props> = ({
+  activeTab,
+  onTabClick,
+}) => {
+  const validGroups = omit(EntityGroup, 'Workspaces', 'Users');
+  return (
+    <Tabs>
+      <TabList>
+        {Object.entries(validGroups).map(([key, value]) => (
+          <Tab
+            key={value}
+            isActive={value === activeTab}
+            onClick={() => onTabClick(value)}
+          >
+            <TabLink>{startCase(key)}</TabLink>
+          </Tab>
+        ))}
+      </TabList>
+    </Tabs>
+  );
+};
 
 export default EntityTabs;

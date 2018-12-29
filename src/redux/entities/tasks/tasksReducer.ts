@@ -1,15 +1,17 @@
-import { handleActions, combineActions } from 'redux-actions';
-import { normalize, schema } from 'normalizr';
-import get from 'lodash/get';
+import { combineActions, handleActions } from 'redux-actions';
+import ReduxEntity from '../../../utils/ReduxEntity';
 import {
+  clockifyTasksFetchFailure,
   clockifyTasksFetchStarted,
   clockifyTasksFetchSuccess,
-  clockifyTasksFetchFailure,
+  togglTasksFetchFailure,
   togglTasksFetchStarted,
   togglTasksFetchSuccess,
-  togglTasksFetchFailure,
+  updateIsTaskIncluded,
 } from './tasksActions';
-import { TaskModel } from '../../../types/tasksTypes';
+import { EntityType, ToolName } from '../../../types/commonTypes';
+import { ClockifyTask, TaskModel, TogglTask } from '../../../types/tasksTypes';
+import { ReduxAction } from '../../rootReducer';
 
 interface TasksEntryForTool {
   readonly tasksById: Record<string, TaskModel>;
@@ -42,58 +44,42 @@ const getEstimateFromSeconds = (seconds: number): string => {
   return `PT${hours}H`;
 };
 
-const tasksSchema = new schema.Entity(
-  'tasks',
-  {},
-  {
-    idAttribute: value => value.id.toString(),
-    processStrategy: value => ({
-      id: value.id.toString(),
-      name: value.name,
-      estimate:
-        'estimated_seconds' in value
-          ? getEstimateFromSeconds(value.estimated_seconds)
-          : value.estimate,
-      projectId: 'pid' in value ? value.pid.toString() : value.projectId,
-      assigneeId:
-        'uid' in value ? value.uid.toString() : get(value, 'assigneeId', null),
-      isActive: 'active' in value ? value.active : value.status === 'ACTIVE',
-      isIncluded: true,
-    }),
-  },
-);
+const schemaProcessStrategy = (value: ClockifyTask | TogglTask): TaskModel => ({
+  id: value.id.toString(),
+  name: value.name,
+  estimate:
+    'estimated_seconds' in value
+      ? getEstimateFromSeconds(value.estimated_seconds)
+      : value.estimate,
+  projectId: ReduxEntity.getIdFieldValue(value, EntityType.Project),
+  assigneeId: ReduxEntity.getIdFieldValue(value, EntityType.User),
+  isActive: 'active' in value ? value.active : value.status === 'ACTIVE',
+  isIncluded: true,
+});
+
+const reduxEntity = new ReduxEntity(EntityType.Task, schemaProcessStrategy);
 
 export default handleActions(
   {
     [clockifyTasksFetchSuccess]: (
       state: TasksState,
-      { payload }: any,
-    ): TasksState => {
-      const { entities, result } = normalize(payload, [tasksSchema]);
-      return {
-        ...state,
-        clockify: {
-          ...state.clockify,
-          tasksById: entities.tasks,
-          taskIds: result,
-        },
-      };
-    },
+      { payload }: ReduxAction<ClockifyTask[]>,
+    ): TasksState =>
+      reduxEntity.getNormalizedState<TasksState, ClockifyTask[]>(
+        ToolName.Clockify,
+        state,
+        payload,
+      ),
 
     [togglTasksFetchSuccess]: (
       state: TasksState,
-      { payload }: any,
-    ): TasksState => {
-      const { entities, result } = normalize(payload, [tasksSchema]);
-      return {
-        ...state,
-        toggl: {
-          ...state.toggl,
-          tasksById: entities.tasks,
-          taskIds: result,
-        },
-      };
-    },
+      { payload }: ReduxAction<TogglTask[]>,
+    ): TasksState =>
+      reduxEntity.getNormalizedState<TasksState, TogglTask[]>(
+        ToolName.Clockify,
+        state,
+        payload,
+      ),
 
     [combineActions(clockifyTasksFetchStarted, togglTasksFetchStarted)]: (
       state: TasksState,
@@ -111,6 +97,11 @@ export default handleActions(
       ...state,
       isFetching: false,
     }),
+
+    [updateIsTaskIncluded]: (
+      state: TasksState,
+      { payload: taskId }: ReduxAction<string>,
+    ): TasksState => reduxEntity.updateIsIncluded<TasksState>(state, taskId),
   },
   initialState,
 );

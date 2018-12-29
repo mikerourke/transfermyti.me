@@ -1,6 +1,13 @@
 import { createSelector } from 'reselect';
+import { selectTogglClientRecords } from '../clients/clientsSelectors';
+import { selectTogglProjectRecords } from '../projects/projectsSelectors';
+import { selectTogglTagRecords } from '../tags/tagsSelectors';
+import { selectTogglTaskRecords } from '../tasks/tasksSelectors';
+import { selectTogglTimeEntryRecords } from '../timeEntries/timeEntriesSelectors';
+import { selectTogglUserGroupRecords } from '../userGroups/userGroupsSelectors';
 import {
-  WorkspaceAndYearModel,
+  WorkspaceEntitiesFetchDetailsModel,
+  WorkspaceEntitiesModel,
   WorkspaceModel,
 } from '../../../types/workspacesTypes';
 import { State } from '../../rootReducer';
@@ -10,15 +17,24 @@ export const selectTogglWorkspacesById = createSelector(
   (workspacesById): Record<string, WorkspaceModel> => workspacesById,
 );
 
-export const selectTogglWorkspaceRecords = createSelector(
+export const selectTogglIncludedWorkspacesById = createSelector(
   selectTogglWorkspacesById,
-  (workspacesById): WorkspaceModel[] => Object.values(workspacesById),
+  (workspacesById): Record<string, WorkspaceModel> =>
+    Object.entries(workspacesById).reduce(
+      (acc, [workspaceId, workspaceRecord]) => {
+        if (!workspaceRecord.isIncluded) return acc;
+        return {
+          ...acc,
+          [workspaceId]: workspaceRecord,
+        };
+      },
+      {},
+    ),
 );
 
 export const selectTogglIncludedWorkspaceRecords = createSelector(
-  selectTogglWorkspaceRecords,
-  (workspaceRecords): WorkspaceModel[] =>
-    workspaceRecords.filter(({ isIncluded }) => isIncluded),
+  selectTogglIncludedWorkspacesById,
+  (workspacesById): WorkspaceModel[] => Object.values(workspacesById),
 );
 
 export const selectTogglIncludedWorkspacesCount = createSelector(
@@ -41,29 +57,39 @@ export const selectTogglWorkspaceIncludedYearsCount = createSelector(
     ),
 );
 
-export const selectTogglWorkspaceAndYearRecords = createSelector(
-  selectTogglIncludedWorkspaceRecords,
-  (workspaceRecords): WorkspaceAndYearModel[] => {
-    const workspaceAndYearRecords: WorkspaceAndYearModel[] = [];
-
-    workspaceRecords.forEach(({ id, inclusionsByYear }) => {
-      Object.entries(inclusionsByYear).forEach(([year, isIncluded]) => {
-        if (isIncluded) {
-          workspaceAndYearRecords.push({ id, year: +year });
-        }
-      });
-    });
-
-    return workspaceAndYearRecords;
-  },
-);
-
 export const selectTogglWorkspaceIds = createSelector(
   (state: State) => state.entities.workspaces.toggl.workspaceIds,
   (workspaceIds): string[] => workspaceIds,
 );
 
-export const selectTogglIncludedWorkspaceIds = createSelector(
-  selectTogglIncludedWorkspaceRecords,
-  (workspaceRecords): string[] => workspaceRecords.map(({ id }) => id),
+export const selectWorkspaceEntitiesFetchDetails = createSelector(
+  (state: State) => state.entities.workspaces.entitiesFetchDetails,
+  (entitiesFetchDetails): WorkspaceEntitiesFetchDetailsModel =>
+    entitiesFetchDetails,
+);
+
+export const selectTogglWorkspaceEntities = createSelector(
+  [
+    selectTogglClientRecords,
+    selectTogglProjectRecords,
+    selectTogglTagRecords,
+    selectTogglTaskRecords,
+    selectTogglTimeEntryRecords,
+    selectTogglUserGroupRecords,
+  ],
+  (
+    clients,
+    projects,
+    tags,
+    tasks,
+    timeEntries,
+    userGroups,
+  ): WorkspaceEntitiesModel => ({
+    clients,
+    projects,
+    tags,
+    tasks,
+    timeEntries,
+    userGroups,
+  }),
 );

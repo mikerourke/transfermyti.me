@@ -1,7 +1,7 @@
 import { getFirstAndLastDayOfYear } from '../../../utils/dateUtils';
 import {
   ClockifyTimeEntry,
-  TogglTimeEntry,
+  TogglTimeEntriesFetchResponse,
 } from '../../../types/timeEntriesTypes';
 
 export const apiFetchClockifyTimeEntries = (
@@ -28,14 +28,7 @@ export const apiFetchTogglTimeEntries = (
   workspaceId: string,
   year: number,
   page: number = 1,
-): Promise<{
-  total_grand: number;
-  total_billable: number | null;
-  total_currencies: { currency: string | null; amount: number | null }[];
-  total_count: number;
-  per_page: number;
-  data: TogglTimeEntry[];
-}> => {
+): Promise<TogglTimeEntriesFetchResponse> => {
   const { firstDay, lastDay } = getFirstAndLastDayOfYear(
     year,
     'YYYY-MM-DDTHH:mm:ssZ',

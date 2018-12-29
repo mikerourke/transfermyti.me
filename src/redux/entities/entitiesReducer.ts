@@ -7,6 +7,7 @@ import timeEntries, {
   TimeEntriesState,
 } from './timeEntries/timeEntriesReducer';
 import user, { UserState } from './user/userReducer';
+import userGroups, { UserGroupsState } from './userGroups/userGroupsReducer';
 import workspaces, { WorkspacesState } from './workspaces/workspacesReducer';
 
 export interface EntitiesState {
@@ -16,6 +17,7 @@ export interface EntitiesState {
   tasks: TasksState;
   timeEntries: TimeEntriesState;
   user: UserState;
+  userGroups: UserGroupsState;
   workspaces: WorkspacesState;
 }
 
@@ -26,5 +28,6 @@ export default combineReducers({
   tasks,
   timeEntries,
   user,
+  userGroups,
   workspaces,
 });

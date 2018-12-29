@@ -1,6 +1,6 @@
 import { createSelector } from 'reselect';
-import { State } from '../rootReducer';
 import { CredentialsModel } from '../../types/credentialsTypes';
+import { State } from '../rootReducer';
 
 export const selectCredentials = createSelector(
   (state: State) => state.credentials,

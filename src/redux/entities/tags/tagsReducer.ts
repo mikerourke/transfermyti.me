@@ -1,14 +1,17 @@
-import { handleActions, combineActions } from 'redux-actions';
-import { normalize, schema } from 'normalizr';
+import { combineActions, handleActions } from 'redux-actions';
+import ReduxEntity from '../../../utils/ReduxEntity';
 import {
+  clockifyTagsFetchFailure,
   clockifyTagsFetchStarted,
   clockifyTagsFetchSuccess,
-  clockifyTagsFetchFailure,
+  togglTagsFetchFailure,
   togglTagsFetchStarted,
   togglTagsFetchSuccess,
-  togglTagsFetchFailure,
+  updateIsTagIncluded,
 } from './tagsActions';
-import { TagModel } from '../../../types/tagsTypes';
+import { EntityType, ToolName } from '../../../types/commonTypes';
+import { ClockifyTag, TagModel, TogglTag } from '../../../types/tagsTypes';
+import { ReduxAction } from '../../rootReducer';
 
 interface TagsEntryForTool {
   readonly tagsById: Record<string, TagModel>;
@@ -33,51 +36,36 @@ export const initialState: TagsState = {
   isFetching: false,
 };
 
-const tagsSchema = new schema.Entity(
-  'tags',
-  {},
-  {
-    idAttribute: value => value.id.toString(),
-    processStrategy: value => ({
-      id: value.id.toString(),
-      name: value.name,
-      workspaceId: 'wid' in value ? value.wid.toString() : value.workspaceId,
-      isIncluded: true,
-    }),
-  },
-);
+const schemaProcessStrategy = (value: ClockifyTag | TogglTag): TagModel => ({
+  id: value.id.toString(),
+  name: value.name,
+  workspaceId: ReduxEntity.getIdFieldValue(value, EntityType.Workspace),
+  isIncluded: true,
+});
+
+const reduxEntity = new ReduxEntity(EntityType.Tag, schemaProcessStrategy);
 
 export default handleActions(
   {
     [clockifyTagsFetchSuccess]: (
       state: TagsState,
-      { payload }: any,
-    ): TagsState => {
-      const { entities, result } = normalize(payload, [tagsSchema]);
-      return {
-        ...state,
-        clockify: {
-          ...state.clockify,
-          tagsById: entities.tags,
-          tagIds: result,
-        },
-      };
-    },
+      { payload }: ReduxAction<ClockifyTag[]>,
+    ): TagsState =>
+      reduxEntity.getNormalizedState<TagsState, ClockifyTag[]>(
+        ToolName.Clockify,
+        state,
+        payload,
+      ),
 
     [togglTagsFetchSuccess]: (
       state: TagsState,
-      { payload }: any,
-    ): TagsState => {
-      const { entities, result } = normalize(payload, [tagsSchema]);
-      return {
-        ...state,
-        toggl: {
-          ...state.toggl,
-          tagsById: entities.tags,
-          tagIds: result,
-        },
-      };
-    },
+      { payload }: ReduxAction<TogglTag[]>,
+    ): TagsState =>
+      reduxEntity.getNormalizedState<TagsState, TogglTag[]>(
+        ToolName.Toggl,
+        state,
+        payload,
+      ),
 
     [combineActions(clockifyTagsFetchStarted, togglTagsFetchStarted)]: (
       state: TagsState,
@@ -95,6 +83,11 @@ export default handleActions(
       ...state,
       isFetching: false,
     }),
+
+    [updateIsTagIncluded]: (
+      state: TagsState,
+      { payload: tagId }: ReduxAction<string>,
+    ): TagsState => reduxEntity.updateIsIncluded<TagsState>(state, tagId),
   },
   initialState,
 );

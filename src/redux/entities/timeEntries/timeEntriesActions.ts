@@ -10,6 +10,10 @@ import {
   selectClockifyUserId,
   selectTogglUserEmail,
 } from '../user/userSelectors';
+import {
+  ClockifyTimeEntry,
+  TogglTimeEntry,
+} from '../../../types/timeEntriesTypes';
 import { Dispatch, GetState } from '../../rootReducer';
 
 export const clockifyTimeEntriesFetchStarted = createAction(
@@ -17,6 +21,7 @@ export const clockifyTimeEntriesFetchStarted = createAction(
 );
 export const clockifyTimeEntriesFetchSuccess = createAction(
   '@timeEntries/CLOCKIFY_FETCH_SUCCESS',
+  (timeEntries: ClockifyTimeEntry[]) => timeEntries,
 );
 export const clockifyTimeEntriesFetchFailure = createAction(
   '@timeEntries/CLOCKIFY_FETCH_FAILURE',
@@ -26,6 +31,7 @@ export const togglTimeEntriesFetchStarted = createAction(
 );
 export const togglTimeEntriesFetchSuccess = createAction(
   '@timeEntries/TOGGL_FETCH_SUCCESS',
+  (timeEntries: TogglTimeEntry[]) => timeEntries,
 );
 export const togglTimeEntriesFetchFailure = createAction(
   '@timeEntries/TOGGL_FETCH_FAILURE',
@@ -38,16 +44,57 @@ export const fetchClockifyTimeEntries = (
   dispatch(clockifyTimeEntriesFetchStarted());
   const userId = selectClockifyUserId(getState());
   try {
-    const response = await apiFetchClockifyTimeEntries(
+    const timeEntries = await apiFetchClockifyTimeEntries(
       userId,
       workspaceId,
       year,
     );
-    return dispatch(clockifyTimeEntriesFetchSuccess(response));
+    return dispatch(clockifyTimeEntriesFetchSuccess(timeEntries));
   } catch (error) {
     dispatch(showFetchErrorNotification(error));
     return dispatch(clockifyTimeEntriesFetchFailure());
   }
+};
+
+const fetchTogglTimeEntriesForRemainingPages = async (
+  email: string,
+  workspaceId: string,
+  year: number,
+  totalPages: number,
+): Promise<TogglTimeEntry[]> => {
+  const fetchEntriesForPage = (page: number) =>
+    new Promise((resolve, reject) =>
+      apiFetchTogglTimeEntries(email, workspaceId, year, page)
+        .then(({ data }) => {
+          resolve(data);
+        })
+        .catch(error => {
+          reject(error);
+        }),
+    );
+
+  const promiseThrottle = new PromiseThrottle({
+    requestsPerSecond: 4,
+    promiseImplementation: Promise,
+  });
+
+  const timeEntriesForPage: TogglTimeEntry[][] = [];
+  let requestsRemaining = totalPages;
+
+  // We already got the first page, don't want to fetch again:
+  while (requestsRemaining > 1) {
+    await promiseThrottle
+      .add(
+        // @ts-ignore
+        fetchEntriesForPage.bind(this, requestsRemaining),
+      )
+      .then((data: TogglTimeEntry[]) => {
+        timeEntriesForPage.push(data);
+      });
+    requestsRemaining -= 1;
+  }
+
+  return flatten(timeEntriesForPage);
 };
 
 export const fetchTogglTimeEntries = (
@@ -58,40 +105,23 @@ export const fetchTogglTimeEntries = (
   const email = selectTogglUserEmail(getState());
 
   try {
-    const allTimeEntries = [];
+    const {
+      total_count,
+      per_page,
+      data: firstPageEntries,
+    } = await apiFetchTogglTimeEntries(email, workspaceId, year, 1);
 
-    const fetchEntriesForPage = (page: number) =>
-      apiFetchTogglTimeEntries(email, workspaceId, year, page).then(
-        ({ data }) => {
-          allTimeEntries.push(data);
-        },
-      );
+    const totalPages = Math.ceil(total_count / per_page);
 
-    const firstPage = await apiFetchTogglTimeEntries(
+    const remainingPageEntries = await fetchTogglTimeEntriesForRemainingPages(
       email,
       workspaceId,
       year,
-      1,
+      totalPages,
     );
 
-    const promiseThrottle = new PromiseThrottle({
-      requestsPerSecond: 1,
-      promiseImplementation: Promise,
-    });
-
-    const { total_count, per_page, data } = firstPage;
-    allTimeEntries.push(data);
-
-    let requestsRemaining = Math.ceil(total_count / per_page);
-
-    while (requestsRemaining > 0) {
-      // @ts-ignore
-      promiseThrottle.add(fetchEntriesForPage.bind(this, requestsRemaining));
-      requestsRemaining -= 1;
-    }
-
-    const flattenedEntries = flatten(allTimeEntries);
-    return dispatch(togglTimeEntriesFetchSuccess(flattenedEntries));
+    const allTimeEntries = [...firstPageEntries, ...remainingPageEntries];
+    return dispatch(togglTimeEntriesFetchSuccess(allTimeEntries));
   } catch (error) {
     dispatch(showFetchErrorNotification(error));
     return dispatch(togglTimeEntriesFetchFailure());

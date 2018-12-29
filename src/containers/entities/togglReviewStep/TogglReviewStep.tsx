@@ -1,42 +1,42 @@
 import React from 'react';
 import { connect } from 'react-redux';
 import { css } from 'emotion';
+import { List, ListRowProps } from 'react-virtualized';
+import isNil from 'lodash/isNil';
+import { fetchTogglEntitiesForWorkspace } from '../../../redux/entities/workspaces/workspacesActions';
+import {
+  selectTogglIncludedWorkspacesById,
+  selectTogglWorkspaceEntities,
+  selectWorkspaceEntitiesFetchDetails,
+} from '../../../redux/entities/workspaces/workspacesSelectors';
+import Loader from '../../../components/loader/Loader';
+import StepPage from '../../../components/stepPage/StepPage';
+import BasicListItem from './components/BasicListItem';
 import EntityTabs from './components/EntityTabs';
 import {
-  selectTogglIncludedWorkspaceIds,
-  selectTogglWorkspaceAndYearRecords,
-} from '../../../redux/entities/workspaces/workspacesSelectors';
-import { fetchTogglTimeEntries } from '../../../redux/entities/timeEntries/timeEntriesActions';
-import StepPage from '../../../components/stepPage/StepPage';
-import { ReduxDispatch, ReduxState } from '../../../types/commonTypes';
-import { WorkspaceAndYearModel } from '../../../types/workspacesTypes';
-import { fetchTogglClients } from '../../../redux/entities/clients/clientsActions';
-import { fetchTogglProjects } from '../../../redux/entities/projects/projectsActions';
-import { fetchTogglTags } from '../../../redux/entities/tags/tagsActions';
-import { fetchTogglTasks } from '../../../redux/entities/tasks/tasksActions';
-import { selectTogglClientRecords } from '../../../redux/entities/clients/clientsSelectors';
-import { selectTogglProjectRecords } from '../../../redux/entities/projects/projectsSelectors';
-import { selectTogglTagRecords } from '../../../redux/entities/tags/tagsSelectors';
-import { selectTogglTaskRecords } from '../../../redux/entities/tasks/tasksSelectors';
-import { selectTogglTimeEntryRecords } from '../../../redux/entities/timeEntries/timeEntriesSelectors';
-import Loader from '../../../components/loader/Loader';
+  EntityGroup,
+  ReduxDispatch,
+  ReduxState,
+} from '../../../types/commonTypes';
+import {
+  EntityModel,
+  WorkspaceEntitiesFetchDetailsModel,
+  WorkspaceEntitiesModel,
+  WorkspaceModel,
+} from '../../../types/workspacesTypes';
+import TimeEntryListItem from './components/TimeEntryListItem';
+import { TimeEntryModel } from '../../../types/timeEntriesTypes';
 
 interface ConnectStateProps {
-  workspaceIds: string[];
-  workspaceAndYearRecords: WorkspaceAndYearModel[];
-  clientRecords: any[];
-  projectRecords: any[];
-  tagRecords: any[];
-  taskRecords: any[];
-  timeEntryRecords: any[];
+  workspaceEntities: WorkspaceEntitiesModel;
+  workspacesById: Record<string, WorkspaceModel>;
+  entitiesFetchDetails: WorkspaceEntitiesFetchDetailsModel;
 }
 
 interface ConnectDispatchProps {
-  onFetchTogglClients: (workspaceId: string) => Promise<any>;
-  onFetchTogglProjects: (workspaceId: string) => Promise<any>;
-  onFetchTogglTags: (workspaceId: string) => Promise<any>;
-  onFetchTogglTasks: (workspaceId: string) => Promise<any>;
-  onFetchTogglTimeEntries: (workspaceId: string, year: number) => Promise<any>;
+  onFetchEntitiesForWorkspace: (
+    workspaceRecord: WorkspaceModel,
+  ) => Promise<any>;
 }
 
 interface OwnProps {
@@ -47,45 +47,77 @@ interface OwnProps {
 type Props = ConnectStateProps & ConnectDispatchProps & OwnProps;
 
 interface State {
-  isDataFetching: boolean;
+  activeTab: EntityGroup;
+  tableWidth: number;
+}
+
+interface ColumnDescriptor {
+  field: string;
+  width: number;
+  flexGrow: number;
 }
 
 export class TogglReviewStepComponent extends React.Component<Props, State> {
-  state = {
-    isDataFetching: true,
-  };
+  private stepPageRef: HTMLDivElement;
+
+  constructor(props: Props) {
+    super(props);
+
+    this.stepPageRef = null;
+    this.state = {
+      activeTab: EntityGroup.Projects,
+      tableWidth: 0,
+    };
+  }
 
   public componentDidMount() {
-    this.fetchEntitiesForAllWorkspaces()
-      .then(this.fetchTimeEntriesForAllWorkspaces)
-      .then(() => {
-        this.setState({ isDataFetching: false });
-      });
+    const width = this.stepPageRef.clientWidth;
+    this.fetchEntitiesForAllWorkspaces().then(() => {
+      this.setState({ tableWidth: width });
+    });
   }
 
   private fetchEntitiesForAllWorkspaces = async () => {
-    for (const workspaceId of this.props.workspaceIds) {
-      await this.fetchEntitiesForWorkspace(workspaceId);
+    const workspaceRecords = Object.values(this.props.workspacesById);
+    for (const workspaceRecord of workspaceRecords) {
+      await this.props.onFetchEntitiesForWorkspace(workspaceRecord);
     }
   };
 
-  private fetchEntitiesForWorkspace = async (workspaceId: string) => {
-    await this.props.onFetchTogglClients(workspaceId);
-    await this.props.onFetchTogglProjects(workspaceId);
-    await this.props.onFetchTogglTags(workspaceId);
-    await this.props.onFetchTogglTasks(workspaceId);
+  private getRowRenderer = (activeEntities: EntityModel[]) => (
+    listRowProps: ListRowProps,
+  ) => {
+    const entityRecord = activeEntities[listRowProps.index];
+    if (this.state.activeTab === EntityGroup.TimeEntries) {
+      return (
+        <TimeEntryListItem
+          entityRecord={entityRecord as TimeEntryModel}
+          {...listRowProps}
+        />
+      );
+    }
+
+    return <BasicListItem entityRecord={entityRecord} {...listRowProps} />;
   };
 
-  private fetchTimeEntriesForAllWorkspaces = async () => {
-    for (const { id, year } of this.props.workspaceAndYearRecords) {
-      await this.props.onFetchTogglTimeEntries(id, year);
-    }
+  private handleTabClick = (entityGroup: EntityGroup) => {
+    this.setState({ activeTab: entityGroup });
+  };
+
+  private handleRowClick = ({ rowData }: { rowData: EntityModel }) => {
+    console.log(rowData);
   };
 
   public render() {
-    if (this.state.isDataFetching) {
-      return <Loader message="Fetching data, please wait..." />;
+    const { entityName, workspaceName } = this.props.entitiesFetchDetails;
+    if (!isNil(entityName) || !isNil(workspaceName)) {
+      const message = `Fetching ${entityName} in ${workspaceName}...`;
+      return <Loader message={message} />;
     }
+
+    const { activeTab } = this.state;
+    const activeEntities = this.props.workspaceEntities[activeTab];
+    const rowHeight = activeTab === EntityGroup.TimeEntries ? 120 : 64;
 
     return (
       <StepPage
@@ -93,6 +125,7 @@ export class TogglReviewStepComponent extends React.Component<Props, State> {
         subtitle="Review Toggl Data Before Transfer"
         onPreviousClick={this.props.previous}
         onNextClick={this.props.next}
+        contentRef={element => (this.stepPageRef = element)}
       >
         <p
           className={css`
@@ -111,33 +144,35 @@ export class TogglReviewStepComponent extends React.Component<Props, State> {
           Once you're done, press the <strong>Next</strong> button to move to
           the last step!
         </p>
-        <EntityTabs />
+        <EntityTabs
+          activeTab={this.state.activeTab}
+          onTabClick={this.handleTabClick}
+        />
+        <List
+          width={this.state.tableWidth}
+          height={500}
+          rowHeight={rowHeight}
+          rowClassName={css`
+            cursor: pointer;
+          `}
+          rowCount={activeEntities.length}
+          rowRenderer={this.getRowRenderer(activeEntities)}
+          onRowClick={this.handleRowClick as any}
+        />
       </StepPage>
     );
   }
 }
 
 const mapStateToProps = (state: ReduxState) => ({
-  workspaceIds: selectTogglIncludedWorkspaceIds(state),
-  workspaceAndYearRecords: selectTogglWorkspaceAndYearRecords(state),
-  clientRecords: selectTogglClientRecords(state),
-  projectRecords: selectTogglProjectRecords(state),
-  tagRecords: selectTogglTagRecords(state),
-  taskRecords: selectTogglTaskRecords(state),
-  timeEntryRecords: selectTogglTimeEntryRecords(state),
+  workspaceEntities: selectTogglWorkspaceEntities(state),
+  workspacesById: selectTogglIncludedWorkspacesById(state),
+  entitiesFetchDetails: selectWorkspaceEntitiesFetchDetails(state),
 });
 
 const mapDispatchToProps = (dispatch: ReduxDispatch) => ({
-  onFetchTogglClients: (workspaceId: string) =>
-    dispatch(fetchTogglClients(workspaceId)),
-  onFetchTogglProjects: (workspaceId: string) =>
-    dispatch(fetchTogglProjects(workspaceId)),
-  onFetchTogglTags: (workspaceId: string) =>
-    dispatch(fetchTogglTags(workspaceId)),
-  onFetchTogglTasks: (workspaceId: string) =>
-    dispatch(fetchTogglTasks(workspaceId)),
-  onFetchTogglTimeEntries: (workspaceId: string, year: number) =>
-    dispatch(fetchTogglTimeEntries(workspaceId, year)),
+  onFetchEntitiesForWorkspace: (workspaceRecord: WorkspaceModel) =>
+    dispatch(fetchTogglEntitiesForWorkspace(workspaceRecord)),
 });
 
 export default connect<ConnectStateProps, ConnectDispatchProps, OwnProps>(

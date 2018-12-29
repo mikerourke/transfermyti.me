@@ -1,4 +1,4 @@
-import React, { Component } from 'react';
+import React from 'react';
 import { connect } from 'react-redux';
 import { css } from 'emotion';
 import { Container } from 'bloomer';
@@ -50,7 +50,7 @@ interface State {
   workspaceLoading: string | null;
 }
 
-class WorkspacesStepComponent extends Component<Props, State> {
+class WorkspacesStepComponent extends React.Component<Props, State> {
   state: State = {
     workspaceLoading: null,
   };

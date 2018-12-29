@@ -1,8 +1,7 @@
 import { handleActions, combineActions } from 'redux-actions';
-import { normalize, schema } from 'normalizr';
 import cloneDeep from 'lodash/cloneDeep';
 import get from 'lodash/get';
-import isNil from 'lodash/isNil';
+import ReduxEntity from '../../../utils/ReduxEntity';
 import {
   clockifyWorkspacesFetchStarted,
   clockifyWorkspacesFetchSuccess,
@@ -15,8 +14,17 @@ import {
   togglWorkspaceSummaryFetchFailure,
   updateIsWorkspaceIncluded,
   updateIsWorkspaceYearIncluded,
+  updateEntitiesFetchDetails,
 } from './workspacesActions';
-import { WorkspaceModel } from '../../../types/workspacesTypes';
+import {
+  ClockifyWorkspace,
+  TogglWorkspace,
+  WorkspaceEntitiesFetchDetailsModel,
+  WorkspaceModel,
+  WorkspaceUserModel,
+} from '../../../types/workspacesTypes';
+import { EntityType, ToolName } from '../../../types/commonTypes';
+import { ReduxAction } from '../../rootReducer';
 
 interface WorkspacesEntryForTool {
   readonly workspacesById: Record<string, WorkspaceModel>;
@@ -26,6 +34,7 @@ interface WorkspacesEntryForTool {
 export interface WorkspacesState {
   readonly clockify: WorkspacesEntryForTool;
   readonly toggl: WorkspacesEntryForTool;
+  readonly entitiesFetchDetails: WorkspaceEntitiesFetchDetailsModel;
   readonly isFetching: boolean;
 }
 
@@ -38,59 +47,67 @@ export const initialState: WorkspacesState = {
     workspacesById: {},
     workspaceIds: [],
   },
+  entitiesFetchDetails: {
+    entityName: null,
+    workspaceName: null,
+  },
   isFetching: false,
 };
 
-const workspacesSchema = new schema.Entity(
-  'workspaces',
-  {},
-  {
-    idAttribute: value => value.id.toString(),
-    processStrategy: value => ({
-      id: value.id.toString(),
-      name: value.name,
-      inclusionsByYear: {},
-      isAdmin: 'admin' in value ? value.admin : false,
-      isIncluded: true,
-    }),
-  },
+interface ClockifyFullWorkspace extends ClockifyWorkspace {
+  users: WorkspaceUserModel[];
+}
+
+interface TogglFullWorkspace extends TogglWorkspace {
+  users: WorkspaceUserModel[];
+}
+
+const schemaProcessStrategy = (
+  value: ClockifyFullWorkspace | TogglFullWorkspace,
+): WorkspaceModel => ({
+  id: value.id.toString(),
+  name: value.name,
+  inclusionsByYear: {},
+  users: get(value, 'users', []),
+  isAdmin: get(value, 'admin', null),
+  isIncluded: true,
+});
+
+const reduxEntity = new ReduxEntity(
+  EntityType.Workspace,
+  schemaProcessStrategy,
 );
 
 export default handleActions(
   {
     [clockifyWorkspacesFetchSuccess]: (
       state: WorkspacesState,
-      { payload }: any,
-    ): WorkspacesState => {
-      const { entities, result } = normalize(payload, [workspacesSchema]);
-      return {
-        ...state,
-        clockify: {
-          ...state.clockify,
-          workspacesById: entities.workspaces,
-          workspaceIds: result,
-        },
-      };
-    },
+      { payload }: ReduxAction<ClockifyFullWorkspace[]>,
+    ): WorkspacesState =>
+      reduxEntity.getNormalizedState<WorkspacesState, ClockifyFullWorkspace[]>(
+        ToolName.Clockify,
+        state,
+        payload,
+      ),
 
     [togglWorkspacesFetchSuccess]: (
       state: WorkspacesState,
-      { payload }: any,
-    ): WorkspacesState => {
-      const { entities, result } = normalize(payload, [workspacesSchema]);
-      return {
-        ...state,
-        toggl: {
-          ...state.toggl,
-          workspacesById: entities.workspaces,
-          workspaceIds: result,
-        },
-      };
-    },
+      { payload }: ReduxAction<TogglFullWorkspace[]>,
+    ): WorkspacesState =>
+      reduxEntity.getNormalizedState<WorkspacesState, TogglFullWorkspace[]>(
+        ToolName.Toggl,
+        state,
+        payload,
+      ),
 
     [togglWorkspaceSummaryFetchSuccess]: (
       state: WorkspacesState,
-      { payload: { workspaceId, inclusionsByYear } }: any,
+      {
+        payload: { workspaceId, inclusionsByYear },
+      }: ReduxAction<{
+        workspaceId: string;
+        inclusionsByYear: Record<string, boolean>;
+      }>,
     ): WorkspacesState => {
       const workspacesById = cloneDeep(state.toggl.workspacesById);
       const updatedWorkspacesById = Object.entries(workspacesById).reduce(
@@ -136,24 +153,15 @@ export default handleActions(
 
     [updateIsWorkspaceIncluded]: (
       state: WorkspacesState,
-      { payload: workspaceId }: any,
-    ): WorkspacesState => ({
-      ...state,
-      toggl: {
-        ...state.toggl,
-        workspacesById: {
-          ...state.toggl.workspacesById,
-          [workspaceId]: {
-            ...state.toggl.workspacesById[workspaceId],
-            isIncluded: !state.toggl.workspacesById[workspaceId].isIncluded,
-          },
-        },
-      },
-    }),
+      { payload: workspaceId }: ReduxAction<string>,
+    ): WorkspacesState =>
+      reduxEntity.updateIsIncluded<WorkspacesState>(state, workspaceId),
 
     [updateIsWorkspaceYearIncluded]: (
       state: WorkspacesState,
-      { payload: { workspaceId, year } }: any,
+      {
+        payload: { workspaceId, year },
+      }: ReduxAction<{ workspaceId: string; year: number }>,
     ): WorkspacesState => {
       const inclusionsByYear = get(
         state,
@@ -178,6 +186,26 @@ export default handleActions(
         },
       };
     },
+
+    [updateEntitiesFetchDetails]: (
+      state: WorkspacesState,
+      { payload }: ReduxAction<WorkspaceEntitiesFetchDetailsModel>,
+    ): WorkspacesState => ({
+      ...state,
+      entitiesFetchDetails: {
+        ...state.entitiesFetchDetails,
+        entityName: get(
+          payload,
+          'entityName',
+          state.entitiesFetchDetails.entityName,
+        ),
+        workspaceName: get(
+          payload,
+          'workspaceName',
+          state.entitiesFetchDetails.workspaceName,
+        ),
+      },
+    }),
   },
   initialState,
 );

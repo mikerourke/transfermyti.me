@@ -3,8 +3,8 @@ import { css } from 'emotion';
 
 interface Props {
   isIncluded: boolean;
+  size: number | string;
   onClick: () => void;
-  size?: number | string;
 }
 
 const uncheckedBoxPath = `
@@ -45,8 +45,8 @@ const checkedBoxPath = `
 
 const IncludedIndicator: React.FunctionComponent<Props> = ({
   isIncluded,
-  onClick,
   size,
+  onClick,
 }) => (
   <svg
     viewBox="0 0 448 512"
@@ -63,9 +63,5 @@ const IncludedIndicator: React.FunctionComponent<Props> = ({
     />
   </svg>
 );
-
-IncludedIndicator.defaultProps = {
-  size: 24,
-};
 
 export default IncludedIndicator;

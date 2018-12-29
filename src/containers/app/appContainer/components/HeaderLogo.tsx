@@ -1,4 +1,3 @@
-/* tslint:disable:max-line-length */
 import React from 'react';
 
 type Props = React.SVGAttributes<SVGElement>;

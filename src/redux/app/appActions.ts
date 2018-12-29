@@ -3,8 +3,8 @@ import capitalize from 'lodash/capitalize';
 import isNil from 'lodash/isNil';
 import uniqueId from 'lodash/uniqueId';
 import { NotificationModel, NotificationType } from '../../types/appTypes';
-import { Dispatch } from '../rootReducer';
 import { ToolName } from '../../types/commonTypes';
+import { Dispatch } from '../rootReducer';
 
 const getNotificationId = () => uniqueId('NTF');
 
@@ -18,10 +18,6 @@ export const dismissNotification = createAction(
 );
 export const dismissAllNotifications = createAction(
   '@app/DISMISS_ALL_NOTIFICATIONS',
-);
-export const updateActiveWorkspaceId = createAction(
-  '@app/UPDATE_ACTIVE_WORKSPACE_ID',
-  (workspaceId: string) => workspaceId,
 );
 
 export const showNotification = (notification: Partial<NotificationModel>) => (

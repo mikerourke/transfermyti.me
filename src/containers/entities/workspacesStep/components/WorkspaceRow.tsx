@@ -2,7 +2,7 @@ import React from 'react';
 import reverse from 'lodash/reverse';
 import { css } from 'emotion';
 import { Box } from 'bloomer';
-import IncludedIndicator from './IncludedIndicator';
+import IncludedIndicator from '../../../../components/includedIndicator/IncludedIndicator';
 import { WorkspaceModel } from '../../../../types/workspacesTypes';
 
 interface Props {
@@ -29,6 +29,7 @@ const WorkspaceRow: React.FunctionComponent<Props> = ({
     >
       <IncludedIndicator
         isIncluded={isIncluded}
+        size="1.5rem"
         onClick={() => onWorkspaceClick(id)}
       />
       <span
@@ -52,8 +53,8 @@ const WorkspaceRow: React.FunctionComponent<Props> = ({
         >
           <IncludedIndicator
             isIncluded={inclusionsByYear[year]}
-            onClick={() => onYearClick(id, year)}
             size="1.25rem"
+            onClick={() => onYearClick(id, year)}
           />
           <span
             className={css`
