@@ -1,4 +1,5 @@
 import React from 'react';
+import { css } from 'emotion';
 import omit from 'lodash/omit';
 import startCase from 'lodash/startCase';
 import { Tab, TabLink, TabList, Tabs } from 'bloomer';
@@ -13,17 +14,27 @@ const EntityTabs: React.FunctionComponent<Props> = ({
   activeTab,
   onTabClick,
 }) => {
-  const validGroups = omit(EntityGroup, 'Workspaces', 'Users');
+  const validGroups = omit(EntityGroup, 'Workspaces');
+  const activeStyle = {
+    borderBottomColor: 'var(--info)',
+    color: 'var(--info)',
+  };
+
   return (
     <Tabs>
       <TabList>
         {Object.entries(validGroups).map(([key, value]) => (
           <Tab
             key={value}
+            className={css`
+              font-weight: 500;
+            `}
             isActive={value === activeTab}
             onClick={() => onTabClick(value)}
           >
-            <TabLink>{startCase(key)}</TabLink>
+            <TabLink style={value === activeTab ? activeStyle : {}}>
+              {startCase(key)}
+            </TabLink>
           </Tab>
         ))}
       </TabList>

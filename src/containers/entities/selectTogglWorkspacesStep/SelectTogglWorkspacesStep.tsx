@@ -16,6 +16,7 @@ import {
   selectTogglWorkspaceIds,
   selectTogglWorkspacesById,
   selectTogglWorkspaceIncludedYearsCount,
+  selectIfTogglWorkspaceYearsFetched,
 } from '../../../redux/entities/workspaces/workspacesSelectors';
 import Loader from '../../../components/loader/Loader';
 import StepPage from '../../../components/stepPage/StepPage';
@@ -27,6 +28,7 @@ import { WorkspaceModel } from '../../../types/workspacesTypes';
 interface ConnectStateProps {
   workspaceIds: string[];
   workspacesById: Record<string, WorkspaceModel>;
+  areWorkspaceYearsFetched: boolean;
   countWorkspacesIncluded: number;
   yearsCountByWorkspaceId: Record<string, number>;
 }
@@ -47,24 +49,27 @@ interface OwnProps {
 type Props = ConnectStateProps & ConnectDispatchProps & OwnProps;
 
 interface State {
-  workspaceLoading: string | null;
+  workspaceFetching: string | null;
 }
 
-class WorkspacesStepComponent extends React.Component<Props, State> {
+class SelectTogglWorkspacesStepComponent extends React.Component<Props, State> {
   state: State = {
-    workspaceLoading: null,
+    workspaceFetching: null,
   };
 
   public componentDidMount() {
+    // Don't re-fetch if workspaces have already been fetched:
+    if (this.props.areWorkspaceYearsFetched) return;
+
     this.loadWorkspaceSummaries().then(() => {
-      this.setState({ workspaceLoading: null });
+      this.setState({ workspaceFetching: null });
     });
   }
 
   private loadWorkspaceSummaries = async () => {
     for (const workspaceId of this.props.workspaceIds) {
       const workspace = this.props.workspacesById[workspaceId];
-      this.setState({ workspaceLoading: workspace.name });
+      this.setState({ workspaceFetching: workspace.name });
       await this.props.onFetchWorkspaceSummary(workspaceId);
     }
   };
@@ -110,9 +115,18 @@ class WorkspacesStepComponent extends React.Component<Props, State> {
   };
 
   public render() {
-    const { workspaceLoading } = this.state;
-    if (workspaceLoading !== null) {
-      return <Loader message={`Loading data for ${workspaceLoading}...`} />;
+    const { workspaceFetching } = this.state;
+    if (workspaceFetching !== null) {
+      return (
+        <Loader
+          message={
+            <span>
+              Fetching data for <strong>{workspaceFetching} </strong>
+              workspace...
+            </span>
+          }
+        />
+      );
     }
 
     return (
@@ -138,10 +152,10 @@ class WorkspacesStepComponent extends React.Component<Props, State> {
             padding: 1rem;
           `}
         >
-          {Object.values(this.props.workspacesById).map(({ id, ...rest }) => (
+          {this.props.workspaceIds.map(workspaceId => (
             <WorkspaceRow
-              key={id}
-              workspaceRecord={{ id, ...rest }}
+              key={workspaceId}
+              workspaceRecord={this.props.workspacesById[workspaceId]}
               onWorkspaceClick={this.handleWorkspaceClick}
               onYearClick={this.handleYearClick}
             />
@@ -155,6 +169,7 @@ class WorkspacesStepComponent extends React.Component<Props, State> {
 const mapStateToProps = (state: ReduxState) => ({
   workspaceIds: selectTogglWorkspaceIds(state),
   workspacesById: selectTogglWorkspacesById(state),
+  areWorkspaceYearsFetched: selectIfTogglWorkspaceYearsFetched(state),
   countWorkspacesIncluded: selectTogglIncludedWorkspacesCount(state),
   yearsCountByWorkspaceId: selectTogglWorkspaceIncludedYearsCount(state),
 });
@@ -174,4 +189,4 @@ const mapDispatchToProps = (dispatch: ReduxDispatch) => ({
 export default connect<ConnectStateProps, ConnectDispatchProps, OwnProps>(
   mapStateToProps,
   mapDispatchToProps,
-)(WorkspacesStepComponent);
+)(SelectTogglWorkspacesStepComponent);

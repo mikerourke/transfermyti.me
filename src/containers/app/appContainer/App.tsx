@@ -1,9 +1,9 @@
 import React from 'react';
 import { Section } from 'bloomer';
 import { Wizard, Steps, Step } from 'react-albus';
-import CredentialsStep from '../../credentials/credentialsStep/CredentialsStep';
-import WorkspacesStep from '../../entities/workspacesStep/WorkspacesStep';
-import TogglReviewStep from '../../entities/togglReviewStep/TogglReviewStep';
+import EnterCredentialsStep from '../../credentials/enterCredentialsStep/EnterCredentialsStep';
+import SelectTogglWorkspacesStep from '../../entities/selectTogglWorkspacesStep/SelectTogglWorkspacesStep';
+import ReviewTogglEntitiesStep from '../../entities/reviewTogglEntitiesStep/ReviewTogglEntitiesStep';
 import NotificationsDisplay from '../notificationsDisplay/NotificationsDisplay';
 import Header from './components/Header';
 
@@ -15,18 +15,18 @@ const App: React.FunctionComponent = () => (
         <Steps>
           <Step
             id="credentials"
-            render={({ next }) => <CredentialsStep next={next} />}
+            render={({ next }) => <EnterCredentialsStep next={next} />}
           />
           <Step
             id="selectTogglWorkspaces"
             render={({ previous, next }) => (
-              <WorkspacesStep previous={previous} next={next} />
+              <SelectTogglWorkspacesStep previous={previous} next={next} />
             )}
           />
           <Step
             id="reviewTogglData"
             render={({ previous, next }) => (
-              <TogglReviewStep previous={previous} next={next} />
+              <ReviewTogglEntitiesStep previous={previous} next={next} />
             )}
           />
         </Steps>

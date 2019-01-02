@@ -44,7 +44,10 @@ interface State {
   clockifyApiKeyError: string;
 }
 
-export class CredentialsStepComponent extends React.Component<Props, State> {
+export class EnterCredentialsStepComponent extends React.Component<
+  Props,
+  State
+> {
   state = {
     togglEmailError: '',
     togglApiKeyError: '',
@@ -197,4 +200,4 @@ const mapDispatchToProps = (dispatch: ReduxDispatch) => ({
 export default connect<ConnectStateProps, ConnectDispatchProps>(
   mapStateToProps,
   mapDispatchToProps,
-)(CredentialsStepComponent);
+)(EnterCredentialsStepComponent);
