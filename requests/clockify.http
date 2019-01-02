@@ -1,0 +1,11 @@
+### Get Clockify workspaces
+GET https://api.clockify.me/api/workspaces/
+Accept: application/json
+X-Api-Key: {{clockify-api-key}}
+
+### Get Clockify workspace users for workspace
+GET https://api.clockify.me/api/workspaces/{{clockify-workspace-id}}/users/
+Accept: application/json
+X-Api-Key: {{clockify-api-key}}
+
+###

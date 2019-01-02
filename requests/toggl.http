@@ -1,0 +1,16 @@
+### Get Toggl workspaces
+GET https://www.toggl.com/api/v8/workspaces
+Accept: application/json
+Authorization: Basic {{toggl-auth}}
+
+### Get Toggl workspace users for personal workspace
+GET https://www.toggl.com/api/v8/workspaces/{{toggl-workspace-id-personal}}/users
+Accept: application/json
+Authorization: Basic {{toggl-auth}}
+
+### Get Toggl workspace users for work workspace
+GET https://www.toggl.com/api/v8/workspaces/{{toggl-workspace-id-work}}/users
+Accept: application/json
+Authorization: Basic {{toggl-auth}}
+
+###
