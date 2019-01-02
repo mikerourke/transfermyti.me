@@ -118,14 +118,11 @@ class SelectTogglWorkspacesStepComponent extends React.Component<Props, State> {
     const { workspaceFetching } = this.state;
     if (workspaceFetching !== null) {
       return (
-        <Loader
-          message={
-            <span>
-              Fetching data for <strong>{workspaceFetching} </strong>
-              workspace...
-            </span>
-          }
-        />
+        <Loader>
+          <span>
+            Fetching data for <strong>{workspaceFetching}</strong> workspace...
+          </span>
+        </Loader>
       );
     }
 

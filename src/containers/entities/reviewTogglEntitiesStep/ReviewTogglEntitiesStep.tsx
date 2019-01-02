@@ -141,13 +141,11 @@ export class ReviewTogglEntitiesStepComponent extends React.Component<
     const wsName = this.props.workspaceNameBeingFetched;
     if (!isNil(wsName)) {
       return (
-        <Loader
-          message={
-            <span>
-              Fetching entities in <strong>{wsName} </strong> workspace...
-            </span>
-          }
-        />
+        <Loader>
+          <span>
+            Fetching entities in <strong>{wsName} </strong> workspace...
+          </span>
+        </Loader>
       );
     }
 
