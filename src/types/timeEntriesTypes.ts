@@ -1,6 +1,6 @@
 import { TogglTotalCurrencyModel } from './commonTypes';
 import { ClockifyProject } from './projectsTypes';
-import { ClockifyUser } from './userTypes';
+import { ClockifyUser } from './usersTypes';
 
 export interface ClockifyTimeInterval {
   start: string;
@@ -68,5 +68,12 @@ export interface TimeEntryModel {
   start: Date | null;
   end: Date | null;
   tags: string[];
-  isIncluded: boolean;
+  tagIds?: string[];
+}
+
+export interface DetailedTimeEntryModel extends TimeEntryModel {
+  projectName: string | null;
+  taskName: string | null;
+  userName: string | null;
+  tagList: string | null;
 }

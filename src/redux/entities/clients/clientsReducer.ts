@@ -46,6 +46,7 @@ const schemaProcessStrategy = (
   id: value.id.toString(),
   name: value.name,
   workspaceId: ReduxEntity.getIdFieldValue(value, EntityType.Workspace),
+  entryCount: 0,
   isIncluded: true,
 });
 

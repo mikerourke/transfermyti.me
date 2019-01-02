@@ -9,7 +9,7 @@ import { showFetchErrorNotification } from '../../app/appActions';
 import {
   selectClockifyUserId,
   selectTogglUserEmail,
-} from '../user/userSelectors';
+} from '../../credentials/credentialsSelectors';
 import {
   ClockifyTimeEntry,
   TogglTimeEntry,

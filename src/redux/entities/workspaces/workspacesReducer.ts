@@ -1,6 +1,7 @@
 import { handleActions, combineActions } from 'redux-actions';
 import cloneDeep from 'lodash/cloneDeep';
 import get from 'lodash/get';
+import uniq from 'lodash/uniq';
 import ReduxEntity from '../../../utils/ReduxEntity';
 import {
   clockifyWorkspacesFetchStarted,
@@ -12,18 +13,17 @@ import {
   togglWorkspaceSummaryFetchStarted,
   togglWorkspaceSummaryFetchSuccess,
   togglWorkspaceSummaryFetchFailure,
+  appendUserIdsToWorkspace,
   updateIsWorkspaceIncluded,
   updateIsWorkspaceYearIncluded,
-  updateEntitiesFetchDetails,
+  updateWorkspaceNameBeingFetched,
 } from './workspacesActions';
+import { EntityType, ToolName } from '../../../types/commonTypes';
 import {
   ClockifyWorkspace,
   TogglWorkspace,
-  WorkspaceEntitiesFetchDetailsModel,
   WorkspaceModel,
-  WorkspaceUserModel,
 } from '../../../types/workspacesTypes';
-import { EntityType, ToolName } from '../../../types/commonTypes';
 import { ReduxAction } from '../../rootReducer';
 
 interface WorkspacesEntryForTool {
@@ -34,7 +34,7 @@ interface WorkspacesEntryForTool {
 export interface WorkspacesState {
   readonly clockify: WorkspacesEntryForTool;
   readonly toggl: WorkspacesEntryForTool;
-  readonly entitiesFetchDetails: WorkspaceEntitiesFetchDetailsModel;
+  readonly workspaceNameBeingFetched: string | null;
   readonly isFetching: boolean;
 }
 
@@ -47,29 +47,19 @@ export const initialState: WorkspacesState = {
     workspacesById: {},
     workspaceIds: [],
   },
-  entitiesFetchDetails: {
-    entityName: null,
-    workspaceName: null,
-  },
+  workspaceNameBeingFetched: null,
   isFetching: false,
 };
 
-interface ClockifyFullWorkspace extends ClockifyWorkspace {
-  users: WorkspaceUserModel[];
-}
-
-interface TogglFullWorkspace extends TogglWorkspace {
-  users: WorkspaceUserModel[];
-}
-
 const schemaProcessStrategy = (
-  value: ClockifyFullWorkspace | TogglFullWorkspace,
+  value: ClockifyWorkspace | TogglWorkspace,
 ): WorkspaceModel => ({
   id: value.id.toString(),
   name: value.name,
+  userIds: [],
   inclusionsByYear: {},
-  users: get(value, 'users', []),
   isAdmin: get(value, 'admin', null),
+  entryCount: 0,
   isIncluded: true,
 });
 
@@ -82,9 +72,9 @@ export default handleActions(
   {
     [clockifyWorkspacesFetchSuccess]: (
       state: WorkspacesState,
-      { payload }: ReduxAction<ClockifyFullWorkspace[]>,
+      { payload }: ReduxAction<ClockifyWorkspace[]>,
     ): WorkspacesState =>
-      reduxEntity.getNormalizedState<WorkspacesState, ClockifyFullWorkspace[]>(
+      reduxEntity.getNormalizedState<WorkspacesState, ClockifyWorkspace[]>(
         ToolName.Clockify,
         state,
         payload,
@@ -92,9 +82,9 @@ export default handleActions(
 
     [togglWorkspacesFetchSuccess]: (
       state: WorkspacesState,
-      { payload }: ReduxAction<TogglFullWorkspace[]>,
+      { payload }: ReduxAction<TogglWorkspace[]>,
     ): WorkspacesState =>
-      reduxEntity.getNormalizedState<WorkspacesState, TogglFullWorkspace[]>(
+      reduxEntity.getNormalizedState<WorkspacesState, TogglWorkspace[]>(
         ToolName.Toggl,
         state,
         payload,
@@ -151,6 +141,32 @@ export default handleActions(
       isFetching: false,
     }),
 
+    [appendUserIdsToWorkspace]: (
+      state: WorkspacesState,
+      {
+        payload: { toolName, workspaceId, userIds },
+      }: ReduxAction<{
+        toolName: ToolName;
+        workspaceId: string;
+        userIds: string[];
+      }>,
+    ): WorkspacesState => ({
+      ...state,
+      [toolName]: {
+        ...state[toolName],
+        workspacesById: {
+          ...state[toolName].workspacesById,
+          [workspaceId]: {
+            ...state[toolName].workspacesById[workspaceId],
+            userIds: uniq([
+              ...state[toolName].workspacesById[workspaceId].userIds,
+              ...userIds,
+            ]),
+          },
+        },
+      },
+    }),
+
     [updateIsWorkspaceIncluded]: (
       state: WorkspacesState,
       { payload: workspaceId }: ReduxAction<string>,
@@ -187,24 +203,12 @@ export default handleActions(
       };
     },
 
-    [updateEntitiesFetchDetails]: (
+    [updateWorkspaceNameBeingFetched]: (
       state: WorkspacesState,
-      { payload }: ReduxAction<WorkspaceEntitiesFetchDetailsModel>,
+      { payload: workspaceName }: ReduxAction<string>,
     ): WorkspacesState => ({
       ...state,
-      entitiesFetchDetails: {
-        ...state.entitiesFetchDetails,
-        entityName: get(
-          payload,
-          'entityName',
-          state.entitiesFetchDetails.entityName,
-        ),
-        workspaceName: get(
-          payload,
-          'workspaceName',
-          state.entitiesFetchDetails.workspaceName,
-        ),
-      },
+      workspaceNameBeingFetched: workspaceName,
     }),
   },
   initialState,

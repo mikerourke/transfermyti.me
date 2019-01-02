@@ -1,20 +1,22 @@
 import { createAction } from 'redux-actions';
 import PromiseThrottle from 'promise-throttle';
+import property from 'lodash/property';
 import set from 'lodash/set';
 import {
   apiFetchClockifyProjects,
-  apiFetchClockifyProjectUsers,
   apiFetchTogglProjects,
-  apiFetchTogglProjectUsers,
 } from '../api/projects';
+import {
+  apiFetchClockifyUsersInProject,
+  apiFetchTogglUsersInProject,
+} from '../api/users';
 import { showFetchErrorNotification } from '../../app/appActions';
 import {
   ClockifyProject,
-  ProjectUserModel,
   TogglProject,
   TogglProjectUser,
 } from '../../../types/projectsTypes';
-import { ClockifyUser } from '../../../types/userTypes';
+import { ClockifyUser } from '../../../types/usersTypes';
 import { Dispatch } from '../../rootReducer';
 
 export const clockifyProjectsFetchStarted = createAction(
@@ -42,24 +44,37 @@ export const updateIsProjectIncluded = createAction(
   (projectId: string) => projectId,
 );
 
-const appendUsersToProject = async (
+const appendUserIdsToProject = async (
   projects: (TogglProject | ClockifyProject)[],
-  fetchUsersForProjectFn: (projectId: string) => Promise<any>,
+  apiFetchUsersFn: (projectId: string, workspaceId?: string) => Promise<any>,
+  workspaceId?: string,
 ) => {
   const promiseThrottle = new PromiseThrottle({
     requestsPerSecond: 4,
     promiseImplementation: Promise,
   });
 
+  const fetchUsersForProject = (projectId: string) =>
+    new Promise((resolve, reject) =>
+      apiFetchUsersFn(projectId, workspaceId)
+        .then((projectUsers: (ClockifyUser | TogglProjectUser)[]) => {
+          const userIds = projectUsers.map(property('id'));
+          resolve(userIds);
+        })
+        .catch(error => {
+          reject(error);
+        }),
+    );
+
   for (const project of projects) {
     try {
       await promiseThrottle
         .add(
           // @ts-ignore
-          fetchUsersForProjectFn.bind(this, project.id.toString()),
+          fetchUsersForProject.bind(this, project.id.toString()),
         )
-        .then((users: ProjectUserModel[]) => {
-          set(project, 'users', users);
+        .then((userIds: string[]) => {
+          set(project, 'userIds', userIds);
         });
     } catch (error) {
       if (error.status !== 403) throw error;
@@ -73,23 +88,12 @@ export const fetchClockifyProjects = (workspaceId: string) => async (
   dispatch(clockifyProjectsFetchStarted());
   try {
     const projects = await apiFetchClockifyProjects(workspaceId);
+    await appendUserIdsToProject(
+      projects,
+      apiFetchClockifyUsersInProject,
+      workspaceId,
+    );
 
-    const fetchUsersForProject = (projectId: string) =>
-      new Promise((resolve, reject) =>
-        apiFetchClockifyProjectUsers(workspaceId, projectId)
-          .then((projectUsers: ClockifyUser[]) => {
-            const userRecords = projectUsers.map(({ id }) => ({
-              id,
-              isManager: null,
-            }));
-            resolve(userRecords);
-          })
-          .catch(error => {
-            reject(error);
-          }),
-      );
-
-    await appendUsersToProject(projects, fetchUsersForProject);
     return dispatch(clockifyProjectsFetchSuccess(projects));
   } catch (error) {
     dispatch(showFetchErrorNotification(error));
@@ -103,23 +107,8 @@ export const fetchTogglProjects = (workspaceId: string) => async (
   dispatch(togglProjectsFetchStarted());
   try {
     const projects = await apiFetchTogglProjects(workspaceId);
+    await appendUserIdsToProject(projects, apiFetchTogglUsersInProject);
 
-    const fetchUsersForProject = (projectId: string) =>
-      new Promise((resolve, reject) =>
-        apiFetchTogglProjectUsers(projectId)
-          .then((projectUsers: TogglProjectUser[]) => {
-            const userRecords = projectUsers.map(({ uid, manager }) => ({
-              id: uid.toString(),
-              isManager: manager,
-            }));
-            resolve(userRecords);
-          })
-          .catch(error => {
-            reject(error);
-          }),
-      );
-
-    await appendUsersToProject(projects, fetchUsersForProject);
     return dispatch(togglProjectsFetchSuccess(projects));
   } catch (error) {
     dispatch(showFetchErrorNotification(error));

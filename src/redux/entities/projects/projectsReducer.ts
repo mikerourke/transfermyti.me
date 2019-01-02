@@ -52,7 +52,8 @@ const schemaProcessStrategy = (
   isPublic: 'public' in value ? value.public : !value.is_private,
   isActive: 'archived' in value ? value.archived : value.active,
   color: 'hex_color' in value ? value.hex_color : value.color,
-  users: get(value, 'users', []),
+  userIds: get(value, 'userIds', []),
+  entryCount: 0,
   isIncluded: true,
 });
 

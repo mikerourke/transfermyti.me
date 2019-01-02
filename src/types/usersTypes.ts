@@ -40,18 +40,45 @@ export interface TogglUser {
   default_wid: number;
   email: string;
   fullname: string;
+  jquery_timeofday_format: string;
+  jquery_date_format: string;
+  timeofday_format: string;
+  date_format: string;
+  store_start_and_stop_time: boolean;
+  beginning_of_week: number;
+  language: string;
+  image_url: string;
+  sidebar_piechart: false;
   at: string;
-  created_at: string;
-  timezone: string;
-  workspaces: TogglWorkspace[];
+  retention: number;
+  record_timeline: boolean;
+  render_timeline: boolean;
+  timeline_enabled: boolean;
+  timeline_experiment: boolean;
+  new_blog_post: any;
+  should_upgrade: boolean;
+  invitation: any;
 }
 
 export interface TogglMeResponse {
   since: number;
-  data: TogglUser;
+  data: {
+    id: number;
+    default_wid: number;
+    email: string;
+    fullname: string;
+    at: string;
+    created_at: string;
+    timezone: string;
+    workspaces: TogglWorkspace[];
+  };
 }
 
 export interface UserModel {
-  userId: string | null;
-  email: string | null;
+  id: string;
+  name: string;
+  email: string;
+  isAdmin: boolean | null;
+  isActive: boolean;
+  isIncluded: boolean;
 }

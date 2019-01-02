@@ -1,20 +1,33 @@
 import { createSelector } from 'reselect';
-import { selectTogglClientRecords } from '../clients/clientsSelectors';
-import { selectTogglProjectRecords } from '../projects/projectsSelectors';
-import { selectTogglTagRecords } from '../tags/tagsSelectors';
-import { selectTogglTaskRecords } from '../tasks/tasksSelectors';
-import { selectTogglTimeEntryRecords } from '../timeEntries/timeEntriesSelectors';
-import { selectTogglUserGroupRecords } from '../userGroups/userGroupsSelectors';
-import {
-  WorkspaceEntitiesFetchDetailsModel,
-  WorkspaceEntitiesModel,
-  WorkspaceModel,
-} from '../../../types/workspacesTypes';
+import get from 'lodash/get';
+import isEmpty from 'lodash/isEmpty';
+import { selectTogglClientRecordsByWorkspaceId } from '../clients/clientsSelectors';
+import { selectTogglProjectRecordsByWorkspaceId } from '../projects/projectsSelectors';
+import { selectTogglTagRecordsByWorkspaceId } from '../tags/tagsSelectors';
+import { selectTogglTaskRecordsByWorkspaceId } from '../tasks/tasksSelectors';
+import { selectTogglTimeEntryRecordsByWorkspaceId } from '../timeEntries/timeEntriesSelectors';
+import { selectTogglUserGroupRecordsByWorkspaceId } from '../userGroups/userGroupsSelectors';
+import { EntityGroup, EntityModel } from '../../../types/commonTypes';
+import { WorkspaceModel } from '../../../types/workspacesTypes';
 import { State } from '../../rootReducer';
+import { selectTogglUserRecordsByWorkspaceId } from '../users/usersSelectors';
+
+const selectTogglWorkspaceRecords = createSelector(
+  (state: State) => state.entities.workspaces.toggl.workspacesById,
+  workspacesById =>
+    isEmpty(workspacesById) ? [] : Object.values(workspacesById),
+);
 
 export const selectTogglWorkspacesById = createSelector(
-  (state: State) => state.entities.workspaces.toggl.workspacesById,
-  (workspacesById): Record<string, WorkspaceModel> => workspacesById,
+  selectTogglWorkspaceRecords,
+  (workspaceRecords): Record<string, WorkspaceModel> =>
+    workspaceRecords.reduce(
+      (acc, workspaceRecord) => ({
+        ...acc,
+        [workspaceRecord.id]: workspaceRecord,
+      }),
+      {},
+    ),
 );
 
 export const selectTogglIncludedWorkspacesById = createSelector(
@@ -62,34 +75,59 @@ export const selectTogglWorkspaceIds = createSelector(
   (workspaceIds): string[] => workspaceIds,
 );
 
-export const selectWorkspaceEntitiesFetchDetails = createSelector(
-  (state: State) => state.entities.workspaces.entitiesFetchDetails,
-  (entitiesFetchDetails): WorkspaceEntitiesFetchDetailsModel =>
-    entitiesFetchDetails,
+export const selectIfTogglWorkspaceYearsFetched = createSelector(
+  [selectTogglWorkspacesById, selectTogglWorkspaceIds],
+  (workspacesById, workspaceIds): boolean => {
+    if (isEmpty(workspacesById)) return false;
+
+    const hasYearInclusionsCount = Object.entries(workspacesById).reduce(
+      (acc, [workspaceId, { inclusionsByYear }]) =>
+        acc + (isEmpty(inclusionsByYear) ? 0 : 1),
+      0,
+    );
+    return hasYearInclusionsCount === workspaceIds.length;
+  },
 );
 
-export const selectTogglWorkspaceEntities = createSelector(
+export const selectWorkspaceNameBeingFetched = createSelector(
+  (state: State) => state.entities.workspaces.workspaceNameBeingFetched,
+  (workspaceNameBeingFetched): string => workspaceNameBeingFetched,
+);
+
+export const selectTogglEntitiesByWorkspaceId = createSelector(
   [
-    selectTogglClientRecords,
-    selectTogglProjectRecords,
-    selectTogglTagRecords,
-    selectTogglTaskRecords,
-    selectTogglTimeEntryRecords,
-    selectTogglUserGroupRecords,
+    selectTogglWorkspaceIds,
+    selectTogglClientRecordsByWorkspaceId,
+    selectTogglProjectRecordsByWorkspaceId,
+    selectTogglTagRecordsByWorkspaceId,
+    selectTogglTaskRecordsByWorkspaceId,
+    selectTogglTimeEntryRecordsByWorkspaceId,
+    selectTogglUserGroupRecordsByWorkspaceId,
+    selectTogglUserRecordsByWorkspaceId,
   ],
   (
-    clients,
-    projects,
-    tags,
-    tasks,
-    timeEntries,
-    userGroups,
-  ): WorkspaceEntitiesModel => ({
-    clients,
-    projects,
-    tags,
-    tasks,
-    timeEntries,
-    userGroups,
-  }),
+    workspaceIds,
+    clientsByWorkspaceId,
+    projectsByWorkspaceId,
+    tagsByWorkspaceId,
+    tasksByWorkspaceId,
+    timeEntriesByWorkspaceId,
+    userGroupsByWorkspaceId,
+    usersByWorkspaceId,
+  ): Record<string, Record<EntityGroup, EntityModel[]>> =>
+    workspaceIds.reduce(
+      (acc, workspaceId) => ({
+        ...acc,
+        [workspaceId]: {
+          clients: get(clientsByWorkspaceId, workspaceId, []),
+          projects: get(projectsByWorkspaceId, workspaceId, []),
+          tags: get(tagsByWorkspaceId, workspaceId, []),
+          tasks: get(tasksByWorkspaceId, workspaceId, []),
+          timeEntries: get(timeEntriesByWorkspaceId, workspaceId, []),
+          userGroups: get(userGroupsByWorkspaceId, workspaceId, []),
+          users: get(usersByWorkspaceId, workspaceId, []),
+        },
+      }),
+      {},
+    ),
 );

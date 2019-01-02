@@ -1,4 +1,4 @@
-import { ClockifyMembership } from './userTypes';
+import { ClockifyMembership } from './usersTypes';
 import { ClockifyTask } from './tasksTypes';
 
 export enum ClockifyEstimateType {
@@ -53,11 +53,6 @@ export interface TogglProjectUser {
   rate: number;
 }
 
-export interface ProjectUserModel {
-  id: string;
-  isManager: boolean | null;
-}
-
 export interface ProjectModel {
   id: string;
   name: string;
@@ -67,6 +62,7 @@ export interface ProjectModel {
   isPublic: boolean;
   isActive: boolean;
   color: string;
-  users: ProjectUserModel[];
+  userIds: string[];
+  entryCount: number;
   isIncluded: boolean;
 }

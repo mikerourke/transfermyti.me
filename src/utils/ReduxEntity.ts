@@ -1,9 +1,17 @@
+import { normalize, schema, Schema } from 'normalizr';
+import flatten from 'lodash/flatten';
 import get from 'lodash/get';
 import isNil from 'lodash/isNil';
+import sortBy from 'lodash/sortBy';
 import uniq from 'lodash/uniq';
-import { normalize, schema, Schema } from 'normalizr';
+import {
+  EntityGroup,
+  EntityModel,
+  EntityType,
+  ToolName,
+} from '../types/commonTypes';
+import { TimeEntryModel } from '../types/timeEntriesTypes';
 import StrategyFunction = schema.StrategyFunction;
-import { EntityGroup, EntityType, ToolName } from '../types/commonTypes';
 
 export default class ReduxEntity {
   private readonly entityGroup: EntityGroup;
@@ -47,6 +55,46 @@ export default class ReduxEntity {
     } catch (error) {
       return null;
     }
+  }
+
+  public static getRecordsByWorkspaceId(
+    entityType: EntityType,
+    entityRecords: EntityModel[],
+    timeEntriesById: Record<string, TimeEntryModel & { clientId?: string }>,
+  ) {
+    const sortedEntityRecords = sortBy(entityRecords, record =>
+      get(record, 'name', null),
+    );
+
+    const entryCountByEntityId = Object.values(timeEntriesById).reduce(
+      (acc, timeEntryRecord) => {
+        const idField = entityType.concat('Id');
+        const entityId = get(timeEntryRecord, idField, null);
+        if (!entityId) return acc;
+        return {
+          ...acc,
+          [entityId]: get(acc, entityId, 0) + 1,
+        };
+      },
+      {},
+    );
+
+    return sortedEntityRecords.reduce((acc, entityRecord: EntityModel) => {
+      const workspaceId = get(entityRecord, 'workspaceId', null);
+      if (!workspaceId) return acc;
+
+      return {
+        ...acc,
+        [workspaceId]: [
+          ...get(acc, workspaceId, []),
+          {
+            workspaceId,
+            ...entityRecord,
+            entryCount: get(entryCountByEntityId, entityRecord.id, 0),
+          },
+        ],
+      };
+    }, {});
   }
 
   constructor(

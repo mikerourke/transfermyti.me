@@ -1,29 +1,31 @@
 import { createAction } from 'redux-actions';
 import PromiseThrottle from 'promise-throttle';
-import get from 'lodash/get';
 import set from 'lodash/set';
 import {
   apiFetchClockifyWorkspaces,
-  apiFetchClockifyWorkspaceUsers,
   apiFetchTogglWorkspaces,
   apiFetchTogglWorkspaceSummaryForYear,
-  apiFetchTogglWorkspaceUsers,
 } from '../api/workspaces';
+import { selectTogglUserEmail } from '../../credentials/credentialsSelectors';
 import { showFetchErrorNotification } from '../../app/appActions';
-import { fetchTogglClients } from '../clients/clientsActions';
-import { fetchTogglProjects } from '../projects/projectsActions';
-import { fetchTogglTags } from '../tags/tagsActions';
-import { fetchTogglTasks } from '../tasks/tasksActions';
+import {
+  fetchTogglClients,
+  updateIsClientIncluded,
+} from '../clients/clientsActions';
+import {
+  fetchTogglProjects,
+  updateIsProjectIncluded,
+} from '../projects/projectsActions';
+import { fetchTogglTags, updateIsTagIncluded } from '../tags/tagsActions';
+import { fetchTogglTasks, updateIsTaskIncluded } from '../tasks/tasksActions';
 import { fetchTogglTimeEntries } from '../timeEntries/timeEntriesActions';
-import { selectTogglUserEmail } from '../user/userSelectors';
 import { fetchTogglUserGroups } from '../userGroups/userGroupsActions';
-import { ClockifyUser } from '../../../types/userTypes';
+import { fetchTogglUsers, updateIsUserIncluded } from '../users/usersActions';
+import { EntityGroup, EntityModel, ToolName } from '../../../types/commonTypes';
 import {
   ClockifyWorkspace,
   TogglWorkspace,
-  TogglWorkspaceUser,
   WorkspaceModel,
-  WorkspaceUserModel,
 } from '../../../types/workspacesTypes';
 import { Dispatch, GetState } from '../../rootReducer';
 
@@ -60,6 +62,14 @@ export const togglWorkspaceSummaryFetchSuccess = createAction(
 export const togglWorkspaceSummaryFetchFailure = createAction(
   '@workspaces/TOGGL_SUMMARY_FETCH_FAILURE',
 );
+export const appendUserIdsToWorkspace = createAction(
+  '@workspaces/APPEND_USER_IDS',
+  (toolName: ToolName, workspaceId: string, userIds: string[]) => ({
+    toolName,
+    workspaceId,
+    userIds,
+  }),
+);
 export const updateIsWorkspaceIncluded = createAction(
   '@workspaces/UPDATE_IS_INCLUDED',
   (workspaceId: string) => workspaceId,
@@ -68,62 +78,10 @@ export const updateIsWorkspaceYearIncluded = createAction(
   '@workspaces/UPDATE_IS_YEAR_INCLUDED',
   (workspaceId: string, year: string) => ({ workspaceId, year }),
 );
-export const updateEntitiesFetchDetails = createAction(
-  '@workspaces/UPDATE_ENTITIES_FETCH_DETAILS',
-  (entityName: string | null, workspaceName?: string | null) => ({
-    entityName,
-    workspaceName,
-  }),
+export const updateWorkspaceNameBeingFetched = createAction(
+  '@workspaces/UPDATE_NAME_BEING_FETCHED',
+  (workspaceName: string | null) => workspaceName,
 );
-
-export const appendUsersToWorkspace = async (
-  workspaces: (TogglWorkspace | ClockifyWorkspace)[],
-  apiFetchUsersFn: (workspaceId: string) => Promise<any>,
-) => {
-  const promiseThrottle = new PromiseThrottle({
-    requestsPerSecond: 4,
-    promiseImplementation: Promise,
-  });
-
-  const fetchUsersForWorkspace = (workspaceId: string) =>
-    new Promise((resolve, reject) =>
-      apiFetchUsersFn(workspaceId)
-        .then((workspaceUsers: (ClockifyUser | TogglWorkspaceUser)[]) => {
-          const userRecords = workspaceUsers.map(workspaceUser => ({
-            id:
-              'uid' in workspaceUser
-                ? workspaceUser.uid.toString()
-                : workspaceUser.id,
-            name: workspaceUser.name,
-            email: workspaceUser.email,
-            isAdmin: get(workspaceUser, 'admin', null),
-            isActive:
-              'active' in workspaceUser
-                ? workspaceUser.active
-                : workspaceUser.status === 'ACTIVE',
-          }));
-          resolve(userRecords);
-        })
-        .catch(error => {
-          reject(error);
-        }),
-    );
-
-  for (const workspace of workspaces) {
-    try {
-      await promiseThrottle
-        .add(
-          // @ts-ignore
-          fetchUsersForWorkspace.bind(this, workspace.id.toString()),
-        )
-        .then((users: WorkspaceUserModel[]) => {
-          set(workspace, 'users', users);
-        });
-    } catch (error) {
-      if (error.status !== 403) throw error;
-    }
-  }
-};
 
 export const fetchClockifyWorkspaces = () => async (
   dispatch: Dispatch<any>,
@@ -131,7 +89,6 @@ export const fetchClockifyWorkspaces = () => async (
   dispatch(clockifyWorkspacesFetchStarted());
   try {
     const workspaces = await apiFetchClockifyWorkspaces();
-    await appendUsersToWorkspace(workspaces, apiFetchClockifyWorkspaceUsers);
     return dispatch(clockifyWorkspacesFetchSuccess(workspaces));
   } catch (error) {
     dispatch(showFetchErrorNotification(error));
@@ -143,7 +100,6 @@ export const fetchTogglWorkspaces = () => async (dispatch: Dispatch<any>) => {
   dispatch(togglWorkspacesFetchStarted());
   try {
     const workspaces = await apiFetchTogglWorkspaces();
-    await appendUsersToWorkspace(workspaces, apiFetchTogglWorkspaceUsers);
     return dispatch(togglWorkspacesFetchSuccess(workspaces));
   } catch (error) {
     dispatch(showFetchErrorNotification(error));
@@ -215,25 +171,30 @@ export const fetchTogglEntitiesForWorkspace = (
     [],
   );
 
-  dispatch(updateEntitiesFetchDetails('clients', name));
+  dispatch(updateWorkspaceNameBeingFetched(name));
   await dispatch(fetchTogglClients(id));
-
-  dispatch(updateEntitiesFetchDetails('projects'));
   await dispatch(fetchTogglProjects(id));
-
-  dispatch(updateEntitiesFetchDetails('tags'));
   await dispatch(fetchTogglTags(id));
-
-  dispatch(updateEntitiesFetchDetails('tasks'));
   await dispatch(fetchTogglTasks(id));
-
-  dispatch(updateEntitiesFetchDetails('user groups'));
   await dispatch(fetchTogglUserGroups(id));
-
-  dispatch(updateEntitiesFetchDetails('time entries'));
+  await dispatch(fetchTogglUsers(id));
   for (const inclusionYear of inclusionYears) {
     await dispatch(fetchTogglTimeEntries(id, inclusionYear));
   }
+  return dispatch(updateWorkspaceNameBeingFetched(null));
+};
 
-  return dispatch(updateEntitiesFetchDetails(null, null));
+export const updateIsWorkspaceEntityIncluded = (
+  entityGroup: EntityGroup,
+  entityRecord: EntityModel,
+) => (dispatch: Dispatch<any>) => {
+  const updateAction = {
+    [EntityGroup.Clients]: updateIsClientIncluded,
+    [EntityGroup.Projects]: updateIsProjectIncluded,
+    [EntityGroup.Tags]: updateIsTagIncluded,
+    [EntityGroup.Tasks]: updateIsTaskIncluded,
+    [EntityGroup.Users]: updateIsUserIncluded,
+  }[entityGroup];
+
+  return dispatch(updateAction(entityRecord.id));
 };

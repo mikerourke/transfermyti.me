@@ -27,8 +27,10 @@ export interface TaskModel {
   id: string;
   name: string;
   estimate: string;
+  workspaceId: string;
   projectId: string;
   assigneeId: string | null;
   isActive: boolean;
+  entryCount: number;
   isIncluded: boolean;
 }

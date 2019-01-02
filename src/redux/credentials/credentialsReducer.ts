@@ -1,12 +1,13 @@
 import { handleActions, combineActions } from 'redux-actions';
 import {
-  updateCredentialsField,
   credentialsValidationStarted,
   credentialsValidationSuccess,
   credentialsValidationFailure,
+  updateCredentialsField,
   allCredentialsStored,
 } from './credentialsActions';
 import { CredentialsModel } from '../../types/credentialsTypes';
+import { ReduxAction } from '../rootReducer';
 
 export interface CredentialsState extends CredentialsModel {
   readonly isValid: boolean;
@@ -16,6 +17,7 @@ export interface CredentialsState extends CredentialsModel {
 export const initialState: CredentialsState = {
   togglEmail: '',
   togglApiKey: '',
+  clockifyUserId: '',
   clockifyApiKey: '',
   isValid: false,
   isValidating: false,
@@ -25,7 +27,7 @@ export default handleActions(
   {
     [allCredentialsStored]: (
       state: CredentialsState,
-      { payload: credentials }: any,
+      { payload: credentials }: ReduxAction<CredentialsModel>,
     ): CredentialsState => ({
       ...state,
       ...credentials,
@@ -33,8 +35,10 @@ export default handleActions(
 
     [credentialsValidationSuccess]: (
       state: CredentialsState,
+      { payload: credentials }: ReduxAction<CredentialsModel>,
     ): CredentialsState => ({
       ...state,
+      ...credentials,
       isValid: true,
     }),
 
@@ -62,7 +66,9 @@ export default handleActions(
 
     [updateCredentialsField]: (
       state: CredentialsState,
-      { payload: { field, value } }: any,
+      {
+        payload: { field, value },
+      }: ReduxAction<{ field: string; value: string }>,
     ): CredentialsState => ({
       ...state,
       [field]: value,

@@ -1,6 +1,7 @@
 export enum CredentialsField {
   TogglEmail = 'togglEmail',
   TogglApiKey = 'togglApiKey',
+  ClockifyUserId = 'clockifyUserId',
   ClockifyApiKey = 'clockifyApiKey',
 }
 

@@ -12,5 +12,6 @@ export interface TogglTag {
 }
 
 export interface TagModel extends ClockifyTag {
+  entryCount: number;
   isIncluded: boolean;
 }

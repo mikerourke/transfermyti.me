@@ -51,9 +51,11 @@ const schemaProcessStrategy = (value: ClockifyTask | TogglTask): TaskModel => ({
     'estimated_seconds' in value
       ? getEstimateFromSeconds(value.estimated_seconds)
       : value.estimate,
+  workspaceId: '', // The workspaceId value is assigned in the selector.
   projectId: ReduxEntity.getIdFieldValue(value, EntityType.Project),
   assigneeId: ReduxEntity.getIdFieldValue(value, EntityType.User),
   isActive: 'active' in value ? value.active : value.status === 'ACTIVE',
+  entryCount: 0,
   isIncluded: true,
 });
 

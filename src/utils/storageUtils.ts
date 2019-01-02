@@ -15,12 +15,3 @@ export function updateStorage(credentials: CredentialsModel) {
   const currentContents = getStorage();
   storage.set(STORAGE_KEY, { ...currentContents, ...credentials });
 }
-
-export function hasStorage() {
-  const currentContents = storage.get(STORAGE_KEY);
-  if (!currentContents) return false;
-  const contentValues = Object.values(currentContents).filter(
-    (value: string) => value.length > 0,
-  );
-  return contentValues.length > 0;
-}

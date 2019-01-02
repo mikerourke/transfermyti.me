@@ -69,7 +69,7 @@ const schemaProcessStrategy = (
   tags: isNil(value.tags)
     ? []
     : value.tags.map((tag: any) => (isString(tag) ? tag : get(tag, 'name'))),
-  isIncluded: true,
+  tagIds: [],
 });
 
 const reduxEntity = new ReduxEntity(
