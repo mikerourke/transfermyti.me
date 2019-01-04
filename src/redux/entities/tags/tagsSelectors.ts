@@ -1,10 +1,15 @@
 import { createSelector } from 'reselect';
 import flatten from 'lodash/flatten';
 import get from 'lodash/get';
-import ReduxEntity from '../../../utils/ReduxEntity';
+import { getEntityRecordsByWorkspaceId } from '../../utils';
 import { EntityType } from '../../../types/commonTypes';
 import { TagModel } from '../../../types/tagsTypes';
 import { State } from '../../rootReducer';
+
+export const selectClockifyTagRecords = createSelector(
+  (state: State) => state.entities.tags.clockify.tagsById,
+  (tagsById): TagModel[] => Object.values(tagsById),
+);
 
 export const selectTogglTagsById = createSelector(
   (state: State) => state.entities.tags.toggl.tagsById,
@@ -12,7 +17,7 @@ export const selectTogglTagsById = createSelector(
 );
 
 export const selectTogglTagIdsByName = createSelector(
-  (state: State) => state.entities.tags.toggl.tagsById,
+  selectTogglTagsById,
   (tagsById): Record<string, string> =>
     Object.values(tagsById).reduce(
       (acc, { id, name }) => ({
@@ -55,7 +60,7 @@ export const selectTogglTagRecordsByWorkspaceId = createSelector(
       {},
     );
 
-    const tagRecordsByWorkspaceId = ReduxEntity.getRecordsByWorkspaceId(
+    const tagRecordsByWorkspaceId = getEntityRecordsByWorkspaceId(
       EntityType.Tag,
       tagRecords,
       timeEntriesById,

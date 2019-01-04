@@ -80,5 +80,6 @@ export interface UserModel {
   email: string;
   isAdmin: boolean | null;
   isActive: boolean;
+  linkedId: string | null;
   isIncluded: boolean;
 }

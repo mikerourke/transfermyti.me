@@ -32,8 +32,8 @@ import { WorkspaceModel } from '../../../types/workspacesTypes';
 
 interface ConnectStateProps {
   entitiesByWorkspaceId: Record<string, Record<EntityGroup, EntityModel[]>>;
-  workspacesById: Record<string, WorkspaceModel>;
   workspaceNameBeingFetched: string;
+  workspacesById: Record<string, WorkspaceModel>;
 }
 
 interface ConnectDispatchProps {
@@ -59,7 +59,7 @@ interface State {
   tableWidth: number;
 }
 
-export class ReviewTogglEntitiesStepComponent extends React.Component<
+export class SelectTogglInclusionsStepComponent extends React.Component<
   Props,
   State
 > {
@@ -143,7 +143,7 @@ export class ReviewTogglEntitiesStepComponent extends React.Component<
       return (
         <Loader>
           <span>
-            Fetching entities in <strong>{wsName} </strong> workspace...
+            Fetching entities in <strong>{wsName}</strong> workspace...
           </span>
         </Loader>
       );
@@ -161,7 +161,7 @@ export class ReviewTogglEntitiesStepComponent extends React.Component<
     return (
       <StepPage
         title="Step 3:"
-        subtitle="Review Toggl Data Before Transfer"
+        subtitle="Select Toggl Records to Transfer"
         onPreviousClick={this.props.previous}
         onNextClick={this.props.next}
         contentRef={element => (this.stepPageRef = element)}
@@ -230,4 +230,4 @@ const mapDispatchToProps = (dispatch: ReduxDispatch) => ({
 export default connect<ConnectStateProps, ConnectDispatchProps, OwnProps>(
   mapStateToProps,
   mapDispatchToProps,
-)(ReviewTogglEntitiesStepComponent);
+)(SelectTogglInclusionsStepComponent);

@@ -2,7 +2,7 @@ import { combineActions, handleActions } from 'redux-actions';
 import get from 'lodash/get';
 import isNil from 'lodash/isNil';
 import isString from 'lodash/isString';
-import ReduxEntity from '../../../utils/ReduxEntity';
+import { getEntityIdFieldValue, getEntityNormalizedState } from '../../utils';
 import {
   clockifyTimeEntriesFetchFailure,
   clockifyTimeEntriesFetchStarted,
@@ -55,10 +55,10 @@ const schemaProcessStrategy = (
 ): TimeEntryModel => ({
   id: value.id.toString(),
   description: value.description,
-  projectId: ReduxEntity.getIdFieldValue(value, EntityType.Project),
-  taskId: ReduxEntity.getIdFieldValue(value, EntityType.Task),
-  userId: ReduxEntity.getIdFieldValue(value, EntityType.User),
-  workspaceId: ReduxEntity.getIdFieldValue(value, EntityType.Workspace),
+  projectId: getEntityIdFieldValue(value, EntityType.Project),
+  taskId: getEntityIdFieldValue(value, EntityType.Task),
+  userId: getEntityIdFieldValue(value, EntityType.User),
+  workspaceId: getEntityIdFieldValue(value, EntityType.Workspace),
   client:
     'client' in value
       ? value.client
@@ -70,33 +70,34 @@ const schemaProcessStrategy = (
     ? []
     : value.tags.map((tag: any) => (isString(tag) ? tag : get(tag, 'name'))),
   tagIds: [],
+  name: null,
+  linkedId: null,
 });
-
-const reduxEntity = new ReduxEntity(
-  EntityType.TimeEntry,
-  schemaProcessStrategy,
-);
 
 export default handleActions(
   {
     [clockifyTimeEntriesFetchSuccess]: (
       state: TimeEntriesState,
-      { payload }: ReduxAction<ClockifyTimeEntry[]>,
+      { payload: timeEntries }: ReduxAction<ClockifyTimeEntry[]>,
     ): TimeEntriesState =>
-      reduxEntity.getNormalizedState<TimeEntriesState, ClockifyTimeEntry[]>(
+      getEntityNormalizedState<TimeEntriesState, ClockifyTimeEntry[]>(
         ToolName.Clockify,
+        EntityType.TimeEntry,
+        schemaProcessStrategy,
         state,
-        payload,
+        timeEntries,
       ),
 
     [togglTimeEntriesFetchSuccess]: (
       state: TimeEntriesState,
-      { payload }: ReduxAction<TogglTimeEntry[]>,
+      { payload: timeEntries }: ReduxAction<TogglTimeEntry[]>,
     ): TimeEntriesState =>
-      reduxEntity.getNormalizedState<TimeEntriesState, TogglTimeEntry[]>(
+      getEntityNormalizedState<TimeEntriesState, TogglTimeEntry[]>(
         ToolName.Toggl,
+        EntityType.TimeEntry,
+        schemaProcessStrategy,
         state,
-        payload,
+        timeEntries,
       ),
 
     [combineActions(

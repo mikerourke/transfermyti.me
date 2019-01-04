@@ -2,7 +2,7 @@ import { handleActions, combineActions } from 'redux-actions';
 import cloneDeep from 'lodash/cloneDeep';
 import get from 'lodash/get';
 import uniq from 'lodash/uniq';
-import ReduxEntity from '../../../utils/ReduxEntity';
+import { getEntityNormalizedState, updateIsEntityIncluded } from '../../utils';
 import {
   clockifyWorkspacesFetchStarted,
   clockifyWorkspacesFetchSuccess,
@@ -60,34 +60,34 @@ const schemaProcessStrategy = (
   inclusionsByYear: {},
   isAdmin: get(value, 'admin', null),
   entryCount: 0,
+  linkedId: null,
   isIncluded: true,
 });
-
-const reduxEntity = new ReduxEntity(
-  EntityType.Workspace,
-  schemaProcessStrategy,
-);
 
 export default handleActions(
   {
     [clockifyWorkspacesFetchSuccess]: (
       state: WorkspacesState,
-      { payload }: ReduxAction<ClockifyWorkspace[]>,
+      { payload: workspaces }: ReduxAction<ClockifyWorkspace[]>,
     ): WorkspacesState =>
-      reduxEntity.getNormalizedState<WorkspacesState, ClockifyWorkspace[]>(
+      getEntityNormalizedState<WorkspacesState, ClockifyWorkspace[]>(
         ToolName.Clockify,
+        EntityType.Workspace,
+        schemaProcessStrategy,
         state,
-        payload,
+        workspaces,
       ),
 
     [togglWorkspacesFetchSuccess]: (
       state: WorkspacesState,
-      { payload }: ReduxAction<TogglWorkspace[]>,
+      { payload: workspaces }: ReduxAction<TogglWorkspace[]>,
     ): WorkspacesState =>
-      reduxEntity.getNormalizedState<WorkspacesState, TogglWorkspace[]>(
+      getEntityNormalizedState<WorkspacesState, TogglWorkspace[]>(
         ToolName.Toggl,
+        EntityType.Workspace,
+        schemaProcessStrategy,
         state,
-        payload,
+        workspaces,
       ),
 
     [togglWorkspaceSummaryFetchSuccess]: (
@@ -171,7 +171,11 @@ export default handleActions(
       state: WorkspacesState,
       { payload: workspaceId }: ReduxAction<string>,
     ): WorkspacesState =>
-      reduxEntity.updateIsIncluded<WorkspacesState>(state, workspaceId),
+      updateIsEntityIncluded<WorkspacesState>(
+        state,
+        EntityType.Workspace,
+        workspaceId,
+      ),
 
     [updateIsWorkspaceYearIncluded]: (
       state: WorkspacesState,

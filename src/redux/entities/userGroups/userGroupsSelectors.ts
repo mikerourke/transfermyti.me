@@ -1,8 +1,13 @@
 import { createSelector } from 'reselect';
-import ReduxEntity from '../../../utils/ReduxEntity';
+import { getEntityRecordsByWorkspaceId } from '../../utils';
 import { UserGroupModel } from '../../../types/userGroupsTypes';
-import { State } from '../../rootReducer';
 import { EntityType } from '../../../types/commonTypes';
+import { State } from '../../rootReducer';
+
+export const selectClockifyUserGroupRecords = createSelector(
+  (state: State) => state.entities.userGroups.clockify.userGroupsById,
+  (userGroupsById): UserGroupModel[] => Object.values(userGroupsById),
+);
 
 export const selectTogglUserGroupsById = createSelector(
   (state: State) => state.entities.userGroups.toggl.userGroupsById,
@@ -20,7 +25,7 @@ export const selectTogglUserGroupRecordsByWorkspaceId = createSelector(
     (state: State) => state.entities.timeEntries.toggl.timeEntriesById,
   ],
   (userGroupRecords, timeEntriesById): Record<string, UserGroupModel[]> =>
-    ReduxEntity.getRecordsByWorkspaceId(
+    getEntityRecordsByWorkspaceId(
       EntityType.UserGroup,
       userGroupRecords,
       timeEntriesById,

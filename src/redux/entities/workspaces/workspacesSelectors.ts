@@ -1,16 +1,39 @@
 import { createSelector } from 'reselect';
 import get from 'lodash/get';
 import isEmpty from 'lodash/isEmpty';
-import { selectTogglClientRecordsByWorkspaceId } from '../clients/clientsSelectors';
-import { selectTogglProjectRecordsByWorkspaceId } from '../projects/projectsSelectors';
-import { selectTogglTagRecordsByWorkspaceId } from '../tags/tagsSelectors';
-import { selectTogglTaskRecordsByWorkspaceId } from '../tasks/tasksSelectors';
+import {
+  selectClockifyClientRecords,
+  selectTogglClientRecordsByWorkspaceId,
+} from '../clients/clientsSelectors';
+import {
+  selectClockifyProjectRecords,
+  selectTogglProjectRecordsByWorkspaceId,
+} from '../projects/projectsSelectors';
+import {
+  selectClockifyTagRecords,
+  selectTogglTagRecordsByWorkspaceId,
+} from '../tags/tagsSelectors';
+import {
+  selectClockifyTaskRecords,
+  selectTogglTaskRecordsByWorkspaceId,
+} from '../tasks/tasksSelectors';
 import { selectTogglTimeEntryRecordsByWorkspaceId } from '../timeEntries/timeEntriesSelectors';
-import { selectTogglUserGroupRecordsByWorkspaceId } from '../userGroups/userGroupsSelectors';
+import {
+  selectClockifyUserGroupRecords,
+  selectTogglUserGroupRecordsByWorkspaceId,
+} from '../userGroups/userGroupsSelectors';
+import {
+  selectClockifyUserRecords,
+  selectTogglUserRecordsByWorkspaceId,
+} from '../users/usersSelectors';
 import { EntityGroup, EntityModel } from '../../../types/commonTypes';
 import { WorkspaceModel } from '../../../types/workspacesTypes';
 import { State } from '../../rootReducer';
-import { selectTogglUserRecordsByWorkspaceId } from '../users/usersSelectors';
+
+export const selectClockifyWorkspacesById = createSelector(
+  (state: State) => state.entities.workspaces.clockify.workspacesById,
+  (workspacesById): Record<string, WorkspaceModel> => workspacesById,
+);
 
 const selectTogglWorkspaceRecords = createSelector(
   (state: State) => state.entities.workspaces.toggl.workspacesById,
@@ -92,6 +115,32 @@ export const selectIfTogglWorkspaceYearsFetched = createSelector(
 export const selectWorkspaceNameBeingFetched = createSelector(
   (state: State) => state.entities.workspaces.workspaceNameBeingFetched,
   (workspaceNameBeingFetched): string => workspaceNameBeingFetched,
+);
+
+export const selectClockifyEntitiesByEntityGroup = createSelector(
+  [
+    selectClockifyClientRecords,
+    selectClockifyProjectRecords,
+    selectClockifyTagRecords,
+    selectClockifyTaskRecords,
+    selectClockifyUserGroupRecords,
+    selectClockifyUserRecords,
+  ],
+  (
+    clientRecords,
+    projectRecords,
+    tagRecords,
+    taskRecords,
+    userGroupRecords,
+    userRecords,
+  ): Partial<Record<EntityGroup, EntityModel[]>> => ({
+    [EntityGroup.Clients]: clientRecords,
+    [EntityGroup.Projects]: projectRecords,
+    [EntityGroup.Tags]: tagRecords,
+    [EntityGroup.Tasks]: taskRecords,
+    [EntityGroup.UserGroups]: userGroupRecords,
+    [EntityGroup.Users]: userRecords,
+  }),
 );
 
 export const selectTogglEntitiesByWorkspaceId = createSelector(

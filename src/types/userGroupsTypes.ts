@@ -14,5 +14,6 @@ export interface TogglUserGroup {
 
 export interface UserGroupModel extends ClockifyUserGroup {
   entryCount: number;
+  linkedId: string | null;
   isIncluded: boolean;
 }

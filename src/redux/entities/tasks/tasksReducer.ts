@@ -1,5 +1,9 @@
 import { combineActions, handleActions } from 'redux-actions';
-import ReduxEntity from '../../../utils/ReduxEntity';
+import {
+  getEntityIdFieldValue,
+  getEntityNormalizedState,
+  updateIsEntityIncluded,
+} from '../../utils';
 import {
   clockifyTasksFetchFailure,
   clockifyTasksFetchStarted,
@@ -52,35 +56,38 @@ const schemaProcessStrategy = (value: ClockifyTask | TogglTask): TaskModel => ({
       ? getEstimateFromSeconds(value.estimated_seconds)
       : value.estimate,
   workspaceId: '', // The workspaceId value is assigned in the selector.
-  projectId: ReduxEntity.getIdFieldValue(value, EntityType.Project),
-  assigneeId: ReduxEntity.getIdFieldValue(value, EntityType.User),
+  projectId: getEntityIdFieldValue(value, EntityType.Project),
+  assigneeId: getEntityIdFieldValue(value, EntityType.User),
   isActive: 'active' in value ? value.active : value.status === 'ACTIVE',
   entryCount: 0,
+  linkedId: null,
   isIncluded: true,
 });
-
-const reduxEntity = new ReduxEntity(EntityType.Task, schemaProcessStrategy);
 
 export default handleActions(
   {
     [clockifyTasksFetchSuccess]: (
       state: TasksState,
-      { payload }: ReduxAction<ClockifyTask[]>,
+      { payload: tasks }: ReduxAction<ClockifyTask[]>,
     ): TasksState =>
-      reduxEntity.getNormalizedState<TasksState, ClockifyTask[]>(
+      getEntityNormalizedState<TasksState, ClockifyTask[]>(
         ToolName.Clockify,
+        EntityType.Task,
+        schemaProcessStrategy,
         state,
-        payload,
+        tasks,
       ),
 
     [togglTasksFetchSuccess]: (
       state: TasksState,
-      { payload }: ReduxAction<TogglTask[]>,
+      { payload: tasks }: ReduxAction<TogglTask[]>,
     ): TasksState =>
-      reduxEntity.getNormalizedState<TasksState, TogglTask[]>(
-        ToolName.Clockify,
+      getEntityNormalizedState<TasksState, TogglTask[]>(
+        ToolName.Toggl,
+        EntityType.Task,
+        schemaProcessStrategy,
         state,
-        payload,
+        tasks,
       ),
 
     [combineActions(clockifyTasksFetchStarted, togglTasksFetchStarted)]: (
@@ -103,7 +110,8 @@ export default handleActions(
     [updateIsTaskIncluded]: (
       state: TasksState,
       { payload: taskId }: ReduxAction<string>,
-    ): TasksState => reduxEntity.updateIsIncluded<TasksState>(state, taskId),
+    ): TasksState =>
+      updateIsEntityIncluded<TasksState>(state, EntityType.Task, taskId),
   },
   initialState,
 );

@@ -1,6 +1,10 @@
 import { combineActions, handleActions } from 'redux-actions';
 import get from 'lodash/get';
-import ReduxEntity from '../../../utils/ReduxEntity';
+import {
+  getEntityIdFieldValue,
+  getEntityNormalizedState,
+  updateIsEntityIncluded,
+} from '../../utils';
 import {
   clockifyProjectsFetchFailure,
   clockifyProjectsFetchStarted,
@@ -46,39 +50,42 @@ const schemaProcessStrategy = (
 ): ProjectModel => ({
   id: value.id.toString(),
   name: value.name,
-  workspaceId: ReduxEntity.getIdFieldValue(value, EntityType.Workspace),
-  clientId: ReduxEntity.getIdFieldValue(value, EntityType.Client),
+  workspaceId: getEntityIdFieldValue(value, EntityType.Workspace),
+  clientId: getEntityIdFieldValue(value, EntityType.Client),
   isBillable: value.billable,
   isPublic: 'public' in value ? value.public : !value.is_private,
   isActive: 'archived' in value ? value.archived : value.active,
   color: 'hex_color' in value ? value.hex_color : value.color,
   userIds: get(value, 'userIds', []),
   entryCount: 0,
+  linkedId: null,
   isIncluded: true,
 });
-
-const reduxEntity = new ReduxEntity(EntityType.Project, schemaProcessStrategy);
 
 export default handleActions(
   {
     [clockifyProjectsFetchSuccess]: (
       state: ProjectsState,
-      { payload }: ReduxAction<ClockifyProject[]>,
+      { payload: projects }: ReduxAction<ClockifyProject[]>,
     ): ProjectsState =>
-      reduxEntity.getNormalizedState<ProjectsState, ClockifyProject[]>(
+      getEntityNormalizedState<ProjectsState, ClockifyProject[]>(
         ToolName.Clockify,
+        EntityType.Project,
+        schemaProcessStrategy,
         state,
-        payload,
+        projects,
       ),
 
     [togglProjectsFetchSuccess]: (
       state: ProjectsState,
-      { payload }: ReduxAction<TogglProject[]>,
+      { payload: projects }: ReduxAction<TogglProject[]>,
     ): ProjectsState =>
-      reduxEntity.getNormalizedState<ProjectsState, TogglProject[]>(
+      getEntityNormalizedState<ProjectsState, TogglProject[]>(
         ToolName.Toggl,
+        EntityType.Project,
+        schemaProcessStrategy,
         state,
-        payload,
+        projects,
       ),
 
     [combineActions(clockifyProjectsFetchStarted, togglProjectsFetchStarted)]: (
@@ -102,7 +109,11 @@ export default handleActions(
       state: ProjectsState,
       { payload: projectId }: ReduxAction<string>,
     ): ProjectsState =>
-      reduxEntity.updateIsIncluded<ProjectsState>(state, projectId),
+      updateIsEntityIncluded<ProjectsState>(
+        state,
+        EntityType.Project,
+        projectId,
+      ),
   },
   initialState,
 );

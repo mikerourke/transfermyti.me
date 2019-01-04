@@ -92,6 +92,7 @@ export interface WorkspaceModel {
   inclusionsByYear?: Record<string, boolean>;
   userIds?: string[];
   isAdmin: boolean | null;
-  isIncluded: boolean | null;
   entryCount: number;
+  linkedId: string | null;
+  isIncluded: boolean;
 }

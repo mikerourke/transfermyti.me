@@ -4,6 +4,8 @@ import { CredentialsModel } from '../types/credentialsTypes';
 
 const STORAGE_KEY = 'togglToClockify';
 
+// TODO: Disable this for production!
+
 const defaultStorage = initialState;
 
 export function getStorage() {

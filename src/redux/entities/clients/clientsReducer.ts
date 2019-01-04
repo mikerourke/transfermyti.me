@@ -1,5 +1,9 @@
 import { combineActions, handleActions } from 'redux-actions';
-import ReduxEntity from '../../../utils/ReduxEntity';
+import {
+  getEntityIdFieldValue,
+  getEntityNormalizedState,
+  updateIsEntityIncluded,
+} from '../../utils';
 import {
   clockifyClientsFetchFailure,
   clockifyClientsFetchStarted,
@@ -45,33 +49,36 @@ const schemaProcessStrategy = (
 ): ClientModel => ({
   id: value.id.toString(),
   name: value.name,
-  workspaceId: ReduxEntity.getIdFieldValue(value, EntityType.Workspace),
+  workspaceId: getEntityIdFieldValue(value, EntityType.Workspace),
   entryCount: 0,
+  linkedId: null,
   isIncluded: true,
 });
-
-const reduxEntity = new ReduxEntity(EntityType.Client, schemaProcessStrategy);
 
 export default handleActions(
   {
     [clockifyClientsFetchSuccess]: (
       state: ClientsState,
-      { payload }: ReduxAction<ClockifyClient[]>,
+      { payload: clients }: ReduxAction<ClockifyClient[]>,
     ): ClientsState =>
-      reduxEntity.getNormalizedState<ClientsState, ClockifyClient[]>(
+      getEntityNormalizedState<ClientsState, ClockifyClient[]>(
         ToolName.Clockify,
+        EntityType.Client,
+        schemaProcessStrategy,
         state,
-        payload,
+        clients,
       ),
 
     [togglClientsFetchSuccess]: (
       state: ClientsState,
-      { payload }: ReduxAction<TogglClient[]>,
+      { payload: clients }: ReduxAction<TogglClient[]>,
     ): ClientsState =>
-      reduxEntity.getNormalizedState<ClientsState, TogglClient[]>(
+      getEntityNormalizedState<ClientsState, TogglClient[]>(
         ToolName.Toggl,
+        EntityType.Client,
+        schemaProcessStrategy,
         state,
-        payload,
+        clients,
       ),
 
     [combineActions(clockifyClientsFetchStarted, togglClientsFetchStarted)]: (
@@ -95,7 +102,7 @@ export default handleActions(
       state: ClientsState,
       { payload: clientId }: ReduxAction<string>,
     ): ClientsState =>
-      reduxEntity.updateIsIncluded<ClientsState>(state, clientId),
+      updateIsEntityIncluded<ClientsState>(state, EntityType.Client, clientId),
   },
   initialState,
 );

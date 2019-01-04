@@ -9,18 +9,36 @@ import {
 import { selectTogglUserEmail } from '../../credentials/credentialsSelectors';
 import { showFetchErrorNotification } from '../../app/appActions';
 import {
+  fetchClockifyClients,
   fetchTogglClients,
   updateIsClientIncluded,
 } from '../clients/clientsActions';
 import {
+  fetchClockifyProjects,
   fetchTogglProjects,
   updateIsProjectIncluded,
 } from '../projects/projectsActions';
-import { fetchTogglTags, updateIsTagIncluded } from '../tags/tagsActions';
-import { fetchTogglTasks, updateIsTaskIncluded } from '../tasks/tasksActions';
+import {
+  fetchClockifyTags,
+  fetchTogglTags,
+  updateIsTagIncluded,
+} from '../tags/tagsActions';
+import {
+  fetchClockifyTasks,
+  fetchTogglTasks,
+  updateIsTaskIncluded,
+} from '../tasks/tasksActions';
 import { fetchTogglTimeEntries } from '../timeEntries/timeEntriesActions';
-import { fetchTogglUserGroups } from '../userGroups/userGroupsActions';
-import { fetchTogglUsers, updateIsUserIncluded } from '../users/usersActions';
+import {
+  fetchClockifyUserGroups,
+  fetchTogglUserGroups,
+  updateIsUserGroupIncluded,
+} from '../userGroups/userGroupsActions';
+import {
+  fetchClockifyUsers,
+  fetchTogglUsers,
+  updateIsUserIncluded,
+} from '../users/usersActions';
 import { EntityGroup, EntityModel, ToolName } from '../../../types/commonTypes';
 import {
   ClockifyWorkspace,
@@ -94,6 +112,21 @@ export const fetchClockifyWorkspaces = () => async (
     dispatch(showFetchErrorNotification(error));
     return dispatch(clockifyWorkspacesFetchFailure());
   }
+};
+
+export const fetchClockifyEntitiesForWorkspace = (
+  workspaceRecord: WorkspaceModel,
+) => async (dispatch: Dispatch<any>) => {
+  const { name, id } = workspaceRecord;
+
+  dispatch(updateWorkspaceNameBeingFetched(name));
+  await dispatch(fetchClockifyClients(id));
+  await dispatch(fetchClockifyProjects(id));
+  await dispatch(fetchClockifyTags(id));
+  await dispatch(fetchClockifyTasks(id));
+  await dispatch(fetchClockifyUserGroups(id));
+  await dispatch(fetchClockifyUsers(id));
+  return dispatch(updateWorkspaceNameBeingFetched(null));
 };
 
 export const fetchTogglWorkspaces = () => async (dispatch: Dispatch<any>) => {
@@ -193,6 +226,7 @@ export const updateIsWorkspaceEntityIncluded = (
     [EntityGroup.Projects]: updateIsProjectIncluded,
     [EntityGroup.Tags]: updateIsTagIncluded,
     [EntityGroup.Tasks]: updateIsTaskIncluded,
+    [EntityGroup.UserGroups]: updateIsUserGroupIncluded,
     [EntityGroup.Users]: updateIsUserIncluded,
   }[entityGroup];
 

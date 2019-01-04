@@ -1,5 +1,9 @@
 import { combineActions, handleActions } from 'redux-actions';
-import ReduxEntity from '../../../utils/ReduxEntity';
+import {
+  getEntityIdFieldValue,
+  getEntityNormalizedState,
+  updateIsEntityIncluded,
+} from '../../utils';
 import {
   clockifyUserGroupsFetchFailure,
   clockifyUserGroupsFetchStarted,
@@ -45,37 +49,37 @@ const schemaProcessStrategy = (
 ): UserGroupModel => ({
   id: value.id.toString(),
   name: value.name,
-  workspaceId: ReduxEntity.getIdFieldValue(value, EntityType.Workspace),
+  workspaceId: getEntityIdFieldValue(value, EntityType.Workspace),
   userIds: 'userIds' in value ? value.userIds : [],
   entryCount: 0,
+  linkedId: null,
   isIncluded: true,
 });
-
-const reduxEntity = new ReduxEntity(
-  EntityType.UserGroup,
-  schemaProcessStrategy,
-);
 
 export default handleActions(
   {
     [clockifyUserGroupsFetchSuccess]: (
       state: UserGroupsState,
-      { payload }: ReduxAction<ClockifyUserGroup[]>,
+      { payload: userGroups }: ReduxAction<ClockifyUserGroup[]>,
     ): UserGroupsState =>
-      reduxEntity.getNormalizedState<UserGroupsState, ClockifyUserGroup[]>(
+      getEntityNormalizedState<UserGroupsState, ClockifyUserGroup[]>(
         ToolName.Clockify,
+        EntityType.UserGroup,
+        schemaProcessStrategy,
         state,
-        payload,
+        userGroups,
       ),
 
     [togglUserGroupsFetchSuccess]: (
       state: UserGroupsState,
-      { payload }: ReduxAction<TogglUserGroup[]>,
+      { payload: userGroups }: ReduxAction<TogglUserGroup[]>,
     ): UserGroupsState =>
-      reduxEntity.getNormalizedState<UserGroupsState, TogglUserGroup[]>(
+      getEntityNormalizedState<UserGroupsState, TogglUserGroup[]>(
         ToolName.Toggl,
+        EntityType.UserGroup,
+        schemaProcessStrategy,
         state,
-        payload,
+        userGroups,
       ),
 
     [combineActions(
@@ -100,7 +104,11 @@ export default handleActions(
       state: UserGroupsState,
       { payload: userGroupId }: ReduxAction<string>,
     ): UserGroupsState =>
-      reduxEntity.updateIsIncluded<UserGroupsState>(state, userGroupId),
+      updateIsEntityIncluded<UserGroupsState>(
+        state,
+        EntityType.UserGroup,
+        userGroupId,
+      ),
   },
   initialState,
 );

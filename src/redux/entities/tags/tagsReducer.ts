@@ -1,5 +1,9 @@
 import { combineActions, handleActions } from 'redux-actions';
-import ReduxEntity from '../../../utils/ReduxEntity';
+import {
+  getEntityIdFieldValue,
+  getEntityNormalizedState,
+  updateIsEntityIncluded,
+} from '../../utils';
 import {
   clockifyTagsFetchFailure,
   clockifyTagsFetchStarted,
@@ -39,33 +43,36 @@ export const initialState: TagsState = {
 const schemaProcessStrategy = (value: ClockifyTag | TogglTag): TagModel => ({
   id: value.id.toString(),
   name: value.name,
-  workspaceId: ReduxEntity.getIdFieldValue(value, EntityType.Workspace),
+  workspaceId: getEntityIdFieldValue(value, EntityType.Workspace),
   entryCount: 0,
+  linkedId: null,
   isIncluded: true,
 });
-
-const reduxEntity = new ReduxEntity(EntityType.Tag, schemaProcessStrategy);
 
 export default handleActions(
   {
     [clockifyTagsFetchSuccess]: (
       state: TagsState,
-      { payload }: ReduxAction<ClockifyTag[]>,
+      { payload: tags }: ReduxAction<ClockifyTag[]>,
     ): TagsState =>
-      reduxEntity.getNormalizedState<TagsState, ClockifyTag[]>(
+      getEntityNormalizedState<TagsState, ClockifyTag[]>(
         ToolName.Clockify,
+        EntityType.Tag,
+        schemaProcessStrategy,
         state,
-        payload,
+        tags,
       ),
 
     [togglTagsFetchSuccess]: (
       state: TagsState,
-      { payload }: ReduxAction<TogglTag[]>,
+      { payload: tags }: ReduxAction<TogglTag[]>,
     ): TagsState =>
-      reduxEntity.getNormalizedState<TagsState, TogglTag[]>(
+      getEntityNormalizedState<TagsState, TogglTag[]>(
         ToolName.Toggl,
+        EntityType.Tag,
+        schemaProcessStrategy,
         state,
-        payload,
+        tags,
       ),
 
     [combineActions(clockifyTagsFetchStarted, togglTagsFetchStarted)]: (
@@ -88,7 +95,8 @@ export default handleActions(
     [updateIsTagIncluded]: (
       state: TagsState,
       { payload: tagId }: ReduxAction<string>,
-    ): TagsState => reduxEntity.updateIsIncluded<TagsState>(state, tagId),
+    ): TagsState =>
+      updateIsEntityIncluded<TagsState>(state, EntityType.Tag, tagId),
   },
   initialState,
 );

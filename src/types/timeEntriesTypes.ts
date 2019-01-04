@@ -69,6 +69,8 @@ export interface TimeEntryModel {
   end: Date | null;
   tags: string[];
   tagIds?: string[];
+  name: null; // Not used, included because other entities have a "name".
+  linkedId: string | null;
 }
 
 export interface DetailedTimeEntryModel extends TimeEntryModel {

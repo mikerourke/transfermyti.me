@@ -1,8 +1,12 @@
 import { createAction } from 'redux-actions';
 import { apiFetchClockifyClients, apiFetchTogglClients } from '../api/clients';
 import { showFetchErrorNotification } from '../../app/appActions';
+import {
+  selectClockifyLinkedClientsById,
+  selectTogglIncludedClientRecords,
+} from './clientsSelectors';
 import { ClockifyClient, TogglClient } from '../../../types/clientsTypes';
-import { Dispatch } from '../../rootReducer';
+import { Dispatch, GetState } from '../../rootReducer';
 
 export const clockifyClientsFetchStarted = createAction(
   '@clients/CLOCKIFY_FETCH_STARTED',
@@ -40,6 +44,15 @@ export const fetchClockifyClients = (workspaceId: string) => async (
     dispatch(showFetchErrorNotification(error));
     return dispatch(clockifyClientsFetchFailure());
   }
+};
+
+export const transferAllClientsToClockify = () => async (
+  dispatch: Dispatch<any>,
+  getState: GetState,
+) => {
+  const state = getState();
+  const togglIncludedRecords = selectTogglIncludedClientRecords(state);
+  const clockifyClientsById = selectClockifyLinkedClientsById(state);
 };
 
 export const fetchTogglClients = (workspaceId: string) => async (

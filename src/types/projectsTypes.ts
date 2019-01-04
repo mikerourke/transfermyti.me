@@ -1,5 +1,5 @@
-import { ClockifyMembership } from './usersTypes';
 import { ClockifyTask } from './tasksTypes';
+import { ClockifyMembership } from './usersTypes';
 
 export enum ClockifyEstimateType {
   Auto = 'AUTO',
@@ -64,5 +64,6 @@ export interface ProjectModel {
   color: string;
   userIds: string[];
   entryCount: number;
+  linkedId: string | null;
   isIncluded: boolean;
 }

@@ -1,8 +1,13 @@
 import { createSelector } from 'reselect';
-import ReduxEntity from '../../../utils/ReduxEntity';
+import { getEntityRecordsByWorkspaceId } from '../../utils';
 import { EntityType } from '../../../types/commonTypes';
 import { ProjectModel } from '../../../types/projectsTypes';
 import { State } from '../../rootReducer';
+
+export const selectClockifyProjectRecords = createSelector(
+  (state: State) => state.entities.projects.clockify.projectsById,
+  (projectsById): ProjectModel[] => Object.values(projectsById),
+);
 
 export const selectTogglProjectsById = createSelector(
   (state: State) => state.entities.projects.toggl.projectsById,
@@ -20,7 +25,7 @@ export const selectTogglProjectRecordsByWorkspaceId = createSelector(
     (state: State) => state.entities.timeEntries.toggl.timeEntriesById,
   ],
   (projectRecords, timeEntriesById): Record<string, ProjectModel[]> =>
-    ReduxEntity.getRecordsByWorkspaceId(
+    getEntityRecordsByWorkspaceId(
       EntityType.Project,
       projectRecords,
       timeEntriesById,

@@ -13,5 +13,6 @@ export interface TogglClient {
 
 export interface ClientModel extends ClockifyClient {
   entryCount: number;
+  linkedId: string | null;
   isIncluded: boolean;
 }

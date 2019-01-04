@@ -1,6 +1,6 @@
 import { combineActions, handleActions } from 'redux-actions';
 import get from 'lodash/get';
-import ReduxEntity from '../../../utils/ReduxEntity';
+import { getEntityNormalizedState, updateIsEntityIncluded } from '../../utils';
 import {
   clockifyUsersFetchFailure,
   clockifyUsersFetchStarted,
@@ -43,31 +43,34 @@ const schemaProcessStrategy = (value: ClockifyUser | TogglUser): UserModel => ({
   email: value.email,
   isAdmin: get(value, 'admin', null),
   isActive: 'status' in value ? value.status === 'ACTIVE' : true,
+  linkedId: null,
   isIncluded: true,
 });
-
-const reduxEntity = new ReduxEntity(EntityType.User, schemaProcessStrategy);
 
 export default handleActions(
   {
     [clockifyUsersFetchSuccess]: (
       state: UsersState,
-      { payload }: ReduxAction<ClockifyUser[]>,
+      { payload: users }: ReduxAction<ClockifyUser[]>,
     ): UsersState =>
-      reduxEntity.getNormalizedState<UsersState, ClockifyUser[]>(
+      getEntityNormalizedState<UsersState, ClockifyUser[]>(
         ToolName.Clockify,
+        EntityType.User,
+        schemaProcessStrategy,
         state,
-        payload,
+        users,
       ),
 
     [togglUsersFetchSuccess]: (
       state: UsersState,
-      { payload }: ReduxAction<TogglUser[]>,
+      { payload: users }: ReduxAction<TogglUser[]>,
     ): UsersState =>
-      reduxEntity.getNormalizedState<UsersState, TogglUser[]>(
+      getEntityNormalizedState<UsersState, TogglUser[]>(
         ToolName.Toggl,
+        EntityType.User,
+        schemaProcessStrategy,
         state,
-        payload,
+        users,
       ),
 
     [combineActions(clockifyUsersFetchStarted, togglUsersFetchStarted)]: (
@@ -90,7 +93,8 @@ export default handleActions(
     [updateIsUserIncluded]: (
       state: UsersState,
       { payload: userId }: ReduxAction<string>,
-    ): UsersState => reduxEntity.updateIsIncluded<UsersState>(state, userId),
+    ): UsersState =>
+      updateIsEntityIncluded<UsersState>(state, EntityType.User, userId),
   },
   initialState,
 );

@@ -1,8 +1,13 @@
 import { createSelector } from 'reselect';
 import get from 'lodash/get';
+import { selectCredentials } from '../../credentials/credentialsSelectors';
 import { UserModel } from '../../../types/usersTypes';
 import { State } from '../../rootReducer';
-import { selectCredentials } from '../../credentials/credentialsSelectors';
+
+export const selectClockifyUserRecords = createSelector(
+  (state: State) => state.entities.users.clockify.usersById,
+  (usersById): UserModel[] => Object.values(usersById),
+);
 
 export const selectTogglUsersById = createSelector(
   (state: State) => state.entities.users.toggl.usersById,

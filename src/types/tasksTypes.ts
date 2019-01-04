@@ -32,5 +32,6 @@ export interface TaskModel {
   assigneeId: string | null;
   isActive: boolean;
   entryCount: number;
+  linkedId: string | null;
   isIncluded: boolean;
 }
