@@ -8,4 +8,14 @@ GET https://api.clockify.me/api/workspaces/{{clockify-workspace-id}}/users/
 Accept: application/json
 X-Api-Key: {{clockify-api-key}}
 
+### Get Clockify time entries for workspace for user in 2018
+POST https://api.clockify.me/api/workspaces/{{clockify-workspace-id}}/timeEntries/user/{{clockify-user-id}}/entriesInRange
+Accept: application/json
+Content-Type: application/json
+X-Api-Key: {{clockify-api-key}}
+
+{
+  "start": "2018-01-01T00:00:00.020Z",
+  "end": "2018-12-31T23:59:59.020Z"
+}
 ###
