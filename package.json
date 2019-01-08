@@ -8,9 +8,10 @@
   "license": "MIT",
   "private": false,
   "scripts": {
+    "start": "parcel serve public/index.html --port 3000 --out-dir build",
     "lint": "tslint -c tslint.json -p tsconfig.json || exit 0",
     "prettier": "prettier --write src/**/*.{ts,tsx}",
-    "start": "parcel serve public/index.html --port 3000 --out-dir build"
+    "tidy": "rimraf ./.cache && rimraf ./build"
   },
   "devDependencies": {
     "@types/classnames": "^2.2.6",
@@ -23,8 +24,11 @@
     "@types/react-virtualized": "^9.18.11",
     "@types/store": "^2.0.1",
     "jest": "^23.6.0",
+    "jsonfile": "^5.0.0",
+    "node-fetch": "^2.3.0",
     "parcel-bundler": "^1.11.0",
     "prettier": "^1.15.3",
+    "rimraf": "^2.6.3",
     "ts-jest": "^23.10.5",
     "tslint": "^5.12.0",
     "tslint-config-airbnb": "^5.11.1",
@@ -42,9 +46,9 @@
     "lodash": "^4.17.11",
     "normalizr": "^3.3.0",
     "promise-throttle": "^1.0.0",
-    "react": "^16.7.0",
+    "react": "next",
     "react-albus": "^2.0.0",
-    "react-dom": "^16.7.0",
+    "react-dom": "next",
     "react-redux": "^6.0.0",
     "react-tooltip": "^3.9.0",
     "react-virtualized": "^9.21.0",

@@ -65,3 +65,4 @@ build
 .cache
 data.ts
 http-client.private.env.json
+/responses/
