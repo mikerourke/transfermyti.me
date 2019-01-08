@@ -1,9 +1,9 @@
 import { normalize, schema, Schema } from 'normalizr';
 import get from 'lodash/get';
+import isEmpty from 'lodash/isEmpty';
 import isNil from 'lodash/isNil';
 import uniq from 'lodash/uniq';
-import getEntityGroupFromType from './getEntityGroupFromType';
-import { EntityGroup, EntityType, ToolName } from '../../types/commonTypes';
+import { EntityGroup, ToolName } from '../../types/commonTypes';
 
 import StrategyFunction = schema.StrategyFunction;
 
@@ -22,31 +22,72 @@ const getEntitySchema = (
   return [entitySchema];
 };
 
+const getByIdWithLinkedIds = <TModel>(
+  linkFromEntitiesById: Record<string, TModel>,
+  appendToEntitiesById: Record<string, TModel>,
+): Record<string, TModel> => {
+  if (isEmpty(linkFromEntitiesById)) return appendToEntitiesById;
+
+  type ModelWithName<T> = T & { name: string };
+
+  const linkFromEntitiesByName = Object.values(linkFromEntitiesById).reduce(
+    (acc, entityRecord: ModelWithName<TModel>) => ({
+      ...acc,
+      [entityRecord.name]: entityRecord,
+    }),
+    {},
+  );
+
+  return Object.entries(appendToEntitiesById).reduce(
+    (acc, [entityId, entityRecord]: [string, ModelWithName<TModel>]) => ({
+      ...acc,
+      [entityId]: {
+        ...entityRecord,
+        linkedId: get(linkFromEntitiesByName, [entityRecord.name, 'id'], null),
+      },
+    }),
+    {},
+  );
+};
+
 export default function getEntityNormalizedState<TState, TPayload>(
   toolName: ToolName,
-  entityType: EntityType,
+  entityGroup: EntityGroup,
   schemaProcessStrategy: StrategyFunction,
   state: TState,
   payload: TPayload,
 ): TState {
   if (isNil(payload)) return state;
 
-  const entityGroup = getEntityGroupFromType(entityType);
   const entitySchema = getEntitySchema(entityGroup, schemaProcessStrategy);
   const { entities, result } = normalize(payload, entitySchema);
 
-  const byIdField = entityGroup.concat('ById');
-  const idsField = entityType.concat('Ids');
-
-  return {
+  const normalizedState = {
     ...state,
     [toolName]: {
       ...state[toolName],
-      [byIdField]: {
-        ...get(state, [toolName, byIdField], {}),
+      byId: {
+        ...get(state, [toolName, 'byId'], {}),
         ...entities[entityGroup],
       },
-      [idsField]: uniq([...get(state, [toolName, idsField], []), ...result]),
+      idValues: uniq([...get(state, [toolName, 'idValues'], []), ...result]),
+    },
+  };
+
+  if (toolName === ToolName.Toggl) return normalizedState;
+
+  // Since the Clockify entities are fetched _after_ the Toggl records, we can
+  // loop through each group and assign linked IDs:
+  const { clockify, toggl } = normalizedState;
+  return {
+    ...normalizedState,
+    [ToolName.Clockify]: {
+      ...get(normalizedState, ToolName.Clockify, {}),
+      byId: getByIdWithLinkedIds(toggl.byId, clockify.byId),
+    },
+    [ToolName.Toggl]: {
+      ...get(normalizedState, ToolName.Toggl, {}),
+      byId: getByIdWithLinkedIds(clockify.byId, toggl.byId),
     },
   };
 }

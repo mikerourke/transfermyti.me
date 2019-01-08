@@ -1,3 +1,5 @@
+export { default as batchClockifyRequests } from './batchClockifyRequests';
+export { default as buildThrottler } from './buildThrottler';
 export { default as getEntityIdFieldValue } from './getEntityIdFieldValue';
 export {
   default as getEntityNormalizedState,
@@ -5,5 +7,10 @@ export {
 export {
   default as getEntityRecordsByWorkspaceId,
 } from './getEntityRecordsByWorkspaceId';
-export { default as setLinkedIdInEntities } from './setLinkedIdInEntities';
+export {
+  default as getFirstAndLastDayOfYear,
+} from './getFirstAndLastDayOfYear';
+export {
+  default as getTogglInclusionRecords,
+} from './getTogglInclusionRecords';
 export { default as updateIsEntityIncluded } from './updateIsEntityIncluded';

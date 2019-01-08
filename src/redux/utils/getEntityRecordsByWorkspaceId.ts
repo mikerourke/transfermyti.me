@@ -1,31 +1,31 @@
 import get from 'lodash/get';
 import sortBy from 'lodash/sortBy';
-import { EntityModel, EntityType } from '../../types/commonTypes';
-import { TimeEntryModel } from '../../types/timeEntriesTypes';
+import getEntityRecordsWithEntryCounts from './getEntityRecordsWithEntryCounts';
+import { EntityType } from '../../types/commonTypes';
+import { TimeEntryWithClientModel } from '../../types/timeEntriesTypes';
+import getTogglInclusionRecords from './getTogglInclusionRecords';
 
-export default function getEntityRecordsByWorkspaceId(
+export default function getEntityRecordsByWorkspaceId<TModel>(
   entityType: EntityType,
-  entityRecords: EntityModel[],
-  timeEntriesById: Record<string, TimeEntryModel & { clientId?: string }>,
+  entityRecords: TModel[],
+  timeEntriesById: Record<string, TimeEntryWithClientModel>,
+  inclusionsOnly: boolean,
 ) {
   const sortedEntityRecords = sortBy(entityRecords, record =>
     get(record, 'name', null),
+  ) as TModel[];
+
+  let recordsToGroup = getEntityRecordsWithEntryCounts(
+    entityType,
+    sortedEntityRecords,
+    timeEntriesById,
   );
 
-  const entryCountByEntityId = Object.values(timeEntriesById).reduce(
-    (acc, timeEntryRecord) => {
-      const idField = entityType.concat('Id');
-      const entityId = get(timeEntryRecord, idField, null);
-      if (!entityId) return acc;
-      return {
-        ...acc,
-        [entityId]: get(acc, entityId, 0) + 1,
-      };
-    },
-    {},
-  );
+  if (inclusionsOnly) {
+    recordsToGroup = getTogglInclusionRecords(recordsToGroup);
+  }
 
-  return sortedEntityRecords.reduce((acc, entityRecord: EntityModel) => {
+  return recordsToGroup.reduce((acc, entityRecord: TModel) => {
     const workspaceId = get(entityRecord, 'workspaceId', null);
     if (!workspaceId) return acc;
 
@@ -36,7 +36,6 @@ export default function getEntityRecordsByWorkspaceId(
         {
           workspaceId,
           ...entityRecord,
-          entryCount: get(entryCountByEntityId, entityRecord.id, 0),
         },
       ],
     };

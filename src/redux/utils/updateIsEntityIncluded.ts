@@ -1,5 +1,4 @@
 import get from 'lodash/get';
-import getEntityGroupFromType from './getEntityGroupFromType';
 import { EntityType } from '../../types/commonTypes';
 
 export default function updateIsEntityIncluded<TState>(
@@ -7,9 +6,7 @@ export default function updateIsEntityIncluded<TState>(
   entityType: EntityType,
   entityId: string,
 ): TState {
-  const byIdField = getEntityGroupFromType(entityType).concat('ById');
-
-  const entityRecord = get(state, ['toggl', byIdField, entityId], {
+  const entityRecord = get(state, ['toggl', 'byId', entityId], {
     isIncluded: true,
   });
 
@@ -17,8 +14,8 @@ export default function updateIsEntityIncluded<TState>(
     ...state,
     toggl: {
       ...get(state, 'toggl', {}),
-      [byIdField]: {
-        ...get(state, ['toggl', byIdField], {}),
+      byId: {
+        ...get(state, ['toggl', 'byId'], {}),
         [entityId]: {
           ...entityRecord,
           isIncluded: !entityRecord.isIncluded,
