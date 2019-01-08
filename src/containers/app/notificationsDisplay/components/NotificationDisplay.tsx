@@ -1,6 +1,6 @@
-import React, { Component } from 'react';
-import { css } from 'emotion';
+import React, { useEffect } from 'react';
 import { Delete, Notification } from 'bloomer';
+import { css } from 'emotion';
 import { NotificationModel } from '../../../../types/appTypes';
 
 interface Props {
@@ -8,32 +8,28 @@ interface Props {
   onDismiss: (notificationId: string) => void;
 }
 
-class NotificationDisplay extends Component<Props> {
-  public componentDidMount(): void {
+const NotificationDisplay: React.FunctionComponent<Props> = ({
+  notification: { id, type, message },
+  onDismiss,
+}) => {
+  useEffect(() => {
     setTimeout(() => {
-      this.props.onDismiss(this.props.notification.id);
+      onDismiss(id);
     }, 5000);
-  }
+  });
 
-  private handleDeleteClick = () => {
-    this.props.onDismiss(this.props.notification.id);
-  };
-
-  public render() {
-    const { id, type, message } = this.props.notification;
-    return (
-      <Notification
-        isColor={type}
-        className={css`
-          font-size: 1.25rem;
-          font-weight: bold;
-        `}
-      >
-        <Delete onClick={this.handleDeleteClick} />
-        {message}
-      </Notification>
-    );
-  }
-}
+  return (
+    <Notification
+      isColor={type}
+      className={css`
+        font-size: 1.25rem;
+        font-weight: bold;
+      `}
+    >
+      <Delete onClick={() => onDismiss(id)} />
+      {message}
+    </Notification>
+  );
+};
 
 export default NotificationDisplay;

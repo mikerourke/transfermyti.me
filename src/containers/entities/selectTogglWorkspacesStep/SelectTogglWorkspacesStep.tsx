@@ -119,9 +119,8 @@ class SelectTogglWorkspacesStepComponent extends React.Component<Props, State> {
     if (workspaceFetching !== null) {
       return (
         <Loader>
-          <span>
-            Fetching data for <strong>{workspaceFetching}</strong> workspace...
-          </span>
+          Determining years for <strong>{workspaceFetching} </strong>
+          workspace...
         </Loader>
       );
     }
@@ -130,8 +129,8 @@ class SelectTogglWorkspacesStepComponent extends React.Component<Props, State> {
       <StepPage
         title="Step 2:"
         subtitle="Select Toggl Workspaces to Transfer"
-        onPreviousClick={this.props.previous}
-        onNextClick={this.handleNextClick}
+        previous={this.props.previous}
+        next={this.handleNextClick}
       >
         <p
           className={css`

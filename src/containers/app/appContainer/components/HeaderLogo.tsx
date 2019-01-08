@@ -1,9 +1,7 @@
 import React from 'react';
 
-type Props = React.SVGAttributes<SVGElement>;
-
-const HeaderLogo: React.FunctionComponent<Props> = props => (
-  <svg viewBox="278 609 686 88" {...props}>
+const HeaderLogo: React.FunctionComponent = () => (
+  <svg viewBox="278 609 686 88" height={88} width={686}>
     <defs>
       <filter id="Shadow" filterUnits="userSpaceOnUse" x={278} y={609}>
         <feGaussianBlur in="SourceAlpha" result="blur" stdDeviation={1.308} />
@@ -59,10 +57,5 @@ const HeaderLogo: React.FunctionComponent<Props> = props => (
     </g>
   </svg>
 );
-
-HeaderLogo.defaultProps = {
-  height: 88,
-  width: 686,
-};
 
 export default HeaderLogo;

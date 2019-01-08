@@ -92,7 +92,7 @@ const HelpTooltip: React.FunctionComponent<Props> = ({
 
 HelpTooltip.defaultProps = {
   size: 16,
-  color: '#cccccc',
+  color: 'var(--info)',
 };
 
 export default HelpTooltip;

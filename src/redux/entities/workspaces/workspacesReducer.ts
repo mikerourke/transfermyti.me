@@ -13,12 +13,21 @@ import {
   togglWorkspaceSummaryFetchStarted,
   togglWorkspaceSummaryFetchSuccess,
   togglWorkspaceSummaryFetchFailure,
+  clockifyWorkspaceTransferStarted,
+  clockifyWorkspaceTransferSuccess,
+  clockifyWorkspaceTransferFailure,
   appendUserIdsToWorkspace,
   updateIsWorkspaceIncluded,
   updateIsWorkspaceYearIncluded,
   updateWorkspaceNameBeingFetched,
+  resetContentsForTool,
 } from './workspacesActions';
-import { EntityType, ToolName } from '../../../types/commonTypes';
+import {
+  EntityGroup,
+  EntityType,
+  ReduxStateEntryForTool,
+  ToolName,
+} from '../../../types/commonTypes';
 import {
   ClockifyWorkspace,
   TogglWorkspace,
@@ -26,26 +35,21 @@ import {
 } from '../../../types/workspacesTypes';
 import { ReduxAction } from '../../rootReducer';
 
-interface WorkspacesEntryForTool {
-  readonly workspacesById: Record<string, WorkspaceModel>;
-  readonly workspaceIds: string[];
-}
-
 export interface WorkspacesState {
-  readonly clockify: WorkspacesEntryForTool;
-  readonly toggl: WorkspacesEntryForTool;
+  readonly clockify: ReduxStateEntryForTool<WorkspaceModel>;
+  readonly toggl: ReduxStateEntryForTool<WorkspaceModel>;
   readonly workspaceNameBeingFetched: string | null;
   readonly isFetching: boolean;
 }
 
 export const initialState: WorkspacesState = {
   clockify: {
-    workspacesById: {},
-    workspaceIds: [],
+    byId: {},
+    idValues: [],
   },
   toggl: {
-    workspacesById: {},
-    workspaceIds: [],
+    byId: {},
+    idValues: [],
   },
   workspaceNameBeingFetched: null,
   isFetching: false,
@@ -66,13 +70,16 @@ const schemaProcessStrategy = (
 
 export default handleActions(
   {
-    [clockifyWorkspacesFetchSuccess]: (
+    [combineActions(
+      clockifyWorkspacesFetchSuccess,
+      clockifyWorkspaceTransferSuccess,
+    )]: (
       state: WorkspacesState,
       { payload: workspaces }: ReduxAction<ClockifyWorkspace[]>,
     ): WorkspacesState =>
-      getEntityNormalizedState<WorkspacesState, ClockifyWorkspace[]>(
+      getEntityNormalizedState(
         ToolName.Clockify,
-        EntityType.Workspace,
+        EntityGroup.Workspaces,
         schemaProcessStrategy,
         state,
         workspaces,
@@ -82,9 +89,9 @@ export default handleActions(
       state: WorkspacesState,
       { payload: workspaces }: ReduxAction<TogglWorkspace[]>,
     ): WorkspacesState =>
-      getEntityNormalizedState<WorkspacesState, TogglWorkspace[]>(
+      getEntityNormalizedState(
         ToolName.Toggl,
-        EntityType.Workspace,
+        EntityGroup.Workspaces,
         schemaProcessStrategy,
         state,
         workspaces,
@@ -99,7 +106,7 @@ export default handleActions(
         inclusionsByYear: Record<string, boolean>;
       }>,
     ): WorkspacesState => {
-      const workspacesById = cloneDeep(state.toggl.workspacesById);
+      const workspacesById = cloneDeep(state.toggl.byId);
       const updatedWorkspacesById = Object.entries(workspacesById).reduce(
         (acc, [workspaceId, workspaceRecord]) => ({
           ...acc,
@@ -115,7 +122,7 @@ export default handleActions(
         ...state,
         toggl: {
           ...state.toggl,
-          workspacesById: updatedWorkspacesById,
+          byId: updatedWorkspacesById,
         },
       };
     },
@@ -123,6 +130,7 @@ export default handleActions(
     [combineActions(
       clockifyWorkspacesFetchStarted,
       togglWorkspacesFetchStarted,
+      clockifyWorkspaceTransferStarted,
       togglWorkspaceSummaryFetchStarted,
     )]: (state: WorkspacesState): WorkspacesState => ({
       ...state,
@@ -136,6 +144,8 @@ export default handleActions(
       togglWorkspacesFetchFailure,
       togglWorkspaceSummaryFetchSuccess,
       togglWorkspaceSummaryFetchFailure,
+      clockifyWorkspaceTransferSuccess,
+      clockifyWorkspaceTransferFailure,
     )]: (state: WorkspacesState): WorkspacesState => ({
       ...state,
       isFetching: false,
@@ -154,12 +164,12 @@ export default handleActions(
       ...state,
       [toolName]: {
         ...state[toolName],
-        workspacesById: {
-          ...state[toolName].workspacesById,
+        byId: {
+          ...state[toolName].byId,
           [workspaceId]: {
-            ...state[toolName].workspacesById[workspaceId],
+            ...state[toolName].byId[workspaceId],
             userIds: uniq([
-              ...state[toolName].workspacesById[workspaceId].userIds,
+              ...state[toolName].byId[workspaceId].userIds,
               ...userIds,
             ]),
           },
@@ -171,11 +181,7 @@ export default handleActions(
       state: WorkspacesState,
       { payload: workspaceId }: ReduxAction<string>,
     ): WorkspacesState =>
-      updateIsEntityIncluded<WorkspacesState>(
-        state,
-        EntityType.Workspace,
-        workspaceId,
-      ),
+      updateIsEntityIncluded(state, EntityType.Workspace, workspaceId),
 
     [updateIsWorkspaceYearIncluded]: (
       state: WorkspacesState,
@@ -185,7 +191,7 @@ export default handleActions(
     ): WorkspacesState => {
       const inclusionsByYear = get(
         state,
-        ['toggl', 'workspacesById', workspaceId, 'inclusionsByYear'],
+        ['toggl', 'byId', workspaceId, 'inclusionsByYear'],
         {},
       );
 
@@ -193,10 +199,10 @@ export default handleActions(
         ...state,
         toggl: {
           ...state.toggl,
-          workspacesById: {
-            ...state.toggl.workspacesById,
+          byId: {
+            ...state.toggl.byId,
             [workspaceId]: {
-              ...state.toggl.workspacesById[workspaceId],
+              ...state.toggl.byId[workspaceId],
               inclusionsByYear: {
                 ...inclusionsByYear,
                 [year]: !inclusionsByYear[year],
@@ -213,6 +219,14 @@ export default handleActions(
     ): WorkspacesState => ({
       ...state,
       workspaceNameBeingFetched: workspaceName,
+    }),
+
+    [resetContentsForTool]: (
+      state: WorkspacesState,
+      { payload: toolName }: ReduxAction<string>,
+    ): WorkspacesState => ({
+      ...state,
+      [toolName]: initialState[toolName],
     }),
   },
   initialState,

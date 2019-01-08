@@ -83,3 +83,7 @@ export interface UserModel {
   linkedId: string | null;
   isIncluded: boolean;
 }
+
+export interface AddUsersToWorkspaceRequest {
+  emails: string[];
+}

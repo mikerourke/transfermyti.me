@@ -12,9 +12,17 @@ import {
   togglProjectsFetchFailure,
   togglProjectsFetchStarted,
   togglProjectsFetchSuccess,
+  clockifyProjectsTransferFailure,
+  clockifyProjectsTransferStarted,
+  clockifyProjectsTransferSuccess,
   updateIsProjectIncluded,
 } from './projectsActions';
-import { EntityType, ToolName } from '../../../types/commonTypes';
+import {
+  EntityGroup,
+  EntityType,
+  ReduxStateEntryForTool,
+  ToolName,
+} from '../../../types/commonTypes';
 import {
   ClockifyProject,
   ProjectModel,
@@ -22,25 +30,20 @@ import {
 } from '../../../types/projectsTypes';
 import { ReduxAction } from '../../rootReducer';
 
-interface ProjectsEntryForTool {
-  readonly projectsById: Record<string, ProjectModel>;
-  readonly projectIds: string[];
-}
-
 export interface ProjectsState {
-  readonly clockify: ProjectsEntryForTool;
-  readonly toggl: ProjectsEntryForTool;
+  readonly clockify: ReduxStateEntryForTool<ProjectModel>;
+  readonly toggl: ReduxStateEntryForTool<ProjectModel>;
   readonly isFetching: boolean;
 }
 
 export const initialState: ProjectsState = {
   clockify: {
-    projectsById: {},
-    projectIds: [],
+    byId: {},
+    idValues: [],
   },
   toggl: {
-    projectsById: {},
-    projectIds: [],
+    byId: {},
+    idValues: [],
   },
   isFetching: false,
 };
@@ -56,7 +59,7 @@ const schemaProcessStrategy = (
   isPublic: 'public' in value ? value.public : !value.is_private,
   isActive: 'archived' in value ? value.archived : value.active,
   color: 'hex_color' in value ? value.hex_color : value.color,
-  userIds: get(value, 'userIds', []),
+  userIds: get(value, 'userIds', []).map((userId: number) => userId.toString()),
   entryCount: 0,
   linkedId: null,
   isIncluded: true,
@@ -64,13 +67,16 @@ const schemaProcessStrategy = (
 
 export default handleActions(
   {
-    [clockifyProjectsFetchSuccess]: (
+    [combineActions(
+      clockifyProjectsFetchSuccess,
+      clockifyProjectsTransferSuccess,
+    )]: (
       state: ProjectsState,
       { payload: projects }: ReduxAction<ClockifyProject[]>,
     ): ProjectsState =>
-      getEntityNormalizedState<ProjectsState, ClockifyProject[]>(
+      getEntityNormalizedState(
         ToolName.Clockify,
-        EntityType.Project,
+        EntityGroup.Projects,
         schemaProcessStrategy,
         state,
         projects,
@@ -80,17 +86,19 @@ export default handleActions(
       state: ProjectsState,
       { payload: projects }: ReduxAction<TogglProject[]>,
     ): ProjectsState =>
-      getEntityNormalizedState<ProjectsState, TogglProject[]>(
+      getEntityNormalizedState(
         ToolName.Toggl,
-        EntityType.Project,
+        EntityGroup.Projects,
         schemaProcessStrategy,
         state,
         projects,
       ),
 
-    [combineActions(clockifyProjectsFetchStarted, togglProjectsFetchStarted)]: (
-      state: ProjectsState,
-    ): ProjectsState => ({
+    [combineActions(
+      clockifyProjectsFetchStarted,
+      togglProjectsFetchStarted,
+      clockifyProjectsTransferStarted,
+    )]: (state: ProjectsState): ProjectsState => ({
       ...state,
       isFetching: true,
     }),
@@ -100,6 +108,8 @@ export default handleActions(
       clockifyProjectsFetchFailure,
       togglProjectsFetchSuccess,
       togglProjectsFetchFailure,
+      clockifyProjectsTransferSuccess,
+      clockifyProjectsTransferFailure,
     )]: (state: ProjectsState): ProjectsState => ({
       ...state,
       isFetching: false,
@@ -109,11 +119,7 @@ export default handleActions(
       state: ProjectsState,
       { payload: projectId }: ReduxAction<string>,
     ): ProjectsState =>
-      updateIsEntityIncluded<ProjectsState>(
-        state,
-        EntityType.Project,
-        projectId,
-      ),
+      updateIsEntityIncluded(state, EntityType.Project, projectId),
   },
   initialState,
 );

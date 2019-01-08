@@ -1,6 +1,6 @@
 import { createAction } from 'redux-actions';
 import flatten from 'lodash/flatten';
-import PromiseThrottle from 'promise-throttle';
+import { buildThrottler } from '../../utils';
 import {
   apiFetchClockifyTimeEntries,
   apiFetchTogglTimeEntries,
@@ -15,6 +15,7 @@ import {
   TogglTimeEntry,
 } from '../../../types/timeEntriesTypes';
 import { Dispatch, GetState } from '../../rootReducer';
+import { selectTogglWorkspaceIncludedYears } from '../workspaces/workspacesSelectors';
 
 export const clockifyTimeEntriesFetchStarted = createAction(
   '@timeEntries/CLOCKIFY_FETCH_STARTED',
@@ -37,17 +38,46 @@ export const togglTimeEntriesFetchFailure = createAction(
   '@timeEntries/TOGGL_FETCH_FAILURE',
 );
 
-export const fetchClockifyTimeEntries = (
+const fetchClockifyTimeEntriesForIncludedYears = async (
+  userId: string,
   workspaceId: string,
-  year: number,
-) => async (dispatch: Dispatch<any>, getState: GetState) => {
+  years: number[],
+): Promise<ClockifyTimeEntry[]> => {
+  const { promiseThrottle, throttledFn } = buildThrottler(
+    apiFetchClockifyTimeEntries,
+  );
+
+  const allYearsTimeEntries: ClockifyTimeEntry[][] = [];
+
+  for (const year of years) {
+    await promiseThrottle
+      .add(
+        // @ts-ignore
+        throttledFn.bind(this, userId, workspaceId, year),
+      )
+      .then((yearEntries: ClockifyTimeEntry[]) => {
+        allYearsTimeEntries.push(yearEntries);
+      });
+  }
+
+  return flatten(allYearsTimeEntries);
+};
+
+export const fetchClockifyTimeEntries = (workspaceId: string) => async (
+  dispatch: Dispatch<any>,
+  getState: GetState,
+) => {
+  const state = getState();
+
   dispatch(clockifyTimeEntriesFetchStarted());
-  const userId = selectClockifyUserId(getState());
+
+  const userId = selectClockifyUserId(state);
+  const includedYears = selectTogglWorkspaceIncludedYears(state, workspaceId);
   try {
-    const timeEntries = await apiFetchClockifyTimeEntries(
+    const timeEntries = await fetchClockifyTimeEntriesForIncludedYears(
       userId,
       workspaceId,
-      year,
+      includedYears,
     );
     return dispatch(clockifyTimeEntriesFetchSuccess(timeEntries));
   } catch (error) {
@@ -62,36 +92,24 @@ const fetchTogglTimeEntriesForRemainingPages = async (
   year: number,
   totalPages: number,
 ): Promise<TogglTimeEntry[]> => {
-  const fetchEntriesForPage = (page: number) =>
-    new Promise((resolve, reject) =>
-      apiFetchTogglTimeEntries(email, workspaceId, year, page)
-        .then(({ data }) => {
-          resolve(data);
-        })
-        .catch(error => {
-          reject(error);
-        }),
-    );
-
-  const promiseThrottle = new PromiseThrottle({
-    requestsPerSecond: 4,
-    promiseImplementation: Promise,
-  });
+  const { promiseThrottle, throttledFn } = buildThrottler(
+    apiFetchTogglTimeEntries,
+  );
 
   const timeEntriesForPage: TogglTimeEntry[][] = [];
-  let requestsRemaining = totalPages;
+  let currentPage = totalPages;
 
   // We already got the first page, don't want to fetch again:
-  while (requestsRemaining > 1) {
+  while (currentPage > 1) {
     await promiseThrottle
       .add(
         // @ts-ignore
-        fetchEntriesForPage.bind(this, requestsRemaining),
+        throttledFn.bind(this, email, workspaceId, year, currentPage),
       )
-      .then((data: TogglTimeEntry[]) => {
+      .then(({ data }: { data: TogglTimeEntry[] }) => {
         timeEntriesForPage.push(data);
       });
-    requestsRemaining -= 1;
+    currentPage -= 1;
   }
 
   return flatten(timeEntriesForPage);
@@ -101,8 +119,10 @@ export const fetchTogglTimeEntries = (
   workspaceId: string,
   year: number,
 ) => async (dispatch: Dispatch<any>, getState: GetState) => {
+  const state = getState();
+
   dispatch(togglTimeEntriesFetchStarted());
-  const email = selectTogglUserEmail(getState());
+  const email = selectTogglUserEmail(state);
 
   try {
     const {

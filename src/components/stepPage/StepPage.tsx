@@ -1,70 +1,104 @@
-import React from 'react';
-import isNil from 'lodash/isNil';
-import { css } from 'emotion';
+import React, { useEffect, useRef } from 'react';
 import { Button, Container, Subtitle, Title } from 'bloomer';
+import { css } from 'emotion';
+import isNil from 'lodash/isNil';
+import Flex from '../flex/Flex';
 import ShowIf from '../showIf/ShowIf';
 
 interface Props {
   title: string;
   subtitle: string;
   isNextLoading?: boolean;
-  onNextClick?: () => void;
-  onPreviousClick?: () => void;
-  contentRef?: (element: any) => void;
+  next?: () => void;
+  previous?: () => void;
+  onRefreshClick?: () => void;
+  onResize?: (newWidth: number) => void;
 }
 
-class StepPage extends React.Component<Props> {
-  public render() {
-    const { contentRef, onNextClick, onPreviousClick } = this.props;
+const StepPage: React.FunctionComponent<Props> = ({
+  children,
+  title,
+  subtitle,
+  isNextLoading,
+  next,
+  previous,
+  onRefreshClick,
+  onResize,
+}) => {
+  const contentsRef = useRef(null);
 
-    return (
-      <Container>
-        <Title isSize={4}>{this.props.title}</Title>
-        <Subtitle isSize={3}>{this.props.subtitle}</Subtitle>
-        <div
-          ref={!isNil(contentRef) ? contentRef : undefined}
-          className={css`
-            min-height: 300px;
-          `}
-        >
-          {this.props.children}
-        </div>
-        <div
-          className={css`
-            display: flex;
-            justify-content: flex-end;
-            margin-top: 1.5rem;
-          `}
-        >
+  const handleResize = () => {
+    const width = contentsRef.current.clientWidth;
+    if (!isNil(onResize)) onResize(width);
+  };
+
+  useEffect(() => {
+    window.addEventListener('resize', handleResize);
+    handleResize();
+    return () => {
+      window.removeEventListener('resize', handleResize);
+    };
+  });
+
+  return (
+    <Container>
+      <Title isSize={4}>{title}</Title>
+      <Subtitle isSize={3}>{subtitle}</Subtitle>
+      <div
+        ref={contentsRef}
+        className={css`
+          min-height: 300px;
+        `}
+      >
+        {children}
+      </div>
+      <Flex
+        justifyContent="space-between"
+        className={css`
+          margin-top: 1.5rem;
+        `}
+      >
+        <Flex justifySelf="flex-start">
           <ShowIf
             as={Button}
-            isShown={!isNil(onPreviousClick)}
+            isShown={!isNil(onRefreshClick)}
             isSize="medium"
-            onClick={onPreviousClick}
+            onClick={onRefreshClick}
+            isColor="dark"
+          >
+            Refresh
+          </ShowIf>
+        </Flex>
+        <Flex justifySelf="flex-end">
+          <ShowIf
+            as={Button}
+            isShown={!isNil(previous)}
+            isSize="medium"
+            onClick={previous}
             isColor="dark"
           >
             Previous
           </ShowIf>
           <ShowIf
-            isShown={!isNil(onPreviousClick) && !isNil(onNextClick)}
+            isShown={!isNil(previous) && !isNil(next)}
             className={css`
               margin-right: 1rem;
             `}
           />
           <ShowIf
             as={Button}
-            isShown={!isNil(onNextClick)}
+            isShown={!isNil(next)}
             isSize="medium"
-            isLoading={this.props.isNextLoading}
-            onClick={onNextClick}
+            isLoading={isNextLoading}
+            onClick={next}
             isColor="success"
           >
             Next
           </ShowIf>
-        </div>
-      </Container>
-    );
-  }
-}
+        </Flex>
+      </Flex>
+    </Container>
+  );
+};
 
 export default StepPage;

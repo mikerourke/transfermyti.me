@@ -1,8 +1,10 @@
 import { createAction } from 'redux-actions';
+import storage from 'store';
 import capitalize from 'lodash/capitalize';
 import first from 'lodash/first';
 import set from 'lodash/set';
-import { updateStorage } from '../../utils/storageUtils';
+import getIfDev from '../../utils/getIfDev';
+import { STORAGE_KEY } from '../../constants';
 import {
   apiFetchClockifyUserDetails,
   apiFetchTogglUserDetails,
@@ -45,8 +47,15 @@ export const storeAllCredentials = () => (
   dispatch: Dispatch<any>,
   getState: GetState,
 ) => {
-  const credentials = selectCredentials(getState());
-  updateStorage(credentials);
+  const state = getState();
+
+  const credentials = selectCredentials(state);
+
+  if (getIfDev()) {
+    const storedCredentials = storage.get(STORAGE_KEY) || {};
+    storage.set(STORAGE_KEY, { ...storedCredentials, ...credentials });
+  }
+
   return dispatch(allCredentialsStored(credentials));
 };
 

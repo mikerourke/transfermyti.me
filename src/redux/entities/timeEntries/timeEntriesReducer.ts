@@ -11,7 +11,12 @@ import {
   togglTimeEntriesFetchStarted,
   togglTimeEntriesFetchSuccess,
 } from './timeEntriesActions';
-import { EntityType, ToolName } from '../../../types/commonTypes';
+import {
+  EntityGroup,
+  EntityType,
+  ReduxStateEntryForTool,
+  ToolName,
+} from '../../../types/commonTypes';
 import {
   ClockifyTimeEntry,
   TimeEntryModel,
@@ -19,25 +24,20 @@ import {
 } from '../../../types/timeEntriesTypes';
 import { ReduxAction } from '../../rootReducer';
 
-interface TimeEntriesEntryForTool {
-  readonly timeEntriesById: Record<string, TimeEntryModel>;
-  readonly timeEntryIds: string[];
-}
-
 export interface TimeEntriesState {
-  readonly clockify: TimeEntriesEntryForTool;
-  readonly toggl: TimeEntriesEntryForTool;
+  readonly clockify: ReduxStateEntryForTool<TimeEntryModel>;
+  readonly toggl: ReduxStateEntryForTool<TimeEntryModel>;
   readonly isFetching: boolean;
 }
 
 export const initialState: TimeEntriesState = {
   clockify: {
-    timeEntriesById: {},
-    timeEntryIds: [],
+    byId: {},
+    idValues: [],
   },
   toggl: {
-    timeEntriesById: {},
-    timeEntryIds: [],
+    byId: {},
+    idValues: [],
   },
   isFetching: false,
 };
@@ -72,6 +72,7 @@ const schemaProcessStrategy = (
   tagIds: [],
   name: null,
   linkedId: null,
+  isIncluded: true,
 });
 
 export default handleActions(
@@ -80,9 +81,9 @@ export default handleActions(
       state: TimeEntriesState,
       { payload: timeEntries }: ReduxAction<ClockifyTimeEntry[]>,
     ): TimeEntriesState =>
-      getEntityNormalizedState<TimeEntriesState, ClockifyTimeEntry[]>(
+      getEntityNormalizedState(
         ToolName.Clockify,
-        EntityType.TimeEntry,
+        EntityGroup.TimeEntries,
         schemaProcessStrategy,
         state,
         timeEntries,
@@ -92,9 +93,9 @@ export default handleActions(
       state: TimeEntriesState,
       { payload: timeEntries }: ReduxAction<TogglTimeEntry[]>,
     ): TimeEntriesState =>
-      getEntityNormalizedState<TimeEntriesState, TogglTimeEntry[]>(
+      getEntityNormalizedState(
         ToolName.Toggl,
-        EntityType.TimeEntry,
+        EntityGroup.TimeEntries,
         schemaProcessStrategy,
         state,
         timeEntries,

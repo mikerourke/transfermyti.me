@@ -1,7 +1,8 @@
 import React from 'react';
-import reverse from 'lodash/reverse';
-import { css } from 'emotion';
 import { Box } from 'bloomer';
+import { css } from 'emotion';
+import reverse from 'lodash/reverse';
+import Flex from '../../../../components/flex/Flex';
 import IncludedIndicator from '../../../../components/includedIndicator/IncludedIndicator';
 import { WorkspaceModel } from '../../../../types/workspacesTypes';
 
@@ -21,12 +22,7 @@ const WorkspaceRow: React.FunctionComponent<Props> = ({
       font-weight: bold;
     `}
   >
-    <div
-      className={css`
-        align-items: center;
-        display: flex;
-      `}
-    >
+    <Flex alignItems="center">
       <IncludedIndicator
         isIncluded={isIncluded}
         size="1.5rem"
@@ -40,14 +36,13 @@ const WorkspaceRow: React.FunctionComponent<Props> = ({
       >
         {name}
       </span>
-    </div>
+    </Flex>
     <div>
       {reverse(Object.keys(inclusionsByYear).sort()).map(year => (
-        <div
+        <Flex
           key={`${id}-${year}`}
+          alignItems="center"
           className={css`
-            display: flex;
-            align-items: center;
             margin: 0.5rem 0 0.5rem 2.5rem;
           `}
         >
@@ -64,7 +59,7 @@ const WorkspaceRow: React.FunctionComponent<Props> = ({
           >
             {year}
           </span>
-        </div>
+        </Flex>
       ))}
     </div>
   </Box>

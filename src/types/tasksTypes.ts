@@ -35,3 +35,10 @@ export interface TaskModel {
   linkedId: string | null;
   isIncluded: boolean;
 }
+
+export interface CreateTaskRequest {
+  name: string;
+  projectId: string;
+  estimate?: string;
+  assigneeId?: string;
+}

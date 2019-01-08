@@ -66,7 +66,7 @@ interface TogglSummaryReportDataItemModel {
   rate: number | null;
 }
 
-interface TogglSummaryReportDataModel {
+export interface TogglSummaryReportDataModel {
   id: number;
   title: {
     project: string;

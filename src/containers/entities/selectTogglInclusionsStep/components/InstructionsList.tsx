@@ -35,14 +35,8 @@ const InstructionsList: React.FunctionComponent = () => (
       transfer their entries using this tool.
     </li>
     <li>
-      Once you hit the <strong>Next</strong> button and confirm, it will
-      transfer all your selections to the new workspaces. Don't worry, it won't
-      overwrite Projects, Clients, Tags, Tasks, User Groups or Users (it fetches
-      the Clockify entities and does a name comparison).
-    </li>
-    <li>
-      This tool will copy all of your time entries from Toggl, even if they
-      already exist on Clockify!
+      Once you hit the <strong>Next</strong> button, you'll have a chance to
+      review what will be transferred to Clockify.
     </li>
   </ul>
 );

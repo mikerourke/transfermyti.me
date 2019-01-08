@@ -1,9 +1,13 @@
+import { getFirstAndLastDayOfYear } from '../../utils';
 import {
   ClockifyWorkspace,
   TogglSummaryReport,
   TogglWorkspace,
 } from '../../../types/workspacesTypes';
-import { getFirstAndLastDayOfYear } from '../../../utils/dateUtils';
+import {
+  CreateNamedEntityRequest,
+  HttpMethod,
+} from '../../../types/commonTypes';
 
 export const apiFetchClockifyWorkspaces = (): Promise<ClockifyWorkspace[]> =>
   fetch('/clockify/api/workspaces/');
@@ -27,3 +31,11 @@ export const apiFetchTogglWorkspaceSummaryForYear = (
 
   return fetch(`/toggl/reports/summary?${queryString}`);
 };
+
+export const apiCreateClockifyWorkspace = (
+  workspaceRecord: CreateNamedEntityRequest,
+): Promise<ClockifyWorkspace> =>
+  fetch('/clockify/api/workspaces/', {
+    method: HttpMethod.Post,
+    body: workspaceRecord as any,
+  });

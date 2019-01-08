@@ -3,7 +3,7 @@ import { Section } from 'bloomer';
 import { Wizard, Steps, Step } from 'react-albus';
 import EnterCredentialsStep from '../../credentials/enterCredentialsStep/EnterCredentialsStep';
 import SelectTogglWorkspacesStep from '../../entities/selectTogglWorkspacesStep/SelectTogglWorkspacesStep';
-import SelectTogglInclusionsStepComponent from '../../entities/selectTogglInclusionsStep/SelectTogglInclusionsStep';
+import SelectTogglInclusionsStep from '../../entities/selectTogglInclusionsStep/SelectTogglInclusionsStep';
 import ReviewClockifyDetailsStep from '../../entities/reviewClockifyDetailsStep/ReviewClockifyDetailsStep';
 import NotificationsDisplay from '../notificationsDisplay/NotificationsDisplay';
 import Header from './components/Header';
@@ -11,11 +11,11 @@ import Header from './components/Header';
 const App: React.FunctionComponent = () => (
   <>
     <Header />
-    <Section>
-      <Wizard>
+    <Wizard>
+      <Section>
         <Steps>
           <Step
-            id="credentials"
+            id="enterCredentials"
             render={({ next }) => <EnterCredentialsStep next={next} />}
           />
           <Step
@@ -27,10 +27,7 @@ const App: React.FunctionComponent = () => (
           <Step
             id="reviewTogglData"
             render={({ previous, next }) => (
-              <SelectTogglInclusionsStepComponent
-                previous={previous}
-                next={next}
-              />
+              <SelectTogglInclusionsStep previous={previous} next={next} />
             )}
           />
           <Step
@@ -39,9 +36,13 @@ const App: React.FunctionComponent = () => (
               <ReviewClockifyDetailsStep previous={previous} next={next} />
             )}
           />
+          <Step
+            id="wrapUp"
+            render={({ replace }) => <div>You're all done!</div>}
+          />
         </Steps>
-      </Wizard>
-    </Section>
+      </Section>
+    </Wizard>
     <NotificationsDisplay />
   </>
 );

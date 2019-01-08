@@ -109,7 +109,7 @@ export class EnterCredentialsStepComponent extends React.Component<
         title="Step 1:"
         subtitle="Enter Credentials"
         isNextLoading={this.props.isValidating}
-        onNextClick={this.handleNextClick}
+        next={this.handleNextClick}
       >
         <p
           className={css`

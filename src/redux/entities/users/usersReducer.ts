@@ -8,31 +8,34 @@ import {
   togglUsersFetchFailure,
   togglUsersFetchStarted,
   togglUsersFetchSuccess,
+  clockifyUsersTransferFailure,
+  clockifyUsersTransferStarted,
+  clockifyUsersTransferSuccess,
   updateIsUserIncluded,
 } from './usersActions';
-import { EntityType, ToolName } from '../../../types/commonTypes';
+import {
+  EntityGroup,
+  EntityType,
+  ReduxStateEntryForTool,
+  ToolName,
+} from '../../../types/commonTypes';
 import { ClockifyUser, TogglUser, UserModel } from '../../../types/usersTypes';
 import { ReduxAction } from '../../rootReducer';
 
-interface UsersEntryForTool {
-  readonly usersById: Record<string, UserModel>;
-  readonly userIds: string[];
-}
-
 export interface UsersState {
-  readonly clockify: UsersEntryForTool;
-  readonly toggl: UsersEntryForTool;
+  readonly clockify: ReduxStateEntryForTool<UserModel>;
+  readonly toggl: ReduxStateEntryForTool<UserModel>;
   readonly isFetching: boolean;
 }
 
 export const initialState: UsersState = {
   clockify: {
-    usersById: {},
-    userIds: [],
+    byId: {},
+    idValues: [],
   },
   toggl: {
-    usersById: {},
-    userIds: [],
+    byId: {},
+    idValues: [],
   },
   isFetching: false,
 };
@@ -53,9 +56,9 @@ export default handleActions(
       state: UsersState,
       { payload: users }: ReduxAction<ClockifyUser[]>,
     ): UsersState =>
-      getEntityNormalizedState<UsersState, ClockifyUser[]>(
+      getEntityNormalizedState(
         ToolName.Clockify,
-        EntityType.User,
+        EntityGroup.Users,
         schemaProcessStrategy,
         state,
         users,
@@ -65,17 +68,19 @@ export default handleActions(
       state: UsersState,
       { payload: users }: ReduxAction<TogglUser[]>,
     ): UsersState =>
-      getEntityNormalizedState<UsersState, TogglUser[]>(
+      getEntityNormalizedState(
         ToolName.Toggl,
-        EntityType.User,
+        EntityGroup.Users,
         schemaProcessStrategy,
         state,
         users,
       ),
 
-    [combineActions(clockifyUsersFetchStarted, togglUsersFetchStarted)]: (
-      state: UsersState,
-    ): UsersState => ({
+    [combineActions(
+      clockifyUsersFetchStarted,
+      togglUsersFetchStarted,
+      clockifyUsersTransferStarted,
+    )]: (state: UsersState): UsersState => ({
       ...state,
       isFetching: true,
     }),
@@ -85,6 +90,8 @@ export default handleActions(
       clockifyUsersFetchFailure,
       togglUsersFetchSuccess,
       togglUsersFetchFailure,
+      clockifyUsersTransferSuccess,
+      clockifyUsersTransferFailure,
     )]: (state: UsersState): UsersState => ({
       ...state,
       isFetching: false,
@@ -93,8 +100,7 @@ export default handleActions(
     [updateIsUserIncluded]: (
       state: UsersState,
       { payload: userId }: ReduxAction<string>,
-    ): UsersState =>
-      updateIsEntityIncluded<UsersState>(state, EntityType.User, userId),
+    ): UsersState => updateIsEntityIncluded(state, EntityType.User, userId),
   },
   initialState,
 );

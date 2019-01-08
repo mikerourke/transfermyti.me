@@ -71,6 +71,11 @@ export interface TimeEntryModel {
   tagIds?: string[];
   name: null; // Not used, included because other entities have a "name".
   linkedId: string | null;
+  isIncluded: boolean;
+}
+
+export interface TimeEntryWithClientModel extends TimeEntryModel {
+  clientId?: string;
 }
 
 export interface DetailedTimeEntryModel extends TimeEntryModel {

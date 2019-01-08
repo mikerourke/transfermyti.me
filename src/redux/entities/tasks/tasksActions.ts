@@ -1,8 +1,21 @@
 import { createAction } from 'redux-actions';
-import { apiFetchClockifyTasks, apiFetchTogglTasks } from '../api/tasks';
+import flatten from 'lodash/flatten';
+import isEmpty from 'lodash/isEmpty';
+import { batchClockifyRequests, buildThrottler } from '../../utils';
+import {
+  apiCreateClockifyTask,
+  apiFetchClockifyTasks,
+  apiFetchTogglTasks,
+} from '../api/tasks';
 import { showFetchErrorNotification } from '../../app/appActions';
-import { ClockifyTask, TogglTask } from '../../../types/tasksTypes';
-import { Dispatch } from '../../rootReducer';
+import { selectClockifyProjectIds } from '../projects/projectsSelectors';
+import { selectTasksTransferPayloadForWorkspace } from './tasksSelectors';
+import {
+  ClockifyTask,
+  CreateTaskRequest,
+  TogglTask,
+} from '../../../types/tasksTypes';
+import { Dispatch, GetState } from '../../rootReducer';
 
 export const clockifyTasksFetchStarted = createAction(
   '@tasks/CLOCKIFY_FETCH_STARTED',
@@ -24,17 +37,54 @@ export const togglTasksFetchSuccess = createAction(
 export const togglTasksFetchFailure = createAction(
   '@tasks/TOGGL_FETCH_FAILURE',
 );
+export const clockifyTasksTransferStarted = createAction(
+  '@tasks/CLOCKIFY_TRANSFER_STARTED',
+);
+export const clockifyTasksTransferSuccess = createAction(
+  '@tasks/CLOCKIFY_TRANSFER_SUCCESS',
+  (tasks: ClockifyTask[]) => tasks,
+);
+export const clockifyTasksTransferFailure = createAction(
+  '@tasks/CLOCKIFY_TRANSFER_FAILURE',
+);
 export const updateIsTaskIncluded = createAction(
   '@tasks/UPDATE_IS_INCLUDED',
   (taskId: string) => taskId,
 );
 
+const fetchClockifyTasksForProjectsInWorkspace = async (
+  workspaceId: string,
+  projectIds: string[],
+): Promise<TogglTask[]> => {
+  const { promiseThrottle, throttledFn } = buildThrottler(
+    apiFetchClockifyTasks,
+  );
+
+  const projectTasks: TogglTask[][] = [];
+  for (const projectId of projectIds) {
+    await promiseThrottle
+      // @ts-ignore
+      .add(throttledFn.bind(this, workspaceId, projectId))
+      .then((tasks: TogglTask[]) => {
+        projectTasks.push(tasks);
+      });
+  }
+
+  return flatten(projectTasks);
+};
+
 export const fetchClockifyTasks = (workspaceId: string) => async (
   dispatch: Dispatch<any>,
+  getState: GetState,
 ) => {
   dispatch(clockifyTasksFetchStarted());
   try {
-    const tasks = await apiFetchClockifyTasks(workspaceId);
+    const state = getState();
+    const projectIds = selectClockifyProjectIds(state);
+    const tasks = await fetchClockifyTasksForProjectsInWorkspace(
+      workspaceId,
+      projectIds,
+    );
     return dispatch(clockifyTasksFetchSuccess(tasks));
   } catch (error) {
     dispatch(showFetchErrorNotification(error));
@@ -52,5 +102,52 @@ export const fetchTogglTasks = (workspaceId: string) => async (
   } catch (error) {
     dispatch(showFetchErrorNotification(error));
     return dispatch(togglTasksFetchFailure());
+  }
+};
+
+const transferClockifyTasksForProjectsInWorkspace = async (
+  workspaceId: string,
+  tasksInWorkspaceByProjectId: Record<string, CreateTaskRequest[]>,
+): Promise<ClockifyTask[]> => {
+  const allProjectTasks: ClockifyTask[][] = [];
+
+  for (const [projectId, taskRecords] of Object.entries(
+    tasksInWorkspaceByProjectId,
+  )) {
+    if (taskRecords.length > 0) {
+      const tasks = await batchClockifyRequests(
+        taskRecords,
+        apiCreateClockifyTask,
+        workspaceId,
+        projectId,
+      );
+      allProjectTasks.push(tasks);
+    }
+  }
+
+  return flatten(allProjectTasks);
+};
+
+export const transferTasksToClockify = (
+  togglWorkspaceId: string,
+  clockifyWorkspaceId: string,
+) => async (dispatch: Dispatch<any>, getState: GetState) => {
+  const state = getState();
+  const tasksInWorkspaceByProjectId = selectTasksTransferPayloadForWorkspace(
+    state,
+    togglWorkspaceId,
+  );
+  if (isEmpty(tasksInWorkspaceByProjectId)) return Promise.resolve();
+
+  dispatch(clockifyTasksTransferStarted());
+  try {
+    const tasks = await transferClockifyTasksForProjectsInWorkspace(
+      clockifyWorkspaceId,
+      tasksInWorkspaceByProjectId,
+    );
+    return dispatch(clockifyTasksTransferSuccess(tasks));
+  } catch (error) {
+    dispatch(showFetchErrorNotification(error));
+    return dispatch(clockifyTasksTransferFailure());
   }
 };

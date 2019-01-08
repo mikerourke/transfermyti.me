@@ -67,3 +67,15 @@ export interface ProjectModel {
   linkedId: string | null;
   isIncluded: boolean;
 }
+
+export interface CreateProjectRequest {
+  clientId: string;
+  name: string;
+  isPublic: boolean;
+  isBillable: boolean;
+  color: string;
+  estimate: {
+    estimate: string;
+    type: string;
+  };
+}

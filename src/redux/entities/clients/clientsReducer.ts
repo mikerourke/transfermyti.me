@@ -11,6 +11,9 @@ import {
   togglClientsFetchFailure,
   togglClientsFetchStarted,
   togglClientsFetchSuccess,
+  clockifyClientsTransferFailure,
+  clockifyClientsTransferStarted,
+  clockifyClientsTransferSuccess,
   updateIsClientIncluded,
 } from './clientsActions';
 import {
@@ -18,28 +21,28 @@ import {
   ClockifyClient,
   TogglClient,
 } from '../../../types/clientsTypes';
-import { EntityType, ToolName } from '../../../types/commonTypes';
+import {
+  EntityGroup,
+  EntityType,
+  ReduxStateEntryForTool,
+  ToolName,
+} from '../../../types/commonTypes';
 import { ReduxAction } from '../../rootReducer';
 
-interface ClientsEntryForTool {
-  readonly clientsById: Record<string, ClientModel>;
-  readonly clientIds: string[];
-}
-
 export interface ClientsState {
-  readonly clockify: ClientsEntryForTool;
-  readonly toggl: ClientsEntryForTool;
+  readonly clockify: ReduxStateEntryForTool<ClientModel>;
+  readonly toggl: ReduxStateEntryForTool<ClientModel>;
   readonly isFetching: boolean;
 }
 
 export const initialState: ClientsState = {
   clockify: {
-    clientsById: {},
-    clientIds: [],
+    byId: {},
+    idValues: [],
   },
   toggl: {
-    clientsById: {},
-    clientIds: [],
+    byId: {},
+    idValues: [],
   },
   isFetching: false,
 };
@@ -57,13 +60,16 @@ const schemaProcessStrategy = (
 
 export default handleActions(
   {
-    [clockifyClientsFetchSuccess]: (
+    [combineActions(
+      clockifyClientsFetchSuccess,
+      clockifyClientsTransferSuccess,
+    )]: (
       state: ClientsState,
       { payload: clients }: ReduxAction<ClockifyClient[]>,
     ): ClientsState =>
-      getEntityNormalizedState<ClientsState, ClockifyClient[]>(
+      getEntityNormalizedState(
         ToolName.Clockify,
-        EntityType.Client,
+        EntityGroup.Clients,
         schemaProcessStrategy,
         state,
         clients,
@@ -73,17 +79,19 @@ export default handleActions(
       state: ClientsState,
       { payload: clients }: ReduxAction<TogglClient[]>,
     ): ClientsState =>
-      getEntityNormalizedState<ClientsState, TogglClient[]>(
+      getEntityNormalizedState(
         ToolName.Toggl,
-        EntityType.Client,
+        EntityGroup.Clients,
         schemaProcessStrategy,
         state,
         clients,
       ),
 
-    [combineActions(clockifyClientsFetchStarted, togglClientsFetchStarted)]: (
-      state: ClientsState,
-    ): ClientsState => ({
+    [combineActions(
+      clockifyClientsFetchStarted,
+      togglClientsFetchStarted,
+      clockifyClientsTransferStarted,
+    )]: (state: ClientsState): ClientsState => ({
       ...state,
       isFetching: true,
     }),
@@ -93,6 +101,8 @@ export default handleActions(
       clockifyClientsFetchFailure,
       togglClientsFetchSuccess,
       togglClientsFetchFailure,
+      clockifyClientsTransferSuccess,
+      clockifyClientsTransferFailure,
     )]: (state: ClientsState): ClientsState => ({
       ...state,
       isFetching: false,
@@ -102,7 +112,7 @@ export default handleActions(
       state: ClientsState,
       { payload: clientId }: ReduxAction<string>,
     ): ClientsState =>
-      updateIsEntityIncluded<ClientsState>(state, EntityType.Client, clientId),
+      updateIsEntityIncluded(state, EntityType.Client, clientId),
   },
   initialState,
 );

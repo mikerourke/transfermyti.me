@@ -6,6 +6,7 @@ import { selectNotifications } from '../../../redux/app/appSelectors';
 import NotificationDisplay from './components/NotificationDisplay';
 import { NotificationModel } from '../../../types/appTypes';
 import { ReduxDispatch, ReduxState } from '../../../types/commonTypes';
+import Flex from '../../../components/flex/Flex';
 
 interface ConnectStateProps {
   notifications: NotificationModel[];
@@ -21,13 +22,12 @@ const NotificationsDisplayComponent: React.FunctionComponent<Props> = ({
   notifications,
   onDismissNotification,
 }) => (
-  <div
+  <Flex
+    alignItems="center"
+    justifyContent="center"
+    direction="column"
     className={css`
-      align-items: center;
       bottom: 1rem;
-      display: flex;
-      flex-direction: column;
-      justify-content: center;
       margin: 0 auto;
       position: absolute;
       width: 100%;
@@ -40,7 +40,7 @@ const NotificationsDisplayComponent: React.FunctionComponent<Props> = ({
         onDismiss={onDismissNotification}
       />
     ))}
-  </div>
+  </Flex>
 );
 
 const mapStateToProps = (state: ReduxState) => ({

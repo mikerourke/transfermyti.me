@@ -1,47 +1,60 @@
 import { createAction } from 'redux-actions';
-import PromiseThrottle from 'promise-throttle';
+import isNil from 'lodash/isNil';
 import set from 'lodash/set';
+import { buildThrottler } from '../../utils';
 import {
+  apiCreateClockifyWorkspace,
   apiFetchClockifyWorkspaces,
   apiFetchTogglWorkspaces,
   apiFetchTogglWorkspaceSummaryForYear,
 } from '../api/workspaces';
-import { selectTogglUserEmail } from '../../credentials/credentialsSelectors';
 import { showFetchErrorNotification } from '../../app/appActions';
+import { selectTogglUserEmail } from '../../credentials/credentialsSelectors';
 import {
   fetchClockifyClients,
   fetchTogglClients,
+  transferClientsToClockify,
   updateIsClientIncluded,
 } from '../clients/clientsActions';
 import {
   fetchClockifyProjects,
   fetchTogglProjects,
+  transferProjectsToClockify,
   updateIsProjectIncluded,
 } from '../projects/projectsActions';
 import {
   fetchClockifyTags,
   fetchTogglTags,
+  transferTagsToClockify,
   updateIsTagIncluded,
 } from '../tags/tagsActions';
 import {
   fetchClockifyTasks,
   fetchTogglTasks,
+  transferTasksToClockify,
   updateIsTaskIncluded,
 } from '../tasks/tasksActions';
-import { fetchTogglTimeEntries } from '../timeEntries/timeEntriesActions';
+import {
+  fetchClockifyTimeEntries,
+  fetchTogglTimeEntries,
+} from '../timeEntries/timeEntriesActions';
 import {
   fetchClockifyUserGroups,
   fetchTogglUserGroups,
+  transferUserGroupsToClockify,
   updateIsUserGroupIncluded,
 } from '../userGroups/userGroupsActions';
 import {
   fetchClockifyUsers,
   fetchTogglUsers,
+  transferUsersToClockify,
   updateIsUserIncluded,
 } from '../users/usersActions';
+import { selectTogglIncludedWorkspaceNames } from './workspacesSelectors';
 import { EntityGroup, EntityModel, ToolName } from '../../../types/commonTypes';
 import {
   ClockifyWorkspace,
+  TogglSummaryReportDataModel,
   TogglWorkspace,
   WorkspaceModel,
 } from '../../../types/workspacesTypes';
@@ -52,7 +65,7 @@ export const clockifyWorkspacesFetchStarted = createAction(
 );
 export const clockifyWorkspacesFetchSuccess = createAction(
   '@workspaces/CLOCKIFY_FETCH_SUCCESS',
-  (response: ClockifyWorkspace[]) => response,
+  (workspaces: ClockifyWorkspace[]) => workspaces,
 );
 export const clockifyWorkspacesFetchFailure = createAction(
   '@workspaces/CLOCKIFY_FETCH_FAILURE',
@@ -80,6 +93,16 @@ export const togglWorkspaceSummaryFetchSuccess = createAction(
 export const togglWorkspaceSummaryFetchFailure = createAction(
   '@workspaces/TOGGL_SUMMARY_FETCH_FAILURE',
 );
+export const clockifyWorkspaceTransferStarted = createAction(
+  '@workspaces/CLOCKIFY_TRANSFER_STARTED',
+);
+export const clockifyWorkspaceTransferSuccess = createAction(
+  '@workspaces/CLOCKIFY_TRANSFER_SUCCESS',
+  (workspaces: ClockifyWorkspace[]) => workspaces,
+);
+export const clockifyWorkspaceTransferFailure = createAction(
+  '@workspaces/CLOCKIFY_TRANSFER_FAILURE',
+);
 export const appendUserIdsToWorkspace = createAction(
   '@workspaces/APPEND_USER_IDS',
   (toolName: ToolName, workspaceId: string, userIds: string[]) => ({
@@ -100,33 +123,32 @@ export const updateWorkspaceNameBeingFetched = createAction(
   '@workspaces/UPDATE_NAME_BEING_FETCHED',
   (workspaceName: string | null) => workspaceName,
 );
+export const resetContentsForTool = createAction(
+  '@workspaces/RESET_CONTENTS_FOR_TOOL',
+  (toolName: ToolName) => toolName,
+);
 
 export const fetchClockifyWorkspaces = () => async (
   dispatch: Dispatch<any>,
+  getState: GetState,
 ) => {
+  const state = getState();
+
   dispatch(clockifyWorkspacesFetchStarted());
   try {
+    dispatch(resetContentsForTool(ToolName.Clockify));
+    const togglIncludedNames = selectTogglIncludedWorkspaceNames(state);
+
     const workspaces = await apiFetchClockifyWorkspaces();
-    return dispatch(clockifyWorkspacesFetchSuccess(workspaces));
+    const includedWorkspaces = workspaces.filter(({ name }) =>
+      togglIncludedNames.includes(name),
+    );
+
+    return dispatch(clockifyWorkspacesFetchSuccess(includedWorkspaces));
   } catch (error) {
     dispatch(showFetchErrorNotification(error));
     return dispatch(clockifyWorkspacesFetchFailure());
   }
-};
-
-export const fetchClockifyEntitiesForWorkspace = (
-  workspaceRecord: WorkspaceModel,
-) => async (dispatch: Dispatch<any>) => {
-  const { name, id } = workspaceRecord;
-
-  dispatch(updateWorkspaceNameBeingFetched(name));
-  await dispatch(fetchClockifyClients(id));
-  await dispatch(fetchClockifyProjects(id));
-  await dispatch(fetchClockifyTags(id));
-  await dispatch(fetchClockifyTasks(id));
-  await dispatch(fetchClockifyUserGroups(id));
-  await dispatch(fetchClockifyUsers(id));
-  return dispatch(updateWorkspaceNameBeingFetched(null));
 };
 
 export const fetchTogglWorkspaces = () => async (dispatch: Dispatch<any>) => {
@@ -140,33 +162,64 @@ export const fetchTogglWorkspaces = () => async (dispatch: Dispatch<any>) => {
   }
 };
 
+export const fetchClockifyEntitiesInWorkspace = (
+  workspaceRecord: WorkspaceModel,
+) => async (dispatch: Dispatch<any>) => {
+  const { name, id } = workspaceRecord;
+
+  dispatch(updateWorkspaceNameBeingFetched(name));
+
+  await dispatch(fetchClockifyClients(id));
+  await dispatch(fetchClockifyProjects(id));
+  await dispatch(fetchClockifyTags(id));
+  await dispatch(fetchClockifyTasks(id));
+  await dispatch(fetchClockifyUserGroups(id));
+  await dispatch(fetchClockifyUsers(id));
+  await dispatch(fetchClockifyTimeEntries(id));
+
+  return dispatch(updateWorkspaceNameBeingFetched(null));
+};
+
+export const fetchTogglEntitiesInWorkspace = (
+  workspaceRecord: WorkspaceModel,
+) => async (dispatch: Dispatch<any>) => {
+  const { name, id, inclusionsByYear } = workspaceRecord;
+
+  const inclusionYears = Object.entries(inclusionsByYear).reduce(
+    (acc, [year, isIncluded]) => {
+      if (!isIncluded) return acc;
+      return [...acc, +year];
+    },
+    [],
+  );
+
+  dispatch(updateWorkspaceNameBeingFetched(name));
+
+  await dispatch(fetchTogglClients(id));
+  await dispatch(fetchTogglProjects(id));
+  await dispatch(fetchTogglTags(id));
+  await dispatch(fetchTogglTasks(id));
+  await dispatch(fetchTogglUserGroups(id));
+  await dispatch(fetchTogglUsers(id));
+  for (const inclusionYear of inclusionYears) {
+    await dispatch(fetchTogglTimeEntries(id, inclusionYear));
+  }
+
+  return dispatch(updateWorkspaceNameBeingFetched(null));
+};
+
 export const fetchTogglWorkspaceSummary = (workspaceId: string) => async (
   dispatch: Dispatch<any>,
   getState: GetState,
 ) => {
+  const state = getState();
+
   dispatch(togglWorkspaceSummaryFetchStarted());
   try {
-    const email = selectTogglUserEmail(getState());
-
-    const promiseThrottle = new PromiseThrottle({
-      requestsPerSecond: 4,
-      promiseImplementation: Promise,
-    });
-
-    const fetchSummaryForYear = (workspaceId: string, year: number) =>
-      new Promise((resolve, reject) =>
-        apiFetchTogglWorkspaceSummaryForYear(email, workspaceId, year)
-          .then(({ data }) => {
-            const entryCount = data.reduce(
-              (acc, { items }) => acc + items.length,
-              0,
-            );
-            resolve(entryCount);
-          })
-          .catch(error => {
-            reject(error);
-          }),
-      );
+    const email = selectTogglUserEmail(state);
+    const { promiseThrottle, throttledFn } = buildThrottler(
+      apiFetchTogglWorkspaceSummaryForYear,
+    );
 
     const inclusionsByYear = {};
     let yearToFetch = new Date().getFullYear();
@@ -174,9 +227,13 @@ export const fetchTogglWorkspaceSummary = (workspaceId: string) => async (
       await promiseThrottle
         .add(
           // @ts-ignore
-          fetchSummaryForYear.bind(this, workspaceId, yearToFetch),
+          throttledFn.bind(this, email, workspaceId, yearToFetch),
         )
-        .then((entryCount: number) => {
+        .then(({ data }: { data: TogglSummaryReportDataModel[] }) => {
+          const entryCount = data.reduce(
+            (acc, { items }) => acc + items.length,
+            0,
+          );
           if (entryCount > 0) set(inclusionsByYear, yearToFetch, true);
         });
       yearToFetch -= 1;
@@ -191,30 +248,50 @@ export const fetchTogglWorkspaceSummary = (workspaceId: string) => async (
   }
 };
 
-export const fetchTogglEntitiesForWorkspace = (
+export const transferEntitiesToClockifyWorkspace = (
   workspaceRecord: WorkspaceModel,
 ) => async (dispatch: Dispatch<any>) => {
-  const { name, id, inclusionsByYear } = workspaceRecord;
+  const { name, id: togglWorkspaceId, linkedId } = workspaceRecord;
+  let clockifyWorkspaceId = linkedId;
 
-  const inclusionYears = Object.entries(inclusionsByYear).reduce(
-    (acc, [year, isIncluded]) => {
-      if (!isIncluded) return acc;
-      return [...acc, +year];
-    },
-    [],
-  );
+  dispatch(clockifyWorkspaceTransferStarted());
+  try {
+    dispatch(updateWorkspaceNameBeingFetched(name));
+    if (isNil(linkedId)) {
+      const workspace = await apiCreateClockifyWorkspace({ name });
+      clockifyWorkspaceId = workspace.id;
+      dispatch(clockifyWorkspaceTransferSuccess([workspace]));
+    }
 
-  dispatch(updateWorkspaceNameBeingFetched(name));
-  await dispatch(fetchTogglClients(id));
-  await dispatch(fetchTogglProjects(id));
-  await dispatch(fetchTogglTags(id));
-  await dispatch(fetchTogglTasks(id));
-  await dispatch(fetchTogglUserGroups(id));
-  await dispatch(fetchTogglUsers(id));
-  for (const inclusionYear of inclusionYears) {
-    await dispatch(fetchTogglTimeEntries(id, inclusionYear));
+    await dispatch(
+      transferClientsToClockify(togglWorkspaceId, clockifyWorkspaceId),
+    );
+    await dispatch(
+      transferProjectsToClockify(togglWorkspaceId, clockifyWorkspaceId),
+    );
+    await dispatch(
+      transferTagsToClockify(togglWorkspaceId, clockifyWorkspaceId),
+    );
+    await dispatch(
+      transferTasksToClockify(togglWorkspaceId, clockifyWorkspaceId),
+    );
+    await dispatch(
+      transferUserGroupsToClockify(togglWorkspaceId, clockifyWorkspaceId),
+    );
+    // TODO: Follow up on this:
+    // await dispatch(
+    //   transferUsersToClockify(togglWorkspaceId, clockifyWorkspaceId),
+    // );
+    // TODO: Write a selector to get the appropriate time entries.
+    // await dispatch(
+    //   transferTimeEntriesToClockify(togglWorkspaceId, clockifyWorkspaceId),
+    // );
+
+    return dispatch(updateWorkspaceNameBeingFetched(null));
+  } catch (error) {
+    dispatch(showFetchErrorNotification(error));
+    return dispatch(clockifyWorkspaceTransferFailure());
   }
-  return dispatch(updateWorkspaceNameBeingFetched(null));
 };
 
 export const updateIsWorkspaceEntityIncluded = (

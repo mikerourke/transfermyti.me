@@ -1,4 +1,4 @@
-import { getFirstAndLastDayOfYear } from '../../../utils/dateUtils';
+import { getFirstAndLastDayOfYear } from '../../utils';
 import {
   ClockifyTimeEntry,
   TogglTimeEntriesFetchResponse,

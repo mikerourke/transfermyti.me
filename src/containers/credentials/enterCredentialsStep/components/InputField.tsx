@@ -13,10 +13,6 @@ interface Props extends React.HTMLProps<HTMLInputElement> {
   errorText?: string;
 }
 
-const errorClass = css`
-  background-color: rgba(255, 0, 0, 0.1);
-`;
-
 const InputField: React.FunctionComponent<Props> = ({
   name,
   label,
@@ -34,7 +30,11 @@ const InputField: React.FunctionComponent<Props> = ({
       <Input
         name={name}
         placeholder={`Enter ${label}`}
-        className={cx(className, { [errorClass]: errorText !== '' })}
+        className={cx(className, {
+          [css`
+            background-color: rgba(255, 0, 0, 0.1);
+          `]: errorText !== '',
+        })}
         {...inputProps}
       />
     </Control>

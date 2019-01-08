@@ -1,33 +1,92 @@
 import { createSelector } from 'reselect';
+import get from 'lodash/get';
 import { getEntityRecordsByWorkspaceId } from '../../utils';
+import {
+  CreateNamedEntityRequest,
+  EntityType,
+} from '../../../types/commonTypes';
 import { UserGroupModel } from '../../../types/userGroupsTypes';
-import { EntityType } from '../../../types/commonTypes';
 import { State } from '../../rootReducer';
 
+export const selectClockifyUserGroupsById = createSelector(
+  (state: State) => state.entities.userGroups.clockify.byId,
+  userGroupsById => userGroupsById,
+);
+
 export const selectClockifyUserGroupRecords = createSelector(
-  (state: State) => state.entities.userGroups.clockify.userGroupsById,
+  selectClockifyUserGroupsById,
   (userGroupsById): UserGroupModel[] => Object.values(userGroupsById),
 );
 
 export const selectTogglUserGroupsById = createSelector(
-  (state: State) => state.entities.userGroups.toggl.userGroupsById,
+  (state: State) => state.entities.userGroups.toggl.byId,
   userGroupsById => userGroupsById,
 );
 
 export const selectTogglUserGroupRecords = createSelector(
   selectTogglUserGroupsById,
-  (userGroupsById): UserGroupModel[] => Object.values(userGroupsById),
+  (userGroupsById): UserGroupModel[] =>
+    Object.values(userGroupsById).filter(({ name }) => !/Admin/gi.test(name)),
 );
 
-export const selectTogglUserGroupRecordsByWorkspaceId = createSelector(
+export const selectClockifyUserGroupsByWorkspaceId = createSelector(
   [
-    selectTogglUserGroupRecords,
-    (state: State) => state.entities.timeEntries.toggl.timeEntriesById,
+    selectClockifyUserGroupRecords,
+    (state: State) => state.entities.timeEntries.clockify.byId,
   ],
   (userGroupRecords, timeEntriesById): Record<string, UserGroupModel[]> =>
     getEntityRecordsByWorkspaceId(
       EntityType.UserGroup,
       userGroupRecords,
       timeEntriesById,
+      false,
     ),
+);
+
+export const selectTogglUserGroupsByWorkspaceId = createSelector(
+  [
+    selectTogglUserGroupRecords,
+    (state: State) => state.entities.timeEntries.toggl.byId,
+  ],
+  (userGroupRecords, timeEntriesById): Record<string, UserGroupModel[]> =>
+    getEntityRecordsByWorkspaceId(
+      EntityType.UserGroup,
+      userGroupRecords,
+      timeEntriesById,
+      false,
+    ),
+);
+
+export const selectTogglUserGroupInclusionsByWorkspaceId = createSelector(
+  [
+    selectTogglUserGroupRecords,
+    (state: State) => state.entities.timeEntries.toggl.byId,
+  ],
+  (userGroupRecords, timeEntriesById): Record<string, UserGroupModel[]> =>
+    getEntityRecordsByWorkspaceId(
+      EntityType.UserGroup,
+      userGroupRecords,
+      timeEntriesById,
+      true,
+    ),
+);
+
+export const selectUserGroupsTransferPayloadForWorkspace = createSelector(
+  [
+    selectTogglUserGroupInclusionsByWorkspaceId,
+    (_: null, workspaceId: string) => workspaceId,
+  ],
+  (inclusionsByWorkspaceId, workspaceIdToGet): CreateNamedEntityRequest[] => {
+    const includedRecords = get(
+      inclusionsByWorkspaceId,
+      workspaceIdToGet,
+      [],
+    ) as UserGroupModel[];
+    if (includedRecords.length === 0) return [];
+
+    return includedRecords.reduce((acc, { workspaceId, name }) => {
+      if (workspaceId !== workspaceIdToGet) return acc;
+      return [...acc, { name }];
+    }, []);
+  },
 );

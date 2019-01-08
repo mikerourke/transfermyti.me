@@ -11,31 +11,34 @@ import {
   togglTagsFetchFailure,
   togglTagsFetchStarted,
   togglTagsFetchSuccess,
+  clockifyTagsTransferFailure,
+  clockifyTagsTransferStarted,
+  clockifyTagsTransferSuccess,
   updateIsTagIncluded,
 } from './tagsActions';
-import { EntityType, ToolName } from '../../../types/commonTypes';
+import {
+  EntityGroup,
+  EntityType,
+  ReduxStateEntryForTool,
+  ToolName,
+} from '../../../types/commonTypes';
 import { ClockifyTag, TagModel, TogglTag } from '../../../types/tagsTypes';
 import { ReduxAction } from '../../rootReducer';
 
-interface TagsEntryForTool {
-  readonly tagsById: Record<string, TagModel>;
-  readonly tagIds: string[];
-}
-
 export interface TagsState {
-  readonly clockify: TagsEntryForTool;
-  readonly toggl: TagsEntryForTool;
+  readonly clockify: ReduxStateEntryForTool<TagModel>;
+  readonly toggl: ReduxStateEntryForTool<TagModel>;
   readonly isFetching: boolean;
 }
 
 export const initialState: TagsState = {
   clockify: {
-    tagsById: {},
-    tagIds: [],
+    byId: {},
+    idValues: [],
   },
   toggl: {
-    tagsById: {},
-    tagIds: [],
+    byId: {},
+    idValues: [],
   },
   isFetching: false,
 };
@@ -51,13 +54,13 @@ const schemaProcessStrategy = (value: ClockifyTag | TogglTag): TagModel => ({
 
 export default handleActions(
   {
-    [clockifyTagsFetchSuccess]: (
+    [combineActions(clockifyTagsFetchSuccess, clockifyTagsTransferSuccess)]: (
       state: TagsState,
       { payload: tags }: ReduxAction<ClockifyTag[]>,
     ): TagsState =>
-      getEntityNormalizedState<TagsState, ClockifyTag[]>(
+      getEntityNormalizedState(
         ToolName.Clockify,
-        EntityType.Tag,
+        EntityGroup.Tags,
         schemaProcessStrategy,
         state,
         tags,
@@ -67,17 +70,19 @@ export default handleActions(
       state: TagsState,
       { payload: tags }: ReduxAction<TogglTag[]>,
     ): TagsState =>
-      getEntityNormalizedState<TagsState, TogglTag[]>(
+      getEntityNormalizedState(
         ToolName.Toggl,
-        EntityType.Tag,
+        EntityGroup.Tags,
         schemaProcessStrategy,
         state,
         tags,
       ),
 
-    [combineActions(clockifyTagsFetchStarted, togglTagsFetchStarted)]: (
-      state: TagsState,
-    ): TagsState => ({
+    [combineActions(
+      clockifyTagsFetchStarted,
+      togglTagsFetchStarted,
+      clockifyTagsTransferStarted,
+    )]: (state: TagsState): TagsState => ({
       ...state,
       isFetching: true,
     }),
@@ -87,6 +92,8 @@ export default handleActions(
       clockifyTagsFetchFailure,
       togglTagsFetchSuccess,
       togglTagsFetchFailure,
+      clockifyTagsTransferSuccess,
+      clockifyTagsTransferFailure,
     )]: (state: TagsState): TagsState => ({
       ...state,
       isFetching: false,
@@ -95,8 +102,7 @@ export default handleActions(
     [updateIsTagIncluded]: (
       state: TagsState,
       { payload: tagId }: ReduxAction<string>,
-    ): TagsState =>
-      updateIsEntityIncluded<TagsState>(state, EntityType.Tag, tagId),
+    ): TagsState => updateIsEntityIncluded(state, EntityType.Tag, tagId),
   },
   initialState,
 );

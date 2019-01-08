@@ -1,13 +1,17 @@
 import React from 'react';
 import { ListRowProps } from 'react-virtualized';
-import { css } from 'emotion';
 import { Box } from 'bloomer';
-import { EntityModel } from '../../../../types/commonTypes';
-import IncludedIndicator from '../../../../components/includedIndicator/IncludedIndicator';
+import { css } from 'emotion';
+import isNil from 'lodash/isNil';
+import noop from 'lodash/noop';
+import Flex from '../../flex/Flex';
+import IncludedIndicator from '../../includedIndicator/IncludedIndicator';
+import ShowIf from '../../showIf/ShowIf';
+import { EntityModel } from '../../../types/commonTypes';
 
 interface Props extends ListRowProps {
   entityRecord: EntityModel;
-  onItemClick: () => void;
+  onItemClick?: () => void;
 }
 
 const BasicListItem: React.FunctionComponent<Props> = ({
@@ -21,35 +25,25 @@ const BasicListItem: React.FunctionComponent<Props> = ({
   const entryLabel = entryCount === 1 ? 'entry' : 'entries';
 
   return (
-    <div
-      {...props}
-      className={css`
-        align-items: center;
-        display: flex;
-        justify-content: flex-start;
-      `}
-    >
-      <Box
+    <Flex {...props} alignItems="center" justifyContent="flex-start">
+      <Flex
+        as={Box}
+        alignItems="center"
+        justifyContent="space-between"
         className={css`
-          align-items: center;
-          display: flex;
           height: 48px;
-          justify-content: space-between;
           margin-left: 0.5rem;
           padding: 0 1rem;
           width: calc(100% - 2rem);
         `}
       >
-        <div
-          className={css`
-            display: flex;
-            align-items: center;
-          `}
-        >
-          <IncludedIndicator
+        <Flex alignItems="center">
+          <ShowIf
+            as={IncludedIndicator}
+            isShown={!isNil(onItemClick)}
             isIncluded={isIncluded}
             size="1.25rem"
-            onClick={onItemClick}
+            onClick={isNil(onItemClick) ? noop : onItemClick}
           />
           <span
             className={css`
@@ -59,12 +53,12 @@ const BasicListItem: React.FunctionComponent<Props> = ({
           >
             {name}
           </span>
-        </div>
+        </Flex>
         <div>
           <strong>{entryCount}</strong> time {entryLabel}
         </div>
-      </Box>
-    </div>
+      </Flex>
+    </Flex>
   );
 };
 

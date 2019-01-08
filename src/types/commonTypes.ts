@@ -54,3 +54,17 @@ export type EntityModel =
   | TimeEntryModel
   | UserGroupModel
   | UserModel;
+
+export type ReduxStateEntryForTool<TModel> = {
+  readonly byId: Record<string, TModel>;
+  readonly idValues: string[];
+};
+
+export enum HttpMethod {
+  Post = 'POST',
+  Delete = 'DELETE',
+}
+
+export interface CreateNamedEntityRequest {
+  name: string;
+}

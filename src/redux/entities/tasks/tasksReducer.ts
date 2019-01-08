@@ -8,39 +8,49 @@ import {
   clockifyTasksFetchFailure,
   clockifyTasksFetchStarted,
   clockifyTasksFetchSuccess,
+  clockifyTasksTransferFailure,
+  clockifyTasksTransferStarted,
+  clockifyTasksTransferSuccess,
   togglTasksFetchFailure,
   togglTasksFetchStarted,
   togglTasksFetchSuccess,
   updateIsTaskIncluded,
 } from './tasksActions';
-import { EntityType, ToolName } from '../../../types/commonTypes';
-import { ClockifyTask, TaskModel, TogglTask } from '../../../types/tasksTypes';
+import {
+  EntityGroup,
+  EntityType,
+  ReduxStateEntryForTool,
+  ToolName,
+} from '../../../types/commonTypes';
+import {
+  ClockifyTask,
+  ClockifyTaskStatus,
+  TaskModel,
+  TogglTask
+} from '../../../types/tasksTypes';
 import { ReduxAction } from '../../rootReducer';
 
-interface TasksEntryForTool {
-  readonly tasksById: Record<string, TaskModel>;
-  readonly taskIds: string[];
-}
-
 export interface TasksState {
-  readonly clockify: TasksEntryForTool;
-  readonly toggl: TasksEntryForTool;
+  readonly clockify: ReduxStateEntryForTool<TaskModel>;
+  readonly toggl: ReduxStateEntryForTool<TaskModel>;
   readonly isFetching: boolean;
 }
 
 export const initialState: TasksState = {
   clockify: {
-    tasksById: {},
-    taskIds: [],
+    byId: {},
+    idValues: [],
   },
   toggl: {
-    tasksById: {},
-    taskIds: [],
+    byId: {},
+    idValues: [],
   },
   isFetching: false,
 };
 
-const getEstimateFromSeconds = (seconds: number): string => {
+const convertSecondsToClockifyEstimate = (
+  seconds: number,
+): string => {
   const minutes = seconds / 60;
   if (minutes < 60) return `PT${minutes}M`;
 
@@ -53,12 +63,12 @@ const schemaProcessStrategy = (value: ClockifyTask | TogglTask): TaskModel => ({
   name: value.name,
   estimate:
     'estimated_seconds' in value
-      ? getEstimateFromSeconds(value.estimated_seconds)
+      ? convertSecondsToClockifyEstimate(value.estimated_seconds)
       : value.estimate,
   workspaceId: '', // The workspaceId value is assigned in the selector.
   projectId: getEntityIdFieldValue(value, EntityType.Project),
   assigneeId: getEntityIdFieldValue(value, EntityType.User),
-  isActive: 'active' in value ? value.active : value.status === 'ACTIVE',
+  isActive: 'active' in value ? value.active : value.status === ClockifyTaskStatus.Active,
   entryCount: 0,
   linkedId: null,
   isIncluded: true,
@@ -66,13 +76,13 @@ const schemaProcessStrategy = (value: ClockifyTask | TogglTask): TaskModel => ({
 
 export default handleActions(
   {
-    [clockifyTasksFetchSuccess]: (
+    [combineActions(clockifyTasksFetchSuccess, clockifyTasksTransferSuccess)]: (
       state: TasksState,
       { payload: tasks }: ReduxAction<ClockifyTask[]>,
     ): TasksState =>
-      getEntityNormalizedState<TasksState, ClockifyTask[]>(
+      getEntityNormalizedState(
         ToolName.Clockify,
-        EntityType.Task,
+        EntityGroup.Tasks,
         schemaProcessStrategy,
         state,
         tasks,
@@ -82,17 +92,19 @@ export default handleActions(
       state: TasksState,
       { payload: tasks }: ReduxAction<TogglTask[]>,
     ): TasksState =>
-      getEntityNormalizedState<TasksState, TogglTask[]>(
+      getEntityNormalizedState(
         ToolName.Toggl,
-        EntityType.Task,
+        EntityGroup.Tasks,
         schemaProcessStrategy,
         state,
         tasks,
       ),
 
-    [combineActions(clockifyTasksFetchStarted, togglTasksFetchStarted)]: (
-      state: TasksState,
-    ): TasksState => ({
+    [combineActions(
+      clockifyTasksFetchStarted,
+      togglTasksFetchStarted,
+      clockifyTasksTransferStarted,
+    )]: (state: TasksState): TasksState => ({
       ...state,
       isFetching: true,
     }),
@@ -102,6 +114,8 @@ export default handleActions(
       clockifyTasksFetchFailure,
       togglTasksFetchSuccess,
       togglTasksFetchFailure,
+      clockifyTasksTransferSuccess,
+      clockifyTasksTransferFailure,
     )]: (state: TasksState): TasksState => ({
       ...state,
       isFetching: false,
@@ -110,8 +124,7 @@ export default handleActions(
     [updateIsTaskIncluded]: (
       state: TasksState,
       { payload: taskId }: ReduxAction<string>,
-    ): TasksState =>
-      updateIsEntityIncluded<TasksState>(state, EntityType.Task, taskId),
+    ): TasksState => updateIsEntityIncluded(state, EntityType.Task, taskId),
   },
   initialState,
 );

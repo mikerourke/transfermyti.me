@@ -11,9 +11,17 @@ import {
   togglUserGroupsFetchFailure,
   togglUserGroupsFetchStarted,
   togglUserGroupsFetchSuccess,
+  clockifyUserGroupsTransferFailure,
+  clockifyUserGroupsTransferStarted,
+  clockifyUserGroupsTransferSuccess,
   updateIsUserGroupIncluded,
 } from './userGroupsActions';
-import { EntityType, ToolName } from '../../../types/commonTypes';
+import {
+  EntityGroup,
+  EntityType,
+  ReduxStateEntryForTool,
+  ToolName,
+} from '../../../types/commonTypes';
 import {
   ClockifyUserGroup,
   TogglUserGroup,
@@ -21,25 +29,20 @@ import {
 } from '../../../types/userGroupsTypes';
 import { ReduxAction } from '../../rootReducer';
 
-interface UserGroupsEntryForTool {
-  readonly userGroupsById: Record<string, UserGroupModel>;
-  readonly userGroupIds: string[];
-}
-
 export interface UserGroupsState {
-  readonly clockify: UserGroupsEntryForTool;
-  readonly toggl: UserGroupsEntryForTool;
+  readonly clockify: ReduxStateEntryForTool<UserGroupModel>;
+  readonly toggl: ReduxStateEntryForTool<UserGroupModel>;
   readonly isFetching: boolean;
 }
 
 export const initialState: UserGroupsState = {
   clockify: {
-    userGroupsById: {},
-    userGroupIds: [],
+    byId: {},
+    idValues: [],
   },
   toggl: {
-    userGroupsById: {},
-    userGroupIds: [],
+    byId: {},
+    idValues: [],
   },
   isFetching: false,
 };
@@ -58,13 +61,16 @@ const schemaProcessStrategy = (
 
 export default handleActions(
   {
-    [clockifyUserGroupsFetchSuccess]: (
+    [combineActions(
+      clockifyUserGroupsFetchSuccess,
+      clockifyUserGroupsTransferSuccess,
+    )]: (
       state: UserGroupsState,
       { payload: userGroups }: ReduxAction<ClockifyUserGroup[]>,
     ): UserGroupsState =>
-      getEntityNormalizedState<UserGroupsState, ClockifyUserGroup[]>(
+      getEntityNormalizedState(
         ToolName.Clockify,
-        EntityType.UserGroup,
+        EntityGroup.UserGroups,
         schemaProcessStrategy,
         state,
         userGroups,
@@ -74,9 +80,9 @@ export default handleActions(
       state: UserGroupsState,
       { payload: userGroups }: ReduxAction<TogglUserGroup[]>,
     ): UserGroupsState =>
-      getEntityNormalizedState<UserGroupsState, TogglUserGroup[]>(
+      getEntityNormalizedState(
         ToolName.Toggl,
-        EntityType.UserGroup,
+        EntityGroup.UserGroups,
         schemaProcessStrategy,
         state,
         userGroups,
@@ -85,6 +91,7 @@ export default handleActions(
     [combineActions(
       clockifyUserGroupsFetchStarted,
       togglUserGroupsFetchStarted,
+      clockifyUserGroupsTransferStarted,
     )]: (state: UserGroupsState): UserGroupsState => ({
       ...state,
       isFetching: true,
@@ -95,6 +102,8 @@ export default handleActions(
       clockifyUserGroupsFetchFailure,
       togglUserGroupsFetchSuccess,
       togglUserGroupsFetchFailure,
+      clockifyUserGroupsTransferSuccess,
+      clockifyUserGroupsTransferFailure,
     )]: (state: UserGroupsState): UserGroupsState => ({
       ...state,
       isFetching: false,
@@ -104,11 +113,7 @@ export default handleActions(
       state: UserGroupsState,
       { payload: userGroupId }: ReduxAction<string>,
     ): UserGroupsState =>
-      updateIsEntityIncluded<UserGroupsState>(
-        state,
-        EntityType.UserGroup,
-        userGroupId,
-      ),
+      updateIsEntityIncluded(state, EntityType.UserGroup, userGroupId),
   },
   initialState,
 );

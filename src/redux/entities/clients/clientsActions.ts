@@ -1,10 +1,12 @@
 import { createAction } from 'redux-actions';
-import { apiFetchClockifyClients, apiFetchTogglClients } from '../api/clients';
-import { showFetchErrorNotification } from '../../app/appActions';
+import { batchClockifyRequests } from '../../utils';
 import {
-  selectClockifyLinkedClientsById,
-  selectTogglIncludedClientRecords,
-} from './clientsSelectors';
+  apiCreateClockifyClient,
+  apiFetchClockifyClients,
+  apiFetchTogglClients,
+} from '../api/clients';
+import { showFetchErrorNotification } from '../../app/appActions';
+import { selectClientsTransferPayloadForWorkspace } from './clientsSelectors';
 import { ClockifyClient, TogglClient } from '../../../types/clientsTypes';
 import { Dispatch, GetState } from '../../rootReducer';
 
@@ -28,6 +30,16 @@ export const togglClientsFetchSuccess = createAction(
 export const togglClientsFetchFailure = createAction(
   '@clients/TOGGL_FETCH_FAILURE',
 );
+export const clockifyClientsTransferStarted = createAction(
+  '@clients/CLOCKIFY_CLIENTS_TRANSFER_STARTED',
+);
+export const clockifyClientsTransferSuccess = createAction(
+  '@clients/CLOCKIFY_CLIENTS_TRANSFER_SUCCESS',
+  (clients: ClockifyClient[]) => clients,
+);
+export const clockifyClientsTransferFailure = createAction(
+  '@clients/CLOCKIFY_CLIENTS_TRANSFER_FAILURE',
+);
 export const updateIsClientIncluded = createAction(
   '@clients/UPDATE_IS_INCLUDED',
   (clientId: string) => clientId,
@@ -46,15 +58,6 @@ export const fetchClockifyClients = (workspaceId: string) => async (
   }
 };
 
-export const transferAllClientsToClockify = () => async (
-  dispatch: Dispatch<any>,
-  getState: GetState,
-) => {
-  const state = getState();
-  const togglIncludedRecords = selectTogglIncludedClientRecords(state);
-  const clockifyClientsById = selectClockifyLinkedClientsById(state);
-};
-
 export const fetchTogglClients = (workspaceId: string) => async (
   dispatch: Dispatch<any>,
 ) => {
@@ -65,5 +68,30 @@ export const fetchTogglClients = (workspaceId: string) => async (
   } catch (error) {
     dispatch(showFetchErrorNotification(error));
     return dispatch(togglClientsFetchFailure());
+  }
+};
+
+export const transferClientsToClockify = (
+  togglWorkspaceId: string,
+  clockifyWorkspaceId: string,
+) => async (dispatch: Dispatch<any>, getState: GetState) => {
+  const state = getState();
+  const clientRecordsInWorkspace = selectClientsTransferPayloadForWorkspace(
+    state,
+    togglWorkspaceId,
+  );
+  if (clientRecordsInWorkspace.length === 0) return Promise.resolve();
+
+  dispatch(clockifyClientsTransferStarted());
+  try {
+    const clients = await batchClockifyRequests(
+      clientRecordsInWorkspace,
+      apiCreateClockifyClient,
+      clockifyWorkspaceId,
+    );
+    return dispatch(clockifyClientsTransferSuccess(clients));
+  } catch (error) {
+    dispatch(showFetchErrorNotification(error));
+    return dispatch(clockifyClientsTransferFailure());
   }
 };

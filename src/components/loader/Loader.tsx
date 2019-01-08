@@ -36,6 +36,12 @@ const Loader: React.FunctionComponent = ({ children }) => {
     }
   `;
 
+  const cubeOrientations = [
+    { rotation: '90deg', delay: '0.3s' },
+    { rotation: '270deg', delay: '0.9s' },
+    { rotation: '180deg', delay: '0.6s' },
+  ];
+
   return (
     <div>
       <div
@@ -47,42 +53,20 @@ const Loader: React.FunctionComponent = ({ children }) => {
         `}
       >
         <div className={cubeClass} />
-        <div
-          className={cx(
-            cubeClass,
-            css`
-              transform: scale(1.1) rotateZ(90deg);
-
-              &:before {
-                animation-delay: 0.3s;
-              }
-            `,
-          )}
-        />
-        <div
-          className={cx(
-            cubeClass,
-            css`
-              transform: scale(1.1) rotateZ(270deg);
-
-              &:before {
-                animation-delay: 0.9s;
-              }
-            `,
-          )}
-        />
-        <div
-          className={cx(
-            cubeClass,
-            css`
-              transform: scale(1.1) rotateZ(180deg);
-
-              &:before {
-                animation-delay: 0.6s;
-              }
-            `,
-          )}
-        />
+        {cubeOrientations.map(({ rotation, delay }) => (
+          <div
+            key={rotation}
+            className={cx(
+              cubeClass,
+              css`
+                transform: scale(1.1) rotateZ(${rotation});
+                &:before {
+                  animation-delay: ${delay};
+                }
+              `,
+            )}
+          />
+        ))}
       </div>
       <div
         className={css`
