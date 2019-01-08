@@ -8,16 +8,6 @@ import {
 import { UserGroupModel } from '../../../types/userGroupsTypes';
 import { State } from '../../rootReducer';
 
-export const selectClockifyUserGroupsById = createSelector(
-  (state: State) => state.entities.userGroups.clockify.byId,
-  userGroupsById => userGroupsById,
-);
-
-export const selectClockifyUserGroupRecords = createSelector(
-  selectClockifyUserGroupsById,
-  (userGroupsById): UserGroupModel[] => Object.values(userGroupsById),
-);
-
 export const selectTogglUserGroupsById = createSelector(
   (state: State) => state.entities.userGroups.toggl.byId,
   userGroupsById => userGroupsById,
@@ -27,20 +17,6 @@ export const selectTogglUserGroupRecords = createSelector(
   selectTogglUserGroupsById,
   (userGroupsById): UserGroupModel[] =>
     Object.values(userGroupsById).filter(({ name }) => !/Admin/gi.test(name)),
-);
-
-export const selectClockifyUserGroupsByWorkspaceId = createSelector(
-  [
-    selectClockifyUserGroupRecords,
-    (state: State) => state.entities.timeEntries.clockify.byId,
-  ],
-  (userGroupRecords, timeEntriesById): Record<string, UserGroupModel[]> =>
-    getEntityRecordsByWorkspaceId(
-      EntityType.UserGroup,
-      userGroupRecords,
-      timeEntriesById,
-      false,
-    ),
 );
 
 export const selectTogglUserGroupsByWorkspaceId = createSelector(

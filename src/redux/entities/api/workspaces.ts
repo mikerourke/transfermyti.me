@@ -2,7 +2,6 @@ import { getFirstAndLastDayOfYear } from '../../utils';
 import {
   ClockifyWorkspace,
   TogglSummaryReport,
-  TogglWorkspace,
 } from '../../../types/workspacesTypes';
 import {
   CreateNamedEntityRequest,
@@ -11,9 +10,6 @@ import {
 
 export const apiFetchClockifyWorkspaces = (): Promise<ClockifyWorkspace[]> =>
   fetch('/clockify/api/workspaces/');
-
-export const apiFetchTogglWorkspaces = (): Promise<TogglWorkspace[]> =>
-  fetch('/toggl/api/workspaces');
 
 export const apiFetchTogglWorkspaceSummaryForYear = (
   email: string,

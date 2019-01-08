@@ -2,10 +2,7 @@ import { createSelector } from 'reselect';
 import get from 'lodash/get';
 import property from 'lodash/property';
 import { getTogglInclusionRecords } from '../../utils';
-import {
-  selectCredentials,
-  selectClockifyUserId,
-} from '../../credentials/credentialsSelectors';
+import { selectCredentials } from '../../credentials/credentialsSelectors';
 import { UserModel } from '../../../types/usersTypes';
 import { WorkspaceModel } from '../../../types/workspacesTypes';
 import { State } from '../../rootReducer';
@@ -52,16 +49,6 @@ const getUserRecordsByWorkspaceId = (
     {},
   );
 };
-
-export const selectClockifyUsersByWorkspaceId = createSelector(
-  [
-    selectClockifyUsersById,
-    selectClockifyUserId,
-    (state: State) => state.entities.workspaces.clockify.byId,
-  ],
-  (usersById, meUserId, workspacesById): Record<string, UserModel[]> =>
-    getUserRecordsByWorkspaceId(usersById, meUserId, workspacesById),
-);
 
 export const selectTogglUsersByWorkspaceId = createSelector(
   [

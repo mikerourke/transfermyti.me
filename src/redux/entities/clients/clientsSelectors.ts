@@ -10,19 +10,9 @@ import {
 import { TimeEntryModel } from '../../../types/timeEntriesTypes';
 import { State } from '../../rootReducer';
 
-const selectClockifyClientsById = createSelector(
-  (state: State) => state.entities.clients.clockify.byId,
-  (clientsById): Record<string, ClientModel> => clientsById,
-);
-
 const selectTogglClientsById = createSelector(
   (state: State) => state.entities.clients.toggl.byId,
   (clientsById): Record<string, ClientModel> => clientsById,
-);
-
-export const selectClockifyClientRecords = createSelector(
-  selectClockifyClientsById,
-  (clockifyClientsById): ClientModel[] => Object.values(clockifyClientsById),
 );
 
 export const selectTogglClientRecords = createSelector(
@@ -60,19 +50,6 @@ const getClientRecordsByWorkspaceId = (
     inclusionsOnly,
   );
 };
-
-export const selectClockifyClientsByWorkspaceId = createSelector(
-  [
-    selectClockifyClientRecords,
-    (state: State) => state.entities.timeEntries.clockify.byId,
-  ],
-  (clockifyClientRecords, timeEntriesById): Record<string, ClientModel[]> =>
-    getClientRecordsByWorkspaceId(
-      clockifyClientRecords,
-      timeEntriesById,
-      false,
-    ),
-);
 
 export const selectTogglClientsByWorkspaceId = createSelector(
   [

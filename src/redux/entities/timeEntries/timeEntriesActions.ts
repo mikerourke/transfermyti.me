@@ -10,12 +10,12 @@ import {
   selectClockifyUserId,
   selectTogglUserEmail,
 } from '../../credentials/credentialsSelectors';
+import { selectTogglWorkspaceIncludedYears } from '../workspaces/workspacesSelectors';
 import {
   ClockifyTimeEntry,
   TogglTimeEntry,
 } from '../../../types/timeEntriesTypes';
 import { Dispatch, GetState } from '../../rootReducer';
-import { selectTogglWorkspaceIncludedYears } from '../workspaces/workspacesSelectors';
 
 export const clockifyTimeEntriesFetchStarted = createAction(
   '@timeEntries/CLOCKIFY_FETCH_STARTED',

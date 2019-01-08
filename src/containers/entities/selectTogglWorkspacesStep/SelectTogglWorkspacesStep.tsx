@@ -1,7 +1,7 @@
 import React from 'react';
 import { connect } from 'react-redux';
-import { css } from 'emotion';
 import { Container } from 'bloomer';
+import { css } from 'emotion';
 import {
   dismissAllNotifications,
   showNotification,

@@ -5,7 +5,6 @@ import { buildThrottler } from '../../utils';
 import {
   apiCreateClockifyWorkspace,
   apiFetchClockifyWorkspaces,
-  apiFetchTogglWorkspaces,
   apiFetchTogglWorkspaceSummaryForYear,
 } from '../api/workspaces';
 import { showFetchErrorNotification } from '../../app/appActions';
@@ -148,17 +147,6 @@ export const fetchClockifyWorkspaces = () => async (
   } catch (error) {
     dispatch(showFetchErrorNotification(error));
     return dispatch(clockifyWorkspacesFetchFailure());
-  }
-};
-
-export const fetchTogglWorkspaces = () => async (dispatch: Dispatch<any>) => {
-  dispatch(togglWorkspacesFetchStarted());
-  try {
-    const workspaces = await apiFetchTogglWorkspaces();
-    return dispatch(togglWorkspacesFetchSuccess(workspaces));
-  } catch (error) {
-    dispatch(showFetchErrorNotification(error));
-    return dispatch(togglWorkspacesFetchFailure());
   }
 };
 

@@ -1,10 +1,10 @@
 import { createAction } from 'redux-actions';
-import storage from 'store';
 import capitalize from 'lodash/capitalize';
 import first from 'lodash/first';
 import set from 'lodash/set';
-import getIfDev from '../../utils/getIfDev';
+import storage from 'store';
 import { STORAGE_KEY } from '../../constants';
+import getIfDev from '../../utils/getIfDev';
 import {
   apiFetchClockifyUserDetails,
   apiFetchTogglUserDetails,

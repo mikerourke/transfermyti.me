@@ -19,7 +19,12 @@ import {
   ReduxStateEntryForTool,
   ToolName,
 } from '../../../types/commonTypes';
-import { ClockifyUser, TogglUser, UserModel } from '../../../types/usersTypes';
+import {
+  ClockifyUser,
+  ClockifyUserStatus,
+  TogglUser,
+  UserModel,
+} from '../../../types/usersTypes';
 import { ReduxAction } from '../../rootReducer';
 
 export interface UsersState {
@@ -45,7 +50,8 @@ const schemaProcessStrategy = (value: ClockifyUser | TogglUser): UserModel => ({
   name: 'fullname' in value ? value.fullname : value.name,
   email: value.email,
   isAdmin: get(value, 'admin', null),
-  isActive: 'status' in value ? value.status === 'ACTIVE' : true,
+  isActive:
+    'status' in value ? value.status === ClockifyUserStatus.Active : true,
   linkedId: null,
   isIncluded: true,
 });

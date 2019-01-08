@@ -34,11 +34,6 @@ import { EntityGroup, EntityModel } from '../../../types/commonTypes';
 import { WorkspaceModel } from '../../../types/workspacesTypes';
 import { State } from '../../rootReducer';
 
-const selectClockifyWorkspaceIds = createSelector(
-  (state: State) => state.entities.workspaces.clockify.idValues,
-  (workspaceIds): string[] => workspaceIds,
-);
-
 export const selectTogglWorkspaceIds = createSelector(
   (state: State) => state.entities.workspaces.toggl.idValues,
   (workspaceIds): string[] => workspaceIds,

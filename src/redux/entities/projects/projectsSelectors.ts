@@ -15,11 +15,6 @@ export const selectClockifyProjectsById = createSelector(
   projectsById => projectsById,
 );
 
-export const selectClockifyProjectRecords = createSelector(
-  selectClockifyProjectsById,
-  (projectsById): ProjectModel[] => Object.values(projectsById),
-);
-
 export const selectClockifyProjectIds = createSelector(
   (state: State) => state.entities.projects.clockify.idValues,
   (projectIds): string[] => projectIds,
@@ -33,20 +28,6 @@ export const selectTogglProjectsById = createSelector(
 export const selectTogglProjectRecords = createSelector(
   selectTogglProjectsById,
   (projectsById): ProjectModel[] => Object.values(projectsById),
-);
-
-export const selectClockifyProjectsByWorkspaceId = createSelector(
-  [
-    selectClockifyProjectRecords,
-    (state: State) => state.entities.timeEntries.clockify.byId,
-  ],
-  (projectRecords, timeEntriesById): Record<string, ProjectModel[]> =>
-    getEntityRecordsByWorkspaceId(
-      EntityType.Project,
-      projectRecords,
-      timeEntriesById,
-      false,
-    ),
 );
 
 export const selectTogglProjectsByWorkspaceId = createSelector(

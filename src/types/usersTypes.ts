@@ -1,5 +1,10 @@
 import { TogglWorkspace } from './workspacesTypes';
 
+// TODO: Add the other options here.
+export enum ClockifyUserStatus {
+  Active = 'ACTIVE',
+}
+
 export interface ClockifyMembership {
   userId: string;
   hourlyRate: number | null;

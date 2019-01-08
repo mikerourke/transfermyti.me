@@ -7,7 +7,6 @@ import {
 } from '../../utils';
 import { selectTogglClientsByWorkspaceId } from '../clients/clientsSelectors';
 import {
-  selectClockifyProjectsById,
   selectTogglProjectsById,
 } from '../projects/projectsSelectors';
 import { ClientModel } from '../../../types/clientsTypes';
@@ -35,30 +34,10 @@ const appendWorkspaceIdToTaskRecords = (
     workspaceId: get(projectsById, [taskRecord.projectId, 'workspaceId'], ''),
   }));
 
-export const selectClockifyTaskRecords = createSelector(
-  [selectClockifyTasksById, selectClockifyProjectsById],
-  (tasksById, projectsById): TaskModel[] =>
-    appendWorkspaceIdToTaskRecords(tasksById, projectsById),
-);
-
 export const selectTogglTaskRecords = createSelector(
   [selectTogglTasksById, selectTogglProjectsById],
   (tasksById, projectsById): TaskModel[] =>
     appendWorkspaceIdToTaskRecords(tasksById, projectsById),
-);
-
-export const selectClockifyTasksByWorkspaceId = createSelector(
-  [
-    selectClockifyTaskRecords,
-    (state: State) => state.entities.timeEntries.clockify.byId,
-  ],
-  (taskRecords, timeEntriesById): Record<string, TaskModel[]> =>
-    getEntityRecordsByWorkspaceId(
-      EntityType.Task,
-      taskRecords,
-      timeEntriesById,
-      false,
-    ),
 );
 
 export const selectTogglTasksByWorkspaceId = createSelector(

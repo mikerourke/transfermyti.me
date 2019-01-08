@@ -1,6 +1,6 @@
 import React from 'react';
-import { Section } from 'bloomer';
 import { Wizard, Steps, Step } from 'react-albus';
+import { Section } from 'bloomer';
 import EnterCredentialsStep from '../../credentials/enterCredentialsStep/EnterCredentialsStep';
 import SelectTogglWorkspacesStep from '../../entities/selectTogglWorkspacesStep/SelectTogglWorkspacesStep';
 import SelectTogglInclusionsStep from '../../entities/selectTogglInclusionsStep/SelectTogglInclusionsStep';

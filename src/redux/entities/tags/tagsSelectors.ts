@@ -20,11 +20,6 @@ export const selectTogglTagsById = createSelector(
   tagsById => tagsById,
 );
 
-export const selectClockifyTagRecords = createSelector(
-  (state: State) => state.entities.tags.clockify.byId,
-  (tagsById): TagModel[] => Object.values(tagsById),
-);
-
 export const selectTogglTagRecords = createSelector(
   (state: State) => state.entities.tags.toggl.byId,
   (tagsById): TagModel[] => Object.values(tagsById),
@@ -102,15 +97,6 @@ const getTagRecordsByWorkspaceId = (
     {},
   );
 };
-
-export const selectClockifyTagsByWorkspaceId = createSelector(
-  [
-    selectClockifyTagRecords,
-    (state: State) => state.entities.timeEntries.clockify.byId,
-  ],
-  (tagRecords, timeEntriesById): Record<string, TagModel[]> =>
-    getTagRecordsByWorkspaceId(tagRecords, timeEntriesById, false),
-);
 
 export const selectTogglTagsByWorkspaceId = createSelector(
   [
