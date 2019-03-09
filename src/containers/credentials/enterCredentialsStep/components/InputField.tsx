@@ -2,7 +2,7 @@ import React from 'react';
 import cx from 'classnames';
 import { Control, Field, Help, Input, Label } from 'bloomer';
 import { css } from 'emotion';
-import ShowIf from '../../../../components/showIf/ShowIf';
+import ShowIf from '~/components/showIf/ShowIf';
 import HelpTooltip from './HelpTooltip';
 
 interface Props extends React.HTMLProps<HTMLInputElement> {

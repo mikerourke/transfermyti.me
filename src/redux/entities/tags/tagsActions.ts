@@ -1,14 +1,14 @@
 import { createAction } from 'redux-actions';
-import { batchClockifyRequests } from '../../utils';
+import { batchClockifyRequests } from '~/redux/utils';
 import {
   apiCreateClockifyTag,
   apiFetchClockifyTags,
   apiFetchTogglTags,
 } from '../api/tags';
-import { showFetchErrorNotification } from '../../app/appActions';
+import { showFetchErrorNotification } from '~/redux/app/appActions';
 import { selectTagsTransferPayloadForWorkspace } from './tagsSelectors';
-import { ClockifyTag, TogglTag } from '../../../types/tagsTypes';
-import { Dispatch, GetState } from '../../rootReducer';
+import { ClockifyTag, TogglTag } from '~/types/tagsTypes';
+import { ReduxDispatch, ReduxGetState } from '~/types/commonTypes';
 
 export const clockifyTagsFetchStarted = createAction(
   '@tags/CLOCKIFY_FETCH_STARTED',
@@ -42,7 +42,7 @@ export const updateIsTagIncluded = createAction(
 );
 
 export const fetchClockifyTags = (workspaceId: string) => async (
-  dispatch: Dispatch<any>,
+  dispatch: ReduxDispatch,
 ) => {
   dispatch(clockifyTagsFetchStarted());
   try {
@@ -55,7 +55,7 @@ export const fetchClockifyTags = (workspaceId: string) => async (
 };
 
 export const fetchTogglTags = (workspaceId: string) => async (
-  dispatch: Dispatch<any>,
+  dispatch: ReduxDispatch,
 ) => {
   dispatch(togglTagsFetchStarted());
   try {
@@ -70,10 +70,7 @@ export const fetchTogglTags = (workspaceId: string) => async (
 export const transferTagsToClockify = (
   togglWorkspaceId: string,
   clockifyWorkspaceId: string,
-) => async (
-  dispatch: Dispatch<any>,
-  getState: GetState,
-) => {
+) => async (dispatch: ReduxDispatch, getState: ReduxGetState) => {
   const state = getState();
   const tagRecordsInWorkspace = selectTagsTransferPayloadForWorkspace(
     state,

@@ -1,9 +1,9 @@
 import get from 'lodash/get';
 import sortBy from 'lodash/sortBy';
 import getEntityRecordsWithEntryCounts from './getEntityRecordsWithEntryCounts';
-import { EntityType } from '../../types/commonTypes';
-import { TimeEntryWithClientModel } from '../../types/timeEntriesTypes';
 import getTogglInclusionRecords from './getTogglInclusionRecords';
+import { EntityType } from '~/types/commonTypes';
+import { TimeEntryWithClientModel } from '~/types/timeEntriesTypes';
 
 export default function getEntityRecordsByWorkspaceId<TModel>(
   entityType: EntityType,

@@ -2,23 +2,21 @@ import React from 'react';
 import { connect } from 'react-redux';
 import { Help } from 'bloomer';
 import { css } from 'emotion';
+import omit from 'lodash/omit';
 import {
   storeAllCredentials,
   updateCredentialsField,
   validateCredentials,
-} from '../../../redux/credentials/credentialsActions';
+} from '~/redux/credentials/credentialsActions';
 import {
   selectCredentials,
   selectIsValid,
   selectIsValidating,
-} from '../../../redux/credentials/credentialsSelectors';
-import StepPage from '../../../components/stepPage/StepPage';
+} from '~/redux/credentials/credentialsSelectors';
+import StepPage from '~/components/stepPage/StepPage';
 import InputField from './components/InputField';
-import { ReduxDispatch, ReduxState } from '../../../types/commonTypes';
-import {
-  CredentialsModel,
-  CredentialsField,
-} from '../../../types/credentialsTypes';
+import { ReduxDispatch, ReduxState } from '~/types/commonTypes';
+import { CredentialsModel, CredentialsField } from '~/types/credentialsTypes';
 
 interface ConnectStateProps {
   credentials: CredentialsModel;
@@ -60,20 +58,24 @@ export class EnterCredentialsStepComponent extends React.Component<
 
   private validateInputs = () => {
     const { credentials } = this.props;
+    const requiredCredentials = omit(credentials, 'clockifyUserId');
 
     let invalidCount = 0;
-    const newState = Object.entries(credentials).reduce((acc, [key, value]) => {
-      const errorField = `${key}Error`;
-      if (value !== '') {
-        return { ...acc, [errorField]: '' };
-      }
+    const newState = Object.entries(requiredCredentials).reduce(
+      (acc, [key, value]) => {
+        const errorField = `${key}Error`;
+        if (value !== '') {
+          return { ...acc, [errorField]: '' };
+        }
 
-      invalidCount += 1;
-      return {
-        ...acc,
-        [errorField]: 'You must specify a value',
-      };
-    }, {});
+        invalidCount += 1;
+        return {
+          ...acc,
+          [errorField]: 'You must specify a value',
+        };
+      },
+      {},
+    );
 
     this.setState(newState as any);
     return invalidCount === 0;
@@ -92,9 +94,13 @@ export class EnterCredentialsStepComponent extends React.Component<
   };
 
   private handleNextClick = async () => {
+    console.log('Validating...');
     if (!this.validateInputs()) return;
     await this.props.onValidateCredentials();
-    if (this.props.isValid) this.props.next();
+    console.log('Done!');
+    setTimeout(() => {
+      if (this.props.isValid) this.props.next();
+    }, 100);
   };
 
   render() {

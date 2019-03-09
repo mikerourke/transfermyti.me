@@ -1,27 +1,27 @@
 import { createSelector } from 'reselect';
 import flatten from 'lodash/flatten';
 import get from 'lodash/get';
-import { getEntityRecordsByWorkspaceId } from '../../utils';
+import { getEntityRecordsByWorkspaceId } from '~/redux/utils';
 import {
   CreateNamedEntityRequest,
   EntityType,
-} from '../../../types/commonTypes';
-import { TagModel } from '../../../types/tagsTypes';
-import { TimeEntryModel } from '../../../types/timeEntriesTypes';
-import { State } from '../../rootReducer';
+  ReduxState,
+} from '~/types/commonTypes';
+import { TagModel } from '~/types/tagsTypes';
+import { TimeEntryModel } from '~/types/timeEntriesTypes';
 
 export const selectClockifyTagsById = createSelector(
-  (state: State) => state.entities.tags.clockify.byId,
+  (state: ReduxState) => state.entities.tags.clockify.byId,
   tagsById => tagsById,
 );
 
 export const selectTogglTagsById = createSelector(
-  (state: State) => state.entities.tags.toggl.byId,
+  (state: ReduxState) => state.entities.tags.toggl.byId,
   tagsById => tagsById,
 );
 
 export const selectTogglTagRecords = createSelector(
-  (state: State) => state.entities.tags.toggl.byId,
+  (state: ReduxState) => state.entities.tags.toggl.byId,
   (tagsById): TagModel[] => Object.values(tagsById),
 );
 
@@ -101,7 +101,7 @@ const getTagRecordsByWorkspaceId = (
 export const selectTogglTagsByWorkspaceId = createSelector(
   [
     selectTogglTagRecords,
-    (state: State) => state.entities.timeEntries.toggl.byId,
+    (state: ReduxState) => state.entities.timeEntries.toggl.byId,
   ],
   (tagRecords, timeEntriesById): Record<string, TagModel[]> =>
     getTagRecordsByWorkspaceId(tagRecords, timeEntriesById, false),
@@ -110,7 +110,7 @@ export const selectTogglTagsByWorkspaceId = createSelector(
 export const selectTogglTagInclusionsByWorkspaceId = createSelector(
   [
     selectTogglTagRecords,
-    (state: State) => state.entities.timeEntries.toggl.byId,
+    (state: ReduxState) => state.entities.timeEntries.toggl.byId,
   ],
   (tagRecords, timeEntriesById): Record<string, TagModel[]> =>
     getTagRecordsByWorkspaceId(tagRecords, timeEntriesById, true),

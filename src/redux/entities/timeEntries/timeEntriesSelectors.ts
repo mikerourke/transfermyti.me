@@ -5,33 +5,32 @@ import get from 'lodash/get';
 import {
   selectClockifyProjectsById,
   selectTogglProjectsById,
-} from '../projects/projectsSelectors';
+} from '~/redux/entities/projects/projectsSelectors';
 import {
   selectClockifyTagIdsByName,
   selectTogglTagIdsByName,
-} from '../tags/tagsSelectors';
+} from '~/redux/entities/tags/tagsSelectors';
 import {
   selectClockifyTasksById,
   selectTogglTasksById,
-} from '../tasks/tasksSelectors';
+} from '~/redux/entities/tasks/tasksSelectors';
 import {
   selectClockifyUsersById,
   selectTogglUsersById,
-} from '../users/usersSelectors';
-import { EntityModel } from '../../../types/commonTypes';
+} from '~/redux/entities/users/usersSelectors';
+import { EntityModel, ReduxState } from '~/types/commonTypes';
 import {
   DetailedTimeEntryModel,
   TimeEntryModel,
-} from '../../../types/timeEntriesTypes';
-import { State } from '../../rootReducer';
+} from '~/types/timeEntriesTypes';
 
 const selectClockifyTimeEntriesById = createSelector(
-  (state: State) => state.entities.timeEntries.clockify.byId,
+  (state: ReduxState) => state.entities.timeEntries.clockify.byId,
   timeEntriesById => timeEntriesById,
 );
 
 const selectTogglTimeEntriesById = createSelector(
-  (state: State) => state.entities.timeEntries.toggl.byId,
+  (state: ReduxState) => state.entities.timeEntries.toggl.byId,
   timeEntriesById => timeEntriesById,
 );
 
@@ -105,7 +104,7 @@ const getTimeEntriesByWorkspaceId = (
 export const selectClockifyTimeEntriesByWorkspaceId = createSelector(
   [
     selectClockifyDetailedTimeEntryRecords,
-    (state: State) => state.entities.workspaces.clockify.idValues,
+    (state: ReduxState) => state.entities.workspaces.clockify.idValues,
   ],
   (timeEntryRecords, workspaceIds): Record<string, TimeEntryModel[]> =>
     getTimeEntriesByWorkspaceId(timeEntryRecords, workspaceIds),
@@ -114,7 +113,7 @@ export const selectClockifyTimeEntriesByWorkspaceId = createSelector(
 export const selectTogglTimeEntriesByWorkspaceId = createSelector(
   [
     selectTogglDetailedTimeEntryRecords,
-    (state: State) => state.entities.workspaces.toggl.idValues,
+    (state: ReduxState) => state.entities.workspaces.toggl.idValues,
   ],
   (timeEntryRecords, workspaceIds): Record<string, TimeEntryModel[]> =>
     getTimeEntriesByWorkspaceId(timeEntryRecords, workspaceIds),

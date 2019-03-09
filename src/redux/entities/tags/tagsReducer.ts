@@ -3,7 +3,7 @@ import {
   getEntityIdFieldValue,
   getEntityNormalizedState,
   updateIsEntityIncluded,
-} from '../../utils';
+} from '~/redux/utils';
 import {
   clockifyTagsFetchFailure,
   clockifyTagsFetchStarted,
@@ -19,11 +19,11 @@ import {
 import {
   EntityGroup,
   EntityType,
+  ReduxAction,
   ReduxStateEntryForTool,
   ToolName,
-} from '../../../types/commonTypes';
-import { ClockifyTag, TagModel, TogglTag } from '../../../types/tagsTypes';
-import { ReduxAction } from '../../rootReducer';
+} from '~/types/commonTypes';
+import { ClockifyTag, TagModel, TogglTag } from '~/types/tagsTypes';
 
 export interface TagsState {
   readonly clockify: ReduxStateEntryForTool<TagModel>;

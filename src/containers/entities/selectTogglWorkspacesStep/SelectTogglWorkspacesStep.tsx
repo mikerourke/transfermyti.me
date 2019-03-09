@@ -5,25 +5,25 @@ import { css } from 'emotion';
 import {
   dismissAllNotifications,
   showNotification,
-} from '../../../redux/app/appActions';
+} from '~/redux/app/appActions';
 import {
   fetchTogglWorkspaceSummary,
   updateIsWorkspaceIncluded,
   updateIsWorkspaceYearIncluded,
-} from '../../../redux/entities/workspaces/workspacesActions';
+} from '~/redux/entities/workspaces/workspacesActions';
 import {
   selectTogglIncludedWorkspacesCount,
   selectTogglWorkspaceIds,
   selectTogglWorkspacesById,
   selectTogglWorkspaceIncludedYearsCount,
   selectIfTogglWorkspaceYearsFetched,
-} from '../../../redux/entities/workspaces/workspacesSelectors';
-import Loader from '../../../components/loader/Loader';
-import StepPage from '../../../components/stepPage/StepPage';
+} from '~/redux/entities/workspaces/workspacesSelectors';
+import Loader from '~/components/loader/Loader';
+import StepPage from '~/components/stepPage/StepPage';
 import WorkspaceRow from './components/WorkspaceRow';
-import { NotificationModel, NotificationType } from '../../../types/appTypes';
-import { ReduxDispatch, ReduxState } from '../../../types/commonTypes';
-import { WorkspaceModel } from '../../../types/workspacesTypes';
+import { NotificationModel, NotificationType } from '~/types/appTypes';
+import { ReduxDispatch, ReduxState } from '~/types/commonTypes';
+import { WorkspaceModel } from '~/types/workspacesTypes';
 
 interface ConnectStateProps {
   workspaceIds: string[];
@@ -52,7 +52,10 @@ interface State {
   workspaceFetching: string | null;
 }
 
-class SelectTogglWorkspacesStepComponent extends React.Component<Props, State> {
+export class SelectTogglWorkspacesStepComponent extends React.Component<
+  Props,
+  State
+> {
   state: State = {
     workspaceFetching: null,
   };

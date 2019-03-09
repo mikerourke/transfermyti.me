@@ -5,27 +5,30 @@ import isNil from 'lodash/isNil';
 import {
   fetchTogglEntitiesInWorkspace,
   updateIsWorkspaceEntityIncluded,
-} from '../../../redux/entities/workspaces/workspacesActions';
+} from '~/redux/entities/workspaces/workspacesActions';
 import {
+  selectIfFetchRequiredForTool,
   selectTogglEntitiesByWorkspaceId,
   selectTogglIncludedWorkspacesById,
   selectWorkspaceNameBeingFetched,
-} from '../../../redux/entities/workspaces/workspacesSelectors';
-import EntitiesReviewPage from '../../../components/entitiesReviewPage/EntitiesReviewPage';
-import Loader from '../../../components/loader/Loader';
+} from '~/redux/entities/workspaces/workspacesSelectors';
+import EntitiesReviewPage from '~/components/entitiesReviewPage/EntitiesReviewPage';
+import Loader from '~/components/loader/Loader';
 import InstructionsList from './components/InstructionsList';
 import {
   EntityGroup,
   EntityModel,
   ReduxDispatch,
   ReduxState,
-} from '../../../types/commonTypes';
-import { WorkspaceModel } from '../../../types/workspacesTypes';
+  ToolName,
+} from '~/types/commonTypes';
+import { WorkspaceModel } from '~/types/workspacesTypes';
 
 interface ConnectStateProps {
   entitiesByWorkspaceId: Record<string, Record<EntityGroup, EntityModel[]>>;
   workspaceNameBeingFetched: string;
   workspacesById: Record<string, WorkspaceModel>;
+  isFetchRequired: boolean;
 }
 
 interface ConnectDispatchProps {
@@ -51,6 +54,8 @@ export class SelectTogglInclusionsStepComponent extends React.Component<Props> {
   }
 
   private fetchEntitiesForAllWorkspaces = async () => {
+    if (!this.props.isFetchRequired) return;
+
     const workspaceRecords = Object.values(this.props.workspacesById);
     for (const workspaceRecord of workspaceRecords) {
       await this.props.onFetchEntitiesForWorkspace(workspaceRecord);
@@ -103,6 +108,7 @@ const mapStateToProps = (state: ReduxState) => ({
   entitiesByWorkspaceId: selectTogglEntitiesByWorkspaceId(state),
   workspacesById: selectTogglIncludedWorkspacesById(state),
   workspaceNameBeingFetched: selectWorkspaceNameBeingFetched(state),
+  isFetchRequired: selectIfFetchRequiredForTool(state, ToolName.Toggl),
 });
 
 const mapDispatchToProps = (dispatch: ReduxDispatch) => ({

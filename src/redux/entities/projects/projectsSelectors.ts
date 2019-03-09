@@ -1,27 +1,26 @@
 import { createSelector } from 'reselect';
 import get from 'lodash/get';
 import isNil from 'lodash/isNil';
-import { getEntityRecordsByWorkspaceId } from '../../utils';
-import { EntityType } from '../../../types/commonTypes';
+import { getEntityRecordsByWorkspaceId } from '~/redux/utils';
+import { EntityType, ReduxState } from '~/types/commonTypes';
 import {
   ClockifyEstimateType,
   CreateProjectRequest,
   ProjectModel,
-} from '../../../types/projectsTypes';
-import { State } from '../../rootReducer';
+} from '~/types/projectsTypes';
 
 export const selectClockifyProjectsById = createSelector(
-  (state: State) => state.entities.projects.clockify.byId,
+  (state: ReduxState) => state.entities.projects.clockify.byId,
   projectsById => projectsById,
 );
 
 export const selectClockifyProjectIds = createSelector(
-  (state: State) => state.entities.projects.clockify.idValues,
+  (state: ReduxState) => state.entities.projects.clockify.idValues,
   (projectIds): string[] => projectIds,
 );
 
 export const selectTogglProjectsById = createSelector(
-  (state: State) => state.entities.projects.toggl.byId,
+  (state: ReduxState) => state.entities.projects.toggl.byId,
   projectsById => projectsById,
 );
 
@@ -33,7 +32,7 @@ export const selectTogglProjectRecords = createSelector(
 export const selectTogglProjectsByWorkspaceId = createSelector(
   [
     selectTogglProjectRecords,
-    (state: State) => state.entities.timeEntries.toggl.byId,
+    (state: ReduxState) => state.entities.timeEntries.toggl.byId,
   ],
   (projectRecords, timeEntriesById): Record<string, ProjectModel[]> =>
     getEntityRecordsByWorkspaceId(
@@ -47,7 +46,7 @@ export const selectTogglProjectsByWorkspaceId = createSelector(
 export const selectTogglProjectInclusionsByWorkspaceId = createSelector(
   [
     selectTogglProjectRecords,
-    (state: State) => state.entities.timeEntries.toggl.byId,
+    (state: ReduxState) => state.entities.timeEntries.toggl.byId,
   ],
   (projectRecords, timeEntriesById): Record<string, ProjectModel[]> =>
     getEntityRecordsByWorkspaceId(
@@ -61,7 +60,7 @@ export const selectTogglProjectInclusionsByWorkspaceId = createSelector(
 export const selectProjectsTransferPayloadForWorkspace = createSelector(
   [
     selectTogglProjectInclusionsByWorkspaceId,
-    (state: State) => state.entities.clients.toggl.byId,
+    (state: ReduxState) => state.entities.clients.toggl.byId,
     (_: null, workspaceId: string) => workspaceId,
   ],
   (

@@ -3,7 +3,7 @@ import { Tab, TabLink, TabList, Tabs } from 'bloomer';
 import { css } from 'emotion';
 import omit from 'lodash/omit';
 import startCase from 'lodash/startCase';
-import { EntityGroup } from '../../../types/commonTypes';
+import { EntityGroup } from '~/types/commonTypes';
 
 interface Props {
   activeTab: EntityGroup;

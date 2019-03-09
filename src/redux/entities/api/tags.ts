@@ -1,14 +1,12 @@
-import { HttpMethod } from '../../../types/commonTypes';
-import { ClockifyTag, TogglTag } from '../../../types/tagsTypes';
+import { HttpMethod } from '~/types/commonTypes';
+import { ClockifyTag, TogglTag } from '~/types/tagsTypes';
 
 export const apiFetchClockifyTags = (
   workspaceId: string,
 ): Promise<ClockifyTag[]> =>
   fetch(`/clockify/api/workspaces/${workspaceId}/tags/`);
 
-export const apiFetchTogglTags = (
-  workspaceId: string,
-): Promise<TogglTag[]> =>
+export const apiFetchTogglTags = (workspaceId: string): Promise<TogglTag[]> =>
   fetch(`/toggl/api/workspaces/${workspaceId}/tags`);
 
 export const apiCreateClockifyTag = (

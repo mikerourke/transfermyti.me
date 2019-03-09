@@ -1,21 +1,17 @@
 import { createAction } from 'redux-actions';
 import flatten from 'lodash/flatten';
 import isEmpty from 'lodash/isEmpty';
-import { batchClockifyRequests, buildThrottler } from '../../utils';
+import { batchClockifyRequests, buildThrottler } from '~/redux/utils';
 import {
   apiCreateClockifyTask,
   apiFetchClockifyTasks,
   apiFetchTogglTasks,
-} from '../api/tasks';
-import { showFetchErrorNotification } from '../../app/appActions';
-import { selectClockifyProjectIds } from '../projects/projectsSelectors';
+} from '~/redux/entities/api/tasks';
+import { showFetchErrorNotification } from '~/redux/app/appActions';
+import { selectClockifyProjectIds } from '~/redux/entities/projects/projectsSelectors';
 import { selectTasksTransferPayloadForWorkspace } from './tasksSelectors';
-import {
-  ClockifyTask,
-  CreateTaskRequest,
-  TogglTask,
-} from '../../../types/tasksTypes';
-import { Dispatch, GetState } from '../../rootReducer';
+import { ReduxDispatch, ReduxGetState } from '~/types/commonTypes';
+import { ClockifyTask, CreateTaskRequest, TogglTask } from '~/types/tasksTypes';
 
 export const clockifyTasksFetchStarted = createAction(
   '@tasks/CLOCKIFY_FETCH_STARTED',
@@ -74,8 +70,8 @@ const fetchClockifyTasksForProjectsInWorkspace = async (
 };
 
 export const fetchClockifyTasks = (workspaceId: string) => async (
-  dispatch: Dispatch<any>,
-  getState: GetState,
+  dispatch: ReduxDispatch,
+  getState: ReduxGetState,
 ) => {
   dispatch(clockifyTasksFetchStarted());
   try {
@@ -93,7 +89,7 @@ export const fetchClockifyTasks = (workspaceId: string) => async (
 };
 
 export const fetchTogglTasks = (workspaceId: string) => async (
-  dispatch: Dispatch<any>,
+  dispatch: ReduxDispatch,
 ) => {
   dispatch(togglTasksFetchStarted());
   try {
@@ -131,7 +127,7 @@ const transferClockifyTasksForProjectsInWorkspace = async (
 export const transferTasksToClockify = (
   togglWorkspaceId: string,
   clockifyWorkspaceId: string,
-) => async (dispatch: Dispatch<any>, getState: GetState) => {
+) => async (dispatch: ReduxDispatch, getState: ReduxGetState) => {
   const state = getState();
   const tasksInWorkspaceByProjectId = selectTasksTransferPayloadForWorkspace(
     state,

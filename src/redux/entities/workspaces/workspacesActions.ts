@@ -1,42 +1,42 @@
 import { createAction } from 'redux-actions';
 import isNil from 'lodash/isNil';
 import set from 'lodash/set';
-import { buildThrottler } from '../../utils';
+import { buildThrottler } from '~/redux/utils';
 import {
   apiCreateClockifyWorkspace,
   apiFetchClockifyWorkspaces,
   apiFetchTogglWorkspaceSummaryForYear,
 } from '../api/workspaces';
-import { showFetchErrorNotification } from '../../app/appActions';
-import { selectTogglUserEmail } from '../../credentials/credentialsSelectors';
+import { showFetchErrorNotification } from '~/redux/app/appActions';
+import { selectTogglUserEmail } from '~/redux/credentials/credentialsSelectors';
 import {
   fetchClockifyClients,
   fetchTogglClients,
   transferClientsToClockify,
   updateIsClientIncluded,
-} from '../clients/clientsActions';
+} from '~/redux/entities/clients/clientsActions';
 import {
   fetchClockifyProjects,
   fetchTogglProjects,
   transferProjectsToClockify,
   updateIsProjectIncluded,
-} from '../projects/projectsActions';
+} from '~/redux/entities/projects/projectsActions';
 import {
   fetchClockifyTags,
   fetchTogglTags,
   transferTagsToClockify,
   updateIsTagIncluded,
-} from '../tags/tagsActions';
+} from '~/redux/entities/tags/tagsActions';
 import {
   fetchClockifyTasks,
   fetchTogglTasks,
   transferTasksToClockify,
   updateIsTaskIncluded,
-} from '../tasks/tasksActions';
+} from '~/redux/entities/tasks/tasksActions';
 import {
   fetchClockifyTimeEntries,
   fetchTogglTimeEntries,
-} from '../timeEntries/timeEntriesActions';
+} from '~/redux/entities/timeEntries/timeEntriesActions';
 import {
   fetchClockifyUserGroups,
   fetchTogglUserGroups,
@@ -46,18 +46,22 @@ import {
 import {
   fetchClockifyUsers,
   fetchTogglUsers,
-  transferUsersToClockify,
   updateIsUserIncluded,
-} from '../users/usersActions';
+} from '~/redux/entities/users/usersActions';
 import { selectTogglIncludedWorkspaceNames } from './workspacesSelectors';
-import { EntityGroup, EntityModel, ToolName } from '../../../types/commonTypes';
+import {
+  EntityGroup,
+  EntityModel,
+  ReduxDispatch,
+  ReduxGetState,
+  ToolName,
+} from '~/types/commonTypes';
 import {
   ClockifyWorkspace,
   TogglSummaryReportDataModel,
   TogglWorkspace,
   WorkspaceModel,
-} from '../../../types/workspacesTypes';
-import { Dispatch, GetState } from '../../rootReducer';
+} from '~/types/workspacesTypes';
 
 export const clockifyWorkspacesFetchStarted = createAction(
   '@workspaces/CLOCKIFY_FETCH_STARTED',
@@ -122,14 +126,18 @@ export const updateWorkspaceNameBeingFetched = createAction(
   '@workspaces/UPDATE_NAME_BEING_FETCHED',
   (workspaceName: string | null) => workspaceName,
 );
+export const updateFetchTimeByTool = createAction(
+  '@workspaces/UPDATE_FETCH_TIME_BY_TOOL',
+  (toolName: ToolName, fetchTime: Date | null) => ({ toolName, fetchTime }),
+);
 export const resetContentsForTool = createAction(
   '@workspaces/RESET_CONTENTS_FOR_TOOL',
   (toolName: ToolName) => toolName,
 );
 
 export const fetchClockifyWorkspaces = () => async (
-  dispatch: Dispatch<any>,
-  getState: GetState,
+  dispatch: ReduxDispatch,
+  getState: ReduxGetState,
 ) => {
   const state = getState();
 
@@ -152,7 +160,7 @@ export const fetchClockifyWorkspaces = () => async (
 
 export const fetchClockifyEntitiesInWorkspace = (
   workspaceRecord: WorkspaceModel,
-) => async (dispatch: Dispatch<any>) => {
+) => async (dispatch: ReduxDispatch) => {
   const { name, id } = workspaceRecord;
 
   dispatch(updateWorkspaceNameBeingFetched(name));
@@ -165,12 +173,13 @@ export const fetchClockifyEntitiesInWorkspace = (
   await dispatch(fetchClockifyUsers(id));
   await dispatch(fetchClockifyTimeEntries(id));
 
-  return dispatch(updateWorkspaceNameBeingFetched(null));
+  dispatch(updateWorkspaceNameBeingFetched(null));
+  return dispatch(updateFetchTimeByTool(ToolName.Clockify, new Date()));
 };
 
 export const fetchTogglEntitiesInWorkspace = (
   workspaceRecord: WorkspaceModel,
-) => async (dispatch: Dispatch<any>) => {
+) => async (dispatch: ReduxDispatch) => {
   const { name, id, inclusionsByYear } = workspaceRecord;
 
   const inclusionYears = Object.entries(inclusionsByYear).reduce(
@@ -193,12 +202,13 @@ export const fetchTogglEntitiesInWorkspace = (
     await dispatch(fetchTogglTimeEntries(id, inclusionYear));
   }
 
-  return dispatch(updateWorkspaceNameBeingFetched(null));
+  dispatch(updateWorkspaceNameBeingFetched(null));
+  return dispatch(updateFetchTimeByTool(ToolName.Toggl, new Date()));
 };
 
 export const fetchTogglWorkspaceSummary = (workspaceId: string) => async (
-  dispatch: Dispatch<any>,
-  getState: GetState,
+  dispatch: ReduxDispatch,
+  getState: ReduxGetState,
 ) => {
   const state = getState();
 
@@ -238,7 +248,7 @@ export const fetchTogglWorkspaceSummary = (workspaceId: string) => async (
 
 export const transferEntitiesToClockifyWorkspace = (
   workspaceRecord: WorkspaceModel,
-) => async (dispatch: Dispatch<any>) => {
+) => async (dispatch: ReduxDispatch) => {
   const { name, id: togglWorkspaceId, linkedId } = workspaceRecord;
   let clockifyWorkspaceId = linkedId;
 
@@ -285,7 +295,7 @@ export const transferEntitiesToClockifyWorkspace = (
 export const updateIsWorkspaceEntityIncluded = (
   entityGroup: EntityGroup,
   entityRecord: EntityModel,
-) => (dispatch: Dispatch<any>) => {
+) => (dispatch: ReduxDispatch) => {
   const updateAction = {
     [EntityGroup.Clients]: updateIsClientIncluded,
     [EntityGroup.Projects]: updateIsProjectIncluded,

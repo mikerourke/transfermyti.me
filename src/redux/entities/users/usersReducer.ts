@@ -1,6 +1,9 @@
 import { combineActions, handleActions } from 'redux-actions';
 import get from 'lodash/get';
-import { getEntityNormalizedState, updateIsEntityIncluded } from '../../utils';
+import {
+  getEntityNormalizedState,
+  updateIsEntityIncluded,
+} from '~/redux/utils';
 import {
   clockifyUsersFetchFailure,
   clockifyUsersFetchStarted,
@@ -16,16 +19,16 @@ import {
 import {
   EntityGroup,
   EntityType,
+  ReduxAction,
   ReduxStateEntryForTool,
   ToolName,
-} from '../../../types/commonTypes';
+} from '~/types/commonTypes';
 import {
   ClockifyUser,
   ClockifyUserStatus,
   TogglUser,
   UserModel,
-} from '../../../types/usersTypes';
-import { ReduxAction } from '../../rootReducer';
+} from '~/types/usersTypes';
 
 export interface UsersState {
   readonly clockify: ReduxStateEntryForTool<UserModel>;

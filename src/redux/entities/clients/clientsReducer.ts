@@ -3,7 +3,7 @@ import {
   getEntityIdFieldValue,
   getEntityNormalizedState,
   updateIsEntityIncluded,
-} from '../../utils';
+} from '~/redux/utils';
 import {
   clockifyClientsFetchFailure,
   clockifyClientsFetchStarted,
@@ -16,18 +16,14 @@ import {
   clockifyClientsTransferSuccess,
   updateIsClientIncluded,
 } from './clientsActions';
-import {
-  ClientModel,
-  ClockifyClient,
-  TogglClient,
-} from '../../../types/clientsTypes';
+import { ClientModel, ClockifyClient, TogglClient } from '~/types/clientsTypes';
 import {
   EntityGroup,
   EntityType,
+  ReduxAction,
   ReduxStateEntryForTool,
   ToolName,
-} from '../../../types/commonTypes';
-import { ReduxAction } from '../../rootReducer';
+} from '~/types/commonTypes';
 
 export interface ClientsState {
   readonly clockify: ReduxStateEntryForTool<ClientModel>;

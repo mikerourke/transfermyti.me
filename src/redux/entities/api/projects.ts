@@ -1,9 +1,9 @@
-import { HttpMethod } from '../../../types/commonTypes';
+import { HttpMethod } from '~/types/commonTypes';
 import {
   ClockifyProject,
   CreateProjectRequest,
   TogglProject,
-} from '../../../types/projectsTypes';
+} from '~/types/projectsTypes';
 
 export const apiFetchClockifyProjects = (
   workspaceId: string,

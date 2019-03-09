@@ -3,13 +3,12 @@ import {
   apiAddClockifyUsersToWorkspace,
   apiFetchClockifyUsersInWorkspace,
   apiFetchTogglUsersInWorkspace,
-} from '../api/users';
-import { showFetchErrorNotification } from '../../app/appActions';
+} from '~/redux/entities/api/users';
+import { showFetchErrorNotification } from '~/redux/app/appActions';
 import { selectUsersTransferPayloadForWorkspace } from './usersSelectors';
-import { appendUserIdsToWorkspace } from '../workspaces/workspacesActions';
-import { ToolName } from '../../../types/commonTypes';
-import { ClockifyUser, TogglUser } from '../../../types/usersTypes';
-import { Dispatch, GetState } from '../../rootReducer';
+import { appendUserIdsToWorkspace } from '~/redux/entities/workspaces/workspacesActions';
+import { ReduxDispatch, ReduxGetState, ToolName } from '~/types/commonTypes';
+import { ClockifyUser, TogglUser } from '~/types/usersTypes';
 
 export const clockifyUsersFetchStarted = createAction(
   '@users/CLOCKIFY_FETCH_STARTED',
@@ -49,13 +48,13 @@ const appendUserIdsToWorkspaceForTool = (
   toolName: ToolName,
   users: (ClockifyUser | TogglUser)[],
   workspaceId: string,
-) => (dispatch: Dispatch<any>) => {
+) => (dispatch: ReduxDispatch) => {
   const userIds = users.map(({ id }) => id.toString());
   return dispatch(appendUserIdsToWorkspace(toolName, workspaceId, userIds));
 };
 
 export const fetchClockifyUsers = (workspaceId: string) => async (
-  dispatch: Dispatch<any>,
+  dispatch: ReduxDispatch,
 ) => {
   dispatch(clockifyUsersFetchStarted());
   try {
@@ -71,7 +70,7 @@ export const fetchClockifyUsers = (workspaceId: string) => async (
 };
 
 export const fetchTogglUsers = (workspaceId: string) => async (
-  dispatch: Dispatch<any>,
+  dispatch: ReduxDispatch,
 ) => {
   dispatch(togglUsersFetchStarted());
   try {
@@ -89,7 +88,7 @@ export const fetchTogglUsers = (workspaceId: string) => async (
 export const transferUsersToClockify = (
   togglWorkspaceId: string,
   clockifyWorkspaceId: string,
-) => async (dispatch: Dispatch<any>, getState: GetState) => {
+) => async (dispatch: ReduxDispatch, getState: ReduxGetState) => {
   const state = getState();
   const userEmailsToTransfer = selectUsersTransferPayloadForWorkspace(
     state,

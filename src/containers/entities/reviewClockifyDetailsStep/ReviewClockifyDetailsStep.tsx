@@ -5,23 +5,23 @@ import {
   fetchClockifyEntitiesInWorkspace,
   fetchClockifyWorkspaces,
   transferEntitiesToClockifyWorkspace,
-} from '../../../redux/entities/workspaces/workspacesActions';
+} from '~/redux/entities/workspaces/workspacesActions';
 import {
   selectTogglEntityInclusionsByWorkspaceId,
   selectClockifyIncludedWorkspacesById,
   selectTogglIncludedWorkspacesById,
   selectWorkspaceNameBeingFetched,
-} from '../../../redux/entities/workspaces/workspacesSelectors';
-import EntitiesReviewPage from '../../../components/entitiesReviewPage/EntitiesReviewPage';
-import Loader from '../../../components/loader/Loader';
+} from '~/redux/entities/workspaces/workspacesSelectors';
+import EntitiesReviewPage from '~/components/entitiesReviewPage/EntitiesReviewPage';
+import Loader from '~/components/loader/Loader';
 import ConfirmationModal from './components/ConfirmationModal';
 import {
   EntityGroup,
   EntityModel,
   ReduxDispatch,
   ReduxState,
-} from '../../../types/commonTypes';
-import { WorkspaceModel } from '../../../types/workspacesTypes';
+} from '~/types/commonTypes';
+import { WorkspaceModel } from '~/types/workspacesTypes';
 
 interface ConnectStateProps {
   togglInclusionsByWorkspaceId: Record<

@@ -1,21 +1,18 @@
 import { createAction } from 'redux-actions';
 import flatten from 'lodash/flatten';
-import { buildThrottler } from '../../utils';
+import { buildThrottler } from '~/redux/utils';
 import {
   apiFetchClockifyTimeEntries,
   apiFetchTogglTimeEntries,
 } from '../api/timeEntries';
-import { showFetchErrorNotification } from '../../app/appActions';
+import { showFetchErrorNotification } from '~/redux/app/appActions';
 import {
   selectClockifyUserId,
   selectTogglUserEmail,
-} from '../../credentials/credentialsSelectors';
-import { selectTogglWorkspaceIncludedYears } from '../workspaces/workspacesSelectors';
-import {
-  ClockifyTimeEntry,
-  TogglTimeEntry,
-} from '../../../types/timeEntriesTypes';
-import { Dispatch, GetState } from '../../rootReducer';
+} from '~/redux/credentials/credentialsSelectors';
+import { selectTogglWorkspaceIncludedYears } from '~/redux/entities/workspaces/workspacesSelectors';
+import { ClockifyTimeEntry, TogglTimeEntry } from '~/types/timeEntriesTypes';
+import { ReduxDispatch, ReduxGetState } from '~/types/commonTypes';
 
 export const clockifyTimeEntriesFetchStarted = createAction(
   '@timeEntries/CLOCKIFY_FETCH_STARTED',
@@ -64,8 +61,8 @@ const fetchClockifyTimeEntriesForIncludedYears = async (
 };
 
 export const fetchClockifyTimeEntries = (workspaceId: string) => async (
-  dispatch: Dispatch<any>,
-  getState: GetState,
+  dispatch: ReduxDispatch,
+  getState: ReduxGetState,
 ) => {
   const state = getState();
 
@@ -118,7 +115,7 @@ const fetchTogglTimeEntriesForRemainingPages = async (
 export const fetchTogglTimeEntries = (
   workspaceId: string,
   year: number,
-) => async (dispatch: Dispatch<any>, getState: GetState) => {
+) => async (dispatch: ReduxDispatch, getState: ReduxGetState) => {
   const state = getState();
 
   dispatch(togglTimeEntriesFetchStarted());

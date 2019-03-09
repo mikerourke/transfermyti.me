@@ -3,7 +3,7 @@ import get from 'lodash/get';
 import isEmpty from 'lodash/isEmpty';
 import isNil from 'lodash/isNil';
 import uniq from 'lodash/uniq';
-import { EntityGroup, ToolName } from '../../types/commonTypes';
+import { EntityGroup, ToolName } from '~/types/commonTypes';
 
 import StrategyFunction = schema.StrategyFunction;
 

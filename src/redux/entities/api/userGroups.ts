@@ -1,11 +1,5 @@
-import {
-  ClockifyUserGroup,
-  TogglUserGroup,
-} from '../../../types/userGroupsTypes';
-import {
-  CreateNamedEntityRequest,
-  HttpMethod
-} from '../../../types/commonTypes';
+import { CreateNamedEntityRequest, HttpMethod } from '~/types/commonTypes';
+import { ClockifyUserGroup, TogglUserGroup } from '~/types/userGroupsTypes';
 
 export const apiFetchClockifyUserGroups = (
   workspaceId: string,

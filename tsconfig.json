@@ -15,18 +15,24 @@
     "jsx": "react",
     "moduleResolution": "node",
     "pretty": true,
-    "rootDirs": ["src"],
+    "rootDir": "src",
     "forceConsistentCasingInFileNames": true,
     "noImplicitReturns": true,
     "noImplicitThis": true,
     "noImplicitAny": true,
     "noUnusedLocals": false,
     "suppressImplicitAnyIndexErrors": true,
-    "strictNullChecks": false
+    "strictNullChecks": false,
+    "paths": {
+      "~/*": ["./src/*"]
+    }
   },
   "exclude": [
-    "node_modules",
     "build",
-    "jest"
+    "config",
+    "jest",
+    "node_modules",
+    "public",
+    "requests"
   ]
 }

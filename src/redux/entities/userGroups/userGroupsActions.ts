@@ -1,17 +1,14 @@
 import { createAction } from 'redux-actions';
-import { batchClockifyRequests } from '../../utils';
+import { batchClockifyRequests } from '~/redux/utils';
 import {
   apiCreateClockifyUserGroup,
   apiFetchClockifyUserGroups,
   apiFetchTogglUserGroups,
-} from '../api/userGroups';
-import { showFetchErrorNotification } from '../../app/appActions';
+} from '~/redux/entities/api/userGroups';
+import { showFetchErrorNotification } from '~/redux/app/appActions';
 import { selectUserGroupsTransferPayloadForWorkspace } from './userGroupsSelectors';
-import {
-  ClockifyUserGroup,
-  TogglUserGroup,
-} from '../../../types/userGroupsTypes';
-import { Dispatch, GetState } from '../../rootReducer';
+import { ReduxDispatch, ReduxGetState } from '~/types/commonTypes';
+import { ClockifyUserGroup, TogglUserGroup } from '~/types/userGroupsTypes';
 
 export const clockifyUserGroupsFetchStarted = createAction(
   '@userGroups/CLOCKIFY_FETCH_STARTED',
@@ -49,7 +46,7 @@ export const updateIsUserGroupIncluded = createAction(
 );
 
 export const fetchClockifyUserGroups = (workspaceId: string) => async (
-  dispatch: Dispatch<any>,
+  dispatch: ReduxDispatch,
 ) => {
   dispatch(clockifyUserGroupsFetchStarted());
   try {
@@ -62,7 +59,7 @@ export const fetchClockifyUserGroups = (workspaceId: string) => async (
 };
 
 export const fetchTogglUserGroups = (workspaceId: string) => async (
-  dispatch: Dispatch<any>,
+  dispatch: ReduxDispatch,
 ) => {
   dispatch(togglUserGroupsFetchStarted());
   try {
@@ -77,10 +74,7 @@ export const fetchTogglUserGroups = (workspaceId: string) => async (
 export const transferUserGroupsToClockify = (
   togglWorkspaceId: string,
   clockifyWorkspaceId: string,
-) => async (
-  dispatch: Dispatch<any>,
-  getState: GetState,
-) => {
+) => async (dispatch: ReduxDispatch, getState: ReduxGetState) => {
   const state = getState();
   const userGroupsInWorkspace = selectUserGroupsTransferPayloadForWorkspace(
     state,

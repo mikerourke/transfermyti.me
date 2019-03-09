@@ -2,7 +2,10 @@ import { handleActions, combineActions } from 'redux-actions';
 import cloneDeep from 'lodash/cloneDeep';
 import get from 'lodash/get';
 import uniq from 'lodash/uniq';
-import { getEntityNormalizedState, updateIsEntityIncluded } from '../../utils';
+import {
+  getEntityNormalizedState,
+  updateIsEntityIncluded,
+} from '~/redux/utils';
 import {
   clockifyWorkspacesFetchStarted,
   clockifyWorkspacesFetchSuccess,
@@ -20,24 +23,31 @@ import {
   updateIsWorkspaceIncluded,
   updateIsWorkspaceYearIncluded,
   updateWorkspaceNameBeingFetched,
+  updateFetchTimeByTool,
   resetContentsForTool,
 } from './workspacesActions';
 import {
   EntityGroup,
   EntityType,
+  ReduxAction,
   ReduxStateEntryForTool,
   ToolName,
-} from '../../../types/commonTypes';
+} from '~/types/commonTypes';
 import {
   ClockifyWorkspace,
   TogglWorkspace,
   WorkspaceModel,
-} from '../../../types/workspacesTypes';
-import { ReduxAction } from '../../rootReducer';
+} from '~/types/workspacesTypes';
+
+interface LatestFetchTimesModel {
+  clockify: Date | null;
+  toggl: Date | null;
+}
 
 export interface WorkspacesState {
   readonly clockify: ReduxStateEntryForTool<WorkspaceModel>;
   readonly toggl: ReduxStateEntryForTool<WorkspaceModel>;
+  readonly fetchTimesByTool: LatestFetchTimesModel;
   readonly workspaceNameBeingFetched: string | null;
   readonly isFetching: boolean;
 }
@@ -50,6 +60,10 @@ export const initialState: WorkspacesState = {
   toggl: {
     byId: {},
     idValues: [],
+  },
+  fetchTimesByTool: {
+    clockify: null,
+    toggl: null,
   },
   workspaceNameBeingFetched: null,
   isFetching: false,
@@ -219,6 +233,19 @@ export default handleActions(
     ): WorkspacesState => ({
       ...state,
       workspaceNameBeingFetched: workspaceName,
+    }),
+
+    [updateFetchTimeByTool]: (
+      state: WorkspacesState,
+      {
+        payload: { toolName, fetchDate },
+      }: ReduxAction<{ toolName: ToolName; fetchDate: Date | null }>,
+    ): WorkspacesState => ({
+      ...state,
+      fetchTimesByTool: {
+        ...state.fetchTimesByTool,
+        [toolName]: fetchDate,
+      },
     }),
 
     [resetContentsForTool]: (

@@ -1,12 +1,6 @@
-import { getFirstAndLastDayOfYear } from '../../utils';
-import {
-  ClockifyWorkspace,
-  TogglSummaryReport,
-} from '../../../types/workspacesTypes';
-import {
-  CreateNamedEntityRequest,
-  HttpMethod,
-} from '../../../types/commonTypes';
+import { getFirstAndLastDayOfYear } from '~/redux/utils';
+import { CreateNamedEntityRequest, HttpMethod } from '~/types/commonTypes';
+import { ClockifyWorkspace, TogglSummaryReport } from '~/types/workspacesTypes';
 
 export const apiFetchClockifyWorkspaces = (): Promise<ClockifyWorkspace[]> =>
   fetch('/clockify/api/workspaces/');

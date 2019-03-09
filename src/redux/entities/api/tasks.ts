@@ -1,9 +1,5 @@
-import { HttpMethod } from '../../../types/commonTypes';
-import {
-  ClockifyTask,
-  CreateTaskRequest,
-  TogglTask,
-} from '../../../types/tasksTypes';
+import { HttpMethod } from '~/types/commonTypes';
+import { ClockifyTask, CreateTaskRequest, TogglTask } from '~/types/tasksTypes';
 
 export const apiFetchClockifyTasks = (
   workspaceId: string,

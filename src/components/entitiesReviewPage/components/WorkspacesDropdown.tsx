@@ -9,9 +9,9 @@ import {
   DropdownTrigger,
 } from 'bloomer';
 import { css } from 'emotion';
-import Flex from '../../flex/Flex';
+import Flex from '~/components/flex/Flex';
 import ChevronDownIcon from './ChevronDownIcon';
-import { WorkspaceModel } from '../../../types/workspacesTypes';
+import { WorkspaceModel } from '~/types/workspacesTypes';
 
 interface Props {
   workspacesById: Record<string, WorkspaceModel>;

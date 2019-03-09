@@ -1,19 +1,19 @@
 import { createSelector } from 'reselect';
 import get from 'lodash/get';
 import property from 'lodash/property';
-import { getTogglInclusionRecords } from '../../utils';
-import { selectCredentials } from '../../credentials/credentialsSelectors';
-import { UserModel } from '../../../types/usersTypes';
-import { WorkspaceModel } from '../../../types/workspacesTypes';
-import { State } from '../../rootReducer';
+import { getTogglInclusionRecords } from '~/redux/utils';
+import { selectCredentials } from '~/redux/credentials/credentialsSelectors';
+import { ReduxState } from '~/types/commonTypes';
+import { UserModel } from '~/types/usersTypes';
+import { WorkspaceModel } from '~/types/workspacesTypes';
 
 export const selectClockifyUsersById = createSelector(
-  (state: State) => state.entities.users.clockify.byId,
+  (state: ReduxState) => state.entities.users.clockify.byId,
   (usersById): Record<string, UserModel> => usersById,
 );
 
 export const selectTogglUsersById = createSelector(
-  (state: State) => state.entities.users.toggl.byId,
+  (state: ReduxState) => state.entities.users.toggl.byId,
   (usersById): Record<string, UserModel> => usersById,
 );
 
@@ -54,7 +54,7 @@ export const selectTogglUsersByWorkspaceId = createSelector(
   [
     selectTogglUsersById,
     selectTogglMeUserId,
-    (state: State) => state.entities.workspaces.toggl.byId,
+    (state: ReduxState) => state.entities.workspaces.toggl.byId,
   ],
   (usersById, meUserId, workspacesById): Record<string, UserModel[]> =>
     getUserRecordsByWorkspaceId(usersById, meUserId, workspacesById),

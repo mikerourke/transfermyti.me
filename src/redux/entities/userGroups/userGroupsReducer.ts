@@ -3,7 +3,7 @@ import {
   getEntityIdFieldValue,
   getEntityNormalizedState,
   updateIsEntityIncluded,
-} from '../../utils';
+} from '~/redux/utils';
 import {
   clockifyUserGroupsFetchFailure,
   clockifyUserGroupsFetchStarted,
@@ -19,15 +19,15 @@ import {
 import {
   EntityGroup,
   EntityType,
+  ReduxAction,
   ReduxStateEntryForTool,
   ToolName,
-} from '../../../types/commonTypes';
+} from '~/types/commonTypes';
 import {
   ClockifyUserGroup,
   TogglUserGroup,
   UserGroupModel,
-} from '../../../types/userGroupsTypes';
-import { ReduxAction } from '../../rootReducer';
+} from '~/types/userGroupsTypes';
 
 export interface UserGroupsState {
   readonly clockify: ReduxStateEntryForTool<UserGroupModel>;

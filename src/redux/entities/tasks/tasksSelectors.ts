@@ -4,24 +4,21 @@ import isNil from 'lodash/isNil';
 import {
   getEntityRecordsByWorkspaceId,
   getTogglInclusionRecords,
-} from '../../utils';
-import { selectTogglClientsByWorkspaceId } from '../clients/clientsSelectors';
-import {
-  selectTogglProjectsById,
-} from '../projects/projectsSelectors';
-import { ClientModel } from '../../../types/clientsTypes';
-import { EntityType } from '../../../types/commonTypes';
-import { ProjectModel } from '../../../types/projectsTypes';
-import { CreateTaskRequest, TaskModel } from '../../../types/tasksTypes';
-import { State } from '../../rootReducer';
+} from '~/redux/utils';
+import { selectTogglClientsByWorkspaceId } from '~/redux/entities/clients/clientsSelectors';
+import { selectTogglProjectsById } from '~/redux/entities/projects/projectsSelectors';
+import { ClientModel } from '~/types/clientsTypes';
+import { EntityType, ReduxState } from '~/types/commonTypes';
+import { ProjectModel } from '~/types/projectsTypes';
+import { CreateTaskRequest, TaskModel } from '~/types/tasksTypes';
 
 export const selectClockifyTasksById = createSelector(
-  (state: State) => state.entities.tasks.clockify.byId,
+  (state: ReduxState) => state.entities.tasks.clockify.byId,
   tasksById => tasksById,
 );
 
 export const selectTogglTasksById = createSelector(
-  (state: State) => state.entities.tasks.toggl.byId,
+  (state: ReduxState) => state.entities.tasks.toggl.byId,
   tasksById => tasksById,
 );
 
@@ -43,7 +40,7 @@ export const selectTogglTaskRecords = createSelector(
 export const selectTogglTasksByWorkspaceId = createSelector(
   [
     selectTogglTaskRecords,
-    (state: State) => state.entities.timeEntries.toggl.byId,
+    (state: ReduxState) => state.entities.timeEntries.toggl.byId,
   ],
   (taskRecords, timeEntriesById): Record<string, TaskModel[]> =>
     getEntityRecordsByWorkspaceId(
@@ -57,7 +54,7 @@ export const selectTogglTasksByWorkspaceId = createSelector(
 export const selectTogglTaskInclusionsByWorkspaceId = createSelector(
   [
     selectTogglTaskRecords,
-    (state: State) => state.entities.timeEntries.toggl.byId,
+    (state: ReduxState) => state.entities.timeEntries.toggl.byId,
   ],
   (taskRecords, timeEntriesById): Record<string, TaskModel[]> =>
     getEntityRecordsByWorkspaceId(

@@ -1,8 +1,8 @@
 import { createStore, applyMiddleware, compose } from 'redux';
 import thunkMiddleware from 'redux-thunk';
 import storage from 'store';
-import { STORAGE_KEY } from '../constants';
-import getIfDev from '../utils/getIfDev';
+import { STORAGE_KEY } from '~/constants';
+import getIfDev from '~/utils/getIfDev';
 import { initialState as initialCredentialsState } from './credentials/credentialsReducer';
 import reducers from './rootReducer';
 

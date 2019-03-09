@@ -1,6 +1,6 @@
 import get from 'lodash/get';
-import { EntityType } from '../../types/commonTypes';
-import { TimeEntryWithClientModel } from '../../types/timeEntriesTypes';
+import { EntityType } from '~/types/commonTypes';
+import { TimeEntryWithClientModel } from '~/types/timeEntriesTypes';
 
 export default function getEntityRecordsWithEntryCounts<TModel>(
   entityType: EntityType,

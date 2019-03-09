@@ -2,7 +2,7 @@ import { combineActions, handleActions } from 'redux-actions';
 import get from 'lodash/get';
 import isNil from 'lodash/isNil';
 import isString from 'lodash/isString';
-import { getEntityIdFieldValue, getEntityNormalizedState } from '../../utils';
+import { getEntityIdFieldValue, getEntityNormalizedState } from '~/redux/utils';
 import {
   clockifyTimeEntriesFetchFailure,
   clockifyTimeEntriesFetchStarted,
@@ -14,15 +14,15 @@ import {
 import {
   EntityGroup,
   EntityType,
+  ReduxAction,
   ReduxStateEntryForTool,
   ToolName,
-} from '../../../types/commonTypes';
+} from '~/types/commonTypes';
 import {
   ClockifyTimeEntry,
   TimeEntryModel,
   TogglTimeEntry,
-} from '../../../types/timeEntriesTypes';
-import { ReduxAction } from '../../rootReducer';
+} from '~/types/timeEntriesTypes';
 
 export interface TimeEntriesState {
   readonly clockify: ReduxStateEntryForTool<TimeEntryModel>;

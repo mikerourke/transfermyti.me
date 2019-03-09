@@ -3,26 +3,22 @@ import capitalize from 'lodash/capitalize';
 import first from 'lodash/first';
 import set from 'lodash/set';
 import storage from 'store';
-import { STORAGE_KEY } from '../../constants';
-import getIfDev from '../../utils/getIfDev';
+import { STORAGE_KEY } from '~/constants';
+import getIfDev from '~/utils/getIfDev';
 import {
   apiFetchClockifyUserDetails,
   apiFetchTogglUserDetails,
-} from '../entities/api/users';
-import { apiFetchClockifyWorkspaces } from '../entities/api/workspaces';
+} from '~/redux/entities/api/users';
+import { apiFetchClockifyWorkspaces } from '~/redux/entities/api/workspaces';
 import { selectCredentials } from './credentialsSelectors';
-import { showNotification } from '../app/appActions';
+import { showNotification } from '~/redux/app/appActions';
 import {
   clockifyWorkspacesFetchSuccess,
   togglWorkspacesFetchSuccess,
-} from '../entities/workspaces/workspacesActions';
-import {
-  CredentialsField,
-  CredentialsModel,
-} from '../../types/credentialsTypes';
-import { NotificationType } from '../../types/appTypes';
-import { ToolName } from '../../types/commonTypes';
-import { Dispatch, GetState } from '../rootReducer';
+} from '~/redux/entities/workspaces/workspacesActions';
+import { NotificationType } from '~/types/appTypes';
+import { ReduxDispatch, ReduxGetState, ToolName } from '~/types/commonTypes';
+import { CredentialsField, CredentialsModel } from '~/types/credentialsTypes';
 
 export const allCredentialsStored = createAction(
   '@credentials/STORED',
@@ -44,8 +40,8 @@ export const updateCredentialsField = createAction(
 );
 
 export const storeAllCredentials = () => (
-  dispatch: Dispatch<any>,
-  getState: GetState,
+  dispatch: ReduxDispatch,
+  getState: ReduxGetState,
 ) => {
   const state = getState();
 
@@ -59,7 +55,7 @@ export const storeAllCredentials = () => (
   return dispatch(allCredentialsStored(credentials));
 };
 
-const fetchClockifyUserDetails = () => async (dispatch: Dispatch<any>) => {
+const fetchClockifyUserDetails = () => async (dispatch: ReduxDispatch) => {
   const workspaces = await apiFetchClockifyWorkspaces();
   dispatch(clockifyWorkspacesFetchSuccess(workspaces));
 
@@ -78,13 +74,13 @@ const fetchClockifyUserDetails = () => async (dispatch: Dispatch<any>) => {
   return id;
 };
 
-const fetchTogglUserDetails = () => async (dispatch: Dispatch<any>) => {
+const fetchTogglUserDetails = () => async (dispatch: ReduxDispatch) => {
   const { data } = await apiFetchTogglUserDetails();
   dispatch(togglWorkspacesFetchSuccess(data.workspaces));
   return data.email;
 };
 
-export const validateCredentials = () => async (dispatch: Dispatch<any>) => {
+export const validateCredentials = () => async (dispatch: ReduxDispatch) => {
   dispatch(credentialsValidationStarted());
   try {
     const togglEmail = await dispatch(fetchTogglUserDetails());

@@ -2,8 +2,8 @@ import React, { useEffect, useRef } from 'react';
 import { Button, Container, Subtitle, Title } from 'bloomer';
 import { css } from 'emotion';
 import isNil from 'lodash/isNil';
-import Flex from '../flex/Flex';
-import ShowIf from '../showIf/ShowIf';
+import Flex from '~/components/flex/Flex';
+import ShowIf from '~/components/showIf/ShowIf';
 
 interface Props {
   title: string;

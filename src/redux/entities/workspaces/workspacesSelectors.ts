@@ -2,50 +2,55 @@ import { createSelector } from 'reselect';
 import get from 'lodash/get';
 import isEmpty from 'lodash/isEmpty';
 import isNil from 'lodash/isNil';
+import isBefore from 'date-fns/is_before';
 import {
   selectTogglClientInclusionsByWorkspaceId,
   selectTogglClientsByWorkspaceId,
-} from '../clients/clientsSelectors';
+} from '~/redux/entities/clients/clientsSelectors';
 import {
   selectTogglProjectInclusionsByWorkspaceId,
   selectTogglProjectsByWorkspaceId,
-} from '../projects/projectsSelectors';
+} from '~/redux/entities/projects/projectsSelectors';
 import {
-  selectTogglTagsByWorkspaceId,
   selectTogglTagInclusionsByWorkspaceId,
-} from '../tags/tagsSelectors';
+  selectTogglTagsByWorkspaceId,
+} from '~/redux/entities/tags/tagsSelectors';
 import {
   selectTogglTaskInclusionsByWorkspaceId,
   selectTogglTasksByWorkspaceId,
-} from '../tasks/tasksSelectors';
+} from '~/redux/entities/tasks/tasksSelectors';
 import {
   selectTogglTimeEntriesByWorkspaceId,
   selectTogglTimeEntryInclusionsByWorkspaceId,
-} from '../timeEntries/timeEntriesSelectors';
+} from '~/redux/entities/timeEntries/timeEntriesSelectors';
 import {
   selectTogglUserGroupInclusionsByWorkspaceId,
   selectTogglUserGroupsByWorkspaceId,
-} from '../userGroups/userGroupsSelectors';
+} from '~/redux/entities/userGroups/userGroupsSelectors';
 import {
   selectTogglUserInclusionsByWorkspaceId,
   selectTogglUsersByWorkspaceId,
-} from '../users/usersSelectors';
-import { EntityGroup, EntityModel } from '../../../types/commonTypes';
-import { WorkspaceModel } from '../../../types/workspacesTypes';
-import { State } from '../../rootReducer';
+} from '~/redux/entities/users/usersSelectors';
+import {
+  EntityGroup,
+  EntityModel,
+  ReduxState,
+  ToolName,
+} from '~/types/commonTypes';
+import { WorkspaceModel } from '~/types/workspacesTypes';
 
 export const selectTogglWorkspaceIds = createSelector(
-  (state: State) => state.entities.workspaces.toggl.idValues,
+  (state: ReduxState) => state.entities.workspaces.toggl.idValues,
   (workspaceIds): string[] => workspaceIds,
 );
 
 const selectClockifyWorkspacesById = createSelector(
-  (state: State) => state.entities.workspaces.clockify.byId,
+  (state: ReduxState) => state.entities.workspaces.clockify.byId,
   (workspacesById): Record<string, WorkspaceModel> => workspacesById,
 );
 
 export const selectTogglWorkspacesById = createSelector(
-  (state: State) => state.entities.workspaces.toggl.byId,
+  (state: ReduxState) => state.entities.workspaces.toggl.byId,
   (workspacesById): Record<string, WorkspaceModel> => workspacesById,
 );
 
@@ -167,7 +172,7 @@ export const selectIfTogglWorkspaceYearsFetched = createSelector(
 );
 
 export const selectWorkspaceNameBeingFetched = createSelector(
-  (state: State) => state.entities.workspaces.workspaceNameBeingFetched,
+  (state: ReduxState) => state.entities.workspaces.workspaceNameBeingFetched,
   (workspaceNameBeingFetched): string => workspaceNameBeingFetched,
 );
 
@@ -229,4 +234,35 @@ export const selectTogglEntitiesByWorkspaceId = createSelector(
   ],
   (...args): Record<string, Record<EntityGroup, EntityModel[]>> =>
     getEntityGroupRecordsByWorkspaceId(...args),
+);
+
+const selectFetchTimesByTool = createSelector(
+  (state: ReduxState) => state.entities.workspaces.fetchTimesByTool,
+  fetchTimesByTool => fetchTimesByTool,
+);
+
+export const selectIfFetchRequiredForTool = createSelector(
+  [selectFetchTimesByTool, (_: null, toolName: ToolName) => toolName],
+  (fetchTimesByTool, toolName): boolean => {
+    const {
+      clockify: clockifyFetchTime,
+      toggl: togglFetchTime,
+    } = fetchTimesByTool;
+
+    const wasClockifyFetched = !isNil(clockifyFetchTime);
+    const wasTogglFetched = !isNil(togglFetchTime);
+
+    switch (toolName) {
+      case ToolName.Clockify:
+        if (!wasClockifyFetched || !wasTogglFetched) return true;
+        return isBefore(clockifyFetchTime, togglFetchTime);
+
+      case ToolName.Toggl:
+        if (!wasTogglFetched) return true;
+        return isBefore(togglFetchTime, clockifyFetchTime);
+
+      default:
+        return true;
+    }
+  },
 );

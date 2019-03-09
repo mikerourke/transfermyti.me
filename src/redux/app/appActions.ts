@@ -2,10 +2,9 @@ import { createAction } from 'redux-actions';
 import capitalize from 'lodash/capitalize';
 import isNil from 'lodash/isNil';
 import uniqueId from 'lodash/uniqueId';
-import getIfDev from '../../utils/getIfDev';
-import { NotificationModel, NotificationType } from '../../types/appTypes';
-import { ToolName } from '../../types/commonTypes';
-import { Dispatch } from '../rootReducer';
+import getIfDev from '~/utils/getIfDev';
+import { NotificationModel, NotificationType } from '~/types/appTypes';
+import { ReduxDispatch, ToolName } from '~/types/commonTypes';
 
 export const notificationShown = createAction(
   '@app/NOTIFICATION_SHOWN',
@@ -20,7 +19,7 @@ export const dismissAllNotifications = createAction(
 );
 
 export const showNotification = (notification: Partial<NotificationModel>) => (
-  dispatch: Dispatch<any>,
+  dispatch: ReduxDispatch,
 ) => {
   const id = isNil(notification.id) ? uniqueId('NTF') : notification.id;
   dispatch(notificationShown({ ...notification, id }));
@@ -29,7 +28,7 @@ export const showNotification = (notification: Partial<NotificationModel>) => (
 
 export const showFetchErrorNotification = (
   error: Error & { toolName: ToolName },
-) => (dispatch: Dispatch<any>): string => {
+) => (dispatch: ReduxDispatch): string => {
   if (getIfDev()) console.log(error);
 
   const name = capitalize(error.toolName);

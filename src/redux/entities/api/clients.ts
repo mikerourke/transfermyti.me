@@ -1,8 +1,5 @@
-import { ClockifyClient, TogglClient } from '../../../types/clientsTypes';
-import {
-  CreateNamedEntityRequest,
-  HttpMethod
-} from '../../../types/commonTypes';
+import { ClockifyClient, TogglClient } from '~/types/clientsTypes';
+import { CreateNamedEntityRequest, HttpMethod } from '~/types/commonTypes';
 
 export const apiFetchClockifyClients = (
   workspaceId: string,

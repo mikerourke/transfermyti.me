@@ -5,10 +5,22 @@
     "tslint-config-prettier"
   ],
   "rules": {
+    "align": false,
     "function-name": false,
     "import-name": false,
-    "variable-name": false,
+    "jsx-boolean-value": false,
+    "jsx-curly-spacing": false,
+    "jsx-no-lambda": false,
+    "jsx-no-multiline-js": false,
     "max-line-length": false,
+    "object-shorthand-properties-first": false,
+    "semicolon": [
+      true,
+      "always",
+      "ignore-bound-class-methods"
+    ],
+    "ter-arrow-parens": false,
+    "ter-indent": false,
     "ter-max-len": [
       true,
       80,
@@ -23,15 +35,7 @@
         "ignoreImports": true
       }
     ],
-    "semicolon": [true, "always", "ignore-bound-class-methods"],
-    "jsx-no-multiline-js": false,
-    "jsx-no-lambda": false,
-    "jsx-boolean-value": false,
-    "jsx-curly-spacing": false,
     "trailing-comma": false,
-    "ter-arrow-parens": false,
-    "ter-indent": false,
-    "object-shorthand-properties-first": false,
-    "align": false
+    "variable-name": false
   }
 }

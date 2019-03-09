@@ -4,7 +4,7 @@ import {
   dismissAllNotifications,
   notificationShown,
 } from './appActions';
-import { NotificationModel } from '../../types/appTypes';
+import { NotificationModel } from '~/types/appTypes';
 
 export interface AppState {
   readonly notifications: NotificationModel[];

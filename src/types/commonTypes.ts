@@ -1,4 +1,4 @@
-import { Dispatch } from 'redux-fixed';
+import { Store } from 'redux';
 import { ClientModel } from './clientsTypes';
 import { ProjectModel } from './projectsTypes';
 import { TagModel } from './tagsTypes';
@@ -6,13 +6,7 @@ import { TaskModel } from './tasksTypes';
 import { TimeEntryModel } from './timeEntriesTypes';
 import { UserGroupModel } from './userGroupsTypes';
 import { UserModel } from './usersTypes';
-import { State } from '../redux/rootReducer';
-
-// Use for react-redux connected components:
-export type ReduxDispatch = Dispatch<any>;
-
-// Limit amount of imports for connected components:
-export type ReduxState = State;
+import { State } from '~/redux/rootReducer';
 
 export enum ToolName {
   Clockify = 'clockify',
@@ -67,4 +61,34 @@ export enum HttpMethod {
 
 export interface CreateNamedEntityRequest {
   name: string;
+}
+
+/**
+ * Redux Types
+ */
+export type ReduxStore = Store;
+export type ReduxState = State;
+
+export type ReduxGetState = () => ReduxState;
+
+export type ThunkAction<TResult, TExtra = undefined> = (
+  dispatch: ReduxDispatch,
+  getState: () => ReduxState,
+  extraArgument?: TExtra,
+) => TResult;
+
+export interface ReduxDispatch {
+  // tslint:disable-next-line:callable-types
+  <TResult, TExtra>(asyncAction: ThunkAction<TResult, TExtra>): TResult;
+}
+export interface ReduxDispatch {
+  // tslint:disable-next-line:callable-types
+  <TAction>(action: TAction & { type: any }): TAction & { type: any };
+}
+
+export interface ReduxAction<TPayload = {}> {
+  type: string;
+  payload?: TPayload;
+  error?: boolean;
+  meta?: any;
 }

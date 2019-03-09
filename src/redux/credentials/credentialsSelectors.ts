@@ -1,9 +1,9 @@
 import { createSelector } from 'reselect';
-import { CredentialsModel } from '../../types/credentialsTypes';
-import { State } from '../rootReducer';
+import { CredentialsModel } from '~/types/credentialsTypes';
+import { ReduxState } from '~/types/commonTypes';
 
 export const selectCredentials = createSelector(
-  (state: State) => state.credentials,
+  (state: ReduxState) => state.credentials,
   (credentials): CredentialsModel => credentials,
 );
 
@@ -17,8 +17,8 @@ export const selectTogglUserEmail = createSelector(
   (credentials): string => credentials.togglEmail,
 );
 
-export const selectIsValidating = (state: State): boolean =>
+export const selectIsValidating = (state: ReduxState): boolean =>
   state.credentials.isValidating;
 
-export const selectIsValid = (state: State): boolean =>
+export const selectIsValid = (state: ReduxState): boolean =>
   state.credentials.isValid;

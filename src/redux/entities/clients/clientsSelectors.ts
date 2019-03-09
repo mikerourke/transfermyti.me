@@ -1,17 +1,17 @@
 import { createSelector } from 'reselect';
 import get from 'lodash/get';
 import isNil from 'lodash/isNil';
-import { getEntityRecordsByWorkspaceId } from '../../utils';
-import { ClientModel } from '../../../types/clientsTypes';
+import { getEntityRecordsByWorkspaceId } from '~/redux/utils';
+import { ClientModel } from '~/types/clientsTypes';
 import {
   CreateNamedEntityRequest,
   EntityType,
-} from '../../../types/commonTypes';
-import { TimeEntryModel } from '../../../types/timeEntriesTypes';
-import { State } from '../../rootReducer';
+  ReduxState,
+} from '~/types/commonTypes';
+import { TimeEntryModel } from '~/types/timeEntriesTypes';
 
 const selectTogglClientsById = createSelector(
-  (state: State) => state.entities.clients.toggl.byId,
+  (state: ReduxState) => state.entities.clients.toggl.byId,
   (clientsById): Record<string, ClientModel> => clientsById,
 );
 
@@ -54,7 +54,7 @@ const getClientRecordsByWorkspaceId = (
 export const selectTogglClientsByWorkspaceId = createSelector(
   [
     selectTogglClientRecords,
-    (state: State) => state.entities.timeEntries.toggl.byId,
+    (state: ReduxState) => state.entities.timeEntries.toggl.byId,
   ],
   (clientRecords, timeEntriesById): Record<string, ClientModel[]> =>
     getClientRecordsByWorkspaceId(clientRecords, timeEntriesById, false),
@@ -63,7 +63,7 @@ export const selectTogglClientsByWorkspaceId = createSelector(
 export const selectTogglClientInclusionsByWorkspaceId = createSelector(
   [
     selectTogglClientRecords,
-    (state: State) => state.entities.timeEntries.toggl.byId,
+    (state: ReduxState) => state.entities.timeEntries.toggl.byId,
   ],
   (clientRecords, timeEntriesById): Record<string, ClientModel[]> =>
     getClientRecordsByWorkspaceId(clientRecords, timeEntriesById, true),

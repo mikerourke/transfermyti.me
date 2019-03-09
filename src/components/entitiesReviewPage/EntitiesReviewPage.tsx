@@ -1,13 +1,13 @@
 import React, { useState } from 'react';
 import first from 'lodash/first';
 import get from 'lodash/get';
-import StepPage from '../stepPage/StepPage';
-import EntitiesList from '../entitiesList/EntitiesList';
+import StepPage from '~/components/stepPage/StepPage';
+import EntitiesList from '~/components/entitiesList/EntitiesList';
 import EntityTabs from './components/EntityTabs';
-import WorkspacesDropdown from './components/WorkspacesDropdown';
-import { EntityGroup, EntityModel } from '../../types/commonTypes';
-import { WorkspaceModel } from '../../types/workspacesTypes';
 import NoRecordsDisplay from './components/NoRecordsDisplay';
+import WorkspacesDropdown from './components/WorkspacesDropdown';
+import { EntityGroup, EntityModel } from '~/types/commonTypes';
+import { WorkspaceModel } from '~/types/workspacesTypes';
 
 interface Props {
   title: string;

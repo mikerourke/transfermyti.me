@@ -4,8 +4,8 @@ import { css } from 'emotion';
 import isNil from 'lodash/isNil';
 import BasicListItem from './components/BasicListItem';
 import TimeEntryListItem from './components/TimeEntryListItem';
-import { EntityGroup, EntityModel } from '../../types/commonTypes';
-import { DetailedTimeEntryModel } from '../../types/timeEntriesTypes';
+import { EntityGroup, EntityModel } from '~/types/commonTypes';
+import { DetailedTimeEntryModel } from '~/types/timeEntriesTypes';
 
 interface Props {
   entityGroup: EntityGroup;

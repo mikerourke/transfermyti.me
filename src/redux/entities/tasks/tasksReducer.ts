@@ -3,7 +3,7 @@ import {
   getEntityIdFieldValue,
   getEntityNormalizedState,
   updateIsEntityIncluded,
-} from '../../utils';
+} from '~/redux/utils';
 import {
   clockifyTasksFetchFailure,
   clockifyTasksFetchStarted,
@@ -19,16 +19,16 @@ import {
 import {
   EntityGroup,
   EntityType,
+  ReduxAction,
   ReduxStateEntryForTool,
   ToolName,
-} from '../../../types/commonTypes';
+} from '~/types/commonTypes';
 import {
   ClockifyTask,
   ClockifyTaskStatus,
   TaskModel,
-  TogglTask
-} from '../../../types/tasksTypes';
-import { ReduxAction } from '../../rootReducer';
+  TogglTask,
+} from '~/types/tasksTypes';
 
 export interface TasksState {
   readonly clockify: ReduxStateEntryForTool<TaskModel>;
@@ -48,9 +48,7 @@ export const initialState: TasksState = {
   isFetching: false,
 };
 
-const convertSecondsToClockifyEstimate = (
-  seconds: number,
-): string => {
+const convertSecondsToClockifyEstimate = (seconds: number): string => {
   const minutes = seconds / 60;
   if (minutes < 60) return `PT${minutes}M`;
 
@@ -68,7 +66,10 @@ const schemaProcessStrategy = (value: ClockifyTask | TogglTask): TaskModel => ({
   workspaceId: '', // The workspaceId value is assigned in the selector.
   projectId: getEntityIdFieldValue(value, EntityType.Project),
   assigneeId: getEntityIdFieldValue(value, EntityType.User),
-  isActive: 'active' in value ? value.active : value.status === ClockifyTaskStatus.Active,
+  isActive:
+    'active' in value
+      ? value.active
+      : value.status === ClockifyTaskStatus.Active,
   entryCount: 0,
   linkedId: null,
   isIncluded: true,

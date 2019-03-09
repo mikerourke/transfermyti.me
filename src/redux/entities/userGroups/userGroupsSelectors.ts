@@ -1,15 +1,15 @@
 import { createSelector } from 'reselect';
 import get from 'lodash/get';
-import { getEntityRecordsByWorkspaceId } from '../../utils';
+import { getEntityRecordsByWorkspaceId } from '~/redux/utils';
 import {
   CreateNamedEntityRequest,
   EntityType,
-} from '../../../types/commonTypes';
-import { UserGroupModel } from '../../../types/userGroupsTypes';
-import { State } from '../../rootReducer';
+  ReduxState,
+} from '~/types/commonTypes';
+import { UserGroupModel } from '~/types/userGroupsTypes';
 
 export const selectTogglUserGroupsById = createSelector(
-  (state: State) => state.entities.userGroups.toggl.byId,
+  (state: ReduxState) => state.entities.userGroups.toggl.byId,
   userGroupsById => userGroupsById,
 );
 
@@ -22,7 +22,7 @@ export const selectTogglUserGroupRecords = createSelector(
 export const selectTogglUserGroupsByWorkspaceId = createSelector(
   [
     selectTogglUserGroupRecords,
-    (state: State) => state.entities.timeEntries.toggl.byId,
+    (state: ReduxState) => state.entities.timeEntries.toggl.byId,
   ],
   (userGroupRecords, timeEntriesById): Record<string, UserGroupModel[]> =>
     getEntityRecordsByWorkspaceId(
@@ -36,7 +36,7 @@ export const selectTogglUserGroupsByWorkspaceId = createSelector(
 export const selectTogglUserGroupInclusionsByWorkspaceId = createSelector(
   [
     selectTogglUserGroupRecords,
-    (state: State) => state.entities.timeEntries.toggl.byId,
+    (state: ReduxState) => state.entities.timeEntries.toggl.byId,
   ],
   (userGroupRecords, timeEntriesById): Record<string, UserGroupModel[]> =>
     getEntityRecordsByWorkspaceId(

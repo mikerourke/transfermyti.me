@@ -1,8 +1,8 @@
-import { getFirstAndLastDayOfYear } from '../../utils';
+import { getFirstAndLastDayOfYear } from '~/redux/utils';
 import {
   ClockifyTimeEntry,
   TogglTimeEntriesFetchResponse,
-} from '../../../types/timeEntriesTypes';
+} from '~/types/timeEntriesTypes';
 
 export const apiFetchClockifyTimeEntries = (
   userId: string,

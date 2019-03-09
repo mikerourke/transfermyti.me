@@ -1,6 +1,6 @@
 import get from 'lodash/get';
 import isNil from 'lodash/isNil';
-import { EntityType } from '../../types/commonTypes';
+import { EntityType } from '~/types/commonTypes';
 
 export default function getEntityIdFieldValue(
   record: any,

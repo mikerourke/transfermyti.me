@@ -1,12 +1,12 @@
+import { HttpMethod } from '~/types/commonTypes';
+import { TogglProjectUser } from '~/types/projectsTypes';
 import {
   AddUsersToWorkspaceRequest,
   ClockifyUser,
   TogglMeResponse,
   TogglUser,
-} from '../../../types/usersTypes';
-import { TogglProjectUser } from '../../../types/projectsTypes';
-import { ClockifyWorkspace } from '../../../types/workspacesTypes';
-import { HttpMethod } from '../../../types/commonTypes';
+} from '~/types/usersTypes';
+import { ClockifyWorkspace } from '~/types/workspacesTypes';
 
 export const apiFetchClockifyUserDetails = (
   userId: string,

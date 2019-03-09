@@ -5,9 +5,9 @@ import { css } from 'emotion';
 import isNil from 'lodash/isNil';
 import noop from 'lodash/noop';
 import Flex from '../../flex/Flex';
-import IncludedIndicator from '../../includedIndicator/IncludedIndicator';
-import ShowIf from '../../showIf/ShowIf';
-import { EntityModel } from '../../../types/commonTypes';
+import IncludedIndicator from '~/components/includedIndicator/IncludedIndicator';
+import ShowIf from '~/components/showIf/ShowIf';
+import { EntityModel } from '~/types/commonTypes';
 
 interface Props extends ListRowProps {
   entityRecord: EntityModel;

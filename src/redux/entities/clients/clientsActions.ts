@@ -1,14 +1,14 @@
 import { createAction } from 'redux-actions';
-import { batchClockifyRequests } from '../../utils';
+import { batchClockifyRequests } from '~/redux/utils';
 import {
   apiCreateClockifyClient,
   apiFetchClockifyClients,
   apiFetchTogglClients,
 } from '../api/clients';
-import { showFetchErrorNotification } from '../../app/appActions';
+import { showFetchErrorNotification } from '~/redux/app/appActions';
 import { selectClientsTransferPayloadForWorkspace } from './clientsSelectors';
-import { ClockifyClient, TogglClient } from '../../../types/clientsTypes';
-import { Dispatch, GetState } from '../../rootReducer';
+import { ClockifyClient, TogglClient } from '~/types/clientsTypes';
+import { ReduxDispatch, ReduxGetState } from '~/types/commonTypes';
 
 export const clockifyClientsFetchStarted = createAction(
   '@clients/CLOCKIFY_FETCH_STARTED',
@@ -46,7 +46,7 @@ export const updateIsClientIncluded = createAction(
 );
 
 export const fetchClockifyClients = (workspaceId: string) => async (
-  dispatch: Dispatch<any>,
+  dispatch: ReduxDispatch,
 ) => {
   dispatch(clockifyClientsFetchStarted());
   try {
@@ -59,7 +59,7 @@ export const fetchClockifyClients = (workspaceId: string) => async (
 };
 
 export const fetchTogglClients = (workspaceId: string) => async (
-  dispatch: Dispatch<any>,
+  dispatch: ReduxDispatch,
 ) => {
   dispatch(togglClientsFetchStarted());
   try {
@@ -74,7 +74,7 @@ export const fetchTogglClients = (workspaceId: string) => async (
 export const transferClientsToClockify = (
   togglWorkspaceId: string,
   clockifyWorkspaceId: string,
-) => async (dispatch: Dispatch<any>, getState: GetState) => {
+) => async (dispatch: ReduxDispatch, getState: ReduxGetState) => {
   const state = getState();
   const clientRecordsInWorkspace = selectClientsTransferPayloadForWorkspace(
     state,

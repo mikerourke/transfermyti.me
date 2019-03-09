@@ -2,9 +2,9 @@ import React from 'react';
 import { Box } from 'bloomer';
 import { css } from 'emotion';
 import reverse from 'lodash/reverse';
-import Flex from '../../../../components/flex/Flex';
-import IncludedIndicator from '../../../../components/includedIndicator/IncludedIndicator';
-import { WorkspaceModel } from '../../../../types/workspacesTypes';
+import Flex from '~/components/flex/Flex';
+import IncludedIndicator from '~/components/includedIndicator/IncludedIndicator';
+import { WorkspaceModel } from '~/types/workspacesTypes';
 
 interface Props {
   workspaceRecord: WorkspaceModel;

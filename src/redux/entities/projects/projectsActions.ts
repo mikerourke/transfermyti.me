@@ -1,7 +1,7 @@
 import { createAction } from 'redux-actions';
 import property from 'lodash/property';
 import set from 'lodash/set';
-import { batchClockifyRequests, buildThrottler } from '../../utils';
+import { batchClockifyRequests, buildThrottler } from '~/redux/utils';
 import {
   apiCreateClockifyProject,
   apiFetchClockifyProjects,
@@ -11,15 +11,15 @@ import {
   apiFetchClockifyUsersInProject,
   apiFetchTogglUsersInProject,
 } from '../api/users';
-import { showFetchErrorNotification } from '../../app/appActions';
+import { showFetchErrorNotification } from '~/redux/app/appActions';
 import { selectProjectsTransferPayloadForWorkspace } from './projectsSelectors';
 import {
   ClockifyProject,
   TogglProject,
   TogglProjectUser,
-} from '../../../types/projectsTypes';
-import { ClockifyUser } from '../../../types/usersTypes';
-import { Dispatch, GetState } from '../../rootReducer';
+} from '~/types/projectsTypes';
+import { ClockifyUser } from '~/types/usersTypes';
+import { ReduxDispatch, ReduxGetState } from '~/types/commonTypes';
 
 export const clockifyProjectsFetchStarted = createAction(
   '@projects/CLOCKIFY_FETCH_STARTED',
@@ -81,7 +81,7 @@ const appendUserIdsToProject = async (
 };
 
 export const fetchClockifyProjects = (workspaceId: string) => async (
-  dispatch: Dispatch<any>,
+  dispatch: ReduxDispatch,
 ) => {
   dispatch(clockifyProjectsFetchStarted());
   try {
@@ -100,7 +100,7 @@ export const fetchClockifyProjects = (workspaceId: string) => async (
 };
 
 export const fetchTogglProjects = (workspaceId: string) => async (
-  dispatch: Dispatch<any>,
+  dispatch: ReduxDispatch,
 ) => {
   dispatch(togglProjectsFetchStarted());
   try {
@@ -117,7 +117,7 @@ export const fetchTogglProjects = (workspaceId: string) => async (
 export const transferProjectsToClockify = (
   togglWorkspaceId: string,
   clockifyWorkspaceId: string,
-) => async (dispatch: Dispatch<any>, getState: GetState) => {
+) => async (dispatch: ReduxDispatch, getState: ReduxGetState) => {
   const state = getState();
   const projectRecordsInWorkspace = selectProjectsTransferPayloadForWorkspace(
     state,

@@ -4,7 +4,7 @@ import {
   getEntityIdFieldValue,
   getEntityNormalizedState,
   updateIsEntityIncluded,
-} from '../../utils';
+} from '~/redux/utils';
 import {
   clockifyProjectsFetchFailure,
   clockifyProjectsFetchStarted,
@@ -20,15 +20,15 @@ import {
 import {
   EntityGroup,
   EntityType,
+  ReduxAction,
   ReduxStateEntryForTool,
   ToolName,
-} from '../../../types/commonTypes';
+} from '~/types/commonTypes';
 import {
   ClockifyProject,
   ProjectModel,
   TogglProject,
-} from '../../../types/projectsTypes';
-import { ReduxAction } from '../../rootReducer';
+} from '~/types/projectsTypes';
 
 export interface ProjectsState {
   readonly clockify: ReduxStateEntryForTool<ProjectModel>;

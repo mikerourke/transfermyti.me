@@ -1,5 +1,5 @@
 import get from 'lodash/get';
-import { EntityType } from '../../types/commonTypes';
+import { EntityType } from '~/types/commonTypes';
 
 export default function updateIsEntityIncluded<TState>(
   state: TState,

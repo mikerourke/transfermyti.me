@@ -6,8 +6,8 @@ import {
   updateCredentialsField,
   allCredentialsStored,
 } from './credentialsActions';
-import { CredentialsModel } from '../../types/credentialsTypes';
-import { ReduxAction } from '../rootReducer';
+import { CredentialsModel } from '~/types/credentialsTypes';
+import { ReduxAction } from '~/types/commonTypes';
 
 export interface CredentialsState extends CredentialsModel {
   readonly isValid: boolean;
