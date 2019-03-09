@@ -1,4 +1,4 @@
-import { createAction } from 'redux-actions';
+import { createAsyncAction, createStandardAction } from 'typesafe-actions';
 import { batchClockifyRequests } from '~/redux/utils';
 import {
   apiCreateClockifyUserGroup,
@@ -10,64 +10,51 @@ import { selectUserGroupsTransferPayloadForWorkspace } from './userGroupsSelecto
 import { ReduxDispatch, ReduxGetState } from '~/types/commonTypes';
 import { ClockifyUserGroup, TogglUserGroup } from '~/types/userGroupsTypes';
 
-export const clockifyUserGroupsFetchStarted = createAction(
-  '@userGroups/CLOCKIFY_FETCH_STARTED',
-);
-export const clockifyUserGroupsFetchSuccess = createAction(
+export const clockifyUserGroupsFetch = createAsyncAction(
+  '@userGroups/CLOCKIFY_FETCH_REQUEST',
   '@userGroups/CLOCKIFY_FETCH_SUCCESS',
-  (userGroups: ClockifyUserGroup[]) => userGroups,
-);
-export const clockifyUserGroupsFetchFailure = createAction(
   '@userGroups/CLOCKIFY_FETCH_FAILURE',
-);
-export const togglUserGroupsFetchStarted = createAction(
-  '@userGroups/TOGGL_FETCH_STARTED',
-);
-export const togglUserGroupsFetchSuccess = createAction(
+)<void, ClockifyUserGroup[], void>();
+
+export const togglUserGroupsFetch = createAsyncAction(
+  '@userGroups/TOGGL_FETCH_REQUEST',
   '@userGroups/TOGGL_FETCH_SUCCESS',
-  (userGroups: TogglUserGroup[]) => userGroups,
-);
-export const togglUserGroupsFetchFailure = createAction(
   '@userGroups/TOGGL_FETCH_FAILURE',
-);
-export const clockifyUserGroupsTransferStarted = createAction(
-  '@userGroups/CLOCKIFY_TRANSFER_STARTED',
-);
-export const clockifyUserGroupsTransferSuccess = createAction(
+)<void, TogglUserGroup[], void>();
+
+export const clockifyUserGroupsTransfer = createAsyncAction(
+  '@userGroups/CLOCKIFY_TRANSFER_REQUEST',
   '@userGroups/CLOCKIFY_TRANSFER_SUCCESS',
-  (userGroups: ClockifyUserGroup[]) => userGroups,
-);
-export const clockifyUserGroupsTransferFailure = createAction(
   '@userGroups/CLOCKIFY_TRANSFER_FAILURE',
-);
-export const updateIsUserGroupIncluded = createAction(
+)<void, ClockifyUserGroup[], void>();
+
+export const updateIsUserGroupIncluded = createStandardAction(
   '@userGroups/UPDATE_IS_INCLUDED',
-  (userGroupId: string) => userGroupId,
-);
+)<string>();
 
 export const fetchClockifyUserGroups = (workspaceId: string) => async (
   dispatch: ReduxDispatch,
 ) => {
-  dispatch(clockifyUserGroupsFetchStarted());
+  dispatch(clockifyUserGroupsFetch.request());
   try {
     const userGroups = await apiFetchClockifyUserGroups(workspaceId);
-    return dispatch(clockifyUserGroupsFetchSuccess(userGroups));
+    return dispatch(clockifyUserGroupsFetch.success(userGroups));
   } catch (error) {
     dispatch(showFetchErrorNotification(error));
-    return dispatch(clockifyUserGroupsFetchFailure());
+    return dispatch(clockifyUserGroupsFetch.failure());
   }
 };
 
 export const fetchTogglUserGroups = (workspaceId: string) => async (
   dispatch: ReduxDispatch,
 ) => {
-  dispatch(togglUserGroupsFetchStarted());
+  dispatch(togglUserGroupsFetch.request());
   try {
     const userGroups = await apiFetchTogglUserGroups(workspaceId);
-    return dispatch(togglUserGroupsFetchSuccess(userGroups));
+    return dispatch(togglUserGroupsFetch.success(userGroups));
   } catch (error) {
     dispatch(showFetchErrorNotification(error));
-    return dispatch(togglUserGroupsFetchFailure());
+    return dispatch(togglUserGroupsFetch.failure());
   }
 };
 
@@ -82,16 +69,16 @@ export const transferUserGroupsToClockify = (
   );
   if (userGroupsInWorkspace.length === 0) return Promise.resolve();
 
-  dispatch(clockifyUserGroupsTransferStarted());
+  dispatch(clockifyUserGroupsTransfer.request());
   try {
     const userGroups = await batchClockifyRequests(
       userGroupsInWorkspace,
       apiCreateClockifyUserGroup,
       clockifyWorkspaceId,
     );
-    return dispatch(clockifyUserGroupsTransferSuccess(userGroups));
+    return dispatch(clockifyUserGroupsTransfer.success(userGroups));
   } catch (error) {
     dispatch(showFetchErrorNotification(error));
-    return dispatch(clockifyUserGroupsTransferFailure());
+    return dispatch(clockifyUserGroupsTransfer.failure());
   }
 };

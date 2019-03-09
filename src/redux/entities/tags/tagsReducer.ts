@@ -1,21 +1,11 @@
+import { getType } from 'typesafe-actions';
 import { combineActions, handleActions } from 'redux-actions';
 import {
   getEntityIdFieldValue,
   getEntityNormalizedState,
   updateIsEntityIncluded,
 } from '~/redux/utils';
-import {
-  clockifyTagsFetchFailure,
-  clockifyTagsFetchStarted,
-  clockifyTagsFetchSuccess,
-  togglTagsFetchFailure,
-  togglTagsFetchStarted,
-  togglTagsFetchSuccess,
-  clockifyTagsTransferFailure,
-  clockifyTagsTransferStarted,
-  clockifyTagsTransferSuccess,
-  updateIsTagIncluded,
-} from './tagsActions';
+import * as tagsActions from './tagsActions';
 import {
   EntityGroup,
   EntityType,
@@ -54,7 +44,10 @@ const schemaProcessStrategy = (value: ClockifyTag | TogglTag): TagModel => ({
 
 export default handleActions(
   {
-    [combineActions(clockifyTagsFetchSuccess, clockifyTagsTransferSuccess)]: (
+    [combineActions(
+      getType(tagsActions.clockifyTagsFetch.success),
+      getType(tagsActions.clockifyTagsTransfer.success),
+    )]: (
       state: TagsState,
       { payload: tags }: ReduxAction<ClockifyTag[]>,
     ): TagsState =>
@@ -66,7 +59,7 @@ export default handleActions(
         tags,
       ),
 
-    [togglTagsFetchSuccess]: (
+    [getType(tagsActions.togglTagsFetch.success)]: (
       state: TagsState,
       { payload: tags }: ReduxAction<TogglTag[]>,
     ): TagsState =>
@@ -79,27 +72,27 @@ export default handleActions(
       ),
 
     [combineActions(
-      clockifyTagsFetchStarted,
-      togglTagsFetchStarted,
-      clockifyTagsTransferStarted,
+      getType(tagsActions.clockifyTagsFetch.request),
+      getType(tagsActions.togglTagsFetch.request),
+      getType(tagsActions.clockifyTagsTransfer.request),
     )]: (state: TagsState): TagsState => ({
       ...state,
       isFetching: true,
     }),
 
     [combineActions(
-      clockifyTagsFetchSuccess,
-      clockifyTagsFetchFailure,
-      togglTagsFetchSuccess,
-      togglTagsFetchFailure,
-      clockifyTagsTransferSuccess,
-      clockifyTagsTransferFailure,
+      getType(tagsActions.clockifyTagsFetch.success),
+      getType(tagsActions.clockifyTagsFetch.failure),
+      getType(tagsActions.togglTagsFetch.success),
+      getType(tagsActions.togglTagsFetch.failure),
+      getType(tagsActions.clockifyTagsTransfer.success),
+      getType(tagsActions.clockifyTagsTransfer.failure),
     )]: (state: TagsState): TagsState => ({
       ...state,
       isFetching: false,
     }),
 
-    [updateIsTagIncluded]: (
+    [getType(tagsActions.updateIsTagIncluded)]: (
       state: TagsState,
       { payload: tagId }: ReduxAction<string>,
     ): TagsState => updateIsEntityIncluded(state, EntityType.Tag, tagId),

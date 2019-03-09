@@ -1,4 +1,4 @@
-import { createAction } from 'redux-actions';
+import { createAsyncAction, createStandardAction } from 'typesafe-actions';
 import { batchClockifyRequests } from '~/redux/utils';
 import {
   apiCreateClockifyTag,
@@ -10,60 +10,51 @@ import { selectTagsTransferPayloadForWorkspace } from './tagsSelectors';
 import { ClockifyTag, TogglTag } from '~/types/tagsTypes';
 import { ReduxDispatch, ReduxGetState } from '~/types/commonTypes';
 
-export const clockifyTagsFetchStarted = createAction(
-  '@tags/CLOCKIFY_FETCH_STARTED',
-);
-export const clockifyTagsFetchSuccess = createAction(
+export const clockifyTagsFetch = createAsyncAction(
+  '@tags/CLOCKIFY_FETCH_REQUEST',
   '@tags/CLOCKIFY_FETCH_SUCCESS',
-  (tags: ClockifyTag[]) => tags,
-);
-export const clockifyTagsFetchFailure = createAction(
   '@tags/CLOCKIFY_FETCH_FAILURE',
-);
-export const togglTagsFetchStarted = createAction('@tags/TOGGL_FETCH_STARTED');
-export const togglTagsFetchSuccess = createAction(
+)<void, ClockifyTag[], void>();
+
+export const togglTagsFetch = createAsyncAction(
+  '@tags/TOGGL_FETCH_REQUEST',
   '@tags/TOGGL_FETCH_SUCCESS',
-  (tags: TogglTag[]) => tags,
-);
-export const togglTagsFetchFailure = createAction('@tags/TOGGL_FETCH_FAILURE');
-export const clockifyTagsTransferStarted = createAction(
-  '@tags/CLOCKIFY_TRANSFER_STARTED',
-);
-export const clockifyTagsTransferSuccess = createAction(
+  '@tags/TOGGL_FETCH_FAILURE',
+)<void, TogglTag[], void>();
+
+export const clockifyTagsTransfer = createAsyncAction(
+  '@tags/CLOCKIFY_TRANSFER_REQUEST',
   '@tags/CLOCKIFY_TRANSFER_SUCCESS',
-  (tags: ClockifyTag[]) => tags,
-);
-export const clockifyTagsTransferFailure = createAction(
   '@tags/CLOCKIFY_TRANSFER_FAILURE',
-);
-export const updateIsTagIncluded = createAction(
+)<void, ClockifyTag[], void>();
+
+export const updateIsTagIncluded = createStandardAction(
   '@tags/UPDATE_IS_INCLUDED',
-  (tagId: string) => tagId,
-);
+)<string>();
 
 export const fetchClockifyTags = (workspaceId: string) => async (
   dispatch: ReduxDispatch,
 ) => {
-  dispatch(clockifyTagsFetchStarted());
+  dispatch(clockifyTagsFetch.request());
   try {
     const tags = await apiFetchClockifyTags(workspaceId);
-    return dispatch(clockifyTagsFetchSuccess(tags));
+    return dispatch(clockifyTagsFetch.success(tags));
   } catch (error) {
     dispatch(showFetchErrorNotification(error));
-    return dispatch(clockifyTagsFetchFailure());
+    return dispatch(clockifyTagsFetch.failure());
   }
 };
 
 export const fetchTogglTags = (workspaceId: string) => async (
   dispatch: ReduxDispatch,
 ) => {
-  dispatch(togglTagsFetchStarted());
+  dispatch(togglTagsFetch.request());
   try {
     const tags = await apiFetchTogglTags(workspaceId);
-    return dispatch(togglTagsFetchSuccess(tags));
+    return dispatch(togglTagsFetch.success(tags));
   } catch (error) {
     dispatch(showFetchErrorNotification(error));
-    return dispatch(togglTagsFetchFailure());
+    return dispatch(togglTagsFetch.failure());
   }
 };
 
@@ -78,16 +69,16 @@ export const transferTagsToClockify = (
   );
   if (tagRecordsInWorkspace.length === 0) return Promise.resolve();
 
-  dispatch(clockifyTagsTransferStarted());
+  dispatch(clockifyTagsTransfer.request());
   try {
     const tags = await batchClockifyRequests(
       tagRecordsInWorkspace,
       apiCreateClockifyTag,
       clockifyWorkspaceId,
     );
-    return dispatch(clockifyTagsTransferSuccess(tags));
+    return dispatch(clockifyTagsTransfer.success(tags));
   } catch (error) {
     dispatch(showFetchErrorNotification(error));
-    return dispatch(clockifyTagsTransferFailure());
+    return dispatch(clockifyTagsTransfer.failure());
   }
 };

@@ -1,4 +1,4 @@
-import { createAction } from 'redux-actions';
+import { createAsyncAction, createStandardAction } from 'typesafe-actions';
 import { property, set } from 'lodash';
 import { batchClockifyRequests, buildThrottler } from '~/redux/utils';
 import {
@@ -12,48 +12,35 @@ import {
 } from '../api/users';
 import { showFetchErrorNotification } from '~/redux/app/appActions';
 import { selectProjectsTransferPayloadForWorkspace } from './projectsSelectors';
+import { ReduxDispatch, ReduxGetState } from '~/types/commonTypes';
 import {
   ClockifyProject,
   TogglProject,
   TogglProjectUser,
 } from '~/types/projectsTypes';
 import { ClockifyUser } from '~/types/usersTypes';
-import { ReduxDispatch, ReduxGetState } from '~/types/commonTypes';
 
-export const clockifyProjectsFetchStarted = createAction(
-  '@projects/CLOCKIFY_FETCH_STARTED',
-);
-export const clockifyProjectsFetchSuccess = createAction(
+export const clockifyProjectsFetch = createAsyncAction(
+  '@projects/CLOCKIFY_FETCH_REQUEST',
   '@projects/CLOCKIFY_FETCH_SUCCESS',
-  (projects: ClockifyProject[]) => projects,
-);
-export const clockifyProjectsFetchFailure = createAction(
   '@projects/CLOCKIFY_FETCH_FAILURE',
-);
-export const togglProjectsFetchStarted = createAction(
-  '@projects/TOGGL_FETCH_STARTED',
-);
-export const togglProjectsFetchSuccess = createAction(
+)<void, ClockifyProject[], void>();
+
+export const togglProjectsFetch = createAsyncAction(
+  '@projects/TOGGL_FETCH_REQUEST',
   '@projects/TOGGL_FETCH_SUCCESS',
-  (projects: TogglProject[]) => projects,
-);
-export const togglProjectsFetchFailure = createAction(
   '@projects/TOGGL_FETCH_FAILURE',
-);
-export const clockifyProjectsTransferStarted = createAction(
-  '@clients/CLOCKIFY_PROJECTS_TRANSFER_STARTED',
-);
-export const clockifyProjectsTransferSuccess = createAction(
-  '@clients/CLOCKIFY_PROJECTS_TRANSFER_SUCCESS',
-  (clients: ClockifyProject[]) => clients,
-);
-export const clockifyProjectsTransferFailure = createAction(
-  '@clients/CLOCKIFY_PROJECTS_TRANSFER_FAILURE',
-);
-export const updateIsProjectIncluded = createAction(
+)<void, TogglProject[], void>();
+
+export const clockifyProjectsTransfer = createAsyncAction(
+  '@projects/CLOCKIFY_TRANSFER_REQUEST',
+  '@projects/CLOCKIFY_TRANSFER_SUCCESS',
+  '@projects/CLOCKIFY_TRANSFER_FAILURE',
+)<void, ClockifyProject[], void>();
+
+export const updateIsProjectIncluded = createStandardAction(
   '@projects/UPDATE_IS_INCLUDED',
-  (projectId: string) => projectId,
-);
+)<string>();
 
 const appendUserIdsToProject = async (
   projects: (TogglProject | ClockifyProject)[],
@@ -82,7 +69,7 @@ const appendUserIdsToProject = async (
 export const fetchClockifyProjects = (workspaceId: string) => async (
   dispatch: ReduxDispatch,
 ) => {
-  dispatch(clockifyProjectsFetchStarted());
+  dispatch(clockifyProjectsFetch.request());
   try {
     const { project: projects } = await apiFetchClockifyProjects(workspaceId);
     await appendUserIdsToProject(
@@ -91,25 +78,25 @@ export const fetchClockifyProjects = (workspaceId: string) => async (
       workspaceId,
     );
 
-    return dispatch(clockifyProjectsFetchSuccess(projects));
+    return dispatch(clockifyProjectsFetch.success(projects));
   } catch (error) {
     dispatch(showFetchErrorNotification(error));
-    return dispatch(clockifyProjectsFetchFailure());
+    return dispatch(clockifyProjectsFetch.failure());
   }
 };
 
 export const fetchTogglProjects = (workspaceId: string) => async (
   dispatch: ReduxDispatch,
 ) => {
-  dispatch(togglProjectsFetchStarted());
+  dispatch(togglProjectsFetch.request());
   try {
     const projects = await apiFetchTogglProjects(workspaceId);
     await appendUserIdsToProject(projects, apiFetchTogglUsersInProject);
 
-    return dispatch(togglProjectsFetchSuccess(projects));
+    return dispatch(togglProjectsFetch.success(projects));
   } catch (error) {
     dispatch(showFetchErrorNotification(error));
-    return dispatch(togglProjectsFetchFailure());
+    return dispatch(togglProjectsFetch.failure());
   }
 };
 
@@ -124,7 +111,7 @@ export const transferProjectsToClockify = (
   );
   if (projectRecordsInWorkspace.length === 0) return Promise.resolve();
 
-  dispatch(clockifyProjectsTransferStarted());
+  dispatch(clockifyProjectsTransfer.request());
   try {
     const projects = await batchClockifyRequests(
       projectRecordsInWorkspace,
@@ -132,9 +119,9 @@ export const transferProjectsToClockify = (
       clockifyWorkspaceId,
     );
 
-    return dispatch(clockifyProjectsTransferSuccess(projects));
+    return dispatch(clockifyProjectsTransfer.success(projects));
   } catch (error) {
     dispatch(showFetchErrorNotification(error));
-    return dispatch(clockifyProjectsTransferFailure());
+    return dispatch(clockifyProjectsTransfer.failure());
   }
 };

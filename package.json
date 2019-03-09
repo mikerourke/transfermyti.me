@@ -64,6 +64,7 @@
     "redux-thunk": "^2.3.0",
     "reselect": "^4.0.0",
     "store": "^2.0.12",
+    "typesafe-actions": "^3.2.1",
     "whatwg-fetch": "^3.0.0"
   },
   "prettier": {

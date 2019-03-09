@@ -6,3 +6,6 @@ export const selectNotifications = createSelector(
   (state: ReduxState) => state.app.notifications,
   (notifications): NotificationModel[] => notifications,
 );
+
+export const selectCurrentTransferType = (state: ReduxState) =>
+  state.app.currentTransferType;

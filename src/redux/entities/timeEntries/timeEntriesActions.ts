@@ -1,4 +1,4 @@
-import { createAction } from 'redux-actions';
+import { createAsyncAction } from 'typesafe-actions';
 import { flatten } from 'lodash';
 import { buildThrottler } from '~/redux/utils';
 import {
@@ -14,26 +14,17 @@ import { selectTogglWorkspaceIncludedYears } from '~/redux/entities/workspaces/w
 import { ClockifyTimeEntry, TogglTimeEntry } from '~/types/timeEntriesTypes';
 import { ReduxDispatch, ReduxGetState } from '~/types/commonTypes';
 
-export const clockifyTimeEntriesFetchStarted = createAction(
-  '@timeEntries/CLOCKIFY_FETCH_STARTED',
-);
-export const clockifyTimeEntriesFetchSuccess = createAction(
+export const clockifyTimeEntriesFetch = createAsyncAction(
+  '@timeEntries/CLOCKIFY_FETCH_REQUEST',
   '@timeEntries/CLOCKIFY_FETCH_SUCCESS',
-  (timeEntries: ClockifyTimeEntry[]) => timeEntries,
-);
-export const clockifyTimeEntriesFetchFailure = createAction(
   '@timeEntries/CLOCKIFY_FETCH_FAILURE',
-);
-export const togglTimeEntriesFetchStarted = createAction(
-  '@timeEntries/TOGGL_FETCH_STARTED',
-);
-export const togglTimeEntriesFetchSuccess = createAction(
+)<void, ClockifyTimeEntry[], void>();
+
+export const togglTimeEntriesFetch = createAsyncAction(
+  '@timeEntries/TOGGL_FETCH_REQUEST',
   '@timeEntries/TOGGL_FETCH_SUCCESS',
-  (timeEntries: TogglTimeEntry[]) => timeEntries,
-);
-export const togglTimeEntriesFetchFailure = createAction(
   '@timeEntries/TOGGL_FETCH_FAILURE',
-);
+)<void, TogglTimeEntry[], void>();
 
 const fetchClockifyTimeEntriesForIncludedYears = async (
   userId: string,
@@ -66,7 +57,7 @@ export const fetchClockifyTimeEntries = (workspaceId: string) => async (
 ) => {
   const state = getState();
 
-  dispatch(clockifyTimeEntriesFetchStarted());
+  dispatch(clockifyTimeEntriesFetch.request());
 
   const userId = selectClockifyUserId(state);
   const includedYears = selectTogglWorkspaceIncludedYears(state, workspaceId);
@@ -76,10 +67,10 @@ export const fetchClockifyTimeEntries = (workspaceId: string) => async (
       workspaceId,
       includedYears,
     );
-    return dispatch(clockifyTimeEntriesFetchSuccess(timeEntries));
+    return dispatch(clockifyTimeEntriesFetch.success(timeEntries));
   } catch (error) {
     dispatch(showFetchErrorNotification(error));
-    return dispatch(clockifyTimeEntriesFetchFailure());
+    return dispatch(clockifyTimeEntriesFetch.failure());
   }
 };
 
@@ -118,7 +109,7 @@ export const fetchTogglTimeEntries = (
 ) => async (dispatch: ReduxDispatch, getState: ReduxGetState) => {
   const state = getState();
 
-  dispatch(togglTimeEntriesFetchStarted());
+  dispatch(togglTimeEntriesFetch.request());
   const email = selectTogglUserEmail(state);
 
   try {
@@ -138,9 +129,9 @@ export const fetchTogglTimeEntries = (
     );
 
     const allTimeEntries = [...firstPageEntries, ...remainingPageEntries];
-    return dispatch(togglTimeEntriesFetchSuccess(allTimeEntries));
+    return dispatch(togglTimeEntriesFetch.success(allTimeEntries));
   } catch (error) {
     dispatch(showFetchErrorNotification(error));
-    return dispatch(togglTimeEntriesFetchFailure());
+    return dispatch(togglTimeEntriesFetch.failure());
   }
 };

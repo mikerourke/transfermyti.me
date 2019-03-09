@@ -1,32 +1,32 @@
+import { getType } from 'typesafe-actions';
 import { handleActions } from 'redux-actions';
-import {
-  dismissNotification,
-  dismissAllNotifications,
-  notificationShown,
-} from './appActions';
-import { NotificationModel } from '~/types/appTypes';
+import * as appActions from './appActions';
+import { NotificationModel, TransferType } from '~/types/appTypes';
+import { ReduxAction } from '~/types/commonTypes';
 
 export interface AppState {
   readonly notifications: NotificationModel[];
+  readonly currentTransferType: TransferType;
 }
 
 export const initialState: AppState = {
   notifications: [],
+  currentTransferType: TransferType.SingleUser,
 };
 
 export default handleActions(
   {
-    [notificationShown]: (
+    [getType(appActions.notificationShown)]: (
       state: AppState,
-      { payload: notification }: any,
+      { payload: notification }: ReduxAction<NotificationModel>,
     ): AppState => ({
       ...state,
       notifications: [...state.notifications, notification],
     }),
 
-    [dismissNotification]: (
+    [getType(appActions.dismissNotification)]: (
       state: AppState,
-      { payload: notificationId }: any,
+      { payload: notificationId }: ReduxAction<string>,
     ): AppState => ({
       ...state,
       notifications: state.notifications.filter(
@@ -34,9 +34,19 @@ export default handleActions(
       ),
     }),
 
-    [dismissAllNotifications]: (state: AppState): AppState => ({
+    [getType(appActions.dismissAllNotifications)]: (
+      state: AppState,
+    ): AppState => ({
       ...state,
       notifications: [],
+    }),
+
+    [getType(appActions.updateTransferType)]: (
+      state: AppState,
+      { payload: transferType }: ReduxAction<TransferType>,
+    ): AppState => ({
+      ...state,
+      currentTransferType: transferType,
     }),
   },
   initialState,

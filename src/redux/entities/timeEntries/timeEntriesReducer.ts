@@ -1,14 +1,8 @@
+import { getType } from 'typesafe-actions';
 import { combineActions, handleActions } from 'redux-actions';
 import { get, isNil, isString } from 'lodash';
 import { getEntityIdFieldValue, getEntityNormalizedState } from '~/redux/utils';
-import {
-  clockifyTimeEntriesFetchFailure,
-  clockifyTimeEntriesFetchStarted,
-  clockifyTimeEntriesFetchSuccess,
-  togglTimeEntriesFetchFailure,
-  togglTimeEntriesFetchStarted,
-  togglTimeEntriesFetchSuccess,
-} from './timeEntriesActions';
+import * as timeEntriesActions from './timeEntriesActions';
 import {
   EntityGroup,
   EntityType,
@@ -75,7 +69,7 @@ const schemaProcessStrategy = (
 
 export default handleActions(
   {
-    [clockifyTimeEntriesFetchSuccess]: (
+    [getType(timeEntriesActions.clockifyTimeEntriesFetch.success)]: (
       state: TimeEntriesState,
       { payload: timeEntries }: ReduxAction<ClockifyTimeEntry[]>,
     ): TimeEntriesState =>
@@ -87,7 +81,7 @@ export default handleActions(
         timeEntries,
       ),
 
-    [togglTimeEntriesFetchSuccess]: (
+    [getType(timeEntriesActions.togglTimeEntriesFetch.success)]: (
       state: TimeEntriesState,
       { payload: timeEntries }: ReduxAction<TogglTimeEntry[]>,
     ): TimeEntriesState =>
@@ -100,18 +94,18 @@ export default handleActions(
       ),
 
     [combineActions(
-      clockifyTimeEntriesFetchStarted,
-      togglTimeEntriesFetchStarted,
+      getType(timeEntriesActions.clockifyTimeEntriesFetch.request),
+      getType(timeEntriesActions.togglTimeEntriesFetch.request),
     )]: (state: TimeEntriesState): TimeEntriesState => ({
       ...state,
       isFetching: true,
     }),
 
     [combineActions(
-      clockifyTimeEntriesFetchSuccess,
-      clockifyTimeEntriesFetchFailure,
-      togglTimeEntriesFetchSuccess,
-      togglTimeEntriesFetchFailure,
+      getType(timeEntriesActions.clockifyTimeEntriesFetch.success),
+      getType(timeEntriesActions.clockifyTimeEntriesFetch.failure),
+      getType(timeEntriesActions.togglTimeEntriesFetch.success),
+      getType(timeEntriesActions.togglTimeEntriesFetch.failure),
     )]: (state: TimeEntriesState): TimeEntriesState => ({
       ...state,
       isFetching: false,

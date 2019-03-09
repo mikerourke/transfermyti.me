@@ -1,29 +1,11 @@
+import { getType } from 'typesafe-actions';
 import { handleActions, combineActions } from 'redux-actions';
 import { cloneDeep, get, uniq } from 'lodash';
 import {
   getEntityNormalizedState,
   updateIsEntityIncluded,
 } from '~/redux/utils';
-import {
-  clockifyWorkspacesFetchStarted,
-  clockifyWorkspacesFetchSuccess,
-  clockifyWorkspacesFetchFailure,
-  togglWorkspacesFetchStarted,
-  togglWorkspacesFetchSuccess,
-  togglWorkspacesFetchFailure,
-  togglWorkspaceSummaryFetchStarted,
-  togglWorkspaceSummaryFetchSuccess,
-  togglWorkspaceSummaryFetchFailure,
-  clockifyWorkspaceTransferStarted,
-  clockifyWorkspaceTransferSuccess,
-  clockifyWorkspaceTransferFailure,
-  appendUserIdsToWorkspace,
-  updateIsWorkspaceIncluded,
-  updateIsWorkspaceYearIncluded,
-  updateWorkspaceNameBeingFetched,
-  updateFetchTimeByTool,
-  resetContentsForTool,
-} from './workspacesActions';
+import * as workspacesActions from './workspacesActions';
 import {
   EntityGroup,
   EntityType,
@@ -83,8 +65,8 @@ const schemaProcessStrategy = (
 export default handleActions(
   {
     [combineActions(
-      clockifyWorkspacesFetchSuccess,
-      clockifyWorkspaceTransferSuccess,
+      getType(workspacesActions.clockifyWorkspacesFetch.success),
+      getType(workspacesActions.clockifyWorkspaceTransfer.success),
     )]: (
       state: WorkspacesState,
       { payload: workspaces }: ReduxAction<ClockifyWorkspace[]>,
@@ -97,7 +79,7 @@ export default handleActions(
         workspaces,
       ),
 
-    [togglWorkspacesFetchSuccess]: (
+    [getType(workspacesActions.togglWorkspacesFetch.success)]: (
       state: WorkspacesState,
       { payload: workspaces }: ReduxAction<TogglWorkspace[]>,
     ): WorkspacesState =>
@@ -109,7 +91,7 @@ export default handleActions(
         workspaces,
       ),
 
-    [togglWorkspaceSummaryFetchSuccess]: (
+    [getType(workspacesActions.togglWorkspaceSummaryFetch.success)]: (
       state: WorkspacesState,
       {
         payload: { workspaceId, inclusionsByYear },
@@ -140,30 +122,30 @@ export default handleActions(
     },
 
     [combineActions(
-      clockifyWorkspacesFetchStarted,
-      togglWorkspacesFetchStarted,
-      clockifyWorkspaceTransferStarted,
-      togglWorkspaceSummaryFetchStarted,
+      getType(workspacesActions.clockifyWorkspacesFetch.request),
+      getType(workspacesActions.togglWorkspacesFetch.request),
+      getType(workspacesActions.clockifyWorkspaceTransfer.request),
+      getType(workspacesActions.togglWorkspaceSummaryFetch.request),
     )]: (state: WorkspacesState): WorkspacesState => ({
       ...state,
       isFetching: true,
     }),
 
     [combineActions(
-      clockifyWorkspacesFetchSuccess,
-      clockifyWorkspacesFetchFailure,
-      togglWorkspacesFetchSuccess,
-      togglWorkspacesFetchFailure,
-      togglWorkspaceSummaryFetchSuccess,
-      togglWorkspaceSummaryFetchFailure,
-      clockifyWorkspaceTransferSuccess,
-      clockifyWorkspaceTransferFailure,
+      getType(workspacesActions.clockifyWorkspacesFetch.success),
+      getType(workspacesActions.clockifyWorkspacesFetch.failure),
+      getType(workspacesActions.togglWorkspacesFetch.success),
+      getType(workspacesActions.togglWorkspacesFetch.failure),
+      getType(workspacesActions.togglWorkspaceSummaryFetch.success),
+      getType(workspacesActions.togglWorkspaceSummaryFetch.failure),
+      getType(workspacesActions.clockifyWorkspaceTransfer.success),
+      getType(workspacesActions.clockifyWorkspaceTransfer.failure),
     )]: (state: WorkspacesState): WorkspacesState => ({
       ...state,
       isFetching: false,
     }),
 
-    [appendUserIdsToWorkspace]: (
+    [getType(workspacesActions.appendUserIdsToWorkspace)]: (
       state: WorkspacesState,
       {
         payload: { toolName, workspaceId, userIds },
@@ -189,13 +171,13 @@ export default handleActions(
       },
     }),
 
-    [updateIsWorkspaceIncluded]: (
+    [getType(workspacesActions.updateIsWorkspaceIncluded)]: (
       state: WorkspacesState,
       { payload: workspaceId }: ReduxAction<string>,
     ): WorkspacesState =>
       updateIsEntityIncluded(state, EntityType.Workspace, workspaceId),
 
-    [updateIsWorkspaceYearIncluded]: (
+    [getType(workspacesActions.updateIsWorkspaceYearIncluded)]: (
       state: WorkspacesState,
       {
         payload: { workspaceId, year },
@@ -225,7 +207,7 @@ export default handleActions(
       };
     },
 
-    [updateWorkspaceNameBeingFetched]: (
+    [getType(workspacesActions.updateWorkspaceNameBeingFetched)]: (
       state: WorkspacesState,
       { payload: workspaceName }: ReduxAction<string>,
     ): WorkspacesState => ({
@@ -233,7 +215,7 @@ export default handleActions(
       workspaceNameBeingFetched: workspaceName,
     }),
 
-    [updateFetchTimeByTool]: (
+    [getType(workspacesActions.updateFetchTimeByTool)]: (
       state: WorkspacesState,
       {
         payload: { toolName, fetchDate },
@@ -246,7 +228,7 @@ export default handleActions(
       },
     }),
 
-    [resetContentsForTool]: (
+    [getType(workspacesActions.resetContentsForTool)]: (
       state: WorkspacesState,
       { payload: toolName }: ReduxAction<string>,
     ): WorkspacesState => ({

@@ -198,7 +198,7 @@ const mapStateToProps = (state: ReduxState) => ({
 
 const mapDispatchToProps = (dispatch: ReduxDispatch) => ({
   onUpdateCredentialsField: (field: CredentialsField, value: string) =>
-    dispatch(updateCredentialsField(field, value)),
+    dispatch(updateCredentialsField({ field, value })),
   onStoreAllCredentials: () => dispatch(storeAllCredentials()),
   onValidateCredentials: () => dispatch(validateCredentials()),
 });

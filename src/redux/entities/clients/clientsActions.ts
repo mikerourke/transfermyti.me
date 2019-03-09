@@ -1,4 +1,4 @@
-import { createAction } from 'redux-actions';
+import { createAsyncAction, createStandardAction } from 'typesafe-actions';
 import { batchClockifyRequests } from '~/redux/utils';
 import {
   apiCreateClockifyClient,
@@ -10,64 +10,51 @@ import { selectClientsTransferPayloadForWorkspace } from './clientsSelectors';
 import { ClockifyClient, TogglClient } from '~/types/clientsTypes';
 import { ReduxDispatch, ReduxGetState } from '~/types/commonTypes';
 
-export const clockifyClientsFetchStarted = createAction(
-  '@clients/CLOCKIFY_FETCH_STARTED',
-);
-export const clockifyClientsFetchSuccess = createAction(
+export const clockifyClientsFetch = createAsyncAction(
+  '@clients/CLOCKIFY_FETCH_REQUEST',
   '@clients/CLOCKIFY_FETCH_SUCCESS',
-  (clients: ClockifyClient[]) => clients,
-);
-export const clockifyClientsFetchFailure = createAction(
   '@clients/CLOCKIFY_FETCH_FAILURE',
-);
-export const togglClientsFetchStarted = createAction(
-  '@clients/TOGGL_FETCH_STARTED',
-);
-export const togglClientsFetchSuccess = createAction(
+)<void, ClockifyClient[], void>();
+
+export const togglClientsFetch = createAsyncAction(
+  '@clients/TOGGL_FETCH_REQUEST',
   '@clients/TOGGL_FETCH_SUCCESS',
-  (clients: TogglClient[]) => clients,
-);
-export const togglClientsFetchFailure = createAction(
   '@clients/TOGGL_FETCH_FAILURE',
-);
-export const clockifyClientsTransferStarted = createAction(
-  '@clients/CLOCKIFY_CLIENTS_TRANSFER_STARTED',
-);
-export const clockifyClientsTransferSuccess = createAction(
-  '@clients/CLOCKIFY_CLIENTS_TRANSFER_SUCCESS',
-  (clients: ClockifyClient[]) => clients,
-);
-export const clockifyClientsTransferFailure = createAction(
-  '@clients/CLOCKIFY_CLIENTS_TRANSFER_FAILURE',
-);
-export const updateIsClientIncluded = createAction(
+)<void, TogglClient[], void>();
+
+export const clockifyClientsTransfer = createAsyncAction(
+  '@clients/CLOCKIFY_TRANSFER_REQUEST',
+  '@clients/CLOCKIFY_TRANSFER_SUCCESS',
+  '@clients/CLOCKIFY_TRANSFER_FAILURE',
+)<void, ClockifyClient[], void>();
+
+export const updateIsClientIncluded = createStandardAction(
   '@clients/UPDATE_IS_INCLUDED',
-  (clientId: string) => clientId,
-);
+)<string>();
 
 export const fetchClockifyClients = (workspaceId: string) => async (
   dispatch: ReduxDispatch,
 ) => {
-  dispatch(clockifyClientsFetchStarted());
+  dispatch(clockifyClientsFetch.request());
   try {
     const clients = await apiFetchClockifyClients(workspaceId);
-    return dispatch(clockifyClientsFetchSuccess(clients));
+    return dispatch(clockifyClientsFetch.success(clients));
   } catch (error) {
     dispatch(showFetchErrorNotification(error));
-    return dispatch(clockifyClientsFetchFailure());
+    return dispatch(clockifyClientsFetch.failure());
   }
 };
 
 export const fetchTogglClients = (workspaceId: string) => async (
   dispatch: ReduxDispatch,
 ) => {
-  dispatch(togglClientsFetchStarted());
+  dispatch(togglClientsFetch.request());
   try {
     const clients = await apiFetchTogglClients(workspaceId);
-    return dispatch(togglClientsFetchSuccess(clients));
+    return dispatch(togglClientsFetch.success(clients));
   } catch (error) {
     dispatch(showFetchErrorNotification(error));
-    return dispatch(togglClientsFetchFailure());
+    return dispatch(togglClientsFetch.failure());
   }
 };
 
@@ -82,16 +69,16 @@ export const transferClientsToClockify = (
   );
   if (clientRecordsInWorkspace.length === 0) return Promise.resolve();
 
-  dispatch(clockifyClientsTransferStarted());
+  dispatch(clockifyClientsTransfer.request());
   try {
     const clients = await batchClockifyRequests(
       clientRecordsInWorkspace,
       apiCreateClockifyClient,
       clockifyWorkspaceId,
     );
-    return dispatch(clockifyClientsTransferSuccess(clients));
+    return dispatch(clockifyClientsTransfer.success(clients));
   } catch (error) {
     dispatch(showFetchErrorNotification(error));
-    return dispatch(clockifyClientsTransferFailure());
+    return dispatch(clockifyClientsTransfer.failure());
   }
 };

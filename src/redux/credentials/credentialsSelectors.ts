@@ -1,6 +1,6 @@
 import { createSelector } from 'reselect';
-import { CredentialsModel } from '~/types/credentialsTypes';
 import { ReduxState } from '~/types/commonTypes';
+import { CredentialsModel } from '~/types/credentialsTypes';
 
 export const selectCredentials = createSelector(
   (state: ReduxState) => state.credentials,

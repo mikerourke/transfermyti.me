@@ -1,13 +1,8 @@
+import { getType } from 'typesafe-actions';
 import { handleActions, combineActions } from 'redux-actions';
-import {
-  credentialsValidationStarted,
-  credentialsValidationSuccess,
-  credentialsValidationFailure,
-  updateCredentialsField,
-  allCredentialsStored,
-} from './credentialsActions';
-import { CredentialsModel } from '~/types/credentialsTypes';
+import * as credentialsActions from './credentialsActions';
 import { ReduxAction } from '~/types/commonTypes';
+import { CredentialsModel } from '~/types/credentialsTypes';
 
 export interface CredentialsState extends CredentialsModel {
   readonly isValid: boolean;
@@ -25,7 +20,7 @@ export const initialState: CredentialsState = {
 
 export default handleActions(
   {
-    [allCredentialsStored]: (
+    [getType(credentialsActions.allCredentialsStored)]: (
       state: CredentialsState,
       { payload: credentials }: ReduxAction<CredentialsModel>,
     ): CredentialsState => ({
@@ -33,7 +28,7 @@ export default handleActions(
       ...credentials,
     }),
 
-    [credentialsValidationSuccess]: (
+    [getType(credentialsActions.credentialsValidation.success)]: (
       state: CredentialsState,
       { payload: credentials }: ReduxAction<CredentialsModel>,
     ): CredentialsState => ({
@@ -42,14 +37,14 @@ export default handleActions(
       isValid: true,
     }),
 
-    [credentialsValidationFailure]: (
+    [getType(credentialsActions.credentialsValidation.failure)]: (
       state: CredentialsState,
     ): CredentialsState => ({
       ...state,
       isValid: false,
     }),
 
-    [credentialsValidationStarted]: (
+    [getType(credentialsActions.credentialsValidation.request)]: (
       state: CredentialsState,
     ): CredentialsState => ({
       ...state,
@@ -57,14 +52,14 @@ export default handleActions(
     }),
 
     [combineActions(
-      credentialsValidationSuccess,
-      credentialsValidationFailure,
+      getType(credentialsActions.credentialsValidation.success),
+      getType(credentialsActions.credentialsValidation.failure),
     )]: (state: CredentialsState): CredentialsState => ({
       ...state,
       isValidating: false,
     }),
 
-    [updateCredentialsField]: (
+    [getType(credentialsActions.updateCredentialsField)]: (
       state: CredentialsState,
       {
         payload: { field, value },

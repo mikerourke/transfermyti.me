@@ -1,21 +1,11 @@
+import { getType } from 'typesafe-actions';
 import { combineActions, handleActions } from 'redux-actions';
 import {
   getEntityIdFieldValue,
   getEntityNormalizedState,
   updateIsEntityIncluded,
 } from '~/redux/utils';
-import {
-  clockifyClientsFetchFailure,
-  clockifyClientsFetchStarted,
-  clockifyClientsFetchSuccess,
-  togglClientsFetchFailure,
-  togglClientsFetchStarted,
-  togglClientsFetchSuccess,
-  clockifyClientsTransferFailure,
-  clockifyClientsTransferStarted,
-  clockifyClientsTransferSuccess,
-  updateIsClientIncluded,
-} from './clientsActions';
+import * as clientsActions from './clientsActions';
 import { ClientModel, ClockifyClient, TogglClient } from '~/types/clientsTypes';
 import {
   EntityGroup,
@@ -57,8 +47,8 @@ const schemaProcessStrategy = (
 export default handleActions(
   {
     [combineActions(
-      clockifyClientsFetchSuccess,
-      clockifyClientsTransferSuccess,
+      getType(clientsActions.clockifyClientsFetch.success),
+      getType(clientsActions.clockifyClientsTransfer.success),
     )]: (
       state: ClientsState,
       { payload: clients }: ReduxAction<ClockifyClient[]>,
@@ -71,7 +61,7 @@ export default handleActions(
         clients,
       ),
 
-    [togglClientsFetchSuccess]: (
+    [getType(clientsActions.togglClientsFetch.success)]: (
       state: ClientsState,
       { payload: clients }: ReduxAction<TogglClient[]>,
     ): ClientsState =>
@@ -84,27 +74,27 @@ export default handleActions(
       ),
 
     [combineActions(
-      clockifyClientsFetchStarted,
-      togglClientsFetchStarted,
-      clockifyClientsTransferStarted,
+      getType(clientsActions.clockifyClientsFetch.request),
+      getType(clientsActions.togglClientsFetch.request),
+      getType(clientsActions.clockifyClientsTransfer.request),
     )]: (state: ClientsState): ClientsState => ({
       ...state,
       isFetching: true,
     }),
 
     [combineActions(
-      clockifyClientsFetchSuccess,
-      clockifyClientsFetchFailure,
-      togglClientsFetchSuccess,
-      togglClientsFetchFailure,
-      clockifyClientsTransferSuccess,
-      clockifyClientsTransferFailure,
+      getType(clientsActions.clockifyClientsFetch.success),
+      getType(clientsActions.clockifyClientsFetch.failure),
+      getType(clientsActions.togglClientsFetch.success),
+      getType(clientsActions.togglClientsFetch.failure),
+      getType(clientsActions.clockifyClientsTransfer.success),
+      getType(clientsActions.clockifyClientsTransfer.failure),
     )]: (state: ClientsState): ClientsState => ({
       ...state,
       isFetching: false,
     }),
 
-    [updateIsClientIncluded]: (
+    [getType(clientsActions.updateIsClientIncluded)]: (
       state: ClientsState,
       { payload: clientId }: ReduxAction<string>,
     ): ClientsState =>

@@ -1,21 +1,11 @@
+import { getType } from 'typesafe-actions';
 import { combineActions, handleActions } from 'redux-actions';
 import {
   getEntityIdFieldValue,
   getEntityNormalizedState,
   updateIsEntityIncluded,
 } from '~/redux/utils';
-import {
-  clockifyTasksFetchFailure,
-  clockifyTasksFetchStarted,
-  clockifyTasksFetchSuccess,
-  clockifyTasksTransferFailure,
-  clockifyTasksTransferStarted,
-  clockifyTasksTransferSuccess,
-  togglTasksFetchFailure,
-  togglTasksFetchStarted,
-  togglTasksFetchSuccess,
-  updateIsTaskIncluded,
-} from './tasksActions';
+import * as tasksActions from './tasksActions';
 import {
   EntityGroup,
   EntityType,
@@ -77,7 +67,10 @@ const schemaProcessStrategy = (value: ClockifyTask | TogglTask): TaskModel => ({
 
 export default handleActions(
   {
-    [combineActions(clockifyTasksFetchSuccess, clockifyTasksTransferSuccess)]: (
+    [combineActions(
+      getType(tasksActions.clockifyTasksFetch.success),
+      getType(tasksActions.clockifyTasksTransfer.success),
+    )]: (
       state: TasksState,
       { payload: tasks }: ReduxAction<ClockifyTask[]>,
     ): TasksState =>
@@ -89,7 +82,7 @@ export default handleActions(
         tasks,
       ),
 
-    [togglTasksFetchSuccess]: (
+    [getType(tasksActions.togglTasksFetch.success)]: (
       state: TasksState,
       { payload: tasks }: ReduxAction<TogglTask[]>,
     ): TasksState =>
@@ -102,27 +95,27 @@ export default handleActions(
       ),
 
     [combineActions(
-      clockifyTasksFetchStarted,
-      togglTasksFetchStarted,
-      clockifyTasksTransferStarted,
+      getType(tasksActions.clockifyTasksFetch.request),
+      getType(tasksActions.togglTasksFetch.request),
+      getType(tasksActions.clockifyTasksTransfer.request),
     )]: (state: TasksState): TasksState => ({
       ...state,
       isFetching: true,
     }),
 
     [combineActions(
-      clockifyTasksFetchSuccess,
-      clockifyTasksFetchFailure,
-      togglTasksFetchSuccess,
-      togglTasksFetchFailure,
-      clockifyTasksTransferSuccess,
-      clockifyTasksTransferFailure,
+      getType(tasksActions.clockifyTasksFetch.success),
+      getType(tasksActions.clockifyTasksFetch.failure),
+      getType(tasksActions.togglTasksFetch.success),
+      getType(tasksActions.togglTasksFetch.failure),
+      getType(tasksActions.clockifyTasksTransfer.success),
+      getType(tasksActions.clockifyTasksTransfer.failure),
     )]: (state: TasksState): TasksState => ({
       ...state,
       isFetching: false,
     }),
 
-    [updateIsTaskIncluded]: (
+    [getType(tasksActions.updateIsTaskIncluded)]: (
       state: TasksState,
       { payload: taskId }: ReduxAction<string>,
     ): TasksState => updateIsEntityIncluded(state, EntityType.Task, taskId),

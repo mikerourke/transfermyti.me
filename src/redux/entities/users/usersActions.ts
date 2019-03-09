@@ -1,4 +1,4 @@
-import { createAction } from 'redux-actions';
+import { createAsyncAction, createStandardAction } from 'typesafe-actions';
 import {
   apiAddClockifyUsersToWorkspace,
   apiFetchClockifyUsersInWorkspace,
@@ -10,39 +10,27 @@ import { appendUserIdsToWorkspace } from '~/redux/entities/workspaces/workspaces
 import { ReduxDispatch, ReduxGetState, ToolName } from '~/types/commonTypes';
 import { ClockifyUser, TogglUser } from '~/types/usersTypes';
 
-export const clockifyUsersFetchStarted = createAction(
-  '@users/CLOCKIFY_FETCH_STARTED',
-);
-export const clockifyUsersFetchSuccess = createAction(
+export const clockifyUsersFetch = createAsyncAction(
+  '@users/CLOCKIFY_FETCH_REQUEST',
   '@users/CLOCKIFY_FETCH_SUCCESS',
-  (users: ClockifyUser[]) => users,
-);
-export const clockifyUsersFetchFailure = createAction(
   '@users/CLOCKIFY_FETCH_FAILURE',
-);
-export const togglUsersFetchStarted = createAction(
-  '@users/TOGGL_FETCH_STARTED',
-);
-export const togglUsersFetchSuccess = createAction(
+)<void, ClockifyUser[], void>();
+
+export const togglUsersFetch = createAsyncAction(
+  '@users/TOGGL_FETCH_REQUEST',
   '@users/TOGGL_FETCH_SUCCESS',
-  (users: ClockifyUser[]) => users,
-);
-export const togglUsersFetchFailure = createAction(
   '@users/TOGGL_FETCH_FAILURE',
-);
-export const clockifyUsersTransferStarted = createAction(
-  '@users/CLOCKIFY_TRANSFER_STARTED',
-);
-export const clockifyUsersTransferSuccess = createAction(
+)<void, TogglUser[], void>();
+
+export const clockifyUsersTransfer = createAsyncAction(
+  '@users/CLOCKIFY_TRANSFER_REQUEST',
   '@users/CLOCKIFY_TRANSFER_SUCCESS',
-);
-export const clockifyUsersTransferFailure = createAction(
   '@users/CLOCKIFY_TRANSFER_FAILURE',
-);
-export const updateIsUserIncluded = createAction(
+)<void, void, void>();
+
+export const updateIsUserIncluded = createStandardAction(
   '@users/UPDATE_IS_INCLUDED',
-  (userId: string) => userId,
-);
+)<string>();
 
 const appendUserIdsToWorkspaceForTool = (
   toolName: ToolName,
@@ -50,38 +38,38 @@ const appendUserIdsToWorkspaceForTool = (
   workspaceId: string,
 ) => (dispatch: ReduxDispatch) => {
   const userIds = users.map(({ id }) => id.toString());
-  return dispatch(appendUserIdsToWorkspace(toolName, workspaceId, userIds));
+  return dispatch(appendUserIdsToWorkspace({ toolName, workspaceId, userIds }));
 };
 
 export const fetchClockifyUsers = (workspaceId: string) => async (
   dispatch: ReduxDispatch,
 ) => {
-  dispatch(clockifyUsersFetchStarted());
+  dispatch(clockifyUsersFetch.request());
   try {
     const users = await apiFetchClockifyUsersInWorkspace(workspaceId);
     dispatch(
       appendUserIdsToWorkspaceForTool(ToolName.Clockify, users, workspaceId),
     );
-    return dispatch(clockifyUsersFetchSuccess(users));
+    return dispatch(clockifyUsersFetch.success(users));
   } catch (error) {
     dispatch(showFetchErrorNotification(error));
-    return dispatch(clockifyUsersFetchFailure());
+    return dispatch(clockifyUsersFetch.failure());
   }
 };
 
 export const fetchTogglUsers = (workspaceId: string) => async (
   dispatch: ReduxDispatch,
 ) => {
-  dispatch(togglUsersFetchStarted());
+  dispatch(togglUsersFetch.request());
   try {
     const users = await apiFetchTogglUsersInWorkspace(workspaceId);
     dispatch(
       appendUserIdsToWorkspaceForTool(ToolName.Toggl, users, workspaceId),
     );
-    return dispatch(togglUsersFetchSuccess(users));
+    return dispatch(togglUsersFetch.success(users));
   } catch (error) {
     dispatch(showFetchErrorNotification(error));
-    return dispatch(togglUsersFetchFailure());
+    return dispatch(togglUsersFetch.failure());
   }
 };
 
@@ -96,16 +84,16 @@ export const transferUsersToClockify = (
   );
   if (userEmailsToTransfer.length === 0) return Promise.resolve();
 
-  dispatch(clockifyUsersTransferStarted());
+  dispatch(clockifyUsersTransfer.request());
   try {
     await apiAddClockifyUsersToWorkspace(clockifyWorkspaceId, {
       emails: userEmailsToTransfer,
     });
     await dispatch(fetchClockifyUsers(clockifyWorkspaceId));
 
-    return dispatch(clockifyUsersTransferSuccess());
+    return dispatch(clockifyUsersTransfer.success());
   } catch (error) {
     dispatch(showFetchErrorNotification(error));
-    return dispatch(clockifyUsersTransferFailure());
+    return dispatch(clockifyUsersTransfer.failure());
   }
 };

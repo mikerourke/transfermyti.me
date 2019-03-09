@@ -1,3 +1,4 @@
+import { getType } from 'typesafe-actions';
 import { combineActions, handleActions } from 'redux-actions';
 import { get } from 'lodash';
 import {
@@ -5,18 +6,7 @@ import {
   getEntityNormalizedState,
   updateIsEntityIncluded,
 } from '~/redux/utils';
-import {
-  clockifyProjectsFetchFailure,
-  clockifyProjectsFetchStarted,
-  clockifyProjectsFetchSuccess,
-  togglProjectsFetchFailure,
-  togglProjectsFetchStarted,
-  togglProjectsFetchSuccess,
-  clockifyProjectsTransferFailure,
-  clockifyProjectsTransferStarted,
-  clockifyProjectsTransferSuccess,
-  updateIsProjectIncluded,
-} from './projectsActions';
+import * as projectsActions from './projectsActions';
 import {
   EntityGroup,
   EntityType,
@@ -68,8 +58,8 @@ const schemaProcessStrategy = (
 export default handleActions(
   {
     [combineActions(
-      clockifyProjectsFetchSuccess,
-      clockifyProjectsTransferSuccess,
+      getType(projectsActions.clockifyProjectsFetch.success),
+      getType(projectsActions.clockifyProjectsTransfer.success),
     )]: (
       state: ProjectsState,
       { payload: projects }: ReduxAction<ClockifyProject[]>,
@@ -82,7 +72,7 @@ export default handleActions(
         projects,
       ),
 
-    [togglProjectsFetchSuccess]: (
+    [getType(projectsActions.togglProjectsFetch.success)]: (
       state: ProjectsState,
       { payload: projects }: ReduxAction<TogglProject[]>,
     ): ProjectsState =>
@@ -95,27 +85,27 @@ export default handleActions(
       ),
 
     [combineActions(
-      clockifyProjectsFetchStarted,
-      togglProjectsFetchStarted,
-      clockifyProjectsTransferStarted,
+      getType(projectsActions.clockifyProjectsFetch.request),
+      getType(projectsActions.togglProjectsFetch.request),
+      getType(projectsActions.clockifyProjectsTransfer.request),
     )]: (state: ProjectsState): ProjectsState => ({
       ...state,
       isFetching: true,
     }),
 
     [combineActions(
-      clockifyProjectsFetchSuccess,
-      clockifyProjectsFetchFailure,
-      togglProjectsFetchSuccess,
-      togglProjectsFetchFailure,
-      clockifyProjectsTransferSuccess,
-      clockifyProjectsTransferFailure,
+      getType(projectsActions.clockifyProjectsFetch.success),
+      getType(projectsActions.clockifyProjectsFetch.failure),
+      getType(projectsActions.togglProjectsFetch.success),
+      getType(projectsActions.togglProjectsFetch.failure),
+      getType(projectsActions.clockifyProjectsTransfer.success),
+      getType(projectsActions.clockifyProjectsTransfer.failure),
     )]: (state: ProjectsState): ProjectsState => ({
       ...state,
       isFetching: false,
     }),
 
-    [updateIsProjectIncluded]: (
+    [getType(projectsActions.updateIsProjectIncluded)]: (
       state: ProjectsState,
       { payload: projectId }: ReduxAction<string>,
     ): ProjectsState =>

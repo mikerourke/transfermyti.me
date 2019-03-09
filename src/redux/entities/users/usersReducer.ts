@@ -1,21 +1,11 @@
+import { getType } from 'typesafe-actions';
 import { combineActions, handleActions } from 'redux-actions';
 import { get } from 'lodash';
 import {
   getEntityNormalizedState,
   updateIsEntityIncluded,
 } from '~/redux/utils';
-import {
-  clockifyUsersFetchFailure,
-  clockifyUsersFetchStarted,
-  clockifyUsersFetchSuccess,
-  togglUsersFetchFailure,
-  togglUsersFetchStarted,
-  togglUsersFetchSuccess,
-  clockifyUsersTransferFailure,
-  clockifyUsersTransferStarted,
-  clockifyUsersTransferSuccess,
-  updateIsUserIncluded,
-} from './usersActions';
+import * as usersActions from './usersActions';
 import {
   EntityGroup,
   EntityType,
@@ -61,7 +51,7 @@ const schemaProcessStrategy = (value: ClockifyUser | TogglUser): UserModel => ({
 
 export default handleActions(
   {
-    [clockifyUsersFetchSuccess]: (
+    [getType(usersActions.clockifyUsersFetch.success)]: (
       state: UsersState,
       { payload: users }: ReduxAction<ClockifyUser[]>,
     ): UsersState =>
@@ -73,7 +63,7 @@ export default handleActions(
         users,
       ),
 
-    [togglUsersFetchSuccess]: (
+    [getType(usersActions.togglUsersFetch.success)]: (
       state: UsersState,
       { payload: users }: ReduxAction<TogglUser[]>,
     ): UsersState =>
@@ -86,27 +76,27 @@ export default handleActions(
       ),
 
     [combineActions(
-      clockifyUsersFetchStarted,
-      togglUsersFetchStarted,
-      clockifyUsersTransferStarted,
+      getType(usersActions.clockifyUsersFetch.request),
+      getType(usersActions.togglUsersFetch.request),
+      getType(usersActions.clockifyUsersTransfer.request),
     )]: (state: UsersState): UsersState => ({
       ...state,
       isFetching: true,
     }),
 
     [combineActions(
-      clockifyUsersFetchSuccess,
-      clockifyUsersFetchFailure,
-      togglUsersFetchSuccess,
-      togglUsersFetchFailure,
-      clockifyUsersTransferSuccess,
-      clockifyUsersTransferFailure,
+      getType(usersActions.clockifyUsersFetch.success),
+      getType(usersActions.clockifyUsersFetch.failure),
+      getType(usersActions.togglUsersFetch.success),
+      getType(usersActions.togglUsersFetch.failure),
+      getType(usersActions.clockifyUsersTransfer.success),
+      getType(usersActions.clockifyUsersTransfer.failure),
     )]: (state: UsersState): UsersState => ({
       ...state,
       isFetching: false,
     }),
 
-    [updateIsUserIncluded]: (
+    [getType(usersActions.updateIsUserIncluded)]: (
       state: UsersState,
       { payload: userId }: ReduxAction<string>,
     ): UsersState => updateIsEntityIncluded(state, EntityType.User, userId),

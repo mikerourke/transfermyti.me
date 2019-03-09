@@ -1,20 +1,28 @@
-import { createAction } from 'redux-actions';
+import { createStandardAction } from 'typesafe-actions';
 import { capitalize, isNil, uniqueId } from 'lodash';
 import getIfDev from '~/utils/getIfDev';
-import { NotificationModel, NotificationType } from '~/types/appTypes';
+import {
+  NotificationModel,
+  NotificationType,
+  TransferType,
+} from '~/types/appTypes';
 import { ReduxDispatch, ToolName } from '~/types/commonTypes';
 
-export const notificationShown = createAction(
+export const notificationShown = createStandardAction(
   '@app/NOTIFICATION_SHOWN',
-  (notification: NotificationModel) => notification,
-);
-export const dismissNotification = createAction(
+)<Partial<NotificationModel>>();
+
+export const dismissNotification = createStandardAction(
   '@app/DISMISS_NOTIFICATION',
-  (notificationId: string) => notificationId,
-);
-export const dismissAllNotifications = createAction(
+)<string>();
+
+export const dismissAllNotifications = createStandardAction(
   '@app/DISMISS_ALL_NOTIFICATIONS',
-);
+)();
+
+export const updateTransferType = createStandardAction(
+  '@app/UPDATE_TRANSFER_TYPE',
+)<TransferType>();
 
 export const showNotification = (notification: Partial<NotificationModel>) => (
   dispatch: ReduxDispatch,

@@ -1,4 +1,4 @@
-import { createAction } from 'redux-actions';
+import { createAsyncAction, createStandardAction } from 'typesafe-actions';
 import { isNil, set } from 'lodash';
 import { buildThrottler } from '~/redux/utils';
 import {
@@ -8,45 +8,13 @@ import {
 } from '../api/workspaces';
 import { showFetchErrorNotification } from '~/redux/app/appActions';
 import { selectTogglUserEmail } from '~/redux/credentials/credentialsSelectors';
-import {
-  fetchClockifyClients,
-  fetchTogglClients,
-  transferClientsToClockify,
-  updateIsClientIncluded,
-} from '~/redux/entities/clients/clientsActions';
-import {
-  fetchClockifyProjects,
-  fetchTogglProjects,
-  transferProjectsToClockify,
-  updateIsProjectIncluded,
-} from '~/redux/entities/projects/projectsActions';
-import {
-  fetchClockifyTags,
-  fetchTogglTags,
-  transferTagsToClockify,
-  updateIsTagIncluded,
-} from '~/redux/entities/tags/tagsActions';
-import {
-  fetchClockifyTasks,
-  fetchTogglTasks,
-  transferTasksToClockify,
-  updateIsTaskIncluded,
-} from '~/redux/entities/tasks/tasksActions';
-import {
-  fetchClockifyTimeEntries,
-  fetchTogglTimeEntries,
-} from '~/redux/entities/timeEntries/timeEntriesActions';
-import {
-  fetchClockifyUserGroups,
-  fetchTogglUserGroups,
-  transferUserGroupsToClockify,
-  updateIsUserGroupIncluded,
-} from '../userGroups/userGroupsActions';
-import {
-  fetchClockifyUsers,
-  fetchTogglUsers,
-  updateIsUserIncluded,
-} from '~/redux/entities/users/usersActions';
+import * as clientsActions from '~/redux/entities/clients/clientsActions';
+import * as projectsActions from '~/redux/entities/projects/projectsActions';
+import * as tagsActions from '~/redux/entities/tags/tagsActions';
+import * as tasksActions from '~/redux/entities/tasks/tasksActions';
+import * as timeEntriesActions from '~/redux/entities/timeEntries/timeEntriesActions';
+import * as userGroupsActions from '../userGroups/userGroupsActions';
+import * as usersActions from '~/redux/entities/users/usersActions';
 import { selectTogglIncludedWorkspaceNames } from './workspacesSelectors';
 import {
   EntityGroup,
@@ -62,77 +30,57 @@ import {
   WorkspaceModel,
 } from '~/types/workspacesTypes';
 
-export const clockifyWorkspacesFetchStarted = createAction(
-  '@workspaces/CLOCKIFY_FETCH_STARTED',
-);
-export const clockifyWorkspacesFetchSuccess = createAction(
+export const clockifyWorkspacesFetch = createAsyncAction(
+  '@workspaces/CLOCKIFY_FETCH_REQUEST',
   '@workspaces/CLOCKIFY_FETCH_SUCCESS',
-  (workspaces: ClockifyWorkspace[]) => workspaces,
-);
-export const clockifyWorkspacesFetchFailure = createAction(
   '@workspaces/CLOCKIFY_FETCH_FAILURE',
-);
-export const togglWorkspacesFetchStarted = createAction(
-  '@workspaces/TOGGL_FETCH_STARTED',
-);
-export const togglWorkspacesFetchSuccess = createAction(
+)<void, ClockifyWorkspace[], void>();
+
+export const togglWorkspacesFetch = createAsyncAction(
+  '@workspaces/TOGGL_FETCH_REQUEST',
   '@workspaces/TOGGL_FETCH_SUCCESS',
-  (response: TogglWorkspace[]) => response,
-);
-export const togglWorkspacesFetchFailure = createAction(
   '@workspaces/TOGGL_FETCH_FAILURE',
-);
-export const togglWorkspaceSummaryFetchStarted = createAction(
-  '@workspaces/TOGGL_SUMMARY_FETCH_STARTED',
-);
-export const togglWorkspaceSummaryFetchSuccess = createAction(
+)<void, TogglWorkspace[], void>();
+
+export const togglWorkspaceSummaryFetch = createAsyncAction(
+  '@workspaces/TOGGL_SUMMARY_FETCH_REQUEST',
   '@workspaces/TOGGL_SUMMARY_FETCH_SUCCESS',
-  (workspaceId: string, inclusionsByYear: Record<string, boolean>) => ({
-    workspaceId,
-    inclusionsByYear,
-  }),
-);
-export const togglWorkspaceSummaryFetchFailure = createAction(
   '@workspaces/TOGGL_SUMMARY_FETCH_FAILURE',
-);
-export const clockifyWorkspaceTransferStarted = createAction(
-  '@workspaces/CLOCKIFY_TRANSFER_STARTED',
-);
-export const clockifyWorkspaceTransferSuccess = createAction(
+)<
+  void,
+  { workspaceId: string; inclusionsByYear: Record<string, boolean> },
+  void
+>();
+
+export const clockifyWorkspaceTransfer = createAsyncAction(
+  '@workspaces/CLOCKIFY_TRANSFER_REQUEST',
   '@workspaces/CLOCKIFY_TRANSFER_SUCCESS',
-  (workspaces: ClockifyWorkspace[]) => workspaces,
-);
-export const clockifyWorkspaceTransferFailure = createAction(
   '@workspaces/CLOCKIFY_TRANSFER_FAILURE',
-);
-export const appendUserIdsToWorkspace = createAction(
+)<void, ClockifyWorkspace[], void>();
+
+export const appendUserIdsToWorkspace = createStandardAction(
   '@workspaces/APPEND_USER_IDS',
-  (toolName: ToolName, workspaceId: string, userIds: string[]) => ({
-    toolName,
-    workspaceId,
-    userIds,
-  }),
-);
-export const updateIsWorkspaceIncluded = createAction(
+)<{ toolName: ToolName; workspaceId: string; userIds: string[] }>();
+
+export const updateIsWorkspaceIncluded = createStandardAction(
   '@workspaces/UPDATE_IS_INCLUDED',
-  (workspaceId: string) => workspaceId,
-);
-export const updateIsWorkspaceYearIncluded = createAction(
+)<string>();
+
+export const updateIsWorkspaceYearIncluded = createStandardAction(
   '@workspaces/UPDATE_IS_YEAR_INCLUDED',
-  (workspaceId: string, year: string) => ({ workspaceId, year }),
-);
-export const updateWorkspaceNameBeingFetched = createAction(
+)<{ workspaceId: string; year: string }>();
+
+export const updateWorkspaceNameBeingFetched = createStandardAction(
   '@workspaces/UPDATE_NAME_BEING_FETCHED',
-  (workspaceName: string | null) => workspaceName,
-);
-export const updateFetchTimeByTool = createAction(
+)<string | null>();
+
+export const updateFetchTimeByTool = createStandardAction(
   '@workspaces/UPDATE_FETCH_TIME_BY_TOOL',
-  (toolName: ToolName, fetchTime: Date | null) => ({ toolName, fetchTime }),
-);
-export const resetContentsForTool = createAction(
+)<{ toolName: ToolName; fetchTime: Date | null }>();
+
+export const resetContentsForTool = createStandardAction(
   '@workspaces/RESET_CONTENTS_FOR_TOOL',
-  (toolName: ToolName) => toolName,
-);
+)<ToolName>();
 
 export const fetchClockifyWorkspaces = () => async (
   dispatch: ReduxDispatch,
@@ -140,7 +88,7 @@ export const fetchClockifyWorkspaces = () => async (
 ) => {
   const state = getState();
 
-  dispatch(clockifyWorkspacesFetchStarted());
+  dispatch(clockifyWorkspacesFetch.request());
   try {
     dispatch(resetContentsForTool(ToolName.Clockify));
     const togglIncludedNames = selectTogglIncludedWorkspaceNames(state);
@@ -150,10 +98,10 @@ export const fetchClockifyWorkspaces = () => async (
       togglIncludedNames.includes(name),
     );
 
-    return dispatch(clockifyWorkspacesFetchSuccess(includedWorkspaces));
+    return dispatch(clockifyWorkspacesFetch.success(includedWorkspaces));
   } catch (error) {
     dispatch(showFetchErrorNotification(error));
-    return dispatch(clockifyWorkspacesFetchFailure());
+    return dispatch(clockifyWorkspacesFetch.failure());
   }
 };
 
@@ -164,16 +112,21 @@ export const fetchClockifyEntitiesInWorkspace = (
 
   dispatch(updateWorkspaceNameBeingFetched(name));
 
-  await dispatch(fetchClockifyClients(id));
-  await dispatch(fetchClockifyProjects(id));
-  await dispatch(fetchClockifyTags(id));
-  await dispatch(fetchClockifyTasks(id));
-  await dispatch(fetchClockifyUserGroups(id));
-  await dispatch(fetchClockifyUsers(id));
-  await dispatch(fetchClockifyTimeEntries(id));
+  await dispatch(clientsActions.fetchClockifyClients(id));
+  await dispatch(projectsActions.fetchClockifyProjects(id));
+  await dispatch(tagsActions.fetchClockifyTags(id));
+  await dispatch(tasksActions.fetchClockifyTasks(id));
+  await dispatch(userGroupsActions.fetchClockifyUserGroups(id));
+  await dispatch(usersActions.fetchClockifyUsers(id));
+  await dispatch(timeEntriesActions.fetchClockifyTimeEntries(id));
 
   dispatch(updateWorkspaceNameBeingFetched(null));
-  return dispatch(updateFetchTimeByTool(ToolName.Clockify, new Date()));
+  return dispatch(
+    updateFetchTimeByTool({
+      toolName: ToolName.Clockify,
+      fetchTime: new Date(),
+    }),
+  );
 };
 
 export const fetchTogglEntitiesInWorkspace = (
@@ -191,18 +144,20 @@ export const fetchTogglEntitiesInWorkspace = (
 
   dispatch(updateWorkspaceNameBeingFetched(name));
 
-  await dispatch(fetchTogglClients(id));
-  await dispatch(fetchTogglProjects(id));
-  await dispatch(fetchTogglTags(id));
-  await dispatch(fetchTogglTasks(id));
-  await dispatch(fetchTogglUserGroups(id));
-  await dispatch(fetchTogglUsers(id));
+  await dispatch(clientsActions.fetchTogglClients(id));
+  await dispatch(projectsActions.fetchTogglProjects(id));
+  await dispatch(tagsActions.fetchTogglTags(id));
+  await dispatch(tasksActions.fetchTogglTasks(id));
+  await dispatch(userGroupsActions.fetchTogglUserGroups(id));
+  await dispatch(usersActions.fetchTogglUsers(id));
   for (const inclusionYear of inclusionYears) {
-    await dispatch(fetchTogglTimeEntries(id, inclusionYear));
+    await dispatch(timeEntriesActions.fetchTogglTimeEntries(id, inclusionYear));
   }
 
   dispatch(updateWorkspaceNameBeingFetched(null));
-  return dispatch(updateFetchTimeByTool(ToolName.Toggl, new Date()));
+  return dispatch(
+    updateFetchTimeByTool({ toolName: ToolName.Toggl, fetchTime: new Date() }),
+  );
 };
 
 export const fetchTogglWorkspaceSummary = (workspaceId: string) => async (
@@ -211,7 +166,7 @@ export const fetchTogglWorkspaceSummary = (workspaceId: string) => async (
 ) => {
   const state = getState();
 
-  dispatch(togglWorkspaceSummaryFetchStarted());
+  dispatch(togglWorkspaceSummaryFetch.request());
   try {
     const email = selectTogglUserEmail(state);
     const { promiseThrottle, throttledFn } = buildThrottler(
@@ -237,11 +192,11 @@ export const fetchTogglWorkspaceSummary = (workspaceId: string) => async (
     }
 
     return dispatch(
-      togglWorkspaceSummaryFetchSuccess(workspaceId, inclusionsByYear),
+      togglWorkspaceSummaryFetch.success({ workspaceId, inclusionsByYear }),
     );
   } catch (error) {
     dispatch(showFetchErrorNotification(error));
-    return dispatch(togglWorkspaceSummaryFetchFailure());
+    return dispatch(togglWorkspaceSummaryFetch.failure());
   }
 };
 
@@ -251,29 +206,41 @@ export const transferEntitiesToClockifyWorkspace = (
   const { name, id: togglWorkspaceId, linkedId } = workspaceRecord;
   let clockifyWorkspaceId = linkedId;
 
-  dispatch(clockifyWorkspaceTransferStarted());
+  dispatch(clockifyWorkspaceTransfer.request());
   try {
     dispatch(updateWorkspaceNameBeingFetched(name));
     if (isNil(linkedId)) {
       const workspace = await apiCreateClockifyWorkspace({ name });
       clockifyWorkspaceId = workspace.id;
-      dispatch(clockifyWorkspaceTransferSuccess([workspace]));
+      dispatch(clockifyWorkspaceTransfer.success([workspace]));
     }
 
     await dispatch(
-      transferClientsToClockify(togglWorkspaceId, clockifyWorkspaceId),
+      clientsActions.transferClientsToClockify(
+        togglWorkspaceId,
+        clockifyWorkspaceId,
+      ),
     );
     await dispatch(
-      transferProjectsToClockify(togglWorkspaceId, clockifyWorkspaceId),
+      projectsActions.transferProjectsToClockify(
+        togglWorkspaceId,
+        clockifyWorkspaceId,
+      ),
     );
     await dispatch(
-      transferTagsToClockify(togglWorkspaceId, clockifyWorkspaceId),
+      tagsActions.transferTagsToClockify(togglWorkspaceId, clockifyWorkspaceId),
     );
     await dispatch(
-      transferTasksToClockify(togglWorkspaceId, clockifyWorkspaceId),
+      tasksActions.transferTasksToClockify(
+        togglWorkspaceId,
+        clockifyWorkspaceId,
+      ),
     );
     await dispatch(
-      transferUserGroupsToClockify(togglWorkspaceId, clockifyWorkspaceId),
+      userGroupsActions.transferUserGroupsToClockify(
+        togglWorkspaceId,
+        clockifyWorkspaceId,
+      ),
     );
     // TODO: Follow up on this:
     // await dispatch(
@@ -287,7 +254,7 @@ export const transferEntitiesToClockifyWorkspace = (
     return dispatch(updateWorkspaceNameBeingFetched(null));
   } catch (error) {
     dispatch(showFetchErrorNotification(error));
-    return dispatch(clockifyWorkspaceTransferFailure());
+    return dispatch(clockifyWorkspaceTransfer.failure());
   }
 };
 
@@ -296,12 +263,12 @@ export const updateIsWorkspaceEntityIncluded = (
   entityRecord: EntityModel,
 ) => (dispatch: ReduxDispatch) => {
   const updateAction = {
-    [EntityGroup.Clients]: updateIsClientIncluded,
-    [EntityGroup.Projects]: updateIsProjectIncluded,
-    [EntityGroup.Tags]: updateIsTagIncluded,
-    [EntityGroup.Tasks]: updateIsTaskIncluded,
-    [EntityGroup.UserGroups]: updateIsUserGroupIncluded,
-    [EntityGroup.Users]: updateIsUserIncluded,
+    [EntityGroup.Clients]: clientsActions.updateIsClientIncluded,
+    [EntityGroup.Projects]: projectsActions.updateIsProjectIncluded,
+    [EntityGroup.Tags]: tagsActions.updateIsTagIncluded,
+    [EntityGroup.Tasks]: tasksActions.updateIsTaskIncluded,
+    [EntityGroup.UserGroups]: userGroupsActions.updateIsUserGroupIncluded,
+    [EntityGroup.Users]: usersActions.updateIsUserIncluded,
   }[entityGroup];
 
   return dispatch(updateAction(entityRecord.id));

@@ -179,7 +179,7 @@ const mapDispatchToProps = (dispatch: ReduxDispatch) => ({
   onUpdateIsWorkspaceIncluded: (workspaceId: string) =>
     dispatch(updateIsWorkspaceIncluded(workspaceId)),
   onUpdateIsWorkspaceYearIncluded: (workspaceId: string, year: string) =>
-    dispatch(updateIsWorkspaceYearIncluded(workspaceId, year)),
+    dispatch(updateIsWorkspaceYearIncluded({ workspaceId, year })),
   onShowNotification: (notification: Partial<NotificationModel>) =>
     dispatch(showNotification(notification)),
   onDismissAllNotifications: () => dispatch(dismissAllNotifications()),

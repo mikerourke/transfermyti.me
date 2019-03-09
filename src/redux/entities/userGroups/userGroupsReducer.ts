@@ -1,21 +1,11 @@
+import { getType } from 'typesafe-actions';
 import { combineActions, handleActions } from 'redux-actions';
 import {
   getEntityIdFieldValue,
   getEntityNormalizedState,
   updateIsEntityIncluded,
 } from '~/redux/utils';
-import {
-  clockifyUserGroupsFetchFailure,
-  clockifyUserGroupsFetchStarted,
-  clockifyUserGroupsFetchSuccess,
-  togglUserGroupsFetchFailure,
-  togglUserGroupsFetchStarted,
-  togglUserGroupsFetchSuccess,
-  clockifyUserGroupsTransferFailure,
-  clockifyUserGroupsTransferStarted,
-  clockifyUserGroupsTransferSuccess,
-  updateIsUserGroupIncluded,
-} from './userGroupsActions';
+import * as userGroupsActions from './userGroupsActions';
 import {
   EntityGroup,
   EntityType,
@@ -62,8 +52,8 @@ const schemaProcessStrategy = (
 export default handleActions(
   {
     [combineActions(
-      clockifyUserGroupsFetchSuccess,
-      clockifyUserGroupsTransferSuccess,
+      getType(userGroupsActions.clockifyUserGroupsFetch.success),
+      getType(userGroupsActions.clockifyUserGroupsTransfer.success),
     )]: (
       state: UserGroupsState,
       { payload: userGroups }: ReduxAction<ClockifyUserGroup[]>,
@@ -76,7 +66,7 @@ export default handleActions(
         userGroups,
       ),
 
-    [togglUserGroupsFetchSuccess]: (
+    [getType(userGroupsActions.togglUserGroupsFetch.success)]: (
       state: UserGroupsState,
       { payload: userGroups }: ReduxAction<TogglUserGroup[]>,
     ): UserGroupsState =>
@@ -89,27 +79,27 @@ export default handleActions(
       ),
 
     [combineActions(
-      clockifyUserGroupsFetchStarted,
-      togglUserGroupsFetchStarted,
-      clockifyUserGroupsTransferStarted,
+      getType(userGroupsActions.clockifyUserGroupsFetch.request),
+      getType(userGroupsActions.togglUserGroupsFetch.request),
+      getType(userGroupsActions.clockifyUserGroupsTransfer.request),
     )]: (state: UserGroupsState): UserGroupsState => ({
       ...state,
       isFetching: true,
     }),
 
     [combineActions(
-      clockifyUserGroupsFetchSuccess,
-      clockifyUserGroupsFetchFailure,
-      togglUserGroupsFetchSuccess,
-      togglUserGroupsFetchFailure,
-      clockifyUserGroupsTransferSuccess,
-      clockifyUserGroupsTransferFailure,
+      getType(userGroupsActions.clockifyUserGroupsFetch.success),
+      getType(userGroupsActions.clockifyUserGroupsFetch.failure),
+      getType(userGroupsActions.togglUserGroupsFetch.success),
+      getType(userGroupsActions.togglUserGroupsFetch.failure),
+      getType(userGroupsActions.clockifyUserGroupsTransfer.success),
+      getType(userGroupsActions.clockifyUserGroupsTransfer.failure),
     )]: (state: UserGroupsState): UserGroupsState => ({
       ...state,
       isFetching: false,
     }),
 
-    [updateIsUserGroupIncluded]: (
+    [getType(userGroupsActions.updateIsUserGroupIncluded)]: (
       state: UserGroupsState,
       { payload: userGroupId }: ReduxAction<string>,
     ): UserGroupsState =>
