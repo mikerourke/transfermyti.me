@@ -21,6 +21,49 @@ const httpEnv = require('../../http-client.private.env.json');
 const clockifyApiKey = httpEnv.development['clockify-api-key'];
 const clockifyUserId = httpEnv.development['clockify-user-id'];
 
+const [action] = process.argv.slice(2);
+handleInput(action);
+
+/**
+ * Performs an action based on the arg passed to the script.
+ * @param {string} action
+ * @returns {Promise<void>}
+ */
+async function handleInput(action) {
+  const commandsMessage = [
+    '  delete',
+    '      Deletes all time entries, projects, tags, and clients on Clockify',
+    '  write',
+    '      Grabs all the Clockify entities and writes them to "clockify.json" in CWD',
+  ].join('\n');
+
+  switch (action) {
+    case 'help':
+      const helpMessage = [
+        'Manage entities in your test Clockify instance.',
+        commandsMessage,
+      ].join('\n');
+      console.log(helpMessage);
+      break;
+
+    case 'delete':
+      await confirmAndDeleteEntities();
+      break;
+
+    case 'write':
+      await writeEntitiesToOutputFile();
+      break;
+
+    default:
+      const invalidMessage = [
+        'You must specify one of the following flags:',
+        commandsMessage,
+      ].join('\n');
+      console.log(invalidMessage);
+      break;
+  }
+}
+
 /**
  * Makes a fetch call to the Clockify API to the specifed endpoint with
  *    specified options.
@@ -96,7 +139,7 @@ function buildThrottler(fetchFn) {
  * @param {number} year
  * @returns {{firstDay: string, lastDay: string}}
  */
-const getFirstAndLastDayOfYear = year => {
+function getFirstAndLastDayOfYear(year) {
   const currentDate = new Date();
   currentDate.setFullYear(year);
 
@@ -117,7 +160,7 @@ const getFirstAndLastDayOfYear = year => {
     firstDay: firstDay.toISOString(),
     lastDay: lastDay.toISOString(),
   };
-};
+}
 
 /**
  * Fetches all time entries (for all years) for the specified workspace ID.
@@ -192,8 +235,9 @@ async function deleteTimeEntriesInWorkspace(workspaceId) {
  * @param {string} entityGroup
  * @returns {string}
  */
-const getEntityGroupEndpoint = (workspaceId, entityGroup) =>
-  `/workspaces/${workspaceId}/${entityGroup}/`;
+function getEntityGroupEndpoint(workspaceId, entityGroup) {
+  return `/workspaces/${workspaceId}/${entityGroup}/`;
+}
 
 /**
  * Fetches the records in the specified entity group and workspace.
@@ -251,12 +295,13 @@ async function deleteEntityGroupInWorkspace(workspaceId, entityGroup) {
  * @param {number} seconds Number of seconds to pause for.
  * @returns {Promise<any>}
  */
-const pause = (seconds = 1) =>
-  new Promise(resolve => {
+function pause(seconds = 1) {
+  return new Promise(resolve => {
     setTimeout(() => {
       resolve();
     }, seconds * 1000);
   });
+}
 
 /**
  * Fetches the workspaces from Clockify and excludes one of the workspaces
@@ -416,46 +461,3 @@ function confirmAndDeleteEntities() {
     },
   );
 }
-
-/**
- * Performs an action based on the arg passed to the script.
- * @param {string} action
- * @returns {Promise<void>}
- */
-async function handleInput(action) {
-  const commandsMessage = [
-    '  delete',
-    '      Deletes all time entries, projects, tags, and clients on Clockify',
-    '  write',
-    '      Grabs all the Clockify entities and writes them to "clockify.json" in CWD',
-  ].join('\n');
-
-  switch (action) {
-    case 'help':
-      const helpMessage = [
-        'Manage entities in your test Clockify instance.',
-        commandsMessage,
-      ].join('\n');
-      console.log(helpMessage);
-      break;
-
-    case 'delete':
-      await confirmAndDeleteEntities();
-      break;
-
-    case 'write':
-      await writeEntitiesToOutputFile();
-      break;
-
-    default:
-      const invalidMessage = [
-        'You must specify one of the following flags:',
-        commandsMessage,
-      ].join('\n');
-      console.log(invalidMessage);
-      break;
-  }
-}
-
-const [action] = process.argv.slice(2);
-handleInput(action);
