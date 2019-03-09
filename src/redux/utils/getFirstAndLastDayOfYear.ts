@@ -1,4 +1,4 @@
-import isNil from 'lodash/isNil';
+import { isNil } from 'lodash';
 import format from 'date-fns/format';
 import endOfYear from 'date-fns/end_of_year';
 import startOfYear from 'date-fns/start_of_year';

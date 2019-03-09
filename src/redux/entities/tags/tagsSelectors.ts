@@ -1,6 +1,5 @@
 import { createSelector } from 'reselect';
-import flatten from 'lodash/flatten';
-import get from 'lodash/get';
+import { flatten, get } from 'lodash';
 import { getEntityRecordsByWorkspaceId } from '~/redux/utils';
 import {
   CreateNamedEntityRequest,

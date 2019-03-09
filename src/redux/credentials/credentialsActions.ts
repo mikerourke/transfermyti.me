@@ -1,7 +1,5 @@
 import { createAction } from 'redux-actions';
-import capitalize from 'lodash/capitalize';
-import first from 'lodash/first';
-import set from 'lodash/set';
+import { capitalize, first, set } from 'lodash';
 import storage from 'store';
 import { STORAGE_KEY } from '~/constants';
 import getIfDev from '~/utils/getIfDev';

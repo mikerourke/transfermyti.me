@@ -1,5 +1,4 @@
-import get from 'lodash/get';
-import sortBy from 'lodash/sortBy';
+import { get, sortBy } from 'lodash';
 import getEntityRecordsWithEntryCounts from './getEntityRecordsWithEntryCounts';
 import getTogglInclusionRecords from './getTogglInclusionRecords';
 import { EntityType } from '~/types/commonTypes';

@@ -1,6 +1,6 @@
 import React from 'react';
 import { css } from 'emotion';
-import isNil from 'lodash/isNil';
+import { isNil } from 'lodash';
 import { EntityGroup } from '~/types/commonTypes';
 
 interface Props {

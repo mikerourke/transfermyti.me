@@ -1,7 +1,5 @@
 import { createSelector } from 'reselect';
-import get from 'lodash/get';
-import isEmpty from 'lodash/isEmpty';
-import isNil from 'lodash/isNil';
+import { get, isEmpty, isNil } from 'lodash';
 import isBefore from 'date-fns/is_before';
 import {
   selectTogglClientInclusionsByWorkspaceId,

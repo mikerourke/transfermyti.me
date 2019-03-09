@@ -1,6 +1,5 @@
 import { createAction } from 'redux-actions';
-import isNil from 'lodash/isNil';
-import set from 'lodash/set';
+import { isNil, set } from 'lodash';
 import { buildThrottler } from '~/redux/utils';
 import {
   apiCreateClockifyWorkspace,

@@ -1,5 +1,4 @@
-import get from 'lodash/get';
-import isNil from 'lodash/isNil';
+import { get, isNil } from 'lodash';
 import { EntityType } from '~/types/commonTypes';
 
 export default function getEntityIdFieldValue(

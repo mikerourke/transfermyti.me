@@ -1,5 +1,4 @@
-import get from 'lodash/get';
-import isNil from 'lodash/isNil';
+import { get, isNil } from 'lodash';
 
 export default function getTogglInclusionRecords<TModel>(
   entityRecords: TModel[],

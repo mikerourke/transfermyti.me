@@ -1,7 +1,7 @@
 import React, { useEffect, useRef } from 'react';
 import { Button, Container, Subtitle, Title } from 'bloomer';
 import { css } from 'emotion';
-import isNil from 'lodash/isNil';
+import { isNil } from 'lodash';
 import Flex from '~/components/flex/Flex';
 import ShowIf from '~/components/showIf/ShowIf';
 

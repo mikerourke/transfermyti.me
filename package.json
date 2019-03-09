@@ -8,6 +8,8 @@
   "license": "MIT",
   "private": false,
   "scripts": {
+    "prebuild": "yarn run tidy",
+    "build": "parcel build public/index.html --out-dir build --no-source-maps",
     "start": "parcel serve public/index.html --port 3000 --out-dir build",
     "lint": "tslint -c tslint.json -p tsconfig.json || exit 0",
     "prettier": "prettier --write '{src,config}/**/*.{js,ts,tsx}'",
@@ -26,6 +28,7 @@
     "@types/react-tooltip": "^3.9.0",
     "@types/react-virtualized": "^9.18.11",
     "@types/store": "^2.0.1",
+    "babel-plugin-lodash": "^3.3.4",
     "babel-plugin-module-resolver": "^3.2.0",
     "jest": "^23.6.0",
     "jsonfile": "^5.0.0",
@@ -70,6 +73,7 @@
   },
   "babel": {
     "plugins": [
+      "lodash",
       [
         "module-resolver",
         {

@@ -1,7 +1,5 @@
 import { combineActions, handleActions } from 'redux-actions';
-import get from 'lodash/get';
-import isNil from 'lodash/isNil';
-import isString from 'lodash/isString';
+import { get, isNil, isString } from 'lodash';
 import { getEntityIdFieldValue, getEntityNormalizedState } from '~/redux/utils';
 import {
   clockifyTimeEntriesFetchFailure,

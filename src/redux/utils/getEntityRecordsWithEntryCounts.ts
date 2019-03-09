@@ -1,4 +1,4 @@
-import get from 'lodash/get';
+import { get } from 'lodash';
 import { EntityType } from '~/types/commonTypes';
 import { TimeEntryWithClientModel } from '~/types/timeEntriesTypes';
 

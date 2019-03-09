@@ -1,6 +1,5 @@
 import { createAction } from 'redux-actions';
-import property from 'lodash/property';
-import set from 'lodash/set';
+import { property, set } from 'lodash';
 import { batchClockifyRequests, buildThrottler } from '~/redux/utils';
 import {
   apiCreateClockifyProject,

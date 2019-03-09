@@ -1,6 +1,5 @@
 import React, { useState } from 'react';
-import first from 'lodash/first';
-import get from 'lodash/get';
+import { first, get } from 'lodash';
 import StepPage from '~/components/stepPage/StepPage';
 import EntitiesList from '~/components/entitiesList/EntitiesList';
 import EntityTabs from './components/EntityTabs';

@@ -1,6 +1,5 @@
 import { createSelector } from 'reselect';
-import get from 'lodash/get';
-import isNil from 'lodash/isNil';
+import { get, isNil } from 'lodash';
 import { getEntityRecordsByWorkspaceId } from '~/redux/utils';
 import { EntityType, ReduxState } from '~/types/commonTypes';
 import {

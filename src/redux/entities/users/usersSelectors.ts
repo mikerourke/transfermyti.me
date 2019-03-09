@@ -1,6 +1,5 @@
 import { createSelector } from 'reselect';
-import get from 'lodash/get';
-import property from 'lodash/property';
+import { get, property } from 'lodash';
 import { getTogglInclusionRecords } from '~/redux/utils';
 import { selectCredentials } from '~/redux/credentials/credentialsSelectors';
 import { ReduxState } from '~/types/commonTypes';

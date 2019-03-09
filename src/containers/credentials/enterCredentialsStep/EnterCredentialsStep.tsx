@@ -2,7 +2,7 @@ import React from 'react';
 import { connect } from 'react-redux';
 import { Help } from 'bloomer';
 import { css } from 'emotion';
-import omit from 'lodash/omit';
+import { omit } from 'lodash';
 import {
   storeAllCredentials,
   updateCredentialsField,

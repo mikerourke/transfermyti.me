@@ -1,7 +1,7 @@
 import React from 'react';
 import { connect } from 'react-redux';
 import { css } from 'emotion';
-import isNil from 'lodash/isNil';
+import { isNil } from 'lodash';
 import {
   fetchTogglEntitiesInWorkspace,
   updateIsWorkspaceEntityIncluded,

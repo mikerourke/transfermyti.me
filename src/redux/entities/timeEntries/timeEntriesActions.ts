@@ -1,5 +1,5 @@
 import { createAction } from 'redux-actions';
-import flatten from 'lodash/flatten';
+import { flatten } from 'lodash';
 import { buildThrottler } from '~/redux/utils';
 import {
   apiFetchClockifyTimeEntries,

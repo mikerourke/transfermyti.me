@@ -1,8 +1,5 @@
 import { normalize, schema, Schema } from 'normalizr';
-import get from 'lodash/get';
-import isEmpty from 'lodash/isEmpty';
-import isNil from 'lodash/isNil';
-import uniq from 'lodash/uniq';
+import { get, isEmpty, isNil, uniq } from 'lodash';
 import { EntityGroup, ToolName } from '~/types/commonTypes';
 
 import StrategyFunction = schema.StrategyFunction;

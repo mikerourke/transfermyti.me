@@ -1,7 +1,7 @@
 import React from 'react';
 import cx from 'classnames';
 import { css } from 'emotion';
-import isNil from 'lodash/isNil';
+import { isNil } from 'lodash';
 
 type GlobalOption = 'inherit' | 'initial' | 'unset';
 

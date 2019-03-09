@@ -1,7 +1,5 @@
 import { createAction } from 'redux-actions';
-import capitalize from 'lodash/capitalize';
-import isNil from 'lodash/isNil';
-import uniqueId from 'lodash/uniqueId';
+import { capitalize, isNil, uniqueId } from 'lodash';
 import getIfDev from '~/utils/getIfDev';
 import { NotificationModel, NotificationType } from '~/types/appTypes';
 import { ReduxDispatch, ToolName } from '~/types/commonTypes';

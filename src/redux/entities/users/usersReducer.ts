@@ -1,5 +1,5 @@
 import { combineActions, handleActions } from 'redux-actions';
-import get from 'lodash/get';
+import { get } from 'lodash';
 import {
   getEntityNormalizedState,
   updateIsEntityIncluded,

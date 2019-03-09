@@ -1,6 +1,5 @@
 import { createAction } from 'redux-actions';
-import flatten from 'lodash/flatten';
-import isEmpty from 'lodash/isEmpty';
+import { flatten, isEmpty } from 'lodash';
 import { batchClockifyRequests, buildThrottler } from '~/redux/utils';
 import {
   apiCreateClockifyTask,

@@ -1,7 +1,5 @@
 import { handleActions, combineActions } from 'redux-actions';
-import cloneDeep from 'lodash/cloneDeep';
-import get from 'lodash/get';
-import uniq from 'lodash/uniq';
+import { cloneDeep, get, uniq } from 'lodash';
 import {
   getEntityNormalizedState,
   updateIsEntityIncluded,

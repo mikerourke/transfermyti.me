@@ -1,8 +1,7 @@
 import React from 'react';
 import { Tab, TabLink, TabList, Tabs } from 'bloomer';
 import { css } from 'emotion';
-import omit from 'lodash/omit';
-import startCase from 'lodash/startCase';
+import { omit, startCase } from 'lodash';
 import { EntityGroup } from '~/types/commonTypes';
 
 interface Props {

@@ -1,7 +1,5 @@
 import { createSelector } from 'reselect';
-import filter from 'lodash/filter';
-import first from 'lodash/first';
-import get from 'lodash/get';
+import { filter, first, get } from 'lodash';
 import {
   selectClockifyProjectsById,
   selectTogglProjectsById,
