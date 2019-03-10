@@ -1,6 +1,6 @@
 import React from 'react';
 
-const HeaderLogo: React.FunctionComponent = () => (
+const HeaderLogo: React.FC = () => (
   <svg viewBox="278 609 686 88" height={88} width={686}>
     <defs>
       <filter id="Shadow" filterUnits="userSpaceOnUse" x={278} y={609}>

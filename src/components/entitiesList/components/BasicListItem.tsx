@@ -1,19 +1,19 @@
 import React from 'react';
 import { ListRowProps } from 'react-virtualized';
+import { When } from 'react-if';
 import { Box } from 'bloomer';
 import { css } from 'emotion';
 import { isNil, noop } from 'lodash';
 import Flex from '~/components/flex/Flex';
-import IncludedIndicator from '~/components/includedIndicator/IncludedIndicator';
-import ShowIf from '~/components/showIf/ShowIf';
-import { EntityModel } from '~/types/commonTypes';
+import Checkbox from '~/components/checkbox/Checkbox';
+import { CheckedState, EntityModel } from '~/types/commonTypes';
 
 interface Props extends ListRowProps {
   entityRecord: EntityModel;
   onItemClick?: () => void;
 }
 
-const BasicListItem: React.FunctionComponent<Props> = ({
+const BasicListItem: React.FC<Props> = ({
   entityRecord,
   onItemClick,
   isScrolling,
@@ -37,13 +37,13 @@ const BasicListItem: React.FunctionComponent<Props> = ({
         `}
       >
         <Flex alignItems="center">
-          <ShowIf
-            as={IncludedIndicator}
-            isShown={!isNil(onItemClick)}
-            isIncluded={isIncluded}
-            size="1.25rem"
-            onClick={isNil(onItemClick) ? noop : onItemClick}
-          />
+          <When condition={!isNil(onItemClick)}>
+            <Checkbox
+              state={isIncluded ? CheckedState.Checked : CheckedState.Unchecked}
+              size="1.25rem"
+              onClick={isNil(onItemClick) ? noop : onItemClick}
+            />
+          </When>
           <span
             className={css`
               font-weight: 400;

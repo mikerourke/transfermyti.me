@@ -10,7 +10,7 @@ interface Props extends ListRowProps {
   timeEntryRecord: DetailedTimeEntryModel;
 }
 
-const TimeEntryListItem: React.FunctionComponent<Props> = ({
+const TimeEntryListItem: React.FC<Props> = ({
   timeEntryRecord,
   isScrolling,
   isVisible,

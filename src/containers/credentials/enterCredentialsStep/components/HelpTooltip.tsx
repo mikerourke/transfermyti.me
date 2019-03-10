@@ -7,7 +7,7 @@ interface TooltipProps extends ReactTooltip.Props {
   delayUpdate: number;
 }
 
-const CustomTooltip: React.FunctionComponent<TooltipProps> = props => (
+const CustomTooltip: React.FC<TooltipProps> = props => (
   <ReactTooltip {...props} />
 );
 
@@ -17,12 +17,7 @@ interface Props {
   color?: string;
 }
 
-const HelpTooltip: React.FunctionComponent<Props> = ({
-  children,
-  tipId,
-  size,
-  color,
-}) => (
+const HelpTooltip: React.FC<Props> = ({ children, tipId, size, color }) => (
   <span
     className={css`
       margin-left: 8px;

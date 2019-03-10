@@ -9,3 +9,8 @@ export interface NotificationModel {
   message: string;
   type: NotificationType;
 }
+
+export enum TransferType {
+  MultipleUsers = 'MULTIPLE',
+  SingleUser = 'SINGLE',
+}

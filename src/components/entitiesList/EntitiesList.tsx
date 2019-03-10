@@ -15,7 +15,7 @@ interface Props {
   onItemClick?: (entityGroup: EntityGroup, entityRecord: EntityModel) => void;
 }
 
-const EntitiesList: React.FunctionComponent<Props> = ({
+const EntitiesList: React.FC<Props> = ({
   entityGroup,
   entityRecords,
   height,

@@ -1,14 +1,15 @@
 import React from 'react';
 import { Wizard, Steps, Step } from 'react-albus';
 import { Section } from 'bloomer';
+import NotificationsDisplay from '~/containers/app/notificationsDisplay/NotificationsDisplay';
+import SelectTransferTypeStep from '~/containers/app/selectTransferTypeStep/SelectTransferTypeStep';
 import EnterCredentialsStep from '~/containers/credentials/enterCredentialsStep/EnterCredentialsStep';
 import SelectTogglWorkspacesStep from '~/containers/entities/selectTogglWorkspacesStep/SelectTogglWorkspacesStep';
 import SelectTogglInclusionsStep from '~/containers/entities/selectTogglInclusionsStep/SelectTogglInclusionsStep';
 import ReviewClockifyDetailsStep from '~/containers/entities/reviewClockifyDetailsStep/ReviewClockifyDetailsStep';
-import NotificationsDisplay from '../notificationsDisplay/NotificationsDisplay';
 import Header from './components/Header';
 
-const App: React.FunctionComponent = () => (
+const App: React.FC = () => (
   <>
     <Header />
     <Wizard>
@@ -16,11 +17,13 @@ const App: React.FunctionComponent = () => (
         <Steps>
           <Step
             id="selectWorkflowType"
-            render={({ next }) => <EnterCredentialsStep next={next} />}
+            render={({ next }) => <SelectTransferTypeStep next={next} />}
           />
           <Step
             id="enterCredentials"
-            render={({ next }) => <EnterCredentialsStep next={next} />}
+            render={({ previous, next }) => (
+              <EnterCredentialsStep previous={previous} next={next} />
+            )}
           />
           <Step
             id="selectTogglWorkspaces"

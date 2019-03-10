@@ -130,7 +130,7 @@ export class SelectTogglWorkspacesStepComponent extends React.Component<
 
     return (
       <StepPage
-        title="Step 2:"
+        title="Step 3:"
         subtitle="Select Toggl Workspaces to Transfer"
         previous={this.props.previous}
         next={this.handleNextClick}

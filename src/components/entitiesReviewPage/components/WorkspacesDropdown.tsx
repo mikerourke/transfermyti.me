@@ -19,7 +19,7 @@ interface Props {
   onItemClick: (workspaceId: string) => void;
 }
 
-const WorkspacesDropdown: React.FunctionComponent<Props> = ({
+const WorkspacesDropdown: React.FC<Props> = ({
   workspacesById,
   activeWorkspaceId,
   onItemClick,

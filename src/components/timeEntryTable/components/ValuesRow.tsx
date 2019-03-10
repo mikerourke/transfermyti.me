@@ -5,10 +5,7 @@ interface Props {
   isBottomPadded: boolean;
 }
 
-const ValuesRow: React.FunctionComponent<Props> = ({
-  isBottomPadded,
-  children,
-}) => (
+const ValuesRow: React.FC<Props> = ({ isBottomPadded, children }) => (
   <tr
     className={css`
       td {

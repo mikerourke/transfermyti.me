@@ -11,9 +11,7 @@ interface Props {
 
 const DATE_FORMAT = 'M/D/YY hh:mma';
 
-const TimeEntryTable: React.FunctionComponent<Props> = ({
-  timeEntryRecord,
-}) => (
+const TimeEntryTable: React.FC<Props> = ({ timeEntryRecord }) => (
   <table
     className={css`
       table-layout: fixed;

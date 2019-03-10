@@ -129,7 +129,7 @@ export class ReviewClockifyDetailsStepComponent extends React.Component<
     return (
       <>
         <EntitiesReviewPage
-          title="Step 4:"
+          title="Step 5:"
           subtitle="Review Pending Data Before Transfer"
           entitiesByWorkspaceId={this.props.togglInclusionsByWorkspaceId}
           workspacesById={this.props.togglWorkspacesById}

@@ -8,10 +8,7 @@ interface Props {
   height: number;
 }
 
-const NoRecordsDisplay: React.FunctionComponent<Props> = ({
-  activeEntityGroup,
-  height,
-}) => {
+const NoRecordsDisplay: React.FC<Props> = ({ activeEntityGroup, height }) => {
   let entityGroupDisplay = {
     [EntityGroup.TimeEntries]: 'time entries',
     [EntityGroup.UserGroups]: 'user groups',

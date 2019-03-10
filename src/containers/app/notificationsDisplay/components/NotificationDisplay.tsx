@@ -8,7 +8,7 @@ interface Props {
   onDismiss: (notificationId: string) => void;
 }
 
-const NotificationDisplay: React.FunctionComponent<Props> = ({
+const NotificationDisplay: React.FC<Props> = ({
   notification: { id, type, message },
   onDismiss,
 }) => {

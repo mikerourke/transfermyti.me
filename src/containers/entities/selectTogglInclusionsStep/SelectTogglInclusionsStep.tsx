@@ -79,7 +79,7 @@ export class SelectTogglInclusionsStepComponent extends React.Component<Props> {
 
     return (
       <EntitiesReviewPage
-        title="Step 3:"
+        title="Step 4:"
         subtitle="Select Toggl Records to Transfer"
         {...reviewPageProps}
       >

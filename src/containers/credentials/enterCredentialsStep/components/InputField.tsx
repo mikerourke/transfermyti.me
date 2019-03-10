@@ -1,8 +1,8 @@
 import React from 'react';
 import cx from 'classnames';
+import { When } from 'react-if';
 import { Control, Field, Help, Input, Label } from 'bloomer';
 import { css } from 'emotion';
-import ShowIf from '~/components/showIf/ShowIf';
 import HelpTooltip from './HelpTooltip';
 
 interface Props extends React.HTMLProps<HTMLInputElement> {
@@ -13,7 +13,7 @@ interface Props extends React.HTMLProps<HTMLInputElement> {
   errorText?: string;
 }
 
-const InputField: React.FunctionComponent<Props> = ({
+const InputField: React.FC<Props> = ({
   name,
   label,
   tooltip,
@@ -38,16 +38,16 @@ const InputField: React.FunctionComponent<Props> = ({
         {...inputProps}
       />
     </Control>
-    <ShowIf
-      isShown={errorText !== ''}
-      as={Help}
-      isColor="danger"
-      className={css`
-        font-weight: bold;
-      `}
-    >
-      {errorText}
-    </ShowIf>
+    <When condition={errorText !== ''}>
+      <Help
+        isColor="danger"
+        className={css`
+          font-weight: bold;
+        `}
+      >
+        {errorText}
+      </Help>
+    </When>
   </Field>
 );
 

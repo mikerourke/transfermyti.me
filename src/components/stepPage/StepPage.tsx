@@ -1,9 +1,9 @@
 import React, { useEffect, useRef } from 'react';
 import { Button, Container, Subtitle, Title } from 'bloomer';
+import { When } from 'react-if';
 import { css } from 'emotion';
 import { isNil } from 'lodash';
 import Flex from '~/components/flex/Flex';
-import ShowIf from '~/components/showIf/ShowIf';
 
 interface Props {
   title: string;
@@ -15,7 +15,7 @@ interface Props {
   onResize?: (newWidth: number) => void;
 }
 
-const StepPage: React.FunctionComponent<Props> = ({
+const StepPage: React.FC<Props> = ({
   children,
   title,
   subtitle,
@@ -59,42 +59,35 @@ const StepPage: React.FunctionComponent<Props> = ({
         `}
       >
         <Flex justifySelf="flex-start">
-          <ShowIf
-            as={Button}
-            isShown={!isNil(onRefreshClick)}
-            isSize="medium"
-            onClick={onRefreshClick}
-            isColor="dark"
-          >
-            Refresh
-          </ShowIf>
+          <When condition={!isNil(onRefreshClick)}>
+            <Button isSize="medium" onClick={onRefreshClick} isColor="dark">
+              Refresh
+            </Button>
+          </When>
         </Flex>
         <Flex justifySelf="flex-end">
-          <ShowIf
-            as={Button}
-            isShown={!isNil(previous)}
-            isSize="medium"
-            onClick={previous}
-            isColor="dark"
-          >
-            Previous
-          </ShowIf>
-          <ShowIf
-            isShown={!isNil(previous) && !isNil(next)}
-            className={css`
-              margin-right: 1rem;
-            `}
-          />
-          <ShowIf
-            as={Button}
-            isShown={!isNil(next)}
-            isSize="medium"
-            isLoading={isNextLoading}
-            onClick={next}
-            isColor="success"
-          >
-            Next
-          </ShowIf>
+          <When condition={!isNil(previous)}>
+            <Button isSize="medium" onClick={previous} isColor="dark">
+              Previous
+            </Button>
+          </When>
+          <When condition={!isNil(previous) && !isNil(next)}>
+            <div
+              className={css`
+                margin-right: 1rem;
+              `}
+            />
+          </When>
+          <When condition={!isNil(next)}>
+            <Button
+              isSize="medium"
+              isLoading={isNextLoading}
+              onClick={next}
+              isColor="success"
+            >
+              Next
+            </Button>
+          </When>
         </Flex>
       </Flex>
     </Container>

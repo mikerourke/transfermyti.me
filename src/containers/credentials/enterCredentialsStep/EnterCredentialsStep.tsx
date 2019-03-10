@@ -31,6 +31,7 @@ interface ConnectDispatchProps {
 }
 
 interface OwnProps {
+  previous: () => void;
   next: () => void;
 }
 
@@ -94,10 +95,9 @@ export class EnterCredentialsStepComponent extends React.Component<
   };
 
   private handleNextClick = async () => {
-    console.log('Validating...');
     if (!this.validateInputs()) return;
     await this.props.onValidateCredentials();
-    console.log('Done!');
+
     setTimeout(() => {
       if (this.props.isValid) this.props.next();
     }, 100);
@@ -112,9 +112,10 @@ export class EnterCredentialsStepComponent extends React.Component<
 
     return (
       <StepPage
-        title="Step 1:"
+        title="Step 2:"
         subtitle="Enter Credentials"
         isNextLoading={this.props.isValidating}
+        previous={this.props.previous}
         next={this.handleNextClick}
       >
         <p

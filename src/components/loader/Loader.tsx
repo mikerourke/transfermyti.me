@@ -2,7 +2,7 @@ import React from 'react';
 import cx from 'classnames';
 import { css, keyframes } from 'emotion';
 
-const Loader: React.FunctionComponent = ({ children }) => {
+const Loader: React.FC = ({ children }) => {
   const cubeFoldingAnimation = keyframes`
     0%, 10% {
       transform: perspective(140px) rotateX(-180deg);

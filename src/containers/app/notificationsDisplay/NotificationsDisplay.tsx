@@ -18,7 +18,7 @@ interface ConnectDispatchProps {
 
 type Props = ConnectStateProps & ConnectDispatchProps;
 
-const NotificationsDisplayComponent: React.FunctionComponent<Props> = ({
+const NotificationsDisplayComponent: React.FC<Props> = ({
   notifications,
   onDismissNotification,
 }) => (

@@ -35,7 +35,7 @@ interface Props {
   direction?: 'column' | 'column-reverse' | 'row' | 'row-reverse';
 }
 
-const Flex: React.FunctionComponent<Props | any> = ({
+const Flex: React.FC<Props | any> = ({
   as,
   className,
   alignItems,

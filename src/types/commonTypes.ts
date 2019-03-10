@@ -8,6 +8,12 @@ import { UserGroupModel } from './userGroupsTypes';
 import { UserModel } from './usersTypes';
 import { State } from '~/redux/rootReducer';
 
+export enum CheckedState {
+  Checked,
+  Unchecked,
+  Indeterminate,
+}
+
 export enum ToolName {
   Clockify = 'clockify',
   Toggl = 'toggl',

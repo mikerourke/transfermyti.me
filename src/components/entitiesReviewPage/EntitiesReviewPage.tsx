@@ -24,7 +24,7 @@ interface Props {
 
 const CONTENTS_HEIGHT = 448;
 
-const EntitiesReviewPage: React.FunctionComponent<Props> = ({
+const EntitiesReviewPage: React.FC<Props> = ({
   children,
   entitiesByWorkspaceId,
   workspacesById,

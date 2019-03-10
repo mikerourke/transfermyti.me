@@ -5,10 +5,7 @@ interface Props {
   hasTopBorder: boolean;
 }
 
-const HeadersRow: React.FunctionComponent<Props> = ({
-  hasTopBorder,
-  children,
-}) => (
+const HeadersRow: React.FC<Props> = ({ hasTopBorder, children }) => (
   <tr
     className={css`
       ${hasTopBorder && 'border-top: 1px solid rgba(10, 10, 10, 0.1)'};

@@ -1,6 +1,6 @@
 import React from 'react';
 
-const ChevronDownIcon: React.FunctionComponent = () => (
+const ChevronDownIcon: React.FC = () => (
   <svg viewBox="0 0 448 512" height={16} width={16} fill="var(--dark-gray)">
     <path
       d={`

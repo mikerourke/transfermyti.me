@@ -17,7 +17,7 @@ interface Props {
   onCancelClick: () => void;
 }
 
-const ConfirmationModal: React.FunctionComponent<Props> = ({
+const ConfirmationModal: React.FC<Props> = ({
   isActive,
   onConfirmClick,
   onCancelClick,
