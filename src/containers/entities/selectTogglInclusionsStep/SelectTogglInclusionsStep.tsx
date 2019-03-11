@@ -7,7 +7,6 @@ import {
   updateIsWorkspaceEntityIncluded,
 } from '~/redux/entities/workspaces/workspacesActions';
 import {
-  selectIfFetchRequiredForTool,
   selectTogglEntitiesByWorkspaceId,
   selectTogglIncludedWorkspacesById,
   selectWorkspaceNameBeingFetched,
@@ -20,7 +19,6 @@ import {
   EntityModel,
   ReduxDispatch,
   ReduxState,
-  ToolName,
 } from '~/types/commonTypes';
 import { WorkspaceModel } from '~/types/workspacesTypes';
 
@@ -28,7 +26,6 @@ interface ConnectStateProps {
   entitiesByWorkspaceId: Record<string, Record<EntityGroup, EntityModel[]>>;
   workspaceNameBeingFetched: string;
   workspacesById: Record<string, WorkspaceModel>;
-  isFetchRequired: boolean;
 }
 
 interface ConnectDispatchProps {
@@ -42,6 +39,7 @@ interface ConnectDispatchProps {
 }
 
 interface OwnProps {
+  stepNumber: number;
   previous: () => void;
   next: () => void;
 }
@@ -54,8 +52,6 @@ export class SelectTogglInclusionsStepComponent extends React.Component<Props> {
   }
 
   private fetchEntitiesForAllWorkspaces = async () => {
-    if (!this.props.isFetchRequired) return;
-
     const workspaceRecords = Object.values(this.props.workspacesById);
     for (const workspaceRecord of workspaceRecords) {
       await this.props.onFetchEntitiesForWorkspace(workspaceRecord);
@@ -80,6 +76,7 @@ export class SelectTogglInclusionsStepComponent extends React.Component<Props> {
     return (
       <EntitiesReviewPage
         subtitle="Select Toggl Records to Transfer"
+        onRefreshClick={this.fetchEntitiesForAllWorkspaces}
         {...reviewPageProps}
       >
         <p
@@ -107,7 +104,6 @@ const mapStateToProps = (state: ReduxState) => ({
   entitiesByWorkspaceId: selectTogglEntitiesByWorkspaceId(state),
   workspacesById: selectTogglIncludedWorkspacesById(state),
   workspaceNameBeingFetched: selectWorkspaceNameBeingFetched(state),
-  isFetchRequired: selectIfFetchRequiredForTool(state, ToolName.Toggl),
 });
 
 const mapDispatchToProps = (dispatch: ReduxDispatch) => ({

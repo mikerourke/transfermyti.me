@@ -19,15 +19,9 @@ import {
   WorkspaceModel,
 } from '~/types/workspacesTypes';
 
-interface LatestFetchTimesModel {
-  clockify: Date | null;
-  toggl: Date | null;
-}
-
 export interface WorkspacesState {
   readonly clockify: ReduxStateEntryForTool<WorkspaceModel>;
   readonly toggl: ReduxStateEntryForTool<WorkspaceModel>;
-  readonly fetchTimesByTool: LatestFetchTimesModel;
   readonly workspaceNameBeingFetched: string | null;
   readonly isFetching: boolean;
 }
@@ -40,10 +34,6 @@ export const initialState: WorkspacesState = {
   toggl: {
     byId: {},
     idValues: [],
-  },
-  fetchTimesByTool: {
-    clockify: null,
-    toggl: null,
   },
   workspaceNameBeingFetched: null,
   isFetching: false,
@@ -213,19 +203,6 @@ export default handleActions(
     ): WorkspacesState => ({
       ...state,
       workspaceNameBeingFetched: workspaceName,
-    }),
-
-    [getType(workspacesActions.updateFetchTimeByTool)]: (
-      state: WorkspacesState,
-      {
-        payload: { toolName, fetchDate },
-      }: ReduxAction<{ toolName: ToolName; fetchDate: Date | null }>,
-    ): WorkspacesState => ({
-      ...state,
-      fetchTimesByTool: {
-        ...state.fetchTimesByTool,
-        [toolName]: fetchDate,
-      },
     }),
 
     [getType(workspacesActions.resetContentsForTool)]: (

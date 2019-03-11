@@ -1,6 +1,5 @@
 import { createSelector } from 'reselect';
 import { get, isEmpty, isNil } from 'lodash';
-import isBefore from 'date-fns/is_before';
 import {
   selectTogglClientInclusionsByWorkspaceId,
   selectTogglClientsByWorkspaceId,
@@ -29,12 +28,7 @@ import {
   selectTogglUserInclusionsByWorkspaceId,
   selectTogglUsersByWorkspaceId,
 } from '~/redux/entities/users/usersSelectors';
-import {
-  EntityGroup,
-  EntityModel,
-  ReduxState,
-  ToolName,
-} from '~/types/commonTypes';
+import { EntityGroup, EntityModel, ReduxState } from '~/types/commonTypes';
 import { WorkspaceModel } from '~/types/workspacesTypes';
 
 export const selectTogglWorkspaceIds = createSelector(
@@ -232,35 +226,4 @@ export const selectTogglEntitiesByWorkspaceId = createSelector(
   ],
   (...args): Record<string, Record<EntityGroup, EntityModel[]>> =>
     getEntityGroupRecordsByWorkspaceId(...args),
-);
-
-const selectFetchTimesByTool = createSelector(
-  (state: ReduxState) => state.entities.workspaces.fetchTimesByTool,
-  fetchTimesByTool => fetchTimesByTool,
-);
-
-export const selectIfFetchRequiredForTool = createSelector(
-  [selectFetchTimesByTool, (_: null, toolName: ToolName) => toolName],
-  (fetchTimesByTool, toolName): boolean => {
-    const {
-      clockify: clockifyFetchTime,
-      toggl: togglFetchTime,
-    } = fetchTimesByTool;
-
-    const wasClockifyFetched = !isNil(clockifyFetchTime);
-    const wasTogglFetched = !isNil(togglFetchTime);
-
-    switch (toolName) {
-      case ToolName.Clockify:
-        if (!wasClockifyFetched || !wasTogglFetched) return true;
-        return isBefore(clockifyFetchTime, togglFetchTime);
-
-      case ToolName.Toggl:
-        if (!wasTogglFetched) return true;
-        return isBefore(togglFetchTime, clockifyFetchTime);
-
-      default:
-        return true;
-    }
-  },
 );

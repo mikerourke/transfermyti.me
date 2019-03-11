@@ -74,10 +74,6 @@ export const updateWorkspaceNameBeingFetched = createStandardAction(
   '@workspaces/UPDATE_NAME_BEING_FETCHED',
 )<string | null>();
 
-export const updateFetchTimeByTool = createStandardAction(
-  '@workspaces/UPDATE_FETCH_TIME_BY_TOOL',
-)<{ toolName: ToolName; fetchTime: Date | null }>();
-
 export const resetContentsForTool = createStandardAction(
   '@workspaces/RESET_CONTENTS_FOR_TOOL',
 )<ToolName>();
@@ -120,13 +116,7 @@ export const fetchClockifyEntitiesInWorkspace = (
   await dispatch(usersActions.fetchClockifyUsers(id));
   await dispatch(timeEntriesActions.fetchClockifyTimeEntries(id));
 
-  dispatch(updateWorkspaceNameBeingFetched(null));
-  return dispatch(
-    updateFetchTimeByTool({
-      toolName: ToolName.Clockify,
-      fetchTime: new Date(),
-    }),
-  );
+  return dispatch(updateWorkspaceNameBeingFetched(null));
 };
 
 export const fetchTogglEntitiesInWorkspace = (
@@ -154,10 +144,7 @@ export const fetchTogglEntitiesInWorkspace = (
     await dispatch(timeEntriesActions.fetchTogglTimeEntries(id, inclusionYear));
   }
 
-  dispatch(updateWorkspaceNameBeingFetched(null));
-  return dispatch(
-    updateFetchTimeByTool({ toolName: ToolName.Toggl, fetchTime: new Date() }),
-  );
+  return dispatch(updateWorkspaceNameBeingFetched(null));
 };
 
 export const fetchTogglWorkspaceSummary = (workspaceId: string) => async (
@@ -221,31 +208,38 @@ export const transferEntitiesToClockifyWorkspace = (
         clockifyWorkspaceId,
       ),
     );
+
     await dispatch(
       projectsActions.transferProjectsToClockify(
         togglWorkspaceId,
         clockifyWorkspaceId,
       ),
     );
+
     await dispatch(
       tagsActions.transferTagsToClockify(togglWorkspaceId, clockifyWorkspaceId),
     );
+
     await dispatch(
       tasksActions.transferTasksToClockify(
         togglWorkspaceId,
         clockifyWorkspaceId,
       ),
     );
+
     await dispatch(
       userGroupsActions.transferUserGroupsToClockify(
         togglWorkspaceId,
         clockifyWorkspaceId,
       ),
     );
-    // TODO: Follow up on this:
-    // await dispatch(
-    //   transferUsersToClockify(togglWorkspaceId, clockifyWorkspaceId),
-    // );
+
+    await dispatch(
+      usersActions.transferUsersToClockify(
+        togglWorkspaceId,
+        clockifyWorkspaceId,
+      ),
+    );
     // TODO: Write a selector to get the appropriate time entries.
     // await dispatch(
     //   transferTimeEntriesToClockify(togglWorkspaceId, clockifyWorkspaceId),
