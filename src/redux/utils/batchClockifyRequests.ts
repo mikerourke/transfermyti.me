@@ -4,6 +4,8 @@ import buildThrottler from './buildThrottler';
 /**
  * Loops through the specified records and performs the specified API function
  *    on each one.
+ *    in global state.
+ * @param onRecord Action to perform when a new record is in process.
  * @param entityRecordsInWorkspace Array of request body records associated
  *    with workspace.
  * @param clockifyApiFn API function to call for each request body.
@@ -11,6 +13,7 @@ import buildThrottler from './buildThrottler';
  * @returns {Promise<*>}
  */
 export default async function batchClockifyRequests<TPayload, TResponse>(
+  onRecord: (record: TPayload) => void,
   entityRecordsInWorkspace: TPayload[],
   clockifyApiFn: (...args: any[]) => Promise<TResponse>,
   ...parentIds: string[]
@@ -22,6 +25,7 @@ export default async function batchClockifyRequests<TPayload, TResponse>(
 
   for (const entityRecord of entityRecordsInWorkspace) {
     try {
+      onRecord(entityRecord);
       await promiseThrottle
         // @ts-ignore
         .add(throttledFn.bind(this, ...parentIds, entityRecord))

@@ -5,10 +5,13 @@ import {
   apiFetchClockifyTags,
   apiFetchTogglTags,
 } from '../api/tags';
-import { showFetchErrorNotification } from '~/redux/app/appActions';
+import {
+  showFetchErrorNotification,
+  updateInTransferEntity,
+} from '~/redux/app/appActions';
 import { selectTagsTransferPayloadForWorkspace } from './tagsSelectors';
 import { ClockifyTag, TogglTag } from '~/types/tagsTypes';
-import { ReduxDispatch, ReduxGetState } from '~/types/commonTypes';
+import { EntityType, ReduxDispatch, ReduxGetState } from '~/types/commonTypes';
 
 export const clockifyTagsFetch = createAsyncAction(
   '@tags/CLOCKIFY_FETCH_REQUEST',
@@ -70,8 +73,15 @@ export const transferTagsToClockify = (
   if (tagRecordsInWorkspace.length === 0) return Promise.resolve();
 
   dispatch(clockifyTagsTransfer.request());
+
+  const onTagRecord = (tagRecord: any) => {
+    const transferRecord = { ...tagRecord, type: EntityType.Tag };
+    dispatch(updateInTransferEntity(transferRecord));
+  };
+
   try {
     const tags = await batchClockifyRequests(
+      onTagRecord,
       tagRecordsInWorkspace,
       apiCreateClockifyTag,
       clockifyWorkspaceId,

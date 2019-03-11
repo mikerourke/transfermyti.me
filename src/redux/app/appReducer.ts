@@ -2,16 +2,18 @@ import { getType } from 'typesafe-actions';
 import { handleActions } from 'redux-actions';
 import * as appActions from './appActions';
 import { NotificationModel, TransferType } from '~/types/appTypes';
-import { ReduxAction } from '~/types/commonTypes';
+import { EntityTransferModel, ReduxAction } from '~/types/commonTypes';
 
 export interface AppState {
   readonly notifications: NotificationModel[];
   readonly currentTransferType: TransferType;
+  readonly inTransferEntity: EntityTransferModel | null;
 }
 
 export const initialState: AppState = {
   notifications: [],
   currentTransferType: TransferType.SingleUser,
+  inTransferEntity: null,
 };
 
 export default handleActions(
@@ -47,6 +49,14 @@ export default handleActions(
     ): AppState => ({
       ...state,
       currentTransferType: transferType,
+    }),
+
+    [getType(appActions.updateInTransferEntity)]: (
+      state: AppState,
+      { payload: inTransferEntity }: ReduxAction<EntityTransferModel>,
+    ): AppState => ({
+      ...state,
+      inTransferEntity,
     }),
   },
   initialState,

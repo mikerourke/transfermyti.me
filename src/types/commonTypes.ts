@@ -1,4 +1,5 @@
 import { Store } from 'redux';
+import { State } from '~/redux/rootReducer';
 import { ClientModel } from './clientsTypes';
 import { ProjectModel } from './projectsTypes';
 import { TagModel } from './tagsTypes';
@@ -6,7 +7,6 @@ import { TaskModel } from './tasksTypes';
 import { TimeEntryModel } from './timeEntriesTypes';
 import { UserGroupModel } from './userGroupsTypes';
 import { UserModel } from './usersTypes';
-import { State } from '~/redux/rootReducer';
 
 export enum CheckedState {
   Checked,
@@ -54,6 +54,8 @@ export type EntityModel =
   | TimeEntryModel
   | UserGroupModel
   | UserModel;
+
+export type EntityTransferModel = Partial<EntityModel> & { type: EntityType };
 
 export type ReduxStateEntryForTool<TModel> = {
   readonly byId: Record<string, TModel>;

@@ -6,7 +6,11 @@ import {
   NotificationType,
   TransferType,
 } from '~/types/appTypes';
-import { ReduxDispatch, ToolName } from '~/types/commonTypes';
+import {
+  EntityTransferModel,
+  ReduxDispatch,
+  ToolName,
+} from '~/types/commonTypes';
 
 export const notificationShown = createStandardAction(
   '@app/NOTIFICATION_SHOWN',
@@ -23,6 +27,10 @@ export const dismissAllNotifications = createStandardAction(
 export const updateTransferType = createStandardAction(
   '@app/UPDATE_TRANSFER_TYPE',
 )<TransferType>();
+
+export const updateInTransferEntity = createStandardAction(
+  '@app/UPDATE_IN_TRANSFER_ENTITY',
+)<EntityTransferModel>();
 
 export const showNotification = (notification: Partial<NotificationModel>) => (
   dispatch: ReduxDispatch,

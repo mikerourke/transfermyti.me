@@ -5,9 +5,12 @@ import {
   apiFetchClockifyUserGroups,
   apiFetchTogglUserGroups,
 } from '~/redux/entities/api/userGroups';
-import { showFetchErrorNotification } from '~/redux/app/appActions';
+import {
+  showFetchErrorNotification,
+  updateInTransferEntity,
+} from '~/redux/app/appActions';
 import { selectUserGroupsTransferPayloadForWorkspace } from './userGroupsSelectors';
-import { ReduxDispatch, ReduxGetState } from '~/types/commonTypes';
+import { EntityType, ReduxDispatch, ReduxGetState } from '~/types/commonTypes';
 import { ClockifyUserGroup, TogglUserGroup } from '~/types/userGroupsTypes';
 
 export const clockifyUserGroupsFetch = createAsyncAction(
@@ -31,6 +34,10 @@ export const clockifyUserGroupsTransfer = createAsyncAction(
 export const updateIsUserGroupIncluded = createStandardAction(
   '@userGroups/UPDATE_IS_INCLUDED',
 )<string>();
+
+export const addTogglUserIdToGroup = createStandardAction(
+  '@userGroups/ADD_TOGGL_USER_ID_TO_GROUP',
+)<{ userId: string; userGroupId: string }>();
 
 export const fetchClockifyUserGroups = (workspaceId: string) => async (
   dispatch: ReduxDispatch,
@@ -70,8 +77,15 @@ export const transferUserGroupsToClockify = (
   if (userGroupsInWorkspace.length === 0) return Promise.resolve();
 
   dispatch(clockifyUserGroupsTransfer.request());
+
+  const onUserGroupRecord = (userGroupRecord: any) => {
+    const transferRecord = { ...userGroupRecord, type: EntityType.UserGroup };
+    dispatch(updateInTransferEntity(transferRecord));
+  };
+
   try {
     const userGroups = await batchClockifyRequests(
+      onUserGroupRecord,
       userGroupsInWorkspace,
       apiCreateClockifyUserGroup,
       clockifyWorkspaceId,

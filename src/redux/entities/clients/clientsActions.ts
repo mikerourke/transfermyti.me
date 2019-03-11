@@ -5,10 +5,13 @@ import {
   apiFetchClockifyClients,
   apiFetchTogglClients,
 } from '../api/clients';
-import { showFetchErrorNotification } from '~/redux/app/appActions';
+import {
+  showFetchErrorNotification,
+  updateInTransferEntity,
+} from '~/redux/app/appActions';
 import { selectClientsTransferPayloadForWorkspace } from './clientsSelectors';
 import { ClockifyClient, TogglClient } from '~/types/clientsTypes';
-import { ReduxDispatch, ReduxGetState } from '~/types/commonTypes';
+import { EntityType, ReduxDispatch, ReduxGetState } from '~/types/commonTypes';
 
 export const clockifyClientsFetch = createAsyncAction(
   '@clients/CLOCKIFY_FETCH_REQUEST',
@@ -70,8 +73,15 @@ export const transferClientsToClockify = (
   if (clientRecordsInWorkspace.length === 0) return Promise.resolve();
 
   dispatch(clockifyClientsTransfer.request());
+
+  const onClientRecord = (clientRecord: any) => {
+    const transferRecord = { ...clientRecord, type: EntityType.Client };
+    dispatch(updateInTransferEntity(transferRecord));
+  };
+
   try {
     const clients = await batchClockifyRequests(
+      onClientRecord,
       clientRecordsInWorkspace,
       apiCreateClockifyClient,
       clockifyWorkspaceId,

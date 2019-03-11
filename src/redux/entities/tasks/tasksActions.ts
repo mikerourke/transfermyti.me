@@ -6,10 +6,13 @@ import {
   apiFetchClockifyTasks,
   apiFetchTogglTasks,
 } from '~/redux/entities/api/tasks';
-import { showFetchErrorNotification } from '~/redux/app/appActions';
+import {
+  showFetchErrorNotification,
+  updateInTransferEntity,
+} from '~/redux/app/appActions';
 import { selectClockifyProjectIds } from '~/redux/entities/projects/projectsSelectors';
 import { selectTasksTransferPayloadForWorkspace } from './tasksSelectors';
-import { ReduxDispatch, ReduxGetState } from '~/types/commonTypes';
+import { EntityType, ReduxDispatch, ReduxGetState } from '~/types/commonTypes';
 import { ClockifyTask, CreateTaskRequest, TogglTask } from '~/types/tasksTypes';
 
 export const clockifyTasksFetch = createAsyncAction(
@@ -88,6 +91,7 @@ export const fetchTogglTasks = (workspaceId: string) => async (
 };
 
 const transferClockifyTasksForProjectsInWorkspace = async (
+  onTaskRecord: (taskRecord: ClockifyTask) => void,
   workspaceId: string,
   tasksInWorkspaceByProjectId: Record<string, CreateTaskRequest[]>,
 ): Promise<ClockifyTask[]> => {
@@ -98,6 +102,7 @@ const transferClockifyTasksForProjectsInWorkspace = async (
   )) {
     if (taskRecords.length > 0) {
       const tasks = await batchClockifyRequests(
+        onTaskRecord,
         taskRecords,
         apiCreateClockifyTask,
         workspaceId,
@@ -122,8 +127,15 @@ export const transferTasksToClockify = (
   if (isEmpty(tasksInWorkspaceByProjectId)) return Promise.resolve();
 
   dispatch(clockifyTasksTransfer.request());
+
+  const onTaskRecord = (taskRecord: any) => {
+    const transferRecord = { ...taskRecord, type: EntityType.Task };
+    dispatch(updateInTransferEntity(transferRecord));
+  };
+
   try {
     const tasks = await transferClockifyTasksForProjectsInWorkspace(
+      onTaskRecord,
       clockifyWorkspaceId,
       tasksInWorkspaceByProjectId,
     );

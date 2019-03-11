@@ -1,5 +1,5 @@
 import { createAsyncAction, createStandardAction } from 'typesafe-actions';
-import { property, set } from 'lodash';
+import { set } from 'lodash';
 import { batchClockifyRequests, buildThrottler } from '~/redux/utils';
 import {
   apiCreateClockifyProject,
@@ -10,9 +10,12 @@ import {
   apiFetchClockifyUsersInProject,
   apiFetchTogglUsersInProject,
 } from '../api/users';
-import { showFetchErrorNotification } from '~/redux/app/appActions';
+import {
+  showFetchErrorNotification,
+  updateInTransferEntity,
+} from '~/redux/app/appActions';
 import { selectProjectsTransferPayloadForWorkspace } from './projectsSelectors';
-import { ReduxDispatch, ReduxGetState } from '~/types/commonTypes';
+import { EntityType, ReduxDispatch, ReduxGetState } from '~/types/commonTypes';
 import {
   ClockifyProject,
   TogglProject,
@@ -57,7 +60,9 @@ const appendUserIdsToProject = async (
           throttledFn.bind(this, project.id.toString(), workspaceId),
         )
         .then((projectUsers: (ClockifyUser | TogglProjectUser)[]) => {
-          const userIds = projectUsers.map(property('id'));
+          const userIds = projectUsers.map(projectUser =>
+            'uid' in projectUser ? projectUser.uid : projectUser.id,
+          );
           set(project, 'userIds', userIds);
         });
     } catch (error) {
@@ -112,8 +117,15 @@ export const transferProjectsToClockify = (
   if (projectRecordsInWorkspace.length === 0) return Promise.resolve();
 
   dispatch(clockifyProjectsTransfer.request());
+
+  const onProjectRecord = (projectRecord: any) => {
+    const transferRecord = { ...projectRecord, type: EntityType.Project };
+    dispatch(updateInTransferEntity(transferRecord));
+  };
+
   try {
     const projects = await batchClockifyRequests(
+      onProjectRecord,
       projectRecordsInWorkspace,
       apiCreateClockifyProject,
       clockifyWorkspaceId,
