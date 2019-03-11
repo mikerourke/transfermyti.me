@@ -45,6 +45,7 @@ const schemaProcessStrategy = (value: ClockifyUser | TogglUser): UserModel => ({
   isAdmin: get(value, 'admin', null),
   isActive:
     'status' in value ? value.status === ClockifyUserStatus.Active : true,
+  userGroupIds: 'userGroupIds' in value ? value.userGroupIds : [],
   linkedId: null,
   isIncluded: true,
 });

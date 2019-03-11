@@ -63,6 +63,27 @@ export interface TogglUser {
   new_blog_post: any;
   should_upgrade: boolean;
   invitation: any;
+  userGroupIds?: string[];
+}
+
+export interface TogglWorkspaceUser {
+  id: number;
+  uid: number;
+  wid: number;
+  admin: boolean;
+  owner: boolean;
+  active: boolean;
+  email: string;
+  timezone: string;
+  inactive: boolean;
+  at: string;
+  name: string;
+  group_ids: number[] | null;
+  rate: string | null;
+  labour_cost: string | null;
+  invite_url: string | null;
+  invitation_code: string | null;
+  avatar_file_name: string | null;
 }
 
 export interface TogglMeResponse {
@@ -85,6 +106,7 @@ export interface UserModel {
   email: string;
   isAdmin: boolean | null;
   isActive: boolean;
+  userGroupIds: string[] | null;
   linkedId: string | null;
   isIncluded: boolean;
 }

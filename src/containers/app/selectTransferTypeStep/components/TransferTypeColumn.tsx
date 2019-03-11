@@ -25,9 +25,10 @@ const TransferTypeColumn: React.FC<Props> = ({
       <Box
         className={cx(
           css`
+            height: 100%;
             cursor: pointer;
             &:hover {
-              border: 4px solid #4a4a4a;
+              border: 2px solid #4a4a4a;
             }
           `,
           { [selectedClass]: isSelected },

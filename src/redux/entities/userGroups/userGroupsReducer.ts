@@ -1,5 +1,6 @@
 import { getType } from 'typesafe-actions';
 import { combineActions, handleActions } from 'redux-actions';
+import { get, uniq } from 'lodash';
 import {
   getEntityIdFieldValue,
   getEntityNormalizedState,
@@ -104,6 +105,31 @@ export default handleActions(
       { payload: userGroupId }: ReduxAction<string>,
     ): UserGroupsState =>
       updateIsEntityIncluded(state, EntityType.UserGroup, userGroupId),
+
+    [getType(userGroupsActions.addTogglUserIdToGroup)]: (
+      state: UserGroupsState,
+      {
+        payload: { userId, userGroupId },
+      }: ReduxAction<{ userId: string; userGroupId: string }>,
+    ): UserGroupsState => {
+      const userGroup = get(state, ['toggl', 'byId', userGroupId]);
+      if (!userGroup) return state;
+
+      const newUserIds = uniq([...userGroup.userIds, userId]);
+      return {
+        ...state,
+        toggl: {
+          ...state.toggl,
+          byId: {
+            ...state.toggl.byId,
+            [userGroupId]: {
+              ...userGroup,
+              userIds: newUserIds,
+            },
+          },
+        },
+      };
+    },
   },
   initialState,
 );

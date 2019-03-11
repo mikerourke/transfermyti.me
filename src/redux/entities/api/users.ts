@@ -5,6 +5,7 @@ import {
   ClockifyUser,
   TogglMeResponse,
   TogglUser,
+  TogglWorkspaceUser,
 } from '~/types/usersTypes';
 import { ClockifyWorkspace } from '~/types/workspacesTypes';
 
@@ -34,6 +35,11 @@ export const apiFetchClockifyUsersInWorkspace = (
 export const apiFetchTogglUsersInWorkspace = (
   workspaceId: string,
 ): Promise<TogglUser[]> => fetch(`/toggl/api/workspaces/${workspaceId}/users`);
+
+export const apiFetchTogglWorkspaceUsers = (
+  workspaceId: string,
+): Promise<TogglWorkspaceUser[]> =>
+  fetch(`/toggl/api/workspaces/${workspaceId}/workspace_users`);
 
 export const apiAddClockifyUsersToWorkspace = (
   workspaceId: string,

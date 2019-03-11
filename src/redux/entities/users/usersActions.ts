@@ -1,13 +1,24 @@
 import { createAsyncAction, createStandardAction } from 'typesafe-actions';
+import { get } from 'lodash';
 import {
   apiAddClockifyUsersToWorkspace,
   apiFetchClockifyUsersInWorkspace,
   apiFetchTogglUsersInWorkspace,
+  apiFetchTogglWorkspaceUsers,
 } from '~/redux/entities/api/users';
-import { showFetchErrorNotification } from '~/redux/app/appActions';
+import {
+  showFetchErrorNotification,
+  updateInTransferEntity,
+} from '~/redux/app/appActions';
 import { selectUsersTransferPayloadForWorkspace } from './usersSelectors';
+import { addTogglUserIdToGroup } from '~/redux/entities/userGroups/userGroupsActions';
 import { appendUserIdsToWorkspace } from '~/redux/entities/workspaces/workspacesActions';
-import { ReduxDispatch, ReduxGetState, ToolName } from '~/types/commonTypes';
+import {
+  EntityType,
+  ReduxDispatch,
+  ReduxGetState,
+  ToolName,
+} from '~/types/commonTypes';
 import { ClockifyUser, TogglUser } from '~/types/usersTypes';
 
 export const clockifyUsersFetch = createAsyncAction(
@@ -57,6 +68,39 @@ export const fetchClockifyUsers = (workspaceId: string) => async (
   }
 };
 
+const transferUserGroupIds = async (
+  workspaceId: string,
+  users: TogglUser[],
+  dispatch: ReduxDispatch,
+) => {
+  const workspaceUsers = await apiFetchTogglWorkspaceUsers(workspaceId);
+  const workspaceUsersById = workspaceUsers.reduce(
+    (acc, workspaceUserRecord) => ({
+      ...acc,
+      [workspaceUserRecord.uid.toString()]: workspaceUserRecord,
+    }),
+    {},
+  );
+
+  users.forEach(user => {
+    Object.assign(user, { userGroupIds: [] });
+    const workspaceUser = get(workspaceUsersById, user.id.toString());
+    if (!workspaceUser) return;
+    if (!workspaceUser.group_ids) return;
+
+    workspaceUser.group_ids.forEach((userGroupId: number) => {
+      const validGroupId = userGroupId.toString();
+      user.userGroupIds.push(validGroupId);
+      dispatch(
+        addTogglUserIdToGroup({
+          userId: user.id.toString(),
+          userGroupId: validGroupId,
+        }),
+      );
+    });
+  });
+};
+
 export const fetchTogglUsers = (workspaceId: string) => async (
   dispatch: ReduxDispatch,
 ) => {
@@ -66,6 +110,9 @@ export const fetchTogglUsers = (workspaceId: string) => async (
     dispatch(
       appendUserIdsToWorkspaceForTool(ToolName.Toggl, users, workspaceId),
     );
+
+    await transferUserGroupIds(workspaceId, users, dispatch);
+
     return dispatch(togglUsersFetch.success(users));
   } catch (error) {
     dispatch(showFetchErrorNotification(error));
@@ -85,6 +132,16 @@ export const transferUsersToClockify = (
   if (userEmailsToTransfer.length === 0) return Promise.resolve();
 
   dispatch(clockifyUsersTransfer.request());
+
+  for (const userEmail of userEmailsToTransfer) {
+    dispatch(
+      updateInTransferEntity({ email: userEmail, type: EntityType.User }),
+    );
+  }
+
+  // TODO: Remove this:
+  return dispatch(clockifyUsersTransfer.success());
+
   try {
     await apiAddClockifyUsersToWorkspace(clockifyWorkspaceId, {
       emails: userEmailsToTransfer,

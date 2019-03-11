@@ -8,6 +8,9 @@ export {
   default as getEntityRecordsByWorkspaceId,
 } from './getEntityRecordsByWorkspaceId';
 export {
+  default as getEntityRecordsWithEntryCounts,
+} from './getEntityRecordsWithEntryCounts';
+export {
   default as getFirstAndLastDayOfYear,
 } from './getFirstAndLastDayOfYear';
 export {
