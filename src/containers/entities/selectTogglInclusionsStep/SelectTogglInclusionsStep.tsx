@@ -79,7 +79,6 @@ export class SelectTogglInclusionsStepComponent extends React.Component<Props> {
 
     return (
       <EntitiesReviewPage
-        title="Step 4:"
         subtitle="Select Toggl Records to Transfer"
         {...reviewPageProps}
       >

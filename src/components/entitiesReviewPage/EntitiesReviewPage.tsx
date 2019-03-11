@@ -9,7 +9,7 @@ import { EntityGroup, EntityModel } from '~/types/commonTypes';
 import { WorkspaceModel } from '~/types/workspacesTypes';
 
 interface Props {
-  title: string;
+  stepNumber: number;
   subtitle: string;
   previous: () => void;
   next: () => void;

@@ -6,7 +6,7 @@ import { isNil } from 'lodash';
 import Flex from '~/components/flex/Flex';
 
 interface Props {
-  title: string;
+  stepNumber: number;
   subtitle: string;
   isNextLoading?: boolean;
   next?: () => void;
@@ -17,7 +17,7 @@ interface Props {
 
 const StepPage: React.FC<Props> = ({
   children,
-  title,
+  stepNumber,
   subtitle,
   isNextLoading,
   next,
@@ -42,7 +42,7 @@ const StepPage: React.FC<Props> = ({
 
   return (
     <Container>
-      <Title isSize={4}>{title}</Title>
+      <Title isSize={4}>{`Step ${stepNumber}:`}</Title>
       <Subtitle isSize={3}>{subtitle}</Subtitle>
       <div
         ref={contentsRef}
@@ -60,7 +60,7 @@ const StepPage: React.FC<Props> = ({
       >
         <Flex justifySelf="flex-start">
           <When condition={!isNil(onRefreshClick)}>
-            <Button isSize="medium" onClick={onRefreshClick} isColor="dark">
+            <Button isSize="medium" onClick={onRefreshClick} isColor="info">
               Refresh
             </Button>
           </When>

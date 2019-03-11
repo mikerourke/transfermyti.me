@@ -31,6 +31,7 @@ interface ConnectDispatchProps {
 }
 
 interface OwnProps {
+  stepNumber: number;
   previous: () => void;
   next: () => void;
 }
@@ -112,7 +113,7 @@ export class EnterCredentialsStepComponent extends React.Component<
 
     return (
       <StepPage
-        title="Step 2:"
+        stepNumber={this.props.stepNumber}
         subtitle="Enter Credentials"
         isNextLoading={this.props.isValidating}
         previous={this.props.previous}

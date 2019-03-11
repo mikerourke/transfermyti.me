@@ -42,6 +42,7 @@ interface ConnectDispatchProps {
 }
 
 interface OwnProps {
+  stepNumber: number;
   previous: () => void;
   next: () => void;
 }
@@ -130,7 +131,7 @@ export class SelectTogglWorkspacesStepComponent extends React.Component<
 
     return (
       <StepPage
-        title="Step 3:"
+        stepNumber={this.props.stepNumber}
         subtitle="Select Toggl Workspaces to Transfer"
         previous={this.props.previous}
         next={this.handleNextClick}

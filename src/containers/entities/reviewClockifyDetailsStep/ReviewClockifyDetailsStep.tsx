@@ -44,6 +44,7 @@ interface ConnectDispatchProps {
 }
 
 interface OwnProps {
+  stepNumber: number;
   previous: () => void;
   next: () => void;
 }
@@ -129,7 +130,7 @@ export class ReviewClockifyDetailsStepComponent extends React.Component<
     return (
       <>
         <EntitiesReviewPage
-          title="Step 5:"
+          stepNumber={this.props.stepNumber}
           subtitle="Review Pending Data Before Transfer"
           entitiesByWorkspaceId={this.props.togglInclusionsByWorkspaceId}
           workspacesById={this.props.togglWorkspacesById}

@@ -18,6 +18,7 @@ interface ConnectDispatchProps {
 }
 
 interface OwnProps {
+  stepNumber: number;
   next: () => void;
 }
 
@@ -26,6 +27,7 @@ type Props = ConnectStateProps & ConnectDispatchProps & OwnProps;
 export const SelectTransferTypeStepComponent: React.FC<Props> = ({
   currentTransferType,
   onUpdateTransferType,
+  stepNumber,
   next,
 }) => {
   const handleTransferTypeSelect = (transferType: TransferType) => () => {
@@ -33,7 +35,11 @@ export const SelectTransferTypeStepComponent: React.FC<Props> = ({
   };
 
   return (
-    <StepPage title="Step 1:" subtitle="Select Transfer Type" next={next}>
+    <StepPage
+      stepNumber={stepNumber}
+      subtitle="Select Transfer Type"
+      next={next}
+    >
       <p
         className={css`
           margin-bottom: 1.25rem;
@@ -81,7 +87,7 @@ const mapDispatchToProps = (dispatch: ReduxDispatch) => ({
     dispatch(updateTransferType(newTransferType)),
 });
 
-export default connect<ConnectStateProps, ConnectDispatchProps>(
+export default connect<ConnectStateProps, ConnectDispatchProps, OwnProps>(
   mapStateToProps,
   mapDispatchToProps,
 )(SelectTransferTypeStepComponent);

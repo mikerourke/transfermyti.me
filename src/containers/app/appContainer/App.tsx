@@ -17,30 +17,48 @@ const App: React.FC = () => (
         <Steps>
           <Step
             id="selectWorkflowType"
-            render={({ next }) => <SelectTransferTypeStep next={next} />}
+            render={({ next }) => (
+              <SelectTransferTypeStep stepNumber={1} next={next} />
+            )}
           />
           <Step
             id="enterCredentials"
             render={({ previous, next }) => (
-              <EnterCredentialsStep previous={previous} next={next} />
+              <EnterCredentialsStep
+                stepNumber={2}
+                previous={previous}
+                next={next}
+              />
             )}
           />
           <Step
             id="selectTogglWorkspaces"
             render={({ previous, next }) => (
-              <SelectTogglWorkspacesStep previous={previous} next={next} />
+              <SelectTogglWorkspacesStep
+                stepNumber={3}
+                previous={previous}
+                next={next}
+              />
             )}
           />
           <Step
             id="reviewTogglData"
             render={({ previous, next }) => (
-              <SelectTogglInclusionsStep previous={previous} next={next} />
+              <SelectTogglInclusionsStep
+                stepNumber={4}
+                previous={previous}
+                next={next}
+              />
             )}
           />
           <Step
             id="reviewClockifyDetails"
             render={({ previous, next }) => (
-              <ReviewClockifyDetailsStep previous={previous} next={next} />
+              <ReviewClockifyDetailsStep
+                stepNumber={5}
+                previous={previous}
+                next={next}
+              />
             )}
           />
           <Step
