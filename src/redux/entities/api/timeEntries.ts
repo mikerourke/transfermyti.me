@@ -1,4 +1,4 @@
-import { getFirstAndLastDayOfYear } from '~/redux/utils';
+import { firstAndLastDayOfYear } from '~/redux/utils';
 import {
   ClockifyTimeEntry,
   TogglTimeEntriesFetchResponse,
@@ -9,7 +9,7 @@ export const apiFetchClockifyTimeEntries = (
   workspaceId: string,
   year: number,
 ): Promise<ClockifyTimeEntry[]> => {
-  const { firstDay, lastDay } = getFirstAndLastDayOfYear(year);
+  const { firstDay, lastDay } = firstAndLastDayOfYear(year);
 
   return fetch(
     `/clockify/api/workspaces/${workspaceId}/timeEntries/user/${userId}/entriesInRange`,
@@ -29,7 +29,7 @@ export const apiFetchTogglTimeEntries = (
   year: number,
   page: number = 1,
 ): Promise<TogglTimeEntriesFetchResponse> => {
-  const { firstDay, lastDay } = getFirstAndLastDayOfYear(
+  const { firstDay, lastDay } = firstAndLastDayOfYear(
     year,
     'YYYY-MM-DDTHH:mm:ssZ',
   );

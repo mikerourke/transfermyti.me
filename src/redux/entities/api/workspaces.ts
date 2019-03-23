@@ -1,4 +1,4 @@
-import { getFirstAndLastDayOfYear } from '~/redux/utils';
+import { firstAndLastDayOfYear } from '~/redux/utils';
 import { CreateNamedEntityRequest, HttpMethod } from '~/types/commonTypes';
 import { ClockifyWorkspace, TogglSummaryReport } from '~/types/workspacesTypes';
 
@@ -10,7 +10,7 @@ export const apiFetchTogglWorkspaceSummaryForYear = (
   workspaceId: string,
   year: number,
 ): Promise<TogglSummaryReport> => {
-  const { firstDay, lastDay } = getFirstAndLastDayOfYear(year, 'YYYY-MM-DD');
+  const { firstDay, lastDay } = firstAndLastDayOfYear(year, 'YYYY-MM-DD');
 
   const queryString = [
     `workspace_id=${workspaceId}`,
