@@ -1,86 +1,72 @@
 import { createSelector } from 'reselect';
 import { get, isNil } from 'lodash';
-import { getEntityRecordsByWorkspaceId } from '~/redux/utils';
-import { ClientModel } from '~/types/clientsTypes';
 import {
-  CreateNamedEntityRequest,
-  EntityType,
-  ReduxState,
-} from '~/types/commonTypes';
+  appendTimeEntryCount,
+  findTogglInclusions,
+  groupByWorkspace,
+} from '~/redux/utils';
+import { selectTogglTimeEntriesById } from '~/redux/entities/timeEntries/timeEntriesSelectors';
+import { ClientModel } from '~/types/clientsTypes';
+import { CreateNamedEntityRequest, ReduxState } from '~/types/commonTypes';
+import { EntityType } from '~/types/entityTypes';
 import { TimeEntryModel } from '~/types/timeEntriesTypes';
 
-const selectTogglClientsById = createSelector(
+export const selectTogglClients = createSelector(
   (state: ReduxState) => state.entities.clients.toggl.byId,
-  (clientsById): Record<string, ClientModel> => clientsById,
-);
-
-export const selectTogglClientRecords = createSelector(
-  selectTogglClientsById,
   (clientsById): ClientModel[] => Object.values(clientsById),
 );
 
-const getClientRecordsByWorkspaceId = (
-  clientRecords: ClientModel[],
+const appendClientToTimeEntries = (
+  clients: ClientModel[],
   timeEntriesById: Record<string, TimeEntryModel>,
-  inclusionsOnly: boolean,
-): Record<string, ClientModel[]> => {
-  const updatedTimeEntriesById = Object.entries(timeEntriesById).reduce(
-    (acc, [timeEntryId, timeEntryRecord]) => {
-      const client = clientRecords.find(
-        clientRecord => clientRecord.name === timeEntryRecord.client,
+) =>
+  Object.entries(timeEntriesById).reduce((acc, [id, timeEntry]) => {
+    const matchingClient = clients.find(
+      ({ name }) => name === timeEntry.client,
+    );
+    const clientId = isNil(matchingClient) ? null : matchingClient.id;
+
+    return {
+      ...acc,
+      [id]: { ...timeEntry, clientId },
+    };
+  }, {});
+
+export const selectTogglClientsByWorkspaceFactory = (inclusionsOnly: boolean) =>
+  createSelector(
+    selectTogglClients,
+    selectTogglTimeEntriesById,
+    (clients, timeEntriesById): Record<string, ClientModel[]> => {
+      const timeEntriesWithClient = appendClientToTimeEntries(
+        clients,
+        timeEntriesById,
       );
-      const clientId = isNil(client) ? null : client.id;
 
-      return {
-        ...acc,
-        [timeEntryId]: {
-          ...timeEntryRecord,
-          clientId,
-        },
-      };
+      const clientsWithEntryCounts = appendTimeEntryCount(
+        EntityType.Client,
+        clients,
+        timeEntriesWithClient,
+      );
+
+      const clientsToUse = inclusionsOnly
+        ? findTogglInclusions(clientsWithEntryCounts)
+        : clientsWithEntryCounts;
+      return groupByWorkspace(clientsToUse);
     },
-    {},
   );
-
-  return getEntityRecordsByWorkspaceId(
-    EntityType.Client,
-    clientRecords,
-    updatedTimeEntriesById,
-    inclusionsOnly,
-  );
-};
-
-export const selectTogglClientsByWorkspaceId = createSelector(
-  [
-    selectTogglClientRecords,
-    (state: ReduxState) => state.entities.timeEntries.toggl.byId,
-  ],
-  (clientRecords, timeEntriesById): Record<string, ClientModel[]> =>
-    getClientRecordsByWorkspaceId(clientRecords, timeEntriesById, false),
-);
-
-export const selectTogglClientInclusionsByWorkspaceId = createSelector(
-  [
-    selectTogglClientRecords,
-    (state: ReduxState) => state.entities.timeEntries.toggl.byId,
-  ],
-  (clientRecords, timeEntriesById): Record<string, ClientModel[]> =>
-    getClientRecordsByWorkspaceId(clientRecords, timeEntriesById, true),
-);
 
 export const selectClientsTransferPayloadForWorkspace = createSelector(
-  [
-    selectTogglClientInclusionsByWorkspaceId,
-    (_: null, workspaceId: string) => workspaceId,
-  ],
-  (inclusionsByWorkspaceId, workspaceIdToGet): CreateNamedEntityRequest[] => {
-    const includedRecords = get(
+  selectTogglClientsByWorkspaceFactory(true),
+  inclusionsByWorkspaceId => (
+    workspaceIdToGet: string,
+  ): CreateNamedEntityRequest[] => {
+    const inclusions = get(
       inclusionsByWorkspaceId,
       workspaceIdToGet,
       [],
     ) as ClientModel[];
-    if (includedRecords.length === 0) return [];
+    if (inclusions.length === 0) return [];
 
-    return includedRecords.reduce((acc, { name }) => [...acc, { name }], []);
+    return inclusions.reduce((acc, { name }) => [...acc, { name }], []);
   },
 );

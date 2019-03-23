@@ -1,5 +1,6 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import { connect } from 'react-redux';
+import { If, Then, Else } from 'react-if';
 import { css } from 'emotion';
 import { isNil } from 'lodash';
 import {
@@ -7,7 +8,7 @@ import {
   updateIsWorkspaceEntityIncluded,
 } from '~/redux/entities/workspaces/workspacesActions';
 import {
-  selectTogglEntitiesByWorkspaceId,
+  selectTogglAllEntitiesByWorkspaceId,
   selectTogglIncludedWorkspacesById,
   selectWorkspaceNameBeingFetched,
 } from '~/redux/entities/workspaces/workspacesSelectors';
@@ -17,6 +18,7 @@ import InstructionsList from './components/InstructionsList';
 import { EntityModel, ReduxDispatch, ReduxState } from '~/types/commonTypes';
 import { EntityGroup } from '~/types/entityTypes';
 import { WorkspaceModel } from '~/types/workspacesTypes';
+import { StepPageProps } from '~/components/stepPage/StepPage';
 
 interface ConnectStateProps {
   entitiesByWorkspaceId: Record<string, Record<EntityGroup, EntityModel[]>>;
@@ -34,72 +36,66 @@ interface ConnectDispatchProps {
   ) => void;
 }
 
-interface OwnProps {
-  stepNumber: number;
-  previous: () => void;
-  next: () => void;
-}
+type Props = ConnectStateProps & ConnectDispatchProps & StepPageProps;
 
-type Props = ConnectStateProps & ConnectDispatchProps & OwnProps;
-
-export class SelectTogglInclusionsStepComponent extends React.Component<Props> {
-  public componentDidMount(): void {
-    this.fetchEntitiesForAllWorkspaces();
-  }
-
-  private fetchEntitiesForAllWorkspaces = async () => {
-    const workspaceRecords = Object.values(this.props.workspacesById);
+export const SelectTogglInclusionsStepComponent: React.FC<Props> = ({
+  workspaceNameBeingFetched,
+  workspacesById,
+  onFetchEntitiesForWorkspace,
+  ...reviewPageProps
+}) => {
+  const fetchEntitiesForAllWorkspaces = async () => {
+    const workspaceRecords = Object.values(workspacesById);
     for (const workspaceRecord of workspaceRecords) {
-      await this.props.onFetchEntitiesForWorkspace(workspaceRecord);
+      await onFetchEntitiesForWorkspace(workspaceRecord);
     }
   };
 
-  public render() {
-    const {
-      onFetchEntitiesForWorkspace,
-      workspaceNameBeingFetched,
-      ...reviewPageProps
-    } = this.props;
-    if (!isNil(workspaceNameBeingFetched)) {
-      return (
+  useEffect(() => {
+    fetchEntitiesForAllWorkspaces();
+  }, []);
+
+  return (
+    <If condition={isNil(workspaceNameBeingFetched)}>
+      <Then>
+        <EntitiesReviewPage
+          subtitle="Select Toggl Records to Transfer"
+          onRefreshClick={fetchEntitiesForAllWorkspaces}
+          workspacesById={workspacesById}
+          {...reviewPageProps}
+        >
+          <p
+            className={css`
+              margin-bottom: 1.25rem;
+            `}
+          >
+            Select which entities/records you want to transfer and press the
+            <strong> Next</strong> button when you're ready. There are a few
+            things to be aware of:
+          </p>
+          <div
+            className={css`
+              margin-bottom: 1.25rem;
+            `}
+          >
+            <InstructionsList />
+          </div>
+        </EntitiesReviewPage>
+      </Then>
+      <Else>
         <Loader>
           Fetching entities in <strong>{workspaceNameBeingFetched} </strong>
           workspace...
         </Loader>
-      );
-    }
-
-    return (
-      <EntitiesReviewPage
-        subtitle="Select Toggl Records to Transfer"
-        onRefreshClick={this.fetchEntitiesForAllWorkspaces}
-        {...reviewPageProps}
-      >
-        <p
-          className={css`
-            margin-bottom: 1.25rem;
-          `}
-        >
-          Select which entities/records you want to transfer and press the
-          <strong> Next</strong> button when you're ready. There are a few
-          things to be aware of:
-        </p>
-        <div
-          className={css`
-            margin-bottom: 1.25rem;
-          `}
-        >
-          <InstructionsList />
-        </div>
-      </EntitiesReviewPage>
-    );
-  }
-}
+      </Else>
+    </If>
+  );
+};
 
 const mapStateToProps = (state: ReduxState) => ({
-  entitiesByWorkspaceId: selectTogglEntitiesByWorkspaceId(state),
-  workspacesById: selectTogglIncludedWorkspacesById(state),
+  entitiesByWorkspaceId: selectTogglAllEntitiesByWorkspaceId(state),
   workspaceNameBeingFetched: selectWorkspaceNameBeingFetched(state),
+  workspacesById: selectTogglIncludedWorkspacesById(state),
 });
 
 const mapDispatchToProps = (dispatch: ReduxDispatch) => ({
@@ -111,7 +107,7 @@ const mapDispatchToProps = (dispatch: ReduxDispatch) => ({
   ) => dispatch(updateIsWorkspaceEntityIncluded(entityGroup, entityRecord)),
 });
 
-export default connect<ConnectStateProps, ConnectDispatchProps, OwnProps>(
+export default connect<ConnectStateProps, ConnectDispatchProps, StepPageProps>(
   mapStateToProps,
   mapDispatchToProps,
 )(SelectTogglInclusionsStepComponent);

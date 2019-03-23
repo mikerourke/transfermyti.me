@@ -7,17 +7,17 @@ import TimeEntryTable from '~/components/timeEntryTable/TimeEntryTable';
 import { DetailedTimeEntryModel } from '~/types/timeEntriesTypes';
 
 interface Props extends ListRowProps {
-  timeEntryRecord: DetailedTimeEntryModel;
+  timeEntry: DetailedTimeEntryModel;
 }
 
 const TimeEntryListItem: React.FC<Props> = ({
-  timeEntryRecord,
+  timeEntry,
   isScrolling,
   isVisible,
-  ...props
+  ...flexProps
 }) => {
   return (
-    <Flex {...props} alignItems="center" justifyContent="flex-start">
+    <Flex {...flexProps} alignItems="center" justifyContent="flex-start">
       <Flex
         as={Box}
         alignItems="center"
@@ -28,7 +28,7 @@ const TimeEntryListItem: React.FC<Props> = ({
           width: calc(100% - 16px);
         `}
       >
-        <TimeEntryTable timeEntryRecord={timeEntryRecord} />
+        <TimeEntryTable timeEntry={timeEntry} />
       </Flex>
     </Flex>
   );

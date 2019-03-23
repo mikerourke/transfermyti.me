@@ -13,13 +13,9 @@ import {
 import { selectUsersTransferPayloadForWorkspace } from './usersSelectors';
 import { addTogglUserIdToGroup } from '~/redux/entities/userGroups/userGroupsActions';
 import { appendUserIdsToWorkspace } from '~/redux/entities/workspaces/workspacesActions';
-import {
-  EntityType,
-  ReduxDispatch,
-  ReduxGetState,
-  ToolName,
-} from '~/types/commonTypes';
+import { ReduxDispatch, ReduxGetState, ToolName } from '~/types/commonTypes';
 import { ClockifyUser, TogglUser } from '~/types/usersTypes';
+import { EntityType } from '~/types/entityTypes';
 
 export const clockifyUsersFetch = createAsyncAction(
   '@users/CLOCKIFY_FETCH_REQUEST',
@@ -125,8 +121,7 @@ export const transferUsersToClockify = (
   clockifyWorkspaceId: string,
 ) => async (dispatch: ReduxDispatch, getState: ReduxGetState) => {
   const state = getState();
-  const userEmailsToTransfer = selectUsersTransferPayloadForWorkspace(
-    state,
+  const userEmailsToTransfer = selectUsersTransferPayloadForWorkspace(state)(
     togglWorkspaceId,
   );
   if (userEmailsToTransfer.length === 0) return Promise.resolve();

@@ -1,135 +1,63 @@
 import { createSelector } from 'reselect';
-import { flatten, get } from 'lodash';
-import { getEntityRecordsByWorkspaceId } from '~/redux/utils';
-import {
-  CreateNamedEntityRequest,
-  EntityType,
-  ReduxState,
-} from '~/types/commonTypes';
+import { get } from 'lodash';
+import { findTogglInclusions, groupByWorkspace } from '~/redux/utils';
+import { selectTogglTimeEntriesById } from '~/redux/entities/timeEntries/timeEntriesSelectors';
+import { CreateNamedEntityRequest, ReduxState } from '~/types/commonTypes';
 import { TagModel } from '~/types/tagsTypes';
-import { TimeEntryModel } from '~/types/timeEntriesTypes';
 
-export const selectClockifyTagsById = createSelector(
-  (state: ReduxState) => state.entities.tags.clockify.byId,
-  tagsById => tagsById,
-);
-
-export const selectTogglTagsById = createSelector(
-  (state: ReduxState) => state.entities.tags.toggl.byId,
-  tagsById => tagsById,
-);
-
-export const selectTogglTagRecords = createSelector(
+export const selectTogglTags = createSelector(
   (state: ReduxState) => state.entities.tags.toggl.byId,
   (tagsById): TagModel[] => Object.values(tagsById),
 );
 
-const getTagIdsByName = (
-  tagsById: Record<string, TagModel>,
-): Record<string, string> =>
-  Object.values(tagsById).reduce(
-    (acc, { id, name }) => ({ ...acc, [name]: id.toString() }),
-    {},
+const selectTagsWithEntryCount = createSelector(
+  selectTogglTags,
+  selectTogglTimeEntriesById,
+  (tags, timeEntriesById) => {
+    const timeEntryCountByTagId = {};
+
+    Object.values(timeEntriesById).forEach(timeEntry => {
+      const tagNames = get(timeEntry, 'tags', []) as string[];
+
+      tagNames.forEach(tagName => {
+        const { id = null } = tags.find(({ name }) => name === tagName);
+        if (!id) return;
+
+        const existingCount = get(timeEntryCountByTagId, id, 0);
+        timeEntryCountByTagId[id] = existingCount + 1;
+      });
+    });
+
+    return tags.map(tag => ({
+      ...tag,
+      entryCount: get(timeEntryCountByTagId, tag.id, 0),
+    }));
+  },
+);
+
+export const selectTogglTagsByWorkspaceFactory = (inclusionsOnly: boolean) =>
+  createSelector(
+    selectTagsWithEntryCount,
+    tags => {
+      const tagsToUse = inclusionsOnly ? findTogglInclusions(tags) : tags;
+      return groupByWorkspace(tagsToUse);
+    },
   );
-
-export const selectClockifyTagIdsByName = createSelector(
-  selectClockifyTagsById,
-  (tagsById): Record<string, string> => getTagIdsByName(tagsById),
-);
-
-export const selectTogglTagIdsByName = createSelector(
-  selectTogglTagsById,
-  (tagsById): Record<string, string> => getTagIdsByName(tagsById),
-);
-
-const getTagRecordsByWorkspaceId = (
-  tagRecords: TagModel[],
-  timeEntriesById: Record<string, TimeEntryModel>,
-  inclusionsOnly: boolean,
-): Record<string, TagModel[]> => {
-  const allTagIds: any[] = [];
-
-  Object.values(timeEntriesById).forEach(timeEntryRecord => {
-    const tagNames = timeEntryRecord.tags;
-
-    if (tagNames.length > 0) {
-      const tagIds = tagNames.reduce((acc, tagName) => {
-        const matchingTag = tagRecords.find(
-          tagRecord => tagRecord.name === tagName,
-        );
-        if (!matchingTag) return acc;
-        return [...acc, matchingTag.id];
-      }, []);
-
-      allTagIds.push(tagIds);
-    }
-  });
-
-  const flattenedTagList = flatten(allTagIds);
-  let entryCountsByTagId = {};
-
-  if (flattenedTagList.length > 0) {
-    entryCountsByTagId = flatten(allTagIds).reduce(
-      (acc, tagId) => ({
-        ...acc,
-        [tagId]: get(acc, tagId, 0) + 1,
-      }),
-      {},
-    );
-  }
-
-  const tagRecordsByWorkspaceId = getEntityRecordsByWorkspaceId(
-    EntityType.Tag,
-    tagRecords,
-    timeEntriesById,
-    inclusionsOnly,
-  );
-
-  return Object.entries(tagRecordsByWorkspaceId).reduce(
-    (acc, [workspaceId, tagRecords]: [string, TagModel[]]) => ({
-      ...acc,
-      [workspaceId]: tagRecords.map(tagRecord => ({
-        ...tagRecord,
-        entryCount: get(entryCountsByTagId, tagRecord.id, 0),
-      })),
-    }),
-    {},
-  );
-};
-
-export const selectTogglTagsByWorkspaceId = createSelector(
-  [
-    selectTogglTagRecords,
-    (state: ReduxState) => state.entities.timeEntries.toggl.byId,
-  ],
-  (tagRecords, timeEntriesById): Record<string, TagModel[]> =>
-    getTagRecordsByWorkspaceId(tagRecords, timeEntriesById, false),
-);
-
-export const selectTogglTagInclusionsByWorkspaceId = createSelector(
-  [
-    selectTogglTagRecords,
-    (state: ReduxState) => state.entities.timeEntries.toggl.byId,
-  ],
-  (tagRecords, timeEntriesById): Record<string, TagModel[]> =>
-    getTagRecordsByWorkspaceId(tagRecords, timeEntriesById, true),
-);
 
 export const selectTagsTransferPayloadForWorkspace = createSelector(
-  [
-    selectTogglTagInclusionsByWorkspaceId,
-    (_: null, workspaceId: string) => workspaceId,
-  ],
-  (inclusionsByWorkspaceId, workspaceIdToGet): CreateNamedEntityRequest[] => {
-    const includedRecords = get(
+  selectTogglTagsByWorkspaceFactory(true),
+  inclusionsByWorkspaceId => (
+    workspaceIdToGet: string,
+  ): CreateNamedEntityRequest[] => {
+    const inclusions = get(
       inclusionsByWorkspaceId,
       workspaceIdToGet,
       [],
     ) as TagModel[];
-    if (includedRecords.length === 0) return [];
+    if (inclusions.length === 0) return [];
 
-    return includedRecords.reduce((acc, { workspaceId, name }) => {
-      if (workspaceId !== workspaceIdToGet) return acc;
+    return inclusions.reduce((acc, { workspaceId, name }) => {
+      if (workspaceIdToGet !== workspaceId) return acc;
       return [...acc, { name }];
     }, []);
   },

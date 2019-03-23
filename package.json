@@ -12,7 +12,7 @@
     "build": "parcel build public/index.html --out-dir build --no-source-maps",
     "start": "parcel serve public/index.html --port 3000 --out-dir build",
     "lint": "tslint -c tslint.json -p tsconfig.json || exit 0",
-    "prettier": "prettier --write '{src,config}/**/*.{js,ts,tsx}'",
+    "prettier": "prettier --write \"{src,config}/**/*.{js,ts,tsx}\"",
     "tidy": "rimraf ./.cache && rimraf ./build",
     "typecheck": "tsc -p tsconfig.json --noEmit",
     "clockify:delete": "node ./config/scripts/manageClockifyEntities.js delete"

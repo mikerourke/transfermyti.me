@@ -10,8 +10,13 @@ import {
   updateInTransferEntity,
 } from '~/redux/app/appActions';
 import { selectUserGroupsTransferPayloadForWorkspace } from './userGroupsSelectors';
-import { EntityType, ReduxDispatch, ReduxGetState } from '~/types/commonTypes';
-import { ClockifyUserGroup, TogglUserGroup } from '~/types/userGroupsTypes';
+import { ReduxDispatch, ReduxGetState } from '~/types/commonTypes';
+import { EntityType } from '~/types/entityTypes';
+import {
+  ClockifyUserGroup,
+  TogglUserGroup,
+  UserGroupModel,
+} from '~/types/userGroupsTypes';
 
 export const clockifyUserGroupsFetch = createAsyncAction(
   '@userGroups/CLOCKIFY_FETCH_REQUEST',
@@ -43,6 +48,7 @@ export const fetchClockifyUserGroups = (workspaceId: string) => async (
   dispatch: ReduxDispatch,
 ) => {
   dispatch(clockifyUserGroupsFetch.request());
+
   try {
     const userGroups = await apiFetchClockifyUserGroups(workspaceId);
     return dispatch(clockifyUserGroupsFetch.success(userGroups));
@@ -56,6 +62,7 @@ export const fetchTogglUserGroups = (workspaceId: string) => async (
   dispatch: ReduxDispatch,
 ) => {
   dispatch(togglUserGroupsFetch.request());
+
   try {
     const userGroups = await apiFetchTogglUserGroups(workspaceId);
     return dispatch(togglUserGroupsFetch.success(userGroups));
@@ -72,20 +79,19 @@ export const transferUserGroupsToClockify = (
   const state = getState();
   const userGroupsInWorkspace = selectUserGroupsTransferPayloadForWorkspace(
     state,
-    togglWorkspaceId,
-  );
+  )(togglWorkspaceId);
   if (userGroupsInWorkspace.length === 0) return Promise.resolve();
 
   dispatch(clockifyUserGroupsTransfer.request());
 
-  const onUserGroupRecord = (userGroupRecord: any) => {
-    const transferRecord = { ...userGroupRecord, type: EntityType.UserGroup };
+  const onUserGroup = (userGroup: UserGroupModel) => {
+    const transferRecord = { ...userGroup, type: EntityType.UserGroup };
     dispatch(updateInTransferEntity(transferRecord));
   };
 
   try {
     const userGroups = await batchClockifyRequests(
-      onUserGroupRecord,
+      onUserGroup,
       userGroupsInWorkspace,
       apiCreateClockifyUserGroup,
       clockifyWorkspaceId,

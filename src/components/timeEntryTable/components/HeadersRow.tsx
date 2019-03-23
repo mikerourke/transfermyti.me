@@ -5,10 +5,10 @@ interface Props {
   hasTopBorder: boolean;
 }
 
-const HeadersRow: React.FC<Props> = ({ hasTopBorder, children }) => (
+const HeadersRow: React.FC<Props> = ({ children, hasTopBorder }) => (
   <tr
     className={css`
-      ${hasTopBorder && 'border-top: 1px solid rgba(10, 10, 10, 0.1)'};
+      ${hasTopBorder && 'border-top: 1px solid rgba(10, 10, 10, 0.1);'};
       td {
         color: var(--info);
         font-size: 12px;

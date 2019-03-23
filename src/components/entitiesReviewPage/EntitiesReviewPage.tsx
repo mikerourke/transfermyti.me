@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { first, get } from 'lodash';
-import StepPage from '~/components/stepPage/StepPage';
+import StepPage, { StepPageProps } from '~/components/stepPage/StepPage';
 import EntitiesList from '~/components/entitiesList/EntitiesList';
 import EntityTabs from './components/EntityTabs';
 import NoRecordsDisplay from './components/NoRecordsDisplay';
@@ -9,11 +9,8 @@ import { EntityModel } from '~/types/commonTypes';
 import { EntityGroup } from '~/types/entityTypes';
 import { WorkspaceModel } from '~/types/workspacesTypes';
 
-interface Props {
-  stepNumber: number;
+interface Props extends StepPageProps {
   subtitle: string;
-  previous: () => void;
-  next: () => void;
   entitiesByWorkspaceId: Record<string, Record<EntityGroup, EntityModel[]>>;
   workspacesById: Record<string, WorkspaceModel>;
   onRefreshClick?: () => void;

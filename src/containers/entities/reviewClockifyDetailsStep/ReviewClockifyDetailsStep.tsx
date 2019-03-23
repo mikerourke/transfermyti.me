@@ -1,5 +1,6 @@
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import { connect } from 'react-redux';
+import { If, Then, Else, When } from 'react-if';
 import { css } from 'emotion';
 import {
   fetchClockifyEntitiesInWorkspace,
@@ -7,9 +8,9 @@ import {
   transferEntitiesToClockifyWorkspace,
 } from '~/redux/entities/workspaces/workspacesActions';
 import {
-  selectTogglEntityInclusionsByWorkspaceId,
   selectClockifyIncludedWorkspacesById,
   selectTogglIncludedWorkspacesById,
+  selectTogglInclusionsByWorkspaceId,
   selectWorkspaceNameBeingFetched,
 } from '~/redux/entities/workspaces/workspacesSelectors';
 import EntitiesReviewPage from '~/components/entitiesReviewPage/EntitiesReviewPage';
@@ -18,127 +19,101 @@ import ConfirmationModal from './components/ConfirmationModal';
 import { EntityModel, ReduxDispatch, ReduxState } from '~/types/commonTypes';
 import { EntityGroup } from '~/types/entityTypes';
 import { WorkspaceModel } from '~/types/workspacesTypes';
+import { StepPageProps } from '~/components/stepPage/StepPage';
 
 interface ConnectStateProps {
+  clockifyWorkspacesById: Record<string, WorkspaceModel>;
   togglInclusionsByWorkspaceId: Record<
     string,
     Record<EntityGroup, EntityModel[]>
   >;
-  clockifyWorkspacesById: Record<string, WorkspaceModel>;
   togglWorkspacesById: Record<string, WorkspaceModel>;
   workspaceNameBeingFetched: string;
 }
 
 interface ConnectDispatchProps {
-  onFetchClockifyWorkspaces: () => Promise<any>;
   onFetchClockifyEntitiesInWorkspace: (
     workspaceRecord: WorkspaceModel,
   ) => Promise<any>;
+  onFetchClockifyWorkspaces: () => Promise<any>;
   onTransferEntitiesToClockifyWorkspace: (
     workspaceRecord: WorkspaceModel,
   ) => Promise<any>;
 }
 
-interface OwnProps {
-  stepNumber: number;
-  previous: () => void;
-  next: () => void;
-}
+type Props = ConnectStateProps & ConnectDispatchProps & StepPageProps;
 
-type Props = ConnectStateProps & ConnectDispatchProps & OwnProps;
+export const ReviewClockifyDetailsStepComponent: React.FC<Props> = props => {
+  const [isFetching, setIsFetching] = useState<boolean>(true);
+  const [isTransferring, setIsTransferring] = useState<boolean>(false);
+  const [isModalActive, setIsModalActive] = useState<boolean>(false);
 
-interface State {
-  isFetching: boolean;
-  isTransferring: boolean;
-  isModalActive: boolean;
-}
-
-export class ReviewClockifyDetailsStepComponent extends React.Component<
-  Props,
-  State
-> {
-  state = {
-    isFetching: true,
-    isTransferring: false,
-    isModalActive: false,
-  };
-
-  public componentDidMount(): void {
-    this.props
-      .onFetchClockifyWorkspaces()
-      .then(this.fetchClockifyEntitiesInAllWorkspaces)
-      .then(() => {
-        this.setState({ isFetching: false });
-      })
-      .catch(() => {
-        this.setState({ isFetching: false });
-      });
-  }
-
-  private fetchClockifyEntitiesInAllWorkspaces = async () => {
-    const workspaceRecords = Object.values(this.props.clockifyWorkspacesById);
+  const fetchClockifyEntitiesInAllWorkspaces = async () => {
+    const workspaceRecords = Object.values(props.clockifyWorkspacesById);
     if (workspaceRecords.length === 0) return Promise.resolve();
 
     for (const workspaceRecord of workspaceRecords) {
-      await this.props.onFetchClockifyEntitiesInWorkspace(workspaceRecord);
+      await props.onFetchClockifyEntitiesInWorkspace(workspaceRecord);
     }
   };
 
-  private handleNextClick = (): void => {
-    this.setState({ isModalActive: true });
+  useEffect(() => {
+    props
+      .onFetchClockifyWorkspaces()
+      .then(fetchClockifyEntitiesInAllWorkspaces)
+      .then(() => setIsFetching(false))
+      .catch(() => setIsFetching(false));
+  }, []);
+
+  const handleNextClick = (): void => {
+    setIsModalActive(false);
   };
 
-  private transferAllEntitiesToClockify = async () => {
-    this.setState({ isTransferring: true });
-    const workspaceRecords = Object.values(this.props.togglWorkspacesById);
+  const transferAllEntitiesToClockify = async () => {
+    setIsTransferring(true);
+    const workspaceRecords = Object.values(props.togglWorkspacesById);
     for (const workspaceRecord of workspaceRecords) {
-      await this.props.onTransferEntitiesToClockifyWorkspace(workspaceRecord);
+      await props.onTransferEntitiesToClockifyWorkspace(workspaceRecord);
     }
-    this.setState({ isTransferring: false });
+    setIsTransferring(false);
   };
 
-  private handleModalConfirmClick = () => {
-    this.setState({ isModalActive: false });
-    this.transferAllEntitiesToClockify()
-      .then(() => this.props.next())
-      .catch(() => this.props.next());
+  const handleModalConfirmClick = () => {
+    setIsModalActive(false);
+    transferAllEntitiesToClockify()
+      .then(props.next)
+      .catch(props.next);
   };
 
-  private handleModalCancelClick = () => {
-    this.setState({ isModalActive: false });
-  };
+  const fetchedName = props.workspaceNameBeingFetched;
 
-  public render() {
-    if (this.state.isFetching) {
-      return <Loader>Fetching Clockify entities, please wait...</Loader>;
-    }
-
-    const { workspaceNameBeingFetched } = this.props;
-    if (this.state.isTransferring) {
-      return (
+  return (
+    <If condition={isFetching || isTransferring}>
+      <Then>
         <Loader>
-          Transferring entities to Clockify for {workspaceNameBeingFetched},
-          please wait...
+          <When condition={isFetching}>
+            Fetching Clockify entities, please wait...
+          </When>
+          <When condition={isTransferring}>
+            Transferring entities to Clockify for {fetchedName}, please wait...
+          </When>
         </Loader>
-      );
-    }
-
-    return (
-      <>
+      </Then>
+      <Else>
         <EntitiesReviewPage
-          stepNumber={this.props.stepNumber}
+          stepNumber={props.stepNumber}
           subtitle="Review Pending Data Before Transfer"
-          entitiesByWorkspaceId={this.props.togglInclusionsByWorkspaceId}
-          workspacesById={this.props.togglWorkspacesById}
-          previous={this.props.previous}
-          next={this.handleNextClick}
+          entitiesByWorkspaceId={props.togglInclusionsByWorkspaceId}
+          workspacesById={props.togglWorkspacesById}
+          previous={props.previous}
+          next={handleNextClick}
         >
           <p
             className={css`
               margin-bottom: 1.25rem;
             `}
           >
-            This page contains all the records that <strong>will</strong> be
+            This page contains all the records that <strong>will </strong> be
             created on Clockify once you press the <strong>Next </strong>
             button and confirm. If any of the records you selected in the
             previous step already existed on Clockify, you won't see them
@@ -154,32 +129,32 @@ export class ReviewClockifyDetailsStepComponent extends React.Component<
             and uncheck it.
           </p>
         </EntitiesReviewPage>
-        <ConfirmationModal
-          isActive={this.state.isModalActive}
-          onConfirmClick={this.handleModalConfirmClick}
-          onCancelClick={this.handleModalCancelClick}
-        />
-      </>
-    );
-  }
-}
+      </Else>
+      <ConfirmationModal
+        isActive={isModalActive}
+        onConfirmClick={handleModalConfirmClick}
+        onCancelClick={() => setIsModalActive(false)}
+      />
+    </If>
+  );
+};
 
 const mapStateToProps = (state: ReduxState) => ({
-  togglInclusionsByWorkspaceId: selectTogglEntityInclusionsByWorkspaceId(state),
   clockifyWorkspacesById: selectClockifyIncludedWorkspacesById(state),
+  togglInclusionsByWorkspaceId: selectTogglInclusionsByWorkspaceId(state),
   togglWorkspacesById: selectTogglIncludedWorkspacesById(state),
   workspaceNameBeingFetched: selectWorkspaceNameBeingFetched(state),
 });
 
 const mapDispatchToProps = (dispatch: ReduxDispatch) => ({
-  onFetchClockifyWorkspaces: () => dispatch(fetchClockifyWorkspaces()),
   onFetchClockifyEntitiesInWorkspace: (workspaceRecord: WorkspaceModel) =>
     dispatch(fetchClockifyEntitiesInWorkspace(workspaceRecord)),
+  onFetchClockifyWorkspaces: () => dispatch(fetchClockifyWorkspaces()),
   onTransferEntitiesToClockifyWorkspace: (workspaceRecord: WorkspaceModel) =>
     dispatch(transferEntitiesToClockifyWorkspace(workspaceRecord)),
 });
 
-export default connect<ConnectStateProps, ConnectDispatchProps, OwnProps>(
+export default connect<ConnectStateProps, ConnectDispatchProps, StepPageProps>(
   mapStateToProps,
   mapDispatchToProps,
 )(ReviewClockifyDetailsStepComponent);

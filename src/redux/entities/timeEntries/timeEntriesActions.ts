@@ -11,8 +11,8 @@ import {
   selectTogglUserEmail,
 } from '~/redux/credentials/credentialsSelectors';
 import { selectTogglWorkspaceIncludedYears } from '~/redux/entities/workspaces/workspacesSelectors';
-import { ClockifyTimeEntry, TogglTimeEntry } from '~/types/timeEntriesTypes';
 import { ReduxDispatch, ReduxGetState } from '~/types/commonTypes';
+import { ClockifyTimeEntry, TogglTimeEntry } from '~/types/timeEntriesTypes';
 
 export const clockifyTimeEntriesFetch = createAsyncAction(
   '@timeEntries/CLOCKIFY_FETCH_REQUEST',
@@ -31,7 +31,7 @@ const fetchClockifyTimeEntriesForIncludedYears = async (
   workspaceId: string,
   years: number[],
 ): Promise<ClockifyTimeEntry[]> => {
-  const { promiseThrottle, throttledFn } = buildThrottler(
+  const { promiseThrottle, throttledFunc } = buildThrottler(
     apiFetchClockifyTimeEntries,
   );
 
@@ -41,7 +41,7 @@ const fetchClockifyTimeEntriesForIncludedYears = async (
     await promiseThrottle
       .add(
         // @ts-ignore
-        throttledFn.bind(this, userId, workspaceId, year),
+        throttledFunc.bind(this, userId, workspaceId, year),
       )
       .then((yearEntries: ClockifyTimeEntry[]) => {
         allYearsTimeEntries.push(yearEntries);
@@ -80,7 +80,7 @@ const fetchTogglTimeEntriesForRemainingPages = async (
   year: number,
   totalPages: number,
 ): Promise<TogglTimeEntry[]> => {
-  const { promiseThrottle, throttledFn } = buildThrottler(
+  const { promiseThrottle, throttledFunc } = buildThrottler(
     apiFetchTogglTimeEntries,
   );
 
@@ -92,7 +92,7 @@ const fetchTogglTimeEntriesForRemainingPages = async (
     await promiseThrottle
       .add(
         // @ts-ignore
-        throttledFn.bind(this, email, workspaceId, year, currentPage),
+        throttledFunc.bind(this, email, workspaceId, year, currentPage),
       )
       .then(({ data }: { data: TogglTimeEntry[] }) => {
         timeEntriesForPage.push(data);

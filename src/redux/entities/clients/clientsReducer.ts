@@ -95,8 +95,7 @@ export default handleActions(
     [getType(clientsActions.updateIsClientIncluded)]: (
       state: ClientsState,
       { payload: clientId }: ReduxAction<string>,
-    ): ClientsState =>
-      swapEntityInclusion(state, EntityType.Client, clientId),
+    ): ClientsState => swapEntityInclusion(state, EntityType.Client, clientId),
   },
   initialState,
 );

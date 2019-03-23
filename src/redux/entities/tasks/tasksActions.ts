@@ -12,8 +12,9 @@ import {
 } from '~/redux/app/appActions';
 import { selectClockifyProjectIds } from '~/redux/entities/projects/projectsSelectors';
 import { selectTasksTransferPayloadForWorkspace } from './tasksSelectors';
-import { EntityType, ReduxDispatch, ReduxGetState } from '~/types/commonTypes';
+import { ReduxDispatch, ReduxGetState } from '~/types/commonTypes';
 import { ClockifyTask, CreateTaskRequest, TogglTask } from '~/types/tasksTypes';
+import { EntityType } from '~/types/entityTypes';
 
 export const clockifyTasksFetch = createAsyncAction(
   '@tasks/CLOCKIFY_FETCH_REQUEST',
@@ -41,7 +42,7 @@ const fetchClockifyTasksForProjectsInWorkspace = async (
   workspaceId: string,
   projectIds: string[],
 ): Promise<ClockifyTask[]> => {
-  const { promiseThrottle, throttledFn } = buildThrottler(
+  const { promiseThrottle, throttledFunc } = buildThrottler(
     apiFetchClockifyTasks,
   );
 
@@ -49,7 +50,7 @@ const fetchClockifyTasksForProjectsInWorkspace = async (
   for (const projectId of projectIds) {
     await promiseThrottle
       // @ts-ignore
-      .add(throttledFn.bind(this, workspaceId, projectId))
+      .add(throttledFunc.bind(this, workspaceId, projectId))
       .then((tasks: ClockifyTask[]) => {
         projectTasks.push(tasks);
       });
@@ -63,6 +64,7 @@ export const fetchClockifyTasks = (workspaceId: string) => async (
   getState: ReduxGetState,
 ) => {
   dispatch(clockifyTasksFetch.request());
+
   try {
     const state = getState();
     const projectIds = selectClockifyProjectIds(state);
@@ -81,6 +83,7 @@ export const fetchTogglTasks = (workspaceId: string) => async (
   dispatch: ReduxDispatch,
 ) => {
   dispatch(togglTasksFetch.request());
+
   try {
     const tasks = await apiFetchTogglTasks(workspaceId);
     return dispatch(togglTasksFetch.success(tasks));
@@ -95,24 +98,24 @@ const transferClockifyTasksForProjectsInWorkspace = async (
   workspaceId: string,
   tasksInWorkspaceByProjectId: Record<string, CreateTaskRequest[]>,
 ): Promise<ClockifyTask[]> => {
-  const allProjectTasks: ClockifyTask[][] = [];
+  const allWorkspaceTasks: ClockifyTask[][] = [];
 
-  for (const [projectId, taskRecords] of Object.entries(
+  for (const [projectId, projectTasks] of Object.entries(
     tasksInWorkspaceByProjectId,
   )) {
-    if (taskRecords.length > 0) {
+    if (projectTasks.length > 0) {
       const tasks = await batchClockifyRequests(
         onTaskRecord,
-        taskRecords,
+        projectTasks,
         apiCreateClockifyTask,
         workspaceId,
         projectId,
       );
-      allProjectTasks.push(tasks);
+      allWorkspaceTasks.push(tasks);
     }
   }
 
-  return flatten(allProjectTasks);
+  return flatten(allWorkspaceTasks);
 };
 
 export const transferTasksToClockify = (
@@ -122,8 +125,7 @@ export const transferTasksToClockify = (
   const state = getState();
   const tasksInWorkspaceByProjectId = selectTasksTransferPayloadForWorkspace(
     state,
-    togglWorkspaceId,
-  );
+  )(togglWorkspaceId);
   if (isEmpty(tasksInWorkspaceByProjectId)) return Promise.resolve();
 
   dispatch(clockifyTasksTransfer.request());

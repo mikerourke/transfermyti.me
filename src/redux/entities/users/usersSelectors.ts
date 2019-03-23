@@ -1,19 +1,11 @@
 import { createSelector } from 'reselect';
 import { get } from 'lodash';
-import {
-  getEntityRecordsWithEntryCounts,
-  getTogglInclusionRecords,
-} from '~/redux/utils';
+import { appendTimeEntryCount, findTogglInclusions } from '~/redux/utils';
 import { selectCredentials } from '~/redux/credentials/credentialsSelectors';
-import { EntityType, ReduxState } from '~/types/commonTypes';
-import { TimeEntryWithClientModel } from '~/types/timeEntriesTypes';
+import { selectTogglTimeEntriesById } from '~/redux/entities/timeEntries/timeEntriesSelectors';
+import { ReduxState } from '~/types/commonTypes';
+import { EntityType } from '~/types/entityTypes';
 import { UserModel } from '~/types/usersTypes';
-import { WorkspaceModel } from '~/types/workspacesTypes';
-
-export const selectClockifyUsersById = createSelector(
-  (state: ReduxState) => state.entities.users.clockify.byId,
-  (usersById): Record<string, UserModel> => usersById,
-);
 
 export const selectTogglUsersById = createSelector(
   (state: ReduxState) => state.entities.users.toggl.byId,
@@ -32,72 +24,63 @@ const selectTogglMeUserId = createSelector(
   },
 );
 
-const getUserRecordsByWorkspaceId = (
+const getValidUsers = (
   usersById: Record<string, UserModel>,
+  userIds: string[],
   meUserId: string,
-  workspacesById: Record<string, WorkspaceModel>,
-  timeEntriesById: Record<string, TimeEntryWithClientModel>,
-): Record<string, UserModel[]> => {
-  const getValidUserRecords = (userIds: string[]) =>
-    userIds.reduce((acc, userId) => {
-      const userRecord = get(usersById, userId, { linkedId: null });
-      if (userId === meUserId) return acc;
-      return [...acc, userRecord];
-    }, []);
+) =>
+  userIds.reduce((acc, userId) => {
+    const userRecord = get(usersById, userId, { linkedId: null });
+    if (userId === meUserId) return acc;
+    return [...acc, userRecord];
+  }, []);
 
-  return Object.values(workspacesById).reduce((acc, { id, userIds }) => {
-    const validUserRecords = getValidUserRecords(userIds);
-    const userRecordWithEntryCounts = getEntityRecordsWithEntryCounts(
-      EntityType.User,
-      validUserRecords,
-      timeEntriesById,
-    );
-
-    return {
-      ...acc,
-      [id]: userRecordWithEntryCounts,
-    };
-  }, {});
-};
-
-export const selectTogglUsersByWorkspaceId = createSelector(
-  [
+export const selectTogglUsersByWorkspaceFactory = (inclusionsOnly: boolean) =>
+  createSelector(
     selectTogglUsersById,
     selectTogglMeUserId,
+    selectTogglTimeEntriesById,
     (state: ReduxState) => state.entities.workspaces.toggl.byId,
-    (state: ReduxState) => state.entities.timeEntries.toggl.byId,
-  ],
-  (...args): Record<string, UserModel[]> =>
-    getUserRecordsByWorkspaceId(...args),
-);
+    (
+      usersById,
+      meUserId,
+      timeEntriesById,
+      workspacesById,
+    ): Record<string, UserModel[]> => {
+      return Object.values(workspacesById).reduce((acc, { id, userIds }) => {
+        const validUsers = getValidUsers(usersById, userIds, meUserId);
+        const usersToUse = inclusionsOnly
+          ? findTogglInclusions(validUsers)
+          : validUsers;
 
-export const selectTogglUserInclusionsByWorkspaceId = createSelector(
-  selectTogglUsersByWorkspaceId,
-  (togglUsersByWorkspaceId): Record<string, UserModel[]> =>
-    Object.entries(togglUsersByWorkspaceId).reduce(
-      (acc, [workspaceId, userRecords]) => {
-        const includedRecords = getTogglInclusionRecords(userRecords);
-        return { ...acc, [workspaceId]: includedRecords };
-      },
-      {},
-    ),
-);
+        const usersWithEntryCounts = appendTimeEntryCount(
+          EntityType.User,
+          usersToUse,
+          timeEntriesById,
+        );
+
+        return {
+          ...acc,
+          [id]: usersWithEntryCounts,
+        };
+      }, {});
+    },
+  );
 
 export const selectUsersTransferPayloadForWorkspace = createSelector(
-  [
-    selectTogglUserInclusionsByWorkspaceId,
-    selectCredentials,
-    (_: null, workspaceId: string) => workspaceId,
-  ],
-  (inclusionsByWorkspaceId, { togglEmail }, workspaceIdToGet): string[] => {
-    const includedRecords = get(
+  selectTogglUsersByWorkspaceFactory(true),
+  selectCredentials,
+  (inclusionsByWorkspaceId, { togglEmail }) => (
+    workspaceIdToGet: string,
+  ): string[] => {
+    const inclusions = get(
       inclusionsByWorkspaceId,
       workspaceIdToGet,
       [],
     ) as UserModel[];
-    if (includedRecords.length === 0) return [];
+    if (inclusions.length === 0) return [];
 
-    return includedRecords.reduce((acc, { email }) => {
+    return inclusions.reduce((acc, { email }) => {
       if (email === togglEmail) return acc;
       return [...acc, email];
     }, []);

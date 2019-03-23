@@ -3,7 +3,7 @@ import { ListRowProps } from 'react-virtualized';
 import { When } from 'react-if';
 import { Box } from 'bloomer';
 import { css } from 'emotion';
-import { isNil, noop } from 'lodash';
+import { isNil } from 'lodash';
 import Flex from '~/components/flex/Flex';
 import Checkbox from '~/components/checkbox/Checkbox';
 import { CheckedState, EntityModel } from '~/types/commonTypes';
@@ -18,13 +18,14 @@ const BasicListItem: React.FC<Props> = ({
   onItemClick,
   isScrolling,
   isVisible,
-  ...props
+  ...flexProps
 }) => {
   const { isIncluded, name, entryCount = 0 } = entityRecord as any;
   const entryLabel = entryCount === 1 ? 'entry' : 'entries';
+  const hasClickEvent = !isNil(onItemClick);
 
   return (
-    <Flex {...props} alignItems="center" justifyContent="flex-start">
+    <Flex {...flexProps} alignItems="center" justifyContent="flex-start">
       <Flex
         as={Box}
         alignItems="center"
@@ -37,11 +38,11 @@ const BasicListItem: React.FC<Props> = ({
         `}
       >
         <Flex alignItems="center">
-          <When condition={!isNil(onItemClick)}>
+          <When condition={hasClickEvent}>
             <Checkbox
               state={isIncluded ? CheckedState.Checked : CheckedState.Unchecked}
               size="1.25rem"
-              onClick={isNil(onItemClick) ? noop : onItemClick}
+              onClick={hasClickEvent ? onItemClick : undefined}
             />
           </When>
           <span

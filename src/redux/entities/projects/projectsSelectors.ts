@@ -1,17 +1,18 @@
 import { createSelector } from 'reselect';
 import { get, isNil } from 'lodash';
-import { getEntityRecordsByWorkspaceId } from '~/redux/utils';
-import { EntityType, ReduxState } from '~/types/commonTypes';
+import {
+  appendTimeEntryCount,
+  findTogglInclusions,
+  groupByWorkspace,
+} from '~/redux/utils';
+import { selectTogglTimeEntriesById } from '~/redux/entities/timeEntries/timeEntriesSelectors';
+import { ReduxState } from '~/types/commonTypes';
+import { EntityType } from '~/types/entityTypes';
 import {
   ClockifyEstimateType,
   CreateProjectRequest,
   ProjectModel,
 } from '~/types/projectsTypes';
-
-export const selectClockifyProjectsById = createSelector(
-  (state: ReduxState) => state.entities.projects.clockify.byId,
-  projectsById => projectsById,
-);
 
 export const selectClockifyProjectIds = createSelector(
   (state: ReduxState) => state.entities.projects.clockify.idValues,
@@ -23,59 +24,41 @@ export const selectTogglProjectsById = createSelector(
   projectsById => projectsById,
 );
 
-export const selectTogglProjectRecords = createSelector(
-  selectTogglProjectsById,
-  (projectsById): ProjectModel[] => Object.values(projectsById),
-);
+export const selectTogglProjectsByWorkspaceFactory = (
+  inclusionsOnly: boolean,
+) =>
+  createSelector(
+    selectTogglProjectsById,
+    selectTogglTimeEntriesById,
+    (projectsById, timeEntriesById): Record<string, ProjectModel[]> => {
+      const projectsWithEntryCounts = appendTimeEntryCount(
+        EntityType.Project,
+        Object.values(projectsById),
+        timeEntriesById,
+      );
 
-export const selectTogglProjectsByWorkspaceId = createSelector(
-  [
-    selectTogglProjectRecords,
-    (state: ReduxState) => state.entities.timeEntries.toggl.byId,
-  ],
-  (projectRecords, timeEntriesById): Record<string, ProjectModel[]> =>
-    getEntityRecordsByWorkspaceId(
-      EntityType.Project,
-      projectRecords,
-      timeEntriesById,
-      false,
-    ),
-);
-
-export const selectTogglProjectInclusionsByWorkspaceId = createSelector(
-  [
-    selectTogglProjectRecords,
-    (state: ReduxState) => state.entities.timeEntries.toggl.byId,
-  ],
-  (projectRecords, timeEntriesById): Record<string, ProjectModel[]> =>
-    getEntityRecordsByWorkspaceId(
-      EntityType.Project,
-      projectRecords,
-      timeEntriesById,
-      true,
-    ),
-);
+      const projectsToUse = inclusionsOnly
+        ? findTogglInclusions(projectsWithEntryCounts)
+        : projectsWithEntryCounts;
+      return groupByWorkspace(projectsToUse);
+    },
+  );
 
 export const selectProjectsTransferPayloadForWorkspace = createSelector(
-  [
-    selectTogglProjectInclusionsByWorkspaceId,
-    (state: ReduxState) => state.entities.clients.toggl.byId,
-    (_: null, workspaceId: string) => workspaceId,
-  ],
-  (
-    inclusionsByWorkspaceId,
-    togglClientsById,
-    workspaceIdToGet,
+  selectTogglProjectsByWorkspaceFactory(true),
+  (state: ReduxState) => state.entities.clients.toggl.byId,
+  (inclusionsByWorkspaceId, togglClientsById) => (
+    workspaceIdToGet: string,
   ): CreateProjectRequest[] => {
-    const includedRecords = get(
+    const inclusions = get(
       inclusionsByWorkspaceId,
       workspaceIdToGet,
       [],
     ) as ProjectModel[];
-    if (includedRecords.length === 0) return [];
+    if (inclusions.length === 0) return [];
 
-    return includedRecords.reduce((acc, projectRecord) => {
-      const { clientId, ...project } = projectRecord;
+    return inclusions.reduce((acc, includedProject) => {
+      const { clientId, ...project } = includedProject;
       const clockifyClientId = get(
         togglClientsById,
         [clientId, 'linkedId'],

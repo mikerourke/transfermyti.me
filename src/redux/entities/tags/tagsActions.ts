@@ -10,8 +10,9 @@ import {
   updateInTransferEntity,
 } from '~/redux/app/appActions';
 import { selectTagsTransferPayloadForWorkspace } from './tagsSelectors';
-import { ClockifyTag, TogglTag } from '~/types/tagsTypes';
-import { EntityType, ReduxDispatch, ReduxGetState } from '~/types/commonTypes';
+import { ReduxDispatch, ReduxGetState } from '~/types/commonTypes';
+import { EntityType } from '~/types/entityTypes';
+import { ClockifyTag, TagModel, TogglTag } from '~/types/tagsTypes';
 
 export const clockifyTagsFetch = createAsyncAction(
   '@tags/CLOCKIFY_FETCH_REQUEST',
@@ -39,6 +40,7 @@ export const fetchClockifyTags = (workspaceId: string) => async (
   dispatch: ReduxDispatch,
 ) => {
   dispatch(clockifyTagsFetch.request());
+
   try {
     const tags = await apiFetchClockifyTags(workspaceId);
     return dispatch(clockifyTagsFetch.success(tags));
@@ -52,6 +54,7 @@ export const fetchTogglTags = (workspaceId: string) => async (
   dispatch: ReduxDispatch,
 ) => {
   dispatch(togglTagsFetch.request());
+
   try {
     const tags = await apiFetchTogglTags(workspaceId);
     return dispatch(togglTagsFetch.success(tags));
@@ -66,23 +69,22 @@ export const transferTagsToClockify = (
   clockifyWorkspaceId: string,
 ) => async (dispatch: ReduxDispatch, getState: ReduxGetState) => {
   const state = getState();
-  const tagRecordsInWorkspace = selectTagsTransferPayloadForWorkspace(
-    state,
+  const tagsInWorkspace = selectTagsTransferPayloadForWorkspace(state)(
     togglWorkspaceId,
   );
-  if (tagRecordsInWorkspace.length === 0) return Promise.resolve();
+  if (tagsInWorkspace.length === 0) return Promise.resolve();
 
   dispatch(clockifyTagsTransfer.request());
 
-  const onTagRecord = (tagRecord: any) => {
-    const transferRecord = { ...tagRecord, type: EntityType.Tag };
+  const onTag = (tag: TagModel) => {
+    const transferRecord = { ...tag, type: EntityType.Tag };
     dispatch(updateInTransferEntity(transferRecord));
   };
 
   try {
     const tags = await batchClockifyRequests(
-      onTagRecord,
-      tagRecordsInWorkspace,
+      onTag,
+      tagsInWorkspace,
       apiCreateClockifyTag,
       clockifyWorkspaceId,
     );

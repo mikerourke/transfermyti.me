@@ -4,7 +4,7 @@ import { Columns } from 'bloomer';
 import { css } from 'emotion';
 import { updateTransferType } from '~/redux/app/appActions';
 import { selectCurrentTransferType } from '~/redux/app/appSelectors';
-import StepPage from '~/components/stepPage/StepPage';
+import StepPage, { StepPageProps } from '~/components/stepPage/StepPage';
 import TransferTypeColumn from './components/TransferTypeColumn';
 import { TransferType } from '~/types/appTypes';
 import { ReduxDispatch, ReduxState } from '~/types/commonTypes';
@@ -17,29 +17,19 @@ interface ConnectDispatchProps {
   onUpdateTransferType: (newTransferType: TransferType) => void;
 }
 
-interface OwnProps {
-  stepNumber: number;
-  next: () => void;
-}
-
-type Props = ConnectStateProps & ConnectDispatchProps & OwnProps;
+type Props = ConnectStateProps & ConnectDispatchProps & StepPageProps;
 
 export const SelectTransferTypeStepComponent: React.FC<Props> = ({
   currentTransferType,
   onUpdateTransferType,
-  stepNumber,
-  next,
+  ...stepPageProps
 }) => {
   const handleTransferTypeSelect = (transferType: TransferType) => () => {
     onUpdateTransferType(transferType);
   };
 
   return (
-    <StepPage
-      stepNumber={stepNumber}
-      subtitle="Select Transfer Type"
-      next={next}
-    >
+    <StepPage subtitle="Select Transfer Type" {...stepPageProps}>
       <p
         className={css`
           margin-bottom: 1.25rem;
@@ -87,7 +77,7 @@ const mapDispatchToProps = (dispatch: ReduxDispatch) => ({
     dispatch(updateTransferType(newTransferType)),
 });
 
-export default connect<ConnectStateProps, ConnectDispatchProps, OwnProps>(
+export default connect<ConnectStateProps, ConnectDispatchProps, StepPageProps>(
   mapStateToProps,
   mapDispatchToProps,
 )(SelectTransferTypeStepComponent);

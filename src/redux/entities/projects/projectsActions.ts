@@ -15,9 +15,11 @@ import {
   updateInTransferEntity,
 } from '~/redux/app/appActions';
 import { selectProjectsTransferPayloadForWorkspace } from './projectsSelectors';
-import { EntityType, ReduxDispatch, ReduxGetState } from '~/types/commonTypes';
+import { ReduxDispatch, ReduxGetState } from '~/types/commonTypes';
+import { EntityType } from '~/types/entityTypes';
 import {
   ClockifyProject,
+  ProjectModel,
   TogglProject,
   TogglProjectUser,
 } from '~/types/projectsTypes';
@@ -44,32 +46,6 @@ export const clockifyProjectsTransfer = createAsyncAction(
 export const updateIsProjectIncluded = createStandardAction(
   '@projects/UPDATE_IS_INCLUDED',
 )<string>();
-
-const appendUserIdsToProject = async (
-  projects: (TogglProject | ClockifyProject)[],
-  apiFetchUsersFn: (projectId: string, workspaceId?: string) => Promise<any>,
-  workspaceId?: string,
-): Promise<void> => {
-  const { promiseThrottle, throttledFn } = buildThrottler(apiFetchUsersFn);
-
-  for (const project of projects) {
-    try {
-      await promiseThrottle
-        .add(
-          // @ts-ignore
-          throttledFn.bind(this, project.id.toString(), workspaceId),
-        )
-        .then((projectUsers: (ClockifyUser | TogglProjectUser)[]) => {
-          const userIds = projectUsers.map(projectUser =>
-            'uid' in projectUser ? projectUser.uid : projectUser.id,
-          );
-          set(project, 'userIds', userIds);
-        });
-    } catch (error) {
-      if (error.status !== 403) throw error;
-    }
-  }
-};
 
 export const fetchClockifyProjects = (workspaceId: string) => async (
   dispatch: ReduxDispatch,
@@ -110,23 +86,22 @@ export const transferProjectsToClockify = (
   clockifyWorkspaceId: string,
 ) => async (dispatch: ReduxDispatch, getState: ReduxGetState) => {
   const state = getState();
-  const projectRecordsInWorkspace = selectProjectsTransferPayloadForWorkspace(
-    state,
+  const projectsInWorkspace = selectProjectsTransferPayloadForWorkspace(state)(
     togglWorkspaceId,
   );
-  if (projectRecordsInWorkspace.length === 0) return Promise.resolve();
+  if (projectsInWorkspace.length === 0) return Promise.resolve();
 
   dispatch(clockifyProjectsTransfer.request());
 
-  const onProjectRecord = (projectRecord: any) => {
-    const transferRecord = { ...projectRecord, type: EntityType.Project };
+  const onProject = (project: ProjectModel) => {
+    const transferRecord = { ...project, type: EntityType.Project };
     dispatch(updateInTransferEntity(transferRecord));
   };
 
   try {
     const projects = await batchClockifyRequests(
-      onProjectRecord,
-      projectRecordsInWorkspace,
+      onProject,
+      projectsInWorkspace,
       apiCreateClockifyProject,
       clockifyWorkspaceId,
     );
@@ -137,3 +112,29 @@ export const transferProjectsToClockify = (
     return dispatch(clockifyProjectsTransfer.failure());
   }
 };
+
+async function appendUserIdsToProject(
+  projects: (TogglProject | ClockifyProject)[],
+  apiFetchUsersFunc: (projectId: string, workspaceId?: string) => Promise<any>,
+  workspaceId?: string,
+): Promise<void> {
+  const { promiseThrottle, throttledFunc } = buildThrottler(apiFetchUsersFunc);
+
+  for (const project of projects) {
+    try {
+      await promiseThrottle
+        .add(
+          // @ts-ignore
+          throttledFunc.bind(this, project.id.toString(), workspaceId),
+        )
+        .then((projectUsers: (ClockifyUser | TogglProjectUser)[]) => {
+          const userIds = projectUsers.map(projectUser =>
+            'uid' in projectUser ? projectUser.uid : projectUser.id,
+          );
+          set(project, 'userIds', userIds);
+        });
+    } catch (error) {
+      if (error.status !== 403) throw error;
+    }
+  }
+}

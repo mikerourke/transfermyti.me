@@ -5,31 +5,25 @@ import { css } from 'emotion';
 import { isNil } from 'lodash';
 import Flex from '~/components/flex/Flex';
 
-interface Props {
+export interface StepPageProps {
   stepNumber: number;
-  subtitle: string;
-  isNextLoading?: boolean;
   next?: () => void;
   previous?: () => void;
+}
+
+interface Props extends StepPageProps {
+  subtitle: string;
+  isNextLoading?: boolean;
   onRefreshClick?: () => void;
   onResize?: (newWidth: number) => void;
 }
 
-const StepPage: React.FC<Props> = ({
-  children,
-  stepNumber,
-  subtitle,
-  isNextLoading,
-  next,
-  previous,
-  onRefreshClick,
-  onResize,
-}) => {
+const StepPage: React.FC<Props> = ({ next, previous, ...props }) => {
   const contentsRef = useRef(null);
 
   const handleResize = () => {
     const width = contentsRef.current.clientWidth;
-    if (!isNil(onResize)) onResize(width);
+    if (!isNil(props.onResize)) props.onResize(width);
   };
 
   useEffect(() => {
@@ -42,15 +36,15 @@ const StepPage: React.FC<Props> = ({
 
   return (
     <Container>
-      <Title isSize={4}>{`Step ${stepNumber}:`}</Title>
-      <Subtitle isSize={3}>{subtitle}</Subtitle>
+      <Title isSize={4}>{`Step ${props.stepNumber}:`}</Title>
+      <Subtitle isSize={3}>{props.subtitle}</Subtitle>
       <div
         ref={contentsRef}
         className={css`
           min-height: 300px;
         `}
       >
-        {children}
+        {props.children}
       </div>
       <Flex
         justifyContent="space-between"
@@ -59,8 +53,12 @@ const StepPage: React.FC<Props> = ({
         `}
       >
         <Flex justifySelf="flex-start">
-          <When condition={!isNil(onRefreshClick)}>
-            <Button isSize="medium" onClick={onRefreshClick} isColor="info">
+          <When condition={!isNil(props.onRefreshClick)}>
+            <Button
+              isSize="medium"
+              onClick={props.onRefreshClick}
+              isColor="info"
+            >
               Refresh
             </Button>
           </When>
@@ -81,7 +79,7 @@ const StepPage: React.FC<Props> = ({
           <When condition={!isNil(next)}>
             <Button
               isSize="medium"
-              isLoading={isNextLoading}
+              isLoading={props.isNextLoading}
               onClick={next}
               isColor="success"
             >

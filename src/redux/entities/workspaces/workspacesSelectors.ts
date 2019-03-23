@@ -1,35 +1,15 @@
 import { createSelector } from 'reselect';
 import { get, isEmpty, isNil } from 'lodash';
-import {
-  selectTogglClientInclusionsByWorkspaceId,
-  selectTogglClientsByWorkspaceId,
-} from '~/redux/entities/clients/clientsSelectors';
-import {
-  selectTogglProjectInclusionsByWorkspaceId,
-  selectTogglProjectsByWorkspaceId,
-} from '~/redux/entities/projects/projectsSelectors';
-import {
-  selectTogglTagInclusionsByWorkspaceId,
-  selectTogglTagsByWorkspaceId,
-} from '~/redux/entities/tags/tagsSelectors';
-import {
-  selectTogglTaskInclusionsByWorkspaceId,
-  selectTogglTasksByWorkspaceId,
-} from '~/redux/entities/tasks/tasksSelectors';
-import {
-  selectTogglTimeEntriesByWorkspaceId,
-  selectTogglTimeEntryInclusionsByWorkspaceId,
-} from '~/redux/entities/timeEntries/timeEntriesSelectors';
-import {
-  selectTogglUserGroupInclusionsByWorkspaceId,
-  selectTogglUserGroupsByWorkspaceId,
-} from '~/redux/entities/userGroups/userGroupsSelectors';
-import {
-  selectTogglUserInclusionsByWorkspaceId,
-  selectTogglUsersByWorkspaceId,
-} from '~/redux/entities/users/usersSelectors';
-import { WorkspaceModel } from '~/types/workspacesTypes';
+import { selectTogglClientsByWorkspaceFactory } from '~/redux/entities/clients/clientsSelectors';
+import { selectTogglProjectsByWorkspaceFactory } from '~/redux/entities/projects/projectsSelectors';
+import { selectTogglTagsByWorkspaceFactory } from '~/redux/entities/tags/tagsSelectors';
+import { selectToggleTasksByWorkspaceFactory } from '~/redux/entities/tasks/tasksSelectors';
+import { selectTogglTimeEntriesByWorkspaceFactory } from '~/redux/entities/timeEntries/timeEntriesSelectors';
+import { selectTogglUserGroupsByWorkspaceFactory } from '~/redux/entities/userGroups/userGroupsSelectors';
+import { selectTogglUsersByWorkspaceFactory } from '~/redux/entities/users/usersSelectors';
+import { EntityModel, ReduxState } from '~/types/commonTypes';
 import { EntityGroup } from '~/types/entityTypes';
+import { WorkspaceModel } from '~/types/workspacesTypes';
 
 export const selectTogglWorkspaceIds = createSelector(
   (state: ReduxState) => state.entities.workspaces.toggl.idValues,
@@ -61,18 +41,18 @@ export const selectTogglIncludedWorkspacesById = createSelector(
     ),
 );
 
-export const selectTogglIncludedWorkspaceRecords = createSelector(
+export const selectTogglIncludedWorkspaces = createSelector(
   selectTogglIncludedWorkspacesById,
   (workspacesById): WorkspaceModel[] => Object.values(workspacesById),
 );
 
 const selectTogglIncludedWorkspacesByName = createSelector(
-  selectTogglIncludedWorkspaceRecords,
-  (includedWorkspaceRecords): Record<string, WorkspaceModel> =>
-    includedWorkspaceRecords.reduce(
-      (acc, workspaceRecord) => ({
+  selectTogglIncludedWorkspaces,
+  (includedWorkspaces): Record<string, WorkspaceModel> =>
+    includedWorkspaces.reduce(
+      (acc, workspace) => ({
         ...acc,
-        [workspaceRecord.name]: workspaceRecord,
+        [workspace.name]: workspace,
       }),
       {},
     ),
@@ -84,7 +64,8 @@ export const selectTogglIncludedWorkspaceNames = createSelector(
 );
 
 export const selectClockifyIncludedWorkspacesById = createSelector(
-  [selectClockifyWorkspacesById, selectTogglIncludedWorkspacesByName],
+  selectClockifyWorkspacesById,
+  selectTogglIncludedWorkspacesByName,
   (clockifyWorkspacesById, togglWorkspacesByName) =>
     Object.entries(clockifyWorkspacesById).reduce(
       (acc, [workspaceId, workspaceRecord]) => {
@@ -99,16 +80,14 @@ export const selectClockifyIncludedWorkspacesById = createSelector(
 );
 
 export const selectTogglIncludedWorkspacesCount = createSelector(
-  selectTogglIncludedWorkspaceRecords,
-  (workspaceRecords): number => workspaceRecords.length,
+  selectTogglIncludedWorkspaces,
+  (workspaces): number => workspaces.length,
 );
 
 export const selectTogglWorkspaceIncludedYears = createSelector(
-  [
-    selectTogglWorkspacesById,
-    selectClockifyWorkspacesById,
-    (_: any, clockifyWorkspaceId: string) => clockifyWorkspaceId,
-  ],
+  selectTogglWorkspacesById,
+  selectClockifyWorkspacesById,
+  (_: any, clockifyWorkspaceId: string) => clockifyWorkspaceId,
   (
     togglWorkspacesById,
     clockifyWorkspacesById,
@@ -150,7 +129,8 @@ export const selectTogglWorkspaceIncludedYearsCount = createSelector(
 );
 
 export const selectIfTogglWorkspaceYearsFetched = createSelector(
-  [selectTogglWorkspacesById, selectTogglWorkspaceIds],
+  selectTogglWorkspacesById,
+  selectTogglWorkspaceIds,
   (workspacesById, workspaceIds): boolean => {
     if (isEmpty(workspacesById)) return false;
 
@@ -168,62 +148,57 @@ export const selectWorkspaceNameBeingFetched = createSelector(
   (workspaceNameBeingFetched): string => workspaceNameBeingFetched,
 );
 
-const getEntityGroupRecordsByWorkspaceId = (
-  workspaceIds: string[],
-  clientsByWorkspaceId: Record<string, EntityModel[]>,
-  projectsByWorkspaceId: Record<string, EntityModel[]>,
-  tagsByWorkspaceId: Record<string, EntityModel[]>,
-  tasksByWorkspaceId: Record<string, EntityModel[]>,
-  timeEntriesByWorkspaceId: Record<string, EntityModel[]>,
-  userGroupsByWorkspaceId: Record<string, EntityModel[]>,
-  usersByWorkspaceId: Record<string, EntityModel[]>,
-): Record<string, Record<EntityGroup, EntityModel[]>> =>
-  workspaceIds.reduce(
-    (acc, workspaceId) => ({
-      ...acc,
-      [workspaceId.toString()]: {
-        [EntityGroup.Clients]: get(clientsByWorkspaceId, workspaceId, []),
-        [EntityGroup.Projects]: get(projectsByWorkspaceId, workspaceId, []),
-        [EntityGroup.Tags]: get(tagsByWorkspaceId, workspaceId, []),
-        [EntityGroup.Tasks]: get(tasksByWorkspaceId, workspaceId, []),
-        [EntityGroup.TimeEntries]: get(
-          timeEntriesByWorkspaceId,
-          workspaceId,
-          [],
-        ),
-        [EntityGroup.UserGroups]: get(userGroupsByWorkspaceId, workspaceId, []),
-        [EntityGroup.Users]: get(usersByWorkspaceId, workspaceId, []),
-      },
-    }),
-    {},
+const selectTogglEntitiesByWorkspaceFactory = (inclusionsOnly: boolean) =>
+  createSelector(
+    selectTogglWorkspaceIds,
+    selectTogglClientsByWorkspaceFactory(inclusionsOnly),
+    selectTogglProjectsByWorkspaceFactory(inclusionsOnly),
+    selectTogglTagsByWorkspaceFactory(inclusionsOnly),
+    selectToggleTasksByWorkspaceFactory(inclusionsOnly),
+    selectTogglTimeEntriesByWorkspaceFactory(inclusionsOnly),
+    selectTogglUserGroupsByWorkspaceFactory(inclusionsOnly),
+    selectTogglUsersByWorkspaceFactory(inclusionsOnly),
+    (
+      workspaceIds: string[],
+      clientsByWorkspace: Record<string, EntityModel[]>,
+      projectsByWorkspace: Record<string, EntityModel[]>,
+      tagsByWorkspace: Record<string, EntityModel[]>,
+      tasksByWorkspace: Record<string, EntityModel[]>,
+      timeEntriesByWorkspace: Record<string, EntityModel[]>,
+      userGroupsByWorkspace: Record<string, EntityModel[]>,
+      usersByWorkspace: Record<string, EntityModel[]>,
+    ): Record<string, Record<EntityGroup, EntityModel[]>> =>
+      workspaceIds.reduce(
+        (acc, workspaceId) => ({
+          ...acc,
+          [workspaceId.toString()]: {
+            [EntityGroup.Clients]: get(clientsByWorkspace, workspaceId, []),
+            [EntityGroup.Projects]: get(projectsByWorkspace, workspaceId, []),
+            [EntityGroup.Tags]: get(tagsByWorkspace, workspaceId, []),
+            [EntityGroup.Tasks]: get(tasksByWorkspace, workspaceId, []),
+            [EntityGroup.TimeEntries]: get(
+              timeEntriesByWorkspace,
+              workspaceId,
+              [],
+            ),
+            [EntityGroup.UserGroups]: get(
+              userGroupsByWorkspace,
+              workspaceId,
+              [],
+            ),
+            [EntityGroup.Users]: get(usersByWorkspace, workspaceId, []),
+          },
+        }),
+        {},
+      ),
   );
 
-export const selectTogglEntityInclusionsByWorkspaceId = createSelector(
-  [
-    selectTogglWorkspaceIds,
-    selectTogglClientInclusionsByWorkspaceId,
-    selectTogglProjectInclusionsByWorkspaceId,
-    selectTogglTagInclusionsByWorkspaceId,
-    selectTogglTaskInclusionsByWorkspaceId,
-    selectTogglTimeEntryInclusionsByWorkspaceId,
-    selectTogglUserGroupInclusionsByWorkspaceId,
-    selectTogglUserInclusionsByWorkspaceId,
-  ],
-  (...args): Record<string, Record<EntityGroup, EntityModel[]>> =>
-    getEntityGroupRecordsByWorkspaceId(...args),
+export const selectTogglInclusionsByWorkspaceId = createSelector(
+  selectTogglEntitiesByWorkspaceFactory(true),
+  togglInclusionsByWorkspaceId => togglInclusionsByWorkspaceId,
 );
 
-export const selectTogglEntitiesByWorkspaceId = createSelector(
-  [
-    selectTogglWorkspaceIds,
-    selectTogglClientsByWorkspaceId,
-    selectTogglProjectsByWorkspaceId,
-    selectTogglTagsByWorkspaceId,
-    selectTogglTasksByWorkspaceId,
-    selectTogglTimeEntriesByWorkspaceId,
-    selectTogglUserGroupsByWorkspaceId,
-    selectTogglUsersByWorkspaceId,
-  ],
-  (...args): Record<string, Record<EntityGroup, EntityModel[]>> =>
-    getEntityGroupRecordsByWorkspaceId(...args),
+export const selectTogglAllEntitiesByWorkspaceId = createSelector(
+  selectTogglEntitiesByWorkspaceFactory(false),
+  togglAllEntitiesByWorkspaceId => togglAllEntitiesByWorkspaceId,
 );

@@ -10,8 +10,9 @@ import {
   updateInTransferEntity,
 } from '~/redux/app/appActions';
 import { selectClientsTransferPayloadForWorkspace } from './clientsSelectors';
-import { ClockifyClient, TogglClient } from '~/types/clientsTypes';
-import { EntityType, ReduxDispatch, ReduxGetState } from '~/types/commonTypes';
+import { ClientModel, ClockifyClient, TogglClient } from '~/types/clientsTypes';
+import { ReduxDispatch, ReduxGetState } from '~/types/commonTypes';
+import { EntityType } from '~/types/entityTypes';
 
 export const clockifyClientsFetch = createAsyncAction(
   '@clients/CLOCKIFY_FETCH_REQUEST',
@@ -39,6 +40,7 @@ export const fetchClockifyClients = (workspaceId: string) => async (
   dispatch: ReduxDispatch,
 ) => {
   dispatch(clockifyClientsFetch.request());
+
   try {
     const clients = await apiFetchClockifyClients(workspaceId);
     return dispatch(clockifyClientsFetch.success(clients));
@@ -52,6 +54,7 @@ export const fetchTogglClients = (workspaceId: string) => async (
   dispatch: ReduxDispatch,
 ) => {
   dispatch(togglClientsFetch.request());
+
   try {
     const clients = await apiFetchTogglClients(workspaceId);
     return dispatch(togglClientsFetch.success(clients));
@@ -66,23 +69,22 @@ export const transferClientsToClockify = (
   clockifyWorkspaceId: string,
 ) => async (dispatch: ReduxDispatch, getState: ReduxGetState) => {
   const state = getState();
-  const clientRecordsInWorkspace = selectClientsTransferPayloadForWorkspace(
-    state,
+  const clientsInWorkspace = selectClientsTransferPayloadForWorkspace(state)(
     togglWorkspaceId,
   );
-  if (clientRecordsInWorkspace.length === 0) return Promise.resolve();
+  if (clientsInWorkspace.length === 0) return Promise.resolve();
 
   dispatch(clockifyClientsTransfer.request());
 
-  const onClientRecord = (clientRecord: any) => {
-    const transferRecord = { ...clientRecord, type: EntityType.Client };
+  const onClient = (client: ClientModel) => {
+    const transferRecord = { ...client, type: EntityType.Client };
     dispatch(updateInTransferEntity(transferRecord));
   };
 
   try {
     const clients = await batchClockifyRequests(
-      onClientRecord,
-      clientRecordsInWorkspace,
+      onClient,
+      clientsInWorkspace,
       apiCreateClockifyClient,
       clockifyWorkspaceId,
     );

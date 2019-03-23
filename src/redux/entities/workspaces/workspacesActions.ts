@@ -17,12 +17,12 @@ import * as userGroupsActions from '../userGroups/userGroupsActions';
 import * as usersActions from '~/redux/entities/users/usersActions';
 import { selectTogglIncludedWorkspaceNames } from './workspacesSelectors';
 import {
-  EntityGroup,
   EntityModel,
   ReduxDispatch,
   ReduxGetState,
   ToolName,
 } from '~/types/commonTypes';
+import { EntityGroup } from '~/types/entityTypes';
 import {
   ClockifyWorkspace,
   TogglSummaryReportDataModel,
@@ -85,6 +85,7 @@ export const fetchClockifyWorkspaces = () => async (
   const state = getState();
 
   dispatch(clockifyWorkspacesFetch.request());
+
   try {
     dispatch(resetContentsForTool(ToolName.Clockify));
     const togglIncludedNames = selectTogglIncludedWorkspaceNames(state);
@@ -101,11 +102,10 @@ export const fetchClockifyWorkspaces = () => async (
   }
 };
 
-export const fetchClockifyEntitiesInWorkspace = (
-  workspaceRecord: WorkspaceModel,
-) => async (dispatch: ReduxDispatch) => {
-  const { name, id } = workspaceRecord;
-
+export const fetchClockifyEntitiesInWorkspace = ({
+  name,
+  id,
+}: WorkspaceModel) => async (dispatch: ReduxDispatch) => {
   dispatch(updateWorkspaceNameBeingFetched(name));
 
   await dispatch(clientsActions.fetchClockifyClients(id));
@@ -119,11 +119,11 @@ export const fetchClockifyEntitiesInWorkspace = (
   return dispatch(updateWorkspaceNameBeingFetched(null));
 };
 
-export const fetchTogglEntitiesInWorkspace = (
-  workspaceRecord: WorkspaceModel,
-) => async (dispatch: ReduxDispatch) => {
-  const { name, id, inclusionsByYear } = workspaceRecord;
-
+export const fetchTogglEntitiesInWorkspace = ({
+  name,
+  id,
+  inclusionsByYear,
+}: WorkspaceModel) => async (dispatch: ReduxDispatch) => {
   const inclusionYears = Object.entries(inclusionsByYear).reduce(
     (acc, [year, isIncluded]) => {
       if (!isIncluded) return acc;
@@ -154,9 +154,10 @@ export const fetchTogglWorkspaceSummary = (workspaceId: string) => async (
   const state = getState();
 
   dispatch(togglWorkspaceSummaryFetch.request());
+
   try {
     const email = selectTogglUserEmail(state);
-    const { promiseThrottle, throttledFn } = buildThrottler(
+    const { promiseThrottle, throttledFunc } = buildThrottler(
       apiFetchTogglWorkspaceSummaryForYear,
     );
 
@@ -166,7 +167,7 @@ export const fetchTogglWorkspaceSummary = (workspaceId: string) => async (
       await promiseThrottle
         .add(
           // @ts-ignore
-          throttledFn.bind(this, email, workspaceId, yearToFetch),
+          throttledFunc.bind(this, email, workspaceId, yearToFetch),
         )
         .then(({ data }: { data: TogglSummaryReportDataModel[] }) => {
           const entryCount = data.reduce(
@@ -187,10 +188,11 @@ export const fetchTogglWorkspaceSummary = (workspaceId: string) => async (
   }
 };
 
-export const transferEntitiesToClockifyWorkspace = (
-  workspaceRecord: WorkspaceModel,
-) => async (dispatch: ReduxDispatch) => {
-  const { name, id: togglWorkspaceId, linkedId } = workspaceRecord;
+export const transferEntitiesToClockifyWorkspace = ({
+  name,
+  id: togglWorkspaceId,
+  linkedId,
+}: WorkspaceModel) => async (dispatch: ReduxDispatch) => {
   let clockifyWorkspaceId = linkedId;
 
   dispatch(clockifyWorkspaceTransfer.request());
@@ -254,7 +256,7 @@ export const transferEntitiesToClockifyWorkspace = (
 
 export const updateIsWorkspaceEntityIncluded = (
   entityGroup: EntityGroup,
-  entityRecord: EntityModel,
+  { id }: EntityModel,
 ) => (dispatch: ReduxDispatch) => {
   const updateAction = {
     [EntityGroup.Clients]: clientsActions.updateIsClientIncluded,
@@ -265,5 +267,5 @@ export const updateIsWorkspaceEntityIncluded = (
     [EntityGroup.Users]: usersActions.updateIsUserIncluded,
   }[entityGroup];
 
-  return dispatch(updateAction(entityRecord.id));
+  return dispatch(updateAction(id));
 };

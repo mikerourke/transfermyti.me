@@ -6,12 +6,12 @@ import ValuesRow from './components/ValuesRow';
 import { DetailedTimeEntryModel } from '~/types/timeEntriesTypes';
 
 interface Props {
-  timeEntryRecord: DetailedTimeEntryModel;
+  timeEntry: DetailedTimeEntryModel;
 }
 
 const DATE_FORMAT = 'M/D/YY hh:mma';
 
-const TimeEntryTable: React.FC<Props> = ({ timeEntryRecord }) => (
+const TimeEntryTable: React.FC<Props> = ({ timeEntry }) => (
   <table
     className={css`
       table-layout: fixed;
@@ -30,8 +30,8 @@ const TimeEntryTable: React.FC<Props> = ({ timeEntryRecord }) => (
         <td colSpan={2}>Description</td>
       </HeadersRow>
       <ValuesRow isBottomPadded>
-        <td>{timeEntryRecord.projectName}</td>
-        <td>{timeEntryRecord.client}</td>
+        <td>{timeEntry.projectName}</td>
+        <td>{timeEntry.client}</td>
         <td
           colSpan={2}
           className={css`
@@ -40,7 +40,7 @@ const TimeEntryTable: React.FC<Props> = ({ timeEntryRecord }) => (
             overflow: hidden;
           `}
         >
-          {timeEntryRecord.description}
+          {timeEntry.description}
         </td>
       </ValuesRow>
       <HeadersRow hasTopBorder>
@@ -50,10 +50,10 @@ const TimeEntryTable: React.FC<Props> = ({ timeEntryRecord }) => (
         <td>Tag(s)</td>
       </HeadersRow>
       <ValuesRow isBottomPadded={false}>
-        <td>{format(timeEntryRecord.start, DATE_FORMAT)}</td>
-        <td>{format(timeEntryRecord.end, DATE_FORMAT)}</td>
-        <td>{timeEntryRecord.userName}</td>
-        <td>{timeEntryRecord.tagList}</td>
+        <td>{format(timeEntry.start, DATE_FORMAT)}</td>
+        <td>{format(timeEntry.end, DATE_FORMAT)}</td>
+        <td>{timeEntry.userName}</td>
+        <td>{timeEntry.tagList}</td>
       </ValuesRow>
     </tbody>
   </table>

@@ -30,7 +30,7 @@ const EntitiesList: React.FC<Props> = ({
     if (entityGroup === EntityGroup.TimeEntries) {
       return (
         <TimeEntryListItem
-          timeEntryRecord={entityRecord as DetailedTimeEntryModel}
+          timeEntry={entityRecord as DetailedTimeEntryModel}
           {...listRowProps}
         />
       );
