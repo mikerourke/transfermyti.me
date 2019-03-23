@@ -1,7 +1,7 @@
 import { getType } from 'typesafe-actions';
 import { combineActions, handleActions } from 'redux-actions';
 import { get, isNil, isString } from 'lodash';
-import { getEntityIdFieldValue, getEntityNormalizedState } from '~/redux/utils';
+import { findIdFieldValue, normalizeState } from '~/redux/utils';
 import * as timeEntriesActions from './timeEntriesActions';
 import {
   EntityGroup,
@@ -47,10 +47,10 @@ const schemaProcessStrategy = (
 ): TimeEntryModel => ({
   id: value.id.toString(),
   description: value.description,
-  projectId: getEntityIdFieldValue(value, EntityType.Project),
-  taskId: getEntityIdFieldValue(value, EntityType.Task),
-  userId: getEntityIdFieldValue(value, EntityType.User),
-  workspaceId: getEntityIdFieldValue(value, EntityType.Workspace),
+  projectId: findIdFieldValue(value, EntityType.Project),
+  taskId: findIdFieldValue(value, EntityType.Task),
+  userId: findIdFieldValue(value, EntityType.User),
+  workspaceId: findIdFieldValue(value, EntityType.Workspace),
   client:
     'client' in value
       ? value.client
@@ -73,7 +73,7 @@ export default handleActions(
       state: TimeEntriesState,
       { payload: timeEntries }: ReduxAction<ClockifyTimeEntry[]>,
     ): TimeEntriesState =>
-      getEntityNormalizedState(
+      normalizeState(
         ToolName.Clockify,
         EntityGroup.TimeEntries,
         schemaProcessStrategy,
@@ -85,7 +85,7 @@ export default handleActions(
       state: TimeEntriesState,
       { payload: timeEntries }: ReduxAction<TogglTimeEntry[]>,
     ): TimeEntriesState =>
-      getEntityNormalizedState(
+      normalizeState(
         ToolName.Toggl,
         EntityGroup.TimeEntries,
         schemaProcessStrategy,

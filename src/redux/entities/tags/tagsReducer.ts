@@ -1,9 +1,9 @@
 import { getType } from 'typesafe-actions';
 import { combineActions, handleActions } from 'redux-actions';
 import {
-  getEntityIdFieldValue,
-  getEntityNormalizedState,
-  updateIsEntityIncluded,
+  findIdFieldValue,
+  normalizeState,
+  swapEntityInclusion,
 } from '~/redux/utils';
 import * as tagsActions from './tagsActions';
 import {
@@ -36,7 +36,7 @@ export const initialState: TagsState = {
 const schemaProcessStrategy = (value: ClockifyTag | TogglTag): TagModel => ({
   id: value.id.toString(),
   name: value.name,
-  workspaceId: getEntityIdFieldValue(value, EntityType.Workspace),
+  workspaceId: findIdFieldValue(value, EntityType.Workspace),
   entryCount: 0,
   linkedId: null,
   isIncluded: true,
@@ -51,7 +51,7 @@ export default handleActions(
       state: TagsState,
       { payload: tags }: ReduxAction<ClockifyTag[]>,
     ): TagsState =>
-      getEntityNormalizedState(
+      normalizeState(
         ToolName.Clockify,
         EntityGroup.Tags,
         schemaProcessStrategy,
@@ -63,7 +63,7 @@ export default handleActions(
       state: TagsState,
       { payload: tags }: ReduxAction<TogglTag[]>,
     ): TagsState =>
-      getEntityNormalizedState(
+      normalizeState(
         ToolName.Toggl,
         EntityGroup.Tags,
         schemaProcessStrategy,
@@ -95,7 +95,7 @@ export default handleActions(
     [getType(tagsActions.updateIsTagIncluded)]: (
       state: TagsState,
       { payload: tagId }: ReduxAction<string>,
-    ): TagsState => updateIsEntityIncluded(state, EntityType.Tag, tagId),
+    ): TagsState => swapEntityInclusion(state, EntityType.Tag, tagId),
   },
   initialState,
 );

@@ -2,9 +2,9 @@ import { getType } from 'typesafe-actions';
 import { combineActions, handleActions } from 'redux-actions';
 import { get, uniq } from 'lodash';
 import {
-  getEntityIdFieldValue,
-  getEntityNormalizedState,
-  updateIsEntityIncluded,
+  findIdFieldValue,
+  normalizeState,
+  swapEntityInclusion,
 } from '~/redux/utils';
 import * as userGroupsActions from './userGroupsActions';
 import {

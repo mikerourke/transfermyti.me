@@ -2,8 +2,8 @@ import { getType } from 'typesafe-actions';
 import { combineActions, handleActions } from 'redux-actions';
 import { get } from 'lodash';
 import {
-  getEntityNormalizedState,
-  updateIsEntityIncluded,
+  normalizeState,
+  swapEntityInclusion,
 } from '~/redux/utils';
 import * as usersActions from './usersActions';
 import {
@@ -56,7 +56,7 @@ export default handleActions(
       state: UsersState,
       { payload: users }: ReduxAction<ClockifyUser[]>,
     ): UsersState =>
-      getEntityNormalizedState(
+      normalizeState(
         ToolName.Clockify,
         EntityGroup.Users,
         schemaProcessStrategy,
@@ -68,7 +68,7 @@ export default handleActions(
       state: UsersState,
       { payload: users }: ReduxAction<TogglUser[]>,
     ): UsersState =>
-      getEntityNormalizedState(
+      normalizeState(
         ToolName.Toggl,
         EntityGroup.Users,
         schemaProcessStrategy,
@@ -100,7 +100,7 @@ export default handleActions(
     [getType(usersActions.updateIsUserIncluded)]: (
       state: UsersState,
       { payload: userId }: ReduxAction<string>,
-    ): UsersState => updateIsEntityIncluded(state, EntityType.User, userId),
+    ): UsersState => swapEntityInclusion(state, EntityType.User, userId),
   },
   initialState,
 );

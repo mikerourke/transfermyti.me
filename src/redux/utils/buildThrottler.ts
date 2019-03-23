@@ -1,16 +1,16 @@
 import PromiseThrottle from 'promise-throttle';
 
 export default function buildThrottler<TResponse>(
-  fetchFn: (...fetchArgs: any[]) => TResponse,
+  fetchFunc: (...fetchArgs: any[]) => TResponse,
 ) {
   const promiseThrottle = new PromiseThrottle({
     requestsPerSecond: 4,
     promiseImplementation: Promise,
   });
 
-  const throttledFn = (...args: any[]) =>
+  const throttledFunc = (...args: any[]) =>
     new Promise((resolve, reject) =>
-      fetchFn
+      fetchFunc
         .call(null, ...args)
         .then((response: TResponse) => {
           resolve(response);
@@ -22,6 +22,6 @@ export default function buildThrottler<TResponse>(
 
   return {
     promiseThrottle,
-    throttledFn,
+    throttledFunc,
   };
 }

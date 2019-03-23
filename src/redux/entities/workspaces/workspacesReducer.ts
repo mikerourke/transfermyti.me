@@ -2,8 +2,8 @@ import { getType } from 'typesafe-actions';
 import { handleActions, combineActions } from 'redux-actions';
 import { cloneDeep, get, uniq } from 'lodash';
 import {
-  getEntityNormalizedState,
-  updateIsEntityIncluded,
+  normalizeState,
+  swapEntityInclusion,
 } from '~/redux/utils';
 import * as workspacesActions from './workspacesActions';
 import {
@@ -61,7 +61,7 @@ export default handleActions(
       state: WorkspacesState,
       { payload: workspaces }: ReduxAction<ClockifyWorkspace[]>,
     ): WorkspacesState =>
-      getEntityNormalizedState(
+      normalizeState(
         ToolName.Clockify,
         EntityGroup.Workspaces,
         schemaProcessStrategy,
@@ -73,7 +73,7 @@ export default handleActions(
       state: WorkspacesState,
       { payload: workspaces }: ReduxAction<TogglWorkspace[]>,
     ): WorkspacesState =>
-      getEntityNormalizedState(
+      normalizeState(
         ToolName.Toggl,
         EntityGroup.Workspaces,
         schemaProcessStrategy,
@@ -165,7 +165,7 @@ export default handleActions(
       state: WorkspacesState,
       { payload: workspaceId }: ReduxAction<string>,
     ): WorkspacesState =>
-      updateIsEntityIncluded(state, EntityType.Workspace, workspaceId),
+      swapEntityInclusion(state, EntityType.Workspace, workspaceId),
 
     [getType(workspacesActions.updateIsWorkspaceYearIncluded)]: (
       state: WorkspacesState,

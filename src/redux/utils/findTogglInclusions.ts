@@ -1,6 +1,6 @@
 import { get, isNil } from 'lodash';
 
-export default function getTogglInclusionRecords<TModel>(
+export default function findTogglInclusions<TModel>(
   entityRecords: TModel[],
 ): TModel[] {
   return entityRecords.reduce(

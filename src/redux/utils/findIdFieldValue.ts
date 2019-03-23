@@ -1,7 +1,7 @@
 import { get, isNil } from 'lodash';
-import { EntityType } from '~/types/commonTypes';
+import { EntityType } from '~/types/entityTypes';
 
-export default function getEntityIdFieldValue(
+export default function findIdFieldValue(
   record: any,
   entityType: EntityType,
 ): string | null {

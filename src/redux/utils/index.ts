@@ -1,19 +1,9 @@
+export { default as appendTimeEntryCount } from './appendTimeEntryCount';
 export { default as batchClockifyRequests } from './batchClockifyRequests';
 export { default as buildThrottler } from './buildThrottler';
-export { default as getEntityIdFieldValue } from './getEntityIdFieldValue';
-export {
-  default as getEntityNormalizedState,
-} from './getEntityNormalizedState';
-export {
-  default as getEntityRecordsByWorkspaceId,
-} from './getEntityRecordsByWorkspaceId';
-export {
-  default as getEntityRecordsWithEntryCounts,
-} from './getEntityRecordsWithEntryCounts';
-export {
-  default as getFirstAndLastDayOfYear,
-} from './getFirstAndLastDayOfYear';
-export {
-  default as getTogglInclusionRecords,
-} from './getTogglInclusionRecords';
-export { default as updateIsEntityIncluded } from './updateIsEntityIncluded';
+export { default as findIdFieldValue } from './findIdFieldValue';
+export { default as findTogglInclusions } from './findTogglInclusions';
+export { default as firstAndLastDayOfYear } from './firstAndLastDayOfYear';
+export { default as groupByWorkspace } from './groupByWorkspace';
+export { default as normalizeState } from './normalizeState';
+export { default as swapEntityInclusion } from './swapEntityInclusion';

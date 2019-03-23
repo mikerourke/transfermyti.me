@@ -1,9 +1,9 @@
 import { getType } from 'typesafe-actions';
 import { combineActions, handleActions } from 'redux-actions';
 import {
-  getEntityIdFieldValue,
-  getEntityNormalizedState,
-  updateIsEntityIncluded,
+  findIdFieldValue,
+  normalizeState,
+  swapEntityInclusion,
 } from '~/redux/utils';
 import * as tasksActions from './tasksActions';
 import {
@@ -54,8 +54,8 @@ const schemaProcessStrategy = (value: ClockifyTask | TogglTask): TaskModel => ({
       ? convertSecondsToClockifyEstimate(value.estimated_seconds)
       : value.estimate,
   workspaceId: '', // The workspaceId value is assigned in the selector.
-  projectId: getEntityIdFieldValue(value, EntityType.Project),
-  assigneeId: getEntityIdFieldValue(value, EntityType.User),
+  projectId: findIdFieldValue(value, EntityType.Project),
+  assigneeId: findIdFieldValue(value, EntityType.User),
   isActive:
     'active' in value
       ? value.active
@@ -74,7 +74,7 @@ export default handleActions(
       state: TasksState,
       { payload: tasks }: ReduxAction<ClockifyTask[]>,
     ): TasksState =>
-      getEntityNormalizedState(
+      normalizeState(
         ToolName.Clockify,
         EntityGroup.Tasks,
         schemaProcessStrategy,
@@ -86,7 +86,7 @@ export default handleActions(
       state: TasksState,
       { payload: tasks }: ReduxAction<TogglTask[]>,
     ): TasksState =>
-      getEntityNormalizedState(
+      normalizeState(
         ToolName.Toggl,
         EntityGroup.Tasks,
         schemaProcessStrategy,
@@ -118,7 +118,7 @@ export default handleActions(
     [getType(tasksActions.updateIsTaskIncluded)]: (
       state: TasksState,
       { payload: taskId }: ReduxAction<string>,
-    ): TasksState => updateIsEntityIncluded(state, EntityType.Task, taskId),
+    ): TasksState => swapEntityInclusion(state, EntityType.Task, taskId),
   },
   initialState,
 );

@@ -1,7 +1,7 @@
 import { get } from 'lodash';
-import { EntityType } from '~/types/commonTypes';
+import { EntityType } from '~/types/entityTypes';
 
-export default function updateIsEntityIncluded<TState>(
+export default function swapEntityInclusion<TState>(
   state: TState,
   entityType: EntityType,
   entityId: string,

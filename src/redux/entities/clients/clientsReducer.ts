@@ -1,9 +1,9 @@
 import { getType } from 'typesafe-actions';
 import { combineActions, handleActions } from 'redux-actions';
 import {
-  getEntityIdFieldValue,
-  getEntityNormalizedState,
-  updateIsEntityIncluded,
+  findIdFieldValue,
+  normalizeState,
+  swapEntityInclusion,
 } from '~/redux/utils';
 import * as clientsActions from './clientsActions';
 import { ClientModel, ClockifyClient, TogglClient } from '~/types/clientsTypes';
@@ -38,7 +38,7 @@ const schemaProcessStrategy = (
 ): ClientModel => ({
   id: value.id.toString(),
   name: value.name,
-  workspaceId: getEntityIdFieldValue(value, EntityType.Workspace),
+  workspaceId: findIdFieldValue(value, EntityType.Workspace),
   entryCount: 0,
   linkedId: null,
   isIncluded: true,
@@ -53,7 +53,7 @@ export default handleActions(
       state: ClientsState,
       { payload: clients }: ReduxAction<ClockifyClient[]>,
     ): ClientsState =>
-      getEntityNormalizedState(
+      normalizeState(
         ToolName.Clockify,
         EntityGroup.Clients,
         schemaProcessStrategy,
@@ -65,7 +65,7 @@ export default handleActions(
       state: ClientsState,
       { payload: clients }: ReduxAction<TogglClient[]>,
     ): ClientsState =>
-      getEntityNormalizedState(
+      normalizeState(
         ToolName.Toggl,
         EntityGroup.Clients,
         schemaProcessStrategy,
@@ -98,7 +98,7 @@ export default handleActions(
       state: ClientsState,
       { payload: clientId }: ReduxAction<string>,
     ): ClientsState =>
-      updateIsEntityIncluded(state, EntityType.Client, clientId),
+      swapEntityInclusion(state, EntityType.Client, clientId),
   },
   initialState,
 );

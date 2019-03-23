@@ -2,9 +2,9 @@ import { getType } from 'typesafe-actions';
 import { combineActions, handleActions } from 'redux-actions';
 import { get } from 'lodash';
 import {
-  getEntityIdFieldValue,
-  getEntityNormalizedState,
-  updateIsEntityIncluded,
+  findIdFieldValue,
+  normalizeState,
+  swapEntityInclusion,
 } from '~/redux/utils';
 import * as projectsActions from './projectsActions';
 import {
@@ -43,8 +43,8 @@ const schemaProcessStrategy = (
 ): ProjectModel => ({
   id: value.id.toString(),
   name: value.name,
-  workspaceId: getEntityIdFieldValue(value, EntityType.Workspace),
-  clientId: getEntityIdFieldValue(value, EntityType.Client),
+  workspaceId: findIdFieldValue(value, EntityType.Workspace),
+  clientId: findIdFieldValue(value, EntityType.Client),
   isBillable: value.billable,
   isPublic: 'public' in value ? value.public : !value.is_private,
   isActive: 'archived' in value ? value.archived : value.active,
@@ -64,7 +64,7 @@ export default handleActions(
       state: ProjectsState,
       { payload: projects }: ReduxAction<ClockifyProject[]>,
     ): ProjectsState =>
-      getEntityNormalizedState(
+      normalizeState(
         ToolName.Clockify,
         EntityGroup.Projects,
         schemaProcessStrategy,
@@ -76,7 +76,7 @@ export default handleActions(
       state: ProjectsState,
       { payload: projects }: ReduxAction<TogglProject[]>,
     ): ProjectsState =>
-      getEntityNormalizedState(
+      normalizeState(
         ToolName.Toggl,
         EntityGroup.Projects,
         schemaProcessStrategy,
@@ -109,7 +109,7 @@ export default handleActions(
       state: ProjectsState,
       { payload: projectId }: ReduxAction<string>,
     ): ProjectsState =>
-      updateIsEntityIncluded(state, EntityType.Project, projectId),
+      swapEntityInclusion(state, EntityType.Project, projectId),
   },
   initialState,
 );
