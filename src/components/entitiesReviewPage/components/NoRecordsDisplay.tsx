@@ -1,7 +1,7 @@
 import React from 'react';
 import { css } from 'emotion';
 import { isNil } from 'lodash';
-import { EntityGroup } from '~/types/commonTypes';
+import { EntityGroup } from '~/types/entityTypes';
 
 interface Props {
   activeEntityGroup: string;

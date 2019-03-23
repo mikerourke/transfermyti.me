@@ -8,12 +8,11 @@ import {
 import * as clientsActions from './clientsActions';
 import { ClientModel, ClockifyClient, TogglClient } from '~/types/clientsTypes';
 import {
-  EntityGroup,
-  EntityType,
   ReduxAction,
   ReduxStateEntryForTool,
   ToolName,
 } from '~/types/commonTypes';
+import { EntityGroup, EntityType } from '~/types/entityTypes';
 
 export interface ClientsState {
   readonly clockify: ReduxStateEntryForTool<ClientModel>;
@@ -39,7 +38,6 @@ const schemaProcessStrategy = (
   id: value.id.toString(),
   name: value.name,
   workspaceId: findIdFieldValue(value, EntityType.Workspace),
-  entryCount: 0,
   linkedId: null,
   isIncluded: true,
 });

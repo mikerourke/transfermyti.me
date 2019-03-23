@@ -1,18 +1,14 @@
 import { getType } from 'typesafe-actions';
 import { combineActions, handleActions } from 'redux-actions';
 import { get } from 'lodash';
-import {
-  normalizeState,
-  swapEntityInclusion,
-} from '~/redux/utils';
+import { normalizeState, swapEntityInclusion } from '~/redux/utils';
 import * as usersActions from './usersActions';
 import {
-  EntityGroup,
-  EntityType,
   ReduxAction,
   ReduxStateEntryForTool,
   ToolName,
 } from '~/types/commonTypes';
+import { EntityGroup, EntityType } from '~/types/entityTypes';
 import {
   ClockifyUser,
   ClockifyUserStatus,

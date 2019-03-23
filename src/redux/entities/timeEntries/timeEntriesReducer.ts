@@ -4,12 +4,11 @@ import { get, isNil, isString } from 'lodash';
 import { findIdFieldValue, normalizeState } from '~/redux/utils';
 import * as timeEntriesActions from './timeEntriesActions';
 import {
-  EntityGroup,
-  EntityType,
   ReduxAction,
   ReduxStateEntryForTool,
   ToolName,
 } from '~/types/commonTypes';
+import { EntityGroup, EntityType } from '~/types/entityTypes';
 import {
   ClockifyTimeEntry,
   TimeEntryModel,

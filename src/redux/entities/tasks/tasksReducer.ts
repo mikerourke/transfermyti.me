@@ -7,12 +7,11 @@ import {
 } from '~/redux/utils';
 import * as tasksActions from './tasksActions';
 import {
-  EntityGroup,
-  EntityType,
   ReduxAction,
   ReduxStateEntryForTool,
   ToolName,
 } from '~/types/commonTypes';
+import { EntityGroup, EntityType } from '~/types/entityTypes';
 import {
   ClockifyTask,
   ClockifyTaskStatus,

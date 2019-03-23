@@ -1,3 +1,5 @@
+import { UniversalEntityModel } from '~/types/entityTypes';
+
 export interface ClockifyUserGroup {
   id: string;
   name: string;
@@ -12,8 +14,4 @@ export interface TogglUserGroup {
   at: string;
 }
 
-export interface UserGroupModel extends ClockifyUserGroup {
-  entryCount: number;
-  linkedId: string | null;
-  isIncluded: boolean;
-}
+export type UserGroupModel = ClockifyUserGroup & UniversalEntityModel;

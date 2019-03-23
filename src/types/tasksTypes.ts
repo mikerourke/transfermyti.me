@@ -1,3 +1,5 @@
+import { UniversalEntityModel } from '~/types/entityTypes';
+
 export enum ClockifyTaskStatus {
   Active = 'ACTIVE',
   Done = 'DONE',
@@ -23,7 +25,7 @@ export interface TogglTask {
   estimated_seconds: number;
 }
 
-export interface TaskModel {
+export interface TaskModel extends UniversalEntityModel {
   id: string;
   name: string;
   estimate: string;
@@ -31,9 +33,6 @@ export interface TaskModel {
   projectId: string;
   assigneeId: string | null;
   isActive: boolean;
-  entryCount: number;
-  linkedId: string | null;
-  isIncluded: boolean;
 }
 
 export interface CreateTaskRequest {

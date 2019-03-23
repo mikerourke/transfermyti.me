@@ -1,3 +1,5 @@
+import { UniversalEntityModel } from '~/types/entityTypes';
+
 export interface ClockifyClient {
   id: string;
   name: string;
@@ -11,8 +13,4 @@ export interface TogglClient {
   at: string;
 }
 
-export interface ClientModel extends ClockifyClient {
-  entryCount: number;
-  linkedId: string | null;
-  isIncluded: boolean;
-}
+export type ClientModel = ClockifyClient & UniversalEntityModel;

@@ -5,7 +5,8 @@ import EntitiesList from '~/components/entitiesList/EntitiesList';
 import EntityTabs from './components/EntityTabs';
 import NoRecordsDisplay from './components/NoRecordsDisplay';
 import WorkspacesDropdown from './components/WorkspacesDropdown';
-import { EntityGroup, EntityModel } from '~/types/commonTypes';
+import { EntityModel } from '~/types/commonTypes';
+import { EntityGroup } from '~/types/entityTypes';
 import { WorkspaceModel } from '~/types/workspacesTypes';
 
 interface Props {

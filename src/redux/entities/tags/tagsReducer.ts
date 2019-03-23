@@ -7,12 +7,11 @@ import {
 } from '~/redux/utils';
 import * as tagsActions from './tagsActions';
 import {
-  EntityGroup,
-  EntityType,
   ReduxAction,
   ReduxStateEntryForTool,
   ToolName,
 } from '~/types/commonTypes';
+import { EntityGroup, EntityType } from '~/types/entityTypes';
 import { ClockifyTag, TagModel, TogglTag } from '~/types/tagsTypes';
 
 export interface TagsState {

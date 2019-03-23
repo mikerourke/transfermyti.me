@@ -2,12 +2,12 @@ import { getType } from 'typesafe-actions';
 import { handleActions } from 'redux-actions';
 import * as appActions from './appActions';
 import { NotificationModel, TransferType } from '~/types/appTypes';
-import { EntityTransferModel, ReduxAction } from '~/types/commonTypes';
+import { EntityModel, ReduxAction } from '~/types/commonTypes';
 
 export interface AppState {
   readonly notifications: NotificationModel[];
   readonly currentTransferType: TransferType;
-  readonly inTransferEntity: EntityTransferModel | null;
+  readonly inTransferEntity: Partial<EntityModel> | null;
 }
 
 export const initialState: AppState = {
@@ -53,7 +53,7 @@ export default handleActions(
 
     [getType(appActions.updateInTransferEntity)]: (
       state: AppState,
-      { payload: inTransferEntity }: ReduxAction<EntityTransferModel>,
+      { payload: inTransferEntity }: ReduxAction<Partial<EntityModel>>,
     ): AppState => ({
       ...state,
       inTransferEntity,

@@ -1,4 +1,5 @@
 import { TogglWorkspace } from './workspacesTypes';
+import { UniversalEntityModel } from '~/types/entityTypes';
 
 // TODO: Add the other options here.
 export enum ClockifyUserStatus {
@@ -100,15 +101,13 @@ export interface TogglMeResponse {
   };
 }
 
-export interface UserModel {
+export interface UserModel extends UniversalEntityModel {
   id: string;
   name: string;
   email: string;
   isAdmin: boolean | null;
   isActive: boolean;
   userGroupIds: string[] | null;
-  linkedId: string | null;
-  isIncluded: boolean;
 }
 
 export interface AddUsersToWorkspaceRequest {

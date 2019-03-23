@@ -1,6 +1,7 @@
 import { TogglTotalCurrencyModel } from './commonTypes';
 import { ClockifyProject } from './projectsTypes';
 import { ClockifyUser } from './usersTypes';
+import { UniversalEntityModel } from '~/types/entityTypes';
 
 export interface ClockifyTimeInterval {
   start: string;
@@ -56,7 +57,7 @@ export interface TogglTimeEntriesFetchResponse {
   data: TogglTimeEntry[];
 }
 
-export interface TimeEntryModel {
+export interface TimeEntryModel extends UniversalEntityModel {
   id: string;
   description: string;
   projectId: string;
@@ -70,8 +71,6 @@ export interface TimeEntryModel {
   tags: string[];
   tagIds?: string[];
   name: null; // Not used, included because other entities have a "name".
-  linkedId: string | null;
-  isIncluded: boolean;
 }
 
 export interface TimeEntryWithClientModel extends TimeEntryModel {

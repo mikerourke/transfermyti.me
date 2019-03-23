@@ -14,12 +14,8 @@ import {
 import EntitiesReviewPage from '~/components/entitiesReviewPage/EntitiesReviewPage';
 import Loader from '~/components/loader/Loader';
 import InstructionsList from './components/InstructionsList';
-import {
-  EntityGroup,
-  EntityModel,
-  ReduxDispatch,
-  ReduxState,
-} from '~/types/commonTypes';
+import { EntityModel, ReduxDispatch, ReduxState } from '~/types/commonTypes';
+import { EntityGroup } from '~/types/entityTypes';
 import { WorkspaceModel } from '~/types/workspacesTypes';
 
 interface ConnectStateProps {

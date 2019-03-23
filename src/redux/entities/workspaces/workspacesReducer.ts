@@ -1,18 +1,14 @@
 import { getType } from 'typesafe-actions';
 import { handleActions, combineActions } from 'redux-actions';
 import { cloneDeep, get, uniq } from 'lodash';
-import {
-  normalizeState,
-  swapEntityInclusion,
-} from '~/redux/utils';
+import { normalizeState, swapEntityInclusion } from '~/redux/utils';
 import * as workspacesActions from './workspacesActions';
 import {
-  EntityGroup,
-  EntityType,
   ReduxAction,
   ReduxStateEntryForTool,
   ToolName,
 } from '~/types/commonTypes';
+import { EntityGroup, EntityType } from '~/types/entityTypes';
 import {
   ClockifyWorkspace,
   TogglWorkspace,

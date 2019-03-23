@@ -19,28 +19,6 @@ export enum ToolName {
   Toggl = 'toggl',
 }
 
-export enum EntityType {
-  Workspace = 'workspace',
-  Project = 'project',
-  Client = 'client',
-  Tag = 'tag',
-  Task = 'task',
-  TimeEntry = 'timeEntry',
-  UserGroup = 'userGroup',
-  User = 'user',
-}
-
-export enum EntityGroup {
-  Workspaces = 'workspaces',
-  Projects = 'projects',
-  Clients = 'clients',
-  Tags = 'tags',
-  Tasks = 'tasks',
-  TimeEntries = 'timeEntries',
-  UserGroups = 'userGroups',
-  Users = 'users',
-}
-
 export interface TogglTotalCurrencyModel {
   currency: string | null;
   amount: number | null;
@@ -54,8 +32,6 @@ export type EntityModel =
   | TimeEntryModel
   | UserGroupModel
   | UserModel;
-
-export type EntityTransferModel = Partial<EntityModel> & { type: EntityType };
 
 export type ReduxStateEntryForTool<TModel> = {
   readonly byId: Record<string, TModel>;

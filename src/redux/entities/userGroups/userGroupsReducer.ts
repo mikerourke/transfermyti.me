@@ -8,12 +8,11 @@ import {
 } from '~/redux/utils';
 import * as userGroupsActions from './userGroupsActions';
 import {
-  EntityGroup,
-  EntityType,
   ReduxAction,
   ReduxStateEntryForTool,
   ToolName,
 } from '~/types/commonTypes';
+import { EntityGroup, EntityType } from '~/types/entityTypes';
 import {
   ClockifyUserGroup,
   TogglUserGroup,
@@ -43,7 +42,7 @@ const schemaProcessStrategy = (
 ): UserGroupModel => ({
   id: value.id.toString(),
   name: value.name,
-  workspaceId: getEntityIdFieldValue(value, EntityType.Workspace),
+  workspaceId: findIdFieldValue(value, EntityType.Workspace),
   userIds: 'userIds' in value ? value.userIds : [],
   entryCount: 0,
   linkedId: null,
@@ -59,7 +58,7 @@ export default handleActions(
       state: UserGroupsState,
       { payload: userGroups }: ReduxAction<ClockifyUserGroup[]>,
     ): UserGroupsState =>
-      getEntityNormalizedState(
+      normalizeState(
         ToolName.Clockify,
         EntityGroup.UserGroups,
         schemaProcessStrategy,
@@ -71,7 +70,7 @@ export default handleActions(
       state: UserGroupsState,
       { payload: userGroups }: ReduxAction<TogglUserGroup[]>,
     ): UserGroupsState =>
-      getEntityNormalizedState(
+      normalizeState(
         ToolName.Toggl,
         EntityGroup.UserGroups,
         schemaProcessStrategy,
@@ -104,7 +103,7 @@ export default handleActions(
       state: UserGroupsState,
       { payload: userGroupId }: ReduxAction<string>,
     ): UserGroupsState =>
-      updateIsEntityIncluded(state, EntityType.UserGroup, userGroupId),
+      swapEntityInclusion(state, EntityType.UserGroup, userGroupId),
 
     [getType(userGroupsActions.addTogglUserIdToGroup)]: (
       state: UserGroupsState,

@@ -1,3 +1,5 @@
+import { UniversalEntityModel } from '~/types/entityTypes';
+
 export interface ClockifyTag {
   id: string;
   name: string;
@@ -11,8 +13,4 @@ export interface TogglTag {
   at: string;
 }
 
-export interface TagModel extends ClockifyTag {
-  entryCount: number;
-  linkedId: string | null;
-  isIncluded: boolean;
-}
+export type TagModel = ClockifyTag & UniversalEntityModel;

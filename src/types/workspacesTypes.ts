@@ -1,5 +1,6 @@
 import { TogglTotalCurrencyModel } from './commonTypes';
 import { ClockifyMembership } from './usersTypes';
+import { UniversalEntityModel } from '~/types/entityTypes';
 
 interface ClockifyWorkspaceSettings {
   timeRoundingInReports: boolean;
@@ -86,13 +87,10 @@ export interface TogglSummaryReport {
   data: TogglSummaryReportDataModel[];
 }
 
-export interface WorkspaceModel {
+export interface WorkspaceModel extends UniversalEntityModel {
   id: string;
   name: string;
   inclusionsByYear?: Record<string, boolean>;
   userIds?: string[];
   isAdmin: boolean | null;
-  entryCount: number;
-  linkedId: string | null;
-  isIncluded: boolean;
 }

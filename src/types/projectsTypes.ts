@@ -1,5 +1,6 @@
 import { ClockifyTask } from './tasksTypes';
 import { ClockifyMembership } from './usersTypes';
+import { UniversalEntityModel } from '~/types/entityTypes';
 
 export enum ClockifyEstimateType {
   Auto = 'AUTO',
@@ -53,7 +54,7 @@ export interface TogglProjectUser {
   rate: number;
 }
 
-export interface ProjectModel {
+export interface ProjectModel extends UniversalEntityModel {
   id: string;
   name: string;
   workspaceId: string;
@@ -63,9 +64,6 @@ export interface ProjectModel {
   isActive: boolean;
   color: string;
   userIds: string[];
-  entryCount: number;
-  linkedId: string | null;
-  isIncluded: boolean;
 }
 
 export interface CreateProjectRequest {

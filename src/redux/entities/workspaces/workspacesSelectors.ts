@@ -28,8 +28,8 @@ import {
   selectTogglUserInclusionsByWorkspaceId,
   selectTogglUsersByWorkspaceId,
 } from '~/redux/entities/users/usersSelectors';
-import { EntityGroup, EntityModel, ReduxState } from '~/types/commonTypes';
 import { WorkspaceModel } from '~/types/workspacesTypes';
+import { EntityGroup } from '~/types/entityTypes';
 
 export const selectTogglWorkspaceIds = createSelector(
   (state: ReduxState) => state.entities.workspaces.toggl.idValues,

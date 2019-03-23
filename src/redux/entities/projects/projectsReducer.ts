@@ -8,12 +8,11 @@ import {
 } from '~/redux/utils';
 import * as projectsActions from './projectsActions';
 import {
-  EntityGroup,
-  EntityType,
   ReduxAction,
   ReduxStateEntryForTool,
   ToolName,
 } from '~/types/commonTypes';
+import { EntityGroup, EntityType } from '~/types/entityTypes';
 import {
   ClockifyProject,
   ProjectModel,
