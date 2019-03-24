@@ -66,7 +66,7 @@ export const SelectTogglInclusionsStepComponent: React.FC<Props> = ({
         >
           <p
             className={css`
-              margin-bottom: 1.25rem;
+              margin-bottom: 1rem;
             `}
           >
             Select which entities/records you want to transfer and press the
@@ -75,7 +75,7 @@ export const SelectTogglInclusionsStepComponent: React.FC<Props> = ({
           </p>
           <div
             className={css`
-              margin-bottom: 1.25rem;
+              margin-bottom: 1rem;
             `}
           >
             <InstructionsList />

@@ -36,16 +36,31 @@ const StepPage: React.FC<Props> = ({ next, previous, ...props }) => {
 
   return (
     <Container>
-      <Title isSize={4}>{`Step ${props.stepNumber}:`}</Title>
+      <h1
       <Subtitle isSize={3}>{props.subtitle}</Subtitle>
       <div
         ref={contentsRef}
         className={css`
-          min-height: 300px;
+          margin-bottom: 0;
+          font-size: 1.5rem;
+          color: var(--dark-gray);
+          font-weight: 600;
+          line-height: 1.125;
         `}
       >
-        {props.children}
-      </div>
+        Step {props.stepNumber}:
+      </h1>
+      <h2
+        className={css`
+          margin-bottom: 0.5rem;
+          font-size: 2rem;
+          font-weight: 400;
+          color: var(--dark-gray);
+        `}
+      >
+        {props.subtitle}
+      </h2>
+      <div ref={contentsRef}>{props.children}</div>
       <Flex
         justifyContent="space-between"
         className={css`
@@ -57,7 +72,15 @@ const StepPage: React.FC<Props> = ({ next, previous, ...props }) => {
             <Button
               isSize="medium"
               onClick={props.onRefreshClick}
-              isColor="info"
+              className={css`
+                background: rgba(125, 103, 198, 1);
+                color: white;
+
+                &:hover {
+                  background: rgba(125, 103, 198, 0.8);
+                  color: white;
+                }
+              `}
             >
               Refresh
             </Button>

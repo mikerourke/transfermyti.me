@@ -27,7 +27,7 @@ const Checkbox: React.FC<Props> = ({ state, size, onClick }) => (
       cursor: pointer;
     `}
   >
-    <path d={statePaths[state]} fill="var(--dark-gray)" />
+    <path d={statePaths[state]} fill="var(--info)" />
   </svg>
 );
 

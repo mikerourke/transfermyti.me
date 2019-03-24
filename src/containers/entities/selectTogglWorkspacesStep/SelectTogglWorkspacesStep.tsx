@@ -134,7 +134,7 @@ export const SelectTogglWorkspacesStepComponent: React.FC<Props> = props => {
         className={css`
           max-height: 50vh;
           overflow: auto;
-          padding: 1rem;
+              padding: 0.25rem;
         `}
       >
         {props.workspaceIds.map(workspaceId => (

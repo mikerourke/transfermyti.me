@@ -12,6 +12,12 @@ const InstructionsList: React.FC = () => (
       }
 
       li:last-child {
+        color: var(--info);
+        font-weight: 500;
+      }
+
+      span:last-child {
+        color: var(--info);
         font-weight: 700;
       }
     `}
@@ -27,8 +33,8 @@ const InstructionsList: React.FC = () => (
       entry and manually update it, or delete the workspace and start over.
     </li>
     <li>
-      Once you hit the <strong>Next</strong> button, you'll have a chance to
-      review what will be transferred to Clockify.
+      Once you hit the <span>Next</span> button, you'll have a chance to review
+      what will be transferred to Clockify.
     </li>
   </ul>
 );

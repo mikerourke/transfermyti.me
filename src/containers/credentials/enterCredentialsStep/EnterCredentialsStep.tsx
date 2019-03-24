@@ -104,7 +104,7 @@ export const EnterCredentialsStepComponent: React.FC<Props> = ({
     >
       <p
         className={css`
-          margin-bottom: 1.25rem;
+          margin-bottom: 1rem;
         `}
       >
         Enter your credentials in the form below. If you need help, hover over

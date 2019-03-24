@@ -9,7 +9,6 @@ import {
   DropdownTrigger,
 } from 'bloomer';
 import { css } from 'emotion';
-import Flex from '~/components/flex/Flex';
 import ChevronDownIcon from './ChevronDownIcon';
 import { WorkspaceModel } from '~/types/workspacesTypes';
 
@@ -18,6 +17,8 @@ interface Props {
   activeWorkspaceId: string;
   onItemClick: (workspaceId: string) => void;
 }
+
+const MIN_WIDTH = '14rem';
 
 const WorkspacesDropdown: React.FC<Props> = ({
   workspacesById,
@@ -32,69 +33,61 @@ const WorkspacesDropdown: React.FC<Props> = ({
   };
 
   return (
-    <Flex
-      direction="column"
+    <Dropdown
+      isActive={isActive}
       className={css`
-        margin-bottom: 1rem;
+        margin-bottom: 0.5rem;
+        min-width: ${MIN_WIDTH};
       `}
     >
-      <div
+      <DropdownTrigger
         className={css`
-          font-size: 14px;
-          font-weight: 700;
-          color: var(--info);
-          margin: 0.25rem;
-          text-transform: uppercase;
+          min-width: ${MIN_WIDTH};
         `}
       >
-        Select a Workspace:
-      </div>
-      <Dropdown
-        isActive={isActive}
-        className={css`
-          min-width: 12rem;
-        `}
-      >
-        <DropdownTrigger
+        <Button
+          isOutlined
+          aria-haspopup="true"
+          aria-controls="dropdown-menu"
           className={css`
-            width: 12rem;
+            font-size: 1.25rem;
+            font-weight: bold;
+            width: 100%;
+            justify-content: space-between;
           `}
+          onClick={() => setIsActive(!isActive)}
         >
-          <Button
-            isOutlined
-            aria-haspopup="true"
-            aria-controls="dropdown-menu"
-            className={css`
-              width: 100%;
-              justify-content: space-between;
-            `}
-            onClick={() => setIsActive(!isActive)}
-          >
-            <span>{get(workspacesById, [activeWorkspaceId, 'name'], '')}</span>
-            <ChevronDownIcon />
-          </Button>
-        </DropdownTrigger>
-        <DropdownMenu>
-          <DropdownContent>
-            {Object.values(workspacesById).map(({ id, name }) => (
-              <DropdownItem
-                key={id}
-                className={css`
-                  cursor: pointer;
-                  &:hover {
-                    background-color: var(--info);
-                    color: white;
-                  }
-                `}
-                onClick={() => handleItemClick(id)}
-              >
-                {name}
-              </DropdownItem>
-            ))}
-          </DropdownContent>
-        </DropdownMenu>
-      </Dropdown>
-    </Flex>
+          <span>{get(workspacesById, [activeWorkspaceId, 'name'], '')}</span>
+          <ChevronDownIcon />
+        </Button>
+      </DropdownTrigger>
+      <DropdownMenu
+        className={css`
+          min-width: ${MIN_WIDTH};
+        `}
+      >
+        <DropdownContent>
+          {Object.values(workspacesById).map(({ id, name }) => (
+            <DropdownItem
+              key={id}
+              className={css`
+                cursor: pointer;
+                font-size: 1.25rem;
+                font-weight: bold;
+
+                &:hover {
+                  background-color: var(--info);
+                  color: white;
+                }
+              `}
+              onClick={() => handleItemClick(id)}
+            >
+              {name}
+            </DropdownItem>
+          ))}
+        </DropdownContent>
+      </DropdownMenu>
+    </Dropdown>
   );
 };
 

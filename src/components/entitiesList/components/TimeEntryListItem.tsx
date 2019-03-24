@@ -23,9 +23,9 @@ const TimeEntryListItem: React.FC<Props> = ({
         alignItems="center"
         className={css`
           height: 104px;
-          margin-left: 4px;
-          padding-left: 8px;
-          width: calc(100% - 16px);
+          margin-left: 0.5rem;
+          padding-left: 1rem;
+          width: calc(100% - 2rem);
         `}
       >
         <TimeEntryTable timeEntry={timeEntry} />

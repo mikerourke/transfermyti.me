@@ -110,7 +110,7 @@ export const ReviewClockifyDetailsStepComponent: React.FC<Props> = props => {
         >
           <p
             className={css`
-              margin-bottom: 1.25rem;
+              margin-bottom: 1rem;
             `}
           >
             This page contains all the records that <strong>will </strong> be
@@ -121,7 +121,7 @@ export const ReviewClockifyDetailsStepComponent: React.FC<Props> = props => {
           </p>
           <p
             className={css`
-              margin-bottom: 1.25rem;
+              margin-bottom: 1rem;
             `}
           >
             If you see something here that you <strong>don't</strong> want
