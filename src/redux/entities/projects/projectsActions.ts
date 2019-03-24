@@ -43,8 +43,8 @@ export const clockifyProjectsTransfer = createAsyncAction(
   '@projects/CLOCKIFY_TRANSFER_FAILURE',
 )<void, ClockifyProject[], void>();
 
-export const updateIsProjectIncluded = createStandardAction(
-  '@projects/UPDATE_IS_INCLUDED',
+export const flipIsProjectIncluded = createStandardAction(
+  '@projects/FLIP_IS_INCLUDED',
 )<string>();
 
 export const fetchClockifyProjects = (workspaceId: string) => async (

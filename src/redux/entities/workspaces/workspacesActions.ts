@@ -62,12 +62,12 @@ export const appendUserIdsToWorkspace = createStandardAction(
   '@workspaces/APPEND_USER_IDS',
 )<{ toolName: ToolName; workspaceId: string; userIds: string[] }>();
 
-export const updateIsWorkspaceIncluded = createStandardAction(
-  '@workspaces/UPDATE_IS_INCLUDED',
+export const flipIsWorkspaceIncluded = createStandardAction(
+  '@workspaces/FLIP_IS_INCLUDED',
 )<string>();
 
-export const updateIsWorkspaceYearIncluded = createStandardAction(
-  '@workspaces/UPDATE_IS_YEAR_INCLUDED',
+export const flipIsWorkspaceYearIncluded = createStandardAction(
+  '@workspaces/FLIP_IS_YEAR_INCLUDED',
 )<{ workspaceId: string; year: string }>();
 
 export const updateWorkspaceNameBeingFetched = createStandardAction(
@@ -138,8 +138,8 @@ export const fetchTogglEntitiesInWorkspace = ({
   await dispatch(projectsActions.fetchTogglProjects(id));
   await dispatch(tagsActions.fetchTogglTags(id));
   await dispatch(tasksActions.fetchTogglTasks(id));
-  await dispatch(userGroupsActions.fetchTogglUserGroups(id));
   await dispatch(usersActions.fetchTogglUsers(id));
+  await dispatch(userGroupsActions.fetchTogglUserGroups(id));
   for (const inclusionYear of inclusionYears) {
     await dispatch(timeEntriesActions.fetchTogglTimeEntries(id, inclusionYear));
   }
@@ -254,17 +254,17 @@ export const transferEntitiesToClockifyWorkspace = ({
   }
 };
 
-export const updateIsWorkspaceEntityIncluded = (
+export const flipIsWorkspaceEntityIncluded = (
   entityGroup: EntityGroup,
   { id }: EntityModel,
 ) => (dispatch: ReduxDispatch) => {
   const updateAction = {
-    [EntityGroup.Clients]: clientsActions.updateIsClientIncluded,
-    [EntityGroup.Projects]: projectsActions.updateIsProjectIncluded,
-    [EntityGroup.Tags]: tagsActions.updateIsTagIncluded,
-    [EntityGroup.Tasks]: tasksActions.updateIsTaskIncluded,
-    [EntityGroup.UserGroups]: userGroupsActions.updateIsUserGroupIncluded,
-    [EntityGroup.Users]: usersActions.updateIsUserIncluded,
+    [EntityGroup.Clients]: clientsActions.flipIsClientIncluded,
+    [EntityGroup.Projects]: projectsActions.flipIsProjectIncluded,
+    [EntityGroup.Tags]: tagsActions.flipIsTagIncluded,
+    [EntityGroup.Tasks]: tasksActions.flipIsTaskIncluded,
+    [EntityGroup.UserGroups]: userGroupsActions.flipIsUserGroupIncluded,
+    [EntityGroup.Users]: usersActions.flipIsUserIncluded,
   }[entityGroup];
 
   return dispatch(updateAction(id));

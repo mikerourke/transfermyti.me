@@ -1,13 +1,7 @@
 import { createSelector } from 'reselect';
 import { get, isNil } from 'lodash';
-import {
-  appendTimeEntryCount,
-  findTogglInclusions,
-  groupByWorkspace,
-} from '~/redux/utils';
-import { selectTogglTimeEntriesById } from '~/redux/entities/timeEntries/timeEntriesSelectors';
+import { findTogglInclusions, groupByWorkspace } from '~/redux/utils';
 import { ReduxState } from '~/types/commonTypes';
-import { EntityType } from '~/types/entityTypes';
 import {
   ClockifyEstimateType,
   CreateProjectRequest,
@@ -28,18 +22,11 @@ export const selectTogglProjectsByWorkspaceFactory = (
   inclusionsOnly: boolean,
 ) =>
   createSelector(
-    selectTogglProjectsById,
-    selectTogglTimeEntriesById,
-    (projectsById, timeEntriesById): Record<string, ProjectModel[]> => {
-      const projectsWithEntryCounts = appendTimeEntryCount(
-        EntityType.Project,
-        Object.values(projectsById),
-        timeEntriesById,
-      );
-
+    (state: ReduxState) => Object.values(state.entities.projects.toggl.byId),
+    (projects): Record<string, ProjectModel[]> => {
       const projectsToUse = inclusionsOnly
-        ? findTogglInclusions(projectsWithEntryCounts)
-        : projectsWithEntryCounts;
+        ? findTogglInclusions(projects)
+        : projects;
       return groupByWorkspace(projectsToUse);
     },
   );

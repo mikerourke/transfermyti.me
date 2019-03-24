@@ -5,7 +5,7 @@ import { css } from 'emotion';
 import { isNil } from 'lodash';
 import {
   fetchTogglEntitiesInWorkspace,
-  updateIsWorkspaceEntityIncluded,
+  flipIsWorkspaceEntityIncluded,
 } from '~/redux/entities/workspaces/workspacesActions';
 import {
   selectTogglAllEntitiesByWorkspaceId,
@@ -14,11 +14,16 @@ import {
 } from '~/redux/entities/workspaces/workspacesSelectors';
 import EntitiesReviewPage from '~/components/entitiesReviewPage/EntitiesReviewPage';
 import Loader from '~/components/loader/Loader';
+import { StepPageProps } from '~/components/stepPage/StepPage';
 import InstructionsList from './components/InstructionsList';
-import { EntityModel, ReduxDispatch, ReduxState } from '~/types/commonTypes';
+import {
+  EntityModel,
+  ReduxDispatch,
+  ReduxState,
+  ToolName,
+} from '~/types/commonTypes';
 import { EntityGroup } from '~/types/entityTypes';
 import { WorkspaceModel } from '~/types/workspacesTypes';
-import { StepPageProps } from '~/components/stepPage/StepPage';
 
 interface ConnectStateProps {
   entitiesByWorkspaceId: Record<string, Record<EntityGroup, EntityModel[]>>;
@@ -30,7 +35,7 @@ interface ConnectDispatchProps {
   onFetchEntitiesForWorkspace: (
     workspaceRecord: WorkspaceModel,
   ) => Promise<any>;
-  onUpdateIsWorkspaceEntityIncluded: (
+  onFlipIsWorkspaceEntityIncluded: (
     entityGroup: EntityGroup,
     entityRecord: EntityModel,
   ) => void;
@@ -60,8 +65,9 @@ export const SelectTogglInclusionsStepComponent: React.FC<Props> = ({
       <Then>
         <EntitiesReviewPage
           subtitle="Select Toggl Records to Transfer"
-          onRefreshClick={fetchEntitiesForAllWorkspaces}
+          toolName={ToolName.Toggl}
           workspacesById={workspacesById}
+          onRefreshClick={fetchEntitiesForAllWorkspaces}
           {...reviewPageProps}
         >
           <p
@@ -101,10 +107,10 @@ const mapStateToProps = (state: ReduxState) => ({
 const mapDispatchToProps = (dispatch: ReduxDispatch) => ({
   onFetchEntitiesForWorkspace: (workspaceRecord: WorkspaceModel) =>
     dispatch(fetchTogglEntitiesInWorkspace(workspaceRecord)),
-  onUpdateIsWorkspaceEntityIncluded: (
+  onFlipIsWorkspaceEntityIncluded: (
     entityGroup: EntityGroup,
     entityRecord: EntityModel,
-  ) => dispatch(updateIsWorkspaceEntityIncluded(entityGroup, entityRecord)),
+  ) => dispatch(flipIsWorkspaceEntityIncluded(entityGroup, entityRecord)),
 });
 
 export default connect<ConnectStateProps, ConnectDispatchProps, StepPageProps>(

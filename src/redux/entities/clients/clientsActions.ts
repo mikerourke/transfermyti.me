@@ -32,8 +32,8 @@ export const clockifyClientsTransfer = createAsyncAction(
   '@clients/CLOCKIFY_TRANSFER_FAILURE',
 )<void, ClockifyClient[], void>();
 
-export const updateIsClientIncluded = createStandardAction(
-  '@clients/UPDATE_IS_INCLUDED',
+export const flipIsClientIncluded = createStandardAction(
+  '@clients/FLIP_IS_INCLUDED',
 )<string>();
 
 export const fetchClockifyClients = (workspaceId: string) => async (

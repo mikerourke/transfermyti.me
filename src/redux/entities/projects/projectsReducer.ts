@@ -2,10 +2,12 @@ import { getType } from 'typesafe-actions';
 import { combineActions, handleActions } from 'redux-actions';
 import { get } from 'lodash';
 import {
+  appendEntryCountToState,
   findIdFieldValue,
   normalizeState,
-  swapEntityInclusion,
+  flipEntityInclusion,
 } from '~/redux/utils';
+import { togglTimeEntriesFetch } from '~/redux/entities/timeEntries/timeEntriesActions';
 import * as projectsActions from './projectsActions';
 import {
   ReduxAction,
@@ -18,6 +20,7 @@ import {
   ProjectModel,
   TogglProject,
 } from '~/types/projectsTypes';
+import { TogglTimeEntry } from '~/types/timeEntriesTypes';
 
 export interface ProjectsState {
   readonly clockify: ReduxStateEntryForTool<ProjectModel>;
@@ -66,9 +69,9 @@ export default handleActions(
       normalizeState(
         ToolName.Clockify,
         EntityGroup.Projects,
-        schemaProcessStrategy,
         state,
         projects,
+        schemaProcessStrategy,
       ),
 
     [getType(projectsActions.togglProjectsFetch.success)]: (
@@ -78,9 +81,9 @@ export default handleActions(
       normalizeState(
         ToolName.Toggl,
         EntityGroup.Projects,
-        schemaProcessStrategy,
         state,
         projects,
+        schemaProcessStrategy,
       ),
 
     [combineActions(
@@ -104,11 +107,22 @@ export default handleActions(
       isFetching: false,
     }),
 
-    [getType(projectsActions.updateIsProjectIncluded)]: (
+    [getType(projectsActions.flipIsProjectIncluded)]: (
       state: ProjectsState,
       { payload: projectId }: ReduxAction<string>,
     ): ProjectsState =>
-      swapEntityInclusion(state, EntityType.Project, projectId),
+      flipEntityInclusion(state, EntityType.Project, projectId),
+
+    [getType(togglTimeEntriesFetch.success)]: (
+      state: ProjectsState,
+      { payload: timeEntries }: ReduxAction<TogglTimeEntry[]>,
+    ) =>
+      appendEntryCountToState(
+        EntityType.Project,
+        ToolName.Toggl,
+        state,
+        timeEntries,
+      ),
   },
   initialState,
 );

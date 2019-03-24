@@ -8,9 +8,9 @@ import { EntityGroup } from '~/types/entityTypes';
 export default function normalizeState<TState, TPayload>(
   toolName: ToolName,
   entityGroup: EntityGroup,
-  schemaProcessStrategy: StrategyFunction,
   state: TState,
   payload: TPayload,
+  schemaProcessStrategy?: StrategyFunction,
 ): TState {
   if (isNil(payload)) return state;
 
@@ -49,7 +49,7 @@ export default function normalizeState<TState, TPayload>(
 
 function getEntitySchema(
   entityGroup: EntityGroup,
-  schemaProcessStrategy: StrategyFunction,
+  schemaProcessStrategy?: StrategyFunction,
 ): Schema {
   const entitySchema = new schema.Entity(
     entityGroup,

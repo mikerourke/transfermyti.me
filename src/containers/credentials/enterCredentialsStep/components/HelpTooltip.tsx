@@ -1,15 +1,6 @@
 import React from 'react';
-import ReactTooltip from 'react-tooltip';
 import { css } from 'emotion';
-
-// Needed this due to outdated type definitions for react-tooltip:
-interface TooltipProps extends ReactTooltip.Props {
-  delayUpdate: number;
-}
-
-const CustomTooltip: React.FC<TooltipProps> = props => (
-  <ReactTooltip {...props} />
-);
+import Tooltip from '~/components/tooltip/Tooltip';
 
 interface Props {
   tipId: string;
@@ -70,18 +61,7 @@ const HelpTooltip: React.FC<Props> = ({ children, tipId, size, color }) => (
         />
       </g>
     </svg>
-    <CustomTooltip
-      id={tipId}
-      border
-      effect="solid"
-      delayHide={500}
-      delayShow={100}
-      delayUpdate={500}
-      place="right"
-      type="light"
-    >
-      {children}
-    </CustomTooltip>
+    <Tooltip id={tipId}>{children}</Tooltip>
   </span>
 );
 

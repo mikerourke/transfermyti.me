@@ -32,7 +32,7 @@ export const SelectTransferTypeStepComponent: React.FC<Props> = ({
     <StepPage subtitle="Select Transfer Type" {...stepPageProps}>
       <p
         className={css`
-          margin-bottom: 1.25rem;
+          margin-bottom: 1rem;
         `}
       >
         Select whether you're transferring entries for just yourself or multiple
@@ -40,7 +40,7 @@ export const SelectTransferTypeStepComponent: React.FC<Props> = ({
       </p>
       <div
         className={css`
-          margin-bottom: 1.25rem;
+          padding: 0 0.25rem;
         `}
       >
         <Columns isCentered>
@@ -49,9 +49,8 @@ export const SelectTransferTypeStepComponent: React.FC<Props> = ({
             isSelected={currentTransferType === TransferType.SingleUser}
             onSelect={handleTransferTypeSelect(TransferType.SingleUser)}
           >
-            Select this option if you're not the owner/member of an organization
-            and you want to transfer <strong>your </strong>
-            entries to Clockify.
+            Select this option if you're not the owner/admin of an organization
+            and you want to transfer <strong>your</strong> entries to Clockify.
           </TransferTypeColumn>
           <TransferTypeColumn
             title="Multiple Users"

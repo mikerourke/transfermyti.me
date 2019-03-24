@@ -64,17 +64,15 @@ export interface TimeEntryModel extends UniversalEntityModel {
   taskId: string | null;
   workspaceId: string;
   userId: string | null;
+  userGroupIds: string[] | null;
   client: string | null;
+  clientId?: string | null;
   isBillable: boolean;
   start: Date | null;
   end: Date | null;
   tags: string[];
   tagIds?: string[];
   name: null; // Not used, included because other entities have a "name".
-}
-
-export interface TimeEntryWithClientModel extends TimeEntryModel {
-  clientId?: string;
 }
 
 export interface DetailedTimeEntryModel extends TimeEntryModel {

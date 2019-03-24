@@ -28,11 +28,12 @@
     }
   },
   "exclude": [
+    ".cache",
     "build",
     "config",
-    "jest",
     "node_modules",
     "public",
-    "requests"
+    "requests",
+    "responses"
   ]
 }

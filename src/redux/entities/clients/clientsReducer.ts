@@ -1,10 +1,12 @@
 import { getType } from 'typesafe-actions';
 import { combineActions, handleActions } from 'redux-actions';
 import {
+  appendEntryCountToState,
   findIdFieldValue,
   normalizeState,
-  swapEntityInclusion,
+  flipEntityInclusion,
 } from '~/redux/utils';
+import { togglTimeEntriesFetch } from '~/redux/entities/timeEntries/timeEntriesActions';
 import * as clientsActions from './clientsActions';
 import { ClientModel, ClockifyClient, TogglClient } from '~/types/clientsTypes';
 import {
@@ -13,6 +15,7 @@ import {
   ToolName,
 } from '~/types/commonTypes';
 import { EntityGroup, EntityType } from '~/types/entityTypes';
+import { TogglTimeEntry } from '~/types/timeEntriesTypes';
 
 export interface ClientsState {
   readonly clockify: ReduxStateEntryForTool<ClientModel>;
@@ -40,6 +43,7 @@ const schemaProcessStrategy = (
   workspaceId: findIdFieldValue(value, EntityType.Workspace),
   linkedId: null,
   isIncluded: true,
+  entryCount: 0,
 });
 
 export default handleActions(
@@ -54,9 +58,9 @@ export default handleActions(
       normalizeState(
         ToolName.Clockify,
         EntityGroup.Clients,
-        schemaProcessStrategy,
         state,
         clients,
+        schemaProcessStrategy,
       ),
 
     [getType(clientsActions.togglClientsFetch.success)]: (
@@ -66,9 +70,9 @@ export default handleActions(
       normalizeState(
         ToolName.Toggl,
         EntityGroup.Clients,
-        schemaProcessStrategy,
         state,
         clients,
+        schemaProcessStrategy,
       ),
 
     [combineActions(
@@ -92,10 +96,21 @@ export default handleActions(
       isFetching: false,
     }),
 
-    [getType(clientsActions.updateIsClientIncluded)]: (
+    [getType(clientsActions.flipIsClientIncluded)]: (
       state: ClientsState,
       { payload: clientId }: ReduxAction<string>,
-    ): ClientsState => swapEntityInclusion(state, EntityType.Client, clientId),
+    ): ClientsState => flipEntityInclusion(state, EntityType.Client, clientId),
+
+    [getType(togglTimeEntriesFetch.success)]: (
+      state: ClientsState,
+      { payload: timeEntries }: ReduxAction<TogglTimeEntry[]>,
+    ) =>
+      appendEntryCountToState(
+        EntityType.Client,
+        ToolName.Toggl,
+        state,
+        timeEntries,
+      ),
   },
   initialState,
 );

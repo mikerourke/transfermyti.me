@@ -1,30 +1,43 @@
 import { createAsyncAction } from 'typesafe-actions';
-import { flatten } from 'lodash';
-import { buildThrottler } from '~/redux/utils';
+import { flatten, get, isNil, isString } from 'lodash';
+import { buildThrottler, findIdFieldValue } from '~/redux/utils';
 import {
   apiFetchClockifyTimeEntries,
   apiFetchTogglTimeEntries,
 } from '../api/timeEntries';
 import { showFetchErrorNotification } from '~/redux/app/appActions';
+import { selectTogglClients } from '~/redux/entities/clients/clientsSelectors';
 import {
   selectClockifyUserId,
   selectTogglUserEmail,
 } from '~/redux/credentials/credentialsSelectors';
+import { calculateUserGroupEntryCounts } from '~/redux/entities/userGroups/userGroupsActions';
+import {
+  selectClockifyUsersById,
+  selectTogglUsersById,
+} from '~/redux/entities/users/usersSelectors';
 import { selectTogglWorkspaceIncludedYears } from '~/redux/entities/workspaces/workspacesSelectors';
-import { ReduxDispatch, ReduxGetState } from '~/types/commonTypes';
-import { ClockifyTimeEntry, TogglTimeEntry } from '~/types/timeEntriesTypes';
+import { ReduxDispatch, ReduxGetState, ToolName } from '~/types/commonTypes';
+import { ClientModel } from '~/types/clientsTypes';
+import { EntityType } from '~/types/entityTypes';
+import {
+  ClockifyTimeEntry,
+  TimeEntryModel,
+  TogglTimeEntry,
+} from '~/types/timeEntriesTypes';
+import { UserModel } from '~/types/usersTypes';
 
 export const clockifyTimeEntriesFetch = createAsyncAction(
   '@timeEntries/CLOCKIFY_FETCH_REQUEST',
   '@timeEntries/CLOCKIFY_FETCH_SUCCESS',
   '@timeEntries/CLOCKIFY_FETCH_FAILURE',
-)<void, ClockifyTimeEntry[], void>();
+)<void, TimeEntryModel[], void>();
 
 export const togglTimeEntriesFetch = createAsyncAction(
   '@timeEntries/TOGGL_FETCH_REQUEST',
   '@timeEntries/TOGGL_FETCH_SUCCESS',
   '@timeEntries/TOGGL_FETCH_FAILURE',
-)<void, TogglTimeEntry[], void>();
+)<void, TimeEntryModel[], void>();
 
 const fetchClockifyTimeEntriesForIncludedYears = async (
   userId: string,
@@ -51,21 +64,95 @@ const fetchClockifyTimeEntriesForIncludedYears = async (
   return flatten(allYearsTimeEntries);
 };
 
+const getTimeValue = (value: any, field: string): Date | null => {
+  const timeValue =
+    'timeInterval' in value
+      ? get(value, ['timeInterval', field], null)
+      : get(value, field, null);
+  return isNil(timeValue) ? null : new Date(timeValue);
+};
+
+const convertTimeEntriesFromToolToUniversal = (
+  workspaceId: string,
+  timeEntries: (ClockifyTimeEntry | TogglTimeEntry)[],
+  clients: ClientModel[] | null,
+  usersById: Record<string, UserModel> | null,
+): TimeEntryModel[] =>
+  timeEntries.map(timeEntry => {
+    let clientId = null;
+
+    if ('client' in timeEntry && !isNil(clients)) {
+      const matchingClient = clients.find(
+        ({ name }) => name === timeEntry.client,
+      );
+      clientId = isNil(matchingClient) ? null : matchingClient.id;
+    }
+
+    const userId = findIdFieldValue(timeEntry, EntityType.User);
+    let userGroupIds: string[] = [];
+    if (!isNil(usersById)) {
+      userGroupIds = get(usersById, [userId, 'userGroupIds'], []);
+    }
+
+    return {
+      id: timeEntry.id.toString(),
+      description: timeEntry.description,
+      projectId: findIdFieldValue(timeEntry, EntityType.Project),
+      taskId: findIdFieldValue(timeEntry, EntityType.Task),
+      userId,
+      userGroupIds,
+      workspaceId,
+      client:
+        'client' in timeEntry
+          ? timeEntry.client
+          : get(timeEntry, ['project', 'clientName'], null),
+      clientId,
+      isBillable:
+        'is_billable' in timeEntry ? timeEntry.is_billable : timeEntry.billable,
+      start: getTimeValue(timeEntry, 'start'),
+      end: getTimeValue(timeEntry, 'end'),
+      tags: isNil(timeEntry.tags)
+        ? []
+        : timeEntry.tags.map((tag: any) =>
+            isString(tag) ? tag : get(tag, 'name'),
+          ),
+      tagIds: [],
+      name: null,
+      linkedId: null,
+      isIncluded: true,
+    };
+  });
+
 export const fetchClockifyTimeEntries = (workspaceId: string) => async (
   dispatch: ReduxDispatch,
   getState: ReduxGetState,
 ) => {
-  const state = getState();
-
   dispatch(clockifyTimeEntriesFetch.request());
-
-  const userId = selectClockifyUserId(state);
-  const includedYears = selectTogglWorkspaceIncludedYears(state, workspaceId);
   try {
-    const timeEntries = await fetchClockifyTimeEntriesForIncludedYears(
+    const state = getState();
+    const userId = selectClockifyUserId(state);
+    const usersById = selectClockifyUsersById(state);
+    const includedYears = selectTogglWorkspaceIncludedYears(state, workspaceId);
+
+    const clockifyTimeEntries = await fetchClockifyTimeEntriesForIncludedYears(
       userId,
       workspaceId,
       includedYears,
+    );
+
+    const timeEntries = convertTimeEntriesFromToolToUniversal(
+      workspaceId,
+      clockifyTimeEntries,
+      null,
+      usersById,
+    );
+
+    dispatch(
+      calculateUserGroupEntryCounts({
+        toolName: ToolName.Clockify,
+        timeEntries,
+        usersById,
+      }),
     );
     return dispatch(clockifyTimeEntriesFetch.success(timeEntries));
   } catch (error) {
@@ -107,12 +194,13 @@ export const fetchTogglTimeEntries = (
   workspaceId: string,
   year: number,
 ) => async (dispatch: ReduxDispatch, getState: ReduxGetState) => {
-  const state = getState();
-
   dispatch(togglTimeEntriesFetch.request());
-  const email = selectTogglUserEmail(state);
 
   try {
+    const state = getState();
+    const email = selectTogglUserEmail(state);
+    const usersById = selectTogglUsersById(state);
+
     const {
       total_count,
       per_page,
@@ -129,7 +217,22 @@ export const fetchTogglTimeEntries = (
     );
 
     const allTimeEntries = [...firstPageEntries, ...remainingPageEntries];
-    return dispatch(togglTimeEntriesFetch.success(allTimeEntries));
+    const togglClients = selectTogglClients(state);
+    const timeEntries = convertTimeEntriesFromToolToUniversal(
+      workspaceId,
+      allTimeEntries,
+      togglClients,
+      usersById,
+    );
+
+    dispatch(
+      calculateUserGroupEntryCounts({
+        toolName: ToolName.Toggl,
+        timeEntries,
+        usersById,
+      }),
+    );
+    return dispatch(togglTimeEntriesFetch.success(timeEntries));
   } catch (error) {
     dispatch(showFetchErrorNotification(error));
     return dispatch(togglTimeEntriesFetch.failure());

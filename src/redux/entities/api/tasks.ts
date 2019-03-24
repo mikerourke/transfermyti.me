@@ -8,7 +8,7 @@ export const apiFetchClockifyTasks = (
   fetch(`/clockify/api/workspaces/${workspaceId}/projects/${projectId}/tasks/`);
 
 export const apiFetchTogglTasks = (workspaceId: string): Promise<TogglTask[]> =>
-  fetch(`/toggl/api/workspaces/${workspaceId}/tasks`);
+  fetch(`/toggl/api/workspaces/${workspaceId}/tasks?active=both`);
 
 export const apiCreateClockifyTask = (
   workspaceId: string,

@@ -1,16 +1,10 @@
 import { createSelector } from 'reselect';
 import { get, isNil } from 'lodash';
-import {
-  appendTimeEntryCount,
-  findTogglInclusions,
-  groupByWorkspace,
-} from '~/redux/utils';
+import { findTogglInclusions, groupByWorkspace } from '~/redux/utils';
 import { selectTogglClientsByWorkspaceFactory } from '~/redux/entities/clients/clientsSelectors';
 import { selectTogglProjectsById } from '~/redux/entities/projects/projectsSelectors';
-import { selectTogglTimeEntriesById } from '~/redux/entities/timeEntries/timeEntriesSelectors';
 import { ClientModel } from '~/types/clientsTypes';
 import { ReduxState } from '~/types/commonTypes';
-import { EntityType } from '~/types/entityTypes';
 import { CreateTaskRequest, TaskModel } from '~/types/tasksTypes';
 
 export const selectTogglTasks = createSelector(
@@ -26,17 +20,8 @@ export const selectTogglTasks = createSelector(
 export const selectToggleTasksByWorkspaceFactory = (inclusionsOnly: boolean) =>
   createSelector(
     selectTogglTasks,
-    selectTogglTimeEntriesById,
-    (tasks, timeEntriesById): Record<string, TaskModel[]> => {
-      const tasksWithEntryCounts = appendTimeEntryCount(
-        EntityType.Task,
-        tasks,
-        timeEntriesById,
-      );
-
-      const tasksToUse = inclusionsOnly
-        ? findTogglInclusions(tasksWithEntryCounts)
-        : tasksWithEntryCounts;
+    (tasks): Record<string, TaskModel[]> => {
+      const tasksToUse = inclusionsOnly ? findTogglInclusions(tasks) : tasks;
       return groupByWorkspace(tasksToUse);
     },
   );

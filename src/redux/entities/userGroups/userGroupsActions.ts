@@ -1,4 +1,5 @@
 import { createAsyncAction, createStandardAction } from 'typesafe-actions';
+import { get } from 'lodash';
 import { batchClockifyRequests } from '~/redux/utils';
 import {
   apiCreateClockifyUserGroup,
@@ -9,14 +10,26 @@ import {
   showFetchErrorNotification,
   updateInTransferEntity,
 } from '~/redux/app/appActions';
+import {
+  selectClockifyUsersByWorkspace,
+  selectTogglUsersByWorkspaceFactory,
+} from '~/redux/entities/users/usersSelectors';
 import { selectUserGroupsTransferPayloadForWorkspace } from './userGroupsSelectors';
-import { ReduxDispatch, ReduxGetState } from '~/types/commonTypes';
+import { ReduxDispatch, ReduxGetState, ToolName } from '~/types/commonTypes';
 import { EntityType } from '~/types/entityTypes';
+import { TimeEntryModel } from '~/types/timeEntriesTypes';
 import {
   ClockifyUserGroup,
   TogglUserGroup,
   UserGroupModel,
 } from '~/types/userGroupsTypes';
+import { UserModel } from '~/types/usersTypes';
+
+export interface EntryCountCalculatorModel {
+  toolName: ToolName;
+  timeEntries: TimeEntryModel[];
+  usersById: Record<string, UserModel>;
+}
 
 export const clockifyUserGroupsFetch = createAsyncAction(
   '@userGroups/CLOCKIFY_FETCH_REQUEST',
@@ -28,7 +41,7 @@ export const togglUserGroupsFetch = createAsyncAction(
   '@userGroups/TOGGL_FETCH_REQUEST',
   '@userGroups/TOGGL_FETCH_SUCCESS',
   '@userGroups/TOGGL_FETCH_FAILURE',
-)<void, TogglUserGroup[], void>();
+)<void, UserGroupModel[], void>();
 
 export const clockifyUserGroupsTransfer = createAsyncAction(
   '@userGroups/CLOCKIFY_TRANSFER_REQUEST',
@@ -36,21 +49,74 @@ export const clockifyUserGroupsTransfer = createAsyncAction(
   '@userGroups/CLOCKIFY_TRANSFER_FAILURE',
 )<void, ClockifyUserGroup[], void>();
 
-export const updateIsUserGroupIncluded = createStandardAction(
-  '@userGroups/UPDATE_IS_INCLUDED',
+export const flipIsUserGroupIncluded = createStandardAction(
+  '@userGroups/FLIP_IS_INCLUDED',
 )<string>();
 
 export const addTogglUserIdToGroup = createStandardAction(
   '@userGroups/ADD_TOGGL_USER_ID_TO_GROUP',
 )<{ userId: string; userGroupId: string }>();
 
+export const calculateUserGroupEntryCounts = createStandardAction(
+  '@userGroups/CALCULATE_ENTRY_COUNTS',
+)<EntryCountCalculatorModel>();
+
+const convertUserGroupsFromToolToUniversal = (
+  workspaceId: string,
+  userGroups: (TogglUserGroup | ClockifyUserGroup)[],
+  usersByWorkspace: Record<string, UserModel[]>,
+): UserGroupModel[] => {
+  const workspaceUsers = get(usersByWorkspace, workspaceId, []);
+
+  return userGroups.map(userGroup => {
+    const userGroupId = userGroup.id.toString();
+    const usersInUserGroup: UserModel[] = [];
+
+    if (workspaceUsers.length !== 0) {
+      workspaceUsers.forEach(workspaceUser => {
+        if (workspaceUser.userGroupIds.includes(userGroupId)) {
+          usersInUserGroup.push(workspaceUser);
+        }
+      });
+    }
+
+    const userIds: string[] = [];
+
+    if (usersInUserGroup.length !== 0) {
+      usersInUserGroup.forEach(user => {
+        userIds.push(user.id);
+      });
+    }
+
+    return {
+      id: userGroupId,
+      name: userGroup.name,
+      workspaceId,
+      userIds: 'userIds' in userGroup ? userGroup.userIds : userIds,
+      entryCount: 0,
+      linkedId: null,
+      isIncluded: true,
+    };
+  });
+};
+
 export const fetchClockifyUserGroups = (workspaceId: string) => async (
   dispatch: ReduxDispatch,
+  getState: ReduxGetState,
 ) => {
   dispatch(clockifyUserGroupsFetch.request());
 
   try {
-    const userGroups = await apiFetchClockifyUserGroups(workspaceId);
+    const clockifyUserGroups = await apiFetchClockifyUserGroups(workspaceId);
+
+    const state = getState();
+    const usersByWorkspace = selectClockifyUsersByWorkspace(state);
+    const userGroups = convertUserGroupsFromToolToUniversal(
+      workspaceId,
+      clockifyUserGroups,
+      usersByWorkspace,
+    );
+
     return dispatch(clockifyUserGroupsFetch.success(userGroups));
   } catch (error) {
     dispatch(showFetchErrorNotification(error));
@@ -60,11 +126,21 @@ export const fetchClockifyUserGroups = (workspaceId: string) => async (
 
 export const fetchTogglUserGroups = (workspaceId: string) => async (
   dispatch: ReduxDispatch,
+  getState: ReduxGetState,
 ) => {
   dispatch(togglUserGroupsFetch.request());
 
   try {
-    const userGroups = await apiFetchTogglUserGroups(workspaceId);
+    const togglUserGroups = await apiFetchTogglUserGroups(workspaceId);
+
+    const state = getState();
+    const usersByWorkspace = selectTogglUsersByWorkspaceFactory(false)(state);
+    const userGroups = convertUserGroupsFromToolToUniversal(
+      workspaceId,
+      togglUserGroups,
+      usersByWorkspace,
+    );
+
     return dispatch(togglUserGroupsFetch.success(userGroups));
   } catch (error) {
     dispatch(showFetchErrorNotification(error));

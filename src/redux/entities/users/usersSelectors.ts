@@ -1,11 +1,28 @@
 import { createSelector } from 'reselect';
 import { get } from 'lodash';
-import { appendTimeEntryCount, findTogglInclusions } from '~/redux/utils';
+import { findTogglInclusions } from '~/redux/utils';
 import { selectCredentials } from '~/redux/credentials/credentialsSelectors';
 import { selectTogglTimeEntriesById } from '~/redux/entities/timeEntries/timeEntriesSelectors';
 import { ReduxState } from '~/types/commonTypes';
-import { EntityType } from '~/types/entityTypes';
 import { UserModel } from '~/types/usersTypes';
+
+export const selectClockifyUsersById = createSelector(
+  (state: ReduxState) => state.entities.users.clockify.byId,
+  usersById => usersById,
+);
+
+export const selectClockifyUsersByWorkspace = createSelector(
+  selectClockifyUsersById,
+  (state: ReduxState) => Object.values(state.entities.workspaces.clockify.byId),
+  (usersById, workspaces): Record<string, UserModel[]> =>
+    workspaces.reduce(
+      (acc, workspace) => ({
+        ...acc,
+        [workspace.id]: workspace.userIds.map(userId => get(usersById, userId)),
+      }),
+      {},
+    ),
+);
 
 export const selectTogglUsersById = createSelector(
   (state: ReduxState) => state.entities.users.toggl.byId,
@@ -53,15 +70,9 @@ export const selectTogglUsersByWorkspaceFactory = (inclusionsOnly: boolean) =>
           ? findTogglInclusions(validUsers)
           : validUsers;
 
-        const usersWithEntryCounts = appendTimeEntryCount(
-          EntityType.User,
-          usersToUse,
-          timeEntriesById,
-        );
-
         return {
           ...acc,
-          [id]: usersWithEntryCounts,
+          [id]: usersToUse,
         };
       }, {});
     },

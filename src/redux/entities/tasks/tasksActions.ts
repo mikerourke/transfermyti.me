@@ -34,8 +34,8 @@ export const clockifyTasksTransfer = createAsyncAction(
   '@tasks/CLOCKIFY_TRANSFER_FAILURE',
 )<void, ClockifyTask[], void>();
 
-export const updateIsTaskIncluded = createStandardAction(
-  '@tasks/UPDATE_IS_INCLUDED',
+export const flipIsTaskIncluded = createStandardAction(
+  '@tasks/FLIP_IS_INCLUDED',
 )<string>();
 
 const fetchClockifyTasksForProjectsInWorkspace = async (

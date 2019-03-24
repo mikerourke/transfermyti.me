@@ -1,56 +1,21 @@
 import { createSelector } from 'reselect';
-import { get, isNil } from 'lodash';
-import {
-  appendTimeEntryCount,
-  findTogglInclusions,
-  groupByWorkspace,
-} from '~/redux/utils';
-import { selectTogglTimeEntriesById } from '~/redux/entities/timeEntries/timeEntriesSelectors';
+import { get } from 'lodash';
+import { findTogglInclusions, groupByWorkspace } from '~/redux/utils';
 import { ClientModel } from '~/types/clientsTypes';
 import { CreateNamedEntityRequest, ReduxState } from '~/types/commonTypes';
-import { EntityType } from '~/types/entityTypes';
-import { TimeEntryModel } from '~/types/timeEntriesTypes';
 
 export const selectTogglClients = createSelector(
   (state: ReduxState) => state.entities.clients.toggl.byId,
   (clientsById): ClientModel[] => Object.values(clientsById),
 );
 
-const appendClientToTimeEntries = (
-  clients: ClientModel[],
-  timeEntriesById: Record<string, TimeEntryModel>,
-) =>
-  Object.entries(timeEntriesById).reduce((acc, [id, timeEntry]) => {
-    const matchingClient = clients.find(
-      ({ name }) => name === timeEntry.client,
-    );
-    const clientId = isNil(matchingClient) ? null : matchingClient.id;
-
-    return {
-      ...acc,
-      [id]: { ...timeEntry, clientId },
-    };
-  }, {});
-
 export const selectTogglClientsByWorkspaceFactory = (inclusionsOnly: boolean) =>
   createSelector(
     selectTogglClients,
-    selectTogglTimeEntriesById,
-    (clients, timeEntriesById): Record<string, ClientModel[]> => {
-      const timeEntriesWithClient = appendClientToTimeEntries(
-        clients,
-        timeEntriesById,
-      );
-
-      const clientsWithEntryCounts = appendTimeEntryCount(
-        EntityType.Client,
-        clients,
-        timeEntriesWithClient,
-      );
-
+    (clients): Record<string, ClientModel[]> => {
       const clientsToUse = inclusionsOnly
-        ? findTogglInclusions(clientsWithEntryCounts)
-        : clientsWithEntryCounts;
+        ? findTogglInclusions(clients)
+        : clients;
       return groupByWorkspace(clientsToUse);
     },
   );

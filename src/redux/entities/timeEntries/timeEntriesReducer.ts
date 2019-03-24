@@ -1,14 +1,13 @@
 import { getType } from 'typesafe-actions';
 import { combineActions, handleActions } from 'redux-actions';
-import { get, isNil, isString } from 'lodash';
-import { findIdFieldValue, normalizeState } from '~/redux/utils';
+import { normalizeState } from '~/redux/utils';
 import * as timeEntriesActions from './timeEntriesActions';
 import {
   ReduxAction,
   ReduxStateEntryForTool,
   ToolName,
 } from '~/types/commonTypes';
-import { EntityGroup, EntityType } from '~/types/entityTypes';
+import { EntityGroup } from '~/types/entityTypes';
 import {
   ClockifyTimeEntry,
   TimeEntryModel,
@@ -33,39 +32,6 @@ export const initialState: TimeEntriesState = {
   isFetching: false,
 };
 
-const getTimeValue = (value: any, field: string): Date | null => {
-  const timeValue =
-    'timeInterval' in value
-      ? get(value, ['timeInterval', field], null)
-      : get(value, field, null);
-  return isNil(timeValue) ? null : new Date(timeValue);
-};
-
-const schemaProcessStrategy = (
-  value: ClockifyTimeEntry | TogglTimeEntry,
-): TimeEntryModel => ({
-  id: value.id.toString(),
-  description: value.description,
-  projectId: findIdFieldValue(value, EntityType.Project),
-  taskId: findIdFieldValue(value, EntityType.Task),
-  userId: findIdFieldValue(value, EntityType.User),
-  workspaceId: findIdFieldValue(value, EntityType.Workspace),
-  client:
-    'client' in value
-      ? value.client
-      : get(value, ['project', 'clientName'], null),
-  isBillable: 'is_billable' in value ? value.is_billable : value.billable,
-  start: getTimeValue(value, 'start'),
-  end: getTimeValue(value, 'end'),
-  tags: isNil(value.tags)
-    ? []
-    : value.tags.map((tag: any) => (isString(tag) ? tag : get(tag, 'name'))),
-  tagIds: [],
-  name: null,
-  linkedId: null,
-  isIncluded: true,
-});
-
 export default handleActions(
   {
     [getType(timeEntriesActions.clockifyTimeEntriesFetch.success)]: (
@@ -75,7 +41,6 @@ export default handleActions(
       normalizeState(
         ToolName.Clockify,
         EntityGroup.TimeEntries,
-        schemaProcessStrategy,
         state,
         timeEntries,
       ),
@@ -87,7 +52,6 @@ export default handleActions(
       normalizeState(
         ToolName.Toggl,
         EntityGroup.TimeEntries,
-        schemaProcessStrategy,
         state,
         timeEntries,
       ),

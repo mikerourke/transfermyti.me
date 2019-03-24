@@ -86,7 +86,7 @@ export const EnterCredentialsStepComponent: React.FC<Props> = ({
     await props.onValidateCredentials();
 
     setTimeout(() => {
-      if (props.isValid) props.next();
+      if (props.isValid) props.onNextClick();
     }, 100);
   };
 
@@ -99,8 +99,8 @@ export const EnterCredentialsStepComponent: React.FC<Props> = ({
       stepNumber={props.stepNumber}
       subtitle="Enter Credentials"
       isNextLoading={props.isValidating}
-      previous={props.previous}
-      next={handleNextClick}
+      onPreviousClick={props.onPreviousClick}
+      onNextClick={handleNextClick}
     >
       <p
         className={css`
@@ -186,7 +186,7 @@ const mapDispatchToProps = (dispatch: ReduxDispatch) => ({
   onValidateCredentials: () => dispatch(validateCredentials()),
 });
 
-export default connect<ConnectStateProps, ConnectDispatchProps>(
+export default connect<ConnectStateProps, ConnectDispatchProps, StepPageProps>(
   mapStateToProps,
   mapDispatchToProps,
 )(EnterCredentialsStepComponent);

@@ -1,14 +1,8 @@
 import { createSelector } from 'reselect';
 import { get } from 'lodash';
-import {
-  appendTimeEntryCount,
-  findTogglInclusions,
-  groupByWorkspace,
-} from '~/redux/utils';
-import { selectTogglTimeEntriesById } from '~/redux/entities/timeEntries/timeEntriesSelectors';
+import { findTogglInclusions, groupByWorkspace } from '~/redux/utils';
 import { selectTogglUsersByWorkspaceFactory } from '~/redux/entities/users/usersSelectors';
 import { CreateNamedEntityRequest, ReduxState } from '~/types/commonTypes';
-import { EntityType } from '~/types/entityTypes';
 import { UserGroupModel } from '~/types/userGroupsTypes';
 import { UserModel } from '~/types/usersTypes';
 
@@ -39,24 +33,13 @@ export const selectTogglUserGroupsByWorkspaceFactory = (
   createSelector(
     selectTogglUserGroups,
     selectTogglUsersByWorkspaceFactory(inclusionsOnly),
-    selectTogglTimeEntriesById,
-    (
-      userGroups,
-      usersByWorkspaceId,
-      timeEntriesById,
-    ): Record<string, UserGroupModel[]> => {
+    (userGroups, usersByWorkspaceId): Record<string, UserGroupModel[]> => {
       const userGroupsToUse = inclusionsOnly
         ? findTogglInclusions(userGroups)
         : userGroups;
 
-      const userGroupsWithEntryCounts = appendTimeEntryCount(
-        EntityType.UserGroup,
-        userGroupsToUse,
-        timeEntriesById,
-      );
-
       const userGroupsByWorkspaceId = groupByWorkspace(
-        userGroupsWithEntryCounts,
+        userGroupsToUse,
       ) as Record<string, UserGroupModel[]>;
 
       return Object.entries(userGroupsByWorkspaceId).reduce(

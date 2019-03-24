@@ -11,7 +11,6 @@ import {
   updateInTransferEntity,
 } from '~/redux/app/appActions';
 import { selectUsersTransferPayloadForWorkspace } from './usersSelectors';
-import { addTogglUserIdToGroup } from '~/redux/entities/userGroups/userGroupsActions';
 import { appendUserIdsToWorkspace } from '~/redux/entities/workspaces/workspacesActions';
 import { ReduxDispatch, ReduxGetState, ToolName } from '~/types/commonTypes';
 import { ClockifyUser, TogglUser } from '~/types/usersTypes';
@@ -35,8 +34,8 @@ export const clockifyUsersTransfer = createAsyncAction(
   '@users/CLOCKIFY_TRANSFER_FAILURE',
 )<void, void, void>();
 
-export const updateIsUserIncluded = createStandardAction(
-  '@users/UPDATE_IS_INCLUDED',
+export const flipIsUserIncluded = createStandardAction(
+  '@users/FLIP_IS_INCLUDED',
 )<string>();
 
 const appendUserIdsToWorkspaceForTool = (
@@ -57,6 +56,7 @@ export const fetchClockifyUsers = (workspaceId: string) => async (
     dispatch(
       appendUserIdsToWorkspaceForTool(ToolName.Clockify, users, workspaceId),
     );
+
     return dispatch(clockifyUsersFetch.success(users));
   } catch (error) {
     dispatch(showFetchErrorNotification(error));
@@ -64,10 +64,9 @@ export const fetchClockifyUsers = (workspaceId: string) => async (
   }
 };
 
-const transferUserGroupIds = async (
+const transferTogglUserGroupIds = async (
   workspaceId: string,
   users: TogglUser[],
-  dispatch: ReduxDispatch,
 ) => {
   const workspaceUsers = await apiFetchTogglWorkspaceUsers(workspaceId);
   const workspaceUsersById = workspaceUsers.reduce(
@@ -87,12 +86,6 @@ const transferUserGroupIds = async (
     workspaceUser.group_ids.forEach((userGroupId: number) => {
       const validGroupId = userGroupId.toString();
       user.userGroupIds.push(validGroupId);
-      dispatch(
-        addTogglUserIdToGroup({
-          userId: user.id.toString(),
-          userGroupId: validGroupId,
-        }),
-      );
     });
   });
 };
@@ -107,7 +100,7 @@ export const fetchTogglUsers = (workspaceId: string) => async (
       appendUserIdsToWorkspaceForTool(ToolName.Toggl, users, workspaceId),
     );
 
-    await transferUserGroupIds(workspaceId, users, dispatch);
+    await transferTogglUserGroupIds(workspaceId, users);
 
     return dispatch(togglUsersFetch.success(users));
   } catch (error) {

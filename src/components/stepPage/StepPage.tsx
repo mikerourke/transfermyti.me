@@ -1,5 +1,5 @@
 import React, { useEffect, useRef } from 'react';
-import { Button, Container, Subtitle, Title } from 'bloomer';
+import { Button, Container } from 'bloomer';
 import { When } from 'react-if';
 import { css } from 'emotion';
 import { isNil } from 'lodash';
@@ -7,8 +7,8 @@ import Flex from '~/components/flex/Flex';
 
 export interface StepPageProps {
   stepNumber: number;
-  next?: () => void;
-  previous?: () => void;
+  onNextClick?: () => void;
+  onPreviousClick?: () => void;
 }
 
 interface Props extends StepPageProps {
@@ -18,7 +18,11 @@ interface Props extends StepPageProps {
   onResize?: (newWidth: number) => void;
 }
 
-const StepPage: React.FC<Props> = ({ next, previous, ...props }) => {
+const StepPage: React.FC<Props> = ({
+  onNextClick,
+  onPreviousClick,
+  ...props
+}) => {
   const contentsRef = useRef(null);
 
   const handleResize = () => {
@@ -37,9 +41,6 @@ const StepPage: React.FC<Props> = ({ next, previous, ...props }) => {
   return (
     <Container>
       <h1
-      <Subtitle isSize={3}>{props.subtitle}</Subtitle>
-      <div
-        ref={contentsRef}
         className={css`
           margin-bottom: 0;
           font-size: 1.5rem;
@@ -87,23 +88,23 @@ const StepPage: React.FC<Props> = ({ next, previous, ...props }) => {
           </When>
         </Flex>
         <Flex justifySelf="flex-end">
-          <When condition={!isNil(previous)}>
-            <Button isSize="medium" onClick={previous} isColor="dark">
+          <When condition={!isNil(onPreviousClick)}>
+            <Button isSize="medium" onClick={onPreviousClick} isColor="dark">
               Previous
             </Button>
           </When>
-          <When condition={!isNil(previous) && !isNil(next)}>
+          <When condition={!isNil(onPreviousClick) && !isNil(onNextClick)}>
             <div
               className={css`
                 margin-right: 1rem;
               `}
             />
           </When>
-          <When condition={!isNil(next)}>
+          <When condition={!isNil(onNextClick)}>
             <Button
               isSize="medium"
               isLoading={props.isNextLoading}
-              onClick={next}
+              onClick={onNextClick}
               isColor="success"
             >
               Next

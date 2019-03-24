@@ -3,8 +3,10 @@ import { combineActions, handleActions } from 'redux-actions';
 import {
   findIdFieldValue,
   normalizeState,
-  swapEntityInclusion,
+  flipEntityInclusion,
+  appendEntryCountToState,
 } from '~/redux/utils';
+import { togglTimeEntriesFetch } from '~/redux/entities/timeEntries/timeEntriesActions';
 import * as tasksActions from './tasksActions';
 import {
   ReduxAction,
@@ -18,6 +20,7 @@ import {
   TaskModel,
   TogglTask,
 } from '~/types/tasksTypes';
+import { TogglTimeEntry } from '~/types/timeEntriesTypes';
 
 export interface TasksState {
   readonly clockify: ReduxStateEntryForTool<TaskModel>;
@@ -76,9 +79,9 @@ export default handleActions(
       normalizeState(
         ToolName.Clockify,
         EntityGroup.Tasks,
-        schemaProcessStrategy,
         state,
         tasks,
+        schemaProcessStrategy,
       ),
 
     [getType(tasksActions.togglTasksFetch.success)]: (
@@ -88,9 +91,9 @@ export default handleActions(
       normalizeState(
         ToolName.Toggl,
         EntityGroup.Tasks,
-        schemaProcessStrategy,
         state,
         tasks,
+        schemaProcessStrategy,
       ),
 
     [combineActions(
@@ -114,10 +117,21 @@ export default handleActions(
       isFetching: false,
     }),
 
-    [getType(tasksActions.updateIsTaskIncluded)]: (
+    [getType(tasksActions.flipIsTaskIncluded)]: (
       state: TasksState,
       { payload: taskId }: ReduxAction<string>,
-    ): TasksState => swapEntityInclusion(state, EntityType.Task, taskId),
+    ): TasksState => flipEntityInclusion(state, EntityType.Task, taskId),
+
+    [getType(togglTimeEntriesFetch.success)]: (
+      state: TasksState,
+      { payload: timeEntries }: ReduxAction<TogglTimeEntry[]>,
+    ) =>
+      appendEntryCountToState(
+        EntityType.Task,
+        ToolName.Toggl,
+        state,
+        timeEntries,
+      ),
   },
   initialState,
 );

@@ -32,8 +32,8 @@ export const clockifyTagsTransfer = createAsyncAction(
   '@tags/CLOCKIFY_TRANSFER_FAILURE',
 )<void, ClockifyTag[], void>();
 
-export const updateIsTagIncluded = createStandardAction(
-  '@tags/UPDATE_IS_INCLUDED',
+export const flipIsTagIncluded = createStandardAction(
+  '@tags/FLIP_IS_INCLUDED',
 )<string>();
 
 export const fetchClockifyTags = (workspaceId: string) => async (

@@ -1,15 +1,17 @@
 import React, { useEffect, useState } from 'react';
+import { If, Then, Else } from 'react-if';
 import { connect } from 'react-redux';
 import { Container } from 'bloomer';
 import { css } from 'emotion';
+import { isNil } from 'lodash';
 import {
   dismissAllNotifications,
   showNotification,
 } from '~/redux/app/appActions';
 import {
   fetchTogglWorkspaceSummary,
-  updateIsWorkspaceIncluded,
-  updateIsWorkspaceYearIncluded,
+  flipIsWorkspaceIncluded,
+  flipIsWorkspaceYearIncluded,
 } from '~/redux/entities/workspaces/workspacesActions';
 import {
   selectIfTogglWorkspaceYearsFetched,
@@ -36,9 +38,9 @@ interface ConnectStateProps {
 interface ConnectDispatchProps {
   onDismissAllNotifications: () => void;
   onFetchWorkspaceSummary: (workspaceId: string) => Promise<any>;
+  onFlipIsWorkspaceIncluded: (workspaceId: string) => void;
+  onFlipIsWorkspaceYearIncluded: (workspaceId: string, year: string) => void;
   onShowNotification: (notification: Partial<NotificationModel>) => void;
-  onUpdateIsWorkspaceIncluded: (workspaceId: string) => void;
-  onUpdateIsWorkspaceYearIncluded: (workspaceId: string, year: string) => void;
 }
 
 type Props = ConnectStateProps & ConnectDispatchProps & StepPageProps;
@@ -53,6 +55,7 @@ export const SelectTogglWorkspacesStepComponent: React.FC<Props> = props => {
       const workspace = props.workspacesById[workspaceId];
       setWorkspaceFetching(workspace.name);
       await props.onFetchWorkspaceSummary(workspaceId);
+      setWorkspaceFetching(null);
     }
   };
 
@@ -60,10 +63,26 @@ export const SelectTogglWorkspacesStepComponent: React.FC<Props> = props => {
     // Don't re-fetch if workspaces have already been fetched:
     if (props.areWorkspaceYearsFetched) return;
 
-    loadWorkspaceSummaries().then(() => {
-      setWorkspaceFetching(null);
-    });
+    loadWorkspaceSummaries();
   }, [props.areWorkspaceYearsFetched]);
+
+  const validateWorkspaceInclusionByYears = (workspaceId: string) => {
+    const workspace = props.workspacesById[workspaceId];
+
+    const includedCount = props.yearsCountByWorkspaceId[workspaceId];
+    if (
+      (includedCount === 0 && workspace.isIncluded) ||
+      (includedCount > 0 && !workspace.isIncluded)
+    ) {
+      props.onFlipIsWorkspaceIncluded(workspaceId);
+    }
+  };
+
+  const validateWorkspaceInclusions = () => {
+    props.workspaceIds.forEach(workspaceId => {
+      validateWorkspaceInclusionByYears(workspaceId);
+    });
+  };
 
   const handleNextClick = () => {
     if (props.countWorkspacesIncluded === 0) {
@@ -72,7 +91,8 @@ export const SelectTogglWorkspacesStepComponent: React.FC<Props> = props => {
         type: NotificationType.Error,
       });
     } else {
-      props.next();
+      validateWorkspaceInclusions();
+      props.onNextClick();
     }
   };
 
@@ -80,10 +100,10 @@ export const SelectTogglWorkspacesStepComponent: React.FC<Props> = props => {
     const workspace = props.workspacesById[workspaceId];
     const wasWorkspaceIncluded = workspace.isIncluded;
 
-    props.onUpdateIsWorkspaceIncluded(workspaceId);
+    props.onFlipIsWorkspaceIncluded(workspaceId);
     Object.entries(workspace.inclusionsByYear).forEach(([year, isIncluded]) => {
       if (isIncluded === wasWorkspaceIncluded) {
-        props.onUpdateIsWorkspaceYearIncluded(workspaceId, year);
+        props.onFlipIsWorkspaceYearIncluded(workspaceId, year);
       }
     });
 
@@ -91,62 +111,57 @@ export const SelectTogglWorkspacesStepComponent: React.FC<Props> = props => {
   };
 
   const handleYearClick = (workspaceId: string, year: string) => {
-    const workspace = props.workspacesById[workspaceId];
-    props.onUpdateIsWorkspaceYearIncluded(workspaceId, year);
+    props.onFlipIsWorkspaceYearIncluded(workspaceId, year);
 
     setTimeout(() => {
-      const includedCount = props.yearsCountByWorkspaceId[workspaceId];
-      if (
-        (includedCount === 0 && workspace.isIncluded) ||
-        (includedCount > 0 && !workspace.isIncluded)
-      ) {
-        props.onUpdateIsWorkspaceIncluded(workspaceId);
-      }
+      validateWorkspaceInclusionByYears(workspaceId);
     });
   };
 
-  if (workspaceFetching !== null) {
-    return (
-      <Loader>
-        Determining years for <strong>{workspaceFetching} </strong>
-        workspace...
-      </Loader>
-    );
-  }
-
   return (
-    <StepPage
-      stepNumber={props.stepNumber}
-      subtitle="Select Toggl Workspaces to Transfer"
-      previous={props.previous}
-      next={handleNextClick}
-    >
-      <p
-        className={css`
-          margin-bottom: 1.25rem;
-        `}
-      >
-        Select which workspaces and years you want to transfer to Clockify. All
-        of them are included by default. Press the <strong>Next </strong>
-        button when you're ready to proceed.
-      </p>
-      <Container
-        className={css`
-          max-height: 50vh;
-          overflow: auto;
+    <If condition={isNil(workspaceFetching)}>
+      <Then>
+        <StepPage
+          stepNumber={props.stepNumber}
+          subtitle="Select Toggl Workspaces to Transfer"
+          onPreviousClick={props.onPreviousClick}
+          onNextClick={handleNextClick}
+          onRefreshClick={loadWorkspaceSummaries}
+        >
+          <p
+            className={css`
+              margin-bottom: 1rem;
+            `}
+          >
+            Select which workspaces and years you want to transfer to Clockify.
+            All of them are included by default. Press the
+            <strong> Next</strong> button when you're ready to proceed.
+          </p>
+          <Container
+            className={css`
+              max-height: 50vh;
+              overflow: auto;
               padding: 0.25rem;
-        `}
-      >
-        {props.workspaceIds.map(workspaceId => (
-          <WorkspaceRow
-            key={workspaceId}
-            workspaceRecord={props.workspacesById[workspaceId]}
-            onWorkspaceClick={handleWorkspaceClick}
-            onYearClick={handleYearClick}
-          />
-        ))}
-      </Container>
-    </StepPage>
+            `}
+          >
+            {props.workspaceIds.map(workspaceId => (
+              <WorkspaceRow
+                key={workspaceId}
+                workspaceRecord={props.workspacesById[workspaceId]}
+                onWorkspaceClick={handleWorkspaceClick}
+                onYearClick={handleYearClick}
+              />
+            ))}
+          </Container>
+        </StepPage>
+      </Then>
+      <Else>
+        <Loader>
+          Determining years for <strong>{workspaceFetching} </strong>
+          workspace...
+        </Loader>
+      </Else>
+    </If>
   );
 };
 
@@ -162,17 +177,17 @@ const mapDispatchToProps = (dispatch: ReduxDispatch) => ({
   onDismissAllNotifications: () => dispatch(dismissAllNotifications()),
   onFetchWorkspaceSummary: (workspaceId: string) =>
     dispatch(fetchTogglWorkspaceSummary(workspaceId)),
-  onShowNotification: (notification: Partial<NotificationModel>) =>
-    dispatch(showNotification(notification)),
-  onUpdateIsWorkspaceIncluded: (workspaceId: string) =>
-    dispatch(updateIsWorkspaceIncluded(workspaceId)),
-  onUpdateIsWorkspaceYearIncluded: (workspaceId: string, year: string) =>
+  onFlipIsWorkspaceIncluded: (workspaceId: string) =>
+    dispatch(flipIsWorkspaceIncluded(workspaceId)),
+  onFlipIsWorkspaceYearIncluded: (workspaceId: string, year: string) =>
     dispatch(
-      updateIsWorkspaceYearIncluded({
+      flipIsWorkspaceYearIncluded({
         workspaceId,
         year,
       }),
     ),
+  onShowNotification: (notification: Partial<NotificationModel>) =>
+    dispatch(showNotification(notification)),
 });
 
 export default connect<ConnectStateProps, ConnectDispatchProps, StepPageProps>(

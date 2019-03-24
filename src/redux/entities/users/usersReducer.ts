@@ -1,7 +1,12 @@
 import { getType } from 'typesafe-actions';
 import { combineActions, handleActions } from 'redux-actions';
 import { get } from 'lodash';
-import { normalizeState, swapEntityInclusion } from '~/redux/utils';
+import {
+  normalizeState,
+  flipEntityInclusion,
+  appendEntryCountToState
+} from '~/redux/utils';
+import { togglTimeEntriesFetch } from '~/redux/entities/timeEntries/timeEntriesActions';
 import * as usersActions from './usersActions';
 import {
   ReduxAction,
@@ -15,6 +20,7 @@ import {
   TogglUser,
   UserModel,
 } from '~/types/usersTypes';
+import { TogglTimeEntry } from '~/types/timeEntriesTypes';
 
 export interface UsersState {
   readonly clockify: ReduxStateEntryForTool<UserModel>;
@@ -42,6 +48,7 @@ const schemaProcessStrategy = (value: ClockifyUser | TogglUser): UserModel => ({
   isActive:
     'status' in value ? value.status === ClockifyUserStatus.Active : true,
   userGroupIds: 'userGroupIds' in value ? value.userGroupIds : [],
+  entryCount: 0,
   linkedId: null,
   isIncluded: true,
 });
@@ -55,9 +62,9 @@ export default handleActions(
       normalizeState(
         ToolName.Clockify,
         EntityGroup.Users,
-        schemaProcessStrategy,
         state,
         users,
+        schemaProcessStrategy,
       ),
 
     [getType(usersActions.togglUsersFetch.success)]: (
@@ -67,9 +74,9 @@ export default handleActions(
       normalizeState(
         ToolName.Toggl,
         EntityGroup.Users,
-        schemaProcessStrategy,
         state,
         users,
+        schemaProcessStrategy,
       ),
 
     [combineActions(
@@ -93,10 +100,21 @@ export default handleActions(
       isFetching: false,
     }),
 
-    [getType(usersActions.updateIsUserIncluded)]: (
+    [getType(usersActions.flipIsUserIncluded)]: (
       state: UsersState,
       { payload: userId }: ReduxAction<string>,
-    ): UsersState => swapEntityInclusion(state, EntityType.User, userId),
+    ): UsersState => flipEntityInclusion(state, EntityType.User, userId),
+
+    [getType(togglTimeEntriesFetch.success)]: (
+      state: UsersState,
+      { payload: timeEntries }: ReduxAction<TogglTimeEntry[]>,
+    ) =>
+      appendEntryCountToState(
+        EntityType.User,
+        ToolName.Toggl,
+        state,
+        timeEntries,
+      ),
   },
   initialState,
 );

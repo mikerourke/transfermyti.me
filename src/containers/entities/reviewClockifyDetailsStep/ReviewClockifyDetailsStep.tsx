@@ -15,11 +15,16 @@ import {
 } from '~/redux/entities/workspaces/workspacesSelectors';
 import EntitiesReviewPage from '~/components/entitiesReviewPage/EntitiesReviewPage';
 import Loader from '~/components/loader/Loader';
+import { StepPageProps } from '~/components/stepPage/StepPage';
 import ConfirmationModal from './components/ConfirmationModal';
-import { EntityModel, ReduxDispatch, ReduxState } from '~/types/commonTypes';
+import {
+  EntityModel,
+  ReduxDispatch,
+  ReduxState,
+  ToolName,
+} from '~/types/commonTypes';
 import { EntityGroup } from '~/types/entityTypes';
 import { WorkspaceModel } from '~/types/workspacesTypes';
-import { StepPageProps } from '~/components/stepPage/StepPage';
 
 interface ConnectStateProps {
   clockifyWorkspacesById: Record<string, WorkspaceModel>;
@@ -81,8 +86,8 @@ export const ReviewClockifyDetailsStepComponent: React.FC<Props> = props => {
   const handleModalConfirmClick = () => {
     setIsModalActive(false);
     transferAllEntitiesToClockify()
-      .then(props.next)
-      .catch(props.next);
+      .then(() => props.onNextClick())
+      .catch(() => props.onNextClick());
   };
 
   const fetchedName = props.workspaceNameBeingFetched;
@@ -103,21 +108,22 @@ export const ReviewClockifyDetailsStepComponent: React.FC<Props> = props => {
         <EntitiesReviewPage
           stepNumber={props.stepNumber}
           subtitle="Review Pending Data Before Transfer"
+          toolName={ToolName.Clockify}
           entitiesByWorkspaceId={props.togglInclusionsByWorkspaceId}
           workspacesById={props.togglWorkspacesById}
-          previous={props.previous}
-          next={handleNextClick}
+          onPreviousClick={props.onPreviousClick}
+          onNextClick={handleNextClick}
         >
           <p
             className={css`
               margin-bottom: 1rem;
             `}
           >
-            This page contains all the records that <strong>will </strong> be
+            This page contains all the records that <strong>will</strong> be
             created on Clockify once you press the <strong>Next </strong>
             button and confirm. If any of the records you selected in the
-            previous step already existed on Clockify, you won't see them
-            here...because they already exist.
+            previous step already exist on Clockify, you won't see them
+            here...because they already exist...uh...on Clockify.
           </p>
           <p
             className={css`

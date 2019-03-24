@@ -1,11 +1,7 @@
 import { getType } from 'typesafe-actions';
 import { combineActions, handleActions } from 'redux-actions';
 import { get, uniq } from 'lodash';
-import {
-  findIdFieldValue,
-  normalizeState,
-  swapEntityInclusion,
-} from '~/redux/utils';
+import { normalizeState, flipEntityInclusion } from '~/redux/utils';
 import * as userGroupsActions from './userGroupsActions';
 import {
   ReduxAction,
@@ -18,6 +14,8 @@ import {
   TogglUserGroup,
   UserGroupModel,
 } from '~/types/userGroupsTypes';
+import { UserModel } from '~/types/usersTypes';
+import { TimeEntryModel } from '~/types/timeEntriesTypes';
 
 export interface UserGroupsState {
   readonly clockify: ReduxStateEntryForTool<UserGroupModel>;
@@ -37,17 +35,53 @@ export const initialState: UserGroupsState = {
   isFetching: false,
 };
 
-const schemaProcessStrategy = (
-  value: ClockifyUserGroup | TogglUserGroup,
-): UserGroupModel => ({
-  id: value.id.toString(),
-  name: value.name,
-  workspaceId: findIdFieldValue(value, EntityType.Workspace),
-  userIds: 'userIds' in value ? value.userIds : [],
-  entryCount: 0,
-  linkedId: null,
-  isIncluded: true,
-});
+const appendEntryCountToUserGroupsInState = (
+  toolName: ToolName,
+  state: UserGroupsState,
+  timeEntries: TimeEntryModel[],
+  usersById: Record<string, UserModel>,
+): UserGroupsState => {
+  const userGroupsById = state[toolName].byId;
+
+  const updatedUserGroupsById = Object.entries(userGroupsById).reduce(
+    (acc, [userGroupId, userGroup]) => {
+      let entryCount = 0;
+
+      if (userGroup.userIds.length !== 0) {
+        const entryCountByUserId = timeEntries.reduce((acc, timeEntry) => {
+          const userId = get(timeEntry, 'userId');
+          if (!userId) return acc;
+
+          return {
+            ...acc,
+            [userId]: get(acc, userId, 0) + 1,
+          };
+        }, {});
+
+        userGroup.userIds.forEach(userId => {
+          const matchingUser = get(usersById, userId);
+          if (matchingUser) {
+            entryCount += get(entryCountByUserId, userId, 0);
+          }
+        });
+      }
+
+      return {
+        ...acc,
+        [userGroupId]: { ...userGroup, entryCount },
+      };
+    },
+    {},
+  );
+
+  return {
+    ...state,
+    [toolName]: {
+      ...state[toolName],
+      byId: updatedUserGroupsById,
+    },
+  };
+};
 
 export default handleActions(
   {
@@ -61,7 +95,6 @@ export default handleActions(
       normalizeState(
         ToolName.Clockify,
         EntityGroup.UserGroups,
-        schemaProcessStrategy,
         state,
         userGroups,
       ),
@@ -70,13 +103,7 @@ export default handleActions(
       state: UserGroupsState,
       { payload: userGroups }: ReduxAction<TogglUserGroup[]>,
     ): UserGroupsState =>
-      normalizeState(
-        ToolName.Toggl,
-        EntityGroup.UserGroups,
-        schemaProcessStrategy,
-        state,
-        userGroups,
-      ),
+      normalizeState(ToolName.Toggl, EntityGroup.UserGroups, state, userGroups),
 
     [combineActions(
       getType(userGroupsActions.clockifyUserGroupsFetch.request),
@@ -99,11 +126,11 @@ export default handleActions(
       isFetching: false,
     }),
 
-    [getType(userGroupsActions.updateIsUserGroupIncluded)]: (
+    [getType(userGroupsActions.flipIsUserGroupIncluded)]: (
       state: UserGroupsState,
       { payload: userGroupId }: ReduxAction<string>,
     ): UserGroupsState =>
-      swapEntityInclusion(state, EntityType.UserGroup, userGroupId),
+      flipEntityInclusion(state, EntityType.UserGroup, userGroupId),
 
     [getType(userGroupsActions.addTogglUserIdToGroup)]: (
       state: UserGroupsState,
@@ -129,6 +156,19 @@ export default handleActions(
         },
       };
     },
+
+    [getType(userGroupsActions.calculateUserGroupEntryCounts)]: (
+      state: UserGroupsState,
+      {
+        payload: { toolName, timeEntries, usersById },
+      }: ReduxAction<userGroupsActions.EntryCountCalculatorModel>,
+    ) =>
+      appendEntryCountToUserGroupsInState(
+        toolName,
+        state,
+        timeEntries,
+        usersById,
+      ),
   },
   initialState,
 );

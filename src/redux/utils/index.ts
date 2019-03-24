@@ -1,9 +1,9 @@
-export { default as appendTimeEntryCount } from './appendTimeEntryCount';
+export { default as appendEntryCountToState } from './appendEntryCountToState';
 export { default as batchClockifyRequests } from './batchClockifyRequests';
 export { default as buildThrottler } from './buildThrottler';
 export { default as findIdFieldValue } from './findIdFieldValue';
 export { default as findTogglInclusions } from './findTogglInclusions';
 export { default as firstAndLastDayOfYear } from './firstAndLastDayOfYear';
+export { default as flipEntityInclusion } from './flipEntityInclusion';
 export { default as groupByWorkspace } from './groupByWorkspace';
 export { default as normalizeState } from './normalizeState';
-export { default as swapEntityInclusion } from './swapEntityInclusion';

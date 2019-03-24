@@ -1,10 +1,12 @@
 import { getType } from 'typesafe-actions';
 import { combineActions, handleActions } from 'redux-actions';
+import { get } from 'lodash';
 import {
   findIdFieldValue,
+  flipEntityInclusion,
   normalizeState,
-  swapEntityInclusion,
 } from '~/redux/utils';
+import { togglTimeEntriesFetch } from '~/redux/entities/timeEntries/timeEntriesActions';
 import * as tagsActions from './tagsActions';
 import {
   ReduxAction,
@@ -13,6 +15,7 @@ import {
 } from '~/types/commonTypes';
 import { EntityGroup, EntityType } from '~/types/entityTypes';
 import { ClockifyTag, TagModel, TogglTag } from '~/types/tagsTypes';
+import { TogglTimeEntry } from '~/types/timeEntriesTypes';
 
 export interface TagsState {
   readonly clockify: ReduxStateEntryForTool<TagModel>;
@@ -41,6 +44,46 @@ const schemaProcessStrategy = (value: ClockifyTag | TogglTag): TagModel => ({
   isIncluded: true,
 });
 
+const appendEntryCountByTagName = <TTimeEntry>(
+  toolName: ToolName,
+  state: TagsState,
+  timeEntries: TTimeEntry[],
+) => {
+  const timeEntryCountByTagId = {};
+  const tags = Object.values(state[toolName].byId);
+
+  timeEntries.forEach(timeEntry => {
+    const tagNames = get(timeEntry, 'tags', []) as string[];
+
+    tagNames.forEach(tagName => {
+      const { id = null } = tags.find(({ name }) => name === tagName);
+      if (!id) return;
+
+      const existingCount = get(timeEntryCountByTagId, id, 0);
+      timeEntryCountByTagId[id] = existingCount + 1;
+    });
+  });
+
+  const updatedTagsById = tags.reduce(
+    (acc, tag) => ({
+      ...acc,
+      [tag.id]: {
+        ...tag,
+        entryCount: tag.entryCount + get(timeEntryCountByTagId, tag.id, 0),
+      },
+    }),
+    {},
+  );
+
+  return {
+    ...state,
+    [toolName]: {
+      ...state[toolName],
+      byId: updatedTagsById,
+    },
+  };
+};
+
 export default handleActions(
   {
     [combineActions(
@@ -53,9 +96,9 @@ export default handleActions(
       normalizeState(
         ToolName.Clockify,
         EntityGroup.Tags,
-        schemaProcessStrategy,
         state,
         tags,
+        schemaProcessStrategy,
       ),
 
     [getType(tagsActions.togglTagsFetch.success)]: (
@@ -65,9 +108,9 @@ export default handleActions(
       normalizeState(
         ToolName.Toggl,
         EntityGroup.Tags,
-        schemaProcessStrategy,
         state,
         tags,
+        schemaProcessStrategy,
       ),
 
     [combineActions(
@@ -91,10 +134,15 @@ export default handleActions(
       isFetching: false,
     }),
 
-    [getType(tagsActions.updateIsTagIncluded)]: (
+    [getType(tagsActions.flipIsTagIncluded)]: (
       state: TagsState,
       { payload: tagId }: ReduxAction<string>,
-    ): TagsState => swapEntityInclusion(state, EntityType.Tag, tagId),
+    ): TagsState => flipEntityInclusion(state, EntityType.Tag, tagId),
+
+    [getType(togglTimeEntriesFetch.success)]: (
+      state: TagsState,
+      { payload: timeEntries }: ReduxAction<TogglTimeEntry[]>,
+    ) => appendEntryCountByTagName(ToolName.Toggl, state, timeEntries),
   },
   initialState,
 );
