@@ -5,16 +5,17 @@ import EntitiesList from '~/components/entitiesList/EntitiesList';
 import EntityTabs from './components/EntityTabs';
 import NoRecordsDisplay from './components/NoRecordsDisplay';
 import WorkspacesDropdown from './components/WorkspacesDropdown';
-import { EntityModel } from '~/types/commonTypes';
+import { EntityModel, ToolName } from '~/types/commonTypes';
 import { EntityGroup } from '~/types/entityTypes';
 import { WorkspaceModel } from '~/types/workspacesTypes';
 
 interface Props extends StepPageProps {
   subtitle: string;
+  toolName: ToolName;
   entitiesByWorkspaceId: Record<string, Record<EntityGroup, EntityModel[]>>;
   workspacesById: Record<string, WorkspaceModel>;
   onRefreshClick?: () => void;
-  onUpdateIsWorkspaceEntityIncluded?: (
+  onFlipIsWorkspaceEntityIncluded?: (
     entityGroup: EntityGroup,
     entityRecord: EntityModel,
   ) => void;
@@ -24,9 +25,10 @@ const CONTENTS_HEIGHT = 448;
 
 const EntitiesReviewPage: React.FC<Props> = ({
   children,
+  toolName,
   entitiesByWorkspaceId,
   workspacesById,
-  onUpdateIsWorkspaceEntityIncluded,
+  onFlipIsWorkspaceEntityIncluded,
   ...stepPageProps
 }) => {
   const [workspaceId, setWorkspaceId] = useState(
@@ -52,8 +54,9 @@ const EntitiesReviewPage: React.FC<Props> = ({
       <EntityTabs activeTab={entityGroup} onTabClick={setEntityGroup} />
       {activeEntityRecords.length === 0 ? (
         <NoRecordsDisplay
-          height={CONTENTS_HEIGHT}
           activeEntityGroup={entityGroup}
+          height={CONTENTS_HEIGHT}
+          toolName={toolName}
         />
       ) : (
         <EntitiesList
@@ -61,7 +64,7 @@ const EntitiesReviewPage: React.FC<Props> = ({
           entityRecords={activeEntityRecords}
           height={CONTENTS_HEIGHT}
           width={contentsWidth}
-          onItemClick={onUpdateIsWorkspaceEntityIncluded}
+          onItemClick={onFlipIsWorkspaceEntityIncluded}
         />
       )}
     </StepPage>

@@ -10,7 +10,7 @@ interface Props {
 }
 
 const EntityTabs: React.FC<Props> = ({ activeTab, onTabClick }) => {
-  const validGroups = omit(EntityGroup, 'Workspaces');
+  const validGroups = omit(EntityGroup, 'Workspaces', 'UserGroups', 'Users');
   const activeStyle = {
     borderBottomColor: 'var(--info)',
     color: 'var(--info)',

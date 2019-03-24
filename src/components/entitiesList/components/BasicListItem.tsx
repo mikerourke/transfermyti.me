@@ -1,7 +1,7 @@
 import React from 'react';
 import { ListRowProps } from 'react-virtualized';
 import { When } from 'react-if';
-import { Box } from 'bloomer';
+import { Box, Tag } from 'bloomer';
 import { css } from 'emotion';
 import { isNil } from 'lodash';
 import Flex from '~/components/flex/Flex';
@@ -20,7 +20,13 @@ const BasicListItem: React.FC<Props> = ({
   isVisible,
   ...flexProps
 }) => {
-  const { isIncluded, name, entryCount = 0 } = entityRecord as any;
+  const {
+    isIncluded,
+    name,
+    entryCount = 0,
+    isActive = true,
+  } = entityRecord as any;
+
   const entryLabel = entryCount === 1 ? 'entry' : 'entries';
   const hasClickEvent = !isNil(onItemClick);
 
@@ -33,7 +39,7 @@ const BasicListItem: React.FC<Props> = ({
         className={css`
           height: 48px;
           margin-left: 0.5rem;
-          padding: 0 1rem;
+          padding-left: 1rem;
           width: calc(100% - 2rem);
         `}
       >
@@ -53,6 +59,17 @@ const BasicListItem: React.FC<Props> = ({
           >
             {name}
           </span>
+          <When condition={!isActive}>
+            <Tag
+              isColor="warning"
+              className={css`
+                font-weight: bold;
+                margin-left: 0.5rem;
+              `}
+            >
+              Archived
+            </Tag>
+          </When>
         </Flex>
         <div>
           <strong>{entryCount}</strong> time {entryLabel}
