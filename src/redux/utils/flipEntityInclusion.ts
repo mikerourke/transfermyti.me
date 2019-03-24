@@ -1,7 +1,7 @@
 import { get } from 'lodash';
 import { EntityType } from '~/types/entityTypes';
 
-export default function swapEntityInclusion<TState>(
+export default function flipEntityInclusion<TState>(
   state: TState,
   entityType: EntityType,
   entityId: string,
