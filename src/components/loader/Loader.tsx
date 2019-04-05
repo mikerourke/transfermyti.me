@@ -1,5 +1,5 @@
 import React from 'react';
-import cx from 'classnames';
+import classnames from 'classnames';
 import { css, keyframes } from 'emotion';
 
 const Loader: React.FC = ({ children }) => {
@@ -56,7 +56,7 @@ const Loader: React.FC = ({ children }) => {
         {cubeOrientations.map(({ rotation, delay }) => (
           <div
             key={rotation}
-            className={cx(
+            className={classnames(
               cubeClass,
               css`
                 transform: scale(1.1) rotateZ(${rotation});

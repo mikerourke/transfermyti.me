@@ -1,7 +1,7 @@
 import React from 'react';
 import { Box, Column, Title } from 'bloomer';
 import { css } from 'emotion';
-import cx from 'classnames';
+import classnames from 'classnames';
 
 interface Props {
   isSelected: boolean;
@@ -23,7 +23,7 @@ const TransferTypeColumn: React.FC<Props> = ({
   return (
     <Column isSize="1/2">
       <Box
-        className={cx(
+        className={classnames(
           css`
             height: 100%;
             min-height: 14rem;

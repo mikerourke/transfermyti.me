@@ -1,5 +1,5 @@
 import React from 'react';
-import cx from 'classnames';
+import classnames from 'classnames';
 import { When } from 'react-if';
 import { Control, Field, Help, Input, Label } from 'bloomer';
 import { css } from 'emotion';
@@ -30,7 +30,7 @@ const InputField: React.FC<Props> = ({
       <Input
         name={name}
         placeholder={`Enter ${label}`}
-        className={cx(className, {
+        className={classnames(className, {
           [css`
             background-color: rgba(255, 0, 0, 0.1);
           `]: errorText !== '',

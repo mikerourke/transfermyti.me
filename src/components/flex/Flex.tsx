@@ -1,5 +1,5 @@
 import React from 'react';
-import cx from 'classnames';
+import classnames from 'classnames';
 import { css } from 'emotion';
 import { isNil } from 'lodash';
 
@@ -45,7 +45,7 @@ const Flex: React.FC<Props | any> = ({
   direction,
   ...props
 }) => {
-  const classes = cx(
+  const classes = classnames(
     className,
     css`
       display: flex;
