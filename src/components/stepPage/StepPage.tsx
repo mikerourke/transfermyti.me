@@ -4,9 +4,11 @@ import { When } from 'react-if';
 import { css } from 'emotion';
 import { isNil } from 'lodash';
 import Flex from '~/components/flex/Flex';
+import InstructionsSection from './components/InstructionsSection';
 
 export interface StepPageProps {
   stepNumber: number;
+  instructions?: React.ReactElement<any> | string;
   onNextClick?: () => void;
   onPreviousClick?: () => void;
 }
@@ -61,7 +63,10 @@ const StepPage: React.FC<Props> = ({
       >
         {props.subtitle}
       </h2>
-      <div ref={contentsRef}>{props.children}</div>
+      <div ref={contentsRef}>
+        <InstructionsSection>{props.instructions}</InstructionsSection>
+        {props.children}
+      </div>
       <Flex
         justifyContent="space-between"
         className={css`

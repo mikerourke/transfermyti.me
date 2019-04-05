@@ -113,7 +113,8 @@ export const ReviewClockifyDetailsStepComponent: React.FC<Props> = props => {
           workspacesById={props.togglWorkspacesById}
           onPreviousClick={props.onPreviousClick}
           onNextClick={handleNextClick}
-        >
+          instructions={
+            <>
           <p
             className={css`
               margin-bottom: 1rem;
@@ -125,16 +126,14 @@ export const ReviewClockifyDetailsStepComponent: React.FC<Props> = props => {
             previous step already exist on Clockify, you won't see them
             here...because they already exist...uh...on Clockify.
           </p>
-          <p
-            className={css`
-              margin-bottom: 1rem;
-            `}
-          >
+              <p>
             If you see something here that you <strong>don't</strong> want
-            transferred, press the <strong>Previous</strong> button to go back
-            and uncheck it.
+                transferred, press the <strong>Previous</strong> button to go
+                back and uncheck it.
           </p>
-        </EntitiesReviewPage>
+            </>
+          }
+        />
       </Else>
       <ConfirmationModal
         isActive={isModalActive}

@@ -127,16 +127,15 @@ export const SelectTogglWorkspacesStepComponent: React.FC<Props> = props => {
           onPreviousClick={props.onPreviousClick}
           onNextClick={handleNextClick}
           onRefreshClick={loadWorkspaceSummaries}
+          instructions={
+            <p>
+              Select which workspaces and years you want to transfer to
+              Clockify. All of them are included by default. Press the
+              <strong> Next</strong> button when you're ready to move onto the
+              next step.
+            </p>
+          }
         >
-          <p
-            className={css`
-              margin-bottom: 1rem;
-            `}
-          >
-            Select which workspaces and years you want to transfer to Clockify.
-            All of them are included by default. Press the
-            <strong> Next</strong> button when you're ready to proceed.
-          </p>
           <Container
             className={css`
               max-height: 50vh;

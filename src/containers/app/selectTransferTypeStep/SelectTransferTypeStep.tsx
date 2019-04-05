@@ -29,15 +29,17 @@ export const SelectTransferTypeStepComponent: React.FC<Props> = ({
   };
 
   return (
-    <StepPage subtitle="Select Transfer Type" {...stepPageProps}>
-      <p
-        className={css`
-          margin-bottom: 1rem;
-        `}
-      >
-        Select whether you're transferring entries for just yourself or multiple
-        users. Press the <strong>Next</strong> button when you're done.
-      </p>
+    <StepPage
+      subtitle="Select Transfer Type"
+      instructions={
+        <p>
+          Select whether you're transferring entries for just yourself or
+          multiple users. Press the <strong>Next</strong> button when you're
+          ready to move onto the next step.
+        </p>
+      }
+      {...stepPageProps}
+    >
       <div
         className={css`
           padding: 0 0.25rem;

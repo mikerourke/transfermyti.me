@@ -68,25 +68,32 @@ export const SelectTogglInclusionsStepComponent: React.FC<Props> = ({
           toolName={ToolName.Toggl}
           workspacesById={workspacesById}
           onRefreshClick={fetchEntitiesForAllWorkspaces}
-          {...reviewPageProps}
-        >
+          instructions={
+            <>
           <p
             className={css`
               margin-bottom: 1rem;
             `}
           >
             Select which entities/records you want to transfer and press the
-            <strong> Next</strong> button when you're ready. There are a few
-            things to be aware of:
+                <strong> Next</strong> button when you're ready to move onto the
+                next step. There are a few things to be aware of:
           </p>
-          <div
+              <InstructionsList />
+              <p
             className={css`
-              margin-bottom: 1rem;
+                  margin-top: 1rem;
             `}
           >
-            <InstructionsList />
-          </div>
-        </EntitiesReviewPage>
+                If you need to change what's included in a different workspace,
+                you can select it from the dropdown to the right of the entity
+                tabs. Don't worry, all of your changes are preserved for all
+                workspaces.
+              </p>
+            </>
+          }
+          {...reviewPageProps}
+        />
       </Then>
       <Else>
         <Loader>
