@@ -1,13 +1,14 @@
 import { getType } from 'typesafe-actions';
 import { combineActions, handleActions } from 'redux-actions';
-import { normalizeState } from '~/redux/utils';
+import { flipEntityInclusion, normalizeState } from '~/redux/utils';
+import { flipIsProjectIncluded } from '~/redux/entities/projects/projectsActions';
 import * as timeEntriesActions from './timeEntriesActions';
 import {
   ReduxAction,
   ReduxStateEntryForTool,
   ToolName,
 } from '~/types/commonTypes';
-import { EntityGroup } from '~/types/entityTypes';
+import { EntityGroup, EntityType } from '~/types/entityTypes';
 import {
   ClockifyTimeEntry,
   TimeEntryModel,
@@ -73,6 +74,38 @@ export default handleActions(
       ...state,
       isFetching: false,
     }),
+
+    [getType(timeEntriesActions.flipIsTimeEntryIncluded)]: (
+      state: TimeEntriesState,
+      { payload: timeEntryId }: ReduxAction<string>,
+    ): TimeEntriesState =>
+      flipEntityInclusion(state, EntityType.Task, timeEntryId),
+
+    [getType(flipIsProjectIncluded)]: (
+      state: TimeEntriesState,
+      { payload: projectId }: ReduxAction<string>,
+    ): TimeEntriesState => {
+      const timeEntriesById = { ...state.toggl.byId };
+      const updatedEntriesById = Object.entries(timeEntriesById).reduce(
+        (acc, [timeEntryId, { isIncluded, ...timeEntry }]) => ({
+          ...acc,
+          [timeEntryId]: {
+            ...timeEntry,
+            isIncluded:
+              timeEntry.projectId === projectId ? !isIncluded : isIncluded,
+          },
+        }),
+        {},
+      );
+
+      return {
+        ...state,
+        toggl: {
+          ...state.toggl,
+          byId: updatedEntriesById,
+        },
+      };
+    },
   },
   initialState,
 );

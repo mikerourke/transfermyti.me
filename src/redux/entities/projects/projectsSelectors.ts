@@ -13,6 +13,16 @@ export const selectClockifyProjectIds = createSelector(
   (projectIds): string[] => projectIds,
 );
 
+export const selectClockifyProjectsById = createSelector(
+  (state: ReduxState) => state.entities.projects.clockify.byId,
+  (projectsById): Record<string, ProjectModel> => projectsById,
+);
+
+export const selectClockifyProjectsByWorkspace = createSelector(
+  (state: ReduxState) => Object.values(state.entities.projects.clockify.byId),
+  projects => groupByWorkspace(projects),
+);
+
 export const selectTogglProjectsById = createSelector(
   (state: ReduxState) => state.entities.projects.toggl.byId,
   projectsById => projectsById,

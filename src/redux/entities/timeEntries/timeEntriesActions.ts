@@ -1,4 +1,4 @@
-import { createAsyncAction } from 'typesafe-actions';
+import { createAsyncAction, createStandardAction } from 'typesafe-actions';
 import { flatten, get, isNil, isString } from 'lodash';
 import { buildThrottler, findIdFieldValue } from '~/redux/utils';
 import {
@@ -6,17 +6,16 @@ import {
   apiFetchTogglTimeEntries,
 } from '../api/timeEntries';
 import { showFetchErrorNotification } from '~/redux/app/appActions';
+import { selectCurrentTransferType } from '~/redux/app/appSelectors';
 import { selectTogglClients } from '~/redux/entities/clients/clientsSelectors';
-import {
-  selectClockifyUserId,
-  selectTogglUserEmail,
-} from '~/redux/credentials/credentialsSelectors';
+import { selectCredentials } from '~/redux/credentials/credentialsSelectors';
 import { calculateUserGroupEntryCounts } from '~/redux/entities/userGroups/userGroupsActions';
 import {
   selectClockifyUsersById,
   selectTogglUsersById,
 } from '~/redux/entities/users/usersSelectors';
 import { selectTogglWorkspaceIncludedYears } from '~/redux/entities/workspaces/workspacesSelectors';
+import { TransferType } from '~/types/appTypes';
 import { ReduxDispatch, ReduxGetState, ToolName } from '~/types/commonTypes';
 import { ClientModel } from '~/types/clientsTypes';
 import { EntityType } from '~/types/entityTypes';
@@ -38,6 +37,10 @@ export const togglTimeEntriesFetch = createAsyncAction(
   '@timeEntries/TOGGL_FETCH_SUCCESS',
   '@timeEntries/TOGGL_FETCH_FAILURE',
 )<void, TimeEntryModel[], void>();
+
+export const flipIsTimeEntryIncluded = createStandardAction(
+  '@timeEntries/FLIP_IS_INCLUDED',
+)<string>();
 
 const fetchClockifyTimeEntriesForIncludedYears = async (
   userId: string,
@@ -116,6 +119,7 @@ const convertTimeEntriesFromToolToUniversal = (
         : timeEntry.tags.map((tag: any) =>
             isString(tag) ? tag : get(tag, 'name'),
           ),
+      isActive: false,
       tagIds: [],
       name: null,
       linkedId: null,
@@ -130,15 +134,16 @@ export const fetchClockifyTimeEntries = (workspaceId: string) => async (
   dispatch(clockifyTimeEntriesFetch.request());
   try {
     const state = getState();
-    const userId = selectClockifyUserId(state);
-    const usersById = selectClockifyUsersById(state);
+    const { clockifyUserId } = selectCredentials(state);
     const includedYears = selectTogglWorkspaceIncludedYears(state, workspaceId);
 
     const clockifyTimeEntries = await fetchClockifyTimeEntriesForIncludedYears(
-      userId,
+      clockifyUserId,
       workspaceId,
       includedYears,
     );
+
+    const usersById = selectClockifyUsersById(state);
 
     const timeEntries = convertTimeEntriesFromToolToUniversal(
       workspaceId,
@@ -198,32 +203,40 @@ export const fetchTogglTimeEntries = (
 
   try {
     const state = getState();
-    const email = selectTogglUserEmail(state);
-    const usersById = selectTogglUsersById(state);
+    const { togglEmail, togglUserId } = selectCredentials(state);
 
     const {
       total_count,
       per_page,
       data: firstPageEntries,
-    } = await apiFetchTogglTimeEntries(email, workspaceId, year, 1);
+    } = await apiFetchTogglTimeEntries(togglEmail, workspaceId, year, 1);
 
     const totalPages = Math.ceil(total_count / per_page);
 
     const remainingPageEntries = await fetchTogglTimeEntriesForRemainingPages(
-      email,
+      togglEmail,
       workspaceId,
       year,
       totalPages,
     );
 
     const allTimeEntries = [...firstPageEntries, ...remainingPageEntries];
+
     const togglClients = selectTogglClients(state);
-    const timeEntries = convertTimeEntriesFromToolToUniversal(
+    const usersById = selectTogglUsersById(state);
+
+    const universalTimeEntries = convertTimeEntriesFromToolToUniversal(
       workspaceId,
       allTimeEntries,
       togglClients,
       usersById,
     );
+
+    const currentTransferType = selectCurrentTransferType(state);
+    const timeEntries =
+      currentTransferType === TransferType.SingleUser
+        ? universalTimeEntries.filter(({ userId }) => userId === togglUserId)
+        : universalTimeEntries;
 
     dispatch(
       calculateUserGroupEntryCounts({
@@ -232,6 +245,7 @@ export const fetchTogglTimeEntries = (
         usersById,
       }),
     );
+
     return dispatch(togglTimeEntriesFetch.success(timeEntries));
   } catch (error) {
     dispatch(showFetchErrorNotification(error));

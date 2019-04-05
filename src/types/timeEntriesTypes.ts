@@ -71,6 +71,7 @@ export interface TimeEntryModel extends UniversalEntityModel {
   start: Date | null;
   end: Date | null;
   tags: string[];
+  isActive: boolean;
   tagIds?: string[];
   name: null; // Not used, included because other entities have a "name".
 }

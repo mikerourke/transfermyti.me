@@ -7,67 +7,10 @@ import {
   TimeEntryModel,
 } from '~/types/timeEntriesTypes';
 
-export const selectClockifyTimeEntriesById = createSelector(
-  (state: ReduxState) => state.entities.timeEntries.clockify.byId,
-  timeEntries => timeEntries,
-);
-
 export const selectTogglTimeEntriesById = createSelector(
   (state: ReduxState) => state.entities.timeEntries.toggl.byId,
   timeEntries => timeEntries,
 );
-
-const selectDetailedTimeEntriesFactory = (toolName: ToolName) =>
-  createSelector(
-    (state: ReduxState) => state.entities.timeEntries[toolName].byId,
-    (state: ReduxState) => state.entities.projects[toolName].byId,
-    (state: ReduxState) => state.entities.tags[toolName].byId,
-    (state: ReduxState) => state.entities.tasks[toolName].byId,
-    (state: ReduxState) => state.entities.users[toolName].byId,
-    (
-      timeEntriesById: Record<string, TimeEntryModel>,
-      projectsById: Record<string, EntityModel>,
-      tagsById: Record<string, TagModel>,
-      tasksById: Record<string, EntityModel>,
-      usersById: Record<string, EntityModel>,
-    ): DetailedTimeEntryModel[] => {
-      const tagIdsByName = Object.values(tagsById).reduce(
-        (acc, { id, name }) => ({ ...acc, [name]: id.toString() }),
-        {},
-      );
-
-      const timeEntries = Object.values(timeEntriesById).map(
-        ({ projectId, taskId, userId, tags, ...timeEntry }) => ({
-          ...timeEntry,
-          projectId,
-          taskId,
-          userId,
-          tags,
-          workspaceId: get(projectsById, [projectId, 'workspaceId'], null),
-          projectName: get(projectsById, [projectId, 'name'], null),
-          taskName: get(tasksById, [taskId, 'name'], null),
-          userName: get(usersById, [userId, 'name'], null),
-          tagIds: tags.map(tag => get(tagIdsByName, tag, null)),
-          tagList: getTagList(tags),
-        }),
-        [],
-      );
-
-      return timeEntries.sort((a, b) => b.start.getTime() - a.start.getTime());
-    },
-  );
-
-const groupTimeEntriesByWorkspace = (
-  timeEntries: TimeEntryModel[],
-  workspaceIds: string[],
-): Record<string, TimeEntryModel[]> =>
-  workspaceIds.reduce(
-    (acc, workspaceId) => ({
-      ...acc,
-      [workspaceId]: filter(timeEntries, { workspaceId }),
-    }),
-    {},
-  );
 
 const getTagList = (tags: string[]): string => {
   if (tags.length === 0) return '';
@@ -75,31 +18,77 @@ const getTagList = (tags: string[]): string => {
   return tags.reduce((acc, tag) => `${acc}${tag}, `, '');
 };
 
-export const selectClockifyTimeEntriesByWorkspaceId = createSelector(
-  selectDetailedTimeEntriesFactory(ToolName.Clockify),
-  (state: ReduxState) => state.entities.workspaces.clockify.idValues,
-  (timeEntries, workspaceIds): Record<string, TimeEntryModel[]> =>
-    groupTimeEntriesByWorkspace(timeEntries, workspaceIds),
-);
+const selectDetailedTimeEntriesByWorkspaceFactory = (toolName: ToolName) =>
+  createSelector(
+    (state: ReduxState) => state.entities.workspaces[toolName].idValues,
+    (state: ReduxState) => state.entities.timeEntries[toolName].byId,
+    (state: ReduxState) => state.entities.projects[toolName].byId,
+    (state: ReduxState) => state.entities.tags[toolName].byId,
+    (state: ReduxState) => state.entities.tasks[toolName].byId,
+    (state: ReduxState) => state.entities.users[toolName].byId,
+    (
+      workspaceIds: string[],
+      timeEntriesById: Record<string, TimeEntryModel>,
+      projectsById: Record<string, EntityModel>,
+      tagsById: Record<string, TagModel>,
+      tasksById: Record<string, EntityModel>,
+      usersById: Record<string, EntityModel>,
+    ): Record<string, DetailedTimeEntryModel[]> => {
+      const tagIdsByName = Object.values(tagsById).reduce(
+        (acc, { id, name }) => ({ ...acc, [name]: id.toString() }),
+        {},
+      );
 
-export const selectTogglTimeEntriesByWorkspaceId = createSelector(
-  selectDetailedTimeEntriesFactory(ToolName.Toggl),
-  (state: ReduxState) => state.entities.workspaces.toggl.idValues,
-  (timeEntries, workspaceIds): Record<string, TimeEntryModel[]> =>
-    groupTimeEntriesByWorkspace(timeEntries, workspaceIds),
-);
+      const timeEntries = Object.values(timeEntriesById).map(
+        ({ projectId, taskId, userId, tags, ...timeEntry }) => {
+          const matchingProject = get(projectsById, projectId, {});
 
-export const selectTogglTimeEntriesByWorkspaceFactory = (
+          return {
+            ...timeEntry,
+            projectId,
+            taskId,
+            userId,
+            tags,
+            isActive: get(matchingProject, 'isActive', false),
+            workspaceId: get(matchingProject, 'workspaceId', null),
+            projectName: get(matchingProject, 'name', null),
+            taskName: get(tasksById, [taskId, 'name'], null),
+            userName: get(usersById, [userId, 'name'], null),
+            tagIds: tags.map(tag => get(tagIdsByName, tag, null)),
+            tagList: getTagList(tags),
+          };
+        },
+        [],
+      );
+
+      const sortedEntries = timeEntries.sort(
+        (a, b) => b.start.getTime() - a.start.getTime(),
+      );
+
+      return workspaceIds.reduce(
+        (acc, workspaceId) => ({
+          ...acc,
+          [workspaceId]: filter(sortedEntries, { workspaceId }),
+        }),
+        {},
+      );
+    },
+  );
+
+export const selectTimeEntriesByWorkspaceFactory = (
+  toolName: ToolName,
   inclusionsOnly: boolean,
 ) =>
   createSelector(
-    selectClockifyTimeEntriesByWorkspaceId,
-    selectTogglTimeEntriesByWorkspaceId,
-    (
-      clockifyTimeEntriesByWorkspaceId,
-      togglTimeEntriesByWorkspaceId,
-    ): Record<string, TimeEntryModel[]> => {
-      // TODO: Write this!
-      return togglTimeEntriesByWorkspaceId;
-    },
+    selectDetailedTimeEntriesByWorkspaceFactory(toolName),
+    (timeEntriesByWorkspace): Record<string, TimeEntryModel[]> =>
+      Object.entries(timeEntriesByWorkspace).reduce(
+        (acc, [workspaceId, timeEntries]) => ({
+          ...acc,
+          [workspaceId]: inclusionsOnly
+            ? timeEntries.filter(({ isIncluded }) => isIncluded)
+            : timeEntries,
+        }),
+        {},
+      ),
   );

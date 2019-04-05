@@ -4,6 +4,11 @@ import { findTogglInclusions, groupByWorkspace } from '~/redux/utils';
 import { ClientModel } from '~/types/clientsTypes';
 import { CreateNamedEntityRequest, ReduxState } from '~/types/commonTypes';
 
+export const selectClockifyClientsByWorkspace = createSelector(
+  (state: ReduxState) => Object.values(state.entities.clients.clockify.byId),
+  clients => groupByWorkspace(clients),
+);
+
 export const selectTogglClients = createSelector(
   (state: ReduxState) => state.entities.clients.toggl.byId,
   (clientsById): ClientModel[] => Object.values(clientsById),

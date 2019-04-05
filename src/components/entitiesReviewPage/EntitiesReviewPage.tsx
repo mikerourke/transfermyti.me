@@ -1,18 +1,25 @@
 import React, { useState } from 'react';
-import { first, get } from 'lodash';
-import StepPage, { StepPageProps } from '~/components/stepPage/StepPage';
+import { first, get, isNil } from 'lodash';
+import { css } from 'emotion';
 import EntitiesList from '~/components/entitiesList/EntitiesList';
+import StepPage, { StepPageProps } from '~/components/stepPage/StepPage';
 import EntityTabs from './components/EntityTabs';
 import NoRecordsDisplay from './components/NoRecordsDisplay';
+import TotalsFooter from './components/TotalsFooter';
 import WorkspacesDropdown from './components/WorkspacesDropdown';
 import { EntityModel, ToolName } from '~/types/commonTypes';
 import { EntityGroup } from '~/types/entityTypes';
-import { WorkspaceModel } from '~/types/workspacesTypes';
+import {
+  CountsByGroupByWorkspaceModel,
+  EntitiesByGroupByWorkspaceModel,
+  WorkspaceModel,
+} from '~/types/workspacesTypes';
 
 interface Props extends StepPageProps {
   subtitle: string;
   toolName: ToolName;
-  entitiesByWorkspaceId: Record<string, Record<EntityGroup, EntityModel[]>>;
+  countsByGroupByWorkspace: CountsByGroupByWorkspaceModel;
+  entitiesByGroupByWorkspace: EntitiesByGroupByWorkspaceModel;
   workspacesById: Record<string, WorkspaceModel>;
   onRefreshClick?: () => void;
   onFlipIsWorkspaceEntityIncluded?: (
@@ -24,49 +31,85 @@ interface Props extends StepPageProps {
 const CONTENTS_HEIGHT = 448;
 
 const EntitiesReviewPage: React.FC<Props> = ({
-  children,
   toolName,
-  entitiesByWorkspaceId,
+  countsByGroupByWorkspace,
+  entitiesByGroupByWorkspace,
   workspacesById,
   onFlipIsWorkspaceEntityIncluded,
   ...stepPageProps
 }) => {
-  const [workspaceId, setWorkspaceId] = useState(
+  const [workspaceId, setWorkspaceId] = useState<string>(
     first(Object.keys(workspacesById)),
   );
-  const [entityGroup, setEntityGroup] = useState(EntityGroup.Projects);
-  const [contentsWidth, setContentsWidth] = useState(0);
+  const [activeEntityGroup, setActiveEntityGroup] = useState<EntityGroup>(
+    EntityGroup.Projects,
+  );
+  const [contentsWidth, setContentsWidth] = useState<number>(0);
+  const [showInclusionsOnly, setShowInclusionsOnly] = useState<boolean>(false);
 
-  const activeEntityRecords = get(
-    entitiesByWorkspaceId,
-    [workspaceId, entityGroup],
+  let activeEntityRecords = get(
+    entitiesByGroupByWorkspace,
+    [workspaceId, activeEntityGroup],
     [],
+  );
+
+  if (showInclusionsOnly && activeEntityRecords.length !== 0) {
+    activeEntityRecords = activeEntityRecords.reduce(
+      (acc: EntityModel[], entityRecord: EntityModel) => {
+        if (!entityRecord.isIncluded) return acc;
+        if (!isNil(entityRecord.linkedId)) return acc;
+        return [...acc, entityRecord];
+      },
+      [],
+    );
+  }
+
+  const groupRecordCounts = get(
+    countsByGroupByWorkspace,
+    [workspaceId, activeEntityGroup],
+    {},
   );
 
   return (
     <StepPage onResize={setContentsWidth} {...stepPageProps}>
-      {children}
-      <WorkspacesDropdown
-        workspacesById={workspacesById}
-        activeWorkspaceId={workspaceId}
-        onItemClick={setWorkspaceId}
-      />
-      <EntityTabs activeTab={entityGroup} onTabClick={setEntityGroup} />
+      <div
+        className={css`
+          margin-bottom: 1rem;
+          position: relative;
+        `}
+      >
+        <EntityTabs
+          activeTab={activeEntityGroup}
+          onTabClick={setActiveEntityGroup}
+        />
+        <WorkspacesDropdown
+          workspacesById={workspacesById}
+          activeWorkspaceId={workspaceId}
+          onItemClick={setWorkspaceId}
+        />
+      </div>
       {activeEntityRecords.length === 0 ? (
         <NoRecordsDisplay
-          activeEntityGroup={entityGroup}
+          activeEntityGroup={activeEntityGroup}
           height={CONTENTS_HEIGHT}
           toolName={toolName}
         />
       ) : (
         <EntitiesList
-          entityGroup={entityGroup}
+          entityGroup={activeEntityGroup}
           entityRecords={activeEntityRecords}
           height={CONTENTS_HEIGHT}
           width={contentsWidth}
           onItemClick={onFlipIsWorkspaceEntityIncluded}
         />
       )}
+      <TotalsFooter
+        activeEntityGroup={activeEntityGroup}
+        entityRecords={activeEntityRecords}
+        groupRecordCounts={groupRecordCounts}
+        showInclusionsOnly={showInclusionsOnly}
+        onFlipInclusionsOnly={() => setShowInclusionsOnly(!showInclusionsOnly)}
+      />
     </StepPage>
   );
 };

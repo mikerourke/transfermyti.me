@@ -8,7 +8,8 @@ import {
   flipIsWorkspaceEntityIncluded,
 } from '~/redux/entities/workspaces/workspacesActions';
 import {
-  selectTogglAllEntitiesByWorkspaceId,
+  selectTogglEntitiesByGroupByWorkspace,
+  selectTogglCountsByGroupByWorkspace,
   selectTogglIncludedWorkspacesById,
   selectWorkspaceNameBeingFetched,
 } from '~/redux/entities/workspaces/workspacesSelectors';
@@ -23,10 +24,15 @@ import {
   ToolName,
 } from '~/types/commonTypes';
 import { EntityGroup } from '~/types/entityTypes';
-import { WorkspaceModel } from '~/types/workspacesTypes';
+import {
+  CountsByGroupByWorkspaceModel,
+  EntitiesByGroupByWorkspaceModel,
+  WorkspaceModel,
+} from '~/types/workspacesTypes';
 
 interface ConnectStateProps {
-  entitiesByWorkspaceId: Record<string, Record<EntityGroup, EntityModel[]>>;
+  countsByGroupByWorkspace: CountsByGroupByWorkspaceModel;
+  entitiesByGroupByWorkspace: EntitiesByGroupByWorkspaceModel;
   workspaceNameBeingFetched: string;
   workspacesById: Record<string, WorkspaceModel>;
 }
@@ -70,21 +76,21 @@ export const SelectTogglInclusionsStepComponent: React.FC<Props> = ({
           onRefreshClick={fetchEntitiesForAllWorkspaces}
           instructions={
             <>
-          <p
-            className={css`
-              margin-bottom: 1rem;
-            `}
-          >
-            Select which entities/records you want to transfer and press the
+              <p
+                className={css`
+                  margin-bottom: 1rem;
+                `}
+              >
+                Select which entities/records you want to transfer and press the
                 <strong> Next</strong> button when you're ready to move onto the
                 next step. There are a few things to be aware of:
-          </p>
+              </p>
               <InstructionsList />
               <p
-            className={css`
+                className={css`
                   margin-top: 1rem;
-            `}
-          >
+                `}
+              >
                 If you need to change what's included in a different workspace,
                 you can select it from the dropdown to the right of the entity
                 tabs. Don't worry, all of your changes are preserved for all
@@ -106,7 +112,8 @@ export const SelectTogglInclusionsStepComponent: React.FC<Props> = ({
 };
 
 const mapStateToProps = (state: ReduxState) => ({
-  entitiesByWorkspaceId: selectTogglAllEntitiesByWorkspaceId(state),
+  countsByGroupByWorkspace: selectTogglCountsByGroupByWorkspace(state),
+  entitiesByGroupByWorkspace: selectTogglEntitiesByGroupByWorkspace(state),
   workspaceNameBeingFetched: selectWorkspaceNameBeingFetched(state),
   workspacesById: selectTogglIncludedWorkspacesById(state),
 });

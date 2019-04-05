@@ -1,6 +1,6 @@
 import { createAsyncAction, createStandardAction } from 'typesafe-actions';
 import { get } from 'lodash';
-import { batchClockifyRequests } from '~/redux/utils';
+import { batchClockifyRequests, getValidEntities } from '~/redux/utils';
 import {
   apiCreateClockifyUserGroup,
   apiFetchClockifyUserGroups,
@@ -66,6 +66,8 @@ const convertUserGroupsFromToolToUniversal = (
   userGroups: (TogglUserGroup | ClockifyUserGroup)[],
   usersByWorkspace: Record<string, UserModel[]>,
 ): UserGroupModel[] => {
+  if (getValidEntities(userGroups).length === 0) return [];
+
   const workspaceUsers = get(usersByWorkspace, workspaceId, []);
 
   return userGroups.map(userGroup => {

@@ -18,7 +18,7 @@ interface Props {
   onItemClick: (workspaceId: string) => void;
 }
 
-const MIN_WIDTH = '14rem';
+const MIN_WIDTH = '12rem';
 
 const WorkspacesDropdown: React.FC<Props> = ({
   workspacesById,
@@ -36,8 +36,10 @@ const WorkspacesDropdown: React.FC<Props> = ({
     <Dropdown
       isActive={isActive}
       className={css`
-        margin-bottom: 0.5rem;
         min-width: ${MIN_WIDTH};
+        position: absolute;
+        top: 0;
+        right: 0;
       `}
     >
       <DropdownTrigger
@@ -50,7 +52,7 @@ const WorkspacesDropdown: React.FC<Props> = ({
           aria-haspopup="true"
           aria-controls="dropdown-menu"
           className={css`
-            font-size: 1.25rem;
+            font-size: 1rem;
             font-weight: bold;
             width: 100%;
             justify-content: space-between;
@@ -77,7 +79,7 @@ const WorkspacesDropdown: React.FC<Props> = ({
               key={id}
               className={css`
                 cursor: pointer;
-                font-size: 1.25rem;
+                font-size: 1rem;
                 font-weight: bold;
 
                 &:hover {

@@ -9,29 +9,26 @@ import {
 } from '~/redux/entities/workspaces/workspacesActions';
 import {
   selectClockifyIncludedWorkspacesById,
+  selectTogglCountsByGroupByWorkspace,
+  selectTogglEntitiesByGroupByWorkspace,
   selectTogglIncludedWorkspacesById,
-  selectTogglInclusionsByWorkspaceId,
   selectWorkspaceNameBeingFetched,
 } from '~/redux/entities/workspaces/workspacesSelectors';
 import EntitiesReviewPage from '~/components/entitiesReviewPage/EntitiesReviewPage';
 import Loader from '~/components/loader/Loader';
 import { StepPageProps } from '~/components/stepPage/StepPage';
 import ConfirmationModal from './components/ConfirmationModal';
+import { ReduxDispatch, ReduxState, ToolName } from '~/types/commonTypes';
 import {
-  EntityModel,
-  ReduxDispatch,
-  ReduxState,
-  ToolName,
-} from '~/types/commonTypes';
-import { EntityGroup } from '~/types/entityTypes';
-import { WorkspaceModel } from '~/types/workspacesTypes';
+  CountsByGroupByWorkspaceModel,
+  EntitiesByGroupByWorkspaceModel,
+  WorkspaceModel,
+} from '~/types/workspacesTypes';
 
 interface ConnectStateProps {
   clockifyWorkspacesById: Record<string, WorkspaceModel>;
-  togglInclusionsByWorkspaceId: Record<
-    string,
-    Record<EntityGroup, EntityModel[]>
-  >;
+  togglCountsByGroupByWorkspace: CountsByGroupByWorkspaceModel;
+  togglEntitiesByGroupByWorkspace: EntitiesByGroupByWorkspaceModel;
   togglWorkspacesById: Record<string, WorkspaceModel>;
   workspaceNameBeingFetched: string;
 }
@@ -109,28 +106,29 @@ export const ReviewClockifyDetailsStepComponent: React.FC<Props> = props => {
           stepNumber={props.stepNumber}
           subtitle="Review Pending Data Before Transfer"
           toolName={ToolName.Clockify}
-          entitiesByWorkspaceId={props.togglInclusionsByWorkspaceId}
+          entitiesByGroupByWorkspace={props.togglEntitiesByGroupByWorkspace}
+          countsByGroupByWorkspace={props.togglCountsByGroupByWorkspace}
           workspacesById={props.togglWorkspacesById}
           onPreviousClick={props.onPreviousClick}
           onNextClick={handleNextClick}
           instructions={
             <>
-          <p
-            className={css`
-              margin-bottom: 1rem;
-            `}
-          >
-            This page contains all the records that <strong>will</strong> be
-            created on Clockify once you press the <strong>Next </strong>
-            button and confirm. If any of the records you selected in the
-            previous step already exist on Clockify, you won't see them
-            here...because they already exist...uh...on Clockify.
-          </p>
+              <p
+                className={css`
+                  margin-bottom: 1rem;
+                `}
+              >
+                This page contains all the records that <strong>will</strong> be
+                created on Clockify once you press the <strong>Next </strong>
+                button and confirm. If any of the records you selected in the
+                previous step already exist on Clockify, you won't see them
+                here...because they already exist...uh...on Clockify.
+              </p>
               <p>
-            If you see something here that you <strong>don't</strong> want
+                If you see something here that you <strong>don't</strong> want
                 transferred, press the <strong>Previous</strong> button to go
                 back and uncheck it.
-          </p>
+              </p>
             </>
           }
         />
@@ -146,7 +144,8 @@ export const ReviewClockifyDetailsStepComponent: React.FC<Props> = props => {
 
 const mapStateToProps = (state: ReduxState) => ({
   clockifyWorkspacesById: selectClockifyIncludedWorkspacesById(state),
-  togglInclusionsByWorkspaceId: selectTogglInclusionsByWorkspaceId(state),
+  togglEntitiesByGroupByWorkspace: selectTogglEntitiesByGroupByWorkspace(state),
+  togglCountsByGroupByWorkspace: selectTogglCountsByGroupByWorkspace(state),
   togglWorkspacesById: selectTogglIncludedWorkspacesById(state),
   workspaceNameBeingFetched: selectWorkspaceNameBeingFetched(state),
 });

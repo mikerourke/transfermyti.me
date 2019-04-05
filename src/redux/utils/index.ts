@@ -5,5 +5,6 @@ export { default as findIdFieldValue } from './findIdFieldValue';
 export { default as findTogglInclusions } from './findTogglInclusions';
 export { default as firstAndLastDayOfYear } from './firstAndLastDayOfYear';
 export { default as flipEntityInclusion } from './flipEntityInclusion';
+export { default as getValidEntities } from './getValidEntities';
 export { default as groupByWorkspace } from './groupByWorkspace';
 export { default as normalizeState } from './normalizeState';

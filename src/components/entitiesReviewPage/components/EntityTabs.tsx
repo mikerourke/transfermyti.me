@@ -17,7 +17,7 @@ const EntityTabs: React.FC<Props> = ({ activeTab, onTabClick }) => {
   };
 
   return (
-    <Tabs>
+    <Tabs isMarginless>
       <TabList>
         {Object.entries(validGroups).map(([key, value]) => (
           <Tab

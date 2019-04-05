@@ -1,9 +1,8 @@
 import { normalize, schema, Schema } from 'normalizr';
 import { get, isEmpty, isNil, uniq } from 'lodash';
 import { ToolName } from '~/types/commonTypes';
-
-import StrategyFunction = schema.StrategyFunction;
 import { EntityGroup } from '~/types/entityTypes';
+import StrategyFunction = schema.StrategyFunction;
 
 export default function normalizeState<TState, TPayload>(
   toolName: ToolName,
@@ -13,6 +12,7 @@ export default function normalizeState<TState, TPayload>(
   schemaProcessStrategy?: StrategyFunction,
 ): TState {
   if (isNil(payload)) return state;
+  if (Array.isArray(payload) && payload.length === 0) return state;
 
   const entitySchema = getEntitySchema(entityGroup, schemaProcessStrategy);
   const { entities, result } = normalize(payload, entitySchema);
@@ -38,11 +38,11 @@ export default function normalizeState<TState, TPayload>(
     ...normalizedState,
     [ToolName.Clockify]: {
       ...get(normalizedState, ToolName.Clockify, {}),
-      byId: appendLinkedId(toggl.byId, clockify.byId),
+      byId: appendLinkedId(entityGroup, toggl.byId, clockify.byId),
     },
     [ToolName.Toggl]: {
       ...get(normalizedState, ToolName.Toggl, {}),
-      byId: appendLinkedId(clockify.byId, toggl.byId),
+      byId: appendLinkedId(entityGroup, clockify.byId, toggl.byId),
     },
   };
 }
@@ -63,10 +63,12 @@ function getEntitySchema(
 }
 
 function appendLinkedId<TModel>(
+  entityGroup: EntityGroup,
   linkFromEntitiesById: Record<string, TModel>,
   appendToEntitiesById: Record<string, TModel>,
 ): Record<string, TModel> {
-  if (isEmpty(linkFromEntitiesById)) return appendToEntitiesById;
+  if (entityGroup === EntityGroup.TimeEntries || isEmpty(linkFromEntitiesById))
+    return appendToEntitiesById;
 
   type ModelWithName<T> = T & { name: string };
 

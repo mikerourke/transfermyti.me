@@ -7,6 +7,11 @@ import { ClientModel } from '~/types/clientsTypes';
 import { ReduxState } from '~/types/commonTypes';
 import { CreateTaskRequest, TaskModel } from '~/types/tasksTypes';
 
+export const selectClockifyTasksByWorkspace = createSelector(
+  (state: ReduxState) => Object.values(state.entities.tasks.clockify.byId),
+  tasks => groupByWorkspace(tasks),
+);
+
 export const selectTogglTasks = createSelector(
   (state: ReduxState) => Object.values(state.entities.tasks.clockify.byId),
   selectTogglProjectsById,

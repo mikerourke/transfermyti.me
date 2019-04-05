@@ -4,6 +4,11 @@ import { findTogglInclusions, groupByWorkspace } from '~/redux/utils';
 import { CreateNamedEntityRequest, ReduxState } from '~/types/commonTypes';
 import { TagModel } from '~/types/tagsTypes';
 
+export const selectClockifyTagsByWorkspace = createSelector(
+  (state: ReduxState) => Object.values(state.entities.tags.clockify.byId),
+  tags => groupByWorkspace(tags),
+);
+
 export const selectTogglTags = createSelector(
   (state: ReduxState) => state.entities.tags.toggl.byId,
   (tagsById): TagModel[] => Object.values(tagsById),
