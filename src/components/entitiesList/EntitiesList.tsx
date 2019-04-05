@@ -27,10 +27,13 @@ const EntitiesList: React.FC<Props> = ({
 
   const listRowRenderer = (listRowProps: ListRowProps) => {
     const entityRecord = entityRecords[listRowProps.index];
+    const isOmitted = !entityRecord.isIncluded || !isNil(entityRecord.linkedId);
+
     if (entityGroup === EntityGroup.TimeEntries) {
       return (
         <TimeEntryListItem
           timeEntry={entityRecord as DetailedTimeEntryModel}
+          isOmitted={isOmitted}
           {...listRowProps}
         />
       );
@@ -41,6 +44,7 @@ const EntitiesList: React.FC<Props> = ({
     return (
       <BasicListItem
         entityRecord={entityRecord}
+        isOmitted={isOmitted}
         onItemClick={!isNil(onItemClick) ? handleItemClick : undefined}
         {...listRowProps}
       />
