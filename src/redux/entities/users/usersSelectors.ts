@@ -66,7 +66,7 @@ export const selectTogglUsersByWorkspaceFactory = (inclusionsOnly: boolean) =>
     },
   );
 
-export const selectUsersTransferPayloadForWorkspace = createSelector(
+export const selectUsersInvitePayloadForWorkspace = createSelector(
   selectTogglUsersByWorkspaceFactory(true),
   selectCredentials,
   (inclusionsByWorkspaceId, { togglEmail }) => (

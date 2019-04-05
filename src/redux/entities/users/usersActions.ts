@@ -10,7 +10,7 @@ import {
   showFetchErrorNotification,
   updateInTransferEntity,
 } from '~/redux/app/appActions';
-import { selectUsersTransferPayloadForWorkspace } from './usersSelectors';
+import { selectUsersInvitePayloadForWorkspace } from './usersSelectors';
 import { appendUserIdsToWorkspace } from '~/redux/entities/workspaces/workspacesActions';
 import { ReduxDispatch, ReduxGetState, ToolName } from '~/types/commonTypes';
 import { ClockifyUser, TogglUser } from '~/types/usersTypes';
@@ -64,7 +64,7 @@ export const fetchClockifyUsers = (workspaceId: string) => async (
   }
 };
 
-const transferTogglUserGroupIds = async (
+const appendTogglUserGroupIdsToUsers = async (
   workspaceId: string,
   users: TogglUser[],
 ) => {
@@ -100,7 +100,7 @@ export const fetchTogglUsers = (workspaceId: string) => async (
       appendUserIdsToWorkspaceForTool(ToolName.Toggl, users, workspaceId),
     );
 
-    await transferTogglUserGroupIds(workspaceId, users);
+    await appendTogglUserGroupIdsToUsers(workspaceId, users);
 
     return dispatch(togglUsersFetch.success(users));
   } catch (error) {
@@ -109,30 +109,27 @@ export const fetchTogglUsers = (workspaceId: string) => async (
   }
 };
 
-export const transferUsersToClockify = (
+export const inviteUsersToClockify = (
   togglWorkspaceId: string,
   clockifyWorkspaceId: string,
 ) => async (dispatch: ReduxDispatch, getState: ReduxGetState) => {
   const state = getState();
-  const userEmailsToTransfer = selectUsersTransferPayloadForWorkspace(state)(
+  const userEmailsToInvite = selectUsersInvitePayloadForWorkspace(state)(
     togglWorkspaceId,
   );
-  if (userEmailsToTransfer.length === 0) return Promise.resolve();
+  if (userEmailsToInvite.length === 0) return Promise.resolve();
 
   dispatch(clockifyUsersTransfer.request());
 
-  for (const userEmail of userEmailsToTransfer) {
+  for (const userEmail of userEmailsToInvite) {
     dispatch(
       updateInTransferEntity({ email: userEmail, type: EntityType.User }),
     );
   }
 
-  // TODO: Remove this:
-  return dispatch(clockifyUsersTransfer.success());
-
   try {
     await apiAddClockifyUsersToWorkspace(clockifyWorkspaceId, {
-      emails: userEmailsToTransfer,
+      emails: userEmailsToInvite,
     });
     await dispatch(fetchClockifyUsers(clockifyWorkspaceId));
 
