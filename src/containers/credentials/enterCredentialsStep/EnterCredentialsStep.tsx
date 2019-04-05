@@ -50,7 +50,11 @@ export const EnterCredentialsStepComponent: React.FC<Props> = ({
   }, []);
 
   const validateInputs = () => {
-    const requiredCredentials = omit(credentials, 'clockifyUserId');
+    const requiredCredentials = omit(
+      credentials,
+      'clockifyUserId',
+      'togglUserId',
+    );
 
     let invalidCount = 0;
     const newInputErrors = Object.entries(requiredCredentials).reduce(
@@ -103,10 +107,10 @@ export const EnterCredentialsStepComponent: React.FC<Props> = ({
       onNextClick={handleNextClick}
       instructions={
         <p>
-        Enter your credentials in the form below. If you need help, hover over
+          Enter your credentials in the form below. If you need help, hover over
           the help icon. Press the <strong>Next</strong> button when you're
           ready to move onto the next step.
-      </p>
+        </p>
       }
     >
       <form>

@@ -13,7 +13,7 @@ export const apiFetchClockifyUserDetails = (
   userId: string,
 ): Promise<ClockifyUser> => fetch(`/clockify/api/users/${userId}`);
 
-export const apiFetchTogglUserDetails = (): Promise<TogglMeResponse> =>
+export const apiFetchTogglMeDetails = (): Promise<TogglMeResponse> =>
   fetch('/toggl/api/me');
 
 export const apiFetchClockifyUsersInProject = (

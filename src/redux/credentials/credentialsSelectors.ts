@@ -7,11 +7,6 @@ export const selectCredentials = createSelector(
   (credentials): CredentialsModel => credentials,
 );
 
-export const selectClockifyUserId = createSelector(
-  selectCredentials,
-  (credentials): string => credentials.clockifyUserId,
-);
-
 export const selectTogglUserEmail = createSelector(
   selectCredentials,
   (credentials): string => credentials.togglEmail,

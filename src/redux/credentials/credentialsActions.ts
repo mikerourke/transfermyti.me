@@ -5,7 +5,7 @@ import { STORAGE_KEY } from '~/constants';
 import getIfDev from '~/utils/getIfDev';
 import {
   apiFetchClockifyUserDetails,
-  apiFetchTogglUserDetails,
+  apiFetchTogglMeDetails,
 } from '~/redux/entities/api/users';
 import { apiFetchClockifyWorkspaces } from '~/redux/entities/api/workspaces';
 import { selectCredentials } from './credentialsSelectors';
@@ -67,21 +67,27 @@ const fetchClockifyUserDetails = () => async (dispatch: ReduxDispatch) => {
   return id;
 };
 
-const fetchTogglUserDetails = () => async (dispatch: ReduxDispatch) => {
-  const { data } = await apiFetchTogglUserDetails();
+const fetchTogglMeDetails = () => async (dispatch: ReduxDispatch) => {
+  const { data } = await apiFetchTogglMeDetails();
   dispatch(togglWorkspacesFetch.success(data.workspaces));
-  return data.email;
+
+  return {
+    togglEmail: data.email,
+    togglUserId: data.id.toString(),
+  };
 };
 
 export const validateCredentials = () => async (dispatch: ReduxDispatch) => {
   dispatch(credentialsValidation.request());
+
   try {
-    const togglEmail = await dispatch(fetchTogglUserDetails());
+    const { togglEmail, togglUserId } = await dispatch(fetchTogglMeDetails());
     const clockifyUserId = await dispatch(fetchClockifyUserDetails());
 
     const credentials = {
       [CredentialsField.ClockifyUserId]: clockifyUserId,
       [CredentialsField.TogglEmail]: togglEmail,
+      [CredentialsField.TogglUserId]: togglUserId,
     };
 
     return dispatch(credentialsValidation.success(credentials));

@@ -12,6 +12,7 @@ export interface CredentialsState extends CredentialsModel {
 export const initialState: CredentialsState = {
   togglEmail: '',
   togglApiKey: '',
+  togglUserId: '',
   clockifyUserId: '',
   clockifyApiKey: '',
   isValid: false,

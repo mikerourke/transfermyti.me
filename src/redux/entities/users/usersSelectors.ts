@@ -29,18 +29,6 @@ export const selectTogglUsersById = createSelector(
   (usersById): Record<string, UserModel> => usersById,
 );
 
-const selectTogglMeUserId = createSelector(
-  [selectCredentials, selectTogglUsersById],
-  ({ togglEmail }, usersById): string | null => {
-    const matchingUser = Object.values(usersById).find(
-      ({ email }) => email === togglEmail,
-    );
-    if (matchingUser) return matchingUser.id;
-
-    return null;
-  },
-);
-
 const getValidUsers = (
   usersById: Record<string, UserModel>,
   userIds: string[],
@@ -54,18 +42,18 @@ const getValidUsers = (
 
 export const selectTogglUsersByWorkspaceFactory = (inclusionsOnly: boolean) =>
   createSelector(
+    selectCredentials,
     selectTogglUsersById,
-    selectTogglMeUserId,
     selectTogglTimeEntriesById,
     (state: ReduxState) => state.entities.workspaces.toggl.byId,
     (
+      { togglUserId },
       usersById,
-      meUserId,
       timeEntriesById,
       workspacesById,
     ): Record<string, UserModel[]> => {
       return Object.values(workspacesById).reduce((acc, { id, userIds }) => {
-        const validUsers = getValidUsers(usersById, userIds, meUserId);
+        const validUsers = getValidUsers(usersById, userIds, togglUserId);
         const usersToUse = inclusionsOnly
           ? findTogglInclusions(validUsers)
           : validUsers;
