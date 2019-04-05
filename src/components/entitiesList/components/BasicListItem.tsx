@@ -46,7 +46,7 @@ const BasicListItem: React.FC<Props> = ({
         <Flex alignItems="center">
           <When condition={hasClickEvent}>
             <Checkbox
-              state={isIncluded ? CheckedState.Checked : CheckedState.Unchecked}
+            checked={isIncluded}
               size="1.25rem"
               onClick={hasClickEvent ? onItemClick : undefined}
             />

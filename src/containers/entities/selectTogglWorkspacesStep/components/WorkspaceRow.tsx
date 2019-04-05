@@ -41,7 +41,7 @@ const WorkspaceRow: React.FC<Props> = ({
   >
     <Flex alignItems="center">
       <Checkbox
-        state={getWorkspaceCheckedState(inclusionsByYear)}
+        checked={getWorkspaceCheckedState(inclusionsByYear)}
         size="1.5rem"
         onClick={() => onWorkspaceClick(id)}
       />
@@ -64,11 +64,7 @@ const WorkspaceRow: React.FC<Props> = ({
           `}
         >
           <Checkbox
-            state={
-              inclusionsByYear[year]
-                ? CheckedState.Checked
-                : CheckedState.Unchecked
-            }
+            checked={inclusionsByYear[year]}
             size="1.25rem"
             onClick={() => onYearClick(id, year)}
           />

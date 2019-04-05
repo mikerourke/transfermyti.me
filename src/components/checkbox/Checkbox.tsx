@@ -3,7 +3,7 @@ import { css } from 'emotion';
 import { CheckedState } from '~/types/commonTypes';
 
 interface Props {
-  state: CheckedState;
+  checked: CheckedState | boolean;
   size: number | string;
   onClick: () => void;
 }
@@ -17,18 +17,27 @@ const statePaths = [
   'M19 3H5c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h14c1.1 0 2-.9 2-2V5c0-1.1-.9-2-2-2zm-2 10H7v-2h10v2z',
 ];
 
-const Checkbox: React.FC<Props> = ({ state, size, onClick }) => (
-  <svg
-    viewBox="0 0 24 24"
-    height={size}
-    width={size}
-    onClick={onClick}
-    className={css`
-      cursor: pointer;
-    `}
-  >
-    <path d={statePaths[state]} fill="var(--info)" />
-  </svg>
-);
+const Checkbox: React.FC<Props> = ({ checked, size, onClick }) => {
+  let state = 0;
+  if (typeof checked === 'boolean') {
+    state = checked ? CheckedState.Checked : CheckedState.Unchecked;
+  } else {
+    state = checked;
+  }
+
+  return (
+    <svg
+      viewBox="0 0 24 24"
+      height={size}
+      width={size}
+      onClick={onClick}
+      className={css`
+        cursor: pointer;
+      `}
+    >
+      <path d={statePaths[state]} fill="var(--info)" />
+    </svg>
+  );
+};
 
 export default Checkbox;
