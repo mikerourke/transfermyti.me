@@ -9,7 +9,7 @@ import {
   DropdownTrigger,
 } from 'bloomer';
 import { css } from 'emotion';
-import ChevronDownIcon from './ChevronDownIcon';
+import SvgIcon, { SvgIconName } from '~/components/svgIcon/SvgIcon';
 import { WorkspaceModel } from '~/types/workspacesTypes';
 
 interface Props {
@@ -58,7 +58,12 @@ const WorkspacesDropdown: React.FC<Props> = ({
           onClick={() => setIsActive(!isActive)}
         >
           <span>{get(workspacesById, [activeWorkspaceId, 'name'], '')}</span>
-          <ChevronDownIcon />
+          <SvgIcon
+            name={SvgIconName.ExpandMore}
+            color="var(--dark-gray)"
+            height={16}
+            width={16}
+          />
         </Button>
       </DropdownTrigger>
       <DropdownMenu

@@ -1,5 +1,33 @@
-export default {
-  github: {
+export enum SvgIconName {
+  ChevronDown = 'chevronDown',
+  ExpandLess = 'expandLess',
+  ExpandMore = 'expandMore',
+  GitHub = 'github',
+  Heart = 'heart',
+  Person = 'person',
+  People = 'people',
+}
+
+export const iconProps = {
+  [SvgIconName.ChevronDown]: {
+    viewBox: '0 0 448 512',
+    path: [
+      'M207.029 381.476 L12.686 187.132 c-9.373-9.373-9.373-24.569 0-33.941 ',
+      'l22.667-22.667 c9.357-9.357 24.522-9.375 33.901-.04 L224 284.505 ',
+      'l154.745-154.021 c9.379-9.335 24.544-9.317 33.901.04 l22.667 22.667 ',
+      'c9.373 9.373 9.373 24.569 0 33.941 L240.971 381.476 ',
+      'c-9.373 9.372-24.569 9.372-33.942 0z',
+    ].join(''),
+  },
+  [SvgIconName.ExpandLess]: {
+    viewBox: '0 0 24 14.83',
+    path: 'M12 0L0 12l2.83 2.83L12 5.66l9.17 9.17L24 12z',
+  },
+  [SvgIconName.ExpandMore]: {
+    viewBox: '0 0 24 14.83',
+    path: 'M21.17 0L12 9.17 2.83 0 0 2.83l12 12 12-12z',
+  },
+  [SvgIconName.GitHub]: {
     viewBox: '0 0 1024 998',
     path: [
       'M0 512q0 166 95.5 298.5T343 996q6 1 10 1t6.5-1.5 4-3 2-5 .5-4.5',
@@ -13,7 +41,7 @@ export default {
       't-163.5 109T40.5 313 0 512z',
     ].join(''),
   },
-  heart: {
+  [SvgIconName.Heart]: {
     viewBox: '0 0 1792 1536',
     path: [
       'M896 1536q-26 0-44-18L228 916q-10-8-27.5-26',
@@ -23,7 +51,7 @@ export default {
       'q0 221-229 450l-623 600q-18 18-44 18z',
     ].join(''),
   },
-  people: {
+  [SvgIconName.People]: {
     viewBox: '0 0 448 288',
     path: [
       'M305.454 120c33.599 0 61.092-27.002 61.092-60 0-32.997-27.493-60-61.092-60',
@@ -35,7 +63,7 @@ export default {
       'v54h128v-54c0-47.002-94.688-58.997-142.546-58.997z',
     ].join(''),
   },
-  person: {
+  [SvgIconName.Person]: {
     viewBox: '0 0 384 384',
     path: [
       'M192 192c52.805 0 96-43.201 96-96S244.805 0 192 0 96 43.201 96 96',
