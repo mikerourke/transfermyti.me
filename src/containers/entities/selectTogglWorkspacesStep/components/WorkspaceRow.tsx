@@ -37,6 +37,7 @@ const WorkspaceRow: React.FC<Props> = ({
   <Box
     className={css`
       font-weight: bold;
+      padding: 1rem;
     `}
   >
     <Flex alignItems="center">

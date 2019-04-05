@@ -112,8 +112,8 @@ export const fetchClockifyEntitiesInWorkspace = ({
   await dispatch(projectsActions.fetchClockifyProjects(id));
   await dispatch(tagsActions.fetchClockifyTags(id));
   await dispatch(tasksActions.fetchClockifyTasks(id));
-  await dispatch(userGroupsActions.fetchClockifyUserGroups(id));
   await dispatch(usersActions.fetchClockifyUsers(id));
+  await dispatch(userGroupsActions.fetchClockifyUserGroups(id));
   await dispatch(timeEntriesActions.fetchClockifyTimeEntries(id));
 
   return dispatch(updateWorkspaceNameBeingFetched(null));
@@ -229,19 +229,6 @@ export const transferEntitiesToClockifyWorkspace = ({
       ),
     );
 
-    await dispatch(
-      userGroupsActions.transferUserGroupsToClockify(
-        togglWorkspaceId,
-        clockifyWorkspaceId,
-      ),
-    );
-
-    await dispatch(
-      usersActions.transferUsersToClockify(
-        togglWorkspaceId,
-        clockifyWorkspaceId,
-      ),
-    );
     // TODO: Write a selector to get the appropriate time entries.
     // await dispatch(
     //   transferTimeEntriesToClockify(togglWorkspaceId, clockifyWorkspaceId),

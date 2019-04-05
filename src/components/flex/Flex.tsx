@@ -25,7 +25,7 @@ type SelfPositionalOption = 'normal' | 'self-end' | 'self-start';
 
 type SpacePositionalOption = 'space-around' | 'space-between' | 'space-evenly';
 
-interface Props {
+export interface FlexProps {
   as?: string | React.ReactElement<any> | React.ReactNode;
   className?: string;
   alignItems?: CommonPositionalOption | SelfPositionalOption;
@@ -35,7 +35,7 @@ interface Props {
   direction?: 'column' | 'column-reverse' | 'row' | 'row-reverse';
 }
 
-const Flex: React.FC<Props | any> = ({
+const Flex: React.FC<FlexProps | any> = ({
   as,
   className,
   alignItems,
