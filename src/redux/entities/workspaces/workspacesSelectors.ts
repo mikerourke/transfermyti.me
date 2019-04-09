@@ -16,9 +16,7 @@ import {
   selectClockifyTasksByWorkspace,
   selectToggleTasksByWorkspaceFactory,
 } from '~/redux/entities/tasks/tasksSelectors';
-import {
-  selectTimeEntriesByWorkspaceFactory,
-} from '~/redux/entities/timeEntries/timeEntriesSelectors';
+import { selectTimeEntriesByWorkspaceFactory } from '~/redux/entities/timeEntries/timeEntriesSelectors';
 import {
   selectClockifyUserGroupsByWorkspace,
   selectTogglUserGroupsByWorkspaceFactory,

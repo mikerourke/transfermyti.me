@@ -32,9 +32,9 @@ export const clockifyTagsTransfer = createAsyncAction(
   '@tags/CLOCKIFY_TRANSFER_FAILURE',
 )<void, ClockifyTag[], void>();
 
-export const flipIsTagIncluded = createStandardAction(
-  '@tags/FLIP_IS_INCLUDED',
-)<string>();
+export const flipIsTagIncluded = createStandardAction('@tags/FLIP_IS_INCLUDED')<
+  string
+>();
 
 export const fetchClockifyTags = (workspaceId: string) => async (
   dispatch: ReduxDispatch,

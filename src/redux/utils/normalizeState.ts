@@ -67,8 +67,12 @@ function appendLinkedId<TModel>(
   linkFromEntitiesById: Record<string, TModel>,
   appendToEntitiesById: Record<string, TModel>,
 ): Record<string, TModel> {
-  if (entityGroup === EntityGroup.TimeEntries || isEmpty(linkFromEntitiesById))
+  if (
+    entityGroup === EntityGroup.TimeEntries ||
+    isEmpty(linkFromEntitiesById)
+  ) {
     return appendToEntitiesById;
+  }
 
   type ModelWithName<T> = T & { name: string };
 

@@ -63,7 +63,7 @@ export const calculateUserGroupEntryCounts = createStandardAction(
 
 const convertUserGroupsFromToolToUniversal = (
   workspaceId: string,
-  userGroups: (TogglUserGroup | ClockifyUserGroup)[],
+  userGroups: Array<TogglUserGroup | ClockifyUserGroup>,
   usersByWorkspace: Record<string, UserModel[]>,
 ): UserGroupModel[] => {
   if (getValidEntities(userGroups).length === 0) return [];

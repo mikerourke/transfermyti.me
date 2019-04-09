@@ -21,7 +21,7 @@ export default async function batchClockifyRequests<TPayload, TResponse>(
   const { promiseThrottle, throttledFunc } = buildThrottler(clockifyApiFunc);
 
   const fetchResults: TResponse[] = [];
-  const fetchErrors: { name: string; message: string }[] = [];
+  const fetchErrors: Array<{ name: string; message: string }> = [];
 
   for (const entityRecord of entityRecordsInWorkspace) {
     try {
@@ -44,7 +44,7 @@ export default async function batchClockifyRequests<TPayload, TResponse>(
   // Let the user know there was some issues without holding up the whole
   // kit and caboodle:
   if (fetchErrors.length !== 0) {
-    console.log('The following errors occurred:');
+    console.error('The following errors occurred:');
     fetchErrors.forEach(fetchError => {
       console.dir(fetchError);
     });

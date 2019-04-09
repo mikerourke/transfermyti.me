@@ -4,7 +4,7 @@ import { get } from 'lodash';
 import {
   normalizeState,
   flipEntityInclusion,
-  appendEntryCountToState
+  appendEntryCountToState,
 } from '~/redux/utils';
 import { togglTimeEntriesFetch } from '~/redux/entities/timeEntries/timeEntriesActions';
 import * as usersActions from './usersActions';

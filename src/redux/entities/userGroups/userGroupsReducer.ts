@@ -44,19 +44,22 @@ const appendEntryCountToUserGroupsInState = (
   const userGroupsById = state[toolName].byId;
 
   const updatedUserGroupsById = Object.entries(userGroupsById).reduce(
-    (acc, [userGroupId, userGroup]) => {
+    (userGroupsAcc, [userGroupId, userGroup]) => {
       let entryCount = 0;
 
       if (userGroup.userIds.length !== 0) {
-        const entryCountByUserId = timeEntries.reduce((acc, timeEntry) => {
-          const userId = get(timeEntry, 'userId');
-          if (!userId) return acc;
+        const entryCountByUserId = timeEntries.reduce(
+          (timeEntryAcc, timeEntry) => {
+            const userId = get(timeEntry, 'userId');
+            if (!userId) return timeEntryAcc;
 
-          return {
-            ...acc,
-            [userId]: get(acc, userId, 0) + 1,
-          };
-        }, {});
+            return {
+              ...timeEntryAcc,
+              [userId]: get(timeEntryAcc, userId, 0) + 1,
+            };
+          },
+          {},
+        );
 
         userGroup.userIds.forEach(userId => {
           const matchingUser = get(usersById, userId);
@@ -67,7 +70,7 @@ const appendEntryCountToUserGroupsInState = (
       }
 
       return {
-        ...acc,
+        ...userGroupsAcc,
         [userGroupId]: { ...userGroup, entryCount },
       };
     },

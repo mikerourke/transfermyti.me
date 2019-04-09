@@ -80,7 +80,7 @@ export default handleActions(
     [getType(workspacesActions.togglWorkspaceSummaryFetch.success)]: (
       state: WorkspacesState,
       {
-        payload: { workspaceId, inclusionsByYear },
+        payload: { inclusionsByYear },
       }: ReduxAction<{
         workspaceId: string;
         inclusionsByYear: Record<string, boolean>;

@@ -33,10 +33,10 @@ export type EntityModel =
   | UserGroupModel
   | UserModel;
 
-export type ReduxStateEntryForTool<TModel> = {
+export interface ReduxStateEntryForTool<TModel> {
   readonly byId: Record<string, TModel>;
   readonly idValues: string[];
-};
+}
 
 export enum HttpMethod {
   Post = 'POST',

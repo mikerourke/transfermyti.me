@@ -114,7 +114,7 @@ export const transferProjectsToClockify = (
 };
 
 async function appendUserIdsToProject(
-  projects: (TogglProject | ClockifyProject)[],
+  projects: Array<TogglProject | ClockifyProject>,
   apiFetchUsersFunc: (projectId: string, workspaceId?: string) => Promise<any>,
   workspaceId?: string,
 ): Promise<void> {
@@ -127,7 +127,7 @@ async function appendUserIdsToProject(
           // @ts-ignore
           throttledFunc.bind(this, project.id.toString(), workspaceId),
         )
-        .then((projectUsers: (ClockifyUser | TogglProjectUser)[]) => {
+        .then((projectUsers: Array<ClockifyUser | TogglProjectUser>) => {
           const userIds = projectUsers.map(projectUser =>
             'uid' in projectUser ? projectUser.uid : projectUser.id,
           );

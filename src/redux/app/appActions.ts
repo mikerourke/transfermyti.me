@@ -39,7 +39,7 @@ export const showNotification = (notification: Partial<NotificationModel>) => (
 export const showFetchErrorNotification = (
   error: Error & { toolName: ToolName },
 ) => (dispatch: ReduxDispatch): string => {
-  if (getIfDev()) console.log(error);
+  if (getIfDev()) console.error(error);
 
   const name = capitalize(error.toolName);
   const message = `An error occurred when making a request to the ${name} API`;

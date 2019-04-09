@@ -77,7 +77,7 @@ const getTimeValue = (value: any, field: string): Date | null => {
 
 const convertTimeEntriesFromToolToUniversal = (
   workspaceId: string,
-  timeEntries: (ClockifyTimeEntry | TogglTimeEntry)[],
+  timeEntries: Array<ClockifyTimeEntry | TogglTimeEntry>,
   clients: ClientModel[] | null,
   usersById: Record<string, UserModel> | null,
 ): TimeEntryModel[] =>

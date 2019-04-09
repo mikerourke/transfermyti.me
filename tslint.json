@@ -1,5 +1,6 @@
 {
   "extends": [
+    "tslint:recommended",
     "tslint-config-airbnb",
     "tslint-react",
     "tslint-config-prettier"
@@ -8,12 +9,17 @@
     "align": false,
     "function-name": false,
     "import-name": false,
+    "interface-name": false,
     "jsx-boolean-value": false,
     "jsx-curly-spacing": false,
     "jsx-no-lambda": false,
     "jsx-no-multiline-js": false,
     "max-line-length": false,
+    "no-console": [true, "log"],
+    "object-literal-sort-keys": false,
     "object-shorthand-properties-first": false,
+    "ordered-imports": false,
+    "prefer-array-literal": false,
     "semicolon": [
       true,
       "always",

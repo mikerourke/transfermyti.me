@@ -40,7 +40,7 @@ export const flipIsUserIncluded = createStandardAction(
 
 const appendUserIdsToWorkspaceForTool = (
   toolName: ToolName,
-  users: (ClockifyUser | TogglUser)[],
+  users: Array<ClockifyUser | TogglUser>,
   workspaceId: string,
 ) => (dispatch: ReduxDispatch) => {
   const userIds = users.map(({ id }) => id.toString());
