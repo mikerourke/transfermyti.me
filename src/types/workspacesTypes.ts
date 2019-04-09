@@ -91,7 +91,7 @@ export interface WorkspaceModel extends UniversalEntityModel {
   id: string;
   name: string;
   inclusionsByYear?: Record<string, boolean>;
-  userIds?: string[];
+  userIds?: Array<string>;
   isAdmin: boolean | null;
 }
 

@@ -13,8 +13,8 @@ import buildThrottler from './buildThrottler';
 export default async function batchClockifyRequests<TPayload, TResponse>(
   onRecord: (record: any) => void,
   entityRecordsInWorkspace: TPayload[],
-  clockifyApiFunc: (...args: any[]) => Promise<TResponse>,
-  ...parentIds: string[]
+  clockifyApiFunc: (...args: Array<any>) => Promise<TResponse>,
+  ...parentIds: Array<string>
 ): Promise<TResponse[]> {
   const { promiseThrottle, throttledFunc } = buildThrottler(clockifyApiFunc);
 

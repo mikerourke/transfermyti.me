@@ -64,7 +64,7 @@ export interface TogglUser {
   new_blog_post: any;
   should_upgrade: boolean;
   invitation: any;
-  userGroupIds?: string[];
+  userGroupIds?: Array<string>;
 }
 
 export interface TogglWorkspaceUser {
@@ -79,7 +79,7 @@ export interface TogglWorkspaceUser {
   inactive: boolean;
   at: string;
   name: string;
-  group_ids: number[] | null;
+  group_ids: Array<number> | null;
   rate: string | null;
   labour_cost: string | null;
   invite_url: string | null;
@@ -107,9 +107,9 @@ export interface UserModel extends UniversalEntityModel {
   email: string;
   isAdmin: boolean | null;
   isActive: boolean;
-  userGroupIds: string[] | null;
+  userGroupIds: Array<string> | null;
 }
 
 export interface AddUsersToWorkspaceRequest {
-  emails: string[];
+  emails: Array<string>;
 }

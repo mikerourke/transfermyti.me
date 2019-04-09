@@ -60,7 +60,7 @@ export const clockifyWorkspaceTransfer = createAsyncAction(
 
 export const appendUserIdsToWorkspace = createStandardAction(
   '@workspaces/APPEND_USER_IDS',
-)<{ toolName: ToolName; workspaceId: string; userIds: string[] }>();
+)<{ toolName: ToolName; workspaceId: string; userIds: Array<string> }>();
 
 export const flipIsWorkspaceIncluded = createStandardAction(
   '@workspaces/FLIP_IS_INCLUDED',

@@ -53,7 +53,7 @@ const appendEntryCountByTagName = <TTimeEntry>(
   const tags = Object.values(state[toolName].byId);
 
   timeEntries.forEach(timeEntry => {
-    const tagNames = get(timeEntry, 'tags', []) as string[];
+    const tagNames = get(timeEntry, 'tags', []) as Array<string>;
 
     tagNames.forEach(tagName => {
       const { id = null } = tags.find(({ name }) => name === tagName);

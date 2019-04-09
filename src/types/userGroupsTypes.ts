@@ -3,7 +3,7 @@ import { UniversalEntityModel } from '~/types/entityTypes';
 export interface ClockifyUserGroup {
   id: string;
   name: string;
-  userIds: string[];
+  userIds: Array<string>;
   workspaceId: string;
 }
 

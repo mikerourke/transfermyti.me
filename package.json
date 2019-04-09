@@ -14,7 +14,7 @@
     "lint": "tslint -c tslint.json -p tsconfig.json || exit 0",
     "prettier": "prettier --write \"{src,config}/**/*.{js,ts,tsx}\"",
     "tidy": "rimraf ./.cache && rimraf ./build",
-    "typecheck": "tsc -p tsconfig.json --noEmit",
+    "typecheck": "tsc -p tsconfig.json --noEmit --skipLibCheck",
     "clockify:delete": "node ./scripts/manageClockifyEntities.js delete",
     "test": "node ./scripts/runTests.js --env=jsdom --coverageReporters=lcov --config jest.config.json"
   },

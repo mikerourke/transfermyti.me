@@ -138,7 +138,7 @@ export default handleActions(
       }: ReduxAction<{
         toolName: ToolName;
         workspaceId: string;
-        userIds: string[];
+        userIds: Array<string>;
       }>,
     ): WorkspacesState => ({
       ...state,

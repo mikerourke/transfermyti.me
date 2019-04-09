@@ -12,7 +12,7 @@ export const selectTogglTimeEntriesById = createSelector(
   timeEntries => timeEntries,
 );
 
-const getTagList = (tags: string[]): string => {
+const getTagList = (tags: Array<string>): string => {
   if (tags.length === 0) return '';
   if (tags.length === 1) return first(tags);
   return tags.reduce((acc, tag) => `${acc}${tag}, `, '');
@@ -27,7 +27,7 @@ const selectDetailedTimeEntriesByWorkspaceFactory = (toolName: ToolName) =>
     (state: ReduxState) => state.entities.tasks[toolName].byId,
     (state: ReduxState) => state.entities.users[toolName].byId,
     (
-      workspaceIds: string[],
+      workspaceIds: Array<string>,
       timeEntriesById: Record<string, TimeEntryModel>,
       projectsById: Record<string, EntityModel>,
       tagsById: Record<string, TagModel>,

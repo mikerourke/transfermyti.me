@@ -30,7 +30,7 @@ import { WorkspaceModel } from '~/types/workspacesTypes';
 interface ConnectStateProps {
   areWorkspaceYearsFetched: boolean;
   countWorkspacesIncluded: number;
-  workspaceIds: string[];
+  workspaceIds: Array<string>;
   workspacesById: Record<string, WorkspaceModel>;
   yearsCountByWorkspaceId: Record<string, number>;
 }

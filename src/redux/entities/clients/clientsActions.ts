@@ -18,19 +18,19 @@ export const clockifyClientsFetch = createAsyncAction(
   '@clients/CLOCKIFY_FETCH_REQUEST',
   '@clients/CLOCKIFY_FETCH_SUCCESS',
   '@clients/CLOCKIFY_FETCH_FAILURE',
-)<void, ClockifyClient[], void>();
+)<void, Array<ClockifyClient>, void>();
 
 export const togglClientsFetch = createAsyncAction(
   '@clients/TOGGL_FETCH_REQUEST',
   '@clients/TOGGL_FETCH_SUCCESS',
   '@clients/TOGGL_FETCH_FAILURE',
-)<void, TogglClient[], void>();
+)<void, Array<TogglClient>, void>();
 
 export const clockifyClientsTransfer = createAsyncAction(
   '@clients/CLOCKIFY_TRANSFER_REQUEST',
   '@clients/CLOCKIFY_TRANSFER_SUCCESS',
   '@clients/CLOCKIFY_TRANSFER_FAILURE',
-)<void, ClockifyClient[], void>();
+)<void, Array<ClockifyClient>, void>();
 
 export const flipIsClientIncluded = createStandardAction(
   '@clients/FLIP_IS_INCLUDED',

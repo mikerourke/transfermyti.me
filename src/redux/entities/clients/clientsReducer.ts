@@ -53,7 +53,7 @@ export default handleActions(
       getType(clientsActions.clockifyClientsTransfer.success),
     )]: (
       state: ClientsState,
-      { payload: clients }: ReduxAction<ClockifyClient[]>,
+      { payload: clients }: ReduxAction<Array<ClockifyClient>>,
     ): ClientsState =>
       normalizeState(
         ToolName.Clockify,
@@ -65,7 +65,7 @@ export default handleActions(
 
     [getType(clientsActions.togglClientsFetch.success)]: (
       state: ClientsState,
-      { payload: clients }: ReduxAction<TogglClient[]>,
+      { payload: clients }: ReduxAction<Array<TogglClient>>,
     ): ClientsState =>
       normalizeState(
         ToolName.Toggl,
@@ -77,8 +77,8 @@ export default handleActions(
 
     [combineActions(
       getType(clientsActions.clockifyClientsFetch.request),
-      getType(clientsActions.togglClientsFetch.request),
       getType(clientsActions.clockifyClientsTransfer.request),
+      getType(clientsActions.togglClientsFetch.request),
     )]: (state: ClientsState): ClientsState => ({
       ...state,
       isFetching: true,
@@ -87,10 +87,10 @@ export default handleActions(
     [combineActions(
       getType(clientsActions.clockifyClientsFetch.success),
       getType(clientsActions.clockifyClientsFetch.failure),
-      getType(clientsActions.togglClientsFetch.success),
-      getType(clientsActions.togglClientsFetch.failure),
       getType(clientsActions.clockifyClientsTransfer.success),
       getType(clientsActions.clockifyClientsTransfer.failure),
+      getType(clientsActions.togglClientsFetch.success),
+      getType(clientsActions.togglClientsFetch.failure),
     )]: (state: ClientsState): ClientsState => ({
       ...state,
       isFetching: false,
@@ -103,7 +103,7 @@ export default handleActions(
 
     [getType(togglTimeEntriesFetch.success)]: (
       state: ClientsState,
-      { payload: timeEntries }: ReduxAction<TogglTimeEntry[]>,
+      { payload: timeEntries }: ReduxAction<Array<TogglTimeEntry>>,
     ) =>
       appendEntryCountToState(
         EntityType.Client,

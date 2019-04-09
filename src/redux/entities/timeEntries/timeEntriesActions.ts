@@ -45,7 +45,7 @@ export const flipIsTimeEntryIncluded = createStandardAction(
 const fetchClockifyTimeEntriesForIncludedYears = async (
   userId: string,
   workspaceId: string,
-  years: number[],
+  years: Array<number>,
 ): Promise<ClockifyTimeEntry[]> => {
   const { promiseThrottle, throttledFunc } = buildThrottler(
     apiFetchClockifyTimeEntries,
@@ -92,7 +92,7 @@ const convertTimeEntriesFromToolToUniversal = (
     }
 
     const userId = findIdFieldValue(timeEntry, EntityType.User);
-    let userGroupIds: string[] = [];
+    let userGroupIds: Array<string> = [];
     if (!isNil(usersById)) {
       userGroupIds = get(usersById, [userId, 'userGroupIds'], []);
     }

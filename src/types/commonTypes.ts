@@ -35,7 +35,7 @@ export type EntityModel =
 
 export interface ReduxStateEntryForTool<TModel> {
   readonly byId: Record<string, TModel>;
-  readonly idValues: string[];
+  readonly idValues: Array<string>;
 }
 
 export enum HttpMethod {

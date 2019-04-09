@@ -40,7 +40,7 @@ export const flipIsTaskIncluded = createStandardAction(
 
 const fetchClockifyTasksForProjectsInWorkspace = async (
   workspaceId: string,
-  projectIds: string[],
+  projectIds: Array<string>,
 ): Promise<ClockifyTask[]> => {
   const { promiseThrottle, throttledFunc } = buildThrottler(
     apiFetchClockifyTasks,

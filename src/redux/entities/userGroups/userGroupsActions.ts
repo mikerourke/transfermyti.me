@@ -82,7 +82,7 @@ const convertUserGroupsFromToolToUniversal = (
       });
     }
 
-    const userIds: string[] = [];
+    const userIds: Array<string> = [];
 
     if (usersInUserGroup.length !== 0) {
       usersInUserGroup.forEach(user => {

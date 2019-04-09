@@ -63,7 +63,7 @@ export interface ProjectModel extends UniversalEntityModel {
   isPublic: boolean;
   isActive: boolean;
   color: string;
-  userIds: string[];
+  userIds: Array<string>;
 }
 
 export interface CreateProjectRequest {

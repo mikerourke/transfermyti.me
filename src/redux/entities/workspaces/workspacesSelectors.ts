@@ -115,7 +115,7 @@ export const selectTogglWorkspaceIncludedYears = createSelector(
     togglWorkspacesById,
     clockifyWorkspacesById,
     clockifyWorkspaceId,
-  ): number[] => {
+  ): Array<number> => {
     const { linkedId } = get(clockifyWorkspacesById, clockifyWorkspaceId, {
       linkedId: null,
     });

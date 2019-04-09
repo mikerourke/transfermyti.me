@@ -31,7 +31,7 @@ export const selectTogglUsersById = createSelector(
 
 const getValidUsers = (
   usersById: Record<string, UserModel>,
-  userIds: string[],
+  userIds: Array<string>,
   meUserId: string,
 ) =>
   userIds.reduce((acc, userId) => {
@@ -71,7 +71,7 @@ export const selectUsersInvitePayloadForWorkspace = createSelector(
   selectCredentials,
   (inclusionsByWorkspaceId, { togglEmail }) => (
     workspaceIdToGet: string,
-  ): string[] => {
+  ): Array<string> => {
     const inclusions = get(
       inclusionsByWorkspaceId,
       workspaceIdToGet,

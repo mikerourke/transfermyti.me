@@ -12,7 +12,7 @@ export interface ClockifyTimeInterval {
 export interface ClockifyTimeEntry {
   id: string;
   description: string;
-  tags: string[] | null;
+  tags: Array<string> | null;
   user: ClockifyUser;
   billable: boolean;
   task: any;
@@ -45,7 +45,7 @@ export interface TogglTimeEntry {
   billable: number | null;
   is_billable: boolean;
   cur: string | null;
-  tags: string[];
+  tags: Array<string>;
 }
 
 export interface TogglTimeEntriesFetchResponse {
@@ -64,15 +64,15 @@ export interface TimeEntryModel extends UniversalEntityModel {
   taskId: string | null;
   workspaceId: string;
   userId: string | null;
-  userGroupIds: string[] | null;
+  userGroupIds: Array<string> | null;
   client: string | null;
   clientId?: string | null;
   isBillable: boolean;
   start: Date | null;
   end: Date | null;
-  tags: string[];
+  tags: Array<string>;
   isActive: boolean;
-  tagIds?: string[];
+  tagIds?: Array<string>;
   name: null; // Not used, included because other entities have a "name".
 }
 

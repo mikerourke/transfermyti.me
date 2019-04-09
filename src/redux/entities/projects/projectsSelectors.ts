@@ -10,7 +10,7 @@ import {
 
 export const selectClockifyProjectIds = createSelector(
   (state: ReduxState) => state.entities.projects.clockify.idValues,
-  (projectIds): string[] => projectIds,
+  (projectIds): Array<string> => projectIds,
 );
 
 export const selectClockifyProjectsById = createSelector(
