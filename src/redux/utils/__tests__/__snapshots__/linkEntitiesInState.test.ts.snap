@@ -1,0 +1,117 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`the linkEntitiesInState method links entities with the same name and matches snapshot 1`] = `
+Object {
+  "clockify": Object {
+    "byId": Object {
+      "C1": Object {
+        "entryCount": 0,
+        "id": "C1",
+        "isIncluded": true,
+        "linkedId": "T5",
+        "name": "blog",
+        "workspaceId": "CW1",
+      },
+      "C2": Object {
+        "entryCount": 0,
+        "id": "C2",
+        "isIncluded": true,
+        "linkedId": "T3",
+        "name": "deployment",
+        "workspaceId": "CW1",
+      },
+      "C3": Object {
+        "entryCount": 0,
+        "id": "C3",
+        "isIncluded": true,
+        "linkedId": "T1",
+        "name": "git",
+        "workspaceId": "CW1",
+      },
+      "C4": Object {
+        "entryCount": 0,
+        "id": "C4",
+        "isIncluded": true,
+        "linkedId": "T7",
+        "name": "javascript",
+        "workspaceId": "CW1",
+      },
+    },
+    "idValues": Array [
+      "C1",
+      "C2",
+      "C3",
+      "C4",
+    ],
+  },
+  "toggl": Object {
+    "byId": Object {
+      "T1": Object {
+        "entryCount": 0,
+        "id": "T1",
+        "isIncluded": true,
+        "linkedId": "C3",
+        "name": "git",
+        "workspaceId": "TW1",
+      },
+      "T2": Object {
+        "entryCount": 6,
+        "id": "T2",
+        "isIncluded": true,
+        "linkedId": null,
+        "name": "api",
+        "workspaceId": "TW1",
+      },
+      "T3": Object {
+        "entryCount": 0,
+        "id": "T3",
+        "isIncluded": true,
+        "linkedId": "C2",
+        "name": "deployment",
+        "workspaceId": "TW1",
+      },
+      "T4": Object {
+        "entryCount": 37,
+        "id": "T4",
+        "isIncluded": true,
+        "linkedId": null,
+        "name": "react",
+        "workspaceId": "TW1",
+      },
+      "T5": Object {
+        "entryCount": 7,
+        "id": "T5",
+        "isIncluded": true,
+        "linkedId": "C1",
+        "name": "blog",
+        "workspaceId": "TW1",
+      },
+      "T6": Object {
+        "entryCount": 2,
+        "id": "T6",
+        "isIncluded": true,
+        "linkedId": null,
+        "name": "python",
+        "workspaceId": "TW1",
+      },
+      "T7": Object {
+        "entryCount": 29,
+        "id": "T7",
+        "isIncluded": true,
+        "linkedId": "C4",
+        "name": "javascript",
+        "workspaceId": "TW1",
+      },
+    },
+    "idValues": Array [
+      "T1",
+      "T2",
+      "T3",
+      "T4",
+      "T5",
+      "T6",
+      "T7",
+    ],
+  },
+}
+`;

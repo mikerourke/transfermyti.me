@@ -1,0 +1,214 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`clientsReducer state matches snapshot for fetch actions when clockifyClientsFetch.failure is dispatched 1`] = `
+Object {
+  "clockify": Object {
+    "byId": Object {},
+    "idValues": Array [],
+  },
+  "isFetching": false,
+  "toggl": Object {
+    "byId": Object {},
+    "idValues": Array [],
+  },
+}
+`;
+
+exports[`clientsReducer state matches snapshot for fetch actions when clockifyClientsFetch.request is dispatched 1`] = `
+Object {
+  "clockify": Object {
+    "byId": Object {},
+    "idValues": Array [],
+  },
+  "isFetching": true,
+  "toggl": Object {
+    "byId": Object {},
+    "idValues": Array [],
+  },
+}
+`;
+
+exports[`clientsReducer state matches snapshot for fetch actions when clockifyClientsFetch.success is dispatched 1`] = `
+Object {
+  "clockify": Object {
+    "byId": Object {
+      "2FZn1Y9R5M4nnMGV9K32xJ": Object {
+        "entryCount": 0,
+        "id": "2FZn1Y9R5M4nnMGV9K32xJ",
+        "isIncluded": true,
+        "linkedId": null,
+        "name": "Client A",
+        "workspaceId": "aZJSPbcPw1cpdfYmtHM7za",
+      },
+      "ir4aN5VF7pdfDrgWjGCxeR": Object {
+        "entryCount": 0,
+        "id": "ir4aN5VF7pdfDrgWjGCxeR",
+        "isIncluded": true,
+        "linkedId": null,
+        "name": "Client B",
+        "workspaceId": "aZJSPbcPw1cpdfYmtHM7za",
+      },
+      "uABwBW6XWsWLRzRtKY1gow": Object {
+        "entryCount": 0,
+        "id": "uABwBW6XWsWLRzRtKY1gow",
+        "isIncluded": true,
+        "linkedId": null,
+        "name": "Client C",
+        "workspaceId": "aZJSPbcPw1cpdfYmtHM7za",
+      },
+    },
+    "idValues": Array [
+      "2FZn1Y9R5M4nnMGV9K32xJ",
+      "ir4aN5VF7pdfDrgWjGCxeR",
+      "uABwBW6XWsWLRzRtKY1gow",
+    ],
+  },
+  "isFetching": false,
+  "toggl": Object {
+    "byId": Object {},
+    "idValues": Array [],
+  },
+}
+`;
+
+exports[`clientsReducer state matches snapshot for fetch actions when clockifyClientsTransfer.failure is dispatched 1`] = `
+Object {
+  "clockify": Object {
+    "byId": Object {},
+    "idValues": Array [],
+  },
+  "isFetching": false,
+  "toggl": Object {
+    "byId": Object {},
+    "idValues": Array [],
+  },
+}
+`;
+
+exports[`clientsReducer state matches snapshot for fetch actions when clockifyClientsTransfer.request is dispatched 1`] = `
+Object {
+  "clockify": Object {
+    "byId": Object {},
+    "idValues": Array [],
+  },
+  "isFetching": true,
+  "toggl": Object {
+    "byId": Object {},
+    "idValues": Array [],
+  },
+}
+`;
+
+exports[`clientsReducer state matches snapshot for fetch actions when clockifyClientsTransfer.success is dispatched 1`] = `
+Object {
+  "clockify": Object {
+    "byId": Object {
+      "2FZn1Y9R5M4nnMGV9K32xJ": Object {
+        "entryCount": 0,
+        "id": "2FZn1Y9R5M4nnMGV9K32xJ",
+        "isIncluded": true,
+        "linkedId": null,
+        "name": "Client A",
+        "workspaceId": "aZJSPbcPw1cpdfYmtHM7za",
+      },
+      "ir4aN5VF7pdfDrgWjGCxeR": Object {
+        "entryCount": 0,
+        "id": "ir4aN5VF7pdfDrgWjGCxeR",
+        "isIncluded": true,
+        "linkedId": null,
+        "name": "Client B",
+        "workspaceId": "aZJSPbcPw1cpdfYmtHM7za",
+      },
+      "uABwBW6XWsWLRzRtKY1gow": Object {
+        "entryCount": 0,
+        "id": "uABwBW6XWsWLRzRtKY1gow",
+        "isIncluded": true,
+        "linkedId": null,
+        "name": "Client C",
+        "workspaceId": "aZJSPbcPw1cpdfYmtHM7za",
+      },
+    },
+    "idValues": Array [
+      "2FZn1Y9R5M4nnMGV9K32xJ",
+      "ir4aN5VF7pdfDrgWjGCxeR",
+      "uABwBW6XWsWLRzRtKY1gow",
+    ],
+  },
+  "isFetching": false,
+  "toggl": Object {
+    "byId": Object {},
+    "idValues": Array [],
+  },
+}
+`;
+
+exports[`clientsReducer state matches snapshot for fetch actions when togglClientsFetch.failure is dispatched 1`] = `
+Object {
+  "clockify": Object {
+    "byId": Object {},
+    "idValues": Array [],
+  },
+  "isFetching": false,
+  "toggl": Object {
+    "byId": Object {},
+    "idValues": Array [],
+  },
+}
+`;
+
+exports[`clientsReducer state matches snapshot for fetch actions when togglClientsFetch.request is dispatched 1`] = `
+Object {
+  "clockify": Object {
+    "byId": Object {},
+    "idValues": Array [],
+  },
+  "isFetching": true,
+  "toggl": Object {
+    "byId": Object {},
+    "idValues": Array [],
+  },
+}
+`;
+
+exports[`clientsReducer state matches snapshot for fetch actions when togglClientsFetch.success is dispatched 1`] = `
+Object {
+  "clockify": Object {
+    "byId": Object {},
+    "idValues": Array [],
+  },
+  "isFetching": false,
+  "toggl": Object {
+    "byId": Object {
+      "19521509": Object {
+        "entryCount": 0,
+        "id": "19521509",
+        "isIncluded": true,
+        "linkedId": null,
+        "name": "Client B",
+        "workspaceId": "1738517",
+      },
+      "21773956": Object {
+        "entryCount": 0,
+        "id": "21773956",
+        "isIncluded": true,
+        "linkedId": null,
+        "name": "Client C",
+        "workspaceId": "1738517",
+      },
+      "37389358": Object {
+        "entryCount": 0,
+        "id": "37389358",
+        "isIncluded": true,
+        "linkedId": null,
+        "name": "Client A",
+        "workspaceId": "1738517",
+      },
+    },
+    "idValues": Array [
+      "37389358",
+      "19521509",
+      "21773956",
+    ],
+  },
+}
+`;
