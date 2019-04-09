@@ -1,15 +1,19 @@
+import { get, isNil, uniq } from 'lodash';
 import { normalize, schema, Schema } from 'normalizr';
-import { get, isEmpty, isNil, uniq } from 'lodash';
 import { ToolName } from '~/types/commonTypes';
 import { EntityGroup } from '~/types/entityTypes';
-import StrategyFunction = schema.StrategyFunction;
+import linkEntitiesInState from '~/redux/utils/linkEntitiesInState';
 
+/**
+ * Applies the specified schemaProcessStrategy to the payload and returns state
+ * in the form required by all entities.
+ */
 export default function normalizeState<TState, TPayload>(
   toolName: ToolName,
   entityGroup: EntityGroup,
   state: TState,
   payload: TPayload,
-  schemaProcessStrategy?: StrategyFunction,
+  schemaProcessStrategy?: schema.StrategyFunction,
 ): TState {
   if (isNil(payload)) return state;
   if (Array.isArray(payload) && payload.length === 0) return state;
@@ -33,23 +37,15 @@ export default function normalizeState<TState, TPayload>(
 
   // Since the Clockify entities are fetched _after_ the Toggl records, we can
   // loop through each group and assign linked IDs:
-  const { clockify, toggl } = normalizedState;
-  return {
-    ...normalizedState,
-    [ToolName.Clockify]: {
-      ...get(normalizedState, ToolName.Clockify, {}),
-      byId: appendLinkedId(entityGroup, toggl.byId, clockify.byId),
-    },
-    [ToolName.Toggl]: {
-      ...get(normalizedState, ToolName.Toggl, {}),
-      byId: appendLinkedId(entityGroup, clockify.byId, toggl.byId),
-    },
-  };
+  return linkEntitiesInState(entityGroup, normalizedState);
 }
 
+/**
+ * Returns the required group schema to use in the normalize() method.
+ */
 function getEntitySchema(
   entityGroup: EntityGroup,
-  schemaProcessStrategy?: StrategyFunction,
+  schemaProcessStrategy?: schema.StrategyFunction,
 ): Schema {
   const entitySchema = new schema.Entity(
     entityGroup,
@@ -60,38 +56,4 @@ function getEntitySchema(
     },
   );
   return [entitySchema];
-}
-
-function appendLinkedId<TModel>(
-  entityGroup: EntityGroup,
-  linkFromEntitiesById: Record<string, TModel>,
-  appendToEntitiesById: Record<string, TModel>,
-): Record<string, TModel> {
-  if (
-    entityGroup === EntityGroup.TimeEntries ||
-    isEmpty(linkFromEntitiesById)
-  ) {
-    return appendToEntitiesById;
-  }
-
-  type ModelWithName<T> = T & { name: string };
-
-  const linkFromEntitiesByName = Object.values(linkFromEntitiesById).reduce(
-    (acc, entityRecord: ModelWithName<TModel>) => ({
-      ...acc,
-      [entityRecord.name]: entityRecord,
-    }),
-    {},
-  );
-
-  return Object.entries(appendToEntitiesById).reduce(
-    (acc, [entityId, entityRecord]: [string, ModelWithName<TModel>]) => ({
-      ...acc,
-      [entityId]: {
-        ...entityRecord,
-        linkedId: get(linkFromEntitiesByName, [entityRecord.name, 'id'], null),
-      },
-    }),
-    {},
-  );
 }

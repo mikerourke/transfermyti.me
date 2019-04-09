@@ -32,12 +32,12 @@
   "exclude": [
     ".cache",
     "build",
-    "config",
     "coverage",
     "node_modules",
     "public",
     "requests",
     "responses",
+    "scripts",
     "src/setupJest.js"
   ]
 }

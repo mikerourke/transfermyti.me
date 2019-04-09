@@ -2,6 +2,10 @@ import { get } from 'lodash';
 import { EntityType } from '~/types/entityTypes';
 import { EntityModel, ToolName } from '~/types/commonTypes';
 
+/**
+ * Loops through the records in the specified entityState and returns state
+ * with `entryCount` calculated for each record.
+ */
 export default function appendEntryCountToState<TState, TTimeEntryModel>(
   entityType: EntityType,
   toolName: ToolName,

@@ -3,14 +3,12 @@ import buildThrottler from './buildThrottler';
 
 /**
  * Loops through the specified records and performs the specified API function
- *    on each one.
- *    in global state.
+ * on each one in global state.
  * @param onRecord Action to perform when a new record is in process.
  * @param entityRecordsInWorkspace Array of request body records associated
- *    with workspace.
+ *                                 with workspace.
  * @param clockifyApiFunc API function to call for each request body.
  * @param parentIds Parent ID values to call API function.
- * @returns {Promise<*>}
  */
 export default async function batchClockifyRequests<TPayload, TResponse>(
   onRecord: (record: any) => void,

@@ -1,8 +1,12 @@
 import { get, isNil } from 'lodash';
 import { EntityType } from '~/types/entityTypes';
 
-export default function findIdFieldValue(
-  record: any,
+/**
+ * Extrapolates the ID field name from the specified entityRecord based on
+ * its type.
+ */
+export default function findIdFieldValue<TEntity>(
+  entityRecord: TEntity,
   entityType: EntityType,
 ): string | null {
   const togglIdField = {
@@ -17,26 +21,26 @@ export default function findIdFieldValue(
   // representing the entity (e.g. "wid" for workspace ID). This returns either
   // the string value or null:
   try {
-    if (togglIdField in record) {
-      const value = get(record, togglIdField, null);
+    if (togglIdField in entityRecord) {
+      const value = get(entityRecord, togglIdField, null);
       return isNil(value) ? null : value.toString();
     }
 
     // For Clockify entities, if you specified "workspace" for the entity type,
     // it would return "workspaceId":
     const fieldName = entityType.concat('Id');
-    if (fieldName in record) {
-      return get(record, fieldName, null);
+    if (fieldName in entityRecord) {
+      return get(entityRecord, fieldName, null);
     }
 
     // For Clockify Tasks, the assigneeId is the userId of the assigned user:
-    if (entityType === EntityType.User && 'assigneeId' in record) {
-      return get(record, 'assigneeId', null);
+    if (entityType === EntityType.User && 'assigneeId' in entityRecord) {
+      return get(entityRecord, 'assigneeId', null);
     }
 
     // For Clockify entities, there may be an entity object with an "id" field
     // (e.g. "project": { "id": "someProjectId" }):
-    return get(record, [entityType, 'id'], null);
+    return get(entityRecord, [entityType, 'id'], null);
   } catch (error) {
     return null;
   }
