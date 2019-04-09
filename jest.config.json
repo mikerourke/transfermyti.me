@@ -2,28 +2,28 @@
   "globals": {
     "window": true
   },
+  "collectCoverageFrom": ["src/**/*.{ts,tsx}"],
+  "coveragePathIgnorePatterns": [
+    "/node_modules/",
+    "__fixtures__",
+    "state.ts"
+  ],
+  "moduleFileExtensions": ["js", "json", "jsx", "ts", "tsx"],
+  "moduleNameMapper":  {
+    "^~/(.*)$": "<rootDir>/src/$1"
+  },
+  "preset": "ts-jest",
   "roots": [
     "<rootDir>/src/"
   ],
-  "coverageReporters": [
-    "lcov",
-    "text"
-  ],
-  "collectCoverageFrom": [
-    "src/**/*.{ts,tsx}"
-  ],
-  "setupTestFrameworkScriptFile": "<rootDir>/config/jest/setupJest.js",
-  "testMatch": [
-    "<rootDir>/src/**/__tests__/**/*.{ts,tsx}",
-    "<rootDir>/src/**/?(*.)(spec|test).{ts,tsx}"
-  ],
+  "setupFilesAfterEnv": ["<rootDir>/src/setupJest.js"],
   "testEnvironment": "node",
-  "transform": {
-    "^.+\\.(ts|tsx)$": "<rootDir>/node_modules/ts-jest"
-  },
-  "moduleFileExtensions": [
-    "json",
-    "js",
-    "ts"
-  ]
+  "testMatch": [
+    "<rootDir>/src/**/__tests__/**/*.ts?(x)",
+    "<rootDir>/src/**/?(*.)(spec|test).ts?(x)"
+  ],
+  "testPathIgnorePatterns": [
+    "<rootDir>/scripts/runTests.js"
+  ],
+  "testURL": "http://localhost"
 }

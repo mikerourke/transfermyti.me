@@ -15,7 +15,8 @@
     "prettier": "prettier --write \"{src,config}/**/*.{js,ts,tsx}\"",
     "tidy": "rimraf ./.cache && rimraf ./build",
     "typecheck": "tsc -p tsconfig.json --noEmit",
-    "clockify:delete": "node ./config/scripts/manageClockifyEntities.js delete"
+    "clockify:delete": "node ./scripts/manageClockifyEntities.js delete",
+    "test": "node ./scripts/runTests.js --env=jsdom --coverageReporters=lcov --config jest.config.json"
   },
   "dependencies": {
     "bloomer": "^0.6.5",
@@ -46,6 +47,9 @@
     "@babel/core": "^7.3.4",
     "@babel/plugin-syntax-json-strings": "^7.2.0",
     "@types/classnames": "^2.2.6",
+    "@types/enzyme": "^3.9.1",
+    "@types/jest": "^24.0.11",
+    "@types/jest-in-case": "^1.0.1",
     "@types/lodash": "^4.14.119",
     "@types/react": "^16.7.17",
     "@types/react-albus": "^2.0.4",
@@ -56,7 +60,11 @@
     "@types/store": "^2.0.1",
     "babel-plugin-lodash": "^3.3.4",
     "babel-plugin-module-resolver": "^3.2.0",
+    "enzyme": "^3.9.0",
+    "enzyme-adapter-react-16": "^1.12.1",
+    "enzyme-to-json": "^3.3.5",
     "jest": "^24.3.1",
+    "jest-in-case": "^1.0.2",
     "jsonfile": "^5.0.0",
     "node-fetch": "^2.3.0",
     "parcel-bundler": "^1.11.0",

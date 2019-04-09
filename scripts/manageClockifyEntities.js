@@ -1,3 +1,4 @@
+/* tslint:disable */
 const fs = require('fs');
 const path = require('path');
 const readline = require('readline');
@@ -8,7 +9,7 @@ const flatten = require('lodash/flatten');
 const set = require('lodash/set');
 const jsonFile = require('jsonfile');
 const PromiseThrottle = require('promise-throttle');
-const httpEnv = require('../../http-client.private.env.json');
+const httpEnv = require('../http-client.private.env.json');
 
 /**
  * You need to copy the http-client.private.env.example.json file in the

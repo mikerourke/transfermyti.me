@@ -9,6 +9,8 @@
       "es2016",
       "es2017.object"
     ],
+    "experimentalDecorators": true,
+    "esModuleInterop": true,
     "allowSyntheticDefaultImports": true,
     "sourceMap": true,
     "allowJs": true,
@@ -31,9 +33,11 @@
     ".cache",
     "build",
     "config",
+    "coverage",
     "node_modules",
     "public",
     "requests",
-    "responses"
+    "responses",
+    "src/setupJest.js"
   ]
 }

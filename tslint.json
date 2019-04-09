@@ -7,6 +7,7 @@
   ],
   "rules": {
     "align": false,
+    "array-type": false,
     "function-name": false,
     "import-name": false,
     "interface-name": false,
