@@ -15,7 +15,7 @@ export const selectClockifyTasksByWorkspace = createSelector(
 export const selectTogglTasks = createSelector(
   (state: ReduxState) => Object.values(state.entities.tasks.clockify.byId),
   selectTogglProjectsById,
-  (tasks, projectsById): TaskModel[] =>
+  (tasks, projectsById): Array<TaskModel> =>
     tasks.map(task => ({
       ...task,
       workspaceId: get(projectsById, [task.projectId, 'workspaceId'], ''),
@@ -25,7 +25,7 @@ export const selectTogglTasks = createSelector(
 export const selectToggleTasksByWorkspaceFactory = (inclusionsOnly: boolean) =>
   createSelector(
     selectTogglTasks,
-    (tasks): Record<string, TaskModel[]> => {
+    (tasks): Record<string, Array<TaskModel>> => {
       const tasksToUse = inclusionsOnly ? findTogglInclusions(tasks) : tasks;
       return groupByWorkspace(tasksToUse);
     },
@@ -34,7 +34,7 @@ export const selectToggleTasksByWorkspaceFactory = (inclusionsOnly: boolean) =>
 const findAssigneeIdForTask = (
   workspaceId: string,
   assigneeId: string,
-  clientsByWorkspaceId: Record<string, ClientModel[]>,
+  clientsByWorkspaceId: Record<string, Array<ClientModel>>,
 ) => {
   const clientsInWorkspace = get(clientsByWorkspaceId, workspaceId, []);
   if (clientsInWorkspace.length === 0) return undefined;
@@ -53,7 +53,7 @@ export const selectTasksTransferPayloadForWorkspace = createSelector(
   selectTogglClientsByWorkspaceFactory(true),
   (tasks, clientsByWorkspaceId) => (
     workspaceIdToGet: string,
-  ): Record<string, CreateTaskRequest[]> => {
+  ): Record<string, Array<CreateTaskRequest>> => {
     const includedTasks = findTogglInclusions(tasks);
     return includedTasks.reduce(
       (acc, { workspaceId, projectId, name, estimate, assigneeId }) => {

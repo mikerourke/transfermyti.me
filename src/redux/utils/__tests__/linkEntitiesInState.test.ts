@@ -1,4 +1,5 @@
-import linkEntitiesInState from '../linkEntitiesInState';
+/* eslint-disable @typescript-eslint/indent */
+import { linkEntitiesInState } from '../linkEntitiesInState';
 import { EntityGroup } from '~/types/entityTypes';
 
 // prettier-ignore

@@ -33,7 +33,7 @@ export interface ClockifyWorkspace {
     amount: number;
     currency: string;
   };
-  memberships: ClockifyMembership[];
+  memberships: Array<ClockifyMembership>;
   workspaceSettings: ClockifyWorkspaceSettings;
   imageUrl: string;
 }
@@ -76,15 +76,15 @@ export interface TogglSummaryReportDataModel {
     hex_color: string;
   };
   time: number;
-  total_currencies: TogglTotalCurrencyModel[];
-  items: TogglSummaryReportDataItemModel[];
+  total_currencies: Array<TogglTotalCurrencyModel>;
+  items: Array<TogglSummaryReportDataItemModel>;
 }
 
 export interface TogglSummaryReport {
   total_grand: number;
   total_billable: number | null;
-  total_currencies: TogglTotalCurrencyModel[];
-  data: TogglSummaryReportDataModel[];
+  total_currencies: Array<TogglTotalCurrencyModel>;
+  data: Array<TogglSummaryReportDataModel>;
 }
 
 export interface WorkspaceModel extends UniversalEntityModel {
@@ -97,7 +97,7 @@ export interface WorkspaceModel extends UniversalEntityModel {
 
 export type EntitiesByGroupByWorkspaceModel = Record<
   string,
-  Record<EntityGroup, EntityModel[]>
+  Record<EntityGroup, Array<EntityModel>>
 >;
 
 export interface RecordCountsModel {

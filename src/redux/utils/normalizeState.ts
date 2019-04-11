@@ -1,14 +1,14 @@
 import { get, isNil, uniq } from 'lodash';
 import { normalize, schema, Schema } from 'normalizr';
+import { linkEntitiesInState } from '~/redux/utils/linkEntitiesInState';
 import { ToolName } from '~/types/commonTypes';
 import { EntityGroup } from '~/types/entityTypes';
-import linkEntitiesInState from '~/redux/utils/linkEntitiesInState';
 
 /**
  * Applies the specified schemaProcessStrategy to the payload and returns state
  * in the form required by all entities.
  */
-export default function normalizeState<TState, TPayload>(
+export function normalizeState<TState, TPayload>(
   toolName: ToolName,
   entityGroup: EntityGroup,
   state: TState,

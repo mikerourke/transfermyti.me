@@ -48,6 +48,7 @@ const Header: React.FC<Props> = ({ currentTransferType }) => {
             <a
               href="https://github.com/mikerourke/toggl-to-clockify-web"
               target="_blank"
+              rel="noopener noreferrer"
             >
               <SvgIcon name={SvgIconName.GitHub} color="white" height={16} />
             </a>

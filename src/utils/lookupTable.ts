@@ -12,7 +12,7 @@
  *  )
  *  console.log(result); // "c"
  */
-export default function lookupTable<T>(
+export function lookupTable<T>(
   searchKey: string,
   values: Record<string, T> & { default: T },
 ): T {

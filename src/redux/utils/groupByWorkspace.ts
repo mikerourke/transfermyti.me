@@ -4,7 +4,7 @@ import { get, sortBy } from 'lodash';
  * Sorts the specified entity records by name and groups them by their
  * corresponding workspaceId.
  */
-export default function groupByWorkspace<TModel>(entityRecords: Array<TModel>) {
+export function groupByWorkspace<TModel>(entityRecords: Array<TModel>) {
   const sortedEntityRecords = sortBy(entityRecords, record =>
     get(record, 'name', null),
   ) as Array<TModel>;

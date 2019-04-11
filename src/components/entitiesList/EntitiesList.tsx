@@ -10,7 +10,7 @@ import { DetailedTimeEntryModel } from '~/types/timeEntriesTypes';
 
 interface Props {
   entityGroup: EntityGroup;
-  entityRecords: EntityModel[];
+  entityRecords: Array<EntityModel>;
   height: number;
   width: number;
   onItemClick?: (entityGroup: EntityGroup, entityRecord: EntityModel) => void;

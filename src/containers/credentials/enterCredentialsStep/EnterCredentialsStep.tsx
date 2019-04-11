@@ -108,7 +108,7 @@ export const EnterCredentialsStepComponent: React.FC<Props> = ({
       instructions={
         <p>
           Enter your credentials in the form below. If you need help, hover over
-          the help icon. Press the <strong>Next</strong> button when you're
+          the help icon. Press the <strong>Next</strong> button when you&apos;re
           ready to move onto the next step.
         </p>
       }

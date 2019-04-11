@@ -57,14 +57,14 @@ const schemaProcessStrategy = (
   isIncluded: true,
 });
 
-export default handleActions(
+export const projectsReducer = handleActions(
   {
     [combineActions(
       getType(projectsActions.clockifyProjectsFetch.success),
       getType(projectsActions.clockifyProjectsTransfer.success),
     )]: (
       state: ProjectsState,
-      { payload: projects }: ReduxAction<ClockifyProject[]>,
+      { payload: projects }: ReduxAction<Array<ClockifyProject>>,
     ): ProjectsState =>
       normalizeState(
         ToolName.Clockify,
@@ -76,7 +76,7 @@ export default handleActions(
 
     [getType(projectsActions.togglProjectsFetch.success)]: (
       state: ProjectsState,
-      { payload: projects }: ReduxAction<TogglProject[]>,
+      { payload: projects }: ReduxAction<Array<TogglProject>>,
     ): ProjectsState =>
       normalizeState(
         ToolName.Toggl,
@@ -115,7 +115,7 @@ export default handleActions(
 
     [getType(togglTimeEntriesFetch.success)]: (
       state: ProjectsState,
-      { payload: timeEntries }: ReduxAction<TogglTimeEntry[]>,
+      { payload: timeEntries }: ReduxAction<Array<TogglTimeEntry>>,
     ) =>
       appendEntryCountToState(
         EntityType.Project,

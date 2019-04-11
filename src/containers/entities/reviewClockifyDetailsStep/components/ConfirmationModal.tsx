@@ -47,13 +47,13 @@ const ConfirmationModal: React.FC<Props> = ({
           transfer all your stuff.
         </p>
         <p>
-          If you're psychologically and emotionally ready to proceed, just hit
-          the ol' <strong>Confirm</strong> button down there. The transfer
-          process will start and you'll be taken to the final step when
-          everything is done.
+          If you&apos;re psychologically and emotionally ready to proceed, just
+          hit the ol&apos; <strong>Confirm</strong> button down there. The
+          transfer process will start and you&apos;ll be taken to the final step
+          when everything is done.
         </p>
         <p>
-          If you're not quite ready, no sweat, just hit the
+          If you&apos;re not quite ready, no sweat, just hit the
           <strong> Cancel</strong> button and regroup.
         </p>
       </ModalCardBody>

@@ -29,12 +29,13 @@ const InstructionsList: React.FC = () => (
       </li>
       <li>
         If you deselect a <strong>Tag</strong> or <strong>Client</strong>, it
-        won't be associated with the time entry. If you uncheck one of these in
-        error and perform the transfer, you'll either have to go through each
-        entry and manually update it, or delete the workspace and start over.
+        won&apos;t be associated with the time entry. If you uncheck one of
+        these in error and perform the transfer, you&apos;ll either have to go
+        through each entry and manually update it, or delete the workspace and
+        start over.
       </li>
       <li>
-        Once you hit the <span>Next</span> button, you'll have a chance to
+        Once you hit the <span>Next</span> button, you&apos;ll have a chance to
         review what will be transferred to Clockify.
       </li>
     </ul>

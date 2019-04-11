@@ -20,13 +20,13 @@ export const clockifyUsersFetch = createAsyncAction(
   '@users/CLOCKIFY_FETCH_REQUEST',
   '@users/CLOCKIFY_FETCH_SUCCESS',
   '@users/CLOCKIFY_FETCH_FAILURE',
-)<void, ClockifyUser[], void>();
+)<void, Array<ClockifyUser>, void>();
 
 export const togglUsersFetch = createAsyncAction(
   '@users/TOGGL_FETCH_REQUEST',
   '@users/TOGGL_FETCH_SUCCESS',
   '@users/TOGGL_FETCH_FAILURE',
-)<void, TogglUser[], void>();
+)<void, Array<TogglUser>, void>();
 
 export const clockifyUsersTransfer = createAsyncAction(
   '@users/CLOCKIFY_TRANSFER_REQUEST',
@@ -66,7 +66,7 @@ export const fetchClockifyUsers = (workspaceId: string) => async (
 
 const appendTogglUserGroupIdsToUsers = async (
   workspaceId: string,
-  users: TogglUser[],
+  users: Array<TogglUser>,
 ) => {
   const workspaceUsers = await apiFetchTogglWorkspaceUsers(workspaceId);
   const workspaceUsersById = workspaceUsers.reduce(

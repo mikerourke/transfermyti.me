@@ -1,0 +1,98 @@
+{
+  "parser": "@typescript-eslint/parser",
+  "extends": [
+    "plugin:react/recommended",
+    "plugin:@typescript-eslint/recommended"
+  ],
+  "plugins": [
+    "@typescript-eslint",
+    "react",
+    "unicorn",
+    "import"
+  ],
+  "settings": {
+    "react": {
+      "version": "detect"
+    }
+  },
+  "env": {
+    "es6": true,
+    "browser": true,
+    "node": true,
+    "jest": true
+  },
+  "parserOptions": {
+    "ecmaVersion": 2018,
+    "project": "./tsconfig.json",
+    "sourceType": "module",
+    "ecmaFeatures": {
+      "jsx": true
+    },
+    "extraFileExtensions": [
+      ".ts",
+      ".tsx"
+    ]
+  },
+  "rules": {
+    "indent": "off",
+    "no-unused-vars": "off",
+    "@typescript-eslint/array-type": [
+      "error",
+      "generic"
+    ],
+    "@typescript-eslint/indent": ["error", 2],
+    "@typescript-eslint/explicit-function-return-type": "off",
+    "@typescript-eslint/member-ordering": "error",
+    "@typescript-eslint/no-explicit-any": "off",
+    "@typescript-eslint/no-parameter-properties": "off",
+    "@typescript-eslint/no-unused-vars": [
+      "error",
+      {
+        "ignoreRestSiblings": true,
+        "argsIgnorePattern": "props|args|_",
+        "args": "after-used"
+      }
+    ],
+    "@typescript-eslint/no-use-before-define": "off",
+    "@typescript-eslint/no-var-requires": "off",
+    "react/prop-types": "off",
+    "react/jsx-curly-spacing": [
+      "error",
+      {
+        "when": "never"
+      }
+    ],
+    "unicorn/catch-error-name": [
+      "error",
+      {
+        "name": "error"
+      }
+    ],
+    "unicorn/explicit-length-check": [
+      "error",
+      {
+        "non-zero": "not-equal"
+      }
+    ],
+    "unicorn/new-for-builtins": "error",
+    "unicorn/no-new-buffer": "error",
+    "unicorn/prefer-add-event-listener": "error",
+    "unicorn/throw-new-error": "error",
+    "import/no-default-export": "error"
+  },
+  "overrides": [
+    {
+      "files": ["scripts/*"],
+      "rules": {
+        "no-console": "off"
+      }
+    },
+    {
+      "files": ["*.tsx"],
+      "rules": {
+        "@typescript-eslint/member-ordering": "off",
+        "import/no-default-export": "off"
+      }
+    }
+  ]
+}

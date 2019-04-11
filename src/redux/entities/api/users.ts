@@ -19,26 +19,27 @@ export const apiFetchTogglMeDetails = (): Promise<TogglMeResponse> =>
 export const apiFetchClockifyUsersInProject = (
   projectId: string,
   workspaceId: string,
-): Promise<ClockifyUser[]> =>
+): Promise<Array<ClockifyUser>> =>
   fetch(`/clockify/api/workspaces/${workspaceId}/projects/${projectId}/users/`);
 
 export const apiFetchTogglUsersInProject = (
   projectId: string,
-): Promise<TogglProjectUser[]> =>
+): Promise<Array<TogglProjectUser>> =>
   fetch(`/toggl/api/projects/${projectId}/project_users`);
 
 export const apiFetchClockifyUsersInWorkspace = (
   workspaceId: string,
-): Promise<ClockifyUser[]> =>
+): Promise<Array<ClockifyUser>> =>
   fetch(`/clockify/api/workspaces/${workspaceId}/users/`);
 
 export const apiFetchTogglUsersInWorkspace = (
   workspaceId: string,
-): Promise<TogglUser[]> => fetch(`/toggl/api/workspaces/${workspaceId}/users`);
+): Promise<Array<TogglUser>> =>
+  fetch(`/toggl/api/workspaces/${workspaceId}/users`);
 
 export const apiFetchTogglWorkspaceUsers = (
   workspaceId: string,
-): Promise<TogglWorkspaceUser[]> =>
+): Promise<Array<TogglWorkspaceUser>> =>
   fetch(`/toggl/api/workspaces/${workspaceId}/workspace_users`);
 
 export const apiAddClockifyUsersToWorkspace = (

@@ -47,7 +47,7 @@ const schemaProcessStrategy = (value: ClockifyTag | TogglTag): TagModel => ({
 const appendEntryCountByTagName = <TTimeEntry>(
   toolName: ToolName,
   state: TagsState,
-  timeEntries: TTimeEntry[],
+  timeEntries: Array<TTimeEntry>,
 ) => {
   const timeEntryCountByTagId = {};
   const tags = Object.values(state[toolName].byId);
@@ -84,14 +84,14 @@ const appendEntryCountByTagName = <TTimeEntry>(
   };
 };
 
-export default handleActions(
+export const tagsReducer = handleActions(
   {
     [combineActions(
       getType(tagsActions.clockifyTagsFetch.success),
       getType(tagsActions.clockifyTagsTransfer.success),
     )]: (
       state: TagsState,
-      { payload: tags }: ReduxAction<ClockifyTag[]>,
+      { payload: tags }: ReduxAction<Array<ClockifyTag>>,
     ): TagsState =>
       normalizeState(
         ToolName.Clockify,
@@ -103,7 +103,7 @@ export default handleActions(
 
     [getType(tagsActions.togglTagsFetch.success)]: (
       state: TagsState,
-      { payload: tags }: ReduxAction<TogglTag[]>,
+      { payload: tags }: ReduxAction<Array<TogglTag>>,
     ): TagsState =>
       normalizeState(
         ToolName.Toggl,
@@ -141,7 +141,7 @@ export default handleActions(
 
     [getType(togglTimeEntriesFetch.success)]: (
       state: TagsState,
-      { payload: timeEntries }: ReduxAction<TogglTimeEntry[]>,
+      { payload: timeEntries }: ReduxAction<Array<TogglTimeEntry>>,
     ) => appendEntryCountByTagName(ToolName.Toggl, state, timeEntries),
   },
   initialState,

@@ -46,7 +46,7 @@ const schemaProcessStrategy = (
   entryCount: 0,
 });
 
-export default handleActions(
+export const clientsReducer = handleActions(
   {
     [combineActions(
       getType(clientsActions.clockifyClientsFetch.success),

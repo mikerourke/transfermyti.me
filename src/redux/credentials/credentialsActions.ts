@@ -2,7 +2,7 @@ import { createAsyncAction, createStandardAction } from 'typesafe-actions';
 import { capitalize, first, set } from 'lodash';
 import storage from 'store';
 import { STORAGE_KEY } from '~/constants';
-import getIfDev from '~/utils/getIfDev';
+import { getIfDev } from '~/utils/getIfDev';
 import {
   apiFetchClockifyUserDetails,
   apiFetchTogglMeDetails,

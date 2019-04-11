@@ -11,13 +11,13 @@ export const selectClockifyClientsByWorkspace = createSelector(
 
 export const selectTogglClients = createSelector(
   (state: ReduxState) => state.entities.clients.toggl.byId,
-  (clientsById): ClientModel[] => Object.values(clientsById),
+  (clientsById): Array<ClientModel> => Object.values(clientsById),
 );
 
 export const selectTogglClientsByWorkspaceFactory = (inclusionsOnly: boolean) =>
   createSelector(
     selectTogglClients,
-    (clients): Record<string, ClientModel[]> => {
+    (clients): Record<string, Array<ClientModel>> => {
       const clientsToUse = inclusionsOnly
         ? findTogglInclusions(clients)
         : clients;
@@ -29,12 +29,12 @@ export const selectClientsTransferPayloadForWorkspace = createSelector(
   selectTogglClientsByWorkspaceFactory(true),
   inclusionsByWorkspaceId => (
     workspaceIdToGet: string,
-  ): CreateNamedEntityRequest[] => {
+  ): Array<CreateNamedEntityRequest> => {
     const inclusions = get(
       inclusionsByWorkspaceId,
       workspaceIdToGet,
       [],
-    ) as ClientModel[];
+    ) as Array<ClientModel>;
     if (inclusions.length === 0) return [];
 
     return inclusions.reduce((acc, { name }) => [...acc, { name }], []);

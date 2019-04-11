@@ -53,11 +53,11 @@ const schemaProcessStrategy = (value: ClockifyUser | TogglUser): UserModel => ({
   isIncluded: true,
 });
 
-export default handleActions(
+export const usersReducer = handleActions(
   {
     [getType(usersActions.clockifyUsersFetch.success)]: (
       state: UsersState,
-      { payload: users }: ReduxAction<ClockifyUser[]>,
+      { payload: users }: ReduxAction<Array<ClockifyUser>>,
     ): UsersState =>
       normalizeState(
         ToolName.Clockify,
@@ -69,7 +69,7 @@ export default handleActions(
 
     [getType(usersActions.togglUsersFetch.success)]: (
       state: UsersState,
-      { payload: users }: ReduxAction<TogglUser[]>,
+      { payload: users }: ReduxAction<Array<TogglUser>>,
     ): UsersState =>
       normalizeState(
         ToolName.Toggl,
@@ -107,7 +107,7 @@ export default handleActions(
 
     [getType(togglTimeEntriesFetch.success)]: (
       state: UsersState,
-      { payload: timeEntries }: ReduxAction<TogglTimeEntry[]>,
+      { payload: timeEntries }: ReduxAction<Array<TogglTimeEntry>>,
     ) =>
       appendEntryCountToState(
         EntityType.User,

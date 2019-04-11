@@ -30,13 +30,13 @@ export const clockifyTimeEntriesFetch = createAsyncAction(
   '@timeEntries/CLOCKIFY_FETCH_REQUEST',
   '@timeEntries/CLOCKIFY_FETCH_SUCCESS',
   '@timeEntries/CLOCKIFY_FETCH_FAILURE',
-)<void, TimeEntryModel[], void>();
+)<void, Array<TimeEntryModel>, void>();
 
 export const togglTimeEntriesFetch = createAsyncAction(
   '@timeEntries/TOGGL_FETCH_REQUEST',
   '@timeEntries/TOGGL_FETCH_SUCCESS',
   '@timeEntries/TOGGL_FETCH_FAILURE',
-)<void, TimeEntryModel[], void>();
+)<void, Array<TimeEntryModel>, void>();
 
 export const flipIsTimeEntryIncluded = createStandardAction(
   '@timeEntries/FLIP_IS_INCLUDED',
@@ -46,12 +46,12 @@ const fetchClockifyTimeEntriesForIncludedYears = async (
   userId: string,
   workspaceId: string,
   years: Array<number>,
-): Promise<ClockifyTimeEntry[]> => {
+): Promise<Array<ClockifyTimeEntry>> => {
   const { promiseThrottle, throttledFunc } = buildThrottler(
     apiFetchClockifyTimeEntries,
   );
 
-  const allYearsTimeEntries: ClockifyTimeEntry[][] = [];
+  const allYearsTimeEntries: Array<Array<ClockifyTimeEntry>> = [];
 
   for (const year of years) {
     await promiseThrottle
@@ -59,7 +59,7 @@ const fetchClockifyTimeEntriesForIncludedYears = async (
         // @ts-ignore
         throttledFunc.bind(this, userId, workspaceId, year),
       )
-      .then((yearEntries: ClockifyTimeEntry[]) => {
+      .then((yearEntries: Array<ClockifyTimeEntry>) => {
         allYearsTimeEntries.push(yearEntries);
       });
   }
@@ -78,9 +78,9 @@ const getTimeValue = (value: any, field: string): Date | null => {
 const convertTimeEntriesFromToolToUniversal = (
   workspaceId: string,
   timeEntries: Array<ClockifyTimeEntry | TogglTimeEntry>,
-  clients: ClientModel[] | null,
+  clients: Array<ClientModel> | null,
   usersById: Record<string, UserModel> | null,
-): TimeEntryModel[] =>
+): Array<TimeEntryModel> =>
   timeEntries.map(timeEntry => {
     let clientId = null;
 
@@ -96,6 +96,8 @@ const convertTimeEntriesFromToolToUniversal = (
     if (!isNil(usersById)) {
       userGroupIds = get(usersById, [userId, 'userGroupIds'], []);
     }
+
+    const getTagValue = (tag: any) => (isString(tag) ? tag : get(tag, 'name'));
 
     return {
       id: timeEntry.id.toString(),
@@ -114,11 +116,7 @@ const convertTimeEntriesFromToolToUniversal = (
         'is_billable' in timeEntry ? timeEntry.is_billable : timeEntry.billable,
       start: getTimeValue(timeEntry, 'start'),
       end: getTimeValue(timeEntry, 'end'),
-      tags: isNil(timeEntry.tags)
-        ? []
-        : timeEntry.tags.map((tag: any) =>
-            isString(tag) ? tag : get(tag, 'name'),
-          ),
+      tags: isNil(timeEntry.tags) ? [] : timeEntry.tags.map(getTagValue),
       isActive: false,
       tagIds: [],
       name: null,
@@ -171,12 +169,12 @@ const fetchTogglTimeEntriesForRemainingPages = async (
   workspaceId: string,
   year: number,
   totalPages: number,
-): Promise<TogglTimeEntry[]> => {
+): Promise<Array<TogglTimeEntry>> => {
   const { promiseThrottle, throttledFunc } = buildThrottler(
     apiFetchTogglTimeEntries,
   );
 
-  const timeEntriesForPage: TogglTimeEntry[][] = [];
+  const timeEntriesForPage: Array<Array<TogglTimeEntry>> = [];
   let currentPage = totalPages;
 
   // We already got the first page, don't want to fetch again:
@@ -186,7 +184,7 @@ const fetchTogglTimeEntriesForRemainingPages = async (
         // @ts-ignore
         throttledFunc.bind(this, email, workspaceId, year, currentPage),
       )
-      .then(({ data }: { data: TogglTimeEntry[] }) => {
+      .then(({ data }: { data: Array<TogglTimeEntry> }) => {
         timeEntriesForPage.push(data);
       });
     currentPage -= 1;
@@ -206,12 +204,12 @@ export const fetchTogglTimeEntries = (
     const { togglEmail, togglUserId } = selectCredentials(state);
 
     const {
-      total_count,
-      per_page,
+      total_count: totalCount,
+      per_page: perPage,
       data: firstPageEntries,
     } = await apiFetchTogglTimeEntries(togglEmail, workspaceId, year, 1);
 
-    const totalPages = Math.ceil(total_count / per_page);
+    const totalPages = Math.ceil(totalCount / perPage);
 
     const remainingPageEntries = await fetchTogglTimeEntriesForRemainingPages(
       togglEmail,

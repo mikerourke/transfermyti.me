@@ -1,4 +1,4 @@
-import groupByWorkspace from '../groupByWorkspace';
+import { groupByWorkspace } from '~/redux/utils';
 
 const clients: any = [
   {

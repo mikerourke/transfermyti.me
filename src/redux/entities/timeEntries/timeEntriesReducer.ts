@@ -33,11 +33,11 @@ export const initialState: TimeEntriesState = {
   isFetching: false,
 };
 
-export default handleActions(
+export const timeEntriesReducer = handleActions(
   {
     [getType(timeEntriesActions.clockifyTimeEntriesFetch.success)]: (
       state: TimeEntriesState,
-      { payload: timeEntries }: ReduxAction<ClockifyTimeEntry[]>,
+      { payload: timeEntries }: ReduxAction<Array<ClockifyTimeEntry>>,
     ): TimeEntriesState =>
       normalizeState(
         ToolName.Clockify,
@@ -48,7 +48,7 @@ export default handleActions(
 
     [getType(timeEntriesActions.togglTimeEntriesFetch.success)]: (
       state: TimeEntriesState,
-      { payload: timeEntries }: ReduxAction<TogglTimeEntry[]>,
+      { payload: timeEntries }: ReduxAction<Array<TogglTimeEntry>>,
     ): TimeEntriesState =>
       normalizeState(
         ToolName.Toggl,

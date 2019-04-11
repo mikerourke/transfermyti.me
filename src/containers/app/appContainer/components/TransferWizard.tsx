@@ -55,7 +55,7 @@ const TransferWizard: React.FC = () => (
           />
         )}
       />
-      <Step id="wrapUp" render={({ replace }) => <div>You're all done!</div>} />
+      <Step id="wrapUp" render={() => <div>You&apos;re all done!</div>} />
     </Steps>
   </Wizard>
 );

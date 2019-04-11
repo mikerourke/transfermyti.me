@@ -4,7 +4,7 @@ import { isNil } from 'lodash';
  * Given the specified records (or possibly null), only return if its a valid
  * array with a length greater than 0.
  */
-export default function getValidEntities<TEntity>(
+export function getValidEntities<TEntity>(
   entityRecords?: Array<TEntity> | null,
 ) {
   if (isNil(entityRecords)) return [];

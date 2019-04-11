@@ -51,10 +51,10 @@ export interface TogglTimeEntry {
 export interface TogglTimeEntriesFetchResponse {
   total_grand: number;
   total_billable: number | null;
-  total_currencies: TogglTotalCurrencyModel[];
+  total_currencies: Array<TogglTotalCurrencyModel>;
   total_count: number;
   per_page: number;
-  data: TogglTimeEntry[];
+  data: Array<TogglTimeEntry>;
 }
 
 export interface TimeEntryModel extends UniversalEntityModel {

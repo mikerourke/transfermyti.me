@@ -7,7 +7,7 @@ import {
 
 export const apiFetchClockifyProjects = (
   workspaceId: string,
-): Promise<{ project: ClockifyProject[]; count: number }> =>
+): Promise<{ project: Array<ClockifyProject>; count: number }> =>
   fetch(`/clockify/api/workspaces/${workspaceId}/projects/filtered`, {
     method: HttpMethod.Post,
     body: {
@@ -23,7 +23,7 @@ export const apiFetchClockifyProjects = (
 
 export const apiFetchTogglProjects = (
   workspaceId: string,
-): Promise<TogglProject[]> =>
+): Promise<Array<TogglProject>> =>
   fetch(`/toggl/api/workspaces/${workspaceId}/projects?active=both`);
 
 export const apiCreateClockifyProject = (

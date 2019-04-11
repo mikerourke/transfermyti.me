@@ -68,7 +68,7 @@ export const ReviewClockifyDetailsStepComponent: React.FC<Props> = props => {
   }, []);
 
   const handleNextClick = (): void => {
-    setIsModalActive(false);
+    setIsModalActive(true);
   };
 
   const transferAllEntitiesToClockify = async () => {
@@ -121,23 +121,23 @@ export const ReviewClockifyDetailsStepComponent: React.FC<Props> = props => {
                 This page contains all the records that <strong>will</strong> be
                 created on Clockify once you press the <strong>Next </strong>
                 button and confirm. If any of the records you selected in the
-                previous step already exist on Clockify, you won't see them
+                previous step already exist on Clockify, you won&apos;t see them
                 here...because they already exist...uh...on Clockify.
               </p>
               <p>
-                If you see something here that you <strong>don't</strong> want
-                transferred, press the <strong>Previous</strong> button to go
-                back and uncheck it.
+                If you see something here that you <strong>don&apos;t </strong>
+                want transferred, press the <strong>Previous</strong> button to
+                go back and uncheck it.
               </p>
             </>
           }
         />
+        <ConfirmationModal
+          isActive={isModalActive}
+          onConfirmClick={handleModalConfirmClick}
+          onCancelClick={() => setIsModalActive(false)}
+        />
       </Else>
-      <ConfirmationModal
-        isActive={isModalActive}
-        onConfirmClick={handleModalConfirmClick}
-        onCancelClick={() => setIsModalActive(false)}
-      />
     </If>
   );
 };

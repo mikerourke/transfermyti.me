@@ -2,14 +2,14 @@ import { createStore, applyMiddleware, compose } from 'redux';
 import thunkMiddleware from 'redux-thunk';
 import storage from 'store';
 import { STORAGE_KEY } from '~/constants';
-import getIfDev from '~/utils/getIfDev';
+import { getIfDev } from '~/utils/getIfDev';
 import { initialState as initialCredentialsState } from './credentials/credentialsReducer';
-import reducers from './rootReducer';
+import { rootReducer } from './rootReducer';
 
 const devTools = (window as any).__REDUX_DEVTOOLS_EXTENSION_COMPOSE__;
 const composeEnhancers: any = devTools || compose;
 
-export default function configureStore() {
+export function configureStore() {
   const middleware = [thunkMiddleware];
 
   let credentials = initialCredentialsState;
@@ -21,7 +21,7 @@ export default function configureStore() {
   }
 
   return createStore(
-    reducers,
+    rootReducer,
     { credentials },
     composeEnhancers(applyMiddleware(...middleware)),
   );

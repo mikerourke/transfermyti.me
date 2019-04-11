@@ -67,14 +67,14 @@ const schemaProcessStrategy = (value: ClockifyTask | TogglTask): TaskModel => ({
   isIncluded: true,
 });
 
-export default handleActions(
+export const tasksReducer = handleActions(
   {
     [combineActions(
       getType(tasksActions.clockifyTasksFetch.success),
       getType(tasksActions.clockifyTasksTransfer.success),
     )]: (
       state: TasksState,
-      { payload: tasks }: ReduxAction<ClockifyTask[]>,
+      { payload: tasks }: ReduxAction<Array<ClockifyTask>>,
     ): TasksState =>
       normalizeState(
         ToolName.Clockify,
@@ -86,7 +86,7 @@ export default handleActions(
 
     [getType(tasksActions.togglTasksFetch.success)]: (
       state: TasksState,
-      { payload: tasks }: ReduxAction<TogglTask[]>,
+      { payload: tasks }: ReduxAction<Array<TogglTask>>,
     ): TasksState =>
       normalizeState(
         ToolName.Toggl,
@@ -124,7 +124,7 @@ export default handleActions(
 
     [getType(togglTimeEntriesFetch.success)]: (
       state: TasksState,
-      { payload: timeEntries }: ReduxAction<TogglTimeEntry[]>,
+      { payload: timeEntries }: ReduxAction<Array<TogglTimeEntry>>,
     ) =>
       appendEntryCountToState(
         EntityType.Task,

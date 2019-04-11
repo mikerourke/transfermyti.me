@@ -5,7 +5,7 @@ import { get, isNil } from 'lodash';
  * without a `linkedId` that have the `isIncluded` flag set to `true` should
  * be included in the transfer to Clockify.
  */
-export default function findTogglInclusions<TEntity>(
+export function findTogglInclusions<TEntity>(
   entityRecords: Array<TEntity>,
 ): Array<TEntity> {
   return entityRecords.reduce(

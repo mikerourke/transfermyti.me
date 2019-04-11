@@ -34,13 +34,13 @@ export const clockifyWorkspacesFetch = createAsyncAction(
   '@workspaces/CLOCKIFY_FETCH_REQUEST',
   '@workspaces/CLOCKIFY_FETCH_SUCCESS',
   '@workspaces/CLOCKIFY_FETCH_FAILURE',
-)<void, ClockifyWorkspace[], void>();
+)<void, Array<ClockifyWorkspace>, void>();
 
 export const togglWorkspacesFetch = createAsyncAction(
   '@workspaces/TOGGL_FETCH_REQUEST',
   '@workspaces/TOGGL_FETCH_SUCCESS',
   '@workspaces/TOGGL_FETCH_FAILURE',
-)<void, TogglWorkspace[], void>();
+)<void, Array<TogglWorkspace>, void>();
 
 export const togglWorkspaceSummaryFetch = createAsyncAction(
   '@workspaces/TOGGL_SUMMARY_FETCH_REQUEST',
@@ -56,7 +56,7 @@ export const clockifyWorkspaceTransfer = createAsyncAction(
   '@workspaces/CLOCKIFY_TRANSFER_REQUEST',
   '@workspaces/CLOCKIFY_TRANSFER_SUCCESS',
   '@workspaces/CLOCKIFY_TRANSFER_FAILURE',
-)<void, ClockifyWorkspace[], void>();
+)<void, Array<ClockifyWorkspace>, void>();
 
 export const appendUserIdsToWorkspace = createStandardAction(
   '@workspaces/APPEND_USER_IDS',
@@ -169,7 +169,7 @@ export const fetchTogglWorkspaceSummary = (workspaceId: string) => async (
           // @ts-ignore
           throttledFunc.bind(this, email, workspaceId, yearToFetch),
         )
-        .then(({ data }: { data: TogglSummaryReportDataModel[] }) => {
+        .then(({ data }: { data: Array<TogglSummaryReportDataModel> }) => {
           const entryCount = data.reduce(
             (acc, { items }) => acc + items.length,
             0,

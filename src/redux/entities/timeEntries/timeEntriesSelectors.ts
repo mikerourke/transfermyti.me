@@ -33,7 +33,7 @@ const selectDetailedTimeEntriesByWorkspaceFactory = (toolName: ToolName) =>
       tagsById: Record<string, TagModel>,
       tasksById: Record<string, EntityModel>,
       usersById: Record<string, EntityModel>,
-    ): Record<string, DetailedTimeEntryModel[]> => {
+    ): Record<string, Array<DetailedTimeEntryModel>> => {
       const tagIdsByName = Object.values(tagsById).reduce(
         (acc, { id, name }) => ({ ...acc, [name]: id.toString() }),
         {},
@@ -81,7 +81,7 @@ export const selectTimeEntriesByWorkspaceFactory = (
 ) =>
   createSelector(
     selectDetailedTimeEntriesByWorkspaceFactory(toolName),
-    (timeEntriesByWorkspace): Record<string, TimeEntryModel[]> =>
+    (timeEntriesByWorkspace): Record<string, Array<TimeEntryModel>> =>
       Object.entries(timeEntriesByWorkspace).reduce(
         (acc, [workspaceId, timeEntries]) => ({
           ...acc,

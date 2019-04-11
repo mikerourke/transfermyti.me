@@ -11,7 +11,7 @@ export const selectClockifyUserGroupsByWorkspace = createSelector(
 
 export const selectTogglUserGroups = createSelector(
   (state: ReduxState) => state.entities.userGroups.toggl.byId,
-  (userGroupsById): UserGroupModel[] =>
+  (userGroupsById): Array<UserGroupModel> =>
     Object.values(userGroupsById).filter(({ name }) => !/Admin/gi.test(name)),
 );
 
@@ -20,7 +20,7 @@ export const selectTogglUserGroupsByWorkspaceFactory = (
 ) =>
   createSelector(
     selectTogglUserGroups,
-    (userGroups): Record<string, UserGroupModel[]> => {
+    (userGroups): Record<string, Array<UserGroupModel>> => {
       const userGroupsToUse = inclusionsOnly
         ? findTogglInclusions(userGroups)
         : userGroups;
@@ -33,12 +33,12 @@ export const selectUserGroupsTransferPayloadForWorkspace = createSelector(
   selectTogglUserGroupsByWorkspaceFactory(true),
   inclusionsByWorkspaceId => (
     workspaceIdToGet: string,
-  ): CreateNamedEntityRequest[] => {
+  ): Array<CreateNamedEntityRequest> => {
     const inclusions = get(
       inclusionsByWorkspaceId,
       workspaceIdToGet,
       [],
-    ) as UserGroupModel[];
+    ) as Array<UserGroupModel>;
     if (inclusions.length === 0) return [];
 
     return inclusions.reduce((acc, { workspaceId, name }) => {

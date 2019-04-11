@@ -38,7 +38,7 @@ export const initialState: UserGroupsState = {
 const appendEntryCountToUserGroupsInState = (
   toolName: ToolName,
   state: UserGroupsState,
-  timeEntries: TimeEntryModel[],
+  timeEntries: Array<TimeEntryModel>,
   usersById: Record<string, UserModel>,
 ): UserGroupsState => {
   const userGroupsById = state[toolName].byId;
@@ -86,14 +86,14 @@ const appendEntryCountToUserGroupsInState = (
   };
 };
 
-export default handleActions(
+export const userGroupsReducer = handleActions(
   {
     [combineActions(
       getType(userGroupsActions.clockifyUserGroupsFetch.success),
       getType(userGroupsActions.clockifyUserGroupsTransfer.success),
     )]: (
       state: UserGroupsState,
-      { payload: userGroups }: ReduxAction<ClockifyUserGroup[]>,
+      { payload: userGroups }: ReduxAction<Array<ClockifyUserGroup>>,
     ): UserGroupsState =>
       normalizeState(
         ToolName.Clockify,
@@ -104,7 +104,7 @@ export default handleActions(
 
     [getType(userGroupsActions.togglUserGroupsFetch.success)]: (
       state: UserGroupsState,
-      { payload: userGroups }: ReduxAction<TogglUserGroup[]>,
+      { payload: userGroups }: ReduxAction<Array<TogglUserGroup>>,
     ): UserGroupsState =>
       normalizeState(ToolName.Toggl, EntityGroup.UserGroups, state, userGroups),
 

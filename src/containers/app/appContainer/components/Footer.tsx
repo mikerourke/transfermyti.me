@@ -6,7 +6,11 @@ import SvgIcon, { SvgIconName } from '~/components/svgIcon/SvgIcon';
 const Love = () => <SvgIcon name={SvgIconName.Heart} color="red" height={12} />;
 
 const LinkToMe = () => (
-  <a href="https://github.com/mikerourke" target="_blank">
+  <a
+    href="https://github.com/mikerourke"
+    target="_blank"
+    rel="noopener noreferrer"
+  >
     Mike Rourke
   </a>
 );

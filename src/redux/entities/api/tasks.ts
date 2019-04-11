@@ -4,10 +4,12 @@ import { ClockifyTask, CreateTaskRequest, TogglTask } from '~/types/tasksTypes';
 export const apiFetchClockifyTasks = (
   workspaceId: string,
   projectId: string,
-): Promise<ClockifyTask[]> =>
+): Promise<Array<ClockifyTask>> =>
   fetch(`/clockify/api/workspaces/${workspaceId}/projects/${projectId}/tasks/`);
 
-export const apiFetchTogglTasks = (workspaceId: string): Promise<TogglTask[]> =>
+export const apiFetchTogglTasks = (
+  workspaceId: string,
+): Promise<Array<TogglTask>> =>
   fetch(`/toggl/api/workspaces/${workspaceId}/tasks?active=both`);
 
 export const apiCreateClockifyTask = (

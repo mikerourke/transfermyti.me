@@ -5,7 +5,7 @@ import { EntityType } from '~/types/entityTypes';
  * Extrapolates the ID field name from the specified entityRecord based on
  * its type.
  */
-export default function findIdFieldValue<TEntity>(
+export function findIdFieldValue<TEntity>(
   entityRecord: TEntity,
   entityType: EntityType,
 ): string | null {

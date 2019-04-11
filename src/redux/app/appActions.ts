@@ -1,6 +1,6 @@
 import { createStandardAction } from 'typesafe-actions';
 import { capitalize, isNil, uniqueId } from 'lodash';
-import getIfDev from '~/utils/getIfDev';
+import { getIfDev } from '~/utils/getIfDev';
 import {
   NotificationModel,
   NotificationType,

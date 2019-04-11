@@ -55,7 +55,7 @@ const EntitiesReviewPage: React.FC<Props> = ({
 
   if (showInclusionsOnly && activeEntityRecords.length !== 0) {
     activeEntityRecords = activeEntityRecords.reduce(
-      (acc: EntityModel[], entityRecord: EntityModel) => {
+      (acc: Array<EntityModel>, entityRecord: EntityModel) => {
         if (!entityRecord.isIncluded) return acc;
         if (!isNil(entityRecord.linkedId)) return acc;
         return [...acc, entityRecord];

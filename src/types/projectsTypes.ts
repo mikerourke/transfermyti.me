@@ -20,11 +20,11 @@ export interface ClockifyProject {
   client: string | null;
   workspaceId: string;
   billable: boolean;
-  memberships: ClockifyMembership[];
+  memberships: Array<ClockifyMembership>;
   color: string;
   estimate: ClockifyEstimate;
   archived: boolean;
-  tasks: ClockifyTask[];
+  tasks: Array<ClockifyTask>;
   public: boolean;
 }
 

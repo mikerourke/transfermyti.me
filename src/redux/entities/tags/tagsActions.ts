@@ -18,19 +18,19 @@ export const clockifyTagsFetch = createAsyncAction(
   '@tags/CLOCKIFY_FETCH_REQUEST',
   '@tags/CLOCKIFY_FETCH_SUCCESS',
   '@tags/CLOCKIFY_FETCH_FAILURE',
-)<void, ClockifyTag[], void>();
+)<void, Array<ClockifyTag>, void>();
 
 export const togglTagsFetch = createAsyncAction(
   '@tags/TOGGL_FETCH_REQUEST',
   '@tags/TOGGL_FETCH_SUCCESS',
   '@tags/TOGGL_FETCH_FAILURE',
-)<void, TogglTag[], void>();
+)<void, Array<TogglTag>, void>();
 
 export const clockifyTagsTransfer = createAsyncAction(
   '@tags/CLOCKIFY_TRANSFER_REQUEST',
   '@tags/CLOCKIFY_TRANSFER_SUCCESS',
   '@tags/CLOCKIFY_TRANSFER_FAILURE',
-)<void, ClockifyTag[], void>();
+)<void, Array<ClockifyTag>, void>();
 
 export const flipIsTagIncluded = createStandardAction('@tags/FLIP_IS_INCLUDED')<
   string

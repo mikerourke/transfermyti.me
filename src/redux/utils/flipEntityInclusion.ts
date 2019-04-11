@@ -6,7 +6,7 @@ import { EntityType } from '~/types/entityTypes';
  * with the entityId to the opposite of its current value (I didn't want to use
  * the word "toggle" for what I feel is an obvious reason).
  */
-export default function flipEntityInclusion<TState>(
+export function flipEntityInclusion<TState>(
   state: TState,
   entityType: EntityType,
   entityId: string,

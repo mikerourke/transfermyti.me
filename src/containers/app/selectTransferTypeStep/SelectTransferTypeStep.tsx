@@ -33,9 +33,9 @@ export const SelectTransferTypeStepComponent: React.FC<Props> = ({
       subtitle="Select Transfer Type"
       instructions={
         <p>
-          Select whether you're transferring entries for just yourself or
-          multiple users. Press the <strong>Next</strong> button when you're
-          ready to move onto the next step.
+          Select whether you&apos;re transferring entries for just yourself or
+          multiple users. Press the <strong>Next</strong> button when
+          you&apos;re ready to move onto the next step.
         </p>
       }
       {...stepPageProps}
@@ -51,17 +51,18 @@ export const SelectTransferTypeStepComponent: React.FC<Props> = ({
             isSelected={currentTransferType === TransferType.SingleUser}
             onSelect={handleTransferTypeSelect(TransferType.SingleUser)}
           >
-            Select this option if you're not the owner/admin of an organization
-            and you want to transfer <strong>your</strong> entries to Clockify.
+            Select this option if you&apos;re not the owner/admin of an
+            organization and you want to transfer <strong>your</strong> entries
+            to Clockify.
           </TransferTypeColumn>
           <TransferTypeColumn
             title="Multiple Users"
             isSelected={currentTransferType === TransferType.MultipleUsers}
             onSelect={handleTransferTypeSelect(TransferType.MultipleUsers)}
           >
-            Select this option if you have multiple user groups/users and you'd
-            like to transfer <strong>all</strong> entries for you and the
-            members of your team.
+            Select this option if you have multiple user groups/users and
+            you&apos;d like to transfer <strong>all</strong> entries for you and
+            the members of your team.
           </TransferTypeColumn>
         </Columns>
       </div>

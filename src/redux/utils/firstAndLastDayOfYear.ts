@@ -11,7 +11,7 @@ import subHours from 'date-fns/sub_hours';
  * @param year Year to get start and end days for.
  * @param [dateFormat] Optional format to apply to date.
  */
-export default function firstAndLastDayOfYear(
+export function firstAndLastDayOfYear(
   year: number,
   dateFormat?: string,
 ): { firstDay: string; lastDay: string } {

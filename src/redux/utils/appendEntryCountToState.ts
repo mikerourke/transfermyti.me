@@ -6,11 +6,11 @@ import { EntityModel, ToolName } from '~/types/commonTypes';
  * Loops through the records in the specified entityState and returns state
  * with `entryCount` calculated for each record.
  */
-export default function appendEntryCountToState<TState, TTimeEntryModel>(
+export function appendEntryCountToState<TState, TTimeEntryModel>(
   entityType: EntityType,
   toolName: ToolName,
   entityState: TState,
-  timeEntries: TTimeEntryModel[],
+  timeEntries: Array<TTimeEntryModel>,
 ): TState {
   const idField = entityType.concat('Id');
 
@@ -24,8 +24,8 @@ export default function appendEntryCountToState<TState, TTimeEntryModel>(
     };
   }, {});
 
-  const updatedEntitiesById = Object.entries(entityState[toolName].byId).reduce(
-    (acc, [entityId, entityRecord]) => {
+  const updatedEntitiesById = Object.values(entityState[toolName].byId).reduce(
+    (acc, entityRecord) => {
       const { id, ...typedEntityRecord } = entityRecord as EntityModel;
       const newTimeEntryCount = get(entryCountByEntityId, id, 0);
 

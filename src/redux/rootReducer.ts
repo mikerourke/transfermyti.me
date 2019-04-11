@@ -1,9 +1,10 @@
 import { combineReducers } from 'redux';
-import app, { AppState } from './app/appReducer';
-import credentials, {
+import { appReducer, AppState } from './app/appReducer';
+import {
+  credentialsReducer,
   CredentialsState,
 } from './credentials/credentialsReducer';
-import entities, { EntitiesState } from './entities/entitiesReducer';
+import { entitiesReducer, EntitiesState } from './entities/entitiesReducer';
 
 export interface State {
   app: AppState;
@@ -11,8 +12,8 @@ export interface State {
   entities: EntitiesState;
 }
 
-export default combineReducers({
-  app,
-  credentials,
-  entities,
+export const rootReducer = combineReducers({
+  app: appReducer,
+  credentials: credentialsReducer,
+  entities: entitiesReducer,
 });

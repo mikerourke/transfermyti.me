@@ -131,8 +131,8 @@ export const SelectTogglWorkspacesStepComponent: React.FC<Props> = props => {
             <p>
               Select which workspaces and years you want to transfer to
               Clockify. All of them are included by default. Press the
-              <strong> Next</strong> button when you're ready to move onto the
-              next step.
+              <strong> Next</strong> button when you&apos;re ready to move onto
+              the next step.
             </p>
           }
         >

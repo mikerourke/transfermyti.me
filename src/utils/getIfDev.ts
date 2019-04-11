@@ -1,4 +1,4 @@
-export default function getIfDev(): boolean {
+export function getIfDev(): boolean {
   try {
     const nodeEnv = process.env.NODE_ENV;
     if (!nodeEnv) return false;

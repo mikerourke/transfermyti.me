@@ -29,19 +29,19 @@ export const clockifyProjectsFetch = createAsyncAction(
   '@projects/CLOCKIFY_FETCH_REQUEST',
   '@projects/CLOCKIFY_FETCH_SUCCESS',
   '@projects/CLOCKIFY_FETCH_FAILURE',
-)<void, ClockifyProject[], void>();
+)<void, Array<ClockifyProject>, void>();
 
 export const togglProjectsFetch = createAsyncAction(
   '@projects/TOGGL_FETCH_REQUEST',
   '@projects/TOGGL_FETCH_SUCCESS',
   '@projects/TOGGL_FETCH_FAILURE',
-)<void, TogglProject[], void>();
+)<void, Array<TogglProject>, void>();
 
 export const clockifyProjectsTransfer = createAsyncAction(
   '@projects/CLOCKIFY_TRANSFER_REQUEST',
   '@projects/CLOCKIFY_TRANSFER_SUCCESS',
   '@projects/CLOCKIFY_TRANSFER_FAILURE',
-)<void, ClockifyProject[], void>();
+)<void, Array<ClockifyProject>, void>();
 
 export const flipIsProjectIncluded = createStandardAction(
   '@projects/FLIP_IS_INCLUDED',

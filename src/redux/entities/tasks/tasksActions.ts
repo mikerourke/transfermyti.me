@@ -20,19 +20,19 @@ export const clockifyTasksFetch = createAsyncAction(
   '@tasks/CLOCKIFY_FETCH_REQUEST',
   '@tasks/CLOCKIFY_FETCH_SUCCESS',
   '@tasks/CLOCKIFY_FETCH_FAILURE',
-)<void, ClockifyTask[], void>();
+)<void, Array<ClockifyTask>, void>();
 
 export const togglTasksFetch = createAsyncAction(
   '@tasks/TOGGL_FETCH_REQUEST',
   '@tasks/TOGGL_FETCH_SUCCESS',
   '@tasks/TOGGL_FETCH_FAILURE',
-)<void, TogglTask[], void>();
+)<void, Array<TogglTask>, void>();
 
 export const clockifyTasksTransfer = createAsyncAction(
   '@tasks/CLOCKIFY_TRANSFER_REQUEST',
   '@tasks/CLOCKIFY_TRANSFER_SUCCESS',
   '@tasks/CLOCKIFY_TRANSFER_FAILURE',
-)<void, ClockifyTask[], void>();
+)<void, Array<ClockifyTask>, void>();
 
 export const flipIsTaskIncluded = createStandardAction(
   '@tasks/FLIP_IS_INCLUDED',
@@ -41,17 +41,17 @@ export const flipIsTaskIncluded = createStandardAction(
 const fetchClockifyTasksForProjectsInWorkspace = async (
   workspaceId: string,
   projectIds: Array<string>,
-): Promise<ClockifyTask[]> => {
+): Promise<Array<ClockifyTask>> => {
   const { promiseThrottle, throttledFunc } = buildThrottler(
     apiFetchClockifyTasks,
   );
 
-  const projectTasks: ClockifyTask[][] = [];
+  const projectTasks: Array<Array<ClockifyTask>> = [];
   for (const projectId of projectIds) {
     await promiseThrottle
       // @ts-ignore
       .add(throttledFunc.bind(this, workspaceId, projectId))
-      .then((tasks: ClockifyTask[]) => {
+      .then((tasks: Array<ClockifyTask>) => {
         projectTasks.push(tasks);
       });
   }
@@ -96,14 +96,14 @@ export const fetchTogglTasks = (workspaceId: string) => async (
 const transferClockifyTasksForProjectsInWorkspace = async (
   onTaskRecord: (taskRecord: ClockifyTask) => void,
   workspaceId: string,
-  tasksInWorkspaceByProjectId: Record<string, CreateTaskRequest[]>,
-): Promise<ClockifyTask[]> => {
-  const allWorkspaceTasks: ClockifyTask[][] = [];
+  tasksInWorkspaceByProjectId: Record<string, Array<CreateTaskRequest>>,
+): Promise<Array<ClockifyTask>> => {
+  const allWorkspaceTasks: Array<Array<ClockifyTask>> = [];
 
   for (const [projectId, projectTasks] of Object.entries(
     tasksInWorkspaceByProjectId,
   )) {
-    if (projectTasks.length > 0) {
+    if (projectTasks.length !== 0) {
       const tasks = await batchClockifyRequests(
         onTaskRecord,
         projectTasks,

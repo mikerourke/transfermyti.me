@@ -8,7 +8,7 @@ export const apiFetchClockifyTimeEntries = (
   userId: string,
   workspaceId: string,
   year: number,
-): Promise<ClockifyTimeEntry[]> => {
+): Promise<Array<ClockifyTimeEntry>> => {
   const { firstDay, lastDay } = firstAndLastDayOfYear(year);
 
   return fetch(

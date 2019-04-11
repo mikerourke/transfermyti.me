@@ -1,6 +1,6 @@
 import cases from 'jest-in-case';
 import * as clientsActions from '../clientsActions';
-import clientsReducer, { initialState } from '../clientsReducer';
+import { clientsReducer, initialState } from '../clientsReducer';
 
 const clockifyClientsPayload = [
   {

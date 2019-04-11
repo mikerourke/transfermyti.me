@@ -5,7 +5,7 @@ import { NotificationModel, TransferType } from '~/types/appTypes';
 import { EntityModel, ReduxAction } from '~/types/commonTypes';
 
 export interface AppState {
-  readonly notifications: NotificationModel[];
+  readonly notifications: Array<NotificationModel>;
   readonly currentTransferType: TransferType;
   readonly inTransferEntity: Partial<EntityModel> | null;
 }
@@ -16,7 +16,7 @@ export const initialState: AppState = {
   inTransferEntity: null,
 };
 
-export default handleActions(
+export const appReducer = handleActions(
   {
     [getType(appActions.notificationShown)]: (
       state: AppState,

@@ -3,10 +3,12 @@ import { ClockifyTag, TogglTag } from '~/types/tagsTypes';
 
 export const apiFetchClockifyTags = (
   workspaceId: string,
-): Promise<ClockifyTag[]> =>
+): Promise<Array<ClockifyTag>> =>
   fetch(`/clockify/api/workspaces/${workspaceId}/tags/`);
 
-export const apiFetchTogglTags = (workspaceId: string): Promise<TogglTag[]> =>
+export const apiFetchTogglTags = (
+  workspaceId: string,
+): Promise<Array<TogglTag>> =>
   fetch(`/toggl/api/workspaces/${workspaceId}/tags`);
 
 export const apiCreateClockifyTag = (

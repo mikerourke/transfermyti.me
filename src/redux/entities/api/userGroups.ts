@@ -3,12 +3,12 @@ import { ClockifyUserGroup, TogglUserGroup } from '~/types/userGroupsTypes';
 
 export const apiFetchClockifyUserGroups = (
   workspaceId: string,
-): Promise<ClockifyUserGroup[]> =>
+): Promise<Array<ClockifyUserGroup>> =>
   fetch(`/clockify/api/workspaces/${workspaceId}/userGroups/`);
 
 export const apiFetchTogglUserGroups = (
   workspaceId: string,
-): Promise<TogglUserGroup[]> =>
+): Promise<Array<TogglUserGroup>> =>
   fetch(`/toggl/api/workspaces/${workspaceId}/groups`);
 
 export const apiCreateClockifyUserGroup = (

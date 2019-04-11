@@ -10,7 +10,7 @@ type ModelWithName<T> = T & { name: string };
  * on the name (for non-time entry entities) and the start time, end time, and
  * description (for time entries).
  */
-export default function linkEntitiesInState<TState>(
+export function linkEntitiesInState<TState>(
   entityGroup: EntityGroup,
   normalizedState: TState,
 ): TState {

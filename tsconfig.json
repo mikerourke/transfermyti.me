@@ -38,6 +38,7 @@
     "requests",
     "responses",
     "scripts",
-    "src/setupJest.js"
+    "src/setupJest.js",
+    "state.js"
   ]
 }

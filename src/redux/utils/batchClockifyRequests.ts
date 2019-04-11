@@ -1,5 +1,5 @@
 import { flatten, get } from 'lodash';
-import buildThrottler from './buildThrottler';
+import { buildThrottler } from './buildThrottler';
 
 /**
  * Loops through the specified records and performs the specified API function
@@ -10,15 +10,15 @@ import buildThrottler from './buildThrottler';
  * @param clockifyApiFunc API function to call for each request body.
  * @param parentIds Parent ID values to call API function.
  */
-export default async function batchClockifyRequests<TPayload, TResponse>(
+export async function batchClockifyRequests<TPayload, TResponse>(
   onRecord: (record: any) => void,
-  entityRecordsInWorkspace: TPayload[],
+  entityRecordsInWorkspace: Array<TPayload>,
   clockifyApiFunc: (...args: Array<any>) => Promise<TResponse>,
   ...parentIds: Array<string>
-): Promise<TResponse[]> {
+): Promise<Array<TResponse>> {
   const { promiseThrottle, throttledFunc } = buildThrottler(clockifyApiFunc);
 
-  const fetchResults: TResponse[] = [];
+  const fetchResults: Array<TResponse> = [];
   const fetchErrors: Array<{ name: string; message: string }> = [];
 
   for (const entityRecord of entityRecordsInWorkspace) {

@@ -33,7 +33,7 @@ export const selectTogglProjectsByWorkspaceFactory = (
 ) =>
   createSelector(
     (state: ReduxState) => Object.values(state.entities.projects.toggl.byId),
-    (projects): Record<string, ProjectModel[]> => {
+    (projects): Record<string, Array<ProjectModel>> => {
       const projectsToUse = inclusionsOnly
         ? findTogglInclusions(projects)
         : projects;
@@ -46,12 +46,12 @@ export const selectProjectsTransferPayloadForWorkspace = createSelector(
   (state: ReduxState) => state.entities.clients.toggl.byId,
   (inclusionsByWorkspaceId, togglClientsById) => (
     workspaceIdToGet: string,
-  ): CreateProjectRequest[] => {
+  ): Array<CreateProjectRequest> => {
     const inclusions = get(
       inclusionsByWorkspaceId,
       workspaceIdToGet,
       [],
-    ) as ProjectModel[];
+    ) as Array<ProjectModel>;
     if (inclusions.length === 0) return [];
 
     return inclusions.reduce((acc, includedProject) => {

@@ -9,7 +9,7 @@ import { NotificationModel } from '~/types/appTypes';
 import { ReduxDispatch, ReduxState } from '~/types/commonTypes';
 
 interface ConnectStateProps {
-  notifications: NotificationModel[];
+  notifications: Array<NotificationModel>;
 }
 
 interface ConnectDispatchProps {

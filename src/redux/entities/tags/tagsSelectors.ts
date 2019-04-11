@@ -11,7 +11,7 @@ export const selectClockifyTagsByWorkspace = createSelector(
 
 export const selectTogglTags = createSelector(
   (state: ReduxState) => state.entities.tags.toggl.byId,
-  (tagsById): TagModel[] => Object.values(tagsById),
+  (tagsById): Array<TagModel> => Object.values(tagsById),
 );
 
 export const selectTogglTagsByWorkspaceFactory = (inclusionsOnly: boolean) =>
@@ -27,12 +27,12 @@ export const selectTagsTransferPayloadForWorkspace = createSelector(
   selectTogglTagsByWorkspaceFactory(true),
   inclusionsByWorkspaceId => (
     workspaceIdToGet: string,
-  ): CreateNamedEntityRequest[] => {
+  ): Array<CreateNamedEntityRequest> => {
     const inclusions = get(
       inclusionsByWorkspaceId,
       workspaceIdToGet,
       [],
-    ) as TagModel[];
+    ) as Array<TagModel>;
     if (inclusions.length === 0) return [];
 
     return inclusions.reduce((acc, { workspaceId, name }) => {

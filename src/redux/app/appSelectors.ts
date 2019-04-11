@@ -4,7 +4,7 @@ import { ReduxState } from '~/types/commonTypes';
 
 export const selectNotifications = createSelector(
   (state: ReduxState) => state.app.notifications,
-  (notifications): NotificationModel[] => notifications,
+  (notifications): Array<NotificationModel> => notifications,
 );
 
 export const selectCurrentTransferType = (state: ReduxState) =>

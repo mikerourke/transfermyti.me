@@ -36,7 +36,7 @@ import {
 
 export const selectTogglWorkspaceIds = createSelector(
   (state: ReduxState) => state.entities.workspaces.toggl.idValues,
-  (workspaceIds): string[] => workspaceIds,
+  (workspaceIds): Array<string> => workspaceIds,
 );
 
 const selectClockifyWorkspacesById = createSelector(
@@ -66,7 +66,7 @@ export const selectTogglIncludedWorkspacesById = createSelector(
 
 export const selectTogglIncludedWorkspaces = createSelector(
   selectTogglIncludedWorkspacesById,
-  (workspacesById): WorkspaceModel[] => Object.values(workspacesById),
+  (workspacesById): Array<WorkspaceModel> => Object.values(workspacesById),
 );
 
 const selectTogglIncludedWorkspacesByName = createSelector(
@@ -83,7 +83,7 @@ const selectTogglIncludedWorkspacesByName = createSelector(
 
 export const selectTogglIncludedWorkspaceNames = createSelector(
   selectTogglIncludedWorkspacesByName,
-  (workspacesByName): string[] => Object.keys(workspacesByName),
+  (workspacesByName): Array<string> => Object.keys(workspacesByName),
 );
 
 export const selectClockifyIncludedWorkspacesById = createSelector(
@@ -157,9 +157,8 @@ export const selectIfTogglWorkspaceYearsFetched = createSelector(
   (workspacesById, workspaceIds): boolean => {
     if (isEmpty(workspacesById)) return false;
 
-    const hasYearInclusionsCount = Object.entries(workspacesById).reduce(
-      (acc, [workspaceId, { inclusionsByYear }]) =>
-        acc + (isEmpty(inclusionsByYear) ? 0 : 1),
+    const hasYearInclusionsCount = Object.values(workspacesById).reduce(
+      (acc, { inclusionsByYear }) => acc + (isEmpty(inclusionsByYear) ? 0 : 1),
       0,
     );
     return hasYearInclusionsCount === workspaceIds.length;
@@ -172,14 +171,14 @@ export const selectWorkspaceNameBeingFetched = createSelector(
 );
 
 const getEntitiesByGroupByWorkspace = (
-  workspaceIds: string[],
-  clientsByWorkspace: Record<string, EntityModel[]>,
-  projectsByWorkspace: Record<string, EntityModel[]>,
-  tagsByWorkspace: Record<string, EntityModel[]>,
-  tasksByWorkspace: Record<string, EntityModel[]>,
-  timeEntriesByWorkspace: Record<string, EntityModel[]>,
-  userGroupsByWorkspace: Record<string, EntityModel[]>,
-  usersByWorkspace: Record<string, EntityModel[]>,
+  workspaceIds: Array<string>,
+  clientsByWorkspace: Record<string, Array<EntityModel>>,
+  projectsByWorkspace: Record<string, Array<EntityModel>>,
+  tagsByWorkspace: Record<string, Array<EntityModel>>,
+  tasksByWorkspace: Record<string, Array<EntityModel>>,
+  timeEntriesByWorkspace: Record<string, Array<EntityModel>>,
+  userGroupsByWorkspace: Record<string, Array<EntityModel>>,
+  usersByWorkspace: Record<string, Array<EntityModel>>,
 ): EntitiesByGroupByWorkspaceModel =>
   workspaceIds.reduce(
     (acc, workspaceId) => ({
@@ -245,7 +244,7 @@ const getByGroupByWorkspaceSelectorForTool = (toolName: ToolName) =>
   }[toolName]);
 
 const calculateRecordCountsByEntityGroup = (
-  entitiesByGroup: Record<EntityGroup, EntityModel[]>,
+  entitiesByGroup: Record<EntityGroup, Array<EntityModel>>,
 ): Record<EntityGroup, RecordCountsModel> => {
   const totalEntryCount = entitiesByGroup[EntityGroup.TimeEntries].length;
 
@@ -272,6 +271,7 @@ const calculateRecordCountsByEntityGroup = (
         },
       };
     },
+    // eslint-disable-next-line @typescript-eslint/no-object-literal-type-assertion
     {} as Record<EntityGroup, RecordCountsModel>,
   );
 };

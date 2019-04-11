@@ -19,7 +19,7 @@ export const initialState: CredentialsState = {
   isValidating: false,
 };
 
-export default handleActions(
+export const credentialsReducer = handleActions(
   {
     [getType(credentialsActions.allCredentialsStored)]: (
       state: CredentialsState,

@@ -55,8 +55,8 @@ const getApiUrl = (toolName: ToolName, context: Context): string => {
   return context === Context.Reports ? TOGGL_REPORTS_URL : TOGGL_API_URL;
 };
 
-export default (store: Store) =>
-  fetchIntercept.register({
+export function initInterceptor(store: Store) {
+  return fetchIntercept.register({
     request(url, config: RequestConfig = {}) {
       const { toolName, context, endpoint } = extrapolateFromUrl(url);
 
@@ -98,3 +98,4 @@ export default (store: Store) =>
       return response.text();
     },
   });
+}

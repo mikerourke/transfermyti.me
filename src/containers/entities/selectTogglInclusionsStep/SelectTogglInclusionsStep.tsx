@@ -82,8 +82,8 @@ export const SelectTogglInclusionsStepComponent: React.FC<Props> = ({
                 `}
               >
                 Select which entities/records you want to transfer and press the
-                <strong> Next</strong> button when you're ready to move onto the
-                next step. There are a few things to be aware of:
+                <strong> Next</strong> button when you&apos;re ready to move
+                onto the next step. There are a few things to be aware of:
               </p>
               <InstructionsList />
               <p
@@ -91,10 +91,10 @@ export const SelectTogglInclusionsStepComponent: React.FC<Props> = ({
                   margin-top: 1rem;
                 `}
               >
-                If you need to change what's included in a different workspace,
-                you can select it from the dropdown to the right of the entity
-                tabs. Don't worry, all of your changes are preserved for all
-                workspaces.
+                If you need to change what&apos;s included in a different
+                workspace, you can select it from the dropdown to the right of
+                the entity tabs. Don&apos;t worry, all of your changes are
+                preserved for all workspaces.
               </p>
             </>
           }

@@ -3,11 +3,11 @@ import { ListRowProps } from 'react-virtualized';
 import { When } from 'react-if';
 import { css } from 'emotion';
 import { isNil } from 'lodash';
-import Flex from '~/components/flex/Flex';
 import Checkbox from '~/components/checkbox/Checkbox';
+import Flex from '~/components/flex/Flex';
+import ListItemBase from './ListItemBase';
+import EntityTagsRow from './EntityTagsRow';
 import { EntityModel } from '~/types/commonTypes';
-import ListItemBase from '~/components/entitiesList/components/ListItemBase';
-import EntityTagsRow from '~/components/entitiesList/components/EntityTagsRow';
 
 interface Props extends ListRowProps {
   entityRecord: EntityModel;

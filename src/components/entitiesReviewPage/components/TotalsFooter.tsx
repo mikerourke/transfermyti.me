@@ -2,7 +2,7 @@ import React from 'react';
 import { Unless } from 'react-if';
 import { startCase } from 'lodash';
 import { css } from 'emotion';
-import lookupTable from '~/utils/lookupTable';
+import { lookupTable } from '~/utils/lookupTable';
 import Checkbox from '~/components/checkbox/Checkbox';
 import Flex from '~/components/flex/Flex';
 import GroupTotalsDisplay from './GroupTotalsDisplay';
@@ -12,7 +12,7 @@ import { RecordCountsModel } from '~/types/workspacesTypes';
 
 interface Props {
   activeEntityGroup: EntityGroup;
-  entityRecords: EntityModel[];
+  entityRecords: Array<EntityModel>;
   groupRecordCounts: RecordCountsModel;
   showInclusionsOnly: boolean;
   onFlipInclusionsOnly: () => void;
@@ -20,7 +20,6 @@ interface Props {
 
 const TotalsFooter: React.FC<Props> = ({
   activeEntityGroup,
-  entityRecords,
   groupRecordCounts,
   showInclusionsOnly,
   onFlipInclusionsOnly,

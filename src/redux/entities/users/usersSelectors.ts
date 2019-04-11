@@ -14,7 +14,7 @@ export const selectClockifyUsersById = createSelector(
 export const selectClockifyUsersByWorkspace = createSelector(
   selectClockifyUsersById,
   (state: ReduxState) => Object.values(state.entities.workspaces.clockify.byId),
-  (usersById, workspaces): Record<string, UserModel[]> =>
+  (usersById, workspaces): Record<string, Array<UserModel>> =>
     workspaces.reduce(
       (acc, workspace) => ({
         ...acc,
@@ -51,7 +51,7 @@ export const selectTogglUsersByWorkspaceFactory = (inclusionsOnly: boolean) =>
       usersById,
       timeEntriesById,
       workspacesById,
-    ): Record<string, UserModel[]> => {
+    ): Record<string, Array<UserModel>> => {
       return Object.values(workspacesById).reduce((acc, { id, userIds }) => {
         const validUsers = getValidUsers(usersById, userIds, togglUserId);
         const usersToUse = inclusionsOnly
@@ -76,7 +76,7 @@ export const selectUsersInvitePayloadForWorkspace = createSelector(
       inclusionsByWorkspaceId,
       workspaceIdToGet,
       [],
-    ) as UserModel[];
+    ) as Array<UserModel>;
     if (inclusions.length === 0) return [];
 
     return inclusions.reduce((acc, { email }) => {

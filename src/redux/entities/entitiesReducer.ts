@@ -1,14 +1,21 @@
 import { combineReducers } from 'redux';
-import clients, { ClientsState } from './clients/clientsReducer';
-import projects, { ProjectsState } from './projects/projectsReducer';
-import tags, { TagsState } from './tags/tagsReducer';
-import tasks, { TasksState } from './tasks/tasksReducer';
-import timeEntries, {
+import { clientsReducer, ClientsState } from './clients/clientsReducer';
+import { projectsReducer, ProjectsState } from './projects/projectsReducer';
+import { tagsReducer, TagsState } from './tags/tagsReducer';
+import { tasksReducer, TasksState } from './tasks/tasksReducer';
+import {
+  timeEntriesReducer,
   TimeEntriesState,
 } from './timeEntries/timeEntriesReducer';
-import userGroups, { UserGroupsState } from './userGroups/userGroupsReducer';
-import users, { UsersState } from './users/usersReducer';
-import workspaces, { WorkspacesState } from './workspaces/workspacesReducer';
+import {
+  userGroupsReducer,
+  UserGroupsState,
+} from './userGroups/userGroupsReducer';
+import { usersReducer, UsersState } from './users/usersReducer';
+import {
+  workspacesReducer,
+  WorkspacesState,
+} from './workspaces/workspacesReducer';
 
 export interface EntitiesState {
   clients: ClientsState;
@@ -21,13 +28,13 @@ export interface EntitiesState {
   workspaces: WorkspacesState;
 }
 
-export default combineReducers({
-  clients,
-  projects,
-  tags,
-  tasks,
-  timeEntries,
-  userGroups,
-  users,
-  workspaces,
+export const entitiesReducer = combineReducers({
+  clients: clientsReducer,
+  projects: projectsReducer,
+  tags: tagsReducer,
+  tasks: tasksReducer,
+  timeEntries: timeEntriesReducer,
+  userGroups: userGroupsReducer,
+  users: usersReducer,
+  workspaces: workspacesReducer,
 });

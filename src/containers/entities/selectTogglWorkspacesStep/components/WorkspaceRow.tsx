@@ -30,7 +30,7 @@ const getWorkspaceCheckedState = (
 };
 
 const WorkspaceRow: React.FC<Props> = ({
-  workspaceRecord: { id, name, isIncluded, inclusionsByYear },
+  workspaceRecord: { id, name, inclusionsByYear },
   onWorkspaceClick,
   onYearClick,
 }) => (

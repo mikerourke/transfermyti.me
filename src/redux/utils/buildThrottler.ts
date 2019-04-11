@@ -4,7 +4,7 @@ import PromiseThrottle from 'promise-throttle';
  * Utility function to provide a promiseThrottle instance for throttling
  * requests to the tool APIs.
  */
-export default function buildThrottler<TResponse>(
+export function buildThrottler<TResponse>(
   fetchFunc: (...fetchArgs: Array<any>) => TResponse,
 ) {
   const promiseThrottle = new PromiseThrottle({

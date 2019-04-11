@@ -48,14 +48,14 @@ const schemaProcessStrategy = (
   isIncluded: true,
 });
 
-export default handleActions(
+export const workspacesReducer = handleActions(
   {
     [combineActions(
       getType(workspacesActions.clockifyWorkspacesFetch.success),
       getType(workspacesActions.clockifyWorkspaceTransfer.success),
     )]: (
       state: WorkspacesState,
-      { payload: workspaces }: ReduxAction<ClockifyWorkspace[]>,
+      { payload: workspaces }: ReduxAction<Array<ClockifyWorkspace>>,
     ): WorkspacesState =>
       normalizeState(
         ToolName.Clockify,
@@ -67,7 +67,7 @@ export default handleActions(
 
     [getType(workspacesActions.togglWorkspacesFetch.success)]: (
       state: WorkspacesState,
-      { payload: workspaces }: ReduxAction<TogglWorkspace[]>,
+      { payload: workspaces }: ReduxAction<Array<TogglWorkspace>>,
     ): WorkspacesState =>
       normalizeState(
         ToolName.Toggl,

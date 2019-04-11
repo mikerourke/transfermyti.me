@@ -2,8 +2,9 @@ import { firstAndLastDayOfYear } from '~/redux/utils';
 import { CreateNamedEntityRequest, HttpMethod } from '~/types/commonTypes';
 import { ClockifyWorkspace, TogglSummaryReport } from '~/types/workspacesTypes';
 
-export const apiFetchClockifyWorkspaces = (): Promise<ClockifyWorkspace[]> =>
-  fetch('/clockify/api/workspaces/');
+export const apiFetchClockifyWorkspaces = (): Promise<
+  Array<ClockifyWorkspace>
+> => fetch('/clockify/api/workspaces/');
 
 export const apiFetchTogglWorkspaceSummaryForYear = (
   email: string,

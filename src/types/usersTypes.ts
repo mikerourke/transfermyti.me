@@ -18,7 +18,7 @@ export interface ClockifyUser {
   id: string;
   email: string;
   name: string;
-  memberships: ClockifyMembership[];
+  memberships: Array<ClockifyMembership>;
   profilePicture: string;
   activeWorkspace: string;
   defaultWorkspace: string;
@@ -97,7 +97,7 @@ export interface TogglMeResponse {
     at: string;
     created_at: string;
     timezone: string;
-    workspaces: TogglWorkspace[];
+    workspaces: Array<TogglWorkspace>;
   };
 }
 

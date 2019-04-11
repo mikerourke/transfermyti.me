@@ -27,7 +27,7 @@ import { UserModel } from '~/types/usersTypes';
 
 export interface EntryCountCalculatorModel {
   toolName: ToolName;
-  timeEntries: TimeEntryModel[];
+  timeEntries: Array<TimeEntryModel>;
   usersById: Record<string, UserModel>;
 }
 
@@ -35,19 +35,19 @@ export const clockifyUserGroupsFetch = createAsyncAction(
   '@userGroups/CLOCKIFY_FETCH_REQUEST',
   '@userGroups/CLOCKIFY_FETCH_SUCCESS',
   '@userGroups/CLOCKIFY_FETCH_FAILURE',
-)<void, ClockifyUserGroup[], void>();
+)<void, Array<ClockifyUserGroup>, void>();
 
 export const togglUserGroupsFetch = createAsyncAction(
   '@userGroups/TOGGL_FETCH_REQUEST',
   '@userGroups/TOGGL_FETCH_SUCCESS',
   '@userGroups/TOGGL_FETCH_FAILURE',
-)<void, UserGroupModel[], void>();
+)<void, Array<UserGroupModel>, void>();
 
 export const clockifyUserGroupsTransfer = createAsyncAction(
   '@userGroups/CLOCKIFY_TRANSFER_REQUEST',
   '@userGroups/CLOCKIFY_TRANSFER_SUCCESS',
   '@userGroups/CLOCKIFY_TRANSFER_FAILURE',
-)<void, ClockifyUserGroup[], void>();
+)<void, Array<ClockifyUserGroup>, void>();
 
 export const flipIsUserGroupIncluded = createStandardAction(
   '@userGroups/FLIP_IS_INCLUDED',
@@ -64,15 +64,15 @@ export const calculateUserGroupEntryCounts = createStandardAction(
 const convertUserGroupsFromToolToUniversal = (
   workspaceId: string,
   userGroups: Array<TogglUserGroup | ClockifyUserGroup>,
-  usersByWorkspace: Record<string, UserModel[]>,
-): UserGroupModel[] => {
+  usersByWorkspace: Record<string, Array<UserModel>>,
+): Array<UserGroupModel> => {
   if (getValidEntities(userGroups).length === 0) return [];
 
   const workspaceUsers = get(usersByWorkspace, workspaceId, []);
 
   return userGroups.map(userGroup => {
     const userGroupId = userGroup.id.toString();
-    const usersInUserGroup: UserModel[] = [];
+    const usersInUserGroup: Array<UserModel> = [];
 
     if (workspaceUsers.length !== 0) {
       workspaceUsers.forEach(workspaceUser => {
