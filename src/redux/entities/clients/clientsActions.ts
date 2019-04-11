@@ -4,7 +4,7 @@ import {
   apiCreateClockifyClient,
   apiFetchClockifyClients,
   apiFetchTogglClients,
-} from '../api/clients';
+} from '~/redux/entities/api/clients';
 import {
   showFetchErrorNotification,
   updateInTransferEntity,

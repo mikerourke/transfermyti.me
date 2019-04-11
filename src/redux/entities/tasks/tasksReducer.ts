@@ -1,11 +1,6 @@
 import { getType } from 'typesafe-actions';
 import { combineActions, handleActions } from 'redux-actions';
-import {
-  findIdFieldValue,
-  normalizeState,
-  flipEntityInclusion,
-  appendEntryCountToState,
-} from '~/redux/utils';
+import * as utils from '~/redux/utils';
 import { togglTimeEntriesFetch } from '~/redux/entities/timeEntries/timeEntriesActions';
 import * as tasksActions from './tasksActions';
 import {
@@ -56,8 +51,8 @@ const schemaProcessStrategy = (value: ClockifyTask | TogglTask): TaskModel => ({
       ? convertSecondsToClockifyEstimate(value.estimated_seconds)
       : value.estimate,
   workspaceId: '', // The workspaceId value is assigned in the selector.
-  projectId: findIdFieldValue(value, EntityType.Project),
-  assigneeId: findIdFieldValue(value, EntityType.User),
+  projectId: utils.findIdFieldValue(value, EntityType.Project),
+  assigneeId: utils.findIdFieldValue(value, EntityType.User),
   isActive:
     'active' in value
       ? value.active
@@ -75,20 +70,26 @@ export const tasksReducer = handleActions(
     )]: (
       state: TasksState,
       { payload: tasks }: ReduxAction<Array<ClockifyTask>>,
-    ): TasksState =>
-      normalizeState(
+    ): TasksState => {
+      const normalizedState = utils.normalizeState(
         ToolName.Clockify,
         EntityGroup.Tasks,
         state,
         tasks,
         schemaProcessStrategy,
-      ),
+      );
+
+      return utils.linkEntitiesInStateByName(
+        EntityGroup.Tasks,
+        normalizedState,
+      );
+    },
 
     [getType(tasksActions.togglTasksFetch.success)]: (
       state: TasksState,
       { payload: tasks }: ReduxAction<Array<TogglTask>>,
     ): TasksState =>
-      normalizeState(
+      utils.normalizeState(
         ToolName.Toggl,
         EntityGroup.Tasks,
         state,
@@ -120,13 +121,13 @@ export const tasksReducer = handleActions(
     [getType(tasksActions.flipIsTaskIncluded)]: (
       state: TasksState,
       { payload: taskId }: ReduxAction<string>,
-    ): TasksState => flipEntityInclusion(state, EntityType.Task, taskId),
+    ): TasksState => utils.flipEntityInclusion(state, EntityType.Task, taskId),
 
     [getType(togglTimeEntriesFetch.success)]: (
       state: TasksState,
       { payload: timeEntries }: ReduxAction<Array<TogglTimeEntry>>,
     ) =>
-      appendEntryCountToState(
+      utils.appendEntryCountToState(
         EntityType.Task,
         ToolName.Toggl,
         state,

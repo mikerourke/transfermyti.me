@@ -1,6 +1,6 @@
 import { getType } from 'typesafe-actions';
 import { combineActions, handleActions } from 'redux-actions';
-import { flipEntityInclusion, normalizeState } from '~/redux/utils';
+import * as utils from '~/redux/utils';
 import { flipIsProjectIncluded } from '~/redux/entities/projects/projectsActions';
 import * as timeEntriesActions from './timeEntriesActions';
 import {
@@ -39,7 +39,7 @@ export const timeEntriesReducer = handleActions(
       state: TimeEntriesState,
       { payload: timeEntries }: ReduxAction<Array<ClockifyTimeEntry>>,
     ): TimeEntriesState =>
-      normalizeState(
+      utils.normalizeState(
         ToolName.Clockify,
         EntityGroup.TimeEntries,
         state,
@@ -50,7 +50,7 @@ export const timeEntriesReducer = handleActions(
       state: TimeEntriesState,
       { payload: timeEntries }: ReduxAction<Array<TogglTimeEntry>>,
     ): TimeEntriesState =>
-      normalizeState(
+      utils.normalizeState(
         ToolName.Toggl,
         EntityGroup.TimeEntries,
         state,
@@ -79,7 +79,7 @@ export const timeEntriesReducer = handleActions(
       state: TimeEntriesState,
       { payload: timeEntryId }: ReduxAction<string>,
     ): TimeEntriesState =>
-      flipEntityInclusion(state, EntityType.Task, timeEntryId),
+      utils.flipEntityInclusion(state, EntityType.Task, timeEntryId),
 
     [getType(flipIsProjectIncluded)]: (
       state: TimeEntriesState,
@@ -106,6 +106,14 @@ export const timeEntriesReducer = handleActions(
         },
       };
     },
+
+    [getType(timeEntriesActions.addLinksToTimeEntries)]: (
+      state: TimeEntriesState,
+      { payload: newTimeEntriesState }: ReduxAction<TimeEntriesState>,
+    ): TimeEntriesState => ({
+      ...state,
+      ...newTimeEntriesState,
+    }),
   },
   initialState,
 );

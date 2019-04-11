@@ -1,6 +1,5 @@
 import { get, isNil, uniq } from 'lodash';
 import { normalize, schema, Schema } from 'normalizr';
-import { linkEntitiesInState } from '~/redux/utils/linkEntitiesInState';
 import { ToolName } from '~/types/commonTypes';
 import { EntityGroup } from '~/types/entityTypes';
 
@@ -21,7 +20,7 @@ export function normalizeState<TState, TPayload>(
   const entitySchema = getEntitySchema(entityGroup, schemaProcessStrategy);
   const { entities, result } = normalize(payload, entitySchema);
 
-  const normalizedState = {
+  return {
     ...state,
     [toolName]: {
       ...state[toolName],
@@ -32,12 +31,6 @@ export function normalizeState<TState, TPayload>(
       idValues: uniq([...get(state, [toolName, 'idValues'], []), ...result]),
     },
   };
-
-  if (toolName === ToolName.Toggl) return normalizedState;
-
-  // Since the Clockify entities are fetched _after_ the Toggl records, we can
-  // loop through each group and assign linked IDs:
-  return linkEntitiesInState(entityGroup, normalizedState);
 }
 
 /**

@@ -2,15 +2,13 @@ import { get, isEmpty } from 'lodash';
 import { ToolName } from '~/types/commonTypes';
 import { EntityGroup } from '~/types/entityTypes';
 
-type ModelWithName<T> = T & { name: string };
+type ModelWithName<T> = T & { name: string; isIncluded?: boolean };
 
 /**
  * Given the specified entityGroup and entity state, link the Toggl and Clockify
- * entities by setting a value to the `linkedId` field. The link is contingent
- * on the name (for non-time entry entities) and the start time, end time, and
- * description (for time entries).
+ * entities by setting a value to the `linkedId` field.
  */
-export function linkEntitiesInState<TState>(
+export function linkEntitiesInStateByName<TState>(
   entityGroup: EntityGroup,
   normalizedState: TState,
 ): TState {
@@ -19,20 +17,15 @@ export function linkEntitiesInState<TState>(
 
   if (isEmpty(clockifyById) || isEmpty(togglById)) return normalizedState;
 
-  const linkerFunc =
-    entityGroup === EntityGroup.TimeEntries
-      ? linkEntitiesByTime
-      : linkEntitiesByName;
-
   return {
     ...normalizedState,
     [ToolName.Clockify]: {
       ...get(normalizedState, ToolName.Clockify, {}),
-      byId: linkerFunc(entityGroup, togglById, clockifyById),
+      byId: linkEntitiesByName(entityGroup, togglById, clockifyById),
     },
     [ToolName.Toggl]: {
       ...get(normalizedState, ToolName.Toggl, {}),
-      byId: linkerFunc(entityGroup, clockifyById, togglById),
+      byId: linkEntitiesByName(entityGroup, clockifyById, togglById),
     },
   };
 }
@@ -64,17 +57,4 @@ function linkEntitiesByName<TModel>(
     }),
     {},
   );
-}
-
-/**
- * Sets the `linkedId` field of the time entry in the updatedEntitiesById that
- * shares the same start time, stop time, and description (+/- 5 seconds).
- */
-function linkEntitiesByTime<TModel>(
-  entityGroup: EntityGroup,
-  linkFromEntitiesById: Record<string, TModel>,
-  updatedEntitiesById: Record<string, TModel>,
-): Record<string, TModel> {
-  // TODO: Add this.
-  return updatedEntitiesById;
 }

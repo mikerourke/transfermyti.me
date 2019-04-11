@@ -5,11 +5,11 @@ import {
   apiCreateClockifyProject,
   apiFetchClockifyProjects,
   apiFetchTogglProjects,
-} from '../api/projects';
+} from '~/redux/entities/api/projects';
 import {
   apiFetchClockifyUsersInProject,
   apiFetchTogglUsersInProject,
-} from '../api/users';
+} from '~/redux/entities/api/users';
 import {
   showFetchErrorNotification,
   updateInTransferEntity,

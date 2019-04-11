@@ -1,7 +1,7 @@
 import { getType } from 'typesafe-actions';
 import { combineActions, handleActions } from 'redux-actions';
 import { get, uniq } from 'lodash';
-import { normalizeState, flipEntityInclusion } from '~/redux/utils';
+import * as utils from '~/redux/utils';
 import * as userGroupsActions from './userGroupsActions';
 import {
   ReduxAction,
@@ -94,19 +94,30 @@ export const userGroupsReducer = handleActions(
     )]: (
       state: UserGroupsState,
       { payload: userGroups }: ReduxAction<Array<ClockifyUserGroup>>,
-    ): UserGroupsState =>
-      normalizeState(
+    ): UserGroupsState => {
+      const normalizedState = utils.normalizeState(
         ToolName.Clockify,
         EntityGroup.UserGroups,
         state,
         userGroups,
-      ),
+      );
+
+      return utils.linkEntitiesInStateByName(
+        EntityGroup.UserGroups,
+        normalizedState,
+      );
+    },
 
     [getType(userGroupsActions.togglUserGroupsFetch.success)]: (
       state: UserGroupsState,
       { payload: userGroups }: ReduxAction<Array<TogglUserGroup>>,
     ): UserGroupsState =>
-      normalizeState(ToolName.Toggl, EntityGroup.UserGroups, state, userGroups),
+      utils.normalizeState(
+        ToolName.Toggl,
+        EntityGroup.UserGroups,
+        state,
+        userGroups,
+      ),
 
     [combineActions(
       getType(userGroupsActions.clockifyUserGroupsFetch.request),
@@ -133,7 +144,7 @@ export const userGroupsReducer = handleActions(
       state: UserGroupsState,
       { payload: userGroupId }: ReduxAction<string>,
     ): UserGroupsState =>
-      flipEntityInclusion(state, EntityType.UserGroup, userGroupId),
+      utils.flipEntityInclusion(state, EntityType.UserGroup, userGroupId),
 
     [getType(userGroupsActions.addTogglUserIdToGroup)]: (
       state: UserGroupsState,

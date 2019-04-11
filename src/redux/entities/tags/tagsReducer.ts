@@ -1,11 +1,7 @@
 import { getType } from 'typesafe-actions';
 import { combineActions, handleActions } from 'redux-actions';
 import { get } from 'lodash';
-import {
-  findIdFieldValue,
-  flipEntityInclusion,
-  normalizeState,
-} from '~/redux/utils';
+import * as utils from '~/redux/utils';
 import { togglTimeEntriesFetch } from '~/redux/entities/timeEntries/timeEntriesActions';
 import * as tagsActions from './tagsActions';
 import {
@@ -38,7 +34,7 @@ export const initialState: TagsState = {
 const schemaProcessStrategy = (value: ClockifyTag | TogglTag): TagModel => ({
   id: value.id.toString(),
   name: value.name,
-  workspaceId: findIdFieldValue(value, EntityType.Workspace),
+  workspaceId: utils.findIdFieldValue(value, EntityType.Workspace),
   entryCount: 0,
   linkedId: null,
   isIncluded: true,
@@ -92,20 +88,23 @@ export const tagsReducer = handleActions(
     )]: (
       state: TagsState,
       { payload: tags }: ReduxAction<Array<ClockifyTag>>,
-    ): TagsState =>
-      normalizeState(
+    ): TagsState => {
+      const normalizedState = utils.normalizeState(
         ToolName.Clockify,
         EntityGroup.Tags,
         state,
         tags,
         schemaProcessStrategy,
-      ),
+      );
+
+      return utils.linkEntitiesInStateByName(EntityGroup.Tags, normalizedState);
+    },
 
     [getType(tagsActions.togglTagsFetch.success)]: (
       state: TagsState,
       { payload: tags }: ReduxAction<Array<TogglTag>>,
     ): TagsState =>
-      normalizeState(
+      utils.normalizeState(
         ToolName.Toggl,
         EntityGroup.Tags,
         state,
@@ -137,7 +136,7 @@ export const tagsReducer = handleActions(
     [getType(tagsActions.flipIsTagIncluded)]: (
       state: TagsState,
       { payload: tagId }: ReduxAction<string>,
-    ): TagsState => flipEntityInclusion(state, EntityType.Tag, tagId),
+    ): TagsState => utils.flipEntityInclusion(state, EntityType.Tag, tagId),
 
     [getType(togglTimeEntriesFetch.success)]: (
       state: TagsState,

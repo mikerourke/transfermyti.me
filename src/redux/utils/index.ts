@@ -7,4 +7,5 @@ export { firstAndLastDayOfYear } from './firstAndLastDayOfYear';
 export { flipEntityInclusion } from './flipEntityInclusion';
 export { getValidEntities } from './getValidEntities';
 export { groupByWorkspace } from './groupByWorkspace';
+export { linkEntitiesInStateByName } from './linkEntitiesInStateByName';
 export { normalizeState } from './normalizeState';

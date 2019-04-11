@@ -5,7 +5,7 @@ import {
   apiCreateClockifyWorkspace,
   apiFetchClockifyWorkspaces,
   apiFetchTogglWorkspaceSummaryForYear,
-} from '../api/workspaces';
+} from '~/redux/entities/api/workspaces';
 import { showFetchErrorNotification } from '~/redux/app/appActions';
 import { selectTogglUserEmail } from '~/redux/credentials/credentialsSelectors';
 import * as clientsActions from '~/redux/entities/clients/clientsActions';

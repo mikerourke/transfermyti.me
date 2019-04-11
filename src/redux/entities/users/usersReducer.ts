@@ -1,11 +1,7 @@
 import { getType } from 'typesafe-actions';
 import { combineActions, handleActions } from 'redux-actions';
 import { get } from 'lodash';
-import {
-  normalizeState,
-  flipEntityInclusion,
-  appendEntryCountToState,
-} from '~/redux/utils';
+import * as utils from '~/redux/utils';
 import { togglTimeEntriesFetch } from '~/redux/entities/timeEntries/timeEntriesActions';
 import * as usersActions from './usersActions';
 import {
@@ -58,20 +54,26 @@ export const usersReducer = handleActions(
     [getType(usersActions.clockifyUsersFetch.success)]: (
       state: UsersState,
       { payload: users }: ReduxAction<Array<ClockifyUser>>,
-    ): UsersState =>
-      normalizeState(
+    ): UsersState => {
+      const normalizedState = utils.normalizeState(
         ToolName.Clockify,
         EntityGroup.Users,
         state,
         users,
         schemaProcessStrategy,
-      ),
+      );
+
+      return utils.linkEntitiesInStateByName(
+        EntityGroup.Users,
+        normalizedState,
+      );
+    },
 
     [getType(usersActions.togglUsersFetch.success)]: (
       state: UsersState,
       { payload: users }: ReduxAction<Array<TogglUser>>,
     ): UsersState =>
-      normalizeState(
+      utils.normalizeState(
         ToolName.Toggl,
         EntityGroup.Users,
         state,
@@ -103,13 +105,13 @@ export const usersReducer = handleActions(
     [getType(usersActions.flipIsUserIncluded)]: (
       state: UsersState,
       { payload: userId }: ReduxAction<string>,
-    ): UsersState => flipEntityInclusion(state, EntityType.User, userId),
+    ): UsersState => utils.flipEntityInclusion(state, EntityType.User, userId),
 
     [getType(togglTimeEntriesFetch.success)]: (
       state: UsersState,
       { payload: timeEntries }: ReduxAction<Array<TogglTimeEntry>>,
     ) =>
-      appendEntryCountToState(
+      utils.appendEntryCountToState(
         EntityType.User,
         ToolName.Toggl,
         state,

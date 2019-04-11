@@ -4,7 +4,7 @@ import {
   apiCreateClockifyTag,
   apiFetchClockifyTags,
   apiFetchTogglTags,
-} from '../api/tags';
+} from '~/redux/entities/api/tags';
 import {
   showFetchErrorNotification,
   updateInTransferEntity,

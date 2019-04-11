@@ -4,7 +4,7 @@ import { buildThrottler, findIdFieldValue } from '~/redux/utils';
 import {
   apiFetchClockifyTimeEntries,
   apiFetchTogglTimeEntries,
-} from '../api/timeEntries';
+} from '~/redux/entities/api/timeEntries';
 import { showFetchErrorNotification } from '~/redux/app/appActions';
 import { selectCurrentTransferType } from '~/redux/app/appSelectors';
 import { selectTogglClients } from '~/redux/entities/clients/clientsSelectors';

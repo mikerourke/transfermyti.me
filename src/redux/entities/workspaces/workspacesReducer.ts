@@ -1,7 +1,7 @@
 import { getType } from 'typesafe-actions';
 import { handleActions, combineActions } from 'redux-actions';
 import { cloneDeep, get, uniq } from 'lodash';
-import { normalizeState, flipEntityInclusion } from '~/redux/utils';
+import * as utils from '~/redux/utils';
 import * as workspacesActions from './workspacesActions';
 import {
   ReduxAction,
@@ -56,20 +56,26 @@ export const workspacesReducer = handleActions(
     )]: (
       state: WorkspacesState,
       { payload: workspaces }: ReduxAction<Array<ClockifyWorkspace>>,
-    ): WorkspacesState =>
-      normalizeState(
+    ): WorkspacesState => {
+      const normalizedState = utils.normalizeState(
         ToolName.Clockify,
         EntityGroup.Workspaces,
         state,
         workspaces,
         schemaProcessStrategy,
-      ),
+      );
+
+      return utils.linkEntitiesInStateByName(
+        EntityGroup.Workspaces,
+        normalizedState,
+      );
+    },
 
     [getType(workspacesActions.togglWorkspacesFetch.success)]: (
       state: WorkspacesState,
       { payload: workspaces }: ReduxAction<Array<TogglWorkspace>>,
     ): WorkspacesState =>
-      normalizeState(
+      utils.normalizeState(
         ToolName.Toggl,
         EntityGroup.Workspaces,
         state,
@@ -161,7 +167,7 @@ export const workspacesReducer = handleActions(
       state: WorkspacesState,
       { payload: workspaceId }: ReduxAction<string>,
     ): WorkspacesState =>
-      flipEntityInclusion(state, EntityType.Workspace, workspaceId),
+      utils.flipEntityInclusion(state, EntityType.Workspace, workspaceId),
 
     [getType(workspacesActions.flipIsWorkspaceYearIncluded)]: (
       state: WorkspacesState,
