@@ -105,7 +105,6 @@ const EntitiesReviewPage: React.FC<Props> = ({
       )}
       <TotalsFooter
         activeEntityGroup={activeEntityGroup}
-        entityRecords={activeEntityRecords}
         groupRecordCounts={groupRecordCounts}
         showInclusionsOnly={showInclusionsOnly}
         onFlipInclusionsOnly={() => setShowInclusionsOnly(!showInclusionsOnly)}

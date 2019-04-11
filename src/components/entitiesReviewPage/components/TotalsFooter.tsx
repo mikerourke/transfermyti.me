@@ -6,13 +6,11 @@ import { lookupTable } from '~/utils/lookupTable';
 import Checkbox from '~/components/checkbox/Checkbox';
 import Flex from '~/components/flex/Flex';
 import GroupTotalsDisplay from './GroupTotalsDisplay';
-import { EntityModel } from '~/types/commonTypes';
 import { EntityGroup } from '~/types/entityTypes';
 import { RecordCountsModel } from '~/types/workspacesTypes';
 
 interface Props {
   activeEntityGroup: EntityGroup;
-  entityRecords: Array<EntityModel>;
   groupRecordCounts: RecordCountsModel;
   showInclusionsOnly: boolean;
   onFlipInclusionsOnly: () => void;
