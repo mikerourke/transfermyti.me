@@ -62,11 +62,9 @@ export type ThunkAction<TResult, TExtra = undefined> = (
 ) => TResult;
 
 export interface ReduxDispatch {
-  // tslint:disable-next-line:callable-types
   <TResult, TExtra>(asyncAction: ThunkAction<TResult, TExtra>): TResult;
 }
 export interface ReduxDispatch {
-  // tslint:disable-next-line:callable-types
   <TAction>(action: TAction & { type: any }): TAction & { type: any };
 }
 
