@@ -4,16 +4,19 @@ import { css } from 'emotion';
 import { isNil } from 'lodash';
 import BasicListItem from './components/BasicListItem';
 import TimeEntryListItem from './components/TimeEntryListItem';
-import { EntityModel } from '~/types/commonTypes';
+import { CompoundEntityModel } from '~/types/commonTypes';
 import { EntityGroup } from '~/types/entityTypes';
 import { DetailedTimeEntryModel } from '~/types/timeEntriesTypes';
 
 interface Props {
   entityGroup: EntityGroup;
-  entityRecords: Array<EntityModel>;
+  entityRecords: Array<CompoundEntityModel>;
   height: number;
   width: number;
-  onItemClick?: (entityGroup: EntityGroup, entityRecord: EntityModel) => void;
+  onItemClick?: (
+    entityGroup: EntityGroup,
+    entityRecord: CompoundEntityModel,
+  ) => void;
 }
 
 const EntitiesList: React.FC<Props> = ({

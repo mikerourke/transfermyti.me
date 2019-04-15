@@ -1,17 +1,18 @@
-import { UniversalEntityModel } from '~/types/entityTypes';
+import { BaseCompoundEntityModel } from '~/types/entityTypes';
 
-export interface ClockifyUserGroup {
+export interface ClockifyUserGroupModel {
   id: string;
   name: string;
   userIds: Array<string>;
   workspaceId: string;
 }
 
-export interface TogglUserGroup {
+export interface TogglUserGroupModel {
   id: number;
   wid: number;
   name: string;
   at: string;
 }
 
-export type UserGroupModel = ClockifyUserGroup & UniversalEntityModel;
+// prettier-ignore
+export type CompoundUserGroupModel = ClockifyUserGroupModel & BaseCompoundEntityModel;

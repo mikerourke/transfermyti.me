@@ -18,7 +18,7 @@ import Loader from '~/components/loader/Loader';
 import { StepPageProps } from '~/components/stepPage/StepPage';
 import InstructionsList from './components/InstructionsList';
 import {
-  EntityModel,
+  CompoundEntityModel,
   ReduxDispatch,
   ReduxState,
   ToolName,
@@ -27,23 +27,23 @@ import { EntityGroup } from '~/types/entityTypes';
 import {
   CountsByGroupByWorkspaceModel,
   EntitiesByGroupByWorkspaceModel,
-  WorkspaceModel,
+  CompoundWorkspaceModel,
 } from '~/types/workspacesTypes';
 
 interface ConnectStateProps {
   countsByGroupByWorkspace: CountsByGroupByWorkspaceModel;
   entitiesByGroupByWorkspace: EntitiesByGroupByWorkspaceModel;
   workspaceNameBeingFetched: string;
-  workspacesById: Record<string, WorkspaceModel>;
+  workspacesById: Record<string, CompoundWorkspaceModel>;
 }
 
 interface ConnectDispatchProps {
   onFetchEntitiesForWorkspace: (
-    workspaceRecord: WorkspaceModel,
+    workspaceRecord: CompoundWorkspaceModel,
   ) => Promise<any>;
   onFlipIsWorkspaceEntityIncluded: (
     entityGroup: EntityGroup,
-    entityRecord: EntityModel,
+    entityRecord: CompoundEntityModel,
   ) => void;
 }
 
@@ -119,11 +119,11 @@ const mapStateToProps = (state: ReduxState) => ({
 });
 
 const mapDispatchToProps = (dispatch: ReduxDispatch) => ({
-  onFetchEntitiesForWorkspace: (workspaceRecord: WorkspaceModel) =>
+  onFetchEntitiesForWorkspace: (workspaceRecord: CompoundWorkspaceModel) =>
     dispatch(fetchTogglEntitiesInWorkspace(workspaceRecord)),
   onFlipIsWorkspaceEntityIncluded: (
     entityGroup: EntityGroup,
-    entityRecord: EntityModel,
+    entityRecord: CompoundEntityModel,
   ) => dispatch(flipIsWorkspaceEntityIncluded(entityGroup, entityRecord)),
 });
 

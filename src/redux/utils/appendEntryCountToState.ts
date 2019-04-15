@@ -1,6 +1,6 @@
 import { get } from 'lodash';
 import { EntityType } from '~/types/entityTypes';
-import { EntityModel, ToolName } from '~/types/commonTypes';
+import { CompoundEntityModel, ToolName } from '~/types/commonTypes';
 
 /**
  * Loops through the records in the specified entityState and returns state
@@ -26,7 +26,7 @@ export function appendEntryCountToState<TState, TTimeEntryModel>(
 
   const updatedEntitiesById = Object.values(entityState[toolName].byId).reduce(
     (acc, entityRecord) => {
-      const { id, ...typedEntityRecord } = entityRecord as EntityModel;
+      const { id, ...typedEntityRecord } = entityRecord as CompoundEntityModel;
       const newTimeEntryCount = get(entryCountByEntityId, id, 0);
 
       return {

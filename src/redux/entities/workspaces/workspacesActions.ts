@@ -17,30 +17,30 @@ import * as userGroupsActions from '../userGroups/userGroupsActions';
 import * as usersActions from '~/redux/entities/users/usersActions';
 import { selectTogglIncludedWorkspaceNames } from './workspacesSelectors';
 import {
-  EntityModel,
+  CompoundEntityModel,
   ReduxDispatch,
   ReduxGetState,
   ToolName,
 } from '~/types/commonTypes';
 import { EntityGroup } from '~/types/entityTypes';
 import {
-  ClockifyWorkspace,
+  ClockifyWorkspaceModel,
   TogglSummaryReportDataModel,
-  TogglWorkspace,
-  WorkspaceModel,
+  TogglWorkspaceModel,
+  CompoundWorkspaceModel,
 } from '~/types/workspacesTypes';
 
 export const clockifyWorkspacesFetch = createAsyncAction(
   '@workspaces/CLOCKIFY_FETCH_REQUEST',
   '@workspaces/CLOCKIFY_FETCH_SUCCESS',
   '@workspaces/CLOCKIFY_FETCH_FAILURE',
-)<void, Array<ClockifyWorkspace>, void>();
+)<void, Array<ClockifyWorkspaceModel>, void>();
 
 export const togglWorkspacesFetch = createAsyncAction(
   '@workspaces/TOGGL_FETCH_REQUEST',
   '@workspaces/TOGGL_FETCH_SUCCESS',
   '@workspaces/TOGGL_FETCH_FAILURE',
-)<void, Array<TogglWorkspace>, void>();
+)<void, Array<TogglWorkspaceModel>, void>();
 
 export const togglWorkspaceSummaryFetch = createAsyncAction(
   '@workspaces/TOGGL_SUMMARY_FETCH_REQUEST',
@@ -56,7 +56,7 @@ export const clockifyWorkspaceTransfer = createAsyncAction(
   '@workspaces/CLOCKIFY_TRANSFER_REQUEST',
   '@workspaces/CLOCKIFY_TRANSFER_SUCCESS',
   '@workspaces/CLOCKIFY_TRANSFER_FAILURE',
-)<void, Array<ClockifyWorkspace>, void>();
+)<void, Array<ClockifyWorkspaceModel>, void>();
 
 export const appendUserIdsToWorkspace = createStandardAction(
   '@workspaces/APPEND_USER_IDS',
@@ -105,7 +105,7 @@ export const fetchClockifyWorkspaces = () => async (
 export const fetchClockifyEntitiesInWorkspace = ({
   name,
   id,
-}: WorkspaceModel) => async (dispatch: ReduxDispatch) => {
+}: CompoundWorkspaceModel) => async (dispatch: ReduxDispatch) => {
   dispatch(updateWorkspaceNameBeingFetched(name));
 
   await dispatch(clientsActions.fetchClockifyClients(id));
@@ -123,7 +123,7 @@ export const fetchTogglEntitiesInWorkspace = ({
   name,
   id,
   inclusionsByYear,
-}: WorkspaceModel) => async (dispatch: ReduxDispatch) => {
+}: CompoundWorkspaceModel) => async (dispatch: ReduxDispatch) => {
   const inclusionYears = Object.entries(inclusionsByYear).reduce(
     (acc, [year, isIncluded]) => {
       if (!isIncluded) return acc;
@@ -158,6 +158,7 @@ export const fetchTogglWorkspaceSummary = (workspaceId: string) => async (
   try {
     const email = selectTogglUserEmail(state);
     const { promiseThrottle, throttledFunc } = buildThrottler(
+      4,
       apiFetchTogglWorkspaceSummaryForYear,
     );
 
@@ -192,12 +193,13 @@ export const transferEntitiesToClockifyWorkspace = ({
   name,
   id: togglWorkspaceId,
   linkedId,
-}: WorkspaceModel) => async (dispatch: ReduxDispatch) => {
+}: CompoundWorkspaceModel) => async (dispatch: ReduxDispatch) => {
   let clockifyWorkspaceId = linkedId;
 
   dispatch(clockifyWorkspaceTransfer.request());
   try {
     dispatch(updateWorkspaceNameBeingFetched(name));
+
     if (isNil(linkedId)) {
       const workspace = await apiCreateClockifyWorkspace({ name });
       clockifyWorkspaceId = workspace.id;
@@ -229,10 +231,12 @@ export const transferEntitiesToClockifyWorkspace = ({
       ),
     );
 
-    // TODO: Write a selector to get the appropriate time entries.
-    // await dispatch(
-    //   transferTimeEntriesToClockify(togglWorkspaceId, clockifyWorkspaceId),
-    // );
+    await dispatch(
+      timeEntriesActions.transferTimeEntriesToClockify(
+        togglWorkspaceId,
+        clockifyWorkspaceId,
+      ),
+    );
 
     return dispatch(updateWorkspaceNameBeingFetched(null));
   } catch (error) {
@@ -243,7 +247,7 @@ export const transferEntitiesToClockifyWorkspace = ({
 
 export const flipIsWorkspaceEntityIncluded = (
   entityGroup: EntityGroup,
-  { id }: EntityModel,
+  { id }: CompoundEntityModel,
 ) => (dispatch: ReduxDispatch) => {
   const updateAction = {
     [EntityGroup.Clients]: clientsActions.flipIsClientIncluded,

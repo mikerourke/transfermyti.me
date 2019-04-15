@@ -20,7 +20,7 @@ export enum EntityGroup {
   Users = 'users',
 }
 
-export interface UniversalEntityModel {
+export interface BaseCompoundEntityModel {
   linkedId: string | null;
   isIncluded: boolean;
   entryCount?: number;

@@ -1,19 +1,30 @@
 import { getType } from 'typesafe-actions';
 import { handleActions } from 'redux-actions';
 import * as appActions from './appActions';
-import { NotificationModel, TransferType } from '~/types/appTypes';
-import { EntityModel, ReduxAction } from '~/types/commonTypes';
+import {
+  NotificationModel,
+  TimeEntryTransferDetailsModel,
+  TransferType,
+} from '~/types/appTypes';
+import { CompoundEntityModel, ReduxAction } from '~/types/commonTypes';
 
 export interface AppState {
   readonly notifications: Array<NotificationModel>;
   readonly currentTransferType: TransferType;
-  readonly inTransferEntity: Partial<EntityModel> | null;
+  readonly inTransferEntity: Partial<CompoundEntityModel> | null;
+  readonly timeEntryTransferDetails: TimeEntryTransferDetailsModel;
 }
 
 export const initialState: AppState = {
   notifications: [],
   currentTransferType: TransferType.SingleUser,
   inTransferEntity: null,
+  timeEntryTransferDetails: {
+    countCurrent: 0,
+    countTotal: 0,
+    projectName: '',
+    workspaceName: '',
+  },
 };
 
 export const appReducer = handleActions(
@@ -45,18 +56,28 @@ export const appReducer = handleActions(
 
     [getType(appActions.updateTransferType)]: (
       state: AppState,
-      { payload: transferType }: ReduxAction<TransferType>,
+      { payload: currentTransferType }: ReduxAction<TransferType>,
     ): AppState => ({
       ...state,
-      currentTransferType: transferType,
+      currentTransferType,
     }),
 
     [getType(appActions.updateInTransferEntity)]: (
       state: AppState,
-      { payload: inTransferEntity }: ReduxAction<Partial<EntityModel>>,
+      { payload: inTransferEntity }: ReduxAction<Partial<CompoundEntityModel>>,
     ): AppState => ({
       ...state,
       inTransferEntity,
+    }),
+
+    [getType(appActions.updateTimeEntryTransferDetails)]: (
+      state: AppState,
+      {
+        payload: timeEntryTransferDetails,
+      }: ReduxAction<TimeEntryTransferDetailsModel>,
+    ): AppState => ({
+      ...state,
+      timeEntryTransferDetails,
     }),
   },
   initialState,

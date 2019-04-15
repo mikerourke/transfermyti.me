@@ -1,11 +1,11 @@
-import { UniversalEntityModel } from '~/types/entityTypes';
+import { BaseCompoundEntityModel } from '~/types/entityTypes';
 
 export enum ClockifyTaskStatus {
   Active = 'ACTIVE',
   Done = 'DONE',
 }
 
-export interface ClockifyTask {
+export interface ClockifyTaskModel {
   id: string;
   name: string;
   projectId: string;
@@ -14,7 +14,7 @@ export interface ClockifyTask {
   status: ClockifyTaskStatus;
 }
 
-export interface TogglTask {
+export interface TogglTaskModel {
   name: string;
   id: number;
   wid: number;
@@ -25,7 +25,7 @@ export interface TogglTask {
   estimated_seconds: number;
 }
 
-export interface TaskModel extends UniversalEntityModel {
+export interface CompoundTaskModel extends BaseCompoundEntityModel {
   id: string;
   name: string;
   estimate: string;
@@ -35,7 +35,7 @@ export interface TaskModel extends UniversalEntityModel {
   isActive: boolean;
 }
 
-export interface CreateTaskRequest {
+export interface CreateTaskRequestModel {
   name: string;
   projectId: string;
   estimate?: string;

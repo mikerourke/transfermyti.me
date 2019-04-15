@@ -10,27 +10,26 @@ import {
   updateInTransferEntity,
 } from '~/redux/app/appActions';
 import { selectClientsTransferPayloadForWorkspace } from './clientsSelectors';
-import { ClientModel, ClockifyClient, TogglClient } from '~/types/clientsTypes';
+import { ClockifyClientModel, TogglClientModel } from '~/types/clientsTypes';
 import { ReduxDispatch, ReduxGetState } from '~/types/commonTypes';
-import { EntityType } from '~/types/entityTypes';
 
 export const clockifyClientsFetch = createAsyncAction(
   '@clients/CLOCKIFY_FETCH_REQUEST',
   '@clients/CLOCKIFY_FETCH_SUCCESS',
   '@clients/CLOCKIFY_FETCH_FAILURE',
-)<void, Array<ClockifyClient>, void>();
+)<void, Array<ClockifyClientModel>, void>();
 
 export const togglClientsFetch = createAsyncAction(
   '@clients/TOGGL_FETCH_REQUEST',
   '@clients/TOGGL_FETCH_SUCCESS',
   '@clients/TOGGL_FETCH_FAILURE',
-)<void, Array<TogglClient>, void>();
+)<void, Array<TogglClientModel>, void>();
 
 export const clockifyClientsTransfer = createAsyncAction(
   '@clients/CLOCKIFY_TRANSFER_REQUEST',
   '@clients/CLOCKIFY_TRANSFER_SUCCESS',
   '@clients/CLOCKIFY_TRANSFER_FAILURE',
-)<void, Array<ClockifyClient>, void>();
+)<void, Array<ClockifyClientModel>, void>();
 
 export const flipIsClientIncluded = createStandardAction(
   '@clients/FLIP_IS_INCLUDED',
@@ -72,25 +71,22 @@ export const transferClientsToClockify = (
   const clientsInWorkspace = selectClientsTransferPayloadForWorkspace(state)(
     togglWorkspaceId,
   );
-  if (clientsInWorkspace.length === 0) return Promise.resolve();
+  if (clientsInWorkspace.length === 0) return;
 
   dispatch(clockifyClientsTransfer.request());
 
-  const onClient = (client: ClientModel) => {
-    const transferRecord = { ...client, type: EntityType.Client };
-    dispatch(updateInTransferEntity(transferRecord));
-  };
-
   try {
     const clients = await batchClockifyRequests(
-      onClient,
+      4,
+      client => dispatch(updateInTransferEntity(client)),
       clientsInWorkspace,
       apiCreateClockifyClient,
       clockifyWorkspaceId,
     );
-    return dispatch(clockifyClientsTransfer.success(clients));
+
+    dispatch(clockifyClientsTransfer.success(clients));
   } catch (error) {
     dispatch(showFetchErrorNotification(error));
-    return dispatch(clockifyClientsTransfer.failure());
+    dispatch(clockifyClientsTransfer.failure());
   }
 };

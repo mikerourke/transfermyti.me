@@ -1,12 +1,12 @@
-import { TogglWorkspace } from './workspacesTypes';
-import { UniversalEntityModel } from '~/types/entityTypes';
+import { TogglWorkspaceModel } from './workspacesTypes';
+import { BaseCompoundEntityModel } from '~/types/entityTypes';
 
 // TODO: Add the other options here.
 export enum ClockifyUserStatus {
   Active = 'ACTIVE',
 }
 
-export interface ClockifyMembership {
+export interface ClockifyMembershipModel {
   userId: string;
   hourlyRate: number | null;
   membershipType: string;
@@ -14,11 +14,11 @@ export interface ClockifyMembership {
   target: string;
 }
 
-export interface ClockifyUser {
+export interface ClockifyUserModel {
   id: string;
   email: string;
   name: string;
-  memberships: Array<ClockifyMembership>;
+  memberships: Array<ClockifyMembershipModel>;
   profilePicture: string;
   activeWorkspace: string;
   defaultWorkspace: string;
@@ -41,7 +41,7 @@ export interface ClockifyUser {
   status: string;
 }
 
-export interface TogglUser {
+export interface TogglUserModel {
   id: number;
   default_wid: number;
   email: string;
@@ -67,7 +67,7 @@ export interface TogglUser {
   userGroupIds?: Array<string>;
 }
 
-export interface TogglWorkspaceUser {
+export interface TogglWorkspaceUserModel {
   id: number;
   uid: number;
   wid: number;
@@ -87,7 +87,7 @@ export interface TogglWorkspaceUser {
   avatar_file_name: string | null;
 }
 
-export interface TogglMeResponse {
+export interface TogglMeResponseModel {
   since: number;
   data: {
     id: number;
@@ -97,11 +97,11 @@ export interface TogglMeResponse {
     at: string;
     created_at: string;
     timezone: string;
-    workspaces: Array<TogglWorkspace>;
+    workspaces: Array<TogglWorkspaceModel>;
   };
 }
 
-export interface UserModel extends UniversalEntityModel {
+export interface CompoundUserModel extends BaseCompoundEntityModel {
   id: string;
   name: string;
   email: string;
@@ -110,6 +110,6 @@ export interface UserModel extends UniversalEntityModel {
   userGroupIds: Array<string> | null;
 }
 
-export interface AddUsersToWorkspaceRequest {
+export interface AddUsersToWorkspaceRequestModel {
   emails: Array<string>;
 }

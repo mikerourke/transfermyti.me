@@ -3,20 +3,20 @@ import { get, isNil } from 'lodash';
 import { findTogglInclusions, groupByWorkspace } from '~/redux/utils';
 import { selectTogglClientsByWorkspaceFactory } from '~/redux/entities/clients/clientsSelectors';
 import { selectTogglProjectsById } from '~/redux/entities/projects/projectsSelectors';
-import { ClientModel } from '~/types/clientsTypes';
+import { CompoundClientModel } from '~/types/clientsTypes';
 import { ReduxState } from '~/types/commonTypes';
-import { CreateTaskRequest, TaskModel } from '~/types/tasksTypes';
+import { CreateTaskRequestModel, CompoundTaskModel } from '~/types/tasksTypes';
 
-export const selectClockifyTasksByWorkspace = createSelector(
-  (state: ReduxState) => Object.values(state.entities.tasks.clockify.byId),
-  tasks => groupByWorkspace(tasks),
+export const selectTogglTasksById = createSelector(
+  (state: ReduxState) => state.entities.tasks.toggl.byId,
+  (tasksById): Record<string, CompoundTaskModel> => tasksById,
 );
 
 export const selectTogglTasks = createSelector(
-  (state: ReduxState) => Object.values(state.entities.tasks.clockify.byId),
+  selectTogglTasksById,
   selectTogglProjectsById,
-  (tasks, projectsById): Array<TaskModel> =>
-    tasks.map(task => ({
+  (tasksById, projectsById): Array<CompoundTaskModel> =>
+    Object.values(tasksById).map(task => ({
       ...task,
       workspaceId: get(projectsById, [task.projectId, 'workspaceId'], ''),
     })),
@@ -25,7 +25,7 @@ export const selectTogglTasks = createSelector(
 export const selectToggleTasksByWorkspaceFactory = (inclusionsOnly: boolean) =>
   createSelector(
     selectTogglTasks,
-    (tasks): Record<string, Array<TaskModel>> => {
+    (tasks): Record<string, Array<CompoundTaskModel>> => {
       const tasksToUse = inclusionsOnly ? findTogglInclusions(tasks) : tasks;
       return groupByWorkspace(tasksToUse);
     },
@@ -34,7 +34,7 @@ export const selectToggleTasksByWorkspaceFactory = (inclusionsOnly: boolean) =>
 const findAssigneeIdForTask = (
   workspaceId: string,
   assigneeId: string,
-  clientsByWorkspaceId: Record<string, Array<ClientModel>>,
+  clientsByWorkspaceId: Record<string, Array<CompoundClientModel>>,
 ) => {
   const clientsInWorkspace = get(clientsByWorkspaceId, workspaceId, []);
   if (clientsInWorkspace.length === 0) return undefined;
@@ -53,7 +53,7 @@ export const selectTasksTransferPayloadForWorkspace = createSelector(
   selectTogglClientsByWorkspaceFactory(true),
   (tasks, clientsByWorkspaceId) => (
     workspaceIdToGet: string,
-  ): Record<string, Array<CreateTaskRequest>> => {
+  ): Record<string, Array<CreateTaskRequestModel>> => {
     const includedTasks = findTogglInclusions(tasks);
     return includedTasks.reduce(
       (acc, { workspaceId, projectId, name, estimate, assigneeId }) => {

@@ -14,3 +14,10 @@ export enum TransferType {
   MultipleUsers = 'MULTIPLE',
   SingleUser = 'SINGLE',
 }
+
+export interface TimeEntryTransferDetailsModel {
+  countCurrent: number;
+  countTotal: number;
+  projectName: string;
+  workspaceName: string;
+}

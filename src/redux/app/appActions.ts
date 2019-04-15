@@ -4,9 +4,14 @@ import { getIfDev } from '~/utils/getIfDev';
 import {
   NotificationModel,
   NotificationType,
+  TimeEntryTransferDetailsModel,
   TransferType,
 } from '~/types/appTypes';
-import { EntityModel, ReduxDispatch, ToolName } from '~/types/commonTypes';
+import {
+  CompoundEntityModel,
+  ReduxDispatch,
+  ToolName,
+} from '~/types/commonTypes';
 
 export const notificationShown = createStandardAction(
   '@app/NOTIFICATION_SHOWN',
@@ -26,7 +31,11 @@ export const updateTransferType = createStandardAction(
 
 export const updateInTransferEntity = createStandardAction(
   '@app/UPDATE_IN_TRANSFER_ENTITY',
-)<Partial<EntityModel>>();
+)<Partial<CompoundEntityModel>>();
+
+export const updateTimeEntryTransferDetails = createStandardAction(
+  '@app/UPDATE_TIME_ENTRY_TRANSFER_DETAILS',
+)<TimeEntryTransferDetailsModel>();
 
 export const showNotification = (notification: Partial<NotificationModel>) => (
   dispatch: ReduxDispatch,

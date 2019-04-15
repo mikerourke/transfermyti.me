@@ -1,12 +1,14 @@
 import { Store } from 'redux';
 import { State } from '~/redux/rootReducer';
-import { ClientModel } from './clientsTypes';
-import { ProjectModel } from './projectsTypes';
-import { TagModel } from './tagsTypes';
-import { TaskModel } from './tasksTypes';
-import { TimeEntryModel } from './timeEntriesTypes';
-import { UserGroupModel } from './userGroupsTypes';
-import { UserModel } from './usersTypes';
+import { CompoundClientModel } from './clientsTypes';
+import { EntityGroup } from './entityTypes';
+import { CompoundProjectModel } from './projectsTypes';
+import { CompoundTagModel } from './tagsTypes';
+import { CompoundTaskModel } from './tasksTypes';
+import { CompoundTimeEntryModel } from './timeEntriesTypes';
+import { CompoundUserGroupModel } from './userGroupsTypes';
+import { CompoundUserModel } from './usersTypes';
+import { CompoundWorkspaceModel } from '~/types/workspacesTypes';
 
 export enum CheckedState {
   Checked,
@@ -24,18 +26,28 @@ export interface TogglTotalCurrencyModel {
   amount: number | null;
 }
 
-export type EntityModel =
-  | ClientModel
-  | ProjectModel
-  | TagModel
-  | TaskModel
-  | TimeEntryModel
-  | UserGroupModel
-  | UserModel;
+export type CompoundEntityModel =
+  | CompoundClientModel
+  | CompoundProjectModel
+  | CompoundTagModel
+  | CompoundTaskModel
+  | CompoundTimeEntryModel
+  | CompoundUserGroupModel
+  | CompoundUserModel;
 
 export interface ReduxStateEntryForTool<TModel> {
   readonly byId: Record<string, TModel>;
   readonly idValues: Array<string>;
+}
+
+export interface EntitiesByGroupModel {
+  [EntityGroup.Clients]: ReduxStateEntryForTool<CompoundClientModel>;
+  [EntityGroup.Projects]: ReduxStateEntryForTool<CompoundProjectModel>;
+  [EntityGroup.Tags]: ReduxStateEntryForTool<CompoundTagModel>;
+  [EntityGroup.Tasks]: ReduxStateEntryForTool<CompoundTaskModel>;
+  [EntityGroup.UserGroups]: ReduxStateEntryForTool<CompoundUserGroupModel>;
+  [EntityGroup.Users]: ReduxStateEntryForTool<CompoundUserModel>;
+  [EntityGroup.Workspaces]: ReduxStateEntryForTool<CompoundWorkspaceModel>;
 }
 
 export enum HttpMethod {

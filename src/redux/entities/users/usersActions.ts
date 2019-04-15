@@ -13,20 +13,20 @@ import {
 import { selectUsersInvitePayloadForWorkspace } from './usersSelectors';
 import { appendUserIdsToWorkspace } from '~/redux/entities/workspaces/workspacesActions';
 import { ReduxDispatch, ReduxGetState, ToolName } from '~/types/commonTypes';
-import { ClockifyUser, TogglUser } from '~/types/usersTypes';
+import { ClockifyUserModel, TogglUserModel } from '~/types/usersTypes';
 import { EntityType } from '~/types/entityTypes';
 
 export const clockifyUsersFetch = createAsyncAction(
   '@users/CLOCKIFY_FETCH_REQUEST',
   '@users/CLOCKIFY_FETCH_SUCCESS',
   '@users/CLOCKIFY_FETCH_FAILURE',
-)<void, Array<ClockifyUser>, void>();
+)<void, Array<ClockifyUserModel>, void>();
 
 export const togglUsersFetch = createAsyncAction(
   '@users/TOGGL_FETCH_REQUEST',
   '@users/TOGGL_FETCH_SUCCESS',
   '@users/TOGGL_FETCH_FAILURE',
-)<void, Array<TogglUser>, void>();
+)<void, Array<TogglUserModel>, void>();
 
 export const clockifyUsersTransfer = createAsyncAction(
   '@users/CLOCKIFY_TRANSFER_REQUEST',
@@ -38,23 +38,20 @@ export const flipIsUserIncluded = createStandardAction(
   '@users/FLIP_IS_INCLUDED',
 )<string>();
 
-const appendUserIdsToWorkspaceForTool = (
-  toolName: ToolName,
-  users: Array<ClockifyUser | TogglUser>,
-  workspaceId: string,
-) => (dispatch: ReduxDispatch) => {
-  const userIds = users.map(({ id }) => id.toString());
-  return dispatch(appendUserIdsToWorkspace({ toolName, workspaceId, userIds }));
-};
-
 export const fetchClockifyUsers = (workspaceId: string) => async (
   dispatch: ReduxDispatch,
 ) => {
   dispatch(clockifyUsersFetch.request());
   try {
     const users = await apiFetchClockifyUsersInWorkspace(workspaceId);
+    const userIds = users.map(({ id }) => id.toString());
+
     dispatch(
-      appendUserIdsToWorkspaceForTool(ToolName.Clockify, users, workspaceId),
+      appendUserIdsToWorkspace({
+        toolName: ToolName.Clockify,
+        workspaceId,
+        userIds,
+      }),
     );
 
     return dispatch(clockifyUsersFetch.success(users));
@@ -64,40 +61,20 @@ export const fetchClockifyUsers = (workspaceId: string) => async (
   }
 };
 
-const appendTogglUserGroupIdsToUsers = async (
-  workspaceId: string,
-  users: Array<TogglUser>,
-) => {
-  const workspaceUsers = await apiFetchTogglWorkspaceUsers(workspaceId);
-  const workspaceUsersById = workspaceUsers.reduce(
-    (acc, workspaceUserRecord) => ({
-      ...acc,
-      [workspaceUserRecord.uid.toString()]: workspaceUserRecord,
-    }),
-    {},
-  );
-
-  users.forEach(user => {
-    Object.assign(user, { userGroupIds: [] });
-    const workspaceUser = get(workspaceUsersById, user.id.toString());
-    if (!workspaceUser) return;
-    if (!workspaceUser.group_ids) return;
-
-    workspaceUser.group_ids.forEach((userGroupId: number) => {
-      const validGroupId = userGroupId.toString();
-      user.userGroupIds.push(validGroupId);
-    });
-  });
-};
-
 export const fetchTogglUsers = (workspaceId: string) => async (
   dispatch: ReduxDispatch,
 ) => {
   dispatch(togglUsersFetch.request());
   try {
     const users = await apiFetchTogglUsersInWorkspace(workspaceId);
+    const userIds = users.map(({ id }) => id.toString());
+
     dispatch(
-      appendUserIdsToWorkspaceForTool(ToolName.Toggl, users, workspaceId),
+      appendUserIdsToWorkspace({
+        toolName: ToolName.Toggl,
+        workspaceId,
+        userIds,
+      }),
     );
 
     await appendTogglUserGroupIdsToUsers(workspaceId, users);
@@ -139,3 +116,29 @@ export const inviteUsersToClockify = (
     return dispatch(clockifyUsersTransfer.failure());
   }
 };
+
+async function appendTogglUserGroupIdsToUsers(
+  workspaceId: string,
+  users: Array<TogglUserModel>,
+) {
+  const workspaceUsers = await apiFetchTogglWorkspaceUsers(workspaceId);
+  const workspaceUsersById = workspaceUsers.reduce(
+    (acc, workspaceUserRecord) => ({
+      ...acc,
+      [workspaceUserRecord.uid.toString()]: workspaceUserRecord,
+    }),
+    {},
+  );
+
+  users.forEach(user => {
+    Object.assign(user, { userGroupIds: [] });
+    const workspaceUser = get(workspaceUsersById, user.id.toString());
+    if (!workspaceUser) return;
+    if (!workspaceUser.group_ids) return;
+
+    workspaceUser.group_ids.forEach((userGroupId: number) => {
+      const validGroupId = userGroupId.toString();
+      user.userGroupIds.push(validGroupId);
+    });
+  });
+}

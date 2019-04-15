@@ -4,11 +4,11 @@ import { Tag } from 'bloomer';
 import { css } from 'emotion';
 import { isNil } from 'lodash';
 import Flex, { FlexProps } from '~/components/flex/Flex';
-import { EntityModel } from '~/types/commonTypes';
+import { CompoundEntityModel } from '~/types/commonTypes';
 
 interface Props extends FlexProps {
   isTimeEntry: boolean;
-  entityRecord: EntityModel;
+  entityRecord: CompoundEntityModel;
 }
 
 const EntityTagsRow: React.FC<Props> = ({

@@ -10,16 +10,16 @@ import {
 } from '~/types/commonTypes';
 import { EntityGroup, EntityType } from '~/types/entityTypes';
 import {
-  ClockifyUserGroup,
-  TogglUserGroup,
-  UserGroupModel,
+  ClockifyUserGroupModel,
+  TogglUserGroupModel,
+  CompoundUserGroupModel,
 } from '~/types/userGroupsTypes';
-import { UserModel } from '~/types/usersTypes';
-import { TimeEntryModel } from '~/types/timeEntriesTypes';
+import { CompoundUserModel } from '~/types/usersTypes';
+import { CompoundTimeEntryModel } from '~/types/timeEntriesTypes';
 
 export interface UserGroupsState {
-  readonly clockify: ReduxStateEntryForTool<UserGroupModel>;
-  readonly toggl: ReduxStateEntryForTool<UserGroupModel>;
+  readonly clockify: ReduxStateEntryForTool<CompoundUserGroupModel>;
+  readonly toggl: ReduxStateEntryForTool<CompoundUserGroupModel>;
   readonly isFetching: boolean;
 }
 
@@ -38,8 +38,8 @@ export const initialState: UserGroupsState = {
 const appendEntryCountToUserGroupsInState = (
   toolName: ToolName,
   state: UserGroupsState,
-  timeEntries: Array<TimeEntryModel>,
-  usersById: Record<string, UserModel>,
+  timeEntries: Array<CompoundTimeEntryModel>,
+  usersById: Record<string, CompoundUserModel>,
 ): UserGroupsState => {
   const userGroupsById = state[toolName].byId;
 
@@ -93,7 +93,7 @@ export const userGroupsReducer = handleActions(
       getType(userGroupsActions.clockifyUserGroupsTransfer.success),
     )]: (
       state: UserGroupsState,
-      { payload: userGroups }: ReduxAction<Array<ClockifyUserGroup>>,
+      { payload: userGroups }: ReduxAction<Array<ClockifyUserGroupModel>>,
     ): UserGroupsState => {
       const normalizedState = utils.normalizeState(
         ToolName.Clockify,
@@ -110,7 +110,7 @@ export const userGroupsReducer = handleActions(
 
     [getType(userGroupsActions.togglUserGroupsFetch.success)]: (
       state: UserGroupsState,
-      { payload: userGroups }: ReduxAction<Array<TogglUserGroup>>,
+      { payload: userGroups }: ReduxAction<Array<TogglUserGroupModel>>,
     ): UserGroupsState =>
       utils.normalizeState(
         ToolName.Toggl,

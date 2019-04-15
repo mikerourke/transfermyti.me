@@ -11,16 +11,16 @@ import {
 } from '~/types/commonTypes';
 import { EntityGroup, EntityType } from '~/types/entityTypes';
 import {
-  ClockifyUser,
+  ClockifyUserModel,
   ClockifyUserStatus,
-  TogglUser,
-  UserModel,
+  CompoundUserModel,
+  TogglUserModel,
 } from '~/types/usersTypes';
-import { TogglTimeEntry } from '~/types/timeEntriesTypes';
+import { TogglTimeEntryModel } from '~/types/timeEntriesTypes';
 
 export interface UsersState {
-  readonly clockify: ReduxStateEntryForTool<UserModel>;
-  readonly toggl: ReduxStateEntryForTool<UserModel>;
+  readonly clockify: ReduxStateEntryForTool<CompoundUserModel>;
+  readonly toggl: ReduxStateEntryForTool<CompoundUserModel>;
   readonly isFetching: boolean;
 }
 
@@ -36,7 +36,9 @@ export const initialState: UsersState = {
   isFetching: false,
 };
 
-const schemaProcessStrategy = (value: ClockifyUser | TogglUser): UserModel => ({
+const schemaProcessStrategy = (
+  value: ClockifyUserModel | TogglUserModel,
+): CompoundUserModel => ({
   id: value.id.toString(),
   name: 'fullname' in value ? value.fullname : value.name,
   email: value.email,
@@ -47,13 +49,14 @@ const schemaProcessStrategy = (value: ClockifyUser | TogglUser): UserModel => ({
   entryCount: 0,
   linkedId: null,
   isIncluded: true,
+  type: EntityType.User,
 });
 
 export const usersReducer = handleActions(
   {
     [getType(usersActions.clockifyUsersFetch.success)]: (
       state: UsersState,
-      { payload: users }: ReduxAction<Array<ClockifyUser>>,
+      { payload: users }: ReduxAction<Array<ClockifyUserModel>>,
     ): UsersState => {
       const normalizedState = utils.normalizeState(
         ToolName.Clockify,
@@ -71,7 +74,7 @@ export const usersReducer = handleActions(
 
     [getType(usersActions.togglUsersFetch.success)]: (
       state: UsersState,
-      { payload: users }: ReduxAction<Array<TogglUser>>,
+      { payload: users }: ReduxAction<Array<TogglUserModel>>,
     ): UsersState =>
       utils.normalizeState(
         ToolName.Toggl,
@@ -109,7 +112,7 @@ export const usersReducer = handleActions(
 
     [getType(togglTimeEntriesFetch.success)]: (
       state: UsersState,
-      { payload: timeEntries }: ReduxAction<Array<TogglTimeEntry>>,
+      { payload: timeEntries }: ReduxAction<Array<TogglTimeEntryModel>>,
     ) =>
       utils.appendEntryCountToState(
         EntityType.User,

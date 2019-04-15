@@ -7,12 +7,12 @@ import EntityTabs from './components/EntityTabs';
 import NoRecordsDisplay from './components/NoRecordsDisplay';
 import TotalsFooter from './components/TotalsFooter';
 import WorkspacesDropdown from './components/WorkspacesDropdown';
-import { EntityModel, ToolName } from '~/types/commonTypes';
+import { CompoundEntityModel, ToolName } from '~/types/commonTypes';
 import { EntityGroup } from '~/types/entityTypes';
 import {
   CountsByGroupByWorkspaceModel,
   EntitiesByGroupByWorkspaceModel,
-  WorkspaceModel,
+  CompoundWorkspaceModel,
 } from '~/types/workspacesTypes';
 
 interface Props extends StepPageProps {
@@ -20,11 +20,11 @@ interface Props extends StepPageProps {
   toolName: ToolName;
   countsByGroupByWorkspace: CountsByGroupByWorkspaceModel;
   entitiesByGroupByWorkspace: EntitiesByGroupByWorkspaceModel;
-  workspacesById: Record<string, WorkspaceModel>;
+  workspacesById: Record<string, CompoundWorkspaceModel>;
   onRefreshClick?: () => void;
   onFlipIsWorkspaceEntityIncluded?: (
     entityGroup: EntityGroup,
-    entityRecord: EntityModel,
+    entityRecord: CompoundEntityModel,
   ) => void;
 }
 
@@ -55,7 +55,7 @@ const EntitiesReviewPage: React.FC<Props> = ({
 
   if (showInclusionsOnly && activeEntityRecords.length !== 0) {
     activeEntityRecords = activeEntityRecords.reduce(
-      (acc: Array<EntityModel>, entityRecord: EntityModel) => {
+      (acc: Array<CompoundEntityModel>, entityRecord: CompoundEntityModel) => {
         if (!entityRecord.isIncluded) return acc;
         if (!isNil(entityRecord.linkedId)) return acc;
         return [...acc, entityRecord];

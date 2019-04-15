@@ -7,10 +7,10 @@ import Checkbox from '~/components/checkbox/Checkbox';
 import Flex from '~/components/flex/Flex';
 import ListItemBase from './ListItemBase';
 import EntityTagsRow from './EntityTagsRow';
-import { EntityModel } from '~/types/commonTypes';
+import { CompoundEntityModel } from '~/types/commonTypes';
 
 interface Props extends ListRowProps {
-  entityRecord: EntityModel;
+  entityRecord: CompoundEntityModel;
   isOmitted: boolean;
   onItemClick?: () => void;
 }

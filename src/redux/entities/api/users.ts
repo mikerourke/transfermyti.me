@@ -1,52 +1,55 @@
+import { fetchArray, fetchObject } from './fetchByPayloadType';
 import { HttpMethod } from '~/types/commonTypes';
-import { TogglProjectUser } from '~/types/projectsTypes';
+import { TogglProjectUserModel } from '~/types/projectsTypes';
 import {
-  AddUsersToWorkspaceRequest,
-  ClockifyUser,
-  TogglMeResponse,
-  TogglUser,
-  TogglWorkspaceUser,
+  AddUsersToWorkspaceRequestModel,
+  ClockifyUserModel,
+  TogglMeResponseModel,
+  TogglUserModel,
+  TogglWorkspaceUserModel,
 } from '~/types/usersTypes';
-import { ClockifyWorkspace } from '~/types/workspacesTypes';
+import { ClockifyWorkspaceModel } from '~/types/workspacesTypes';
 
 export const apiFetchClockifyUserDetails = (
   userId: string,
-): Promise<ClockifyUser> => fetch(`/clockify/api/users/${userId}`);
+): Promise<ClockifyUserModel> => fetchObject(`/clockify/api/users/${userId}`);
 
-export const apiFetchTogglMeDetails = (): Promise<TogglMeResponse> =>
-  fetch('/toggl/api/me');
+export const apiFetchTogglMeDetails = (): Promise<TogglMeResponseModel> =>
+  fetchObject('/toggl/api/me');
 
 export const apiFetchClockifyUsersInProject = (
   projectId: string,
   workspaceId: string,
-): Promise<Array<ClockifyUser>> =>
-  fetch(`/clockify/api/workspaces/${workspaceId}/projects/${projectId}/users/`);
+): Promise<Array<ClockifyUserModel>> =>
+  fetchArray(
+    `/clockify/api/workspaces/${workspaceId}/projects/${projectId}/users/`,
+  );
 
 export const apiFetchTogglUsersInProject = (
   projectId: string,
-): Promise<Array<TogglProjectUser>> =>
-  fetch(`/toggl/api/projects/${projectId}/project_users`);
+): Promise<Array<TogglProjectUserModel>> =>
+  fetchArray(`/toggl/api/projects/${projectId}/project_users`);
 
 export const apiFetchClockifyUsersInWorkspace = (
   workspaceId: string,
-): Promise<Array<ClockifyUser>> =>
-  fetch(`/clockify/api/workspaces/${workspaceId}/users/`);
+): Promise<Array<ClockifyUserModel>> =>
+  fetchArray(`/clockify/api/workspaces/${workspaceId}/users/`);
 
 export const apiFetchTogglUsersInWorkspace = (
   workspaceId: string,
-): Promise<Array<TogglUser>> =>
-  fetch(`/toggl/api/workspaces/${workspaceId}/users`);
+): Promise<Array<TogglUserModel>> =>
+  fetchArray(`/toggl/api/workspaces/${workspaceId}/users`);
 
 export const apiFetchTogglWorkspaceUsers = (
   workspaceId: string,
-): Promise<Array<TogglWorkspaceUser>> =>
-  fetch(`/toggl/api/workspaces/${workspaceId}/workspace_users`);
+): Promise<Array<TogglWorkspaceUserModel>> =>
+  fetchArray(`/toggl/api/workspaces/${workspaceId}/workspace_users`);
 
 export const apiAddClockifyUsersToWorkspace = (
   workspaceId: string,
-  requestBody: AddUsersToWorkspaceRequest,
-): Promise<ClockifyWorkspace> =>
-  fetch(`/clockify/api/workspaces/${workspaceId}/users/`, {
+  requestBody: AddUsersToWorkspaceRequestModel,
+): Promise<ClockifyWorkspaceModel> =>
+  fetchObject(`/clockify/api/workspaces/${workspaceId}/users/`, {
     method: HttpMethod.Post,
     body: requestBody as any,
   });

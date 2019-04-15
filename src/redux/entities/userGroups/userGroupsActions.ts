@@ -1,5 +1,4 @@
 import { createAsyncAction, createStandardAction } from 'typesafe-actions';
-import { get } from 'lodash';
 import { batchClockifyRequests, getValidEntities } from '~/redux/utils';
 import {
   apiCreateClockifyUserGroup,
@@ -15,39 +14,39 @@ import {
   selectTogglUsersByWorkspaceFactory,
 } from '~/redux/entities/users/usersSelectors';
 import { selectUserGroupsTransferPayloadForWorkspace } from './userGroupsSelectors';
+import { UserGroupCompounder } from './UserGroupCompounder';
 import { ReduxDispatch, ReduxGetState, ToolName } from '~/types/commonTypes';
-import { EntityType } from '~/types/entityTypes';
-import { TimeEntryModel } from '~/types/timeEntriesTypes';
+import { CompoundTimeEntryModel } from '~/types/timeEntriesTypes';
 import {
-  ClockifyUserGroup,
-  TogglUserGroup,
-  UserGroupModel,
+  ClockifyUserGroupModel,
+  TogglUserGroupModel,
+  CompoundUserGroupModel,
 } from '~/types/userGroupsTypes';
-import { UserModel } from '~/types/usersTypes';
+import { CompoundUserModel } from '~/types/usersTypes';
 
 export interface EntryCountCalculatorModel {
   toolName: ToolName;
-  timeEntries: Array<TimeEntryModel>;
-  usersById: Record<string, UserModel>;
+  timeEntries: Array<CompoundTimeEntryModel>;
+  usersById: Record<string, CompoundUserModel>;
 }
 
 export const clockifyUserGroupsFetch = createAsyncAction(
   '@userGroups/CLOCKIFY_FETCH_REQUEST',
   '@userGroups/CLOCKIFY_FETCH_SUCCESS',
   '@userGroups/CLOCKIFY_FETCH_FAILURE',
-)<void, Array<ClockifyUserGroup>, void>();
+)<void, Array<ClockifyUserGroupModel>, void>();
 
 export const togglUserGroupsFetch = createAsyncAction(
   '@userGroups/TOGGL_FETCH_REQUEST',
   '@userGroups/TOGGL_FETCH_SUCCESS',
   '@userGroups/TOGGL_FETCH_FAILURE',
-)<void, Array<UserGroupModel>, void>();
+)<void, Array<CompoundUserGroupModel>, void>();
 
 export const clockifyUserGroupsTransfer = createAsyncAction(
   '@userGroups/CLOCKIFY_TRANSFER_REQUEST',
   '@userGroups/CLOCKIFY_TRANSFER_SUCCESS',
   '@userGroups/CLOCKIFY_TRANSFER_FAILURE',
-)<void, Array<ClockifyUserGroup>, void>();
+)<void, Array<ClockifyUserGroupModel>, void>();
 
 export const flipIsUserGroupIncluded = createStandardAction(
   '@userGroups/FLIP_IS_INCLUDED',
@@ -61,47 +60,6 @@ export const calculateUserGroupEntryCounts = createStandardAction(
   '@userGroups/CALCULATE_ENTRY_COUNTS',
 )<EntryCountCalculatorModel>();
 
-const convertUserGroupsFromToolToUniversal = (
-  workspaceId: string,
-  userGroups: Array<TogglUserGroup | ClockifyUserGroup>,
-  usersByWorkspace: Record<string, Array<UserModel>>,
-): Array<UserGroupModel> => {
-  if (getValidEntities(userGroups).length === 0) return [];
-
-  const workspaceUsers = get(usersByWorkspace, workspaceId, []);
-
-  return userGroups.map(userGroup => {
-    const userGroupId = userGroup.id.toString();
-    const usersInUserGroup: Array<UserModel> = [];
-
-    if (workspaceUsers.length !== 0) {
-      workspaceUsers.forEach(workspaceUser => {
-        if (workspaceUser.userGroupIds.includes(userGroupId)) {
-          usersInUserGroup.push(workspaceUser);
-        }
-      });
-    }
-
-    const userIds: Array<string> = [];
-
-    if (usersInUserGroup.length !== 0) {
-      usersInUserGroup.forEach(user => {
-        userIds.push(user.id);
-      });
-    }
-
-    return {
-      id: userGroupId,
-      name: userGroup.name,
-      workspaceId,
-      userIds: 'userIds' in userGroup ? userGroup.userIds : userIds,
-      entryCount: 0,
-      linkedId: null,
-      isIncluded: true,
-    };
-  });
-};
-
 export const fetchClockifyUserGroups = (workspaceId: string) => async (
   dispatch: ReduxDispatch,
   getState: ReduxGetState,
@@ -113,7 +71,7 @@ export const fetchClockifyUserGroups = (workspaceId: string) => async (
 
     const state = getState();
     const usersByWorkspace = selectClockifyUsersByWorkspace(state);
-    const userGroups = convertUserGroupsFromToolToUniversal(
+    const userGroups = convertToCompoundUserGroups(
       workspaceId,
       clockifyUserGroups,
       usersByWorkspace,
@@ -137,7 +95,7 @@ export const fetchTogglUserGroups = (workspaceId: string) => async (
 
     const state = getState();
     const usersByWorkspace = selectTogglUsersByWorkspaceFactory(false)(state);
-    const userGroups = convertUserGroupsFromToolToUniversal(
+    const userGroups = convertToCompoundUserGroups(
       workspaceId,
       togglUserGroups,
       usersByWorkspace,
@@ -162,21 +120,33 @@ export const transferUserGroupsToClockify = (
 
   dispatch(clockifyUserGroupsTransfer.request());
 
-  const onUserGroup = (userGroup: UserGroupModel) => {
-    const transferRecord = { ...userGroup, type: EntityType.UserGroup };
-    dispatch(updateInTransferEntity(transferRecord));
-  };
-
   try {
     const userGroups = await batchClockifyRequests(
-      onUserGroup,
+      4,
+      userGroup => dispatch(updateInTransferEntity(userGroup)),
       userGroupsInWorkspace,
       apiCreateClockifyUserGroup,
       clockifyWorkspaceId,
     );
+
     return dispatch(clockifyUserGroupsTransfer.success(userGroups));
   } catch (error) {
     dispatch(showFetchErrorNotification(error));
     return dispatch(clockifyUserGroupsTransfer.failure());
   }
 };
+
+function convertToCompoundUserGroups(
+  workspaceId: string,
+  userGroups: Array<TogglUserGroupModel | ClockifyUserGroupModel>,
+  usersByWorkspace: Record<string, Array<CompoundUserModel>>,
+): Array<CompoundUserGroupModel> {
+  if (getValidEntities(userGroups).length === 0) return [];
+
+  const userGroupCompounder = new UserGroupCompounder(
+    workspaceId,
+    usersByWorkspace,
+  );
+
+  return userGroups.map(userGroup => userGroupCompounder.compound(userGroup));
+}

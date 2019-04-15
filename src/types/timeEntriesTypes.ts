@@ -1,23 +1,27 @@
+import { CompoundClientModel } from './clientsTypes';
 import { TogglTotalCurrencyModel } from './commonTypes';
-import { ClockifyProject } from './projectsTypes';
-import { ClockifyUser } from './usersTypes';
-import { UniversalEntityModel } from '~/types/entityTypes';
+import { BaseCompoundEntityModel } from './entityTypes';
+import { ClockifyProjectModel, CompoundProjectModel } from './projectsTypes';
+import { CompoundTagModel } from './tagsTypes';
+import { CompoundTaskModel } from './tasksTypes';
+import { ClockifyUserModel, CompoundUserModel } from './usersTypes';
+import { CompoundWorkspaceModel } from './workspacesTypes';
 
-export interface ClockifyTimeInterval {
+export interface ClockifyTimeIntervalModel {
   start: string;
   end: string;
   duration: string;
 }
 
-export interface ClockifyTimeEntry {
+export interface ClockifyTimeEntryModel {
   id: string;
   description: string;
   tags: Array<string> | null;
-  user: ClockifyUser;
+  user: ClockifyUserModel;
   billable: boolean;
   task: any;
-  project: ClockifyProject;
-  timeInterval: ClockifyTimeInterval;
+  project: ClockifyProjectModel;
+  timeInterval: ClockifyTimeIntervalModel;
   workspaceId: string;
   totalBillable: string | null;
   hourlyRate: string | null;
@@ -25,7 +29,7 @@ export interface ClockifyTimeEntry {
   projectId: string;
 }
 
-export interface TogglTimeEntry {
+export interface TogglTimeEntryModel {
   id: number;
   pid: number;
   tid: number | null;
@@ -48,16 +52,16 @@ export interface TogglTimeEntry {
   tags: Array<string>;
 }
 
-export interface TogglTimeEntriesFetchResponse {
+export interface TogglTimeEntriesFetchResponseModel {
   total_grand: number;
   total_billable: number | null;
   total_currencies: Array<TogglTotalCurrencyModel>;
   total_count: number;
   per_page: number;
-  data: Array<TogglTimeEntry>;
+  data: Array<TogglTimeEntryModel>;
 }
 
-export interface TimeEntryModel extends UniversalEntityModel {
+export interface CompoundTimeEntryModel extends BaseCompoundEntityModel {
   id: string;
   description: string;
   projectId: string;
@@ -65,20 +69,33 @@ export interface TimeEntryModel extends UniversalEntityModel {
   workspaceId: string;
   userId: string | null;
   userGroupIds: Array<string> | null;
-  client: string | null;
+  clientName: string | null;
   clientId?: string | null;
   isBillable: boolean;
   start: Date | null;
   end: Date | null;
-  tags: Array<string>;
+  tagNames: Array<string>;
   isActive: boolean;
-  tagIds?: Array<string>;
   name: null; // Not used, included because other entities have a "name".
 }
 
-export interface DetailedTimeEntryModel extends TimeEntryModel {
-  projectName: string | null;
-  taskName: string | null;
-  userName: string | null;
-  tagList: string | null;
+export interface DetailedTimeEntryModel extends CompoundTimeEntryModel {
+  client: CompoundClientModel | null;
+  project: CompoundProjectModel | null;
+  task: CompoundTaskModel | null;
+  tags: Array<CompoundTagModel>;
+  user: CompoundUserModel | null;
+  workspace: CompoundWorkspaceModel;
 }
+
+export interface CreateTimeEntryRequestModel {
+  start: string;
+  billable: boolean;
+  description: string;
+  projectId: string;
+  taskId: string;
+  end: string;
+  tagIds: Array<string>;
+}
+
+export type TimeEntryForTool = ClockifyTimeEntryModel | TogglTimeEntryModel;

@@ -11,26 +11,25 @@ import {
 } from '~/redux/app/appActions';
 import { selectTagsTransferPayloadForWorkspace } from './tagsSelectors';
 import { ReduxDispatch, ReduxGetState } from '~/types/commonTypes';
-import { EntityType } from '~/types/entityTypes';
-import { ClockifyTag, TagModel, TogglTag } from '~/types/tagsTypes';
+import { ClockifyTagModel, TogglTagModel } from '~/types/tagsTypes';
 
 export const clockifyTagsFetch = createAsyncAction(
   '@tags/CLOCKIFY_FETCH_REQUEST',
   '@tags/CLOCKIFY_FETCH_SUCCESS',
   '@tags/CLOCKIFY_FETCH_FAILURE',
-)<void, Array<ClockifyTag>, void>();
+)<void, Array<ClockifyTagModel>, void>();
 
 export const togglTagsFetch = createAsyncAction(
   '@tags/TOGGL_FETCH_REQUEST',
   '@tags/TOGGL_FETCH_SUCCESS',
   '@tags/TOGGL_FETCH_FAILURE',
-)<void, Array<TogglTag>, void>();
+)<void, Array<TogglTagModel>, void>();
 
 export const clockifyTagsTransfer = createAsyncAction(
   '@tags/CLOCKIFY_TRANSFER_REQUEST',
   '@tags/CLOCKIFY_TRANSFER_SUCCESS',
   '@tags/CLOCKIFY_TRANSFER_FAILURE',
-)<void, Array<ClockifyTag>, void>();
+)<void, Array<ClockifyTagModel>, void>();
 
 export const flipIsTagIncluded = createStandardAction('@tags/FLIP_IS_INCLUDED')<
   string
@@ -76,14 +75,10 @@ export const transferTagsToClockify = (
 
   dispatch(clockifyTagsTransfer.request());
 
-  const onTag = (tag: TagModel) => {
-    const transferRecord = { ...tag, type: EntityType.Tag };
-    dispatch(updateInTransferEntity(transferRecord));
-  };
-
   try {
     const tags = await batchClockifyRequests(
-      onTag,
+      4,
+      tag => dispatch(updateInTransferEntity(tag)),
       tagsInWorkspace,
       apiCreateClockifyTag,
       clockifyWorkspaceId,

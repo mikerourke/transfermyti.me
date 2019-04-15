@@ -2,16 +2,11 @@ import { createSelector } from 'reselect';
 import { get } from 'lodash';
 import { findTogglInclusions, groupByWorkspace } from '~/redux/utils';
 import { CreateNamedEntityRequest, ReduxState } from '~/types/commonTypes';
-import { UserGroupModel } from '~/types/userGroupsTypes';
-
-export const selectClockifyUserGroupsByWorkspace = createSelector(
-  (state: ReduxState) => Object.values(state.entities.userGroups.clockify.byId),
-  userGroups => groupByWorkspace(userGroups),
-);
+import { CompoundUserGroupModel } from '~/types/userGroupsTypes';
 
 export const selectTogglUserGroups = createSelector(
   (state: ReduxState) => state.entities.userGroups.toggl.byId,
-  (userGroupsById): Array<UserGroupModel> =>
+  (userGroupsById): Array<CompoundUserGroupModel> =>
     Object.values(userGroupsById).filter(({ name }) => !/Admin/gi.test(name)),
 );
 
@@ -20,7 +15,7 @@ export const selectTogglUserGroupsByWorkspaceFactory = (
 ) =>
   createSelector(
     selectTogglUserGroups,
-    (userGroups): Record<string, Array<UserGroupModel>> => {
+    (userGroups): Record<string, Array<CompoundUserGroupModel>> => {
       const userGroupsToUse = inclusionsOnly
         ? findTogglInclusions(userGroups)
         : userGroups;
@@ -38,7 +33,7 @@ export const selectUserGroupsTransferPayloadForWorkspace = createSelector(
       inclusionsByWorkspaceId,
       workspaceIdToGet,
       [],
-    ) as Array<UserGroupModel>;
+    ) as Array<CompoundUserGroupModel>;
     if (inclusions.length === 0) return [];
 
     return inclusions.reduce((acc, { workspaceId, name }) => {

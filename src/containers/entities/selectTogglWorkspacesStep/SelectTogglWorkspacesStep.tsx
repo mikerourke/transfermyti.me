@@ -25,13 +25,13 @@ import StepPage, { StepPageProps } from '~/components/stepPage/StepPage';
 import WorkspaceRow from './components/WorkspaceRow';
 import { NotificationModel, NotificationType } from '~/types/appTypes';
 import { ReduxDispatch, ReduxState } from '~/types/commonTypes';
-import { WorkspaceModel } from '~/types/workspacesTypes';
+import { CompoundWorkspaceModel } from '~/types/workspacesTypes';
 
 interface ConnectStateProps {
   areWorkspaceYearsFetched: boolean;
   countWorkspacesIncluded: number;
   workspaceIds: Array<string>;
-  workspacesById: Record<string, WorkspaceModel>;
+  workspacesById: Record<string, CompoundWorkspaceModel>;
   yearsCountByWorkspaceId: Record<string, number>;
 }
 

@@ -10,16 +10,16 @@ import {
 } from '~/types/commonTypes';
 import { EntityGroup, EntityType } from '~/types/entityTypes';
 import {
-  ClockifyTask,
+  ClockifyTaskModel,
   ClockifyTaskStatus,
-  TaskModel,
-  TogglTask,
+  CompoundTaskModel,
+  TogglTaskModel,
 } from '~/types/tasksTypes';
-import { TogglTimeEntry } from '~/types/timeEntriesTypes';
+import { TogglTimeEntryModel } from '~/types/timeEntriesTypes';
 
 export interface TasksState {
-  readonly clockify: ReduxStateEntryForTool<TaskModel>;
-  readonly toggl: ReduxStateEntryForTool<TaskModel>;
+  readonly clockify: ReduxStateEntryForTool<CompoundTaskModel>;
+  readonly toggl: ReduxStateEntryForTool<CompoundTaskModel>;
   readonly isFetching: boolean;
 }
 
@@ -43,7 +43,9 @@ const convertSecondsToClockifyEstimate = (seconds: number): string => {
   return `PT${hours}H`;
 };
 
-const schemaProcessStrategy = (value: ClockifyTask | TogglTask): TaskModel => ({
+const schemaProcessStrategy = (
+  value: ClockifyTaskModel | TogglTaskModel,
+): CompoundTaskModel => ({
   id: value.id.toString(),
   name: value.name,
   estimate:
@@ -60,6 +62,7 @@ const schemaProcessStrategy = (value: ClockifyTask | TogglTask): TaskModel => ({
   entryCount: 0,
   linkedId: null,
   isIncluded: true,
+  type: EntityType.Task,
 });
 
 export const tasksReducer = handleActions(
@@ -69,7 +72,7 @@ export const tasksReducer = handleActions(
       getType(tasksActions.clockifyTasksTransfer.success),
     )]: (
       state: TasksState,
-      { payload: tasks }: ReduxAction<Array<ClockifyTask>>,
+      { payload: tasks }: ReduxAction<Array<ClockifyTaskModel>>,
     ): TasksState => {
       const normalizedState = utils.normalizeState(
         ToolName.Clockify,
@@ -87,7 +90,7 @@ export const tasksReducer = handleActions(
 
     [getType(tasksActions.togglTasksFetch.success)]: (
       state: TasksState,
-      { payload: tasks }: ReduxAction<Array<TogglTask>>,
+      { payload: tasks }: ReduxAction<Array<TogglTaskModel>>,
     ): TasksState =>
       utils.normalizeState(
         ToolName.Toggl,
@@ -125,7 +128,7 @@ export const tasksReducer = handleActions(
 
     [getType(togglTimeEntriesFetch.success)]: (
       state: TasksState,
-      { payload: timeEntries }: ReduxAction<Array<TogglTimeEntry>>,
+      { payload: timeEntries }: ReduxAction<Array<TogglTimeEntryModel>>,
     ) =>
       utils.appendEntryCountToState(
         EntityType.Task,

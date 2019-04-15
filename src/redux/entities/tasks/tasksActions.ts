@@ -13,51 +13,29 @@ import {
 import { selectClockifyProjectIds } from '~/redux/entities/projects/projectsSelectors';
 import { selectTasksTransferPayloadForWorkspace } from './tasksSelectors';
 import { ReduxDispatch, ReduxGetState } from '~/types/commonTypes';
-import { ClockifyTask, CreateTaskRequest, TogglTask } from '~/types/tasksTypes';
-import { EntityType } from '~/types/entityTypes';
+import { ClockifyTaskModel, TogglTaskModel } from '~/types/tasksTypes';
 
 export const clockifyTasksFetch = createAsyncAction(
   '@tasks/CLOCKIFY_FETCH_REQUEST',
   '@tasks/CLOCKIFY_FETCH_SUCCESS',
   '@tasks/CLOCKIFY_FETCH_FAILURE',
-)<void, Array<ClockifyTask>, void>();
+)<void, Array<ClockifyTaskModel>, void>();
 
 export const togglTasksFetch = createAsyncAction(
   '@tasks/TOGGL_FETCH_REQUEST',
   '@tasks/TOGGL_FETCH_SUCCESS',
   '@tasks/TOGGL_FETCH_FAILURE',
-)<void, Array<TogglTask>, void>();
+)<void, Array<TogglTaskModel>, void>();
 
 export const clockifyTasksTransfer = createAsyncAction(
   '@tasks/CLOCKIFY_TRANSFER_REQUEST',
   '@tasks/CLOCKIFY_TRANSFER_SUCCESS',
   '@tasks/CLOCKIFY_TRANSFER_FAILURE',
-)<void, Array<ClockifyTask>, void>();
+)<void, Array<ClockifyTaskModel>, void>();
 
 export const flipIsTaskIncluded = createStandardAction(
   '@tasks/FLIP_IS_INCLUDED',
 )<string>();
-
-const fetchClockifyTasksForProjectsInWorkspace = async (
-  workspaceId: string,
-  projectIds: Array<string>,
-): Promise<Array<ClockifyTask>> => {
-  const { promiseThrottle, throttledFunc } = buildThrottler(
-    apiFetchClockifyTasks,
-  );
-
-  const projectTasks: Array<Array<ClockifyTask>> = [];
-  for (const projectId of projectIds) {
-    await promiseThrottle
-      // @ts-ignore
-      .add(throttledFunc.bind(this, workspaceId, projectId))
-      .then((tasks: Array<ClockifyTask>) => {
-        projectTasks.push(tasks);
-      });
-  }
-
-  return flatten(projectTasks);
-};
 
 export const fetchClockifyTasks = (workspaceId: string) => async (
   dispatch: ReduxDispatch,
@@ -68,10 +46,24 @@ export const fetchClockifyTasks = (workspaceId: string) => async (
   try {
     const state = getState();
     const projectIds = selectClockifyProjectIds(state);
-    const tasks = await fetchClockifyTasksForProjectsInWorkspace(
-      workspaceId,
-      projectIds,
+
+    const { promiseThrottle, throttledFunc } = buildThrottler(
+      4,
+      apiFetchClockifyTasks,
     );
+
+    const projectTasks: Array<Array<ClockifyTaskModel>> = [];
+    for (const projectId of projectIds) {
+      await promiseThrottle
+        // @ts-ignore
+        .add(throttledFunc.bind(this, workspaceId, projectId))
+        .then((tasks: Array<ClockifyTaskModel>) => {
+          projectTasks.push(tasks);
+        });
+    }
+
+    const tasks = flatten(projectTasks);
+
     return dispatch(clockifyTasksFetch.success(tasks));
   } catch (error) {
     dispatch(showFetchErrorNotification(error));
@@ -93,31 +85,6 @@ export const fetchTogglTasks = (workspaceId: string) => async (
   }
 };
 
-const transferClockifyTasksForProjectsInWorkspace = async (
-  onTaskRecord: (taskRecord: ClockifyTask) => void,
-  workspaceId: string,
-  tasksInWorkspaceByProjectId: Record<string, Array<CreateTaskRequest>>,
-): Promise<Array<ClockifyTask>> => {
-  const allWorkspaceTasks: Array<Array<ClockifyTask>> = [];
-
-  for (const [projectId, projectTasks] of Object.entries(
-    tasksInWorkspaceByProjectId,
-  )) {
-    if (projectTasks.length !== 0) {
-      const tasks = await batchClockifyRequests(
-        onTaskRecord,
-        projectTasks,
-        apiCreateClockifyTask,
-        workspaceId,
-        projectId,
-      );
-      allWorkspaceTasks.push(tasks);
-    }
-  }
-
-  return flatten(allWorkspaceTasks);
-};
-
 export const transferTasksToClockify = (
   togglWorkspaceId: string,
   clockifyWorkspaceId: string,
@@ -130,17 +97,27 @@ export const transferTasksToClockify = (
 
   dispatch(clockifyTasksTransfer.request());
 
-  const onTaskRecord = (taskRecord: any) => {
-    const transferRecord = { ...taskRecord, type: EntityType.Task };
-    dispatch(updateInTransferEntity(transferRecord));
-  };
-
   try {
-    const tasks = await transferClockifyTasksForProjectsInWorkspace(
-      onTaskRecord,
-      clockifyWorkspaceId,
+    const allWorkspaceTasks: Array<Array<ClockifyTaskModel>> = [];
+
+    for (const [projectId, projectTasks] of Object.entries(
       tasksInWorkspaceByProjectId,
-    );
+    )) {
+      if (projectTasks.length !== 0) {
+        const tasks = await batchClockifyRequests(
+          4,
+          task => dispatch(updateInTransferEntity(task)),
+          projectTasks,
+          apiCreateClockifyTask,
+          clockifyWorkspaceId,
+          projectId,
+        );
+        allWorkspaceTasks.push(tasks);
+      }
+    }
+
+    const tasks = flatten(allWorkspaceTasks);
+
     return dispatch(clockifyTasksTransfer.success(tasks));
   } catch (error) {
     dispatch(showFetchErrorNotification(error));

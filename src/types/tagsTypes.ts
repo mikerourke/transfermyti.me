@@ -1,16 +1,16 @@
-import { UniversalEntityModel } from '~/types/entityTypes';
+import { BaseCompoundEntityModel } from '~/types/entityTypes';
 
-export interface ClockifyTag {
+export interface ClockifyTagModel {
   id: string;
   name: string;
   workspaceId: string;
 }
 
-export interface TogglTag {
+export interface TogglTagModel {
   id: number;
   wid: number;
   name: string;
   at: string;
 }
 
-export type TagModel = ClockifyTag & UniversalEntityModel;
+export type CompoundTagModel = ClockifyTagModel & BaseCompoundEntityModel;

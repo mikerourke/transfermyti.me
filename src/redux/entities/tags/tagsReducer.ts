@@ -10,12 +10,16 @@ import {
   ToolName,
 } from '~/types/commonTypes';
 import { EntityGroup, EntityType } from '~/types/entityTypes';
-import { ClockifyTag, TagModel, TogglTag } from '~/types/tagsTypes';
-import { TogglTimeEntry } from '~/types/timeEntriesTypes';
+import {
+  ClockifyTagModel,
+  CompoundTagModel,
+  TogglTagModel,
+} from '~/types/tagsTypes';
+import { TogglTimeEntryModel } from '~/types/timeEntriesTypes';
 
 export interface TagsState {
-  readonly clockify: ReduxStateEntryForTool<TagModel>;
-  readonly toggl: ReduxStateEntryForTool<TagModel>;
+  readonly clockify: ReduxStateEntryForTool<CompoundTagModel>;
+  readonly toggl: ReduxStateEntryForTool<CompoundTagModel>;
   readonly isFetching: boolean;
 }
 
@@ -31,13 +35,16 @@ export const initialState: TagsState = {
   isFetching: false,
 };
 
-const schemaProcessStrategy = (value: ClockifyTag | TogglTag): TagModel => ({
+const schemaProcessStrategy = (
+  value: ClockifyTagModel | TogglTagModel,
+): CompoundTagModel => ({
   id: value.id.toString(),
   name: value.name,
   workspaceId: utils.findIdFieldValue(value, EntityType.Workspace),
   entryCount: 0,
   linkedId: null,
   isIncluded: true,
+  type: EntityType.Tag,
 });
 
 const appendEntryCountByTagName = <TTimeEntry>(
@@ -49,7 +56,7 @@ const appendEntryCountByTagName = <TTimeEntry>(
   const tags = Object.values(state[toolName].byId);
 
   timeEntries.forEach(timeEntry => {
-    const tagNames = get(timeEntry, 'tags', []) as Array<string>;
+    const tagNames = get(timeEntry, 'tagNames', []) as Array<string>;
 
     tagNames.forEach(tagName => {
       const { id = null } = tags.find(({ name }) => name === tagName);
@@ -87,7 +94,7 @@ export const tagsReducer = handleActions(
       getType(tagsActions.clockifyTagsTransfer.success),
     )]: (
       state: TagsState,
-      { payload: tags }: ReduxAction<Array<ClockifyTag>>,
+      { payload: tags }: ReduxAction<Array<ClockifyTagModel>>,
     ): TagsState => {
       const normalizedState = utils.normalizeState(
         ToolName.Clockify,
@@ -102,7 +109,7 @@ export const tagsReducer = handleActions(
 
     [getType(tagsActions.togglTagsFetch.success)]: (
       state: TagsState,
-      { payload: tags }: ReduxAction<Array<TogglTag>>,
+      { payload: tags }: ReduxAction<Array<TogglTagModel>>,
     ): TagsState =>
       utils.normalizeState(
         ToolName.Toggl,
@@ -140,7 +147,7 @@ export const tagsReducer = handleActions(
 
     [getType(togglTimeEntriesFetch.success)]: (
       state: TagsState,
-      { payload: timeEntries }: ReduxAction<Array<TogglTimeEntry>>,
+      { payload: timeEntries }: ReduxAction<Array<TogglTimeEntryModel>>,
     ) => appendEntryCountByTagName(ToolName.Toggl, state, timeEntries),
   },
   initialState,

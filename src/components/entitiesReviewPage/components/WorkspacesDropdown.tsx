@@ -10,10 +10,10 @@ import {
 } from 'bloomer';
 import { css } from 'emotion';
 import SvgIcon, { SvgIconName } from '~/components/svgIcon/SvgIcon';
-import { WorkspaceModel } from '~/types/workspacesTypes';
+import { CompoundWorkspaceModel } from '~/types/workspacesTypes';
 
 interface Props {
-  workspacesById: Record<string, WorkspaceModel>;
+  workspacesById: Record<string, CompoundWorkspaceModel>;
   activeWorkspaceId: string;
   onItemClick: (workspaceId: string) => void;
 }

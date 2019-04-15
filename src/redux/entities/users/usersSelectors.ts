@@ -4,7 +4,7 @@ import { findTogglInclusions } from '~/redux/utils';
 import { selectCredentials } from '~/redux/credentials/credentialsSelectors';
 import { selectTogglTimeEntriesById } from '~/redux/entities/timeEntries/timeEntriesSelectors';
 import { ReduxState } from '~/types/commonTypes';
-import { UserModel } from '~/types/usersTypes';
+import { CompoundUserModel } from '~/types/usersTypes';
 
 export const selectClockifyUsersById = createSelector(
   (state: ReduxState) => state.entities.users.clockify.byId,
@@ -14,7 +14,7 @@ export const selectClockifyUsersById = createSelector(
 export const selectClockifyUsersByWorkspace = createSelector(
   selectClockifyUsersById,
   (state: ReduxState) => Object.values(state.entities.workspaces.clockify.byId),
-  (usersById, workspaces): Record<string, Array<UserModel>> =>
+  (usersById, workspaces): Record<string, Array<CompoundUserModel>> =>
     workspaces.reduce(
       (acc, workspace) => ({
         ...acc,
@@ -26,11 +26,11 @@ export const selectClockifyUsersByWorkspace = createSelector(
 
 export const selectTogglUsersById = createSelector(
   (state: ReduxState) => state.entities.users.toggl.byId,
-  (usersById): Record<string, UserModel> => usersById,
+  (usersById): Record<string, CompoundUserModel> => usersById,
 );
 
 const getValidUsers = (
-  usersById: Record<string, UserModel>,
+  usersById: Record<string, CompoundUserModel>,
   userIds: Array<string>,
   meUserId: string,
 ) =>
@@ -51,7 +51,7 @@ export const selectTogglUsersByWorkspaceFactory = (inclusionsOnly: boolean) =>
       usersById,
       timeEntriesById,
       workspacesById,
-    ): Record<string, Array<UserModel>> => {
+    ): Record<string, Array<CompoundUserModel>> => {
       return Object.values(workspacesById).reduce((acc, { id, userIds }) => {
         const validUsers = getValidUsers(usersById, userIds, togglUserId);
         const usersToUse = inclusionsOnly
@@ -76,7 +76,7 @@ export const selectUsersInvitePayloadForWorkspace = createSelector(
       inclusionsByWorkspaceId,
       workspaceIdToGet,
       [],
-    ) as Array<UserModel>;
+    ) as Array<CompoundUserModel>;
     if (inclusions.length === 0) return [];
 
     return inclusions.reduce((acc, { email }) => {

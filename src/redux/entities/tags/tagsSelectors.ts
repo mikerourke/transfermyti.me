@@ -2,16 +2,16 @@ import { createSelector } from 'reselect';
 import { get } from 'lodash';
 import { findTogglInclusions, groupByWorkspace } from '~/redux/utils';
 import { CreateNamedEntityRequest, ReduxState } from '~/types/commonTypes';
-import { TagModel } from '~/types/tagsTypes';
+import { CompoundTagModel } from '~/types/tagsTypes';
 
-export const selectClockifyTagsByWorkspace = createSelector(
-  (state: ReduxState) => Object.values(state.entities.tags.clockify.byId),
-  tags => groupByWorkspace(tags),
+export const selectTogglTagsById = createSelector(
+  (state: ReduxState) => state.entities.tags.toggl.byId,
+  (tagsById): Record<string, CompoundTagModel> => tagsById,
 );
 
 export const selectTogglTags = createSelector(
-  (state: ReduxState) => state.entities.tags.toggl.byId,
-  (tagsById): Array<TagModel> => Object.values(tagsById),
+  selectTogglTagsById,
+  (tagsById): Array<CompoundTagModel> => Object.values(tagsById),
 );
 
 export const selectTogglTagsByWorkspaceFactory = (inclusionsOnly: boolean) =>
@@ -32,7 +32,7 @@ export const selectTagsTransferPayloadForWorkspace = createSelector(
       inclusionsByWorkspaceId,
       workspaceIdToGet,
       [],
-    ) as Array<TagModel>;
+    ) as Array<CompoundTagModel>;
     if (inclusions.length === 0) return [];
 
     return inclusions.reduce((acc, { workspaceId, name }) => {

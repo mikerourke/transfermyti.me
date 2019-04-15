@@ -4,11 +4,11 @@ import { css } from 'emotion';
 import { reverse } from 'lodash';
 import Flex from '~/components/flex/Flex';
 import Checkbox from '~/components/checkbox/Checkbox';
-import { WorkspaceModel } from '~/types/workspacesTypes';
+import { CompoundWorkspaceModel } from '~/types/workspacesTypes';
 import { CheckedState } from '~/types/commonTypes';
 
 interface Props {
-  workspaceRecord: WorkspaceModel;
+  workspaceRecord: CompoundWorkspaceModel;
   onWorkspaceClick: (workspaceId: string) => void;
   onYearClick: (workspaceId: string, year: string) => void;
 }

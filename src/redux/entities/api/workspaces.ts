@@ -1,16 +1,20 @@
 import { firstAndLastDayOfYear } from '~/redux/utils';
+import { fetchArray, fetchObject } from './fetchByPayloadType';
 import { CreateNamedEntityRequest, HttpMethod } from '~/types/commonTypes';
-import { ClockifyWorkspace, TogglSummaryReport } from '~/types/workspacesTypes';
+import {
+  ClockifyWorkspaceModel,
+  TogglSummaryReportModel,
+} from '~/types/workspacesTypes';
 
 export const apiFetchClockifyWorkspaces = (): Promise<
-  Array<ClockifyWorkspace>
-> => fetch('/clockify/api/workspaces/');
+  Array<ClockifyWorkspaceModel>
+> => fetchArray('/clockify/api/workspaces/');
 
 export const apiFetchTogglWorkspaceSummaryForYear = (
   email: string,
   workspaceId: string,
   year: number,
-): Promise<TogglSummaryReport> => {
+): Promise<TogglSummaryReportModel> => {
   const { firstDay, lastDay } = firstAndLastDayOfYear(year, 'YYYY-MM-DD');
 
   const queryString = [
@@ -20,13 +24,13 @@ export const apiFetchTogglWorkspaceSummaryForYear = (
     `user_agent=${email}`,
   ].join('&');
 
-  return fetch(`/toggl/reports/summary?${queryString}`);
+  return fetchObject(`/toggl/reports/summary?${queryString}`);
 };
 
 export const apiCreateClockifyWorkspace = (
   workspaceRecord: CreateNamedEntityRequest,
-): Promise<ClockifyWorkspace> =>
-  fetch('/clockify/api/workspaces/', {
+): Promise<ClockifyWorkspaceModel> =>
+  fetchObject('/clockify/api/workspaces/', {
     method: HttpMethod.Post,
     body: workspaceRecord as any,
   });

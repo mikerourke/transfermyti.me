@@ -1,5 +1,5 @@
 import { getType } from 'typesafe-actions';
-import { handleActions, combineActions } from 'redux-actions';
+import { combineActions, handleActions } from 'redux-actions';
 import { cloneDeep, get, uniq } from 'lodash';
 import * as utils from '~/redux/utils';
 import * as workspacesActions from './workspacesActions';
@@ -10,14 +10,14 @@ import {
 } from '~/types/commonTypes';
 import { EntityGroup, EntityType } from '~/types/entityTypes';
 import {
-  ClockifyWorkspace,
-  TogglWorkspace,
-  WorkspaceModel,
+  ClockifyWorkspaceModel,
+  CompoundWorkspaceModel,
+  TogglWorkspaceModel,
 } from '~/types/workspacesTypes';
 
 export interface WorkspacesState {
-  readonly clockify: ReduxStateEntryForTool<WorkspaceModel>;
-  readonly toggl: ReduxStateEntryForTool<WorkspaceModel>;
+  readonly clockify: ReduxStateEntryForTool<CompoundWorkspaceModel>;
+  readonly toggl: ReduxStateEntryForTool<CompoundWorkspaceModel>;
   readonly workspaceNameBeingFetched: string | null;
   readonly isFetching: boolean;
 }
@@ -36,8 +36,8 @@ export const initialState: WorkspacesState = {
 };
 
 const schemaProcessStrategy = (
-  value: ClockifyWorkspace | TogglWorkspace,
-): WorkspaceModel => ({
+  value: ClockifyWorkspaceModel | TogglWorkspaceModel,
+): CompoundWorkspaceModel => ({
   id: value.id.toString(),
   name: value.name,
   userIds: [],
@@ -46,6 +46,7 @@ const schemaProcessStrategy = (
   entryCount: 0,
   linkedId: null,
   isIncluded: true,
+  type: EntityType.Workspace,
 });
 
 export const workspacesReducer = handleActions(
@@ -55,7 +56,7 @@ export const workspacesReducer = handleActions(
       getType(workspacesActions.clockifyWorkspaceTransfer.success),
     )]: (
       state: WorkspacesState,
-      { payload: workspaces }: ReduxAction<Array<ClockifyWorkspace>>,
+      { payload: workspaces }: ReduxAction<Array<ClockifyWorkspaceModel>>,
     ): WorkspacesState => {
       const normalizedState = utils.normalizeState(
         ToolName.Clockify,
@@ -73,7 +74,7 @@ export const workspacesReducer = handleActions(
 
     [getType(workspacesActions.togglWorkspacesFetch.success)]: (
       state: WorkspacesState,
-      { payload: workspaces }: ReduxAction<Array<TogglWorkspace>>,
+      { payload: workspaces }: ReduxAction<Array<TogglWorkspaceModel>>,
     ): WorkspacesState =>
       utils.normalizeState(
         ToolName.Toggl,

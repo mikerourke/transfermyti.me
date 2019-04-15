@@ -1,8 +1,8 @@
-import { EntityModel, TogglTotalCurrencyModel } from './commonTypes';
-import { ClockifyMembership } from './usersTypes';
-import { EntityGroup, UniversalEntityModel } from '~/types/entityTypes';
+import { CompoundEntityModel, TogglTotalCurrencyModel } from './commonTypes';
+import { ClockifyMembershipModel } from './usersTypes';
+import { EntityGroup, BaseCompoundEntityModel } from '~/types/entityTypes';
 
-interface ClockifyWorkspaceSettings {
+interface ClockifyWorkspaceSettingsModel {
   timeRoundingInReports: boolean;
   onlyAdminsSeeBillableRates: boolean;
   onlyAdminsCreateProject: boolean;
@@ -26,19 +26,19 @@ interface ClockifyWorkspaceSettings {
   projectGroupingLabel: string;
 }
 
-export interface ClockifyWorkspace {
+export interface ClockifyWorkspaceModel {
   id: string;
   name: string;
   hourlyRate: {
     amount: number;
     currency: string;
   };
-  memberships: Array<ClockifyMembership>;
-  workspaceSettings: ClockifyWorkspaceSettings;
+  memberships: Array<ClockifyMembershipModel>;
+  workspaceSettings: ClockifyWorkspaceSettingsModel;
   imageUrl: string;
 }
 
-export interface TogglWorkspace {
+export interface TogglWorkspaceModel {
   id: number;
   name: string;
   profile: number;
@@ -80,14 +80,14 @@ export interface TogglSummaryReportDataModel {
   items: Array<TogglSummaryReportDataItemModel>;
 }
 
-export interface TogglSummaryReport {
+export interface TogglSummaryReportModel {
   total_grand: number;
   total_billable: number | null;
   total_currencies: Array<TogglTotalCurrencyModel>;
   data: Array<TogglSummaryReportDataModel>;
 }
 
-export interface WorkspaceModel extends UniversalEntityModel {
+export interface CompoundWorkspaceModel extends BaseCompoundEntityModel {
   id: string;
   name: string;
   inclusionsByYear?: Record<string, boolean>;
@@ -97,7 +97,7 @@ export interface WorkspaceModel extends UniversalEntityModel {
 
 export type EntitiesByGroupByWorkspaceModel = Record<
   string,
-  Record<EntityGroup, Array<EntityModel>>
+  Record<EntityGroup, Array<CompoundEntityModel>>
 >;
 
 export interface RecordCountsModel {

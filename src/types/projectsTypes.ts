@@ -1,18 +1,18 @@
-import { ClockifyTask } from './tasksTypes';
-import { ClockifyMembership } from './usersTypes';
-import { UniversalEntityModel } from '~/types/entityTypes';
+import { ClockifyTaskModel } from './tasksTypes';
+import { ClockifyMembershipModel } from './usersTypes';
+import { BaseCompoundEntityModel } from '~/types/entityTypes';
 
 export enum ClockifyEstimateType {
   Auto = 'AUTO',
   Manual = 'MANUAL',
 }
 
-export interface ClockifyEstimate {
+export interface ClockifyEstimateModel {
   estimate: string;
   type: ClockifyEstimateType;
 }
 
-export interface ClockifyProject {
+export interface ClockifyProjectModel {
   id: string;
   name: string;
   hourlyRate: string | null;
@@ -20,15 +20,15 @@ export interface ClockifyProject {
   client: string | null;
   workspaceId: string;
   billable: boolean;
-  memberships: Array<ClockifyMembership>;
+  memberships: Array<ClockifyMembershipModel>;
   color: string;
-  estimate: ClockifyEstimate;
+  estimate: ClockifyEstimateModel;
   archived: boolean;
-  tasks: Array<ClockifyTask>;
+  tasks: Array<ClockifyTaskModel>;
   public: boolean;
 }
 
-export interface TogglProject {
+export interface TogglProjectModel {
   id: number;
   wid: number;
   cid: number;
@@ -45,7 +45,7 @@ export interface TogglProject {
   hex_color: string;
 }
 
-export interface TogglProjectUser {
+export interface TogglProjectUserModel {
   id: number;
   pid: number;
   uid: number;
@@ -54,7 +54,7 @@ export interface TogglProjectUser {
   rate: number;
 }
 
-export interface ProjectModel extends UniversalEntityModel {
+export interface CompoundProjectModel extends BaseCompoundEntityModel {
   id: string;
   name: string;
   workspaceId: string;
@@ -66,7 +66,7 @@ export interface ProjectModel extends UniversalEntityModel {
   userIds: Array<string>;
 }
 
-export interface CreateProjectRequest {
+export interface CreateProjectRequestModel {
   clientId: string;
   name: string;
   isPublic: boolean;

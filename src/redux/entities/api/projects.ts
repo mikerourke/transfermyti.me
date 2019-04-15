@@ -1,14 +1,15 @@
+import { fetchArray, fetchObject } from './fetchByPayloadType';
 import { HttpMethod } from '~/types/commonTypes';
 import {
-  ClockifyProject,
-  CreateProjectRequest,
-  TogglProject,
+  ClockifyProjectModel,
+  CreateProjectRequestModel,
+  TogglProjectModel,
 } from '~/types/projectsTypes';
 
 export const apiFetchClockifyProjects = (
   workspaceId: string,
-): Promise<{ project: Array<ClockifyProject>; count: number }> =>
-  fetch(`/clockify/api/workspaces/${workspaceId}/projects/filtered`, {
+): Promise<{ project: Array<ClockifyProjectModel>; count: number }> =>
+  fetchObject(`/clockify/api/workspaces/${workspaceId}/projects/filtered`, {
     method: HttpMethod.Post,
     body: {
       page: 0,
@@ -23,14 +24,14 @@ export const apiFetchClockifyProjects = (
 
 export const apiFetchTogglProjects = (
   workspaceId: string,
-): Promise<Array<TogglProject>> =>
-  fetch(`/toggl/api/workspaces/${workspaceId}/projects?active=both`);
+): Promise<Array<TogglProjectModel>> =>
+  fetchArray(`/toggl/api/workspaces/${workspaceId}/projects?active=both`);
 
 export const apiCreateClockifyProject = (
   workspaceId: string,
-  projectRecord: CreateProjectRequest,
-): Promise<ClockifyProject> =>
-  fetch(`/clockify/api/workspaces/${workspaceId}/projects/`, {
+  projectRecord: CreateProjectRequestModel,
+): Promise<ClockifyProjectModel> =>
+  fetchObject(`/clockify/api/workspaces/${workspaceId}/projects/`, {
     method: HttpMethod.Post,
     body: projectRecord as any,
   });

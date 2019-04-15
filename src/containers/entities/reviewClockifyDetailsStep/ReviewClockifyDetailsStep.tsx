@@ -22,24 +22,24 @@ import { ReduxDispatch, ReduxState, ToolName } from '~/types/commonTypes';
 import {
   CountsByGroupByWorkspaceModel,
   EntitiesByGroupByWorkspaceModel,
-  WorkspaceModel,
+  CompoundWorkspaceModel,
 } from '~/types/workspacesTypes';
 
 interface ConnectStateProps {
-  clockifyWorkspacesById: Record<string, WorkspaceModel>;
+  clockifyWorkspacesById: Record<string, CompoundWorkspaceModel>;
   togglCountsByGroupByWorkspace: CountsByGroupByWorkspaceModel;
   togglEntitiesByGroupByWorkspace: EntitiesByGroupByWorkspaceModel;
-  togglWorkspacesById: Record<string, WorkspaceModel>;
+  togglWorkspacesById: Record<string, CompoundWorkspaceModel>;
   workspaceNameBeingFetched: string;
 }
 
 interface ConnectDispatchProps {
   onFetchClockifyEntitiesInWorkspace: (
-    workspaceRecord: WorkspaceModel,
+    workspace: CompoundWorkspaceModel,
   ) => Promise<any>;
   onFetchClockifyWorkspaces: () => Promise<any>;
   onTransferEntitiesToClockifyWorkspace: (
-    workspaceRecord: WorkspaceModel,
+    workspace: CompoundWorkspaceModel,
   ) => Promise<any>;
 }
 
@@ -51,11 +51,11 @@ export const ReviewClockifyDetailsStepComponent: React.FC<Props> = props => {
   const [isModalActive, setIsModalActive] = useState<boolean>(false);
 
   const fetchClockifyEntitiesInAllWorkspaces = async () => {
-    const workspaceRecords = Object.values(props.clockifyWorkspacesById);
-    if (workspaceRecords.length === 0) return Promise.resolve();
+    const workspaces = Object.values(props.clockifyWorkspacesById);
+    if (workspaces.length === 0) return Promise.resolve();
 
-    for (const workspaceRecord of workspaceRecords) {
-      await props.onFetchClockifyEntitiesInWorkspace(workspaceRecord);
+    for (const workspace of workspaces) {
+      await props.onFetchClockifyEntitiesInWorkspace(workspace);
     }
   };
 
@@ -73,9 +73,9 @@ export const ReviewClockifyDetailsStepComponent: React.FC<Props> = props => {
 
   const transferAllEntitiesToClockify = async () => {
     setIsTransferring(true);
-    const workspaceRecords = Object.values(props.togglWorkspacesById);
-    for (const workspaceRecord of workspaceRecords) {
-      await props.onTransferEntitiesToClockifyWorkspace(workspaceRecord);
+    const workspaces = Object.values(props.togglWorkspacesById);
+    for (const workspace of workspaces) {
+      await props.onTransferEntitiesToClockifyWorkspace(workspace);
     }
     setIsTransferring(false);
   };
@@ -151,11 +151,11 @@ const mapStateToProps = (state: ReduxState) => ({
 });
 
 const mapDispatchToProps = (dispatch: ReduxDispatch) => ({
-  onFetchClockifyEntitiesInWorkspace: (workspaceRecord: WorkspaceModel) =>
-    dispatch(fetchClockifyEntitiesInWorkspace(workspaceRecord)),
+  onFetchClockifyEntitiesInWorkspace: (workspace: CompoundWorkspaceModel) =>
+    dispatch(fetchClockifyEntitiesInWorkspace(workspace)),
   onFetchClockifyWorkspaces: () => dispatch(fetchClockifyWorkspaces()),
-  onTransferEntitiesToClockifyWorkspace: (workspaceRecord: WorkspaceModel) =>
-    dispatch(transferEntitiesToClockifyWorkspace(workspaceRecord)),
+  onTransferEntitiesToClockifyWorkspace: (workspace: CompoundWorkspaceModel) =>
+    dispatch(transferEntitiesToClockifyWorkspace(workspace)),
 });
 
 export default connect<ConnectStateProps, ConnectDispatchProps, StepPageProps>(
