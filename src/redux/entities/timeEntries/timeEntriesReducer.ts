@@ -1,7 +1,10 @@
+import { get } from 'lodash';
 import { getType } from 'typesafe-actions';
 import { combineActions, handleActions } from 'redux-actions';
 import * as utils from '~/redux/utils';
 import { flipIsProjectIncluded } from '~/redux/entities/projects/projectsActions';
+import { flipIsTaskIncluded } from '~/redux/entities/tasks/tasksActions';
+import { flipIsUserIncluded } from '~/redux/entities/users/usersActions';
 import * as timeEntriesActions from './timeEntriesActions';
 import {
   ReduxAction,
@@ -10,14 +13,14 @@ import {
 } from '~/types/commonTypes';
 import { EntityGroup, EntityType } from '~/types/entityTypes';
 import {
-  ClockifyTimeEntry,
-  TimeEntryModel,
-  TogglTimeEntry,
+  ClockifyTimeEntryModel,
+  CompoundTimeEntryModel,
+  TogglTimeEntryModel,
 } from '~/types/timeEntriesTypes';
 
 export interface TimeEntriesState {
-  readonly clockify: ReduxStateEntryForTool<TimeEntryModel>;
-  readonly toggl: ReduxStateEntryForTool<TimeEntryModel>;
+  readonly clockify: ReduxStateEntryForTool<CompoundTimeEntryModel>;
+  readonly toggl: ReduxStateEntryForTool<CompoundTimeEntryModel>;
   readonly isFetching: boolean;
 }
 
@@ -35,9 +38,12 @@ export const initialState: TimeEntriesState = {
 
 export const timeEntriesReducer = handleActions(
   {
-    [getType(timeEntriesActions.clockifyTimeEntriesFetch.success)]: (
+    [combineActions(
+      getType(timeEntriesActions.clockifyTimeEntriesFetch.success),
+      getType(timeEntriesActions.clockifyTimeEntriesTransfer.success),
+    )]: (
       state: TimeEntriesState,
-      { payload: timeEntries }: ReduxAction<Array<ClockifyTimeEntry>>,
+      { payload: timeEntries }: ReduxAction<Array<ClockifyTimeEntryModel>>,
     ): TimeEntriesState =>
       utils.normalizeState(
         ToolName.Clockify,
@@ -48,7 +54,7 @@ export const timeEntriesReducer = handleActions(
 
     [getType(timeEntriesActions.togglTimeEntriesFetch.success)]: (
       state: TimeEntriesState,
-      { payload: timeEntries }: ReduxAction<Array<TogglTimeEntry>>,
+      { payload: timeEntries }: ReduxAction<Array<TogglTimeEntryModel>>,
     ): TimeEntriesState =>
       utils.normalizeState(
         ToolName.Toggl,
@@ -60,6 +66,7 @@ export const timeEntriesReducer = handleActions(
     [combineActions(
       getType(timeEntriesActions.clockifyTimeEntriesFetch.request),
       getType(timeEntriesActions.togglTimeEntriesFetch.request),
+      getType(timeEntriesActions.clockifyTimeEntriesTransfer.request),
     )]: (state: TimeEntriesState): TimeEntriesState => ({
       ...state,
       isFetching: true,
@@ -70,6 +77,8 @@ export const timeEntriesReducer = handleActions(
       getType(timeEntriesActions.clockifyTimeEntriesFetch.failure),
       getType(timeEntriesActions.togglTimeEntriesFetch.success),
       getType(timeEntriesActions.togglTimeEntriesFetch.failure),
+      getType(timeEntriesActions.clockifyTimeEntriesTransfer.success),
+      getType(timeEntriesActions.clockifyTimeEntriesTransfer.failure),
     )]: (state: TimeEntriesState): TimeEntriesState => ({
       ...state,
       isFetching: false,
@@ -79,33 +88,25 @@ export const timeEntriesReducer = handleActions(
       state: TimeEntriesState,
       { payload: timeEntryId }: ReduxAction<string>,
     ): TimeEntriesState =>
-      utils.flipEntityInclusion(state, EntityType.Task, timeEntryId),
+      utils.flipEntityInclusion(state, EntityType.TimeEntry, timeEntryId),
 
     [getType(flipIsProjectIncluded)]: (
       state: TimeEntriesState,
       { payload: projectId }: ReduxAction<string>,
-    ): TimeEntriesState => {
-      const timeEntriesById = { ...state.toggl.byId };
-      const updatedEntriesById = Object.entries(timeEntriesById).reduce(
-        (acc, [timeEntryId, { isIncluded, ...timeEntry }]) => ({
-          ...acc,
-          [timeEntryId]: {
-            ...timeEntry,
-            isIncluded:
-              timeEntry.projectId === projectId ? !isIncluded : isIncluded,
-          },
-        }),
-        {},
-      );
+    ): TimeEntriesState =>
+      pushInclusionFlipToTimeEntry(state, 'projectId', projectId),
 
-      return {
-        ...state,
-        toggl: {
-          ...state.toggl,
-          byId: updatedEntriesById,
-        },
-      };
-    },
+    [getType(flipIsTaskIncluded)]: (
+      state: TimeEntriesState,
+      { payload: taskId }: ReduxAction<string>,
+    ): TimeEntriesState =>
+      pushInclusionFlipToTimeEntry(state, 'taskId', taskId),
+
+    [getType(flipIsUserIncluded)]: (
+      state: TimeEntriesState,
+      { payload: userId }: ReduxAction<string>,
+    ): TimeEntriesState =>
+      pushInclusionFlipToTimeEntry(state, 'userId', userId),
 
     [getType(timeEntriesActions.addLinksToTimeEntries)]: (
       state: TimeEntriesState,
@@ -117,3 +118,33 @@ export const timeEntriesReducer = handleActions(
   },
   initialState,
 );
+
+function pushInclusionFlipToTimeEntry(
+  state: TimeEntriesState,
+  parentIdFieldName: string,
+  parentId: string,
+): TimeEntriesState {
+  const timeEntriesById = { ...state.toggl.byId };
+
+  const updatedEntriesById = Object.entries(timeEntriesById).reduce(
+    (acc, [timeEntryId, { isIncluded, ...timeEntry }]) => ({
+      ...acc,
+      [timeEntryId]: {
+        ...timeEntry,
+        isIncluded:
+          get(timeEntry, parentIdFieldName) === parentId
+            ? !isIncluded
+            : isIncluded,
+      },
+    }),
+    {},
+  );
+
+  return {
+    ...state,
+    toggl: {
+      ...state.toggl,
+      byId: updatedEntriesById,
+    },
+  };
+}

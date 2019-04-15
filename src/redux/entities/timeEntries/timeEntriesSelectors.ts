@@ -1,71 +1,72 @@
 import { createSelector } from 'reselect';
-import { filter, first, get } from 'lodash';
-import { EntityModel, ReduxState, ToolName } from '~/types/commonTypes';
-import { TagModel } from '~/types/tagsTypes';
+import { compact, filter, get, isNil } from 'lodash';
+import { CompoundEntityModel, ReduxState, ToolName } from '~/types/commonTypes';
 import {
+  CompoundTimeEntryModel,
+  CreateTimeEntryRequestModel,
   DetailedTimeEntryModel,
-  TimeEntryModel,
 } from '~/types/timeEntriesTypes';
+import { CompoundWorkspaceModel } from '~/types/workspacesTypes';
 
 export const selectTogglTimeEntriesById = createSelector(
   (state: ReduxState) => state.entities.timeEntries.toggl.byId,
   timeEntries => timeEntries,
 );
 
-const getTagList = (tags: Array<string>): string => {
-  if (tags.length === 0) return '';
-  if (tags.length === 1) return first(tags);
-  return tags.reduce((acc, tag) => `${acc}${tag}, `, '');
-};
-
-const selectDetailedTimeEntriesByWorkspaceFactory = (toolName: ToolName) =>
+export const selectTimeEntriesByWorkspaceFactory = (
+  toolName: ToolName,
+  inclusionsOnly: boolean,
+) =>
   createSelector(
-    (state: ReduxState) => state.entities.workspaces[toolName].idValues,
-    (state: ReduxState) => state.entities.timeEntries[toolName].byId,
+    (state: ReduxState) => state.entities.clients[toolName].byId,
     (state: ReduxState) => state.entities.projects[toolName].byId,
     (state: ReduxState) => state.entities.tags[toolName].byId,
     (state: ReduxState) => state.entities.tasks[toolName].byId,
+    (state: ReduxState) => state.entities.timeEntries[toolName].byId,
     (state: ReduxState) => state.entities.users[toolName].byId,
+    (state: ReduxState) => state.entities.workspaces[toolName].byId,
     (
-      workspaceIds: Array<string>,
-      timeEntriesById: Record<string, TimeEntryModel>,
-      projectsById: Record<string, EntityModel>,
-      tagsById: Record<string, TagModel>,
-      tasksById: Record<string, EntityModel>,
-      usersById: Record<string, EntityModel>,
+      clientsById: Record<string, CompoundEntityModel>,
+      projectsById: Record<string, CompoundEntityModel>,
+      tagsById: Record<string, CompoundEntityModel>,
+      tasksById: Record<string, CompoundEntityModel>,
+      timeEntriesById: Record<string, CompoundTimeEntryModel>,
+      usersById: Record<string, CompoundEntityModel>,
+      workspacesById: Record<string, CompoundWorkspaceModel>,
     ): Record<string, Array<DetailedTimeEntryModel>> => {
-      const tagIdsByName = Object.values(tagsById).reduce(
-        (acc, { id, name }) => ({ ...acc, [name]: id.toString() }),
+      const allTimeEntries = Object.values(timeEntriesById);
+
+      const tagsByName = Object.values(tagsById).reduce(
+        (acc, tag) => ({
+          ...acc,
+          [tag.name]: tag,
+        }),
         {},
       );
 
-      const timeEntries = Object.values(timeEntriesById).map(
-        ({ projectId, taskId, userId, tags, ...timeEntry }) => {
-          const matchingProject = get(projectsById, projectId, {});
+      const timeEntriesToUse = inclusionsOnly
+        ? allTimeEntries.filter(({ isIncluded }) => isIncluded)
+        : allTimeEntries;
 
-          return {
-            ...timeEntry,
-            projectId,
-            taskId,
-            userId,
-            tags,
-            isActive: get(matchingProject, 'isActive', false),
-            workspaceId: get(matchingProject, 'workspaceId', null),
-            projectName: get(matchingProject, 'name', null),
-            taskName: get(tasksById, [taskId, 'name'], null),
-            userName: get(usersById, [userId, 'name'], null),
-            tagIds: tags.map(tag => get(tagIdsByName, tag, null)),
-            tagList: getTagList(tags),
-          };
-        },
-        [],
-      );
+      const timeEntries = timeEntriesToUse.map(timeEntry => {
+        return {
+          ...timeEntry,
+          client: get(clientsById, timeEntry.clientId, null),
+          project: get(projectsById, timeEntry.projectId, null),
+          task: get(tasksById, timeEntry.taskId, null),
+          tags: compact(
+            timeEntry.tagNames.map(tagName => get(tagsByName, tagName, null)),
+          ),
+          user: get(usersById, timeEntry.userId, null),
+          workspace: get(workspacesById, timeEntry.workspaceId, null),
+        };
+      });
 
       const sortedEntries = timeEntries.sort(
         (a, b) => b.start.getTime() - a.start.getTime(),
       );
 
-      return workspaceIds.reduce(
+      return Object.keys(workspacesById).reduce(
         (acc, workspaceId) => ({
           ...acc,
           [workspaceId]: filter(sortedEntries, { workspaceId }),
@@ -75,20 +76,39 @@ const selectDetailedTimeEntriesByWorkspaceFactory = (toolName: ToolName) =>
     },
   );
 
-export const selectTimeEntriesByWorkspaceFactory = (
-  toolName: ToolName,
-  inclusionsOnly: boolean,
-) =>
-  createSelector(
-    selectDetailedTimeEntriesByWorkspaceFactory(toolName),
-    (timeEntriesByWorkspace): Record<string, Array<TimeEntryModel>> =>
-      Object.entries(timeEntriesByWorkspace).reduce(
-        (acc, [workspaceId, timeEntries]) => ({
-          ...acc,
-          [workspaceId]: inclusionsOnly
-            ? timeEntries.filter(({ isIncluded }) => isIncluded)
-            : timeEntries,
-        }),
-        {},
-      ),
-  );
+export const selectTimeEntriesTransferPayloadForWorkspace = createSelector(
+  selectTimeEntriesByWorkspaceFactory(ToolName.Toggl, true),
+  inclusionsByWorkspaceId => (
+    workspaceIdToGet: string,
+  ): Array<
+    CreateTimeEntryRequestModel & { projectName: string; workspaceName: string }
+  > => {
+    const inclusions = get(
+      inclusionsByWorkspaceId,
+      workspaceIdToGet,
+      [],
+    ) as Array<DetailedTimeEntryModel>;
+
+    return inclusions.reduce((acc, timeEntry) => {
+      const tagIds = timeEntry.tags.reduce((acc, { linkedId, isIncluded }) => {
+        if (isNil(linkedId) || !isIncluded) return acc;
+        return [...acc, linkedId];
+      }, []);
+
+      return [
+        ...acc,
+        {
+          start: timeEntry.start,
+          billable: timeEntry.isBillable,
+          description: timeEntry.description,
+          end: timeEntry.end,
+          projectId: get(timeEntry, ['project', 'linkedId'], null),
+          taskId: get(timeEntry, ['task', 'linkedId'], null),
+          tagIds,
+          projectName: get(timeEntry, ['project', 'name'], null),
+          workspaceName: get(timeEntry, ['workspace', 'name'], null),
+        },
+      ];
+    }, []);
+  },
+);

@@ -1,13 +1,20 @@
 import { createAsyncAction, createStandardAction } from 'typesafe-actions';
-import { flatten, get, isNil, isString } from 'lodash';
-import { buildThrottler, findIdFieldValue } from '~/redux/utils';
+import { flatten } from 'lodash';
 import {
+  batchClockifyRequests,
+  buildThrottler,
+  getValidEntities,
+} from '~/redux/utils';
+import {
+  apiCreateClockifyTimeEntry,
   apiFetchClockifyTimeEntries,
   apiFetchTogglTimeEntries,
 } from '~/redux/entities/api/timeEntries';
-import { showFetchErrorNotification } from '~/redux/app/appActions';
+import {
+  showFetchErrorNotification,
+  updateTimeEntryTransferDetails,
+} from '~/redux/app/appActions';
 import { selectCurrentTransferType } from '~/redux/app/appSelectors';
-import { selectTogglClients } from '~/redux/entities/clients/clientsSelectors';
 import { selectCredentials } from '~/redux/credentials/credentialsSelectors';
 import { calculateUserGroupEntryCounts } from '~/redux/entities/userGroups/userGroupsActions';
 import {
@@ -15,121 +22,58 @@ import {
   selectTogglUsersById,
 } from '~/redux/entities/users/usersSelectors';
 import { selectTogglWorkspaceIncludedYears } from '~/redux/entities/workspaces/workspacesSelectors';
+import { TimeEntryCompounder } from './TimeEntryCompounder';
+import { TimeEntriesState } from './timeEntriesReducer';
+import { selectTimeEntriesTransferPayloadForWorkspace } from './timeEntriesSelectors';
 import { TransferType } from '~/types/appTypes';
-import { ReduxDispatch, ReduxGetState, ToolName } from '~/types/commonTypes';
-import { ClientModel } from '~/types/clientsTypes';
-import { EntityType } from '~/types/entityTypes';
 import {
-  ClockifyTimeEntry,
-  TimeEntryModel,
-  TogglTimeEntry,
+  EntitiesByGroupModel,
+  ReduxDispatch,
+  ReduxGetState,
+  ToolName,
+} from '~/types/commonTypes';
+import {
+  ClockifyTimeEntryModel,
+  CompoundTimeEntryModel,
+  CreateTimeEntryRequestModel,
+  TogglTimeEntryModel,
 } from '~/types/timeEntriesTypes';
-import { UserModel } from '~/types/usersTypes';
+import { selectEntitiesByGroupFactory } from '~/redux/entities/entitiesSelectors';
+
+type TimeEntryForTool = ClockifyTimeEntryModel | TogglTimeEntryModel;
 
 export const clockifyTimeEntriesFetch = createAsyncAction(
   '@timeEntries/CLOCKIFY_FETCH_REQUEST',
   '@timeEntries/CLOCKIFY_FETCH_SUCCESS',
   '@timeEntries/CLOCKIFY_FETCH_FAILURE',
-)<void, Array<TimeEntryModel>, void>();
+)<void, Array<CompoundTimeEntryModel>, void>();
 
 export const togglTimeEntriesFetch = createAsyncAction(
   '@timeEntries/TOGGL_FETCH_REQUEST',
   '@timeEntries/TOGGL_FETCH_SUCCESS',
   '@timeEntries/TOGGL_FETCH_FAILURE',
-)<void, Array<TimeEntryModel>, void>();
+)<void, Array<CompoundTimeEntryModel>, void>();
+
+export const clockifyTimeEntriesTransfer = createAsyncAction(
+  '@timeEntries/CLOCKIFY_TRANSFER_REQUEST',
+  '@timeEntries/CLOCKIFY_TRANSFER_SUCCESS',
+  '@timeEntries/CLOCKIFY_TRANSFER_FAILURE',
+)<void, Array<CompoundTimeEntryModel>, void>();
 
 export const flipIsTimeEntryIncluded = createStandardAction(
   '@timeEntries/FLIP_IS_INCLUDED',
 )<string>();
 
-const fetchClockifyTimeEntriesForIncludedYears = async (
-  userId: string,
-  workspaceId: string,
-  years: Array<number>,
-): Promise<Array<ClockifyTimeEntry>> => {
-  const { promiseThrottle, throttledFunc } = buildThrottler(
-    apiFetchClockifyTimeEntries,
-  );
-
-  const allYearsTimeEntries: Array<Array<ClockifyTimeEntry>> = [];
-
-  for (const year of years) {
-    await promiseThrottle
-      .add(
-        // @ts-ignore
-        throttledFunc.bind(this, userId, workspaceId, year),
-      )
-      .then((yearEntries: Array<ClockifyTimeEntry>) => {
-        allYearsTimeEntries.push(yearEntries);
-      });
-  }
-
-  return flatten(allYearsTimeEntries);
-};
-
-const getTimeValue = (value: any, field: string): Date | null => {
-  const timeValue =
-    'timeInterval' in value
-      ? get(value, ['timeInterval', field], null)
-      : get(value, field, null);
-  return isNil(timeValue) ? null : new Date(timeValue);
-};
-
-const convertTimeEntriesFromToolToUniversal = (
-  workspaceId: string,
-  timeEntries: Array<ClockifyTimeEntry | TogglTimeEntry>,
-  clients: Array<ClientModel> | null,
-  usersById: Record<string, UserModel> | null,
-): Array<TimeEntryModel> =>
-  timeEntries.map(timeEntry => {
-    let clientId = null;
-
-    if ('client' in timeEntry && !isNil(clients)) {
-      const matchingClient = clients.find(
-        ({ name }) => name === timeEntry.client,
-      );
-      clientId = isNil(matchingClient) ? null : matchingClient.id;
-    }
-
-    const userId = findIdFieldValue(timeEntry, EntityType.User);
-    let userGroupIds: Array<string> = [];
-    if (!isNil(usersById)) {
-      userGroupIds = get(usersById, [userId, 'userGroupIds'], []);
-    }
-
-    const getTagValue = (tag: any) => (isString(tag) ? tag : get(tag, 'name'));
-
-    return {
-      id: timeEntry.id.toString(),
-      description: timeEntry.description,
-      projectId: findIdFieldValue(timeEntry, EntityType.Project),
-      taskId: findIdFieldValue(timeEntry, EntityType.Task),
-      userId,
-      userGroupIds,
-      workspaceId,
-      client:
-        'client' in timeEntry
-          ? timeEntry.client
-          : get(timeEntry, ['project', 'clientName'], null),
-      clientId,
-      isBillable:
-        'is_billable' in timeEntry ? timeEntry.is_billable : timeEntry.billable,
-      start: getTimeValue(timeEntry, 'start'),
-      end: getTimeValue(timeEntry, 'end'),
-      tags: isNil(timeEntry.tags) ? [] : timeEntry.tags.map(getTagValue),
-      isActive: false,
-      tagIds: [],
-      name: null,
-      linkedId: null,
-      isIncluded: true,
-    };
-  });
+export const addLinksToTimeEntries = createStandardAction(
+  '@timeEntries/ADD_LINKS_TO_TIME_ENTRIES',
+)<TimeEntriesState>();
 
 export const fetchClockifyTimeEntries = (workspaceId: string) => async (
   dispatch: ReduxDispatch,
   getState: ReduxGetState,
 ) => {
   dispatch(clockifyTimeEntriesFetch.request());
+
   try {
     const state = getState();
     const { clockifyUserId } = selectCredentials(state);
@@ -142,12 +86,10 @@ export const fetchClockifyTimeEntries = (workspaceId: string) => async (
     );
 
     const usersById = selectClockifyUsersById(state);
-
-    const timeEntries = convertTimeEntriesFromToolToUniversal(
+    const timeEntries = convertToCompoundTimeEntries(
       workspaceId,
       clockifyTimeEntries,
-      null,
-      usersById,
+      selectEntitiesByGroupFactory(ToolName.Clockify)(state),
     );
 
     dispatch(
@@ -157,40 +99,12 @@ export const fetchClockifyTimeEntries = (workspaceId: string) => async (
         usersById,
       }),
     );
+
     return dispatch(clockifyTimeEntriesFetch.success(timeEntries));
   } catch (error) {
     dispatch(showFetchErrorNotification(error));
     return dispatch(clockifyTimeEntriesFetch.failure());
   }
-};
-
-const fetchTogglTimeEntriesForRemainingPages = async (
-  email: string,
-  workspaceId: string,
-  year: number,
-  totalPages: number,
-): Promise<Array<TogglTimeEntry>> => {
-  const { promiseThrottle, throttledFunc } = buildThrottler(
-    apiFetchTogglTimeEntries,
-  );
-
-  const timeEntriesForPage: Array<Array<TogglTimeEntry>> = [];
-  let currentPage = totalPages;
-
-  // We already got the first page, don't want to fetch again:
-  while (currentPage > 1) {
-    await promiseThrottle
-      .add(
-        // @ts-ignore
-        throttledFunc.bind(this, email, workspaceId, year, currentPage),
-      )
-      .then(({ data }: { data: Array<TogglTimeEntry> }) => {
-        timeEntriesForPage.push(data);
-      });
-    currentPage -= 1;
-  }
-
-  return flatten(timeEntriesForPage);
 };
 
 export const fetchTogglTimeEntries = (
@@ -203,38 +117,24 @@ export const fetchTogglTimeEntries = (
     const state = getState();
     const { togglEmail, togglUserId } = selectCredentials(state);
 
-    const {
-      total_count: totalCount,
-      per_page: perPage,
-      data: firstPageEntries,
-    } = await apiFetchTogglTimeEntries(togglEmail, workspaceId, year, 1);
-
-    const totalPages = Math.ceil(totalCount / perPage);
-
-    const remainingPageEntries = await fetchTogglTimeEntriesForRemainingPages(
+    const allTimeEntries = await fetchAllTogglTimeEntries(
       togglEmail,
       workspaceId,
       year,
-      totalPages,
     );
 
-    const allTimeEntries = [...firstPageEntries, ...remainingPageEntries];
-
-    const togglClients = selectTogglClients(state);
     const usersById = selectTogglUsersById(state);
-
-    const universalTimeEntries = convertTimeEntriesFromToolToUniversal(
+    const compoundTimeEntries = convertToCompoundTimeEntries(
       workspaceId,
       allTimeEntries,
-      togglClients,
-      usersById,
+      selectEntitiesByGroupFactory(ToolName.Toggl)(state),
     );
 
     const currentTransferType = selectCurrentTransferType(state);
     const timeEntries =
       currentTransferType === TransferType.SingleUser
-        ? universalTimeEntries.filter(({ userId }) => userId === togglUserId)
-        : universalTimeEntries;
+        ? compoundTimeEntries.filter(({ userId }) => userId === togglUserId)
+        : compoundTimeEntries;
 
     dispatch(
       calculateUserGroupEntryCounts({
@@ -250,3 +150,152 @@ export const fetchTogglTimeEntries = (
     return dispatch(togglTimeEntriesFetch.failure());
   }
 };
+
+export const transferTimeEntriesToClockify = (
+  togglWorkspaceId: string,
+  clockifyWorkspaceId: string,
+) => async (dispatch: ReduxDispatch, getState: ReduxGetState) => {
+  const state = getState();
+  const timeEntriesInWorkspace = selectTimeEntriesTransferPayloadForWorkspace(
+    state,
+  )(togglWorkspaceId);
+
+  const countOfTimeEntries = timeEntriesInWorkspace.length;
+  if (countOfTimeEntries === 0) return Promise.resolve();
+
+  dispatch(clockifyTimeEntriesTransfer.request());
+
+  const onTimeEntry = (
+    {
+      workspaceName,
+      projectName,
+    }: CreateTimeEntryRequestModel & {
+      projectName: string;
+      workspaceName: string;
+    },
+    recordNumber: number,
+  ) => {
+    dispatch(
+      updateTimeEntryTransferDetails({
+        countCurrent: recordNumber,
+        countTotal: countOfTimeEntries,
+        workspaceName,
+        projectName,
+      }),
+    );
+  };
+
+  try {
+    const clockifyTimeEntries = await batchClockifyRequests(
+      10,
+      onTimeEntry,
+      timeEntriesInWorkspace,
+      apiCreateClockifyTimeEntry,
+      clockifyWorkspaceId,
+    );
+
+    const timeEntries = convertToCompoundTimeEntries(
+      clockifyWorkspaceId,
+      clockifyTimeEntries,
+      selectEntitiesByGroupFactory(ToolName.Clockify)(state),
+    );
+
+    return dispatch(clockifyTimeEntriesTransfer.success(timeEntries));
+  } catch (error) {
+    dispatch(showFetchErrorNotification(error));
+    return dispatch(clockifyTimeEntriesTransfer.failure());
+  }
+};
+
+async function fetchClockifyTimeEntriesForIncludedYears(
+  userId: string,
+  workspaceId: string,
+  years: Array<number>,
+): Promise<Array<ClockifyTimeEntryModel>> {
+  const { promiseThrottle, throttledFunc } = buildThrottler(
+    4,
+    apiFetchClockifyTimeEntries,
+  );
+
+  const allYearsTimeEntries: Array<Array<ClockifyTimeEntryModel>> = [];
+  for (const year of years) {
+    await promiseThrottle
+      .add(
+        // @ts-ignore
+        throttledFunc.bind(this, userId, workspaceId, year),
+      )
+      .then((yearEntries: Array<ClockifyTimeEntryModel>) => {
+        allYearsTimeEntries.push(yearEntries);
+      });
+  }
+
+  return flatten(allYearsTimeEntries);
+}
+
+async function fetchAllTogglTimeEntries(
+  togglEmail: string,
+  workspaceId: string,
+  year: number,
+) {
+  const {
+    total_count: totalCount,
+    per_page: perPage,
+    data: firstPageEntries,
+  } = await apiFetchTogglTimeEntries(togglEmail, workspaceId, year, 1);
+
+  const totalPages = Math.ceil(totalCount / perPage);
+
+  const remainingPageEntries = await fetchTogglTimeEntriesForRemainingPages(
+    togglEmail,
+    workspaceId,
+    year,
+    totalPages,
+  );
+
+  return [...firstPageEntries, ...remainingPageEntries];
+}
+
+async function fetchTogglTimeEntriesForRemainingPages(
+  email: string,
+  workspaceId: string,
+  year: number,
+  totalPages: number,
+): Promise<Array<TogglTimeEntryModel>> {
+  const { promiseThrottle, throttledFunc } = buildThrottler(
+    4,
+    apiFetchTogglTimeEntries,
+  );
+
+  const timeEntriesForPage: Array<Array<TogglTimeEntryModel>> = [];
+  let currentPage = totalPages;
+
+  // We already got the first page, don't want to fetch again:
+  while (currentPage > 1) {
+    await promiseThrottle
+      .add(
+        // @ts-ignore
+        throttledFunc.bind(this, email, workspaceId, year, currentPage),
+      )
+      .then(({ data }: { data: Array<TogglTimeEntryModel> }) => {
+        timeEntriesForPage.push(data);
+      });
+    currentPage -= 1;
+  }
+
+  return flatten(timeEntriesForPage);
+}
+
+function convertToCompoundTimeEntries(
+  workspaceId: string,
+  timeEntries: Array<TimeEntryForTool>,
+  entitiesByGroup: EntitiesByGroupModel,
+): Array<CompoundTimeEntryModel> {
+  if (getValidEntities(timeEntries).length === 0) return [];
+
+  const timeEntryCompounder = new TimeEntryCompounder(
+    workspaceId,
+    entitiesByGroup,
+  );
+
+  return timeEntries.map(timeEntry => timeEntryCompounder.compound(timeEntry));
+}

@@ -5,10 +5,11 @@ import PromiseThrottle from 'promise-throttle';
  * requests to the tool APIs.
  */
 export function buildThrottler<TResponse>(
+  requestsPerSecond: number,
   fetchFunc: (...fetchArgs: Array<any>) => TResponse,
 ) {
   const promiseThrottle = new PromiseThrottle({
-    requestsPerSecond: 4,
+    requestsPerSecond,
     promiseImplementation: Promise,
   });
 

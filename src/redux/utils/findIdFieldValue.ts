@@ -2,7 +2,7 @@ import { get, isNil } from 'lodash';
 import { EntityType } from '~/types/entityTypes';
 
 /**
- * Extrapolates the ID field name from the specified entityRecord based on
+ * Extrapolates the ID field value from the specified entityRecord based on
  * its type.
  */
 export function findIdFieldValue<TEntity>(

@@ -4,6 +4,8 @@ import { buildThrottler } from './buildThrottler';
 /**
  * Loops through the specified records and performs the specified API function
  * on each one in global state.
+ * @param requestsPerSecond Maximum number of fetch calls per second (to
+ *                          prevent API errors).
  * @param onRecord Action to perform when a new record is in process.
  * @param entityRecordsInWorkspace Array of request body records associated
  *                                 with workspace.
@@ -11,19 +13,25 @@ import { buildThrottler } from './buildThrottler';
  * @param parentIds Parent ID values to call API function.
  */
 export async function batchClockifyRequests<TPayload, TResponse>(
-  onRecord: (record: any) => void,
+  requestsPerSecond: number,
+  onRecord: (record: TPayload, recordNumber?: number) => void,
   entityRecordsInWorkspace: Array<TPayload>,
   clockifyApiFunc: (...args: Array<any>) => Promise<TResponse>,
   ...parentIds: Array<string>
 ): Promise<Array<TResponse>> {
-  const { promiseThrottle, throttledFunc } = buildThrottler(clockifyApiFunc);
+  const { promiseThrottle, throttledFunc } = buildThrottler(
+    requestsPerSecond,
+    clockifyApiFunc,
+  );
 
   const fetchResults: Array<TResponse> = [];
   const fetchErrors: Array<{ name: string; message: string }> = [];
+  let recordNumber = 1;
 
   for (const entityRecord of entityRecordsInWorkspace) {
     try {
-      onRecord(entityRecord);
+      onRecord(entityRecord, recordNumber);
+
       await promiseThrottle
         // @ts-ignore
         .add(throttledFunc.bind(this, ...parentIds, entityRecord))
@@ -36,6 +44,8 @@ export async function batchClockifyRequests<TPayload, TResponse>(
         message: error.statusText,
       });
     }
+
+    recordNumber += 1;
   }
 
   // TODO: Change this to return and render in component.
