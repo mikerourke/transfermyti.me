@@ -6,10 +6,7 @@ import {
   apiFetchClockifyTimeEntries,
   apiFetchTogglTimeEntries,
 } from '~/redux/entities/api/timeEntries';
-import {
-  showFetchErrorNotification,
-  updateTimeEntryTransferDetails,
-} from '~/redux/app/appActions';
+import { showFetchErrorNotification } from '~/redux/app/appActions';
 import { selectCurrentTransferType } from '~/redux/app/appSelectors';
 import { selectCredentials } from '~/redux/credentials/credentialsSelectors';
 import { selectEntitiesByGroupFactory } from '~/redux/entities/entitiesSelectors';
@@ -21,11 +18,10 @@ import {
 import { selectTogglWorkspaceIncludedYears } from '~/redux/entities/workspaces/workspacesSelectors';
 import { TimeEntryCompounder } from './TimeEntryCompounder';
 import { TimeEntriesState } from './timeEntriesReducer';
-import { selectTimeEntriesTransferPayloadForWorkspace } from './timeEntriesSelectors';
+import { selectTimeEntriesForWorkspace } from './timeEntriesSelectors';
 import {
   ClockifyTimeEntryModel,
   CompoundTimeEntryModel,
-  CreateTimeEntryRequestModel,
   EntitiesByGroupModel,
   ReduxDispatch,
   ReduxGetState,
@@ -150,39 +146,17 @@ export const transferTimeEntriesToClockify = (
   clockifyWorkspaceId: string,
 ) => async (dispatch: ReduxDispatch, getState: ReduxGetState) => {
   const state = getState();
-  const timeEntriesInWorkspace = selectTimeEntriesTransferPayloadForWorkspace(
-    state,
-  )(togglWorkspaceId);
-
-  const countOfTimeEntries = timeEntriesInWorkspace.length;
-  if (countOfTimeEntries === 0) return Promise.resolve();
+  const timeEntriesInWorkspace = selectTimeEntriesForWorkspace(state)(
+    togglWorkspaceId,
+  );
+  if (timeEntriesInWorkspace.length === 0) return Promise.resolve();
 
   dispatch(clockifyTimeEntriesTransfer.request());
-
-  const onTimeEntry = (
-    {
-      workspaceName,
-      projectName,
-    }: CreateTimeEntryRequestModel & {
-      projectName: string;
-      workspaceName: string;
-    },
-    recordNumber: number,
-  ) => {
-    dispatch(
-      updateTimeEntryTransferDetails({
-        countCurrent: recordNumber,
-        countTotal: countOfTimeEntries,
-        workspaceName,
-        projectName,
-      }),
-    );
-  };
 
   try {
     const clockifyTimeEntries = await utils.batchClockifyRequests(
       10,
-      onTimeEntry,
+      dispatch,
       timeEntriesInWorkspace,
       apiCreateClockifyTimeEntry,
       clockifyWorkspaceId,

@@ -5,10 +5,7 @@ import {
   apiFetchClockifyUserGroups,
   apiFetchTogglUserGroups,
 } from '~/redux/entities/api/userGroups';
-import {
-  showFetchErrorNotification,
-  updateInTransferEntity,
-} from '~/redux/app/appActions';
+import { showFetchErrorNotification } from '~/redux/app/appActions';
 import {
   selectClockifyUsersByWorkspace,
   selectTogglUsersByWorkspaceFactory,
@@ -125,7 +122,7 @@ export const transferUserGroupsToClockify = (
   try {
     const userGroups = await batchClockifyRequests(
       4,
-      userGroup => dispatch(updateInTransferEntity(userGroup)),
+      dispatch,
       userGroupsInWorkspace,
       apiCreateClockifyUserGroup,
       clockifyWorkspaceId,

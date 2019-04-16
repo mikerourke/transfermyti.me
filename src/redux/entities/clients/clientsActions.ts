@@ -5,10 +5,7 @@ import {
   apiFetchClockifyClients,
   apiFetchTogglClients,
 } from '~/redux/entities/api/clients';
-import {
-  showFetchErrorNotification,
-  updateInTransferEntity,
-} from '~/redux/app/appActions';
+import { showFetchErrorNotification } from '~/redux/app/appActions';
 import { selectClientsTransferPayloadForWorkspace } from './clientsSelectors';
 import {
   ClockifyClientModel,
@@ -82,7 +79,7 @@ export const transferClientsToClockify = (
   try {
     const clients = await batchClockifyRequests(
       4,
-      client => dispatch(updateInTransferEntity(client)),
+      dispatch,
       clientsInWorkspace,
       apiCreateClockifyClient,
       clockifyWorkspaceId,

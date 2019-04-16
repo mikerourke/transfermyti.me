@@ -2,29 +2,25 @@ import { getType } from 'typesafe-actions';
 import { handleActions } from 'redux-actions';
 import * as appActions from './appActions';
 import {
-  CompoundEntityModel,
   NotificationModel,
   ReduxAction,
-  TimeEntryTransferDetailsModel,
+  TransferDetailsModel,
   TransferType,
 } from '~/types';
 
 export interface AppState {
   readonly notifications: Array<NotificationModel>;
   readonly currentTransferType: TransferType;
-  readonly inTransferEntity: Partial<CompoundEntityModel> | null;
-  readonly timeEntryTransferDetails: TimeEntryTransferDetailsModel;
+  readonly transferDetails: TransferDetailsModel;
 }
 
 export const initialState: AppState = {
   notifications: [],
   currentTransferType: TransferType.SingleUser,
-  inTransferEntity: null,
-  timeEntryTransferDetails: {
+  transferDetails: {
     countCurrent: 0,
     countTotal: 0,
-    projectName: '',
-    workspaceName: '',
+    inTransferEntity: null,
   },
 };
 
@@ -63,22 +59,12 @@ export const appReducer = handleActions(
       currentTransferType,
     }),
 
-    [getType(appActions.updateInTransferEntity)]: (
+    [getType(appActions.updateTransferDetails)]: (
       state: AppState,
-      { payload: inTransferEntity }: ReduxAction<Partial<CompoundEntityModel>>,
+      { payload: transferDetails }: ReduxAction<TransferDetailsModel>,
     ): AppState => ({
       ...state,
-      inTransferEntity,
-    }),
-
-    [getType(appActions.updateTimeEntryTransferDetails)]: (
-      state: AppState,
-      {
-        payload: timeEntryTransferDetails,
-      }: ReduxAction<TimeEntryTransferDetailsModel>,
-    ): AppState => ({
-      ...state,
-      timeEntryTransferDetails,
+      transferDetails,
     }),
   },
   initialState,

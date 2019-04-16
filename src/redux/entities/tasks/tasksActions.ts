@@ -6,10 +6,7 @@ import {
   apiFetchClockifyTasks,
   apiFetchTogglTasks,
 } from '~/redux/entities/api/tasks';
-import {
-  showFetchErrorNotification,
-  updateInTransferEntity,
-} from '~/redux/app/appActions';
+import { showFetchErrorNotification } from '~/redux/app/appActions';
 import { selectClockifyProjectIds } from '~/redux/entities/projects/projectsSelectors';
 import { selectTasksTransferPayloadForWorkspace } from './tasksSelectors';
 import {
@@ -110,7 +107,7 @@ export const transferTasksToClockify = (
       if (projectTasks.length !== 0) {
         const tasks = await batchClockifyRequests(
           4,
-          task => dispatch(updateInTransferEntity(task)),
+          dispatch,
           projectTasks,
           apiCreateClockifyTask,
           clockifyWorkspaceId,

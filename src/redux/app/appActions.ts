@@ -2,12 +2,11 @@ import { createStandardAction } from 'typesafe-actions';
 import { capitalize, isNil, uniqueId } from 'lodash';
 import { getIfDev } from '~/utils/getIfDev';
 import {
-  CompoundEntityModel,
   NotificationModel,
   NotificationType,
   ReduxDispatch,
-  TimeEntryTransferDetailsModel,
   ToolName,
+  TransferDetailsModel,
   TransferType,
 } from '~/types';
 
@@ -27,13 +26,9 @@ export const updateTransferType = createStandardAction(
   '@app/UPDATE_TRANSFER_TYPE',
 )<TransferType>();
 
-export const updateInTransferEntity = createStandardAction(
-  '@app/UPDATE_IN_TRANSFER_ENTITY',
-)<Partial<CompoundEntityModel>>();
-
-export const updateTimeEntryTransferDetails = createStandardAction(
-  '@app/UPDATE_TIME_ENTRY_TRANSFER_DETAILS',
-)<TimeEntryTransferDetailsModel>();
+export const updateTransferDetails = createStandardAction(
+  '@app/UPDATE_TRANSFER_DETAILS',
+)<TransferDetailsModel>();
 
 export const showNotification = (notification: Partial<NotificationModel>) => (
   dispatch: ReduxDispatch,

@@ -8,13 +8,12 @@ import {
 } from '~/redux/entities/api/users';
 import {
   showFetchErrorNotification,
-  updateInTransferEntity,
+  updateTransferDetails,
 } from '~/redux/app/appActions';
 import { selectUsersInvitePayloadForWorkspace } from './usersSelectors';
 import { appendUserIdsToWorkspace } from '~/redux/entities/workspaces/workspacesActions';
 import {
   ClockifyUserModel,
-  EntityType,
   ReduxDispatch,
   ReduxGetState,
   TogglUserModel,
@@ -99,13 +98,19 @@ export const inviteUsersToClockify = (
   const userEmailsToInvite = selectUsersInvitePayloadForWorkspace(state)(
     togglWorkspaceId,
   );
-  if (userEmailsToInvite.length === 0) return Promise.resolve();
+  const countOfUserEmails = userEmailsToInvite.length;
+  if (countOfUserEmails === 0) return Promise.resolve();
 
   dispatch(clockifyUsersTransfer.request());
 
+  let countCurrent = 1;
   for (const userEmail of userEmailsToInvite) {
     dispatch(
-      updateInTransferEntity({ email: userEmail, type: EntityType.User }),
+      updateTransferDetails({
+        countCurrent,
+        countTotal: countOfUserEmails,
+        inTransferEntity: { name: userEmail },
+      }),
     );
   }
 

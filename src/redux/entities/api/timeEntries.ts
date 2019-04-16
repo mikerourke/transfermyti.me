@@ -1,9 +1,9 @@
-import { omit } from 'lodash';
+import { get, isNil } from 'lodash';
 import { firstAndLastDayOfYear } from '~/redux/utils';
 import { fetchArray, fetchObject } from './fetchByPayloadType';
 import {
   ClockifyTimeEntryModel,
-  CreateTimeEntryRequestModel,
+  DetailedTimeEntryModel,
   TogglTimeEntriesFetchResponseModel,
 } from '~/types';
 
@@ -58,12 +58,24 @@ export const apiFetchTogglTimeEntries = (
  */
 export const apiCreateClockifyTimeEntry = (
   workspaceId: string,
-  timeEntry: CreateTimeEntryRequestModel & {
-    projectName: string;
-    workspaceName: string;
-  },
+  timeEntry: DetailedTimeEntryModel,
 ): Promise<ClockifyTimeEntryModel> => {
-  const validTimeEntry = omit(timeEntry, 'projectName', 'workspaceName');
+  const tagIds = timeEntry.tags.reduce((acc, { linkedId, isIncluded }) => {
+    if (isNil(linkedId) || !isIncluded) return acc;
+    return [...acc, linkedId];
+  }, []);
+
+  const validTimeEntry = {
+    start: timeEntry.start,
+    billable: timeEntry.isBillable,
+    description: timeEntry.description,
+    end: timeEntry.end,
+    projectId: get(timeEntry, ['project', 'linkedId'], null),
+    taskId: get(timeEntry, ['task', 'linkedId'], null),
+    tagIds,
+    projectName: get(timeEntry, ['project', 'name'], null),
+    workspaceName: get(timeEntry, ['workspace', 'name'], null),
+  };
 
   return fetchObject(`/clockify/api/workspaces/${workspaceId}/timeEntries/`, {
     method: 'POST',

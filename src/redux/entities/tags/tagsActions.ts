@@ -5,10 +5,7 @@ import {
   apiFetchClockifyTags,
   apiFetchTogglTags,
 } from '~/redux/entities/api/tags';
-import {
-  showFetchErrorNotification,
-  updateInTransferEntity,
-} from '~/redux/app/appActions';
+import { showFetchErrorNotification } from '~/redux/app/appActions';
 import { selectTagsTransferPayloadForWorkspace } from './tagsSelectors';
 import {
   ClockifyTagModel,
@@ -82,7 +79,7 @@ export const transferTagsToClockify = (
   try {
     const tags = await batchClockifyRequests(
       4,
-      tag => dispatch(updateInTransferEntity(tag)),
+      dispatch,
       tagsInWorkspace,
       apiCreateClockifyTag,
       clockifyWorkspaceId,

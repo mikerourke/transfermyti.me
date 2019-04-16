@@ -10,10 +10,7 @@ import {
   apiFetchClockifyUsersInProject,
   apiFetchTogglUsersInProject,
 } from '~/redux/entities/api/users';
-import {
-  showFetchErrorNotification,
-  updateInTransferEntity,
-} from '~/redux/app/appActions';
+import { showFetchErrorNotification } from '~/redux/app/appActions';
 import { selectProjectsTransferPayloadForWorkspace } from './projectsSelectors';
 import {
   ClockifyProjectModel,
@@ -95,7 +92,7 @@ export const transferProjectsToClockify = (
   try {
     const projects = await batchClockifyRequests(
       4,
-      project => dispatch(updateInTransferEntity(project)),
+      dispatch,
       projectsInWorkspace,
       apiCreateClockifyProject,
       clockifyWorkspaceId,

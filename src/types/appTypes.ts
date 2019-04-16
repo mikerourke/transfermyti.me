@@ -1,3 +1,5 @@
+import { CompoundEntityModel } from '~/types/commonTypes';
+
 export enum NotificationType {
   Error = 'danger',
   Info = 'info',
@@ -15,9 +17,8 @@ export enum TransferType {
   SingleUser = 'SINGLE',
 }
 
-export interface TimeEntryTransferDetailsModel {
+export interface TransferDetailsModel {
   countCurrent: number;
   countTotal: number;
-  projectName: string;
-  workspaceName: string;
+  inTransferEntity: Partial<CompoundEntityModel> | null;
 }
