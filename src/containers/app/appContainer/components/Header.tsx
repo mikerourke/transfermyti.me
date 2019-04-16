@@ -19,11 +19,7 @@ const Header: React.FC<Props> = ({ currentTransferType }) => {
   }
 
   return (
-    <header
-      className={css`
-        flex-shrink: 0;
-      `}
-    >
+    <header>
       <Hero isSize="small" isColor="dark">
         <HeroHeader>
           <Flex

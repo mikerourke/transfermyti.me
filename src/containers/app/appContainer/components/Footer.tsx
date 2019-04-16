@@ -17,9 +17,15 @@ const LinkToMe = () => (
 
 const Footer: React.FC = () => (
   <BloomerFooter
+    isPaddingless
     className={css`
-      flex-shrink: 0;
-      padding: 1.5rem;
+      position: absolute;
+      right: 0;
+      bottom: 0;
+      left: 0;
+      height: var(--footer-height);
+      display: flex;
+      align-items: center;
     `}
   >
     <Container>

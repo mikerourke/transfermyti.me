@@ -9,17 +9,31 @@
   --dark-gray: #4a4a4a;
   --light-gray: #fafafa;
   --white: #fff;
+  --footer-height: 8rem;
+}
+
+html {
+  height: 100%;
+  box-sizing: border-box;
 }
 
 * {
   font-family: "Quicksand", Arial, sans-serif;
 }
 
+*,
+*:before,
+*:after {
+  box-sizing: inherit;
+}
+
 body {
-  height: 100vh;
-  overflow: auto;
+  min-height: 100%;
+  padding-bottom: var(--footer-height) !important;
+  position: relative;
+  margin: 0;
 }
 
 #root {
-  height: inherit;
+  margin: 0 auto;
 }

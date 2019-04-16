@@ -3,7 +3,6 @@ import { connect } from 'react-redux';
 import { css } from 'emotion';
 import { selectCurrentTransferType } from '~/redux/app/appSelectors';
 import NotificationsDisplay from '~/containers/app/notificationsDisplay/NotificationsDisplay';
-import Flex from '~/components/flex/Flex';
 import Footer from './components/Footer';
 import Header from './components/Header';
 import TransferWizard from './components/TransferWizard';
@@ -14,16 +13,10 @@ interface Props {
 }
 
 const App: React.FC<Props> = ({ currentTransferType }) => (
-  <Flex
-    direction="column"
-    className={css`
-      height: 100vh;
-    `}
-  >
+  <div>
     <Header currentTransferType={currentTransferType} />
     <main
       className={css`
-        flex-grow: 1;
         overflow-y: auto;
         padding: 1.5rem;
       `}
@@ -32,7 +25,7 @@ const App: React.FC<Props> = ({ currentTransferType }) => (
     </main>
     <Footer />
     <NotificationsDisplay />
-  </Flex>
+  </div>
 );
 
 const mapStateToProps = (state: ReduxState) => ({
