@@ -29,7 +29,7 @@ interface Props extends StepPageProps {
   ) => void;
 }
 
-const CONTENTS_HEIGHT = 448;
+const CONTENTS_HEIGHT = 600;
 
 const EntitiesReviewPage: React.FC<Props> = ({
   toolName,

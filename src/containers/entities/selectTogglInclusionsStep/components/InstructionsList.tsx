@@ -1,5 +1,6 @@
 import React from 'react';
 import { css } from 'emotion';
+import EntityTag, { EntityTagType } from '~/components/entityTag/EntityTag';
 
 const InstructionsList: React.FC = () => (
   <div>
@@ -17,12 +18,24 @@ const InstructionsList: React.FC = () => (
           font-weight: 500;
         }
 
-        span:last-child {
+        li:last-child > strong {
           color: var(--info);
+          font-weight: 700;
+        }
+
+        span {
+          margin: 0 4px;
           font-weight: 700;
         }
       `}
     >
+      <li>
+        The
+        <EntityTag size="small" tagType={EntityTagType.Archived} />
+        tag for a project indicates that it is archived on Toggl but won&apos;t
+        be archived on Clockify. Time entries associated with an archived
+        project also have this tag.
+      </li>
       <li>
         If you deselect a <strong>Project</strong>, all time entries associated
         with it will be omitted from the transfer.
@@ -35,8 +48,13 @@ const InstructionsList: React.FC = () => (
         start over.
       </li>
       <li>
-        Once you hit the <span>Next</span> button, you&apos;ll have a chance to
-        review what will be transferred to Clockify.
+        Any items you deselect will be marked with the
+        <EntityTag size="small" tagType={EntityTagType.Excluded} />
+        tag to indicate that you explicitly excluded them from transfer.
+      </li>
+      <li>
+        Once you hit the <strong>Next</strong> button, you&apos;ll have a chance
+        to review what will be transferred to Clockify.
       </li>
     </ul>
   </div>

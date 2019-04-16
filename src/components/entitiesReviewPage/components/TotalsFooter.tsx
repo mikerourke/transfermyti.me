@@ -6,7 +6,8 @@ import { lookupTable } from '~/utils/lookupTable';
 import Checkbox from '~/components/checkbox/Checkbox';
 import Flex from '~/components/flex/Flex';
 import GroupTotalsDisplay from './GroupTotalsDisplay';
-import { EntityGroup, RecordCountsModel } from '~/types';
+import { EntityGroup } from '~/types/entityTypes';
+import { RecordCountsModel } from '~/types/workspacesTypes';
 
 interface Props {
   activeEntityGroup: EntityGroup;
@@ -21,7 +22,9 @@ const TotalsFooter: React.FC<Props> = ({
   showInclusionsOnly,
   onFlipInclusionsOnly,
 }) => {
-  const isTimeEntriesActive = activeEntityGroup === EntityGroup.TimeEntries;
+  // const isTimeEntriesActive = activeEntityGroup === EntityGroup.TimeEntries;
+  // TODO: Re-enable this once you finish implementing the time entry duplication check.
+  const isTimeEntriesActive = true;
 
   const timeEntriesLabel = lookupTable(activeEntityGroup, {
     [EntityGroup.Clients]: 'Time Entries With A Client',

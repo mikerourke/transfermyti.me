@@ -18,6 +18,7 @@ import EntitiesReviewPage from '~/components/entitiesReviewPage/EntitiesReviewPa
 import Loader from '~/components/loader/Loader';
 import { StepPageProps } from '~/components/stepPage/StepPage';
 import ConfirmationModal from './components/ConfirmationModal';
+import InstructionsList from './components/InstructionsList';
 import {
   CompoundWorkspaceModel,
   CountsByGroupByWorkspaceModel,
@@ -122,52 +123,9 @@ export const ReviewClockifyDetailsStepComponent: React.FC<Props> = props => {
               >
                 This page contains all the records that <strong>will</strong> be
                 created on Clockify once you press the <strong>Next </strong>
-                button and confirm. Any records that already exist on Clockify
-                have a blue tag next to the name. These will not be transferred.
-                I couldn&apos;t even do it if I tried, you&apos;ll just end up
-                in API Error City, trust me.
+                button and confirm.
               </p>
-              <p
-                className={css`
-                  margin-bottom: 1rem;
-                `}
-              >
-                Unfortunately, Clockify won&apos;t prevent you from creating
-                duplicate time entries. Ensuring that a time entry doesn&apos;t
-                get duplicated is considerably more complex. You have to compare
-                several fields from each Toggl time entry to the corresponding
-                field on the Clockify time entry and yadda yadda yadda.
-              </p>
-              <p
-                className={css`
-                  margin-bottom: 1rem;
-                `}
-              >
-                <strong>Eventually</strong>, I&apos;m going to add a check to
-                ensure that you don&apos;t end up creating duplicate time
-                entries. I tried to have it ready for the first release but it
-                just wasn&apos;t in the cards.
-              </p>
-              <p
-                className={css`
-                  color: var(--info);
-                  font-weight: bold;
-                  margin-bottom: 1rem;
-                `}
-              >
-                Just keep in mind that using this tool **multiple times** will
-                most likely result in duplicate time entries (unless you picked
-                different projects each time).
-              </p>
-              <p>
-                Anywho, now that we got that out of the way, just one more
-                thing: If you see something here that you
-                <strong> don&apos;t</strong> want transferred, you have to press
-                the <strong>Previous</strong> button to go back and uncheck it.
-                I know, it&apos;s kind of a pain in the butt, but it beats
-                copying and pasting all your time entries into Clockify from
-                like a spreadsheet or something.
-              </p>
+              <InstructionsList />
             </>
           }
         />

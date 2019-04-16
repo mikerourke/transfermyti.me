@@ -21,20 +21,15 @@ interface Props {
   ) => void;
 }
 
-const EntitiesList: React.FC<Props> = ({
-  entityGroup,
-  entityRecords,
-  height,
-  width,
-  onItemClick,
-}) => {
-  const listRowHeight = entityGroup === EntityGroup.TimeEntries ? 120 : 64;
+const EntitiesList: React.FC<Props> = props => {
+  const listRowHeight =
+    props.entityGroup === EntityGroup.TimeEntries ? 120 : 64;
 
   const listRowRenderer = (listRowProps: ListRowProps) => {
-    const entityRecord = entityRecords[listRowProps.index];
+    const entityRecord = props.entityRecords[listRowProps.index];
     const isOmitted = !entityRecord.isIncluded || !isNil(entityRecord.linkedId);
 
-    if (entityGroup === EntityGroup.TimeEntries) {
+    if (props.entityGroup === EntityGroup.TimeEntries) {
       return (
         <TimeEntryListItem
           timeEntry={entityRecord as DetailedTimeEntryModel}
@@ -44,13 +39,14 @@ const EntitiesList: React.FC<Props> = ({
       );
     }
 
-    const handleItemClick = () => onItemClick(entityGroup, entityRecord);
+    const handleItemClick = () =>
+      props.onItemClick(props.entityGroup, entityRecord);
 
     return (
       <BasicListItem
         entityRecord={entityRecord}
         isOmitted={isOmitted}
-        onItemClick={!isNil(onItemClick) ? handleItemClick : undefined}
+        onItemClick={!isNil(props.onItemClick) ? handleItemClick : undefined}
         {...listRowProps}
       />
     );
@@ -58,10 +54,9 @@ const EntitiesList: React.FC<Props> = ({
 
   return (
     <List
-      width={width}
-      height={height}
+      width={props.width}
+      height={props.height}
       className={css`
-        max-height: ${height}px;
         &:focus {
           outline: 0;
         }
@@ -70,7 +65,7 @@ const EntitiesList: React.FC<Props> = ({
       rowClassName={css`
         cursor: pointer;
       `}
-      rowCount={entityRecords.length}
+      rowCount={props.entityRecords.length}
       rowRenderer={listRowRenderer}
     />
   );

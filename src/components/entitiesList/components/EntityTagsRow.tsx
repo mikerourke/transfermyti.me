@@ -1,8 +1,7 @@
 import React from 'react';
 import { When } from 'react-if';
-import { Tag } from 'bloomer';
-import { css } from 'emotion';
-import { isNil } from 'lodash';
+import { get, isNil } from 'lodash';
+import EntityTag, { EntityTagType } from '~/components/entityTag/EntityTag';
 import Flex, { FlexProps } from '~/components/flex/Flex';
 import { CompoundEntityModel } from '~/types';
 
@@ -16,33 +15,18 @@ const EntityTagsRow: React.FC<Props> = ({
   entityRecord,
   ...flexProps
 }) => {
-  const { isIncluded, isActive = true, linkedId } = entityRecord as any;
-
-  const tagClass = css`
-    font-weight: bold;
-    margin-right: 0.5rem;
-  `;
-
-  const entryStyle = isTimeEntry
-    ? { height: '1.5rem', fontSize: '0.625rem' }
-    : {};
+  const tagSize = isTimeEntry ? 'small' : 'large';
 
   return (
     <Flex {...flexProps}>
-      <When condition={!isActive}>
-        <Tag isColor="warning" className={tagClass} style={entryStyle}>
-          Archived
-        </Tag>
+      <When condition={!get(entityRecord, 'isActive', true)}>
+        <EntityTag size={tagSize} tagType={EntityTagType.Archived} />
       </When>
-      <When condition={!isIncluded}>
-        <Tag isColor="danger" className={tagClass} style={entryStyle}>
-          Excluded{!isTimeEntry && ' by User'}
-        </Tag>
+      <When condition={!entityRecord.isIncluded}>
+        <EntityTag size={tagSize} tagType={EntityTagType.Excluded} />
       </When>
-      <When condition={!isNil(linkedId)}>
-        <Tag isColor="info" className={tagClass} style={entryStyle}>
-          {!isTimeEntry && 'Already on '}Clockify
-        </Tag>
+      <When condition={!isNil(entityRecord.linkedId)}>
+        <EntityTag size={tagSize} tagType={EntityTagType.Existing} />
       </When>
     </Flex>
   );

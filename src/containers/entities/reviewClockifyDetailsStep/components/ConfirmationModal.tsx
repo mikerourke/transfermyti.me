@@ -43,14 +43,10 @@ const ConfirmationModal: React.FC<Props> = ({
         `}
       >
         <p>
-          This is just a nifty little modal that makes sure you actually want to
-          transfer all your stuff.
-        </p>
-        <p>
           If you&apos;re psychologically and emotionally ready to proceed, just
           hit the ol&apos; <strong>Confirm</strong> button down there. The
-          transfer process will start and you&apos;ll be taken to the final step
-          when everything is done.
+          transfer process will start and you&apos;ll be taken to the transfer
+          progress page.
         </p>
         <p>
           If you&apos;re not quite ready, no sweat, just hit the
