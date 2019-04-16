@@ -1,5 +1,5 @@
 import { get } from 'lodash';
-import { EntityType } from '~/types/entityTypes';
+import { EntityType } from '~/types';
 
 /**
  * Switches the value of `inIncluded` for the entity record that corresponds

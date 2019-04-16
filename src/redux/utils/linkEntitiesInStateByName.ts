@@ -1,6 +1,5 @@
 import { get, isEmpty } from 'lodash';
-import { ToolName } from '~/types/commonTypes';
-import { EntityGroup } from '~/types/entityTypes';
+import { EntityGroup, ToolName } from '~/types';
 
 type ModelWithName<T> = T & { name: string; isIncluded?: boolean };
 

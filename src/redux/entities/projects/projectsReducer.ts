@@ -5,17 +5,16 @@ import * as utils from '~/redux/utils';
 import { togglTimeEntriesFetch } from '~/redux/entities/timeEntries/timeEntriesActions';
 import * as projectsActions from './projectsActions';
 import {
-  ReduxAction,
-  ReduxStateEntryForTool,
-  ToolName,
-} from '~/types/commonTypes';
-import { EntityGroup, EntityType } from '~/types/entityTypes';
-import {
   ClockifyProjectModel,
   CompoundProjectModel,
+  EntityGroup,
+  EntityType,
+  ReduxAction,
+  ReduxStateEntryForTool,
   TogglProjectModel,
-} from '~/types/projectsTypes';
-import { TogglTimeEntryModel } from '~/types/timeEntriesTypes';
+  TogglTimeEntryModel,
+  ToolName,
+} from '~/types';
 
 export interface ProjectsState {
   readonly clockify: ReduxStateEntryForTool<CompoundProjectModel>;

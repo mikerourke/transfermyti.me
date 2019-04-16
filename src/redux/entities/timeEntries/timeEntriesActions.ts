@@ -1,10 +1,6 @@
 import { createAsyncAction, createStandardAction } from 'typesafe-actions';
 import { flatten } from 'lodash';
-import {
-  batchClockifyRequests,
-  buildThrottler,
-  getValidEntities,
-} from '~/redux/utils';
+import * as utils from '~/redux/utils';
 import {
   apiCreateClockifyTimeEntry,
   apiFetchClockifyTimeEntries,
@@ -16,6 +12,7 @@ import {
 } from '~/redux/app/appActions';
 import { selectCurrentTransferType } from '~/redux/app/appSelectors';
 import { selectCredentials } from '~/redux/credentials/credentialsSelectors';
+import { selectEntitiesByGroupFactory } from '~/redux/entities/entitiesSelectors';
 import { calculateUserGroupEntryCounts } from '~/redux/entities/userGroups/userGroupsActions';
 import {
   selectClockifyUsersById,
@@ -25,20 +22,17 @@ import { selectTogglWorkspaceIncludedYears } from '~/redux/entities/workspaces/w
 import { TimeEntryCompounder } from './TimeEntryCompounder';
 import { TimeEntriesState } from './timeEntriesReducer';
 import { selectTimeEntriesTransferPayloadForWorkspace } from './timeEntriesSelectors';
-import { TransferType } from '~/types/appTypes';
-import {
-  EntitiesByGroupModel,
-  ReduxDispatch,
-  ReduxGetState,
-  ToolName,
-} from '~/types/commonTypes';
 import {
   ClockifyTimeEntryModel,
   CompoundTimeEntryModel,
   CreateTimeEntryRequestModel,
+  EntitiesByGroupModel,
+  ReduxDispatch,
+  ReduxGetState,
   TogglTimeEntryModel,
-} from '~/types/timeEntriesTypes';
-import { selectEntitiesByGroupFactory } from '~/redux/entities/entitiesSelectors';
+  ToolName,
+  TransferType,
+} from '~/types';
 
 type TimeEntryForTool = ClockifyTimeEntryModel | TogglTimeEntryModel;
 
@@ -186,7 +180,7 @@ export const transferTimeEntriesToClockify = (
   };
 
   try {
-    const clockifyTimeEntries = await batchClockifyRequests(
+    const clockifyTimeEntries = await utils.batchClockifyRequests(
       10,
       onTimeEntry,
       timeEntriesInWorkspace,
@@ -212,7 +206,7 @@ async function fetchClockifyTimeEntriesForIncludedYears(
   workspaceId: string,
   years: Array<number>,
 ): Promise<Array<ClockifyTimeEntryModel>> {
-  const { promiseThrottle, throttledFunc } = buildThrottler(
+  const { promiseThrottle, throttledFunc } = utils.buildThrottler(
     4,
     apiFetchClockifyTimeEntries,
   );
@@ -261,7 +255,7 @@ async function fetchTogglTimeEntriesForRemainingPages(
   year: number,
   totalPages: number,
 ): Promise<Array<TogglTimeEntryModel>> {
-  const { promiseThrottle, throttledFunc } = buildThrottler(
+  const { promiseThrottle, throttledFunc } = utils.buildThrottler(
     4,
     apiFetchTogglTimeEntries,
   );
@@ -290,7 +284,7 @@ function convertToCompoundTimeEntries(
   timeEntries: Array<TimeEntryForTool>,
   entitiesByGroup: EntitiesByGroupModel,
 ): Array<CompoundTimeEntryModel> {
-  if (getValidEntities(timeEntries).length === 0) return [];
+  if (utils.getValidEntities(timeEntries).length === 0) return [];
 
   const timeEntryCompounder = new TimeEntryCompounder(
     workspaceId,

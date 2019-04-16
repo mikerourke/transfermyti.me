@@ -7,13 +7,14 @@ import EntityTabs from './components/EntityTabs';
 import NoRecordsDisplay from './components/NoRecordsDisplay';
 import TotalsFooter from './components/TotalsFooter';
 import WorkspacesDropdown from './components/WorkspacesDropdown';
-import { CompoundEntityModel, ToolName } from '~/types/commonTypes';
-import { EntityGroup } from '~/types/entityTypes';
 import {
+  CompoundEntityModel,
+  CompoundWorkspaceModel,
   CountsByGroupByWorkspaceModel,
   EntitiesByGroupByWorkspaceModel,
-  CompoundWorkspaceModel,
-} from '~/types/workspacesTypes';
+  EntityGroup,
+  ToolName,
+} from '~/types';
 
 interface Props extends StepPageProps {
   subtitle: string;

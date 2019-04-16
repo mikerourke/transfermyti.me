@@ -2,16 +2,14 @@ import { createStandardAction } from 'typesafe-actions';
 import { capitalize, isNil, uniqueId } from 'lodash';
 import { getIfDev } from '~/utils/getIfDev';
 import {
+  CompoundEntityModel,
   NotificationModel,
   NotificationType,
-  TimeEntryTransferDetailsModel,
-  TransferType,
-} from '~/types/appTypes';
-import {
-  CompoundEntityModel,
   ReduxDispatch,
+  TimeEntryTransferDetailsModel,
   ToolName,
-} from '~/types/commonTypes';
+  TransferType,
+} from '~/types';
 
 export const notificationShown = createStandardAction(
   '@app/NOTIFICATION_SHOWN',

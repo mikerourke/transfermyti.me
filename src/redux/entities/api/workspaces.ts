@@ -1,10 +1,11 @@
 import { firstAndLastDayOfYear } from '~/redux/utils';
 import { fetchArray, fetchObject } from './fetchByPayloadType';
-import { CreateNamedEntityRequest, HttpMethod } from '~/types/commonTypes';
 import {
   ClockifyWorkspaceModel,
+  CreateNamedEntityRequest,
+  HttpMethod,
   TogglSummaryReportModel,
-} from '~/types/workspacesTypes';
+} from '~/types';
 
 export const apiFetchClockifyWorkspaces = (): Promise<
   Array<ClockifyWorkspaceModel>

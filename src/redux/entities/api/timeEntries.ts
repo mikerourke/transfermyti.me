@@ -5,7 +5,7 @@ import {
   ClockifyTimeEntryModel,
   CreateTimeEntryRequestModel,
   TogglTimeEntriesFetchResponseModel,
-} from '~/types/timeEntriesTypes';
+} from '~/types';
 
 /**
  * Get time entries for specified userId in time range.

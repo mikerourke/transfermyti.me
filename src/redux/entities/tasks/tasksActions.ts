@@ -12,8 +12,12 @@ import {
 } from '~/redux/app/appActions';
 import { selectClockifyProjectIds } from '~/redux/entities/projects/projectsSelectors';
 import { selectTasksTransferPayloadForWorkspace } from './tasksSelectors';
-import { ReduxDispatch, ReduxGetState } from '~/types/commonTypes';
-import { ClockifyTaskModel, TogglTaskModel } from '~/types/tasksTypes';
+import {
+  ClockifyTaskModel,
+  ReduxDispatch,
+  ReduxGetState,
+  TogglTaskModel,
+} from '~/types';
 
 export const clockifyTasksFetch = createAsyncAction(
   '@tasks/CLOCKIFY_FETCH_REQUEST',

@@ -7,16 +7,15 @@ import { flipIsTaskIncluded } from '~/redux/entities/tasks/tasksActions';
 import { flipIsUserIncluded } from '~/redux/entities/users/usersActions';
 import * as timeEntriesActions from './timeEntriesActions';
 import {
-  ReduxAction,
-  ReduxStateEntryForTool,
-  ToolName,
-} from '~/types/commonTypes';
-import { EntityGroup, EntityType } from '~/types/entityTypes';
-import {
   ClockifyTimeEntryModel,
   CompoundTimeEntryModel,
+  EntityGroup,
+  EntityType,
+  ReduxAction,
+  ReduxStateEntryForTool,
   TogglTimeEntryModel,
-} from '~/types/timeEntriesTypes';
+  ToolName,
+} from '~/types';
 
 export interface TimeEntriesState {
   readonly clockify: ReduxStateEntryForTool<CompoundTimeEntryModel>;

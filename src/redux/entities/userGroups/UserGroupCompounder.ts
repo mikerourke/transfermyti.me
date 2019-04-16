@@ -1,11 +1,11 @@
 import { get } from 'lodash';
-import { EntityType } from '~/types/entityTypes';
 import {
   ClockifyUserGroupModel,
   CompoundUserGroupModel,
+  CompoundUserModel,
+  EntityType,
   TogglUserGroupModel,
-} from '~/types/userGroupsTypes';
-import { CompoundUserModel } from '~/types/usersTypes';
+} from '~/types';
 
 type UserGroupForTool = ClockifyUserGroupModel | TogglUserGroupModel;
 

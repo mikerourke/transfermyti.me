@@ -4,18 +4,17 @@ import * as utils from '~/redux/utils';
 import { togglTimeEntriesFetch } from '~/redux/entities/timeEntries/timeEntriesActions';
 import * as tasksActions from './tasksActions';
 import {
-  ReduxAction,
-  ReduxStateEntryForTool,
-  ToolName,
-} from '~/types/commonTypes';
-import { EntityGroup, EntityType } from '~/types/entityTypes';
-import {
   ClockifyTaskModel,
   ClockifyTaskStatus,
   CompoundTaskModel,
+  EntityGroup,
+  EntityType,
+  ReduxAction,
+  ReduxStateEntryForTool,
   TogglTaskModel,
-} from '~/types/tasksTypes';
-import { TogglTimeEntryModel } from '~/types/timeEntriesTypes';
+  TogglTimeEntryModel,
+  ToolName,
+} from '~/types';
 
 export interface TasksState {
   readonly clockify: ReduxStateEntryForTool<CompoundTaskModel>;

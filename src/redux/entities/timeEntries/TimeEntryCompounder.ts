@@ -1,12 +1,12 @@
 import { get, isEmpty, isNil } from 'lodash';
 import { findIdFieldValue } from '~/redux/utils';
-import { CompoundClientModel } from '~/types/clientsTypes';
-import { EntitiesByGroupModel } from '~/types/commonTypes';
-import { EntityType } from '~/types/entityTypes';
 import {
+  CompoundClientModel,
   CompoundTimeEntryModel,
+  EntitiesByGroupModel,
+  EntityType,
   TimeEntryForTool,
-} from '~/types/timeEntriesTypes';
+} from '~/types';
 
 interface ClientDetails {
   clientId: string | null;

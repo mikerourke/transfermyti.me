@@ -1,6 +1,5 @@
 import { get } from 'lodash';
-import { EntityType } from '~/types/entityTypes';
-import { CompoundEntityModel, ToolName } from '~/types/commonTypes';
+import { CompoundEntityModel, EntityType, ToolName } from '~/types';
 
 /**
  * Loops through the records in the specified entityState and returns state

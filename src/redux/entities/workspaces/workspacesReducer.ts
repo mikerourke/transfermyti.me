@@ -4,16 +4,15 @@ import { cloneDeep, get, uniq } from 'lodash';
 import * as utils from '~/redux/utils';
 import * as workspacesActions from './workspacesActions';
 import {
-  ReduxAction,
-  ReduxStateEntryForTool,
-  ToolName,
-} from '~/types/commonTypes';
-import { EntityGroup, EntityType } from '~/types/entityTypes';
-import {
   ClockifyWorkspaceModel,
   CompoundWorkspaceModel,
+  EntityGroup,
+  EntityType,
+  ReduxAction,
+  ReduxStateEntryForTool,
   TogglWorkspaceModel,
-} from '~/types/workspacesTypes';
+  ToolName,
+} from '~/types';
 
 export interface WorkspacesState {
   readonly clockify: ReduxStateEntryForTool<CompoundWorkspaceModel>;

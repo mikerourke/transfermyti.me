@@ -1,7 +1,6 @@
 import { get, isNil, uniq } from 'lodash';
 import { normalize, schema, Schema } from 'normalizr';
-import { ToolName } from '~/types/commonTypes';
-import { EntityGroup } from '~/types/entityTypes';
+import { EntityGroup, ToolName } from '~/types';
 
 /**
  * Applies the specified schemaProcessStrategy to the payload and returns state

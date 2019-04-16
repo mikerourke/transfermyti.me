@@ -18,12 +18,14 @@ import EntitiesReviewPage from '~/components/entitiesReviewPage/EntitiesReviewPa
 import Loader from '~/components/loader/Loader';
 import { StepPageProps } from '~/components/stepPage/StepPage';
 import ConfirmationModal from './components/ConfirmationModal';
-import { ReduxDispatch, ReduxState, ToolName } from '~/types/commonTypes';
 import {
+  CompoundWorkspaceModel,
   CountsByGroupByWorkspaceModel,
   EntitiesByGroupByWorkspaceModel,
-  CompoundWorkspaceModel,
-} from '~/types/workspacesTypes';
+  ReduxDispatch,
+  ReduxState,
+  ToolName,
+} from '~/types';
 
 interface ConnectStateProps {
   clockifyWorkspacesById: Record<string, CompoundWorkspaceModel>;

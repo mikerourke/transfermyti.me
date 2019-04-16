@@ -1,6 +1,5 @@
 import { createSelector } from 'reselect';
-import { NotificationModel } from '~/types/appTypes';
-import { ReduxState } from '~/types/commonTypes';
+import { NotificationModel, ReduxState } from '~/types';
 
 export const selectNotifications = createSelector(
   (state: ReduxState) => state.app.notifications,

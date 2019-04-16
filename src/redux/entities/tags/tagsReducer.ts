@@ -5,17 +5,16 @@ import * as utils from '~/redux/utils';
 import { togglTimeEntriesFetch } from '~/redux/entities/timeEntries/timeEntriesActions';
 import * as tagsActions from './tagsActions';
 import {
-  ReduxAction,
-  ReduxStateEntryForTool,
-  ToolName,
-} from '~/types/commonTypes';
-import { EntityGroup, EntityType } from '~/types/entityTypes';
-import {
   ClockifyTagModel,
   CompoundTagModel,
+  EntityGroup,
+  EntityType,
+  ReduxAction,
+  ReduxStateEntryForTool,
   TogglTagModel,
-} from '~/types/tagsTypes';
-import { TogglTimeEntryModel } from '~/types/timeEntriesTypes';
+  TogglTimeEntryModel,
+  ToolName,
+} from '~/types';
 
 export interface TagsState {
   readonly clockify: ReduxStateEntryForTool<CompoundTagModel>;

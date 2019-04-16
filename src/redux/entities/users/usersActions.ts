@@ -12,9 +12,14 @@ import {
 } from '~/redux/app/appActions';
 import { selectUsersInvitePayloadForWorkspace } from './usersSelectors';
 import { appendUserIdsToWorkspace } from '~/redux/entities/workspaces/workspacesActions';
-import { ReduxDispatch, ReduxGetState, ToolName } from '~/types/commonTypes';
-import { ClockifyUserModel, TogglUserModel } from '~/types/usersTypes';
-import { EntityType } from '~/types/entityTypes';
+import {
+  ClockifyUserModel,
+  EntityType,
+  ReduxDispatch,
+  ReduxGetState,
+  TogglUserModel,
+  ToolName,
+} from '~/types';
 
 export const clockifyUsersFetch = createAsyncAction(
   '@users/CLOCKIFY_FETCH_REQUEST',

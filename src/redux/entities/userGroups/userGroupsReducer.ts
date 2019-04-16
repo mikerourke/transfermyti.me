@@ -4,18 +4,17 @@ import { get, uniq } from 'lodash';
 import * as utils from '~/redux/utils';
 import * as userGroupsActions from './userGroupsActions';
 import {
+  ClockifyUserGroupModel,
+  CompoundTimeEntryModel,
+  CompoundUserGroupModel,
+  CompoundUserModel,
+  EntityGroup,
+  EntityType,
   ReduxAction,
   ReduxStateEntryForTool,
-  ToolName,
-} from '~/types/commonTypes';
-import { EntityGroup, EntityType } from '~/types/entityTypes';
-import {
-  ClockifyUserGroupModel,
   TogglUserGroupModel,
-  CompoundUserGroupModel,
-} from '~/types/userGroupsTypes';
-import { CompoundUserModel } from '~/types/usersTypes';
-import { CompoundTimeEntryModel } from '~/types/timeEntriesTypes';
+  ToolName,
+} from '~/types';
 
 export interface UserGroupsState {
   readonly clockify: ReduxStateEntryForTool<CompoundUserGroupModel>;

@@ -1,8 +1,7 @@
 import { getType } from 'typesafe-actions';
 import { handleActions, combineActions } from 'redux-actions';
 import * as credentialsActions from './credentialsActions';
-import { ReduxAction } from '~/types/commonTypes';
-import { CredentialsModel } from '~/types/credentialsTypes';
+import { CredentialsModel, ReduxAction } from '~/types';
 
 export interface CredentialsState extends CredentialsModel {
   readonly isValid: boolean;

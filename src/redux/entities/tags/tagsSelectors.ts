@@ -1,8 +1,11 @@
 import { createSelector } from 'reselect';
 import { get } from 'lodash';
 import { findTogglInclusions, groupByWorkspace } from '~/redux/utils';
-import { CreateNamedEntityRequest, ReduxState } from '~/types/commonTypes';
-import { CompoundTagModel } from '~/types/tagsTypes';
+import {
+  CompoundTagModel,
+  CreateNamedEntityRequest,
+  ReduxState,
+} from '~/types';
 
 export const selectTogglTagsById = createSelector(
   (state: ReduxState) => state.entities.tags.toggl.byId,

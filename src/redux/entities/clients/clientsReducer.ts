@@ -6,15 +6,14 @@ import * as clientsActions from './clientsActions';
 import {
   ClockifyClientModel,
   CompoundClientModel,
-  TogglClientModel,
-} from '~/types/clientsTypes';
-import {
+  EntityGroup,
+  EntityType,
   ReduxAction,
   ReduxStateEntryForTool,
+  TogglClientModel,
+  TogglTimeEntryModel,
   ToolName,
-} from '~/types/commonTypes';
-import { EntityGroup, EntityType } from '~/types/entityTypes';
-import { TogglTimeEntryModel } from '~/types/timeEntriesTypes';
+} from '~/types';
 
 export interface ClientsState {
   readonly clockify: ReduxStateEntryForTool<CompoundClientModel>;

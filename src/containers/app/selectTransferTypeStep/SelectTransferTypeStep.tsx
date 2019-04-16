@@ -6,8 +6,7 @@ import { updateTransferType } from '~/redux/app/appActions';
 import { selectCurrentTransferType } from '~/redux/app/appSelectors';
 import StepPage, { StepPageProps } from '~/components/stepPage/StepPage';
 import TransferTypeColumn from './components/TransferTypeColumn';
-import { TransferType } from '~/types/appTypes';
-import { ReduxDispatch, ReduxState } from '~/types/commonTypes';
+import { ReduxDispatch, ReduxState, TransferType } from '~/types';
 
 interface ConnectStateProps {
   currentTransferType: TransferType;

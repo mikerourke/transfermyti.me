@@ -4,8 +4,7 @@ import { css } from 'emotion';
 import { reverse } from 'lodash';
 import Flex from '~/components/flex/Flex';
 import Checkbox from '~/components/checkbox/Checkbox';
-import { CompoundWorkspaceModel } from '~/types/workspacesTypes';
-import { CheckedState } from '~/types/commonTypes';
+import { CheckedState, CompoundWorkspaceModel } from '~/types';
 
 interface Props {
   workspaceRecord: CompoundWorkspaceModel;

@@ -2,10 +2,10 @@ import { createSelector } from 'reselect';
 import { get } from 'lodash';
 import {
   EntitiesByGroupModel,
+  EntityGroup,
   ReduxState,
   ToolName,
-} from '~/types/commonTypes';
-import { EntityGroup } from '~/types/entityTypes';
+} from '~/types';
 
 export const selectEntitiesByGroupFactory = (toolName: ToolName) =>
   createSelector(

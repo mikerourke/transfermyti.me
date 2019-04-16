@@ -10,8 +10,12 @@ import {
   updateInTransferEntity,
 } from '~/redux/app/appActions';
 import { selectClientsTransferPayloadForWorkspace } from './clientsSelectors';
-import { ClockifyClientModel, TogglClientModel } from '~/types/clientsTypes';
-import { ReduxDispatch, ReduxGetState } from '~/types/commonTypes';
+import {
+  ClockifyClientModel,
+  ReduxDispatch,
+  ReduxGetState,
+  TogglClientModel,
+} from '~/types';
 
 export const clockifyClientsFetch = createAsyncAction(
   '@clients/CLOCKIFY_FETCH_REQUEST',

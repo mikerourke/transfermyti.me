@@ -23,9 +23,13 @@ import {
 import Loader from '~/components/loader/Loader';
 import StepPage, { StepPageProps } from '~/components/stepPage/StepPage';
 import WorkspaceRow from './components/WorkspaceRow';
-import { NotificationModel, NotificationType } from '~/types/appTypes';
-import { ReduxDispatch, ReduxState } from '~/types/commonTypes';
-import { CompoundWorkspaceModel } from '~/types/workspacesTypes';
+import {
+  CompoundWorkspaceModel,
+  NotificationModel,
+  NotificationType,
+  ReduxDispatch,
+  ReduxState,
+} from '~/types';
 
 interface ConnectStateProps {
   areWorkspaceYearsFetched: boolean;

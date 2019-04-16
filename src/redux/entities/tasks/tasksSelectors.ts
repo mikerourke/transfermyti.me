@@ -3,9 +3,12 @@ import { get, isNil } from 'lodash';
 import { findTogglInclusions, groupByWorkspace } from '~/redux/utils';
 import { selectTogglClientsByWorkspaceFactory } from '~/redux/entities/clients/clientsSelectors';
 import { selectTogglProjectsById } from '~/redux/entities/projects/projectsSelectors';
-import { CompoundClientModel } from '~/types/clientsTypes';
-import { ReduxState } from '~/types/commonTypes';
-import { CreateTaskRequestModel, CompoundTaskModel } from '~/types/tasksTypes';
+import {
+  CompoundClientModel,
+  CompoundTaskModel,
+  CreateTaskRequestModel,
+  ReduxState,
+} from '~/types';
 
 export const selectTogglTasksById = createSelector(
   (state: ReduxState) => state.entities.tasks.toggl.byId,

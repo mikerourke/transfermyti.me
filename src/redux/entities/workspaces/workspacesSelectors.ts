@@ -7,14 +7,16 @@ import { selectToggleTasksByWorkspaceFactory } from '~/redux/entities/tasks/task
 import { selectTimeEntriesByWorkspaceFactory } from '~/redux/entities/timeEntries/timeEntriesSelectors';
 import { selectTogglUserGroupsByWorkspaceFactory } from '~/redux/entities/userGroups/userGroupsSelectors';
 import { selectTogglUsersByWorkspaceFactory } from '~/redux/entities/users/usersSelectors';
-import { CompoundEntityModel, ReduxState, ToolName } from '~/types/commonTypes';
-import { EntityGroup } from '~/types/entityTypes';
 import {
+  CompoundEntityModel,
+  CompoundWorkspaceModel,
   CountsByGroupByWorkspaceModel,
   EntitiesByGroupByWorkspaceModel,
+  EntityGroup,
   RecordCountsModel,
-  CompoundWorkspaceModel,
-} from '~/types/workspacesTypes';
+  ReduxState,
+  ToolName,
+} from '~/types';
 
 export const selectTogglWorkspaceIds = createSelector(
   (state: ReduxState) => state.entities.workspaces.toggl.idValues,

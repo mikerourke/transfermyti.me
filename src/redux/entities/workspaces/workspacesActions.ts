@@ -17,18 +17,16 @@ import * as userGroupsActions from '../userGroups/userGroupsActions';
 import * as usersActions from '~/redux/entities/users/usersActions';
 import { selectTogglIncludedWorkspaceNames } from './workspacesSelectors';
 import {
+  ClockifyWorkspaceModel,
   CompoundEntityModel,
+  CompoundWorkspaceModel,
+  EntityGroup,
   ReduxDispatch,
   ReduxGetState,
-  ToolName,
-} from '~/types/commonTypes';
-import { EntityGroup } from '~/types/entityTypes';
-import {
-  ClockifyWorkspaceModel,
   TogglSummaryReportDataModel,
   TogglWorkspaceModel,
-  CompoundWorkspaceModel,
-} from '~/types/workspacesTypes';
+  ToolName,
+} from '~/types';
 
 export const clockifyWorkspacesFetch = createAsyncAction(
   '@workspaces/CLOCKIFY_FETCH_REQUEST',

@@ -2,8 +2,7 @@ import React from 'react';
 import { If, Then, Else } from 'react-if';
 import { css } from 'emotion';
 import { isNil } from 'lodash';
-import { ToolName } from '~/types/commonTypes';
-import { EntityGroup } from '~/types/entityTypes';
+import { EntityGroup, ToolName } from '~/types';
 
 interface Props {
   activeEntityGroup: string;

@@ -2,11 +2,12 @@ import { getType } from 'typesafe-actions';
 import { handleActions } from 'redux-actions';
 import * as appActions from './appActions';
 import {
+  CompoundEntityModel,
   NotificationModel,
+  ReduxAction,
   TimeEntryTransferDetailsModel,
   TransferType,
-} from '~/types/appTypes';
-import { CompoundEntityModel, ReduxAction } from '~/types/commonTypes';
+} from '~/types';
 
 export interface AppState {
   readonly notifications: Array<NotificationModel>;

@@ -1,9 +1,10 @@
 import { fetchArray, fetchObject } from './fetchByPayloadType';
-import { CreateNamedEntityRequest, HttpMethod } from '~/types/commonTypes';
 import {
   ClockifyUserGroupModel,
+  CreateNamedEntityRequest,
+  HttpMethod,
   TogglUserGroupModel,
-} from '~/types/userGroupsTypes';
+} from '~/types';
 
 export const apiFetchClockifyUserGroups = (
   workspaceId: string,

@@ -1,7 +1,7 @@
 import React from 'react';
+import classnames from 'classnames';
 import { Box, Column, Title } from 'bloomer';
 import { css } from 'emotion';
-import classnames from 'classnames';
 
 interface Props {
   isSelected: boolean;

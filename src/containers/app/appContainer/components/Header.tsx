@@ -3,7 +3,7 @@ import { css } from 'emotion';
 import { Container, Hero, HeroBody, HeroHeader, Title } from 'bloomer';
 import Flex from '~/components/flex/Flex';
 import SvgIcon, { SvgIconName } from '~/components/svgIcon/SvgIcon';
-import { TransferType } from '~/types/appTypes';
+import { TransferType } from '~/types';
 
 interface Props {
   currentTransferType: TransferType;

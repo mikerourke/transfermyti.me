@@ -19,16 +19,14 @@ import { StepPageProps } from '~/components/stepPage/StepPage';
 import InstructionsList from './components/InstructionsList';
 import {
   CompoundEntityModel,
+  CompoundWorkspaceModel,
+  CountsByGroupByWorkspaceModel,
+  EntitiesByGroupByWorkspaceModel,
+  EntityGroup,
   ReduxDispatch,
   ReduxState,
   ToolName,
-} from '~/types/commonTypes';
-import { EntityGroup } from '~/types/entityTypes';
-import {
-  CountsByGroupByWorkspaceModel,
-  EntitiesByGroupByWorkspaceModel,
-  CompoundWorkspaceModel,
-} from '~/types/workspacesTypes';
+} from '~/types';
 
 interface ConnectStateProps {
   countsByGroupByWorkspace: CountsByGroupByWorkspaceModel;

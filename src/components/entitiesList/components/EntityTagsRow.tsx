@@ -4,7 +4,7 @@ import { Tag } from 'bloomer';
 import { css } from 'emotion';
 import { isNil } from 'lodash';
 import Flex, { FlexProps } from '~/components/flex/Flex';
-import { CompoundEntityModel } from '~/types/commonTypes';
+import { CompoundEntityModel } from '~/types';
 
 interface Props extends FlexProps {
   isTimeEntry: boolean;

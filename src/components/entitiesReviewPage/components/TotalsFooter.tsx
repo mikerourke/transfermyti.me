@@ -6,8 +6,7 @@ import { lookupTable } from '~/utils/lookupTable';
 import Checkbox from '~/components/checkbox/Checkbox';
 import Flex from '~/components/flex/Flex';
 import GroupTotalsDisplay from './GroupTotalsDisplay';
-import { EntityGroup } from '~/types/entityTypes';
-import { RecordCountsModel } from '~/types/workspacesTypes';
+import { EntityGroup, RecordCountsModel } from '~/types';
 
 interface Props {
   activeEntityGroup: EntityGroup;

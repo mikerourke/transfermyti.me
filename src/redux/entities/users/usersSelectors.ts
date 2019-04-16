@@ -3,8 +3,7 @@ import { get } from 'lodash';
 import { findTogglInclusions } from '~/redux/utils';
 import { selectCredentials } from '~/redux/credentials/credentialsSelectors';
 import { selectTogglTimeEntriesById } from '~/redux/entities/timeEntries/timeEntriesSelectors';
-import { ReduxState } from '~/types/commonTypes';
-import { CompoundUserModel } from '~/types/usersTypes';
+import { CompoundUserModel, ReduxState } from '~/types';
 
 export const selectClockifyUsersById = createSelector(
   (state: ReduxState) => state.entities.users.clockify.byId,

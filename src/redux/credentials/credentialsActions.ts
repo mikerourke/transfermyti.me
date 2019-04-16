@@ -14,9 +14,14 @@ import {
   clockifyWorkspacesFetch,
   togglWorkspacesFetch,
 } from '~/redux/entities/workspaces/workspacesActions';
-import { NotificationType } from '~/types/appTypes';
-import { ReduxDispatch, ReduxGetState, ToolName } from '~/types/commonTypes';
-import { CredentialsField, CredentialsModel } from '~/types/credentialsTypes';
+import {
+  CredentialsField,
+  CredentialsModel,
+  NotificationType,
+  ReduxDispatch,
+  ReduxGetState,
+  ToolName,
+} from '~/types';
 
 export const allCredentialsStored = createStandardAction('@credentials/STORED')<
   CredentialsModel

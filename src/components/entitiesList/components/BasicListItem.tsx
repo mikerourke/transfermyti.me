@@ -7,7 +7,7 @@ import Checkbox from '~/components/checkbox/Checkbox';
 import Flex from '~/components/flex/Flex';
 import ListItemBase from './ListItemBase';
 import EntityTagsRow from './EntityTagsRow';
-import { CompoundEntityModel } from '~/types/commonTypes';
+import { CompoundEntityModel } from '~/types';
 
 interface Props extends ListRowProps {
   entityRecord: CompoundEntityModel;

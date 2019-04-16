@@ -1,6 +1,6 @@
 import React from 'react';
 import { css } from 'emotion';
-import { CheckedState } from '~/types/commonTypes';
+import { CheckedState } from '~/types';
 
 interface Props {
   checked: CheckedState | boolean;

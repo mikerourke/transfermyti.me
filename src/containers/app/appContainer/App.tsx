@@ -7,8 +7,7 @@ import Flex from '~/components/flex/Flex';
 import Footer from './components/Footer';
 import Header from './components/Header';
 import TransferWizard from './components/TransferWizard';
-import { TransferType } from '~/types/appTypes';
-import { ReduxState } from '~/types/commonTypes';
+import { ReduxState, TransferType } from '~/types';
 
 interface Props {
   currentTransferType: TransferType;

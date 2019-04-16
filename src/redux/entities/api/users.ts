@@ -1,14 +1,14 @@
 import { fetchArray, fetchObject } from './fetchByPayloadType';
-import { HttpMethod } from '~/types/commonTypes';
-import { TogglProjectUserModel } from '~/types/projectsTypes';
 import {
   AddUsersToWorkspaceRequestModel,
   ClockifyUserModel,
+  ClockifyWorkspaceModel,
+  HttpMethod,
   TogglMeResponseModel,
+  TogglProjectUserModel,
   TogglUserModel,
   TogglWorkspaceUserModel,
-} from '~/types/usersTypes';
-import { ClockifyWorkspaceModel } from '~/types/workspacesTypes';
+} from '~/types';
 
 export const apiFetchClockifyUserDetails = (
   userId: string,

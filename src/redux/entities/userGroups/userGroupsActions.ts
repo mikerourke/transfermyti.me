@@ -15,14 +15,16 @@ import {
 } from '~/redux/entities/users/usersSelectors';
 import { selectUserGroupsTransferPayloadForWorkspace } from './userGroupsSelectors';
 import { UserGroupCompounder } from './UserGroupCompounder';
-import { ReduxDispatch, ReduxGetState, ToolName } from '~/types/commonTypes';
-import { CompoundTimeEntryModel } from '~/types/timeEntriesTypes';
 import {
   ClockifyUserGroupModel,
-  TogglUserGroupModel,
+  CompoundTimeEntryModel,
   CompoundUserGroupModel,
-} from '~/types/userGroupsTypes';
-import { CompoundUserModel } from '~/types/usersTypes';
+  CompoundUserModel,
+  ReduxDispatch,
+  ReduxGetState,
+  TogglUserGroupModel,
+  ToolName,
+} from '~/types';
 
 export interface EntryCountCalculatorModel {
   toolName: ToolName;

@@ -15,13 +15,14 @@ import {
   updateInTransferEntity,
 } from '~/redux/app/appActions';
 import { selectProjectsTransferPayloadForWorkspace } from './projectsSelectors';
-import { ReduxDispatch, ReduxGetState } from '~/types/commonTypes';
 import {
   ClockifyProjectModel,
+  ClockifyUserModel,
+  ReduxDispatch,
+  ReduxGetState,
   TogglProjectModel,
   TogglProjectUserModel,
-} from '~/types/projectsTypes';
-import { ClockifyUserModel } from '~/types/usersTypes';
+} from '~/types';
 
 export const clockifyProjectsFetch = createAsyncAction(
   '@projects/CLOCKIFY_FETCH_REQUEST',

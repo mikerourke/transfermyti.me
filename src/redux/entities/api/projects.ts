@@ -1,10 +1,10 @@
 import { fetchArray, fetchObject } from './fetchByPayloadType';
-import { HttpMethod } from '~/types/commonTypes';
 import {
   ClockifyProjectModel,
   CreateProjectRequestModel,
+  HttpMethod,
   TogglProjectModel,
-} from '~/types/projectsTypes';
+} from '~/types';
 
 export const apiFetchClockifyProjects = (
   workspaceId: string,

@@ -1,8 +1,11 @@
 import { createSelector } from 'reselect';
 import { get } from 'lodash';
 import { findTogglInclusions, groupByWorkspace } from '~/redux/utils';
-import { CompoundClientModel } from '~/types/clientsTypes';
-import { CreateNamedEntityRequest, ReduxState } from '~/types/commonTypes';
+import {
+  CompoundClientModel,
+  CreateNamedEntityRequest,
+  ReduxState,
+} from '~/types';
 
 export const selectClockifyClients = createSelector(
   (state: ReduxState) => state.entities.clients.clockify.byId,

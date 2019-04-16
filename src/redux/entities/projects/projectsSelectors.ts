@@ -1,12 +1,12 @@
 import { createSelector } from 'reselect';
 import { get } from 'lodash';
 import { findTogglInclusions, groupByWorkspace } from '~/redux/utils';
-import { ReduxState } from '~/types/commonTypes';
 import {
   ClockifyEstimateType,
-  CreateProjectRequestModel,
   CompoundProjectModel,
-} from '~/types/projectsTypes';
+  CreateProjectRequestModel,
+  ReduxState,
+} from '~/types';
 
 export const selectClockifyProjectIds = createSelector(
   (state: ReduxState) => state.entities.projects.clockify.idValues,

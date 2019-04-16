@@ -5,8 +5,7 @@ import { dismissNotification } from '~/redux/app/appActions';
 import { selectNotifications } from '~/redux/app/appSelectors';
 import Flex from '~/components/flex/Flex';
 import NotificationDisplay from './components/NotificationDisplay';
-import { NotificationModel } from '~/types/appTypes';
-import { ReduxDispatch, ReduxState } from '~/types/commonTypes';
+import { NotificationModel, ReduxDispatch, ReduxState } from '~/types';
 
 interface ConnectStateProps {
   notifications: Array<NotificationModel>;

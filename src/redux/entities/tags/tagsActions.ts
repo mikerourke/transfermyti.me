@@ -10,8 +10,12 @@ import {
   updateInTransferEntity,
 } from '~/redux/app/appActions';
 import { selectTagsTransferPayloadForWorkspace } from './tagsSelectors';
-import { ReduxDispatch, ReduxGetState } from '~/types/commonTypes';
-import { ClockifyTagModel, TogglTagModel } from '~/types/tagsTypes';
+import {
+  ClockifyTagModel,
+  ReduxDispatch,
+  ReduxGetState,
+  TogglTagModel,
+} from '~/types';
 
 export const clockifyTagsFetch = createAsyncAction(
   '@tags/CLOCKIFY_FETCH_REQUEST',
