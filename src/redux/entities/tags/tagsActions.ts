@@ -5,10 +5,15 @@ import {
   apiFetchClockifyTags,
   apiFetchTogglTags,
 } from '~/redux/entities/api/tags';
-import { showFetchErrorNotification } from '~/redux/app/appActions';
+import {
+  showFetchErrorNotification,
+  updateInTransferDetails,
+} from '~/redux/app/appActions';
 import { selectTagsTransferPayloadForWorkspace } from './tagsSelectors';
 import {
   ClockifyTagModel,
+  EntityGroup,
+  EntityWithName,
   ReduxDispatch,
   ReduxGetState,
   TogglTagModel,
@@ -72,18 +77,32 @@ export const transferTagsToClockify = (
   const tagsInWorkspace = selectTagsTransferPayloadForWorkspace(state)(
     togglWorkspaceId,
   );
-  if (tagsInWorkspace.length === 0) return Promise.resolve();
+  const countOfTags = tagsInWorkspace.length;
+  if (countOfTags === 0) return Promise.resolve();
 
   dispatch(clockifyTagsTransfer.request());
+
+  const onTag = (recordNumber: number, entityRecord: EntityWithName) => {
+    dispatch(
+      updateInTransferDetails({
+        countTotal: countOfTags,
+        countCurrent: recordNumber,
+        entityGroup: EntityGroup.Tags,
+        workspaceId: togglWorkspaceId,
+        entityRecord,
+      }),
+    );
+  };
 
   try {
     const tags = await batchClockifyRequests(
       4,
-      dispatch,
+      onTag,
       tagsInWorkspace,
       apiCreateClockifyTag,
       clockifyWorkspaceId,
     );
+
     return dispatch(clockifyTagsTransfer.success(tags));
   } catch (error) {
     dispatch(showFetchErrorNotification(error));

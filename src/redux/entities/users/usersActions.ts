@@ -8,12 +8,13 @@ import {
 } from '~/redux/entities/api/users';
 import {
   showFetchErrorNotification,
-  updateTransferDetails,
+  updateInTransferDetails,
 } from '~/redux/app/appActions';
 import { selectUsersInvitePayloadForWorkspace } from './usersSelectors';
 import { appendUserIdsToWorkspace } from '~/redux/entities/workspaces/workspacesActions';
 import {
   ClockifyUserModel,
+  EntityGroup,
   ReduxDispatch,
   ReduxGetState,
   TogglUserModel,
@@ -103,16 +104,12 @@ export const inviteUsersToClockify = (
 
   dispatch(clockifyUsersTransfer.request());
 
-  let countCurrent = 1;
-  for (const userEmail of userEmailsToInvite) {
-    dispatch(
-      updateTransferDetails({
-        countCurrent,
-        countTotal: countOfUserEmails,
-        inTransferEntity: { name: userEmail },
-      }),
-    );
-  }
+  dispatchInTransferDetailsUpdate(
+    dispatch,
+    togglWorkspaceId,
+    countOfUserEmails,
+    1,
+  );
 
   try {
     await apiAddClockifyUsersToWorkspace(clockifyWorkspaceId, {
@@ -120,12 +117,35 @@ export const inviteUsersToClockify = (
     });
     await dispatch(fetchClockifyUsers(clockifyWorkspaceId));
 
+    dispatchInTransferDetailsUpdate(
+      dispatch,
+      togglWorkspaceId,
+      countOfUserEmails,
+    );
+
     return dispatch(clockifyUsersTransfer.success());
   } catch (error) {
     dispatch(showFetchErrorNotification(error));
     return dispatch(clockifyUsersTransfer.failure());
   }
 };
+
+function dispatchInTransferDetailsUpdate(
+  dispatch: ReduxDispatch,
+  workspaceId: string,
+  countTotal: number,
+  countCurrent: number = countTotal,
+) {
+  dispatch(
+    updateInTransferDetails({
+      countTotal,
+      countCurrent,
+      entityGroup: EntityGroup.Users,
+      workspaceId,
+      entityRecord: null,
+    }),
+  );
+}
 
 async function appendTogglUserGroupIdsToUsers(
   workspaceId: string,

@@ -29,9 +29,9 @@ export const apiFetchTogglProjects = (
 
 export const apiCreateClockifyProject = (
   workspaceId: string,
-  projectRecord: CreateProjectRequestModel,
+  project: CreateProjectRequestModel,
 ): Promise<ClockifyProjectModel> =>
   fetchObject(`/clockify/api/workspaces/${workspaceId}/projects/`, {
     method: HttpMethod.Post,
-    body: projectRecord as any,
+    body: project as any,
   });

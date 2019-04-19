@@ -55,7 +55,7 @@ export enum HttpMethod {
   Delete = 'DELETE',
 }
 
-export interface CreateNamedEntityRequest {
+export interface EntityWithName {
   name: string;
 }
 

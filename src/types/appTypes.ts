@@ -1,4 +1,4 @@
-import { CompoundEntityModel } from '~/types/commonTypes';
+import { EntityGroup } from '~/types/entityTypes';
 
 export enum NotificationType {
   Error = 'danger',
@@ -17,8 +17,22 @@ export enum TransferType {
   SingleUser = 'SINGLE',
 }
 
-export interface TransferDetailsModel {
-  countCurrent: number;
+export interface InTransferDetailsModel<TRecord = {}> {
   countTotal: number;
-  inTransferEntity: Partial<CompoundEntityModel> | null;
+  countCurrent: number;
+  entityGroup: EntityGroup | null;
+  entityRecord: TRecord | null;
+  workspaceId: string | null;
 }
+
+type InTransferGroupKey =
+  | EntityGroup.Projects
+  | EntityGroup.Tags
+  | EntityGroup.Clients
+  | EntityGroup.Tasks
+  | EntityGroup.TimeEntries;
+
+export type InTransferDetailsByGroupModel = Record<
+  InTransferGroupKey,
+  InTransferDetailsModel
+>;

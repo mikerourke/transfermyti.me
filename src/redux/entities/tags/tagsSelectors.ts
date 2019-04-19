@@ -3,7 +3,7 @@ import { get } from 'lodash';
 import { findTogglInclusions, groupByWorkspace } from '~/redux/utils';
 import {
   CompoundTagModel,
-  CreateNamedEntityRequest,
+  EntityWithName,
   ReduxState,
 } from '~/types';
 
@@ -30,7 +30,7 @@ export const selectTagsTransferPayloadForWorkspace = createSelector(
   selectTogglTagsByWorkspaceFactory(true),
   inclusionsByWorkspaceId => (
     workspaceIdToGet: string,
-  ): Array<CreateNamedEntityRequest> => {
+  ): Array<EntityWithName> => {
     const inclusions = get(
       inclusionsByWorkspaceId,
       workspaceIdToGet,

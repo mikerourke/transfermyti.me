@@ -1,14 +1,12 @@
 import { flatten, get } from 'lodash';
-import { updateTransferDetails } from '~/redux/app/appActions';
 import { buildThrottler } from './buildThrottler';
-import { ReduxDispatch } from '~/types';
 
 /**
  * Loops through the specified records and performs the specified API function
  * on each one in global state.
  * @param requestsPerSecond Maximum number of fetch calls per second (to
  *                          prevent API errors).
- * @param dispatch Redux dispatch used to update the in-transfer entity.
+ * @param onRecord Function to perform on each record.
  * @param entityRecordsInWorkspace Array of request body records associated
  *                                 with workspace.
  * @param clockifyApiFunc API function to call for each request body.
@@ -16,7 +14,7 @@ import { ReduxDispatch } from '~/types';
  */
 export async function batchClockifyRequests<TPayload, TResponse>(
   requestsPerSecond: number,
-  dispatch: ReduxDispatch,
+  onRecord: (recordNumber: number, entityRecord: TPayload) => void,
   entityRecordsInWorkspace: Array<TPayload>,
   clockifyApiFunc: (...args: Array<any>) => Promise<TResponse>,
   ...parentIds: Array<string>
@@ -31,15 +29,9 @@ export async function batchClockifyRequests<TPayload, TResponse>(
   let recordNumber = 1;
 
   for (const entityRecord of entityRecordsInWorkspace) {
-    try {
-      dispatch(
-        updateTransferDetails({
-          countCurrent: recordNumber,
-          countTotal: entityRecordsInWorkspace.length,
-          inTransferEntity: entityRecord,
-        }),
-      );
+    onRecord(recordNumber, entityRecord);
 
+    try {
       await promiseThrottle
         // @ts-ignore
         .add(throttledFunc.bind(this, ...parentIds, entityRecord))

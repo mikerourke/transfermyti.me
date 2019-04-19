@@ -1,16 +1,21 @@
 import { createAsyncAction, createStandardAction } from 'typesafe-actions';
-import { flatten, isEmpty } from 'lodash';
+import { flatten } from 'lodash';
 import { batchClockifyRequests, buildThrottler } from '~/redux/utils';
 import {
   apiCreateClockifyTask,
   apiFetchClockifyTasks,
   apiFetchTogglTasks,
 } from '~/redux/entities/api/tasks';
-import { showFetchErrorNotification } from '~/redux/app/appActions';
+import {
+  showFetchErrorNotification,
+  updateInTransferDetails,
+} from '~/redux/app/appActions';
 import { selectClockifyProjectIds } from '~/redux/entities/projects/projectsSelectors';
 import { selectTasksTransferPayloadForWorkspace } from './tasksSelectors';
 import {
   ClockifyTaskModel,
+  EntityGroup,
+  EntityWithName,
   ReduxDispatch,
   ReduxGetState,
   TogglTaskModel,
@@ -91,33 +96,34 @@ export const transferTasksToClockify = (
   clockifyWorkspaceId: string,
 ) => async (dispatch: ReduxDispatch, getState: ReduxGetState) => {
   const state = getState();
-  const tasksInWorkspaceByProjectId = selectTasksTransferPayloadForWorkspace(
-    state,
-  )(togglWorkspaceId);
-  if (isEmpty(tasksInWorkspaceByProjectId)) return Promise.resolve();
+  const tasksInWorkspace = selectTasksTransferPayloadForWorkspace(state)(
+    togglWorkspaceId,
+  );
+  const countOfTasks = tasksInWorkspace.length;
+  if (countOfTasks === 0) return Promise.resolve();
 
   dispatch(clockifyTasksTransfer.request());
 
+  const onTask = (recordNumber: number, entityRecord: EntityWithName) => {
+    dispatch(
+      updateInTransferDetails({
+        countTotal: countOfTasks,
+        countCurrent: recordNumber,
+        entityGroup: EntityGroup.Tasks,
+        workspaceId: togglWorkspaceId,
+        entityRecord,
+      }),
+    );
+  };
+
   try {
-    const allWorkspaceTasks: Array<Array<ClockifyTaskModel>> = [];
-
-    for (const [projectId, projectTasks] of Object.entries(
-      tasksInWorkspaceByProjectId,
-    )) {
-      if (projectTasks.length !== 0) {
-        const tasks = await batchClockifyRequests(
-          4,
-          dispatch,
-          projectTasks,
-          apiCreateClockifyTask,
-          clockifyWorkspaceId,
-          projectId,
-        );
-        allWorkspaceTasks.push(tasks);
-      }
-    }
-
-    const tasks = flatten(allWorkspaceTasks);
+    const tasks = await batchClockifyRequests(
+      4,
+      onTask,
+      tasksInWorkspace,
+      apiCreateClockifyTask,
+      clockifyWorkspaceId,
+    );
 
     return dispatch(clockifyTasksTransfer.success(tasks));
   } catch (error) {

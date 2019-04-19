@@ -2,11 +2,12 @@ import { createStandardAction } from 'typesafe-actions';
 import { capitalize, isNil, uniqueId } from 'lodash';
 import { getIfDev } from '~/utils/getIfDev';
 import {
+  CompoundWorkspaceModel,
+  InTransferDetailsModel,
   NotificationModel,
   NotificationType,
   ReduxDispatch,
   ToolName,
-  TransferDetailsModel,
   TransferType,
 } from '~/types';
 
@@ -26,9 +27,13 @@ export const updateTransferType = createStandardAction(
   '@app/UPDATE_TRANSFER_TYPE',
 )<TransferType>();
 
-export const updateTransferDetails = createStandardAction(
-  '@app/UPDATE_TRANSFER_DETAILS',
-)<TransferDetailsModel>();
+export const updateInTransferWorkspace = createStandardAction(
+  '@app/UPDATE_IN_TRANSFER_WORKSPACE',
+)<CompoundWorkspaceModel | null>();
+
+export const updateInTransferDetails = createStandardAction(
+  '@app/UPDATE_IN_TRANSFER_DETAILS',
+)<InTransferDetailsModel>();
 
 export const showNotification = (notification: Partial<NotificationModel>) => (
   dispatch: ReduxDispatch,

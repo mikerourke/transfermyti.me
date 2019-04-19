@@ -34,29 +34,12 @@ export const selectToggleTasksByWorkspaceFactory = (inclusionsOnly: boolean) =>
     },
   );
 
-const findAssigneeIdForTask = (
-  workspaceId: string,
-  assigneeId: string,
-  clientsByWorkspaceId: Record<string, Array<CompoundClientModel>>,
-) => {
-  const clientsInWorkspace = get(clientsByWorkspaceId, workspaceId, []);
-  if (clientsInWorkspace.length === 0) return undefined;
-
-  const correspondingClient = clientsInWorkspace.find(
-    ({ id }) => id === assigneeId,
-  );
-  if (isNil(correspondingClient)) return undefined;
-
-  const { linkedId } = correspondingClient;
-  return isNil(linkedId) ? undefined : linkedId;
-};
-
 export const selectTasksTransferPayloadForWorkspace = createSelector(
   selectTogglTasks,
   selectTogglClientsByWorkspaceFactory(true),
   (tasks, clientsByWorkspaceId) => (
     workspaceIdToGet: string,
-  ): Record<string, Array<CreateTaskRequestModel>> => {
+  ): Array<CreateTaskRequestModel> => {
     const includedTasks = findTogglInclusions(tasks);
     return includedTasks.reduce(
       (acc, { workspaceId, projectId, name, estimate, assigneeId }) => {
@@ -68,15 +51,29 @@ export const selectTasksTransferPayloadForWorkspace = createSelector(
           clientsByWorkspaceId,
         );
 
-        return {
+        return [
           ...acc,
-          [projectId]: [
-            ...get(acc, projectId, []),
-            { name, projectId, estimate, assigneeId: assigneeIdForTask },
-          ],
-        };
+          { name, projectId, estimate, assigneeId: assigneeIdForTask },
+        ];
       },
-      {},
+      [],
     );
   },
 );
+
+function findAssigneeIdForTask(
+  workspaceId: string,
+  assigneeId: string,
+  clientsByWorkspaceId: Record<string, Array<CompoundClientModel>>,
+) {
+  const clientsInWorkspace = get(clientsByWorkspaceId, workspaceId, []);
+  if (clientsInWorkspace.length === 0) return undefined;
+
+  const correspondingClient = clientsInWorkspace.find(
+    ({ id }) => id === assigneeId,
+  );
+  if (isNil(correspondingClient)) return undefined;
+
+  const { linkedId } = correspondingClient;
+  return isNil(linkedId) ? undefined : linkedId;
+}

@@ -6,7 +6,10 @@ import {
   apiFetchClockifyWorkspaces,
   apiFetchTogglWorkspaceSummaryForYear,
 } from '~/redux/entities/api/workspaces';
-import { showFetchErrorNotification } from '~/redux/app/appActions';
+import {
+  showFetchErrorNotification,
+  updateInTransferWorkspace,
+} from '~/redux/app/appActions';
 import { selectTogglUserEmail } from '~/redux/credentials/credentialsSelectors';
 import * as clientsActions from '~/redux/entities/clients/clientsActions';
 import * as projectsActions from '~/redux/entities/projects/projectsActions';
@@ -187,16 +190,16 @@ export const fetchTogglWorkspaceSummary = (workspaceId: string) => async (
   }
 };
 
-export const transferEntitiesToClockifyWorkspace = ({
-  name,
-  id: togglWorkspaceId,
-  linkedId,
-}: CompoundWorkspaceModel) => async (dispatch: ReduxDispatch) => {
+export const transferEntitiesToClockifyWorkspace = (
+  workspace: CompoundWorkspaceModel,
+) => async (dispatch: ReduxDispatch) => {
+  const { name, id: togglWorkspaceId, linkedId } = workspace;
+
   let clockifyWorkspaceId = linkedId;
 
   dispatch(clockifyWorkspaceTransfer.request());
   try {
-    dispatch(updateWorkspaceNameBeingFetched(name));
+    dispatch(updateInTransferWorkspace(workspace));
 
     if (isNil(linkedId)) {
       const workspace = await apiCreateClockifyWorkspace({ name });
@@ -212,14 +215,14 @@ export const transferEntitiesToClockifyWorkspace = ({
     );
 
     await dispatch(
+      tagsActions.transferTagsToClockify(togglWorkspaceId, clockifyWorkspaceId),
+    );
+
+    await dispatch(
       projectsActions.transferProjectsToClockify(
         togglWorkspaceId,
         clockifyWorkspaceId,
       ),
-    );
-
-    await dispatch(
-      tagsActions.transferTagsToClockify(togglWorkspaceId, clockifyWorkspaceId),
     );
 
     await dispatch(
@@ -236,7 +239,7 @@ export const transferEntitiesToClockifyWorkspace = ({
       ),
     );
 
-    return dispatch(updateWorkspaceNameBeingFetched(null));
+    return dispatch(updateInTransferWorkspace(null));
   } catch (error) {
     dispatch(showFetchErrorNotification(error));
     return dispatch(clockifyWorkspaceTransfer.failure());

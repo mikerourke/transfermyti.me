@@ -21,13 +21,14 @@ export const apiFetchTogglTasks = (
 
 export const apiCreateClockifyTask = (
   workspaceId: string,
-  projectId: string,
-  taskRecord: CreateTaskRequestModel,
-): Promise<ClockifyTaskModel> =>
-  fetchObject(
+  task: CreateTaskRequestModel,
+): Promise<ClockifyTaskModel> => {
+  const { projectId } = task;
+  return fetchObject(
     `/clockify/api/workspaces/${workspaceId}/projects/${projectId}/tasks/`,
     {
       method: HttpMethod.Post,
-      body: taskRecord as any,
+      body: task as any,
     },
   );
+};

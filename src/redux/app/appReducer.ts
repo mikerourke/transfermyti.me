@@ -1,27 +1,31 @@
+import { get } from 'lodash';
 import { getType } from 'typesafe-actions';
 import { handleActions } from 'redux-actions';
 import * as appActions from './appActions';
 import {
+  CompoundWorkspaceModel,
+  InTransferDetailsByGroupModel,
+  InTransferDetailsModel,
   NotificationModel,
   ReduxAction,
-  TransferDetailsModel,
   TransferType,
 } from '~/types';
 
 export interface AppState {
   readonly notifications: Array<NotificationModel>;
   readonly currentTransferType: TransferType;
-  readonly transferDetails: TransferDetailsModel;
+  readonly inTransferWorkspace: CompoundWorkspaceModel | null;
+  readonly inTransferDetailsByGroupByWorkspace: Record<
+    string,
+    InTransferDetailsByGroupModel | null
+  >;
 }
 
 export const initialState: AppState = {
   notifications: [],
   currentTransferType: TransferType.SingleUser,
-  transferDetails: {
-    countCurrent: 0,
-    countTotal: 0,
-    inTransferEntity: null,
-  },
+  inTransferWorkspace: null,
+  inTransferDetailsByGroupByWorkspace: {},
 };
 
 export const appReducer = handleActions(
@@ -59,13 +63,36 @@ export const appReducer = handleActions(
       currentTransferType,
     }),
 
-    [getType(appActions.updateTransferDetails)]: (
+    [getType(appActions.updateInTransferWorkspace)]: (
       state: AppState,
-      { payload: transferDetails }: ReduxAction<TransferDetailsModel>,
+      { payload: inTransferWorkspace }: ReduxAction<CompoundWorkspaceModel>,
     ): AppState => ({
       ...state,
-      transferDetails,
+      inTransferWorkspace,
     }),
+
+    [getType(appActions.updateInTransferDetails)]: (
+      state: AppState,
+      { payload: inTransferDetails }: ReduxAction<InTransferDetailsModel>,
+    ): AppState => {
+      const { entityGroup, workspaceId } = inTransferDetails;
+      const existingForWorkspace = get(
+        state,
+        ['inTransferDetailsByGroupByWorkspace', workspaceId],
+        {},
+      );
+
+      return {
+        ...state,
+        inTransferDetailsByGroupByWorkspace: {
+          ...state.inTransferDetailsByGroupByWorkspace,
+          [workspaceId]: {
+            ...existingForWorkspace,
+            [entityGroup]: inTransferDetails,
+          },
+        },
+      };
+    },
   },
   initialState,
 );

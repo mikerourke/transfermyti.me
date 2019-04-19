@@ -1,9 +1,10 @@
 import React, { useEffect, useRef } from 'react';
 import { Button, Container } from 'bloomer';
-import { When } from 'react-if';
+import { When, Unless } from 'react-if';
 import { css } from 'emotion';
 import { isNil } from 'lodash';
 import Flex from '~/components/flex/Flex';
+import PageHeader from '~/components/pageHeader/PageHeader';
 import InstructionsSection from './components/InstructionsSection';
 
 export interface StepPageProps {
@@ -42,29 +43,14 @@ const StepPage: React.FC<Props> = ({
 
   return (
     <Container>
-      <h1
-        className={css`
-          margin-bottom: 0;
-          font-size: 1.5rem;
-          color: var(--dark-gray);
-          font-weight: 600;
-          line-height: 1.125;
-        `}
-      >
-        Step {props.stepNumber}:
-      </h1>
-      <h2
-        className={css`
-          margin-bottom: 0.5rem;
-          font-size: 2rem;
-          font-weight: 400;
-          color: var(--dark-gray);
-        `}
-      >
-        {props.subtitle}
-      </h2>
+      <PageHeader
+        title={`Step ${props.stepNumber}:`}
+        subtitle={props.subtitle}
+      />
       <div ref={contentsRef}>
-        <InstructionsSection>{props.instructions}</InstructionsSection>
+        <Unless condition={isNil(props.instructions)}>
+          <InstructionsSection>{props.instructions}</InstructionsSection>
+        </Unless>
         {props.children}
       </div>
       <Flex

@@ -3,7 +3,7 @@ import { get } from 'lodash';
 import { findTogglInclusions, groupByWorkspace } from '~/redux/utils';
 import {
   CompoundUserGroupModel,
-  CreateNamedEntityRequest,
+  EntityWithName,
   ReduxState,
 } from '~/types';
 
@@ -31,7 +31,7 @@ export const selectUserGroupsTransferPayloadForWorkspace = createSelector(
   selectTogglUserGroupsByWorkspaceFactory(true),
   inclusionsByWorkspaceId => (
     workspaceIdToGet: string,
-  ): Array<CreateNamedEntityRequest> => {
+  ): Array<EntityWithName> => {
     const inclusions = get(
       inclusionsByWorkspaceId,
       workspaceIdToGet,

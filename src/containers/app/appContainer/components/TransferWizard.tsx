@@ -5,6 +5,7 @@ import EnterCredentialsStep from '~/containers/credentials/enterCredentialsStep/
 import ReviewClockifyDetailsStep from '~/containers/entities/reviewClockifyDetailsStep/ReviewClockifyDetailsStep';
 import SelectTogglInclusionsStep from '~/containers/entities/selectTogglInclusionsStep/SelectTogglInclusionsStep';
 import SelectTogglWorkspacesStep from '~/containers/entities/selectTogglWorkspacesStep/SelectTogglWorkspacesStep';
+import TransferProgressStep from '~/containers/app/transferProgressStep/TransferProgressStep';
 
 const TransferWizard: React.FC = () => (
   <Wizard>
@@ -55,7 +56,7 @@ const TransferWizard: React.FC = () => (
           />
         )}
       />
-      <Step id="wrapUp" render={() => <div>You&apos;re all done!</div>} />
+      <Step id="transferProgress" render={() => <TransferProgressStep />} />
     </Steps>
   </Wizard>
 );

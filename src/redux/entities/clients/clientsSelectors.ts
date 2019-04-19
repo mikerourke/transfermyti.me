@@ -3,7 +3,7 @@ import { get } from 'lodash';
 import { findTogglInclusions, groupByWorkspace } from '~/redux/utils';
 import {
   CompoundClientModel,
-  CreateNamedEntityRequest,
+  EntityWithName,
   ReduxState,
 } from '~/types';
 
@@ -32,7 +32,7 @@ export const selectClientsTransferPayloadForWorkspace = createSelector(
   selectTogglClientsByWorkspaceFactory(true),
   inclusionsByWorkspaceId => (
     workspaceIdToGet: string,
-  ): Array<CreateNamedEntityRequest> => {
+  ): Array<EntityWithName> => {
     const inclusions = get(
       inclusionsByWorkspaceId,
       workspaceIdToGet,

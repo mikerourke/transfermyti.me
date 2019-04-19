@@ -10,11 +10,16 @@ import {
   apiFetchClockifyUsersInProject,
   apiFetchTogglUsersInProject,
 } from '~/redux/entities/api/users';
-import { showFetchErrorNotification } from '~/redux/app/appActions';
+import {
+  showFetchErrorNotification,
+  updateInTransferDetails,
+} from '~/redux/app/appActions';
 import { selectProjectsTransferPayloadForWorkspace } from './projectsSelectors';
 import {
   ClockifyProjectModel,
   ClockifyUserModel,
+  EntityGroup,
+  EntityWithName,
   ReduxDispatch,
   ReduxGetState,
   TogglProjectModel,
@@ -85,14 +90,27 @@ export const transferProjectsToClockify = (
   const projectsInWorkspace = selectProjectsTransferPayloadForWorkspace(state)(
     togglWorkspaceId,
   );
-  if (projectsInWorkspace.length === 0) return;
+  const countOfProjects = projectsInWorkspace.length;
+  if (countOfProjects === 0) return;
 
   dispatch(clockifyProjectsTransfer.request());
+
+  const onProject = (recordNumber: number, entityRecord: EntityWithName) => {
+    dispatch(
+      updateInTransferDetails({
+        countTotal: countOfProjects,
+        countCurrent: recordNumber,
+        entityGroup: EntityGroup.Projects,
+        workspaceId: togglWorkspaceId,
+        entityRecord,
+      }),
+    );
+  };
 
   try {
     const projects = await batchClockifyRequests(
       4,
-      dispatch,
+      onProject,
       projectsInWorkspace,
       apiCreateClockifyProject,
       clockifyWorkspaceId,

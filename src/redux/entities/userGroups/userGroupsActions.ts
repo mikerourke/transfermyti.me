@@ -5,7 +5,10 @@ import {
   apiFetchClockifyUserGroups,
   apiFetchTogglUserGroups,
 } from '~/redux/entities/api/userGroups';
-import { showFetchErrorNotification } from '~/redux/app/appActions';
+import {
+  showFetchErrorNotification,
+  updateInTransferDetails,
+} from '~/redux/app/appActions';
 import {
   selectClockifyUsersByWorkspace,
   selectTogglUsersByWorkspaceFactory,
@@ -17,6 +20,8 @@ import {
   CompoundTimeEntryModel,
   CompoundUserGroupModel,
   CompoundUserModel,
+  EntityGroup,
+  EntityWithName,
   ReduxDispatch,
   ReduxGetState,
   TogglUserGroupModel,
@@ -115,14 +120,27 @@ export const transferUserGroupsToClockify = (
   const userGroupsInWorkspace = selectUserGroupsTransferPayloadForWorkspace(
     state,
   )(togglWorkspaceId);
-  if (userGroupsInWorkspace.length === 0) return Promise.resolve();
+  const countOfUserGroups = userGroupsInWorkspace.length;
+  if (countOfUserGroups === 0) return Promise.resolve();
 
   dispatch(clockifyUserGroupsTransfer.request());
+
+  const onUserGroup = (recordNumber: number, entityRecord: EntityWithName) => {
+    dispatch(
+      updateInTransferDetails({
+        countTotal: countOfUserGroups,
+        countCurrent: recordNumber,
+        entityGroup: EntityGroup.UserGroups,
+        workspaceId: togglWorkspaceId,
+        entityRecord,
+      }),
+    );
+  };
 
   try {
     const userGroups = await batchClockifyRequests(
       4,
-      dispatch,
+      onUserGroup,
       userGroupsInWorkspace,
       apiCreateClockifyUserGroup,
       clockifyWorkspaceId,

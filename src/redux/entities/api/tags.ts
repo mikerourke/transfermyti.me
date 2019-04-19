@@ -1,5 +1,10 @@
 import { fetchArray, fetchObject } from './fetchByPayloadType';
-import { ClockifyTagModel, HttpMethod, TogglTagModel } from '~/types';
+import {
+  ClockifyTagModel,
+  EntityWithName,
+  HttpMethod,
+  TogglTagModel,
+} from '~/types';
 
 export const apiFetchClockifyTags = (
   workspaceId: string,
@@ -13,9 +18,9 @@ export const apiFetchTogglTags = (
 
 export const apiCreateClockifyTag = (
   workspaceId: string,
-  tagRecord: { name: string },
+  tag: EntityWithName,
 ): Promise<ClockifyTagModel> =>
   fetchObject(`/clockify/api/workspaces/${workspaceId}/tags/`, {
     method: HttpMethod.Post,
-    body: tagRecord as any,
+    body: tag as any,
   });

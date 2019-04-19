@@ -6,7 +6,10 @@ import {
   apiFetchClockifyTimeEntries,
   apiFetchTogglTimeEntries,
 } from '~/redux/entities/api/timeEntries';
-import { showFetchErrorNotification } from '~/redux/app/appActions';
+import {
+  showFetchErrorNotification,
+  updateInTransferDetails,
+} from '~/redux/app/appActions';
 import { selectCurrentTransferType } from '~/redux/app/appSelectors';
 import { selectCredentials } from '~/redux/credentials/credentialsSelectors';
 import { selectEntitiesByGroupFactory } from '~/redux/entities/entitiesSelectors';
@@ -22,7 +25,9 @@ import { selectTimeEntriesForWorkspace } from './timeEntriesSelectors';
 import {
   ClockifyTimeEntryModel,
   CompoundTimeEntryModel,
+  DetailedTimeEntryModel,
   EntitiesByGroupModel,
+  EntityGroup,
   ReduxDispatch,
   ReduxGetState,
   TogglTimeEntryModel,
@@ -149,14 +154,30 @@ export const transferTimeEntriesToClockify = (
   const timeEntriesInWorkspace = selectTimeEntriesForWorkspace(state)(
     togglWorkspaceId,
   );
-  if (timeEntriesInWorkspace.length === 0) return Promise.resolve();
+  const countOfTimeEntries = timeEntriesInWorkspace.length;
+  if (countOfTimeEntries === 0) return Promise.resolve();
 
   dispatch(clockifyTimeEntriesTransfer.request());
+
+  const onTimeEntry = (
+    recordNumber: number,
+    entityRecord: DetailedTimeEntryModel,
+  ) => {
+    dispatch(
+      updateInTransferDetails({
+        countTotal: countOfTimeEntries,
+        countCurrent: recordNumber,
+        entityGroup: EntityGroup.TimeEntries,
+        workspaceId: togglWorkspaceId,
+        entityRecord,
+      }),
+    );
+  };
 
   try {
     const clockifyTimeEntries = await utils.batchClockifyRequests(
       10,
-      dispatch,
+      onTimeEntry,
       timeEntriesInWorkspace,
       apiCreateClockifyTimeEntry,
       clockifyWorkspaceId,

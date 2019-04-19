@@ -1,7 +1,7 @@
 import { fetchArray, fetchObject } from './fetchByPayloadType';
 import {
   ClockifyClientModel,
-  CreateNamedEntityRequest,
+  EntityWithName,
   HttpMethod,
   TogglClientModel,
 } from '~/types';
@@ -18,9 +18,9 @@ export const apiFetchTogglClients = (
 
 export const apiCreateClockifyClient = (
   workspaceId: string,
-  clientRecord: CreateNamedEntityRequest,
+  client: EntityWithName,
 ): Promise<ClockifyClientModel> =>
   fetchObject(`/clockify/api/workspaces/${workspaceId}/clients/`, {
     method: HttpMethod.Post,
-    body: clientRecord as any,
+    body: client as any,
   });

@@ -1,7 +1,7 @@
 import { fetchArray, fetchObject } from './fetchByPayloadType';
 import {
   ClockifyUserGroupModel,
-  CreateNamedEntityRequest,
+  EntityWithName,
   HttpMethod,
   TogglUserGroupModel,
 } from '~/types';
@@ -18,9 +18,9 @@ export const apiFetchTogglUserGroups = (
 
 export const apiCreateClockifyUserGroup = (
   workspaceId: string,
-  userGroupRecord: CreateNamedEntityRequest,
+  userGroup: EntityWithName,
 ): Promise<ClockifyUserGroupModel> =>
   fetchObject(`/clockify/api/workspaces/${workspaceId}/userGroups/`, {
     method: HttpMethod.Post,
-    body: userGroupRecord as any,
+    body: userGroup as any,
   });
