@@ -7,8 +7,8 @@ import * as tagsActions from './tagsActions';
 import {
   ClockifyTagModel,
   CompoundTagModel,
+  EntitiesFetchPayloadModel,
   EntityGroup,
-  EntityType,
   ReduxAction,
   ReduxStateEntryForTool,
   TogglTagModel,
@@ -34,23 +34,94 @@ export const initialState: TagsState = {
   isFetching: false,
 };
 
-const schemaProcessStrategy = (
+const getSchemaProcessStrategy = (workspaceId: string) => (
   value: ClockifyTagModel | TogglTagModel,
 ): CompoundTagModel => ({
   id: value.id.toString(),
   name: value.name,
-  workspaceId: utils.findIdFieldValue(value, EntityType.Workspace),
+  workspaceId,
   entryCount: 0,
   linkedId: null,
   isIncluded: true,
-  type: EntityType.Tag,
+  memberOf: EntityGroup.Tags,
 });
 
-const appendEntryCountByTagName = <TTimeEntry>(
+export const tagsReducer = handleActions(
+  {
+    [combineActions(
+      getType(tagsActions.clockifyTagsFetch.success),
+      getType(tagsActions.clockifyTagsTransfer.success),
+    )]: (
+      state: TagsState,
+      {
+        payload: { entityRecords, workspaceId },
+      }: ReduxAction<EntitiesFetchPayloadModel<ClockifyTagModel>>,
+    ): TagsState => {
+      const normalizedState = utils.normalizeState({
+        toolName: ToolName.Clockify,
+        entityGroup: EntityGroup.Tags,
+        entityState: state,
+        payload: entityRecords,
+        schemaProcessStrategy: getSchemaProcessStrategy(workspaceId),
+      });
+
+      return utils.linkEntitiesInStateByName(EntityGroup.Tags, normalizedState);
+    },
+
+    [getType(tagsActions.togglTagsFetch.success)]: (
+      state: TagsState,
+      {
+        payload: { entityRecords, workspaceId },
+      }: ReduxAction<EntitiesFetchPayloadModel<TogglTagModel>>,
+    ): TagsState =>
+      utils.normalizeState({
+        toolName: ToolName.Toggl,
+        entityGroup: EntityGroup.Tags,
+        entityState: state,
+        payload: entityRecords,
+        schemaProcessStrategy: getSchemaProcessStrategy(workspaceId),
+      }),
+
+    [combineActions(
+      getType(tagsActions.clockifyTagsFetch.request),
+      getType(tagsActions.togglTagsFetch.request),
+      getType(tagsActions.clockifyTagsTransfer.request),
+    )]: (state: TagsState): TagsState => ({
+      ...state,
+      isFetching: true,
+    }),
+
+    [combineActions(
+      getType(tagsActions.clockifyTagsFetch.success),
+      getType(tagsActions.clockifyTagsFetch.failure),
+      getType(tagsActions.togglTagsFetch.success),
+      getType(tagsActions.togglTagsFetch.failure),
+      getType(tagsActions.clockifyTagsTransfer.success),
+      getType(tagsActions.clockifyTagsTransfer.failure),
+    )]: (state: TagsState): TagsState => ({
+      ...state,
+      isFetching: false,
+    }),
+
+    [getType(tagsActions.flipIsTagIncluded)]: (
+      state: TagsState,
+      { payload: tagId }: ReduxAction<string>,
+    ): TagsState => utils.flipEntityInclusion(state, tagId),
+
+    [getType(togglTimeEntriesFetch.success)]: (
+      state: TagsState,
+      { payload: timeEntries }: ReduxAction<Array<TogglTimeEntryModel>>,
+    ) => appendEntryCountByTagName(ToolName.Toggl, state, timeEntries),
+  },
+  initialState,
+);
+
+// TODO: Move this to transform class.
+function appendEntryCountByTagName<TTimeEntry>(
   toolName: ToolName,
   state: TagsState,
   timeEntries: Array<TTimeEntry>,
-) => {
+) {
   const timeEntryCountByTagId = {};
   const tags = Object.values(state[toolName].byId);
 
@@ -84,70 +155,4 @@ const appendEntryCountByTagName = <TTimeEntry>(
       byId: updatedTagsById,
     },
   };
-};
-
-export const tagsReducer = handleActions(
-  {
-    [combineActions(
-      getType(tagsActions.clockifyTagsFetch.success),
-      getType(tagsActions.clockifyTagsTransfer.success),
-    )]: (
-      state: TagsState,
-      { payload: tags }: ReduxAction<Array<ClockifyTagModel>>,
-    ): TagsState => {
-      const normalizedState = utils.normalizeState(
-        ToolName.Clockify,
-        EntityGroup.Tags,
-        state,
-        tags,
-        schemaProcessStrategy,
-      );
-
-      return utils.linkEntitiesInStateByName(EntityGroup.Tags, normalizedState);
-    },
-
-    [getType(tagsActions.togglTagsFetch.success)]: (
-      state: TagsState,
-      { payload: tags }: ReduxAction<Array<TogglTagModel>>,
-    ): TagsState =>
-      utils.normalizeState(
-        ToolName.Toggl,
-        EntityGroup.Tags,
-        state,
-        tags,
-        schemaProcessStrategy,
-      ),
-
-    [combineActions(
-      getType(tagsActions.clockifyTagsFetch.request),
-      getType(tagsActions.togglTagsFetch.request),
-      getType(tagsActions.clockifyTagsTransfer.request),
-    )]: (state: TagsState): TagsState => ({
-      ...state,
-      isFetching: true,
-    }),
-
-    [combineActions(
-      getType(tagsActions.clockifyTagsFetch.success),
-      getType(tagsActions.clockifyTagsFetch.failure),
-      getType(tagsActions.togglTagsFetch.success),
-      getType(tagsActions.togglTagsFetch.failure),
-      getType(tagsActions.clockifyTagsTransfer.success),
-      getType(tagsActions.clockifyTagsTransfer.failure),
-    )]: (state: TagsState): TagsState => ({
-      ...state,
-      isFetching: false,
-    }),
-
-    [getType(tagsActions.flipIsTagIncluded)]: (
-      state: TagsState,
-      { payload: tagId }: ReduxAction<string>,
-    ): TagsState => utils.flipEntityInclusion(state, EntityType.Tag, tagId),
-
-    [getType(togglTimeEntriesFetch.success)]: (
-      state: TagsState,
-      { payload: timeEntries }: ReduxAction<Array<TogglTimeEntryModel>>,
-    ) => appendEntryCountByTagName(ToolName.Toggl, state, timeEntries),
-  },
-  initialState,
-);
+}

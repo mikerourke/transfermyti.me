@@ -28,17 +28,6 @@ export const selectTogglUsersById = createSelector(
   (usersById): Record<string, CompoundUserModel> => usersById,
 );
 
-const getValidUsers = (
-  usersById: Record<string, CompoundUserModel>,
-  userIds: Array<string>,
-  meUserId: string,
-) =>
-  userIds.reduce((acc, userId) => {
-    const userRecord = get(usersById, userId, { linkedId: null });
-    if (userId === meUserId) return acc;
-    return [...acc, userRecord];
-  }, []);
-
 export const selectTogglUsersByWorkspaceFactory = (inclusionsOnly: boolean) =>
   createSelector(
     selectCredentials,
@@ -84,3 +73,16 @@ export const selectUsersInvitePayloadForWorkspace = createSelector(
     }, []);
   },
 );
+
+function getValidUsers(
+  usersById: Record<string, CompoundUserModel>,
+  userIds: Array<string>,
+  meUserId: string,
+) {
+  return userIds.reduce((acc, userId) => {
+    const userRecord = get(usersById, userId, { linkedId: null });
+    if (userId === meUserId) return acc;
+
+    return [...acc, userRecord];
+  }, []);
+}

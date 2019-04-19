@@ -1,19 +1,16 @@
 import { createAsyncAction, createStandardAction } from 'typesafe-actions';
-import { batchClockifyRequests } from '~/redux/utils';
+import { batchClockifyTransferRequests } from '~/redux/utils';
 import {
   apiCreateClockifyTag,
   apiFetchClockifyTags,
   apiFetchTogglTags,
 } from '~/redux/entities/api/tags';
-import {
-  showFetchErrorNotification,
-  updateInTransferDetails,
-} from '~/redux/app/appActions';
+import { showFetchErrorNotification } from '~/redux/app/appActions';
 import { selectTagsTransferPayloadForWorkspace } from './tagsSelectors';
 import {
   ClockifyTagModel,
+  EntitiesFetchPayloadModel,
   EntityGroup,
-  EntityWithName,
   ReduxDispatch,
   ReduxGetState,
   TogglTagModel,
@@ -23,19 +20,19 @@ export const clockifyTagsFetch = createAsyncAction(
   '@tags/CLOCKIFY_FETCH_REQUEST',
   '@tags/CLOCKIFY_FETCH_SUCCESS',
   '@tags/CLOCKIFY_FETCH_FAILURE',
-)<void, Array<ClockifyTagModel>, void>();
+)<void, EntitiesFetchPayloadModel<ClockifyTagModel>, void>();
 
 export const togglTagsFetch = createAsyncAction(
   '@tags/TOGGL_FETCH_REQUEST',
   '@tags/TOGGL_FETCH_SUCCESS',
   '@tags/TOGGL_FETCH_FAILURE',
-)<void, Array<TogglTagModel>, void>();
+)<void, EntitiesFetchPayloadModel<TogglTagModel>, void>();
 
 export const clockifyTagsTransfer = createAsyncAction(
   '@tags/CLOCKIFY_TRANSFER_REQUEST',
   '@tags/CLOCKIFY_TRANSFER_SUCCESS',
   '@tags/CLOCKIFY_TRANSFER_FAILURE',
-)<void, Array<ClockifyTagModel>, void>();
+)<void, EntitiesFetchPayloadModel<ClockifyTagModel>, void>();
 
 export const flipIsTagIncluded = createStandardAction('@tags/FLIP_IS_INCLUDED')<
   string
@@ -48,7 +45,10 @@ export const fetchClockifyTags = (workspaceId: string) => async (
 
   try {
     const tags = await apiFetchClockifyTags(workspaceId);
-    return dispatch(clockifyTagsFetch.success(tags));
+
+    return dispatch(
+      clockifyTagsFetch.success({ entityRecords: tags, workspaceId }),
+    );
   } catch (error) {
     dispatch(showFetchErrorNotification(error));
     return dispatch(clockifyTagsFetch.failure());
@@ -62,7 +62,10 @@ export const fetchTogglTags = (workspaceId: string) => async (
 
   try {
     const tags = await apiFetchTogglTags(workspaceId);
-    return dispatch(togglTagsFetch.success(tags));
+
+    return dispatch(
+      togglTagsFetch.success({ entityRecords: tags, workspaceId }),
+    );
   } catch (error) {
     dispatch(showFetchErrorNotification(error));
     return dispatch(togglTagsFetch.failure());
@@ -77,33 +80,26 @@ export const transferTagsToClockify = (
   const tagsInWorkspace = selectTagsTransferPayloadForWorkspace(state)(
     togglWorkspaceId,
   );
-  const countOfTags = tagsInWorkspace.length;
-  if (countOfTags === 0) return Promise.resolve();
+  if (tagsInWorkspace.length === 0) return Promise.resolve();
 
   dispatch(clockifyTagsTransfer.request());
 
-  const onTag = (recordNumber: number, entityRecord: EntityWithName) => {
-    dispatch(
-      updateInTransferDetails({
-        countTotal: countOfTags,
-        countCurrent: recordNumber,
-        entityGroup: EntityGroup.Tags,
-        workspaceId: togglWorkspaceId,
-        entityRecord,
+  try {
+    const tags = await batchClockifyTransferRequests({
+      requestsPerSecond: 4,
+      dispatch,
+      entityGroup: EntityGroup.Tags,
+      entityRecordsInWorkspace: tagsInWorkspace,
+      apiFunc: apiCreateClockifyTag,
+      workspaceId: togglWorkspaceId,
+    });
+
+    return dispatch(
+      clockifyTagsTransfer.success({
+        entityRecords: tags,
+        workspaceId: clockifyWorkspaceId,
       }),
     );
-  };
-
-  try {
-    const tags = await batchClockifyRequests(
-      4,
-      onTag,
-      tagsInWorkspace,
-      apiCreateClockifyTag,
-      clockifyWorkspaceId,
-    );
-
-    return dispatch(clockifyTagsTransfer.success(tags));
   } catch (error) {
     dispatch(showFetchErrorNotification(error));
     return dispatch(clockifyTagsTransfer.failure());

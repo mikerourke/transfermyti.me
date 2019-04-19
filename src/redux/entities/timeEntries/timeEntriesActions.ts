@@ -1,15 +1,16 @@
 import { createAsyncAction, createStandardAction } from 'typesafe-actions';
 import { flatten } from 'lodash';
-import * as utils from '~/redux/utils';
+import {
+  batchClockifyTransferRequests,
+  buildThrottler,
+  getValidEntities,
+} from '~/redux/utils';
 import {
   apiCreateClockifyTimeEntry,
   apiFetchClockifyTimeEntries,
   apiFetchTogglTimeEntries,
 } from '~/redux/entities/api/timeEntries';
-import {
-  showFetchErrorNotification,
-  updateInTransferDetails,
-} from '~/redux/app/appActions';
+import { showFetchErrorNotification } from '~/redux/app/appActions';
 import { selectCurrentTransferType } from '~/redux/app/appSelectors';
 import { selectCredentials } from '~/redux/credentials/credentialsSelectors';
 import { selectEntitiesByGroupFactory } from '~/redux/entities/entitiesSelectors';
@@ -19,13 +20,12 @@ import {
   selectTogglUsersById,
 } from '~/redux/entities/users/usersSelectors';
 import { selectTogglWorkspaceIncludedYears } from '~/redux/entities/workspaces/workspacesSelectors';
-import { TimeEntryCompounder } from './TimeEntryCompounder';
+import { TimeEntryTransform } from './TimeEntryTransform';
 import { TimeEntriesState } from './timeEntriesReducer';
 import { selectTimeEntriesForWorkspace } from './timeEntriesSelectors';
 import {
   ClockifyTimeEntryModel,
   CompoundTimeEntryModel,
-  DetailedTimeEntryModel,
   EntitiesByGroupModel,
   EntityGroup,
   ReduxDispatch,
@@ -74,18 +74,18 @@ export const fetchClockifyTimeEntries = (workspaceId: string) => async (
     const { clockifyUserId } = selectCredentials(state);
     const includedYears = selectTogglWorkspaceIncludedYears(state, workspaceId);
 
-    const clockifyTimeEntries = await fetchClockifyTimeEntriesForIncludedYears(
-      clockifyUserId,
+    const clockifyTimeEntries = await fetchClockifyTimeEntriesForIncludedYears({
+      userId: clockifyUserId,
       workspaceId,
-      includedYears,
-    );
+      years: includedYears,
+    });
 
     const usersById = selectClockifyUsersById(state);
-    const timeEntries = convertToCompoundTimeEntries(
+    const timeEntries = convertToCompoundTimeEntries({
       workspaceId,
-      clockifyTimeEntries,
-      selectEntitiesByGroupFactory(ToolName.Clockify)(state),
-    );
+      timeEntries: clockifyTimeEntries,
+      entitiesByGroup: selectEntitiesByGroupFactory(ToolName.Clockify)(state),
+    });
 
     dispatch(
       calculateUserGroupEntryCounts({
@@ -112,18 +112,18 @@ export const fetchTogglTimeEntries = (
     const state = getState();
     const { togglEmail, togglUserId } = selectCredentials(state);
 
-    const allTimeEntries = await fetchAllTogglTimeEntries(
+    const allTimeEntries = await fetchAllTogglTimeEntries({
       togglEmail,
       workspaceId,
       year,
-    );
+    });
 
     const usersById = selectTogglUsersById(state);
-    const compoundTimeEntries = convertToCompoundTimeEntries(
+    const compoundTimeEntries = convertToCompoundTimeEntries({
       workspaceId,
-      allTimeEntries,
-      selectEntitiesByGroupFactory(ToolName.Toggl)(state),
-    );
+      timeEntries: allTimeEntries,
+      entitiesByGroup: selectEntitiesByGroupFactory(ToolName.Toggl)(state),
+    });
 
     const currentTransferType = selectCurrentTransferType(state);
     const timeEntries =
@@ -154,40 +154,25 @@ export const transferTimeEntriesToClockify = (
   const timeEntriesInWorkspace = selectTimeEntriesForWorkspace(state)(
     togglWorkspaceId,
   );
-  const countOfTimeEntries = timeEntriesInWorkspace.length;
-  if (countOfTimeEntries === 0) return Promise.resolve();
+  if (timeEntriesInWorkspace.length === 0) return Promise.resolve();
 
   dispatch(clockifyTimeEntriesTransfer.request());
 
-  const onTimeEntry = (
-    recordNumber: number,
-    entityRecord: DetailedTimeEntryModel,
-  ) => {
-    dispatch(
-      updateInTransferDetails({
-        countTotal: countOfTimeEntries,
-        countCurrent: recordNumber,
-        entityGroup: EntityGroup.TimeEntries,
-        workspaceId: togglWorkspaceId,
-        entityRecord,
-      }),
-    );
-  };
-
   try {
-    const clockifyTimeEntries = await utils.batchClockifyRequests(
-      10,
-      onTimeEntry,
-      timeEntriesInWorkspace,
-      apiCreateClockifyTimeEntry,
-      clockifyWorkspaceId,
-    );
+    const clockifyTimeEntries = await batchClockifyTransferRequests({
+      requestsPerSecond: 10,
+      dispatch,
+      entityGroup: EntityGroup.TimeEntries,
+      entityRecordsInWorkspace: timeEntriesInWorkspace,
+      apiFunc: apiCreateClockifyTimeEntry,
+      workspaceId: clockifyWorkspaceId,
+    });
 
-    const timeEntries = convertToCompoundTimeEntries(
-      clockifyWorkspaceId,
-      clockifyTimeEntries,
-      selectEntitiesByGroupFactory(ToolName.Clockify)(state),
-    );
+    const timeEntries = convertToCompoundTimeEntries({
+      workspaceId: clockifyWorkspaceId,
+      timeEntries: clockifyTimeEntries,
+      entitiesByGroup: selectEntitiesByGroupFactory(ToolName.Clockify)(state),
+    });
 
     return dispatch(clockifyTimeEntriesTransfer.success(timeEntries));
   } catch (error) {
@@ -196,12 +181,16 @@ export const transferTimeEntriesToClockify = (
   }
 };
 
-async function fetchClockifyTimeEntriesForIncludedYears(
-  userId: string,
-  workspaceId: string,
-  years: Array<number>,
-): Promise<Array<ClockifyTimeEntryModel>> {
-  const { promiseThrottle, throttledFunc } = utils.buildThrottler(
+async function fetchClockifyTimeEntriesForIncludedYears({
+  userId,
+  workspaceId,
+  years,
+}: {
+  userId: string;
+  workspaceId: string;
+  years: Array<number>;
+}): Promise<Array<ClockifyTimeEntryModel>> {
+  const { promiseThrottle, throttledFunc } = buildThrottler(
     4,
     apiFetchClockifyTimeEntries,
   );
@@ -221,11 +210,15 @@ async function fetchClockifyTimeEntriesForIncludedYears(
   return flatten(allYearsTimeEntries);
 }
 
-async function fetchAllTogglTimeEntries(
-  togglEmail: string,
-  workspaceId: string,
-  year: number,
-) {
+async function fetchAllTogglTimeEntries({
+  togglEmail,
+  workspaceId,
+  year,
+}: {
+  togglEmail: string;
+  workspaceId: string;
+  year: number;
+}) {
   const {
     total_count: totalCount,
     per_page: perPage,
@@ -234,23 +227,28 @@ async function fetchAllTogglTimeEntries(
 
   const totalPages = Math.ceil(totalCount / perPage);
 
-  const remainingPageEntries = await fetchTogglTimeEntriesForRemainingPages(
-    togglEmail,
+  const remainingPageEntries = await fetchTogglTimeEntriesForRemainingPages({
+    email: togglEmail,
     workspaceId,
     year,
     totalPages,
-  );
+  });
 
   return [...firstPageEntries, ...remainingPageEntries];
 }
 
-async function fetchTogglTimeEntriesForRemainingPages(
-  email: string,
-  workspaceId: string,
-  year: number,
-  totalPages: number,
-): Promise<Array<TogglTimeEntryModel>> {
-  const { promiseThrottle, throttledFunc } = utils.buildThrottler(
+async function fetchTogglTimeEntriesForRemainingPages({
+  email,
+  workspaceId,
+  year,
+  totalPages,
+}: {
+  email: string;
+  workspaceId: string;
+  year: number;
+  totalPages: number;
+}): Promise<Array<TogglTimeEntryModel>> {
+  const { promiseThrottle, throttledFunc } = buildThrottler(
     4,
     apiFetchTogglTimeEntries,
   );
@@ -274,17 +272,19 @@ async function fetchTogglTimeEntriesForRemainingPages(
   return flatten(timeEntriesForPage);
 }
 
-function convertToCompoundTimeEntries(
-  workspaceId: string,
-  timeEntries: Array<TimeEntryForTool>,
-  entitiesByGroup: EntitiesByGroupModel,
-): Array<CompoundTimeEntryModel> {
-  if (utils.getValidEntities(timeEntries).length === 0) return [];
+function convertToCompoundTimeEntries({
+  workspaceId,
+  timeEntries,
+  entitiesByGroup,
+}: {
+  workspaceId: string;
+  timeEntries: Array<TimeEntryForTool>;
+  entitiesByGroup: EntitiesByGroupModel;
+}): Array<CompoundTimeEntryModel> {
+  if (getValidEntities(timeEntries).length === 0) return [];
 
-  const timeEntryCompounder = new TimeEntryCompounder(
-    workspaceId,
-    entitiesByGroup,
-  );
-
-  return timeEntries.map(timeEntry => timeEntryCompounder.compound(timeEntry));
+  return timeEntries.map(timeEntry => {
+    const transform = new TimeEntryTransform(timeEntry);
+    return transform.compound(workspaceId, entitiesByGroup);
+  });
 }

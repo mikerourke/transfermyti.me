@@ -3,7 +3,6 @@ import { BaseCompoundEntityModel } from '~/types/entityTypes';
 export interface ClockifyClientModel {
   id: string;
   name: string;
-  workspaceId: string;
 }
 
 export interface TogglClientModel {

@@ -1,13 +1,13 @@
 import { isNil } from 'lodash';
-import addHours from 'date-fns/add_hours';
-import endOfYear from 'date-fns/end_of_year';
 import format from 'date-fns/format';
-import startOfYear from 'date-fns/start_of_year';
+import addHours from 'date-fns/add_hours';
 import subHours from 'date-fns/sub_hours';
+import startOfYear from 'date-fns/start_of_year';
+import endOfYear from 'date-fns/end_of_year';
 
 /**
  * Returns the first and last day of the year (in ISO format) for specifying
- *    start and end date ranges for the whole year.
+ * start and end date ranges for the whole year.
  * @param year Year to get start and end days for.
  * @param [dateFormat] Optional format to apply to date.
  */
@@ -29,7 +29,7 @@ export function firstAndLastDayOfYear(
 
 /**
  * Returns a formatted date based on the optional dateFormat or the result
- *    of calling toISOString() on the specified date value.
+ * of calling toISOString() on the specified date value.
  * @param dateValue Value of the date to format.
  * @param [dateFormat] Optional format to apply to the date.
  */
@@ -44,5 +44,6 @@ function formatDate(dateValue: Date, dateFormat?: string): string {
   // hours to ensure the times are accurate:
   const dateMathFunc = utcOffsetHours < 0 ? addHours : subHours;
   const updatedDate = dateMathFunc(dateValue, utcOffsetHours);
+
   return updatedDate.toISOString();
 }

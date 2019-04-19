@@ -14,6 +14,7 @@ import { selectUsersInvitePayloadForWorkspace } from './usersSelectors';
 import { appendUserIdsToWorkspace } from '~/redux/entities/workspaces/workspacesActions';
 import {
   ClockifyUserModel,
+  EntitiesFetchPayloadModel,
   EntityGroup,
   ReduxDispatch,
   ReduxGetState,
@@ -25,19 +26,19 @@ export const clockifyUsersFetch = createAsyncAction(
   '@users/CLOCKIFY_FETCH_REQUEST',
   '@users/CLOCKIFY_FETCH_SUCCESS',
   '@users/CLOCKIFY_FETCH_FAILURE',
-)<void, Array<ClockifyUserModel>, void>();
+)<void, EntitiesFetchPayloadModel<ClockifyUserModel>, void>();
 
 export const togglUsersFetch = createAsyncAction(
   '@users/TOGGL_FETCH_REQUEST',
   '@users/TOGGL_FETCH_SUCCESS',
   '@users/TOGGL_FETCH_FAILURE',
-)<void, Array<TogglUserModel>, void>();
+)<void, EntitiesFetchPayloadModel<TogglUserModel>, void>();
 
 export const clockifyUsersTransfer = createAsyncAction(
   '@users/CLOCKIFY_TRANSFER_REQUEST',
   '@users/CLOCKIFY_TRANSFER_SUCCESS',
   '@users/CLOCKIFY_TRANSFER_FAILURE',
-)<void, void, void>();
+)<void, EntitiesFetchPayloadModel<ClockifyUserModel>, void>();
 
 export const flipIsUserIncluded = createStandardAction(
   '@users/FLIP_IS_INCLUDED',
@@ -48,18 +49,14 @@ export const fetchClockifyUsers = (workspaceId: string) => async (
 ) => {
   dispatch(clockifyUsersFetch.request());
   try {
-    const users = await apiFetchClockifyUsersInWorkspace(workspaceId);
-    const userIds = users.map(({ id }) => id.toString());
-
-    dispatch(
-      appendUserIdsToWorkspace({
-        toolName: ToolName.Clockify,
-        workspaceId,
-        userIds,
-      }),
+    const users = await fetchClockifyUsersAndAppendUserIds(
+      dispatch,
+      workspaceId,
     );
 
-    return dispatch(clockifyUsersFetch.success(users));
+    return dispatch(
+      clockifyUsersFetch.success({ entityRecords: users, workspaceId }),
+    );
   } catch (error) {
     dispatch(showFetchErrorNotification(error));
     return dispatch(clockifyUsersFetch.failure());
@@ -84,7 +81,9 @@ export const fetchTogglUsers = (workspaceId: string) => async (
 
     await appendTogglUserGroupIdsToUsers(workspaceId, users);
 
-    return dispatch(togglUsersFetch.success(users));
+    return dispatch(
+      togglUsersFetch.success({ entityRecords: users, workspaceId }),
+    );
   } catch (error) {
     dispatch(showFetchErrorNotification(error));
     return dispatch(togglUsersFetch.failure());
@@ -115,7 +114,11 @@ export const inviteUsersToClockify = (
     await apiAddClockifyUsersToWorkspace(clockifyWorkspaceId, {
       emails: userEmailsToInvite,
     });
-    await dispatch(fetchClockifyUsers(clockifyWorkspaceId));
+
+    const users = await fetchClockifyUsersAndAppendUserIds(
+      dispatch,
+      clockifyWorkspaceId,
+    );
 
     dispatchInTransferDetailsUpdate(
       dispatch,
@@ -123,12 +126,35 @@ export const inviteUsersToClockify = (
       countOfUserEmails,
     );
 
-    return dispatch(clockifyUsersTransfer.success());
+    return dispatch(
+      clockifyUsersTransfer.success({
+        entityRecords: users,
+        workspaceId: clockifyWorkspaceId,
+      }),
+    );
   } catch (error) {
     dispatch(showFetchErrorNotification(error));
     return dispatch(clockifyUsersTransfer.failure());
   }
 };
+
+async function fetchClockifyUsersAndAppendUserIds(
+  dispatch: ReduxDispatch,
+  workspaceId: string,
+) {
+  const users = await apiFetchClockifyUsersInWorkspace(workspaceId);
+  const userIds = users.map(({ id }) => id.toString());
+
+  dispatch(
+    appendUserIdsToWorkspace({
+      toolName: ToolName.Clockify,
+      workspaceId,
+      userIds,
+    }),
+  );
+
+  return users;
+}
 
 function dispatchInTransferDetailsUpdate(
   dispatch: ReduxDispatch,

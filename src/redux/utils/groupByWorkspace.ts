@@ -1,27 +1,29 @@
-import { get, sortBy } from 'lodash';
+import { compact, get, isNil, sortBy } from 'lodash';
 
 /**
  * Sorts the specified entity records by name and groups them by their
  * corresponding workspaceId.
  */
-export function groupByWorkspace<TModel>(entityRecords: Array<TModel>) {
+export function groupByWorkspace<TEntity>(entityRecords: Array<TEntity>) {
   const sortedEntityRecords = sortBy(entityRecords, record =>
     get(record, 'name', null),
-  ) as Array<TModel>;
+  ) as Array<TEntity>;
+  const validEntityRecords = compact(sortedEntityRecords);
 
-  return sortedEntityRecords.reduce((acc, entityRecord: TModel) => {
+  const entitiesByWorkspace: Record<string, Array<TEntity>> = {};
+
+  validEntityRecords.forEach(entityRecord => {
     const workspaceId = get(entityRecord, 'workspaceId', null);
-    if (!workspaceId) return acc;
+    if (isNil(workspaceId)) return;
 
-    return {
-      ...acc,
-      [workspaceId]: [
-        ...get(acc, workspaceId, []),
-        {
-          workspaceId,
-          ...entityRecord,
-        },
-      ],
-    };
-  }, {});
+    entitiesByWorkspace[workspaceId] = [
+      ...get(entitiesByWorkspace, workspaceId, []),
+      {
+        workspaceId,
+        ...entityRecord,
+      },
+    ];
+  });
+
+  return entitiesByWorkspace;
 }

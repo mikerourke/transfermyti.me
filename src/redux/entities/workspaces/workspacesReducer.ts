@@ -7,7 +7,6 @@ import {
   ClockifyWorkspaceModel,
   CompoundWorkspaceModel,
   EntityGroup,
-  EntityType,
   ReduxAction,
   ReduxStateEntryForTool,
   TogglWorkspaceModel,
@@ -42,10 +41,11 @@ const schemaProcessStrategy = (
   userIds: [],
   inclusionsByYear: {},
   isAdmin: get(value, 'admin', null),
+  workspaceId: value.id.toString(),
   entryCount: 0,
   linkedId: null,
   isIncluded: true,
-  type: EntityType.Workspace,
+  memberOf: EntityGroup.Workspaces,
 });
 
 export const workspacesReducer = handleActions(
@@ -57,13 +57,13 @@ export const workspacesReducer = handleActions(
       state: WorkspacesState,
       { payload: workspaces }: ReduxAction<Array<ClockifyWorkspaceModel>>,
     ): WorkspacesState => {
-      const normalizedState = utils.normalizeState(
-        ToolName.Clockify,
-        EntityGroup.Workspaces,
-        state,
-        workspaces,
+      const normalizedState = utils.normalizeState({
+        toolName: ToolName.Clockify,
+        entityGroup: EntityGroup.Workspaces,
+        entityState: state,
+        payload: workspaces,
         schemaProcessStrategy,
-      );
+      });
 
       return utils.linkEntitiesInStateByName(
         EntityGroup.Workspaces,
@@ -75,13 +75,13 @@ export const workspacesReducer = handleActions(
       state: WorkspacesState,
       { payload: workspaces }: ReduxAction<Array<TogglWorkspaceModel>>,
     ): WorkspacesState =>
-      utils.normalizeState(
-        ToolName.Toggl,
-        EntityGroup.Workspaces,
-        state,
-        workspaces,
-        schemaProcessStrategy,
-      ),
+      utils.normalizeState({
+        toolName: ToolName.Toggl,
+        entityGroup: EntityGroup.Workspaces,
+        entityState: state,
+        payload: workspaces,
+        schemaProcessStrategy: schemaProcessStrategy,
+      }),
 
     [getType(workspacesActions.togglWorkspaceSummaryFetch.success)]: (
       state: WorkspacesState,
@@ -166,8 +166,7 @@ export const workspacesReducer = handleActions(
     [getType(workspacesActions.flipIsWorkspaceIncluded)]: (
       state: WorkspacesState,
       { payload: workspaceId }: ReduxAction<string>,
-    ): WorkspacesState =>
-      utils.flipEntityInclusion(state, EntityType.Workspace, workspaceId),
+    ): WorkspacesState => utils.flipEntityInclusion(state, workspaceId),
 
     [getType(workspacesActions.flipIsWorkspaceYearIncluded)]: (
       state: WorkspacesState,

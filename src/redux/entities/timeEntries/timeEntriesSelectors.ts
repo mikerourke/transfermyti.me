@@ -1,8 +1,12 @@
 import { createSelector } from 'reselect';
 import { compact, filter, get } from 'lodash';
 import {
-  CompoundEntityModel,
+  CompoundClientModel,
+  CompoundProjectModel,
+  CompoundTagModel,
+  CompoundTaskModel,
   CompoundTimeEntryModel,
+  CompoundUserModel,
   CompoundWorkspaceModel,
   DetailedTimeEntryModel,
   ReduxState,
@@ -27,12 +31,12 @@ export const selectTimeEntriesByWorkspaceFactory = (
     (state: ReduxState) => state.entities.users[toolName].byId,
     (state: ReduxState) => state.entities.workspaces[toolName].byId,
     (
-      clientsById: Record<string, CompoundEntityModel>,
-      projectsById: Record<string, CompoundEntityModel>,
-      tagsById: Record<string, CompoundEntityModel>,
-      tasksById: Record<string, CompoundEntityModel>,
+      clientsById: Record<string, CompoundClientModel>,
+      projectsById: Record<string, CompoundProjectModel>,
+      tagsById: Record<string, CompoundTagModel>,
+      tasksById: Record<string, CompoundTaskModel>,
       timeEntriesById: Record<string, CompoundTimeEntryModel>,
-      usersById: Record<string, CompoundEntityModel>,
+      usersById: Record<string, CompoundUserModel>,
       workspacesById: Record<string, CompoundWorkspaceModel>,
     ): Record<string, Array<DetailedTimeEntryModel>> => {
       const allTimeEntries = Object.values(timeEntriesById);

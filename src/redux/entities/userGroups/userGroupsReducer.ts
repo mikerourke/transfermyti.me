@@ -3,13 +3,12 @@ import { combineActions, handleActions } from 'redux-actions';
 import { get, uniq } from 'lodash';
 import * as utils from '~/redux/utils';
 import * as userGroupsActions from './userGroupsActions';
+import { UserGroupTransform } from './UserGroupTransform';
 import {
   ClockifyUserGroupModel,
-  CompoundTimeEntryModel,
   CompoundUserGroupModel,
-  CompoundUserModel,
+  EntitiesFetchPayloadModel,
   EntityGroup,
-  EntityType,
   ReduxAction,
   ReduxStateEntryForTool,
   TogglUserGroupModel,
@@ -34,57 +33,6 @@ export const initialState: UserGroupsState = {
   isFetching: false,
 };
 
-const appendEntryCountToUserGroupsInState = (
-  toolName: ToolName,
-  state: UserGroupsState,
-  timeEntries: Array<CompoundTimeEntryModel>,
-  usersById: Record<string, CompoundUserModel>,
-): UserGroupsState => {
-  const userGroupsById = state[toolName].byId;
-
-  const updatedUserGroupsById = Object.entries(userGroupsById).reduce(
-    (userGroupsAcc, [userGroupId, userGroup]) => {
-      let entryCount = 0;
-
-      if (userGroup.userIds.length !== 0) {
-        const entryCountByUserId = timeEntries.reduce(
-          (timeEntryAcc, timeEntry) => {
-            const userId = get(timeEntry, 'userId');
-            if (!userId) return timeEntryAcc;
-
-            return {
-              ...timeEntryAcc,
-              [userId]: get(timeEntryAcc, userId, 0) + 1,
-            };
-          },
-          {},
-        );
-
-        userGroup.userIds.forEach(userId => {
-          const matchingUser = get(usersById, userId);
-          if (matchingUser) {
-            entryCount += get(entryCountByUserId, userId, 0);
-          }
-        });
-      }
-
-      return {
-        ...userGroupsAcc,
-        [userGroupId]: { ...userGroup, entryCount },
-      };
-    },
-    {},
-  );
-
-  return {
-    ...state,
-    [toolName]: {
-      ...state[toolName],
-      byId: updatedUserGroupsById,
-    },
-  };
-};
-
 export const userGroupsReducer = handleActions(
   {
     [combineActions(
@@ -92,14 +40,16 @@ export const userGroupsReducer = handleActions(
       getType(userGroupsActions.clockifyUserGroupsTransfer.success),
     )]: (
       state: UserGroupsState,
-      { payload: userGroups }: ReduxAction<Array<ClockifyUserGroupModel>>,
+      {
+        payload: { entityRecords },
+      }: ReduxAction<EntitiesFetchPayloadModel<ClockifyUserGroupModel>>,
     ): UserGroupsState => {
-      const normalizedState = utils.normalizeState(
-        ToolName.Clockify,
-        EntityGroup.UserGroups,
-        state,
-        userGroups,
-      );
+      const normalizedState = utils.normalizeState({
+        toolName: ToolName.Clockify,
+        entityGroup: EntityGroup.UserGroups,
+        entityState: state,
+        payload: entityRecords,
+      });
 
       return utils.linkEntitiesInStateByName(
         EntityGroup.UserGroups,
@@ -109,14 +59,16 @@ export const userGroupsReducer = handleActions(
 
     [getType(userGroupsActions.togglUserGroupsFetch.success)]: (
       state: UserGroupsState,
-      { payload: userGroups }: ReduxAction<Array<TogglUserGroupModel>>,
+      {
+        payload: { entityRecords },
+      }: ReduxAction<EntitiesFetchPayloadModel<TogglUserGroupModel>>,
     ): UserGroupsState =>
-      utils.normalizeState(
-        ToolName.Toggl,
-        EntityGroup.UserGroups,
-        state,
-        userGroups,
-      ),
+      utils.normalizeState({
+        toolName: ToolName.Toggl,
+        entityGroup: EntityGroup.UserGroups,
+        entityState: state,
+        payload: entityRecords,
+      }),
 
     [combineActions(
       getType(userGroupsActions.clockifyUserGroupsFetch.request),
@@ -142,8 +94,7 @@ export const userGroupsReducer = handleActions(
     [getType(userGroupsActions.flipIsUserGroupIncluded)]: (
       state: UserGroupsState,
       { payload: userGroupId }: ReduxAction<string>,
-    ): UserGroupsState =>
-      utils.flipEntityInclusion(state, EntityType.UserGroup, userGroupId),
+    ): UserGroupsState => utils.flipEntityInclusion(state, userGroupId),
 
     [getType(userGroupsActions.addTogglUserIdToGroup)]: (
       state: UserGroupsState,
@@ -175,13 +126,28 @@ export const userGroupsReducer = handleActions(
       {
         payload: { toolName, timeEntries, usersById },
       }: ReduxAction<userGroupsActions.EntryCountCalculatorModel>,
-    ) =>
-      appendEntryCountToUserGroupsInState(
-        toolName,
-        state,
-        timeEntries,
-        usersById,
-      ),
+    ) => {
+      const userGroupsById = state[toolName].byId;
+
+      const updatedUserGroupsById = Object.entries(userGroupsById).reduce(
+        (userGroupsAcc, [userGroupId, userGroup]) => {
+          const transform = new UserGroupTransform(userGroup);
+          return {
+            ...userGroupsAcc,
+            [userGroupId]: transform.appendEntryCount(usersById, timeEntries),
+          };
+        },
+        {},
+      );
+
+      return {
+        ...state,
+        [toolName]: {
+          ...state[toolName],
+          byId: updatedUserGroupsById,
+        },
+      };
+    },
   },
   initialState,
 );

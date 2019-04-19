@@ -7,6 +7,7 @@ import {
   ClockifyTaskModel,
   ClockifyTaskStatus,
   CompoundTaskModel,
+  EntitiesFetchPayloadModel,
   EntityGroup,
   EntityType,
   ReduxAction,
@@ -42,7 +43,7 @@ const convertSecondsToClockifyEstimate = (seconds: number): string => {
   return `PT${hours}H`;
 };
 
-const schemaProcessStrategy = (
+const getSchemaProcessStrategy = (workspaceId: string) => (
   value: ClockifyTaskModel | TogglTaskModel,
 ): CompoundTaskModel => ({
   id: value.id.toString(),
@@ -51,7 +52,7 @@ const schemaProcessStrategy = (
     'estimated_seconds' in value
       ? convertSecondsToClockifyEstimate(value.estimated_seconds)
       : value.estimate,
-  workspaceId: '', // The workspaceId value is assigned in the selector.
+  workspaceId,
   projectId: utils.findIdFieldValue(value, EntityType.Project),
   assigneeId: utils.findIdFieldValue(value, EntityType.User),
   isActive:
@@ -61,7 +62,7 @@ const schemaProcessStrategy = (
   entryCount: 0,
   linkedId: null,
   isIncluded: true,
-  type: EntityType.Task,
+  memberOf: EntityGroup.Tasks,
 });
 
 export const tasksReducer = handleActions(
@@ -71,15 +72,17 @@ export const tasksReducer = handleActions(
       getType(tasksActions.clockifyTasksTransfer.success),
     )]: (
       state: TasksState,
-      { payload: tasks }: ReduxAction<Array<ClockifyTaskModel>>,
+      {
+        payload: { entityRecords, workspaceId },
+      }: ReduxAction<EntitiesFetchPayloadModel<ClockifyTaskModel>>,
     ): TasksState => {
-      const normalizedState = utils.normalizeState(
-        ToolName.Clockify,
-        EntityGroup.Tasks,
-        state,
-        tasks,
-        schemaProcessStrategy,
-      );
+      const normalizedState = utils.normalizeState({
+        toolName: ToolName.Clockify,
+        entityGroup: EntityGroup.Tasks,
+        entityState: state,
+        payload: entityRecords,
+        schemaProcessStrategy: getSchemaProcessStrategy(workspaceId),
+      });
 
       return utils.linkEntitiesInStateByName(
         EntityGroup.Tasks,
@@ -89,15 +92,17 @@ export const tasksReducer = handleActions(
 
     [getType(tasksActions.togglTasksFetch.success)]: (
       state: TasksState,
-      { payload: tasks }: ReduxAction<Array<TogglTaskModel>>,
+      {
+        payload: { entityRecords, workspaceId },
+      }: ReduxAction<EntitiesFetchPayloadModel<TogglTaskModel>>,
     ): TasksState =>
-      utils.normalizeState(
-        ToolName.Toggl,
-        EntityGroup.Tasks,
-        state,
-        tasks,
-        schemaProcessStrategy,
-      ),
+      utils.normalizeState({
+        toolName: ToolName.Toggl,
+        entityGroup: EntityGroup.Tasks,
+        entityState: state,
+        payload: entityRecords,
+        schemaProcessStrategy: getSchemaProcessStrategy(workspaceId),
+      }),
 
     [combineActions(
       getType(tasksActions.clockifyTasksFetch.request),
@@ -123,18 +128,18 @@ export const tasksReducer = handleActions(
     [getType(tasksActions.flipIsTaskIncluded)]: (
       state: TasksState,
       { payload: taskId }: ReduxAction<string>,
-    ): TasksState => utils.flipEntityInclusion(state, EntityType.Task, taskId),
+    ): TasksState => utils.flipEntityInclusion(state, taskId),
 
     [getType(togglTimeEntriesFetch.success)]: (
       state: TasksState,
       { payload: timeEntries }: ReduxAction<Array<TogglTimeEntryModel>>,
     ) =>
-      utils.appendEntryCountToState(
-        EntityType.Task,
-        ToolName.Toggl,
-        state,
+      utils.appendEntryCountToState({
+        entityType: EntityType.Task,
+        toolName: ToolName.Toggl,
+        entityState: state,
         timeEntries,
-      ),
+      }),
   },
   initialState,
 );

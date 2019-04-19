@@ -59,6 +59,11 @@ export interface EntityWithName {
   name: string;
 }
 
+export interface EntitiesFetchPayloadModel<TEntity> {
+  entityRecords: Array<TEntity>;
+  workspaceId: string;
+}
+
 /**
  * Redux Types
  */

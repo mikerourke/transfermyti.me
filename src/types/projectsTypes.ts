@@ -57,7 +57,6 @@ export interface TogglProjectUserModel {
 export interface CompoundProjectModel extends BaseCompoundEntityModel {
   id: string;
   name: string;
-  workspaceId: string;
   clientId: string;
   isBillable: boolean;
   isPublic: boolean;

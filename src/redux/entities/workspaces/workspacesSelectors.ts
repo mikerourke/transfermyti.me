@@ -18,14 +18,14 @@ import {
   ToolName,
 } from '~/types';
 
-export const selectTogglWorkspaceIds = createSelector(
-  (state: ReduxState) => state.entities.workspaces.toggl.idValues,
-  (workspaceIds): Array<string> => workspaceIds,
-);
-
 const selectClockifyWorkspacesById = createSelector(
   (state: ReduxState) => state.entities.workspaces.clockify.byId,
   (workspacesById): Record<string, CompoundWorkspaceModel> => workspacesById,
+);
+
+export const selectTogglWorkspaceIds = createSelector(
+  (state: ReduxState) => state.entities.workspaces.toggl.idValues,
+  (workspaceIds): Array<string> => workspaceIds,
 );
 
 export const selectTogglWorkspacesById = createSelector(
@@ -78,6 +78,7 @@ export const selectClockifyIncludedWorkspacesById = createSelector(
     Object.entries(clockifyWorkspacesById).reduce(
       (acc, [workspaceId, workspaceRecord]) => {
         if (isNil(togglWorkspacesByName[workspaceRecord.name])) return acc;
+
         return {
           ...acc,
           [workspaceId]: workspaceRecord,

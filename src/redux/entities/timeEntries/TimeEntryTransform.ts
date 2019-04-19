@@ -4,6 +4,7 @@ import {
   CompoundClientModel,
   CompoundTimeEntryModel,
   EntitiesByGroupModel,
+  EntityGroup,
   EntityType,
   TimeEntryForTool,
 } from '~/types';
@@ -13,39 +14,42 @@ interface ClientDetails {
   clientName: string | null;
 }
 
-export class TimeEntryCompounder {
-  private timeEntryRecord: TimeEntryForTool;
+export class TimeEntryTransform {
+  private entitiesByGroup: EntitiesByGroupModel;
 
-  public constructor(
-    private workspaceId: string,
-    private entitiesByGroup: EntitiesByGroupModel,
-  ) {}
+  public constructor(private timeEntryRecord: TimeEntryForTool) {}
 
-  public compound(timeEntryRecord: TimeEntryForTool): CompoundTimeEntryModel {
-    this.timeEntryRecord = timeEntryRecord;
+  public compound(
+    workspaceId: string,
+    entitiesByGroup: EntitiesByGroupModel,
+  ): CompoundTimeEntryModel {
+    this.entitiesByGroup = entitiesByGroup;
 
-    const projectId = findIdFieldValue(timeEntryRecord, EntityType.Project);
-    const taskId = findIdFieldValue(timeEntryRecord, EntityType.Task);
-    const userId = findIdFieldValue(timeEntryRecord, EntityType.User);
+    const projectId = findIdFieldValue(
+      this.timeEntryRecord,
+      EntityType.Project,
+    );
+    const taskId = findIdFieldValue(this.timeEntryRecord, EntityType.Task);
+    const userId = findIdFieldValue(this.timeEntryRecord, EntityType.User);
 
     return {
-      id: timeEntryRecord.id.toString(),
-      description: timeEntryRecord.description,
+      id: this.timeEntryRecord.id.toString(),
+      description: this.timeEntryRecord.description,
       projectId,
       taskId,
       userId,
       userGroupIds: this.findUserGroupIds(userId),
-      workspaceId: this.workspaceId,
-      ...this.clientDetails,
+      workspaceId,
+      ...this.getClientDetails(),
       isBillable: this.isBillable,
       start: this.startTime,
       end: this.endTime,
-      tagNames: timeEntryRecord.tags,
+      tagNames: this.timeEntryRecord.tags,
       isActive: this.determineIfActive(projectId),
       name: null,
       linkedId: null,
       isIncluded: true,
-      type: EntityType.TimeEntry,
+      memberOf: EntityGroup.TimeEntries,
     };
   }
 
@@ -79,7 +83,7 @@ export class TimeEntryCompounder {
     );
   }
 
-  private get clientDetails(): ClientDetails {
+  private getClientDetails(): ClientDetails {
     const nullClientDetails: ClientDetails = {
       clientId: null,
       clientName: null,

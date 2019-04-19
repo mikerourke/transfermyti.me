@@ -1,20 +1,11 @@
 import { createSelector } from 'reselect';
 import { get } from 'lodash';
 import { findTogglInclusions, groupByWorkspace } from '~/redux/utils';
-import {
-  CompoundTagModel,
-  EntityWithName,
-  ReduxState,
-} from '~/types';
-
-export const selectTogglTagsById = createSelector(
-  (state: ReduxState) => state.entities.tags.toggl.byId,
-  (tagsById): Record<string, CompoundTagModel> => tagsById,
-);
+import { CompoundTagModel, EntityWithName, ReduxState } from '~/types';
 
 export const selectTogglTags = createSelector(
-  selectTogglTagsById,
-  (tagsById): Array<CompoundTagModel> => Object.values(tagsById),
+  (state: ReduxState) => Object.values(state.entities.tags.toggl.byId),
+  (tags): Array<CompoundTagModel> => tags,
 );
 
 export const selectTogglTagsByWorkspaceFactory = (inclusionsOnly: boolean) =>

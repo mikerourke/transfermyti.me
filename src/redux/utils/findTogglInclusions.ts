@@ -12,8 +12,8 @@ export function findTogglInclusions<TEntity>(
     (acc, entityRecord: TEntity & { isIncluded: boolean }) => {
       // If there is no corresponding entity with the same name on Clockify
       // and the user marked it as included, we're good to go!
-      if (!isNil(get(entityRecord, 'linkedId', null))) return acc;
-      if (!entityRecord.isIncluded) return acc;
+      const linkedId = get(entityRecord, 'linkedId', null);
+      if (!isNil(linkedId) || !entityRecord.isIncluded) return acc;
 
       return [...acc, entityRecord];
     },

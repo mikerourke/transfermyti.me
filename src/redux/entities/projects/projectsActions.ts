@@ -1,6 +1,6 @@
 import { createAsyncAction, createStandardAction } from 'typesafe-actions';
 import { set } from 'lodash';
-import { batchClockifyRequests, buildThrottler } from '~/redux/utils';
+import { batchClockifyTransferRequests, buildThrottler } from '~/redux/utils';
 import {
   apiCreateClockifyProject,
   apiFetchClockifyProjects,
@@ -10,16 +10,13 @@ import {
   apiFetchClockifyUsersInProject,
   apiFetchTogglUsersInProject,
 } from '~/redux/entities/api/users';
-import {
-  showFetchErrorNotification,
-  updateInTransferDetails,
-} from '~/redux/app/appActions';
+import { showFetchErrorNotification } from '~/redux/app/appActions';
 import { selectProjectsTransferPayloadForWorkspace } from './projectsSelectors';
 import {
   ClockifyProjectModel,
   ClockifyUserModel,
+  EntitiesFetchPayloadModel,
   EntityGroup,
-  EntityWithName,
   ReduxDispatch,
   ReduxGetState,
   TogglProjectModel,
@@ -30,19 +27,19 @@ export const clockifyProjectsFetch = createAsyncAction(
   '@projects/CLOCKIFY_FETCH_REQUEST',
   '@projects/CLOCKIFY_FETCH_SUCCESS',
   '@projects/CLOCKIFY_FETCH_FAILURE',
-)<void, Array<ClockifyProjectModel>, void>();
+)<void, EntitiesFetchPayloadModel<ClockifyProjectModel>, void>();
 
 export const togglProjectsFetch = createAsyncAction(
   '@projects/TOGGL_FETCH_REQUEST',
   '@projects/TOGGL_FETCH_SUCCESS',
   '@projects/TOGGL_FETCH_FAILURE',
-)<void, Array<TogglProjectModel>, void>();
+)<void, EntitiesFetchPayloadModel<TogglProjectModel>, void>();
 
 export const clockifyProjectsTransfer = createAsyncAction(
   '@projects/CLOCKIFY_TRANSFER_REQUEST',
   '@projects/CLOCKIFY_TRANSFER_SUCCESS',
   '@projects/CLOCKIFY_TRANSFER_FAILURE',
-)<void, Array<ClockifyProjectModel>, void>();
+)<void, EntitiesFetchPayloadModel<ClockifyProjectModel>, void>();
 
 export const flipIsProjectIncluded = createStandardAction(
   '@projects/FLIP_IS_INCLUDED',
@@ -60,7 +57,9 @@ export const fetchClockifyProjects = (workspaceId: string) => async (
       workspaceId,
     );
 
-    return dispatch(clockifyProjectsFetch.success(projects));
+    return dispatch(
+      clockifyProjectsFetch.success({ entityRecords: projects, workspaceId }),
+    );
   } catch (error) {
     dispatch(showFetchErrorNotification(error));
     return dispatch(clockifyProjectsFetch.failure());
@@ -75,7 +74,9 @@ export const fetchTogglProjects = (workspaceId: string) => async (
     const projects = await apiFetchTogglProjects(workspaceId);
     await appendUserIdsToProject(projects, apiFetchTogglUsersInProject);
 
-    return dispatch(togglProjectsFetch.success(projects));
+    return dispatch(
+      togglProjectsFetch.success({ entityRecords: projects, workspaceId }),
+    );
   } catch (error) {
     dispatch(showFetchErrorNotification(error));
     return dispatch(togglProjectsFetch.failure());
@@ -90,42 +91,38 @@ export const transferProjectsToClockify = (
   const projectsInWorkspace = selectProjectsTransferPayloadForWorkspace(state)(
     togglWorkspaceId,
   );
-  const countOfProjects = projectsInWorkspace.length;
-  if (countOfProjects === 0) return;
+  if (projectsInWorkspace.length === 0) return;
 
   dispatch(clockifyProjectsTransfer.request());
 
-  const onProject = (recordNumber: number, entityRecord: EntityWithName) => {
+  try {
+    const projects = await batchClockifyTransferRequests({
+      requestsPerSecond: 4,
+      dispatch,
+      entityGroup: EntityGroup.Projects,
+      entityRecordsInWorkspace: projectsInWorkspace,
+      apiFunc: apiCreateClockifyProject,
+      workspaceId: togglWorkspaceId,
+    });
+
     dispatch(
-      updateInTransferDetails({
-        countTotal: countOfProjects,
-        countCurrent: recordNumber,
-        entityGroup: EntityGroup.Projects,
-        workspaceId: togglWorkspaceId,
-        entityRecord,
+      clockifyProjectsTransfer.success({
+        entityRecords: projects,
+        workspaceId: clockifyWorkspaceId,
       }),
     );
-  };
-
-  try {
-    const projects = await batchClockifyRequests(
-      4,
-      onProject,
-      projectsInWorkspace,
-      apiCreateClockifyProject,
-      clockifyWorkspaceId,
-    );
-
-    dispatch(clockifyProjectsTransfer.success(projects));
   } catch (error) {
     dispatch(showFetchErrorNotification(error));
     dispatch(clockifyProjectsTransfer.failure());
   }
 };
 
-async function appendUserIdsToProject(
+async function appendUserIdsToProject<TPayload>(
   projects: Array<TogglProjectModel | ClockifyProjectModel>,
-  apiFetchUsersFunc: (projectId: string, workspaceId?: string) => Promise<any>,
+  apiFetchUsersFunc: (
+    projectId: string,
+    workspaceId?: string,
+  ) => Promise<TPayload>,
   workspaceId?: string,
 ): Promise<void> {
   const { promiseThrottle, throttledFunc } = buildThrottler(

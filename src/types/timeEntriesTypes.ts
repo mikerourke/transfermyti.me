@@ -66,7 +66,6 @@ export interface CompoundTimeEntryModel extends BaseCompoundEntityModel {
   description: string;
   projectId: string;
   taskId: string | null;
-  workspaceId: string;
   userId: string | null;
   userGroupIds: Array<string> | null;
   clientName: string | null;

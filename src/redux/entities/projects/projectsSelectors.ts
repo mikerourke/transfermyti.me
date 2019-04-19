@@ -1,6 +1,7 @@
 import { createSelector } from 'reselect';
 import { get } from 'lodash';
 import { findTogglInclusions, groupByWorkspace } from '~/redux/utils';
+import { selectTogglClientMatchingId } from '~/redux/entities/clients/clientsSelectors';
 import {
   ClockifyEstimateType,
   CompoundProjectModel,
@@ -22,33 +23,33 @@ export const selectTogglProjectsByWorkspaceFactory = (
   inclusionsOnly: boolean,
 ) =>
   createSelector(
-    (state: ReduxState) => Object.values(state.entities.projects.toggl.byId),
-    (projects): Record<string, Array<CompoundProjectModel>> => {
+    selectTogglProjectsById,
+    (projectsById): Record<string, Array<CompoundProjectModel>> => {
+      const projects = Object.values(projectsById);
+
       const projectsToUse = inclusionsOnly
         ? findTogglInclusions(projects)
         : projects;
+
       return groupByWorkspace(projectsToUse);
     },
   );
 
 export const selectProjectsTransferPayloadForWorkspace = createSelector(
   selectTogglProjectsByWorkspaceFactory(true),
-  (state: ReduxState) => state.entities.clients.toggl.byId,
-  (inclusionsByWorkspaceId, togglClientsById) => (
+  selectTogglClientMatchingId,
+  (inclusionsByWorkspace, getClientMatchingId) => (
     workspaceIdToGet: string,
   ): Array<CreateProjectRequestModel> => {
     const inclusions = get(
-      inclusionsByWorkspaceId,
+      inclusionsByWorkspace,
       workspaceIdToGet,
       [],
     ) as Array<CompoundProjectModel>;
     if (inclusions.length === 0) return [];
 
     return inclusions.reduce((acc, project) => {
-      const matchingClient = get(togglClientsById, project.clientId, {
-        isIncluded: false,
-        linkedId: null,
-      });
+      const matchingClient = getClientMatchingId(project.clientId);
       const clientId = matchingClient.isIncluded
         ? matchingClient.linkedId
         : null;

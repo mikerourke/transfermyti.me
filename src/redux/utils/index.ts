@@ -1,5 +1,5 @@
 export { appendEntryCountToState } from './appendEntryCountToState';
-export { batchClockifyRequests } from './batchClockifyRequests';
+export { batchClockifyTransferRequests } from './batchClockifyTransferRequests';
 export { buildThrottler } from './buildThrottler';
 export { findIdFieldValue } from './findIdFieldValue';
 export { findTogglInclusions } from './findTogglInclusions';

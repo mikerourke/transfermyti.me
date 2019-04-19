@@ -10,7 +10,6 @@ import {
   ClockifyTimeEntryModel,
   CompoundTimeEntryModel,
   EntityGroup,
-  EntityType,
   ReduxAction,
   ReduxStateEntryForTool,
   TogglTimeEntryModel,
@@ -44,23 +43,23 @@ export const timeEntriesReducer = handleActions(
       state: TimeEntriesState,
       { payload: timeEntries }: ReduxAction<Array<ClockifyTimeEntryModel>>,
     ): TimeEntriesState =>
-      utils.normalizeState(
-        ToolName.Clockify,
-        EntityGroup.TimeEntries,
-        state,
-        timeEntries,
-      ),
+      utils.normalizeState({
+        toolName: ToolName.Clockify,
+        entityGroup: EntityGroup.TimeEntries,
+        entityState: state,
+        payload: timeEntries,
+      }),
 
     [getType(timeEntriesActions.togglTimeEntriesFetch.success)]: (
       state: TimeEntriesState,
       { payload: timeEntries }: ReduxAction<Array<TogglTimeEntryModel>>,
     ): TimeEntriesState =>
-      utils.normalizeState(
-        ToolName.Toggl,
-        EntityGroup.TimeEntries,
-        state,
-        timeEntries,
-      ),
+      utils.normalizeState({
+        toolName: ToolName.Toggl,
+        entityGroup: EntityGroup.TimeEntries,
+        entityState: state,
+        payload: timeEntries,
+      }),
 
     [combineActions(
       getType(timeEntriesActions.clockifyTimeEntriesFetch.request),
@@ -86,8 +85,7 @@ export const timeEntriesReducer = handleActions(
     [getType(timeEntriesActions.flipIsTimeEntryIncluded)]: (
       state: TimeEntriesState,
       { payload: timeEntryId }: ReduxAction<string>,
-    ): TimeEntriesState =>
-      utils.flipEntityInclusion(state, EntityType.TimeEntry, timeEntryId),
+    ): TimeEntriesState => utils.flipEntityInclusion(state, timeEntryId),
 
     [getType(flipIsProjectIncluded)]: (
       state: TimeEntriesState,

@@ -2,44 +2,50 @@ import cases from 'jest-in-case';
 import * as clientsActions from '../clientsActions';
 import { clientsReducer, initialState } from '../clientsReducer';
 
-const clockifyClientsPayload = [
-  {
-    id: '2FZn1Y9R5M4nnMGV9K32xJ',
-    name: 'Client A',
-    workspaceId: 'aZJSPbcPw1cpdfYmtHM7za',
-  },
-  {
-    id: 'ir4aN5VF7pdfDrgWjGCxeR',
-    name: 'Client B',
-    workspaceId: 'aZJSPbcPw1cpdfYmtHM7za',
-  },
-  {
-    id: 'uABwBW6XWsWLRzRtKY1gow',
-    name: 'Client C',
-    workspaceId: 'aZJSPbcPw1cpdfYmtHM7za',
-  },
-];
+const clockifyClientsPayload = {
+  entityRecords: [
+    {
+      id: '2FZn1Y9R5M4nnMGV9K32xJ',
+      name: 'Client A',
+      workspaceId: 'aZJSPbcPw1cpdfYmtHM7za',
+    },
+    {
+      id: 'ir4aN5VF7pdfDrgWjGCxeR',
+      name: 'Client B',
+      workspaceId: 'aZJSPbcPw1cpdfYmtHM7za',
+    },
+    {
+      id: 'uABwBW6XWsWLRzRtKY1gow',
+      name: 'Client C',
+      workspaceId: 'aZJSPbcPw1cpdfYmtHM7za',
+    },
+  ],
+  workspaceId: 'aZJSPbcPw1cpdfYmtHM7za',
+};
 
-const togglClientsPayload = [
-  {
-    id: 37389358,
-    wid: 1738517,
-    name: 'Client A',
-    at: '2018-02-18T16:54:02+00:00',
-  },
-  {
-    id: 19521509,
-    wid: 1738517,
-    name: 'Client B',
-    at: '2016-12-06T03:48:38+00:00',
-  },
-  {
-    id: 21773956,
-    wid: 1738517,
-    name: 'Client C',
-    at: '2017-04-26T14:18:07+00:00',
-  },
-];
+const togglClientsPayload = {
+  entityRecords: [
+    {
+      id: 37389358,
+      wid: 1738517,
+      name: 'Client A',
+      at: '2018-02-18T16:54:02+00:00',
+    },
+    {
+      id: 19521509,
+      wid: 1738517,
+      name: 'Client B',
+      at: '2016-12-06T03:48:38+00:00',
+    },
+    {
+      id: 21773956,
+      wid: 1738517,
+      name: 'Client C',
+      at: '2017-04-26T14:18:07+00:00',
+    },
+  ],
+  workspaceId: '1738517',
+};
 
 describe('clientsReducer', () => {
   cases(

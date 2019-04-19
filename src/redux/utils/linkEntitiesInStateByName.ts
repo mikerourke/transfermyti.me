@@ -7,10 +7,10 @@ type ModelWithName<T> = T & { name: string; isIncluded?: boolean };
  * Given the specified entityGroup and entity state, link the Toggl and Clockify
  * entities by setting a value to the `linkedId` field.
  */
-export function linkEntitiesInStateByName<TState>(
+export function linkEntitiesInStateByName<TEntityState>(
   entityGroup: EntityGroup,
-  normalizedState: TState,
-): TState {
+  normalizedState: TEntityState,
+): TEntityState {
   const clockifyById = get(normalizedState, [ToolName.Clockify, 'byId'], {});
   const togglById = get(normalizedState, [ToolName.Toggl, 'byId'], {});
 
@@ -33,13 +33,13 @@ export function linkEntitiesInStateByName<TState>(
  * Sets the `linkedId` field of the record in the updatedEntitiesById that is in
  * the same entityGroup and has the same `name`.
  */
-function linkEntitiesByName<TModel>(
+function linkEntitiesByName<TEntity>(
   entityGroup: EntityGroup,
-  linkFromEntitiesById: Record<string, TModel>,
-  updatedEntitiesById: Record<string, TModel>,
-): Record<string, TModel> {
+  linkFromEntitiesById: Record<string, TEntity>,
+  updatedEntitiesById: Record<string, TEntity>,
+): Record<string, TEntity> {
   const linkFromEntitiesByName = Object.values(linkFromEntitiesById).reduce(
-    (acc, entityRecord: ModelWithName<TModel>) => ({
+    (acc, entityRecord: ModelWithName<TEntity>) => ({
       ...acc,
       [entityRecord.name]: entityRecord,
     }),
@@ -47,7 +47,7 @@ function linkEntitiesByName<TModel>(
   );
 
   return Object.entries(updatedEntitiesById).reduce(
-    (acc, [entityId, entityRecord]: [string, ModelWithName<TModel>]) => ({
+    (acc, [entityId, entityRecord]: [string, ModelWithName<TEntity>]) => ({
       ...acc,
       [entityId]: {
         ...entityRecord,

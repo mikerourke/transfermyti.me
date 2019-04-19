@@ -29,7 +29,6 @@ export interface CompoundTaskModel extends BaseCompoundEntityModel {
   id: string;
   name: string;
   estimate: string;
-  workspaceId: string;
   projectId: string;
   assigneeId: string | null;
   isActive: boolean;

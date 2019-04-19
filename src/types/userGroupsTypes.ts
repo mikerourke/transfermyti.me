@@ -4,7 +4,6 @@ export interface ClockifyUserGroupModel {
   id: string;
   name: string;
   userIds: Array<string>;
-  workspaceId: string;
 }
 
 export interface TogglUserGroupModel {

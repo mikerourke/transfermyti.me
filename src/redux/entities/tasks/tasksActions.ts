@@ -1,21 +1,18 @@
 import { createAsyncAction, createStandardAction } from 'typesafe-actions';
 import { flatten } from 'lodash';
-import { batchClockifyRequests, buildThrottler } from '~/redux/utils';
+import { batchClockifyTransferRequests, buildThrottler } from '~/redux/utils';
 import {
   apiCreateClockifyTask,
   apiFetchClockifyTasks,
   apiFetchTogglTasks,
 } from '~/redux/entities/api/tasks';
-import {
-  showFetchErrorNotification,
-  updateInTransferDetails,
-} from '~/redux/app/appActions';
+import { showFetchErrorNotification } from '~/redux/app/appActions';
 import { selectClockifyProjectIds } from '~/redux/entities/projects/projectsSelectors';
 import { selectTasksTransferPayloadForWorkspace } from './tasksSelectors';
 import {
   ClockifyTaskModel,
+  EntitiesFetchPayloadModel,
   EntityGroup,
-  EntityWithName,
   ReduxDispatch,
   ReduxGetState,
   TogglTaskModel,
@@ -25,19 +22,19 @@ export const clockifyTasksFetch = createAsyncAction(
   '@tasks/CLOCKIFY_FETCH_REQUEST',
   '@tasks/CLOCKIFY_FETCH_SUCCESS',
   '@tasks/CLOCKIFY_FETCH_FAILURE',
-)<void, Array<ClockifyTaskModel>, void>();
+)<void, EntitiesFetchPayloadModel<ClockifyTaskModel>, void>();
 
 export const togglTasksFetch = createAsyncAction(
   '@tasks/TOGGL_FETCH_REQUEST',
   '@tasks/TOGGL_FETCH_SUCCESS',
   '@tasks/TOGGL_FETCH_FAILURE',
-)<void, Array<TogglTaskModel>, void>();
+)<void, EntitiesFetchPayloadModel<TogglTaskModel>, void>();
 
 export const clockifyTasksTransfer = createAsyncAction(
   '@tasks/CLOCKIFY_TRANSFER_REQUEST',
   '@tasks/CLOCKIFY_TRANSFER_SUCCESS',
   '@tasks/CLOCKIFY_TRANSFER_FAILURE',
-)<void, Array<ClockifyTaskModel>, void>();
+)<void, EntitiesFetchPayloadModel<ClockifyTaskModel>, void>();
 
 export const flipIsTaskIncluded = createStandardAction(
   '@tasks/FLIP_IS_INCLUDED',
@@ -70,7 +67,9 @@ export const fetchClockifyTasks = (workspaceId: string) => async (
 
     const tasks = flatten(projectTasks);
 
-    return dispatch(clockifyTasksFetch.success(tasks));
+    return dispatch(
+      clockifyTasksFetch.success({ entityRecords: tasks, workspaceId }),
+    );
   } catch (error) {
     dispatch(showFetchErrorNotification(error));
     return dispatch(clockifyTasksFetch.failure());
@@ -84,7 +83,9 @@ export const fetchTogglTasks = (workspaceId: string) => async (
 
   try {
     const tasks = await apiFetchTogglTasks(workspaceId);
-    return dispatch(togglTasksFetch.success(tasks));
+    return dispatch(
+      togglTasksFetch.success({ entityRecords: tasks, workspaceId }),
+    );
   } catch (error) {
     dispatch(showFetchErrorNotification(error));
     return dispatch(togglTasksFetch.failure());
@@ -99,33 +100,26 @@ export const transferTasksToClockify = (
   const tasksInWorkspace = selectTasksTransferPayloadForWorkspace(state)(
     togglWorkspaceId,
   );
-  const countOfTasks = tasksInWorkspace.length;
-  if (countOfTasks === 0) return Promise.resolve();
+  if (tasksInWorkspace.length === 0) return Promise.resolve();
 
   dispatch(clockifyTasksTransfer.request());
 
-  const onTask = (recordNumber: number, entityRecord: EntityWithName) => {
-    dispatch(
-      updateInTransferDetails({
-        countTotal: countOfTasks,
-        countCurrent: recordNumber,
-        entityGroup: EntityGroup.Tasks,
-        workspaceId: togglWorkspaceId,
-        entityRecord,
+  try {
+    const tasks = await batchClockifyTransferRequests({
+      requestsPerSecond: 4,
+      dispatch,
+      entityGroup: EntityGroup.Tasks,
+      entityRecordsInWorkspace: tasksInWorkspace,
+      apiFunc: apiCreateClockifyTask,
+      workspaceId: togglWorkspaceId,
+    });
+
+    return dispatch(
+      clockifyTasksTransfer.success({
+        entityRecords: tasks,
+        workspaceId: clockifyWorkspaceId,
       }),
     );
-  };
-
-  try {
-    const tasks = await batchClockifyRequests(
-      4,
-      onTask,
-      tasksInWorkspace,
-      apiCreateClockifyTask,
-      clockifyWorkspaceId,
-    );
-
-    return dispatch(clockifyTasksTransfer.success(tasks));
   } catch (error) {
     dispatch(showFetchErrorNotification(error));
     return dispatch(clockifyTasksTransfer.failure());

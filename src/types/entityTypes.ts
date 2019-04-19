@@ -21,8 +21,9 @@ export enum EntityGroup {
 }
 
 export interface BaseCompoundEntityModel {
+  workspaceId: string;
   linkedId: string | null;
   isIncluded: boolean;
   entryCount?: number;
-  type?: EntityType;
+  memberOf?: EntityGroup;
 }

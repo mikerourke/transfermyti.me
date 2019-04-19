@@ -1,11 +1,7 @@
 import { createSelector } from 'reselect';
 import { get } from 'lodash';
 import { findTogglInclusions, groupByWorkspace } from '~/redux/utils';
-import {
-  CompoundUserGroupModel,
-  EntityWithName,
-  ReduxState,
-} from '~/types';
+import { CompoundUserGroupModel, EntityWithName, ReduxState } from '~/types';
 
 export const selectTogglUserGroups = createSelector(
   (state: ReduxState) => state.entities.userGroups.toggl.byId,
@@ -29,11 +25,11 @@ export const selectTogglUserGroupsByWorkspaceFactory = (
 
 export const selectUserGroupsTransferPayloadForWorkspace = createSelector(
   selectTogglUserGroupsByWorkspaceFactory(true),
-  inclusionsByWorkspaceId => (
+  inclusionsByWorkspace => (
     workspaceIdToGet: string,
   ): Array<EntityWithName> => {
     const inclusions = get(
-      inclusionsByWorkspaceId,
+      inclusionsByWorkspace,
       workspaceIdToGet,
       [],
     ) as Array<CompoundUserGroupModel>;
