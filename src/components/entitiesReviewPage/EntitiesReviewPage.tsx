@@ -1,11 +1,13 @@
 import React, { useState } from 'react';
+import { Else, If, Then, When } from 'react-if';
 import { first, get, isNil } from 'lodash';
 import { css } from 'emotion';
 import EntitiesList from '~/components/entitiesList/EntitiesList';
 import StepPage, { StepPageProps } from '~/components/stepPage/StepPage';
 import EntityTabs from './components/EntityTabs';
+import IncludedYearsSelect from './components/IncludedYearsSelect';
 import NoRecordsDisplay from './components/NoRecordsDisplay';
-import TotalsFooter from './components/TotalsFooter';
+import PageFooter from './components/PageFooter';
 import WorkspacesDropdown from './components/WorkspacesDropdown';
 import {
   CompoundEntityModel,
@@ -13,6 +15,7 @@ import {
   CountsByGroupByWorkspaceModel,
   EntitiesByGroupByWorkspaceModel,
   EntityGroup,
+  UpdateIncludedWorkspaceYearModel,
   ToolName,
 } from '~/types';
 
@@ -27,6 +30,9 @@ interface Props extends StepPageProps {
     entityGroup: EntityGroup,
     entityRecord: CompoundEntityModel,
   ) => void;
+  onUpdateIsWorkspaceYearIncluded?: (
+    updateDetails: UpdateIncludedWorkspaceYearModel,
+  ) => void;
 }
 
 const CONTENTS_HEIGHT = 600;
@@ -37,6 +43,7 @@ const EntitiesReviewPage: React.FC<Props> = ({
   entitiesByGroupByWorkspace,
   workspacesById,
   onFlipIsWorkspaceEntityIncluded,
+  onUpdateIsWorkspaceYearIncluded,
   ...stepPageProps
 }) => {
   const [workspaceId, setWorkspaceId] = useState<string>(
@@ -57,8 +64,10 @@ const EntitiesReviewPage: React.FC<Props> = ({
   if (showInclusionsOnly && activeEntityRecords.length !== 0) {
     activeEntityRecords = activeEntityRecords.reduce(
       (acc: Array<CompoundEntityModel>, entityRecord: CompoundEntityModel) => {
-        if (!entityRecord.isIncluded) return acc;
-        if (!isNil(entityRecord.linkedId)) return acc;
+        if (!isNil(entityRecord.linkedId) || !entityRecord.isIncluded) {
+          return acc;
+        }
+
         return [...acc, entityRecord];
       },
       [],
@@ -70,6 +79,17 @@ const EntitiesReviewPage: React.FC<Props> = ({
     [workspaceId, activeEntityGroup],
     {},
   );
+
+  const handleIncludedYearUpdate = (year: number, isIncluded: boolean) => {
+    const updateDetails = { workspaceId, year, isIncluded };
+    onUpdateIsWorkspaceYearIncluded(updateDetails);
+  };
+
+  const activeWorkspace = workspacesById[workspaceId];
+
+  const isIncludedYearsSelectShown =
+    activeEntityGroup === EntityGroup.TimeEntries &&
+    !isNil(onUpdateIsWorkspaceYearIncluded);
 
   return (
     <StepPage onResize={setContentsWidth} {...stepPageProps}>
@@ -89,22 +109,31 @@ const EntitiesReviewPage: React.FC<Props> = ({
           onItemClick={setWorkspaceId}
         />
       </div>
-      {activeEntityRecords.length === 0 ? (
-        <NoRecordsDisplay
-          activeEntityGroup={activeEntityGroup}
-          height={CONTENTS_HEIGHT}
-          toolName={toolName}
+      <When condition={isIncludedYearsSelectShown}>
+        <IncludedYearsSelect
+          inclusionsByYear={activeWorkspace.inclusionsByYear}
+          onUpdateIncludedYear={handleIncludedYearUpdate}
         />
-      ) : (
-        <EntitiesList
-          entityGroup={activeEntityGroup}
-          entityRecords={activeEntityRecords}
-          height={CONTENTS_HEIGHT}
-          width={contentsWidth}
-          onItemClick={onFlipIsWorkspaceEntityIncluded}
-        />
-      )}
-      <TotalsFooter
+      </When>
+      <If condition={activeEntityRecords.length === 0}>
+        <Then>
+          <NoRecordsDisplay
+            activeEntityGroup={activeEntityGroup}
+            height={CONTENTS_HEIGHT}
+            toolName={toolName}
+          />
+        </Then>
+        <Else>
+          <EntitiesList
+            entityGroup={activeEntityGroup}
+            entityRecords={activeEntityRecords}
+            height={CONTENTS_HEIGHT}
+            width={contentsWidth}
+            onItemClick={onFlipIsWorkspaceEntityIncluded}
+          />
+        </Else>
+      </If>
+      <PageFooter
         activeEntityGroup={activeEntityGroup}
         groupRecordCounts={groupRecordCounts}
         showInclusionsOnly={showInclusionsOnly}

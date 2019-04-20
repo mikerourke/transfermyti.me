@@ -14,7 +14,9 @@ import {
   ReduxStateEntryForTool,
   TogglTimeEntryModel,
   ToolName,
+  UpdateIncludedWorkspaceYearModel,
 } from '~/types';
+import { updateIsWorkspaceYearIncluded } from '~/redux/entities/workspaces/workspacesActions';
 
 export interface TimeEntriesState {
   readonly clockify: ReduxStateEntryForTool<CompoundTimeEntryModel>;
@@ -91,19 +93,31 @@ export const timeEntriesReducer = handleActions(
       state: TimeEntriesState,
       { payload: projectId }: ReduxAction<string>,
     ): TimeEntriesState =>
-      pushInclusionFlipToTimeEntry(state, 'projectId', projectId),
+      pushInclusionFlipToTimeEntry({
+        state,
+        parentIdFieldName: 'projectId',
+        parentId: projectId,
+      }),
 
     [getType(flipIsTaskIncluded)]: (
       state: TimeEntriesState,
       { payload: taskId }: ReduxAction<string>,
     ): TimeEntriesState =>
-      pushInclusionFlipToTimeEntry(state, 'taskId', taskId),
+      pushInclusionFlipToTimeEntry({
+        state,
+        parentIdFieldName: 'taskId',
+        parentId: taskId,
+      }),
 
     [getType(flipIsUserIncluded)]: (
       state: TimeEntriesState,
       { payload: userId }: ReduxAction<string>,
     ): TimeEntriesState =>
-      pushInclusionFlipToTimeEntry(state, 'userId', userId),
+      pushInclusionFlipToTimeEntry({
+        state,
+        parentIdFieldName: 'userId',
+        parentId: userId,
+      }),
 
     [getType(timeEntriesActions.addLinksToTimeEntries)]: (
       state: TimeEntriesState,
@@ -112,15 +126,56 @@ export const timeEntriesReducer = handleActions(
       ...state,
       ...newTimeEntriesState,
     }),
+
+    [getType(updateIsWorkspaceYearIncluded)]: (
+      state: TimeEntriesState,
+      {
+        payload: { workspaceId, year, isIncluded },
+      }: ReduxAction<UpdateIncludedWorkspaceYearModel>,
+    ): TimeEntriesState => {
+      const updatedEntriesById = Object.entries(state.toggl.byId).reduce(
+        (acc, [timeEntryId, timeEntry]) => {
+          let isIncludedToUse = timeEntry.isIncluded;
+
+          if (
+            timeEntry.workspaceId === workspaceId &&
+            +timeEntry.year === +year
+          ) {
+            isIncludedToUse = isIncluded;
+          }
+
+          return {
+            ...acc,
+            [timeEntryId]: {
+              ...timeEntry,
+              isIncluded: isIncludedToUse,
+            },
+          };
+        },
+        {},
+      );
+
+      return {
+        ...state,
+        toggl: {
+          ...state.toggl,
+          byId: updatedEntriesById,
+        },
+      };
+    },
   },
   initialState,
 );
 
-function pushInclusionFlipToTimeEntry(
-  state: TimeEntriesState,
-  parentIdFieldName: string,
-  parentId: string,
-): TimeEntriesState {
+function pushInclusionFlipToTimeEntry({
+  state,
+  parentIdFieldName,
+  parentId,
+}: {
+  state: TimeEntriesState;
+  parentIdFieldName: string;
+  parentId: string;
+}): TimeEntriesState {
   const timeEntriesById = { ...state.toggl.byId };
 
   const updatedEntriesById = Object.entries(timeEntriesById).reduce(

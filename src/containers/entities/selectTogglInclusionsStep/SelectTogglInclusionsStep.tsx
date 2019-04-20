@@ -6,6 +6,7 @@ import { isNil } from 'lodash';
 import {
   fetchTogglEntitiesInWorkspace,
   flipIsWorkspaceEntityIncluded,
+  updateIsWorkspaceYearIncluded,
 } from '~/redux/entities/workspaces/workspacesActions';
 import {
   selectTogglEntitiesByGroupByWorkspace,
@@ -26,6 +27,7 @@ import {
   ReduxDispatch,
   ReduxState,
   ToolName,
+  UpdateIncludedWorkspaceYearModel,
 } from '~/types';
 
 interface ConnectStateProps {
@@ -42,6 +44,9 @@ interface ConnectDispatchProps {
   onFlipIsWorkspaceEntityIncluded: (
     entityGroup: EntityGroup,
     entityRecord: CompoundEntityModel,
+  ) => void;
+  onUpdateIsWorkspaceYearIncluded: (
+    updateDetails: UpdateIncludedWorkspaceYearModel,
   ) => void;
 }
 
@@ -123,6 +128,9 @@ const mapDispatchToProps = (dispatch: ReduxDispatch) => ({
     entityGroup: EntityGroup,
     entityRecord: CompoundEntityModel,
   ) => dispatch(flipIsWorkspaceEntityIncluded(entityGroup, entityRecord)),
+  onUpdateIsWorkspaceYearIncluded: (
+    updateDetails: UpdateIncludedWorkspaceYearModel,
+  ) => dispatch(updateIsWorkspaceYearIncluded(updateDetails)),
 });
 
 export default connect<ConnectStateProps, ConnectDispatchProps, StepPageProps>(

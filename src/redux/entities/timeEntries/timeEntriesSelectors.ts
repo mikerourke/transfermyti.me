@@ -83,8 +83,8 @@ export const selectTimeEntriesByWorkspaceFactory = (
 
 export const selectTimeEntriesForWorkspace = createSelector(
   selectTimeEntriesByWorkspaceFactory(ToolName.Toggl, true),
-  inclusionsByWorkspaceId => (
+  inclusionsByWorkspace => (
     workspaceIdToGet: string,
   ): Array<DetailedTimeEntryModel> =>
-    get(inclusionsByWorkspaceId, workspaceIdToGet, []),
+    get(inclusionsByWorkspace, workspaceIdToGet, []),
 );

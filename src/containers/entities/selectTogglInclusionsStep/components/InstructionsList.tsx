@@ -24,8 +24,9 @@ const InstructionsList: React.FC = () => (
         }
 
         span {
-          margin: 0 4px;
           font-weight: 700;
+          margin: 0 4px;
+          vertical-align: bottom;
         }
       `}
     >

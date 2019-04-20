@@ -16,7 +16,7 @@ interface Props {
   onFlipInclusionsOnly: () => void;
 }
 
-const TotalsFooter: React.FC<Props> = ({
+const PageFooter: React.FC<Props> = ({
   activeEntityGroup,
   groupRecordCounts,
   showInclusionsOnly,
@@ -76,4 +76,4 @@ const TotalsFooter: React.FC<Props> = ({
   );
 };
 
-export default TotalsFooter;
+export default PageFooter;

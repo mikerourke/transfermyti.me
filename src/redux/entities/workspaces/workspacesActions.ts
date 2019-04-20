@@ -1,16 +1,14 @@
 import { createAsyncAction, createStandardAction } from 'typesafe-actions';
-import { isNil, set } from 'lodash';
-import { buildThrottler } from '~/redux/utils';
+import { isNil } from 'lodash';
 import {
-  apiCreateClockifyWorkspace,
   apiFetchClockifyWorkspaces,
-  apiFetchTogglWorkspaceSummaryForYear,
+  apiFetchTogglWorkspaces,
+  apiCreateClockifyWorkspace,
 } from '~/redux/entities/api/workspaces';
 import {
   showFetchErrorNotification,
   updateInTransferWorkspace,
 } from '~/redux/app/appActions';
-import { selectTogglUserEmail } from '~/redux/credentials/credentialsSelectors';
 import * as clientsActions from '~/redux/entities/clients/clientsActions';
 import * as projectsActions from '~/redux/entities/projects/projectsActions';
 import * as tagsActions from '~/redux/entities/tags/tagsActions';
@@ -24,9 +22,9 @@ import {
   CompoundEntityModel,
   CompoundWorkspaceModel,
   EntityGroup,
+  UpdateIncludedWorkspaceYearModel,
   ReduxDispatch,
   ReduxGetState,
-  TogglSummaryReportDataModel,
   TogglWorkspaceModel,
   ToolName,
 } from '~/types';
@@ -43,16 +41,6 @@ export const togglWorkspacesFetch = createAsyncAction(
   '@workspaces/TOGGL_FETCH_FAILURE',
 )<void, Array<TogglWorkspaceModel>, void>();
 
-export const togglWorkspaceSummaryFetch = createAsyncAction(
-  '@workspaces/TOGGL_SUMMARY_FETCH_REQUEST',
-  '@workspaces/TOGGL_SUMMARY_FETCH_SUCCESS',
-  '@workspaces/TOGGL_SUMMARY_FETCH_FAILURE',
-)<
-  void,
-  { workspaceId: string; inclusionsByYear: Record<string, boolean> },
-  void
->();
-
 export const clockifyWorkspaceTransfer = createAsyncAction(
   '@workspaces/CLOCKIFY_TRANSFER_REQUEST',
   '@workspaces/CLOCKIFY_TRANSFER_SUCCESS',
@@ -67,9 +55,9 @@ export const flipIsWorkspaceIncluded = createStandardAction(
   '@workspaces/FLIP_IS_INCLUDED',
 )<string>();
 
-export const flipIsWorkspaceYearIncluded = createStandardAction(
-  '@workspaces/FLIP_IS_YEAR_INCLUDED',
-)<{ workspaceId: string; year: string }>();
+export const updateIsWorkspaceYearIncluded = createStandardAction(
+  '@workspaces/UPDATE_IS_WORKSPACE_YEAR_INCLUDED',
+)<UpdateIncludedWorkspaceYearModel>();
 
 export const updateWorkspaceNameBeingFetched = createStandardAction(
   '@workspaces/UPDATE_NAME_BEING_FETCHED',
@@ -120,19 +108,24 @@ export const fetchClockifyEntitiesInWorkspace = ({
   return dispatch(updateWorkspaceNameBeingFetched(null));
 };
 
+export const fetchTogglWorkspaces = () => async (dispatch: ReduxDispatch) => {
+  dispatch(togglWorkspacesFetch.request());
+
+  try {
+    dispatch(resetContentsForTool(ToolName.Toggl));
+    const workspaces = await apiFetchTogglWorkspaces();
+
+    return dispatch(togglWorkspacesFetch.success(workspaces));
+  } catch (error) {
+    dispatch(showFetchErrorNotification(error));
+    return dispatch(togglWorkspacesFetch.failure());
+  }
+};
+
 export const fetchTogglEntitiesInWorkspace = ({
   name,
   id,
-  inclusionsByYear,
 }: CompoundWorkspaceModel) => async (dispatch: ReduxDispatch) => {
-  const inclusionYears = Object.entries(inclusionsByYear).reduce(
-    (acc, [year, isIncluded]) => {
-      if (!isIncluded) return acc;
-      return [...acc, +year];
-    },
-    [],
-  );
-
   dispatch(updateWorkspaceNameBeingFetched(name));
 
   await dispatch(clientsActions.fetchTogglClients(id));
@@ -141,53 +134,9 @@ export const fetchTogglEntitiesInWorkspace = ({
   await dispatch(tasksActions.fetchTogglTasks(id));
   await dispatch(usersActions.fetchTogglUsers(id));
   await dispatch(userGroupsActions.fetchTogglUserGroups(id));
-  for (const inclusionYear of inclusionYears) {
-    await dispatch(timeEntriesActions.fetchTogglTimeEntries(id, inclusionYear));
-  }
+  await dispatch(timeEntriesActions.fetchTogglTimeEntries(id));
 
   return dispatch(updateWorkspaceNameBeingFetched(null));
-};
-
-export const fetchTogglWorkspaceSummary = (workspaceId: string) => async (
-  dispatch: ReduxDispatch,
-  getState: ReduxGetState,
-) => {
-  const state = getState();
-
-  dispatch(togglWorkspaceSummaryFetch.request());
-
-  try {
-    const email = selectTogglUserEmail(state);
-    const { promiseThrottle, throttledFunc } = buildThrottler(
-      4,
-      apiFetchTogglWorkspaceSummaryForYear,
-    );
-
-    const inclusionsByYear = {};
-    let yearToFetch = new Date().getFullYear();
-    while (yearToFetch > 2007) {
-      await promiseThrottle
-        .add(
-          // @ts-ignore
-          throttledFunc.bind(this, email, workspaceId, yearToFetch),
-        )
-        .then(({ data }: { data: Array<TogglSummaryReportDataModel> }) => {
-          const entryCount = data.reduce(
-            (acc, { items }) => acc + items.length,
-            0,
-          );
-          if (entryCount > 0) set(inclusionsByYear, yearToFetch, true);
-        });
-      yearToFetch -= 1;
-    }
-
-    return dispatch(
-      togglWorkspaceSummaryFetch.success({ workspaceId, inclusionsByYear }),
-    );
-  } catch (error) {
-    dispatch(showFetchErrorNotification(error));
-    return dispatch(togglWorkspaceSummaryFetch.failure());
-  }
 };
 
 export const transferEntitiesToClockifyWorkspace = (

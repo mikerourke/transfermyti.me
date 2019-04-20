@@ -1,5 +1,5 @@
 import { createAsyncAction, createStandardAction } from 'typesafe-actions';
-import { flatten } from 'lodash';
+import { flatten, isNil } from 'lodash';
 import {
   batchClockifyTransferRequests,
   buildThrottler,
@@ -34,6 +34,7 @@ import {
   ToolName,
   TransferType,
 } from '~/types';
+import { updateIsWorkspaceYearIncluded } from '~/redux/entities/workspaces/workspacesActions';
 
 type TimeEntryForTool = ClockifyTimeEntryModel | TogglTimeEntryModel;
 
@@ -102,34 +103,58 @@ export const fetchClockifyTimeEntries = (workspaceId: string) => async (
   }
 };
 
-export const fetchTogglTimeEntries = (
-  workspaceId: string,
-  year: number,
-) => async (dispatch: ReduxDispatch, getState: ReduxGetState) => {
+export const fetchTogglTimeEntries = (workspaceId: string) => async (
+  dispatch: ReduxDispatch,
+  getState: ReduxGetState,
+) => {
   dispatch(togglTimeEntriesFetch.request());
 
   try {
     const state = getState();
     const { togglEmail, togglUserId } = selectCredentials(state);
+    const currentTransferType = selectCurrentTransferType(state);
 
-    const allTimeEntries = await fetchAllTogglTimeEntries({
-      togglEmail,
-      workspaceId,
-      year,
-    });
+    const allTimeEntries = [];
+    const currentYear = new Date().getFullYear();
+
+    for (let year = 2007; year <= currentYear; year += 1) {
+      const timeEntriesForYear = await fetchTogglTimeEntriesForYear({
+        togglEmail,
+        workspaceId,
+        year,
+      });
+
+      if (timeEntriesForYear.length !== 0) {
+        allTimeEntries.push(timeEntriesForYear);
+      }
+    }
 
     const usersById = selectTogglUsersById(state);
     const compoundTimeEntries = convertToCompoundTimeEntries({
       workspaceId,
-      timeEntries: allTimeEntries,
+      timeEntries: flatten(allTimeEntries),
       entitiesByGroup: selectEntitiesByGroupFactory(ToolName.Toggl)(state),
     });
 
-    const currentTransferType = selectCurrentTransferType(state);
     const timeEntries =
       currentTransferType === TransferType.SingleUser
         ? compoundTimeEntries.filter(({ userId }) => userId === togglUserId)
         : compoundTimeEntries;
+
+    for (let year = 2007; year <= currentYear; year += 1) {
+      const entryInYear = timeEntries.find(
+        timeEntry => +timeEntry.year === +year,
+      );
+      if (!isNil(entryInYear)) {
+        dispatch(
+          updateIsWorkspaceYearIncluded({
+            workspaceId,
+            year,
+            isIncluded: true,
+          }),
+        );
+      }
+    }
 
     dispatch(
       calculateUserGroupEntryCounts({
@@ -210,7 +235,7 @@ async function fetchClockifyTimeEntriesForIncludedYears({
   return flatten(allYearsTimeEntries);
 }
 
-async function fetchAllTogglTimeEntries({
+async function fetchTogglTimeEntriesForYear({
   togglEmail,
   workspaceId,
   year,
@@ -225,8 +250,11 @@ async function fetchAllTogglTimeEntries({
     data: firstPageEntries,
   } = await apiFetchTogglTimeEntries(togglEmail, workspaceId, year, 1);
 
-  const totalPages = Math.ceil(totalCount / perPage);
+  if (totalCount === 0) return [];
 
+  if (totalCount <= perPage) return firstPageEntries;
+
+  const totalPages = Math.ceil(totalCount / perPage);
   const remainingPageEntries = await fetchTogglTimeEntriesForRemainingPages({
     email: togglEmail,
     workspaceId,
@@ -254,10 +282,9 @@ async function fetchTogglTimeEntriesForRemainingPages({
   );
 
   const timeEntriesForPage: Array<Array<TogglTimeEntryModel>> = [];
-  let currentPage = totalPages;
 
   // We already got the first page, don't want to fetch again:
-  while (currentPage > 1) {
+  for (let currentPage = 2; currentPage <= totalPages; currentPage += 1) {
     await promiseThrottle
       .add(
         // @ts-ignore
@@ -266,7 +293,6 @@ async function fetchTogglTimeEntriesForRemainingPages({
       .then(({ data }: { data: Array<TogglTimeEntryModel> }) => {
         timeEntriesForPage.push(data);
       });
-    currentPage -= 1;
   }
 
   return flatten(timeEntriesForPage);

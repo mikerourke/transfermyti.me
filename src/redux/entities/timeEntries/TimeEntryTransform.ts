@@ -31,6 +31,7 @@ export class TimeEntryTransform {
     );
     const taskId = findIdFieldValue(this.timeEntryRecord, EntityType.Task);
     const userId = findIdFieldValue(this.timeEntryRecord, EntityType.User);
+    const startTime = this.startTime;
 
     return {
       id: this.timeEntryRecord.id.toString(),
@@ -42,8 +43,9 @@ export class TimeEntryTransform {
       workspaceId,
       ...this.getClientDetails(),
       isBillable: this.isBillable,
-      start: this.startTime,
+      start: startTime,
       end: this.endTime,
+      year: new Date(startTime).getFullYear(),
       tagNames: this.timeEntryRecord.tags,
       isActive: this.determineIfActive(projectId),
       name: null,

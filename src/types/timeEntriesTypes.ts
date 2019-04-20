@@ -73,6 +73,7 @@ export interface CompoundTimeEntryModel extends BaseCompoundEntityModel {
   isBillable: boolean;
   start: Date | null;
   end: Date | null;
+  year: number;
   tagNames: Array<string>;
   isActive: boolean;
   name: null; // Not used, included because other entities have a "name".

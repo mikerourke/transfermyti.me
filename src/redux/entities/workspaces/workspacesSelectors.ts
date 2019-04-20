@@ -1,5 +1,5 @@
 import { createSelector } from 'reselect';
-import { get, isEmpty, isNil } from 'lodash';
+import { get, isNil } from 'lodash';
 import { selectTogglClientsByWorkspaceFactory } from '~/redux/entities/clients/clientsSelectors';
 import { selectTogglProjectsByWorkspaceFactory } from '~/redux/entities/projects/projectsSelectors';
 import { selectTogglTagsByWorkspaceFactory } from '~/redux/entities/tags/tagsSelectors';
@@ -23,6 +23,9 @@ const selectClockifyWorkspacesById = createSelector(
   (workspacesById): Record<string, CompoundWorkspaceModel> => workspacesById,
 );
 
+export const selectIfWorkspacesFetching = (state: ReduxState) =>
+  state.entities.workspaces.isFetching;
+
 export const selectTogglWorkspaceIds = createSelector(
   (state: ReduxState) => state.entities.workspaces.toggl.idValues,
   (workspaceIds): Array<string> => workspaceIds,
@@ -33,12 +36,19 @@ export const selectTogglWorkspacesById = createSelector(
   (workspacesById): Record<string, CompoundWorkspaceModel> => workspacesById,
 );
 
+export const selectTogglWorkspaces = createSelector(
+  selectTogglWorkspacesById,
+  (workspacesById): Array<CompoundWorkspaceModel> =>
+    Object.values(workspacesById),
+);
+
 export const selectTogglIncludedWorkspacesById = createSelector(
   selectTogglWorkspacesById,
   (workspacesById): Record<string, CompoundWorkspaceModel> =>
     Object.entries(workspacesById).reduce(
       (acc, [workspaceId, workspaceRecord]) => {
         if (!workspaceRecord.isIncluded) return acc;
+
         return {
           ...acc,
           [workspaceId]: workspaceRecord,
@@ -119,35 +129,6 @@ export const selectTogglWorkspaceIncludedYears = createSelector(
       },
       [],
     );
-  },
-);
-
-export const selectTogglWorkspaceIncludedYearsCount = createSelector(
-  selectTogglWorkspacesById,
-  (workspacesById): Record<string, number> =>
-    Object.entries(workspacesById).reduce(
-      (acc, [workspaceId, { inclusionsByYear }]) => {
-        const includedYears = Object.values(inclusionsByYear).filter(Boolean);
-        return {
-          ...acc,
-          [workspaceId]: includedYears.length,
-        };
-      },
-      {},
-    ),
-);
-
-export const selectIfTogglWorkspaceYearsFetched = createSelector(
-  selectTogglWorkspacesById,
-  selectTogglWorkspaceIds,
-  (workspacesById, workspaceIds): boolean => {
-    if (isEmpty(workspacesById)) return false;
-
-    const hasYearInclusionsCount = Object.values(workspacesById).reduce(
-      (acc, { inclusionsByYear }) => acc + (isEmpty(inclusionsByYear) ? 0 : 1),
-      0,
-    );
-    return hasYearInclusionsCount === workspaceIds.length;
   },
 );
 

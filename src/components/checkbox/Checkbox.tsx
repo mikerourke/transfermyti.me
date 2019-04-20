@@ -1,11 +1,17 @@
 import React from 'react';
+import { isNil } from 'lodash';
 import { css } from 'emotion';
-import { CheckedState } from '~/types';
 
 interface Props {
-  checked: CheckedState | boolean;
+  checked?: boolean;
   size: number | string;
   onClick: () => void;
+}
+
+enum CheckedState {
+  Checked,
+  Unchecked,
+  Indeterminate,
 }
 
 const statePaths = [
@@ -18,11 +24,9 @@ const statePaths = [
 ];
 
 const Checkbox: React.FC<Props> = ({ checked, size, onClick }) => {
-  let state = 0;
-  if (typeof checked === 'boolean') {
+  let state = CheckedState.Indeterminate;
+  if (!isNil(checked)) {
     state = checked ? CheckedState.Checked : CheckedState.Unchecked;
-  } else {
-    state = checked;
   }
 
   return (

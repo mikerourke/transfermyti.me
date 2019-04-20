@@ -25,11 +25,10 @@ const ListItemBase: React.FC<Props> = ({
         alignItems="center"
         className={classnames(
           css`
-            margin-left: 0.5rem;
             opacity: ${isOmitted ? 0.6 : 1};
-            padding-left: 1rem;
-            width: calc(100% - 2rem);
             height: ${height}px;
+            width: 100%;
+            margin: 0 1rem;
           `,
           className,
         )}

@@ -1,12 +1,13 @@
 import { getType } from 'typesafe-actions';
 import { combineActions, handleActions } from 'redux-actions';
-import { cloneDeep, get, uniq } from 'lodash';
+import { get, uniq } from 'lodash';
 import * as utils from '~/redux/utils';
 import * as workspacesActions from './workspacesActions';
 import {
   ClockifyWorkspaceModel,
   CompoundWorkspaceModel,
   EntityGroup,
+  UpdateIncludedWorkspaceYearModel,
   ReduxAction,
   ReduxStateEntryForTool,
   TogglWorkspaceModel,
@@ -83,41 +84,10 @@ export const workspacesReducer = handleActions(
         schemaProcessStrategy: schemaProcessStrategy,
       }),
 
-    [getType(workspacesActions.togglWorkspaceSummaryFetch.success)]: (
-      state: WorkspacesState,
-      {
-        payload: { inclusionsByYear },
-      }: ReduxAction<{
-        workspaceId: string;
-        inclusionsByYear: Record<string, boolean>;
-      }>,
-    ): WorkspacesState => {
-      const workspacesById = cloneDeep(state.toggl.byId);
-      const updatedWorkspacesById = Object.entries(workspacesById).reduce(
-        (acc, [workspaceId, workspaceRecord]) => ({
-          ...acc,
-          [workspaceId]: {
-            ...workspaceRecord,
-            inclusionsByYear,
-          },
-        }),
-        {},
-      );
-
-      return {
-        ...state,
-        toggl: {
-          ...state.toggl,
-          byId: updatedWorkspacesById,
-        },
-      };
-    },
-
     [combineActions(
       getType(workspacesActions.clockifyWorkspacesFetch.request),
       getType(workspacesActions.togglWorkspacesFetch.request),
       getType(workspacesActions.clockifyWorkspaceTransfer.request),
-      getType(workspacesActions.togglWorkspaceSummaryFetch.request),
     )]: (state: WorkspacesState): WorkspacesState => ({
       ...state,
       isFetching: true,
@@ -128,8 +98,6 @@ export const workspacesReducer = handleActions(
       getType(workspacesActions.clockifyWorkspacesFetch.failure),
       getType(workspacesActions.togglWorkspacesFetch.success),
       getType(workspacesActions.togglWorkspacesFetch.failure),
-      getType(workspacesActions.togglWorkspaceSummaryFetch.success),
-      getType(workspacesActions.togglWorkspaceSummaryFetch.failure),
       getType(workspacesActions.clockifyWorkspaceTransfer.success),
       getType(workspacesActions.clockifyWorkspaceTransfer.failure),
     )]: (state: WorkspacesState): WorkspacesState => ({
@@ -168,11 +136,11 @@ export const workspacesReducer = handleActions(
       { payload: workspaceId }: ReduxAction<string>,
     ): WorkspacesState => utils.flipEntityInclusion(state, workspaceId),
 
-    [getType(workspacesActions.flipIsWorkspaceYearIncluded)]: (
+    [getType(workspacesActions.updateIsWorkspaceYearIncluded)]: (
       state: WorkspacesState,
       {
-        payload: { workspaceId, year },
-      }: ReduxAction<{ workspaceId: string; year: number }>,
+        payload: { workspaceId, year, isIncluded },
+      }: ReduxAction<UpdateIncludedWorkspaceYearModel>,
     ): WorkspacesState => {
       const inclusionsByYear = get(
         state,
@@ -190,7 +158,7 @@ export const workspacesReducer = handleActions(
               ...state.toggl.byId[workspaceId],
               inclusionsByYear: {
                 ...inclusionsByYear,
-                [year]: !inclusionsByYear[year],
+                [year]: isIncluded,
               },
             },
           },

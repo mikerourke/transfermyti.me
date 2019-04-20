@@ -1,4 +1,4 @@
-import { CompoundEntityModel, TogglTotalCurrencyModel } from './commonTypes';
+import { CompoundEntityModel } from './commonTypes';
 import { ClockifyMembershipModel } from './usersTypes';
 import { EntityGroup, BaseCompoundEntityModel } from '~/types/entityTypes';
 
@@ -57,36 +57,6 @@ export interface TogglWorkspaceModel {
   ical_enabled: boolean;
 }
 
-interface TogglSummaryReportDataItemModel {
-  title: {
-    time_entry: string;
-  };
-  time: number;
-  cur: string | null;
-  sum: number | null;
-  rate: number | null;
-}
-
-export interface TogglSummaryReportDataModel {
-  id: number;
-  title: {
-    project: string;
-    client: string;
-    color: string;
-    hex_color: string;
-  };
-  time: number;
-  total_currencies: Array<TogglTotalCurrencyModel>;
-  items: Array<TogglSummaryReportDataItemModel>;
-}
-
-export interface TogglSummaryReportModel {
-  total_grand: number;
-  total_billable: number | null;
-  total_currencies: Array<TogglTotalCurrencyModel>;
-  data: Array<TogglSummaryReportDataModel>;
-}
-
 export interface CompoundWorkspaceModel extends BaseCompoundEntityModel {
   id: string;
   name: string;
@@ -111,3 +81,9 @@ export type CountsByGroupByWorkspaceModel = Record<
   string,
   Record<EntityGroup, RecordCountsModel>
 >;
+
+export interface UpdateIncludedWorkspaceYearModel {
+  workspaceId: string;
+  year: number;
+  isIncluded: boolean;
+}

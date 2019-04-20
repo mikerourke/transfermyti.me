@@ -16,7 +16,7 @@ interface Props {
 const EntityTag: React.FC<Props> = ({ size, tagType }) => {
   const tagClass = css`
     font-weight: bold;
-    margin-right: 0.5rem;
+    margin-right: 0.625rem;
   `;
 
   const entryStyle =

@@ -10,12 +10,6 @@ import { CompoundUserGroupModel } from './userGroupsTypes';
 import { CompoundUserModel } from './usersTypes';
 import { CompoundWorkspaceModel } from '~/types/workspacesTypes';
 
-export enum CheckedState {
-  Checked,
-  Unchecked,
-  Indeterminate,
-}
-
 export enum ToolName {
   Clockify = 'clockify',
   Toggl = 'toggl',

@@ -57,11 +57,11 @@ export const selectTogglUsersByWorkspaceFactory = (inclusionsOnly: boolean) =>
 export const selectUsersInvitePayloadForWorkspace = createSelector(
   selectTogglUsersByWorkspaceFactory(true),
   selectCredentials,
-  (inclusionsByWorkspaceId, { togglEmail }) => (
+  (inclusionsByWorkspace, { togglEmail }) => (
     workspaceIdToGet: string,
   ): Array<string> => {
     const inclusions = get(
-      inclusionsByWorkspaceId,
+      inclusionsByWorkspace,
       workspaceIdToGet,
       [],
     ) as Array<CompoundUserModel>;

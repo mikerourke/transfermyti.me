@@ -19,11 +19,11 @@ export const selectTogglTagsByWorkspaceFactory = (inclusionsOnly: boolean) =>
 
 export const selectTagsTransferPayloadForWorkspace = createSelector(
   selectTogglTagsByWorkspaceFactory(true),
-  inclusionsByWorkspaceId => (
+  inclusionsByWorkspace => (
     workspaceIdToGet: string,
   ): Array<EntityWithName> => {
     const inclusions = get(
-      inclusionsByWorkspaceId,
+      inclusionsByWorkspace,
       workspaceIdToGet,
       [],
     ) as Array<CompoundTagModel>;
