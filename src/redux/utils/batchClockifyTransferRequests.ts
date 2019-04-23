@@ -9,7 +9,8 @@ interface Params<TEntity, TResponse> {
   entityGroup: EntityGroup;
   entityRecordsInWorkspace: Array<TEntity>;
   apiFunc: (...args: Array<any>) => Promise<TResponse>;
-  workspaceId: string;
+  clockifyWorkspaceId: string;
+  togglWorkspaceId: string;
 }
 
 interface FetchErrorModel {
@@ -27,7 +28,8 @@ export async function batchClockifyTransferRequests<TEntity, TResponse>({
   entityGroup,
   entityRecordsInWorkspace,
   apiFunc,
-  workspaceId,
+  clockifyWorkspaceId,
+  togglWorkspaceId,
 }: Params<TEntity, TResponse>): Promise<Array<TResponse>> {
   const { promiseThrottle, throttledFunc } = buildThrottler(
     requestsPerSecond,
@@ -41,23 +43,24 @@ export async function batchClockifyTransferRequests<TEntity, TResponse>({
   let countCurrent = 1;
 
   for (const entityRecord of entityRecordsInWorkspace) {
-    // Update state with the details of the in-transfer entity record:
-    dispatch(
-      updateInTransferDetails({
-        countTotal,
-        countCurrent,
-        entityGroup,
-        workspaceId,
-        entityRecord,
-      }),
-    );
+    // Update state with the details of the in-transfer entity record.
+    // We want to use the Toggl workspace ID since it ensures we're able to
+    // get the corresponding data easily out of state and not rely on the
+    // Clockify entities existing:
+    const inTransferDetails = {
+      countTotal,
+      countCurrent,
+      entityGroup,
+      workspaceId: togglWorkspaceId,
+    };
 
     try {
       await promiseThrottle
         // @ts-ignore
-        .add(throttledFunc.bind(this, workspaceId, entityRecord))
+        .add(throttledFunc.bind(this, clockifyWorkspaceId, entityRecord))
         .then((result: TResponse) => {
           fetchResults.push(result);
+          dispatch(updateInTransferDetails(inTransferDetails));
         });
     } catch (error) {
       fetchErrors.push({

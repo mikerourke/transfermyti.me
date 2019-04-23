@@ -136,7 +136,8 @@ export const transferUserGroupsToClockify = (
       entityGroup: EntityGroup.UserGroups,
       entityRecordsInWorkspace: userGroupsInWorkspace,
       apiFunc: apiCreateClockifyUserGroup,
-      workspaceId: togglWorkspaceId,
+      clockifyWorkspaceId,
+      togglWorkspaceId,
     });
 
     return dispatch(

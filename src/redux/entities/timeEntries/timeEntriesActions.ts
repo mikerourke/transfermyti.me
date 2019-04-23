@@ -19,6 +19,7 @@ import {
   selectClockifyUsersById,
   selectTogglUsersById,
 } from '~/redux/entities/users/usersSelectors';
+import { updateIsWorkspaceYearIncluded } from '~/redux/entities/workspaces/workspacesActions';
 import { selectTogglWorkspaceIncludedYears } from '~/redux/entities/workspaces/workspacesSelectors';
 import { TimeEntryTransform } from './TimeEntryTransform';
 import { TimeEntriesState } from './timeEntriesReducer';
@@ -34,7 +35,6 @@ import {
   ToolName,
   TransferType,
 } from '~/types';
-import { updateIsWorkspaceYearIncluded } from '~/redux/entities/workspaces/workspacesActions';
 
 type TimeEntryForTool = ClockifyTimeEntryModel | TogglTimeEntryModel;
 
@@ -190,7 +190,8 @@ export const transferTimeEntriesToClockify = (
       entityGroup: EntityGroup.TimeEntries,
       entityRecordsInWorkspace: timeEntriesInWorkspace,
       apiFunc: apiCreateClockifyTimeEntry,
-      workspaceId: clockifyWorkspaceId,
+      clockifyWorkspaceId,
+      togglWorkspaceId,
     });
 
     const timeEntries = convertToCompoundTimeEntries({

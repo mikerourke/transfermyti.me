@@ -91,7 +91,7 @@ export const transferProjectsToClockify = (
   const projectsInWorkspace = selectProjectsTransferPayloadForWorkspace(state)(
     togglWorkspaceId,
   );
-  if (projectsInWorkspace.length === 0) return;
+  if (projectsInWorkspace.length === 0) return Promise.resolve();
 
   dispatch(clockifyProjectsTransfer.request());
 
@@ -102,10 +102,11 @@ export const transferProjectsToClockify = (
       entityGroup: EntityGroup.Projects,
       entityRecordsInWorkspace: projectsInWorkspace,
       apiFunc: apiCreateClockifyProject,
-      workspaceId: togglWorkspaceId,
+      clockifyWorkspaceId,
+      togglWorkspaceId,
     });
 
-    dispatch(
+    return dispatch(
       clockifyProjectsTransfer.success({
         entityRecords: projects,
         workspaceId: clockifyWorkspaceId,

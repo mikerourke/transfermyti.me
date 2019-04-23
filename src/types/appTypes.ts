@@ -17,22 +17,9 @@ export enum TransferType {
   SingleUser = 'SINGLE',
 }
 
-export interface InTransferDetailsModel<TRecord = {}> {
+export interface InTransferDetailsModel {
   countTotal: number;
   countCurrent: number;
   entityGroup: EntityGroup | null;
-  entityRecord: TRecord | null;
   workspaceId: string | null;
 }
-
-type InTransferGroupKey =
-  | EntityGroup.Projects
-  | EntityGroup.Tags
-  | EntityGroup.Clients
-  | EntityGroup.Tasks
-  | EntityGroup.TimeEntries;
-
-export type InTransferDetailsByGroupModel = Record<
-  InTransferGroupKey,
-  InTransferDetailsModel
->;

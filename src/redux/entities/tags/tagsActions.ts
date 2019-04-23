@@ -91,7 +91,8 @@ export const transferTagsToClockify = (
       entityGroup: EntityGroup.Tags,
       entityRecordsInWorkspace: tagsInWorkspace,
       apiFunc: apiCreateClockifyTag,
-      workspaceId: togglWorkspaceId,
+      clockifyWorkspaceId,
+      togglWorkspaceId,
     });
 
     return dispatch(
