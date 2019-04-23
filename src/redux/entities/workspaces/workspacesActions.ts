@@ -7,7 +7,7 @@ import {
 } from '~/redux/entities/api/workspaces';
 import {
   showFetchErrorNotification,
-  updateInTransferWorkspace,
+  updateTotalTransferredCount,
 } from '~/redux/app/appActions';
 import * as clientsActions from '~/redux/entities/clients/clientsActions';
 import * as projectsActions from '~/redux/entities/projects/projectsActions';
@@ -148,13 +148,15 @@ export const transferEntitiesToClockifyWorkspace = (
 
   dispatch(clockifyWorkspaceTransfer.request());
   try {
-    dispatch(updateInTransferWorkspace(workspace));
+    dispatch(updateWorkspaceNameBeingFetched(name));
 
     if (isNil(linkedId)) {
       const workspace = await apiCreateClockifyWorkspace({ name });
       clockifyWorkspaceId = workspace.id;
       dispatch(clockifyWorkspaceTransfer.success([workspace]));
     }
+
+    dispatch(updateTotalTransferredCount(0));
 
     await dispatch(
       clientsActions.transferClientsToClockify(
@@ -188,7 +190,8 @@ export const transferEntitiesToClockifyWorkspace = (
       ),
     );
 
-    return dispatch(updateInTransferWorkspace(null));
+    dispatch(updateTotalTransferredCount(0));
+    return dispatch(updateWorkspaceNameBeingFetched(null));
   } catch (error) {
     dispatch(showFetchErrorNotification(error));
     return dispatch(clockifyWorkspaceTransfer.failure());

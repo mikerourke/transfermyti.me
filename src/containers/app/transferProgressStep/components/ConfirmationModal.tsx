@@ -44,9 +44,8 @@ const ConfirmationModal: React.FC<Props> = ({
       >
         <p>
           If you&apos;re psychologically and emotionally ready to proceed, just
-          hit the ol&apos; <strong>Confirm</strong> button down there. The
-          transfer process will start and you&apos;ll be taken to the transfer
-          progress page.
+          hit that ol&apos; yellow button down there. The transfer process will
+          start and you&apos;ll be living the dream in no time.
         </p>
         <p>
           If you&apos;re not quite ready, no sweat, just hit the
@@ -62,7 +61,7 @@ const ConfirmationModal: React.FC<Props> = ({
           Cancel
         </Button>
         <Button isSize="medium" onClick={onConfirmClick} isColor="warning">
-          Confirm
+          Start the Damn Transfer!
         </Button>
       </ModalCardFooter>
     </ModalCard>

@@ -1,5 +1,6 @@
 import { createSelector } from 'reselect';
 import { get } from 'lodash';
+import { findTogglInclusions } from '~/redux/utils';
 import {
   EntitiesByGroupModel,
   EntityGroup,
@@ -23,3 +24,26 @@ export const selectEntitiesByGroupFactory = (toolName: ToolName) =>
         {},
       ),
   );
+
+export const selectTotalCountOfPendingTransfers = createSelector(
+  selectEntitiesByGroupFactory(ToolName.Toggl),
+  entitiesByGroup => {
+    let totalCount = 0;
+
+    const entityGroupsToInclude = [
+      EntityGroup.Projects,
+      EntityGroup.Clients,
+      EntityGroup.Tags,
+      EntityGroup.Tasks,
+      EntityGroup.TimeEntries,
+    ];
+
+    entityGroupsToInclude.forEach(entityGroup => {
+      const { byId } = get(entitiesByGroup, entityGroup, {});
+      const includedRecords = findTogglInclusions(Object.values(byId));
+      totalCount += includedRecords.length;
+    });
+
+    return totalCount;
+  },
+);

@@ -1,10 +1,7 @@
-import { get } from 'lodash';
 import { getType } from 'typesafe-actions';
 import { handleActions } from 'redux-actions';
 import * as appActions from './appActions';
 import {
-  CompoundWorkspaceModel,
-  InTransferDetailsByGroupModel,
   InTransferDetailsModel,
   NotificationModel,
   ReduxAction,
@@ -14,18 +11,20 @@ import {
 export interface AppState {
   readonly notifications: Array<NotificationModel>;
   readonly currentTransferType: TransferType;
-  readonly inTransferWorkspace: CompoundWorkspaceModel | null;
-  readonly inTransferDetailsByGroupByWorkspace: Record<
-    string,
-    InTransferDetailsByGroupModel | null
-  >;
+  readonly inTransferDetails: InTransferDetailsModel;
+  readonly countTransferred: number;
 }
 
 export const initialState: AppState = {
   notifications: [],
   currentTransferType: TransferType.SingleUser,
-  inTransferWorkspace: null,
-  inTransferDetailsByGroupByWorkspace: {},
+  inTransferDetails: {
+    countTotal: 0,
+    countCurrent: 0,
+    entityGroup: null,
+    workspaceId: null,
+  },
+  countTransferred: 0,
 };
 
 export const appReducer = handleActions(
@@ -63,36 +62,24 @@ export const appReducer = handleActions(
       currentTransferType,
     }),
 
-    [getType(appActions.updateInTransferWorkspace)]: (
-      state: AppState,
-      { payload: inTransferWorkspace }: ReduxAction<CompoundWorkspaceModel>,
-    ): AppState => ({
-      ...state,
-      inTransferWorkspace,
-    }),
-
     [getType(appActions.updateInTransferDetails)]: (
       state: AppState,
       { payload: inTransferDetails }: ReduxAction<InTransferDetailsModel>,
     ): AppState => {
-      const { entityGroup, workspaceId } = inTransferDetails;
-      const existingForWorkspace = get(
-        state,
-        ['inTransferDetailsByGroupByWorkspace', workspaceId],
-        {},
-      );
-
       return {
         ...state,
-        inTransferDetailsByGroupByWorkspace: {
-          ...state.inTransferDetailsByGroupByWorkspace,
-          [workspaceId]: {
-            ...existingForWorkspace,
-            [entityGroup]: inTransferDetails,
-          },
-        },
+        inTransferDetails,
+        countTransferred: state.countTransferred + 1,
       };
     },
+
+    [getType(appActions.updateTotalTransferredCount)]: (
+      state: AppState,
+      { payload: countTransferred }: ReduxAction<number>,
+    ): AppState => ({
+      ...state,
+      countTransferred: countTransferred,
+    }),
   },
   initialState,
 );

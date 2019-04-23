@@ -16,8 +16,6 @@ interface ConnectDispatchProps {
   onUpdateTransferType: (newTransferType: TransferType) => void;
 }
 
-type Props = ConnectStateProps & ConnectDispatchProps & StepPageProps;
-
 export const SelectTransferTypeStepComponent: React.FC<Props> = ({
   currentTransferType,
   onUpdateTransferType,
@@ -41,7 +39,7 @@ export const SelectTransferTypeStepComponent: React.FC<Props> = ({
     >
       <div
         className={css`
-          padding: 0 0.25rem;
+          padding: 0 0.25rem 2rem 0.25rem;
         `}
       >
         <Columns isCentered>
@@ -68,6 +66,8 @@ export const SelectTransferTypeStepComponent: React.FC<Props> = ({
     </StepPage>
   );
 };
+
+type Props = ConnectStateProps & ConnectDispatchProps & StepPageProps;
 
 const mapStateToProps = (state: ReduxState) => ({
   currentTransferType: selectCurrentTransferType(state),

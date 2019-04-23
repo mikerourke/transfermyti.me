@@ -56,7 +56,17 @@ const TransferWizard: React.FC = () => (
           />
         )}
       />
-      <Step id="transferProgress" render={() => <TransferProgressStep />} />
+      <Step
+        id="transferProgress"
+        render={({ previous }) => (
+          <Step
+            id="transferProgress"
+            render={() => (
+              <TransferProgressStep onPreviousClick={previous} stepNumber={6} />
+            )}
+          />
+        )}
+      />
     </Steps>
   </Wizard>
 );

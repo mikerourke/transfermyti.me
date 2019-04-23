@@ -73,8 +73,6 @@ export const apiCreateClockifyTimeEntry = (
     projectId: get(timeEntry, ['project', 'linkedId'], null),
     taskId: get(timeEntry, ['task', 'linkedId'], null),
     tagIds,
-    projectName: get(timeEntry, ['project', 'name'], null),
-    workspaceName: get(timeEntry, ['workspace', 'name'], null),
   };
 
   return fetchObject(`/clockify/api/workspaces/${workspaceId}/timeEntries/`, {

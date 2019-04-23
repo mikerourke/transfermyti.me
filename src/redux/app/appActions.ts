@@ -2,7 +2,6 @@ import { createStandardAction } from 'typesafe-actions';
 import { capitalize, isNil, uniqueId } from 'lodash';
 import { getIfDev } from '~/utils/getIfDev';
 import {
-  CompoundWorkspaceModel,
   InTransferDetailsModel,
   NotificationModel,
   NotificationType,
@@ -27,13 +26,13 @@ export const updateTransferType = createStandardAction(
   '@app/UPDATE_TRANSFER_TYPE',
 )<TransferType>();
 
-export const updateInTransferWorkspace = createStandardAction(
-  '@app/UPDATE_IN_TRANSFER_WORKSPACE',
-)<CompoundWorkspaceModel | null>();
-
 export const updateInTransferDetails = createStandardAction(
   '@app/UPDATE_IN_TRANSFER_DETAILS',
 )<InTransferDetailsModel>();
+
+export const updateTotalTransferredCount = createStandardAction(
+  '@app/UPDATE_TOTAL_TRANSFERRED_COUNT',
+)<number>();
 
 export const showNotification = (notification: Partial<NotificationModel>) => (
   dispatch: ReduxDispatch,
