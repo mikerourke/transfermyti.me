@@ -1,0 +1,756 @@
+{
+  "clients": [
+    {
+      "id": "clock-client-01",
+      "name": "Test Client A",
+      "workspaceId": "clock-workspace-01"
+    },
+    {
+      "id": "clock-client-02",
+      "name": "Test Client B",
+      "workspaceId": "clock-workspace-01"
+    }
+  ],
+  "projects": [
+    {
+      "id": "clock-project-01",
+      "name": "Test Project A",
+      "hourlyRate": {
+        "amount": 0,
+        "currency": "USD"
+      },
+      "clientId": "clock-client-01",
+      "workspaceId": "clock-workspace-01",
+      "billable": false,
+      "memberships": [
+        {
+          "userId": "clock-user-01",
+          "hourlyRate": null,
+          "targetId": "clock-project-01",
+          "membershipType": "PROJECT",
+          "membershipStatus": "ACTIVE"
+        }
+      ],
+      "color": "#ea468d",
+      "estimate": {
+        "estimate": "PT0S",
+        "type": "AUTO"
+      },
+      "archived": false,
+      "duration": "PT0S",
+      "clientName": "Test Client A",
+      "public": false
+    },
+    {
+      "id": "clock-project-02",
+      "name": "Test Project B",
+      "hourlyRate": {
+        "amount": 0,
+        "currency": "USD"
+      },
+      "clientId": "clock-client-02",
+      "workspaceId": "clock-workspace-01",
+      "billable": false,
+      "memberships": [
+        {
+          "userId": "clock-user-01",
+          "hourlyRate": null,
+          "targetId": "clock-project-02",
+          "membershipType": "PROJECT",
+          "membershipStatus": "ACTIVE"
+        }
+      ],
+      "color": "#c56bff",
+      "estimate": {
+        "estimate": "PT0S",
+        "type": "AUTO"
+      },
+      "archived": false,
+      "duration": "PT0S",
+      "clientName": "Test Client B",
+      "public": false
+    },
+    {
+      "id": "clock-project-03",
+      "name": "Test Project C",
+      "hourlyRate": {
+        "amount": 0,
+        "currency": "USD"
+      },
+      "clientId": "",
+      "workspaceId": "clock-workspace-01",
+      "billable": false,
+      "memberships": [
+        {
+          "userId": "clock-user-01",
+          "hourlyRate": null,
+          "targetId": "clock-project-03",
+          "membershipType": "PROJECT",
+          "membershipStatus": "ACTIVE"
+        }
+      ],
+      "color": "#04bb9b",
+      "estimate": {
+        "estimate": "PT0S",
+        "type": "AUTO"
+      },
+      "archived": true,
+      "duration": "PT0S",
+      "clientName": "",
+      "public": false
+    },
+    {
+      "id": "clock-project-04",
+      "name": "Test Project D",
+      "hourlyRate": {
+        "amount": 0,
+        "currency": "USD"
+      },
+      "clientId": "",
+      "workspaceId": "clock-workspace-01",
+      "billable": false,
+      "memberships": [
+        {
+          "userId": "clock-user-01",
+          "hourlyRate": null,
+          "targetId": "clock-project-04",
+          "membershipType": "PROJECT",
+          "membershipStatus": "ACTIVE"
+        }
+      ],
+      "color": "#04bb9b",
+      "estimate": {
+        "estimate": "PT0S",
+        "type": "MANUAL"
+      },
+      "archived": false,
+      "duration": "PT0S",
+      "clientName": "",
+      "public": false
+    },
+    {
+      "id": "clock-project-05",
+      "name": "Test Project E",
+      "hourlyRate": {
+        "amount": 0,
+        "currency": "USD"
+      },
+      "clientId": "",
+      "workspaceId": "clock-workspace-01",
+      "billable": false,
+      "memberships": [
+        {
+          "userId": "clock-user-01",
+          "hourlyRate": null,
+          "targetId": "clock-project-05",
+          "membershipType": "PROJECT",
+          "membershipStatus": "ACTIVE"
+        }
+      ],
+      "color": "#205500",
+      "estimate": {
+        "estimate": "PT0S",
+        "type": "AUTO"
+      },
+      "archived": false,
+      "duration": "PT0S",
+      "clientName": "",
+      "public": false
+    },
+    {
+      "id": "clock-project-06",
+      "name": "Test Project F",
+      "hourlyRate": {
+        "amount": 0,
+        "currency": "USD"
+      },
+      "clientId": "",
+      "workspaceId": "clock-workspace-01",
+      "billable": false,
+      "memberships": [
+        {
+          "userId": "clock-user-01",
+          "hourlyRate": null,
+          "targetId": "clock-project-06",
+          "membershipType": "PROJECT",
+          "membershipStatus": "ACTIVE"
+        }
+      ],
+      "color": "#a01aa5",
+      "estimate": {
+        "estimate": "PT0S",
+        "type": "AUTO"
+      },
+      "archived": false,
+      "duration": "PT0S",
+      "clientName": "",
+      "public": false
+    }
+  ],
+  "tags": [
+    {
+      "id": "clock-tag-01",
+      "name": "tag-a",
+      "workspaceId": "clock-workspace-01"
+    },
+    {
+      "id": "clock-tag-02",
+      "name": "tag-b",
+      "workspaceId": "clock-workspace-01"
+    },
+    {
+      "id": "clock-tag-03",
+      "name": "tag-c",
+      "workspaceId": "clock-workspace-01"
+    },
+    {
+      "id": "clock-tag-04",
+      "name": "tag-d",
+      "workspaceId": "clock-workspace-01"
+    },
+    {
+      "id": "clock-tag-05",
+      "name": "tag-e",
+      "workspaceId": "clock-workspace-01"
+    }
+  ],
+  "tasks": [],
+  "timeEntries": [
+    {
+      "id": "clock-entry-01",
+      "description": "This is a test entry (01)",
+      "tags": [
+        {
+          "id": "clock-tag-01",
+          "name": "tag-a",
+          "workspaceId": "clock-workspace-01"
+        },
+        {
+          "id": "clock-tag-02",
+          "name": "tag-b",
+          "workspaceId": "clock-workspace-01"
+        }
+      ],
+      "billable": false,
+      "task": null,
+      "timeInterval": {
+        "start": "2019-06-25T18:00:00Z",
+        "end": "2019-06-25T23:00:00Z",
+        "duration": "PT5H"
+      },
+      "workspaceId": "clock-workspace-01",
+      "totalBillable": null,
+      "hourlyRate": null,
+      "isLocked": false,
+      "userId": "clock-user-01",
+      "projectId": "clock-project-01"
+    },
+    {
+      "id": "clock-entry-02",
+      "description": "This is a test entry (02)",
+      "tags": null,
+      "billable": false,
+      "task": null,
+      "timeInterval": {
+        "start": "2019-06-24T14:00:00Z",
+        "end": "2019-06-24T22:00:00Z",
+        "duration": "PT8H"
+      },
+      "workspaceId": "clock-workspace-01",
+      "totalBillable": null,
+      "hourlyRate": null,
+      "isLocked": false,
+      "userId": "clock-user-01",
+      "projectId": "clock-project-01"
+    },
+    {
+      "id": "clock-entry-03",
+      "description": "This is a test entry (03)",
+      "tags": [
+        {
+          "id": "clock-tag-01",
+          "name": "tag-a",
+          "workspaceId": "clock-workspace-01"
+        }
+      ],
+      "billable": false,
+      "task": null,
+      "timeInterval": {
+        "start": "2019-06-23T14:30:00Z",
+        "end": "2019-06-24T04:30:00Z",
+        "duration": "PT14H"
+      },
+      "workspaceId": "clock-workspace-01",
+      "totalBillable": null,
+      "hourlyRate": null,
+      "isLocked": false,
+      "userId": "clock-user-01",
+      "projectId": "clock-project-01"
+    },
+    {
+      "id": "clock-entry-04",
+      "description": "This is a test entry (04)",
+      "tags": null,
+      "billable": false,
+      "task": null,
+      "timeInterval": {
+        "start": "2019-06-23T14:00:20Z",
+        "end": "2019-06-23T17:05:20Z",
+        "duration": "PT3H5M"
+      },
+      "workspaceId": "clock-workspace-01",
+      "totalBillable": null,
+      "hourlyRate": null,
+      "isLocked": false,
+      "userId": "clock-user-01",
+      "projectId": "clock-project-02"
+    },
+    {
+      "id": "clock-entry-05",
+      "description": "This is a test entry (05)",
+      "tags": null,
+      "billable": false,
+      "task": null,
+      "timeInterval": {
+        "start": "2019-06-22T14:00:19Z",
+        "end": "2019-06-22T19:15:19Z",
+        "duration": "PT5H15M"
+      },
+      "workspaceId": "clock-workspace-01",
+      "totalBillable": null,
+      "hourlyRate": null,
+      "isLocked": false,
+      "userId": "clock-user-01",
+      "projectId": "clock-project-02"
+    },
+    {
+      "id": "clock-entry-06",
+      "description": "This is a test entry (06)",
+      "tags": null,
+      "billable": false,
+      "task": null,
+      "timeInterval": {
+        "start": "2019-06-21T20:45:57Z",
+        "end": "2019-06-21T21:50:57Z",
+        "duration": "PT1H5M"
+      },
+      "workspaceId": "clock-workspace-01",
+      "totalBillable": null,
+      "hourlyRate": null,
+      "isLocked": false,
+      "userId": "clock-user-01",
+      "projectId": "clock-project-02"
+    },
+    {
+      "id": "clock-entry-07",
+      "description": "This is a test entry (07)",
+      "tags": null,
+      "billable": false,
+      "task": null,
+      "timeInterval": {
+        "start": "2019-05-02T10:00:00Z",
+        "end": "2019-05-02T12:00:00Z",
+        "duration": "PT2H"
+      },
+      "workspaceId": "clock-workspace-01",
+      "totalBillable": null,
+      "hourlyRate": null,
+      "isLocked": false,
+      "userId": "clock-user-01",
+      "projectId": "clock-project-03"
+    },
+    {
+      "id": "clock-entry-08",
+      "description": "This is a test entry (08)",
+      "tags": null,
+      "billable": false,
+      "task": null,
+      "timeInterval": {
+        "start": "2019-05-01T20:00:00Z",
+        "end": "2019-05-01T21:00:00Z",
+        "duration": "PT1H"
+      },
+      "workspaceId": "clock-workspace-01",
+      "totalBillable": null,
+      "hourlyRate": null,
+      "isLocked": false,
+      "userId": "clock-user-01",
+      "projectId": "clock-project-03"
+    },
+    {
+      "id": "clock-entry-09",
+      "description": "This is a test entry (09)",
+      "tags": null,
+      "billable": false,
+      "task": null,
+      "timeInterval": {
+        "start": "2018-06-25T18:00:00Z",
+        "end": "2018-06-25T23:00:00Z",
+        "duration": "PT5H"
+      },
+      "workspaceId": "clock-workspace-01",
+      "totalBillable": null,
+      "hourlyRate": null,
+      "isLocked": false,
+      "userId": "clock-user-01",
+      "projectId": "clock-project-03"
+    },
+    {
+      "id": "clock-entry-10",
+      "description": "This is a test entry (10)",
+      "tags": null,
+      "billable": false,
+      "task": null,
+      "timeInterval": {
+        "start": "2018-06-24T14:00:00Z",
+        "end": "2018-06-24T22:00:00Z",
+        "duration": "PT8H"
+      },
+      "workspaceId": "clock-workspace-01",
+      "totalBillable": null,
+      "hourlyRate": null,
+      "isLocked": false,
+      "userId": "clock-user-01",
+      "projectId": "clock-project-04"
+    },
+    {
+      "id": "clock-entry-11",
+      "description": "This is a test entry (11)",
+      "tags": null,
+      "billable": false,
+      "task": null,
+      "timeInterval": {
+        "start": "2018-06-23T14:30:00Z",
+        "end": "2018-06-24T04:30:00Z",
+        "duration": "PT14H"
+      },
+      "workspaceId": "clock-workspace-01",
+      "totalBillable": null,
+      "hourlyRate": null,
+      "isLocked": false,
+      "userId": "clock-user-01",
+      "projectId": "clock-project-04"
+    },
+    {
+      "id": "clock-entry-12",
+      "description": "This is a test entry (12)",
+      "tags": null,
+      "billable": false,
+      "task": null,
+      "timeInterval": {
+        "start": "2018-06-23T14:00:20Z",
+        "end": "2018-06-23T17:05:20Z",
+        "duration": "PT3H5M"
+      },
+      "workspaceId": "clock-workspace-01",
+      "totalBillable": null,
+      "hourlyRate": null,
+      "isLocked": false,
+      "userId": "clock-user-01",
+      "projectId": "clock-project-04"
+    },
+    {
+      "id": "clock-entry-13",
+      "description": "This is a test entry (13)",
+      "tags": null,
+      "billable": false,
+      "task": null,
+      "timeInterval": {
+        "start": "2018-06-22T14:00:19Z",
+        "end": "2018-06-22T19:15:19Z",
+        "duration": "PT5H15M"
+      },
+      "workspaceId": "clock-workspace-01",
+      "totalBillable": null,
+      "hourlyRate": null,
+      "isLocked": false,
+      "userId": "clock-user-01",
+      "projectId": "clock-project-05"
+    },
+    {
+      "id": "clock-entry-14",
+      "description": "This is a test entry (14)",
+      "tags": null,
+      "billable": false,
+      "task": null,
+      "timeInterval": {
+        "start": "2018-06-21T20:45:57Z",
+        "end": "2018-06-21T21:50:57Z",
+        "duration": "PT1H5M"
+      },
+      "workspaceId": "clock-workspace-01",
+      "totalBillable": null,
+      "hourlyRate": null,
+      "isLocked": false,
+      "userId": "clock-user-01",
+      "projectId": "clock-project-05"
+    },
+    {
+      "id": "clock-entry-15",
+      "description": "This is a test entry (15)",
+      "tags": null,
+      "billable": false,
+      "task": null,
+      "timeInterval": {
+        "start": "2017-06-25T18:00:00Z",
+        "end": "2017-06-25T23:00:00Z",
+        "duration": "PT5H"
+      },
+      "workspaceId": "clock-workspace-01",
+      "totalBillable": null,
+      "hourlyRate": null,
+      "isLocked": false,
+      "userId": "clock-user-01",
+      "projectId": "clock-project-05"
+    },
+    {
+      "id": "clock-entry-16",
+      "description": "This is a test entry (16)",
+      "tags": null,
+      "billable": false,
+      "task": null,
+      "timeInterval": {
+        "start": "2017-06-24T14:00:00Z",
+        "end": "2017-06-24T22:00:00Z",
+        "duration": "PT8H"
+      },
+      "workspaceId": "clock-workspace-01",
+      "totalBillable": null,
+      "hourlyRate": null,
+      "isLocked": false,
+      "userId": "clock-user-01",
+      "projectId": "clock-project-05"
+    },
+    {
+      "id": "clock-entry-17",
+      "description": "This is a test entry (17)",
+      "tags": null,
+      "billable": false,
+      "task": null,
+      "timeInterval": {
+        "start": "2017-06-23T14:30:00Z",
+        "end": "2017-06-24T04:30:00Z",
+        "duration": "PT14H"
+      },
+      "workspaceId": "clock-workspace-01",
+      "totalBillable": null,
+      "hourlyRate": null,
+      "isLocked": false,
+      "userId": "clock-user-01",
+      "projectId": "clock-project-06"
+    },
+    {
+      "id": "clock-entry-18",
+      "description": "This is a test entry (18)",
+      "tags": null,
+      "billable": false,
+      "task": null,
+      "timeInterval": {
+        "start": "2017-06-23T14:00:20Z",
+        "end": "2017-06-23T17:05:20Z",
+        "duration": "PT3H5M"
+      },
+      "workspaceId": "clock-workspace-01",
+      "totalBillable": null,
+      "hourlyRate": null,
+      "isLocked": false,
+      "userId": "clock-user-01",
+      "projectId": "clock-project-06"
+    },
+    {
+      "id": "clock-entry-19",
+      "description": "This is a test entry (19)",
+      "tags": null,
+      "billable": false,
+      "task": null,
+      "timeInterval": {
+        "start": "2017-06-22T14:00:19Z",
+        "end": "2017-06-22T19:15:19Z",
+        "duration": "PT5H15M"
+      },
+      "workspaceId": "clock-workspace-01",
+      "totalBillable": null,
+      "hourlyRate": null,
+      "isLocked": false,
+      "userId": "clock-user-01",
+      "projectId": "clock-project-06"
+    },
+    {
+      "id": "clock-entry-20",
+      "description": "This is a test entry (20)",
+      "tags": null,
+      "billable": false,
+      "task": null,
+      "timeInterval": {
+        "start": "2017-06-21T20:45:57Z",
+        "end": "2017-06-21T21:50:57Z",
+        "duration": "PT1H5M"
+      },
+      "workspaceId": "clock-workspace-01",
+      "totalBillable": null,
+      "hourlyRate": null,
+      "isLocked": false,
+      "userId": "clock-user-01",
+      "projectId": "clock-project-06"
+    }
+  ],
+  "userGroups": [
+    {
+      "id": "clock-user-group-01",
+      "name": "Admins",
+      "workspaceId": "clock-workspace-01",
+      "userIds": [
+        "clock-user-01"
+      ]
+    },
+    {
+      "id": "clock-user-group-02",
+      "name": "Test Group A",
+      "workspaceId": "clock-workspace-01",
+      "userIds": []
+    }
+  ],
+  "users": [
+    {
+      "id": "clock-user-01",
+      "email": "test-user@test.com",
+      "name": "John Test",
+      "memberships": [
+        {
+          "userId": "clock-user-01",
+          "hourlyRate": null,
+          "targetId": "clock-workspace-01",
+          "membershipType": "WORKSPACE",
+          "membershipStatus": "ACTIVE"
+        },
+        {
+          "userId": "clock-user-01",
+          "hourlyRate": null,
+          "targetId": "clock-user-group-01",
+          "membershipType": "USERGROUP",
+          "membershipStatus": "ACTIVE"
+        },
+        {
+          "userId": "clock-user-01",
+          "hourlyRate": null,
+          "targetId": "clock-project-03",
+          "membershipType": "PROJECT",
+          "membershipStatus": "ACTIVE"
+        },
+        {
+          "userId": "clock-user-01",
+          "hourlyRate": null,
+          "targetId": "clock-project-01",
+          "membershipType": "PROJECT",
+          "membershipStatus": "ACTIVE"
+        },
+        {
+          "userId": "clock-user-01",
+          "hourlyRate": null,
+          "targetId": "clock-project-02",
+          "membershipType": "PROJECT",
+          "membershipStatus": "ACTIVE"
+        },
+        {
+          "userId": "clock-user-01",
+          "hourlyRate": null,
+          "targetId": "clock-project-05",
+          "membershipType": "PROJECT",
+          "membershipStatus": "ACTIVE"
+        },
+        {
+          "userId": "clock-user-01",
+          "hourlyRate": null,
+          "targetId": "clock-project-06",
+          "membershipType": "PROJECT",
+          "membershipStatus": "ACTIVE"
+        },
+        {
+          "userId": "clock-user-01",
+          "hourlyRate": null,
+          "targetId": "clock-project-04",
+          "membershipType": "PROJECT",
+          "membershipStatus": "ACTIVE"
+        }
+      ],
+      "profilePicture": "https://s3.eu-central-01.amazonaws.com/clockify/no-user-image.png",
+      "activeWorkspace": "clock-workspace-01",
+      "defaultWorkspace": "clock-workspace-01",
+      "settings": {
+        "weekStart": "MONDAY",
+        "timeZone": "America/Chicago",
+        "timeFormat": "HOUR12",
+        "dateFormat": "MM/DD/YYYY",
+        "sendNewsletter": true,
+        "weeklyUpdates": false,
+        "longRunning": false,
+        "summaryReportSettings": {
+          "group": "Project",
+          "subgroup": "Time Entry"
+        },
+        "isCompactViewOn": false,
+        "dashboardSelection": "ME",
+        "dashboardViewType": "BILLABILITY",
+        "dashboardPinToTop": false,
+        "projectListCollapse": null,
+        "collapseAllProjectLists": false,
+        "groupSimilarEntriesDisabled": false,
+        "timeTrackingManual": true
+      },
+      "status": "ACTIVE"
+    }
+  ],
+  "workspaces": [
+    {
+      "id": "clock-workspace-01",
+      "name": "Test Workspace",
+      "hourlyRate": {
+        "amount": 0,
+        "currency": "USD"
+      },
+      "memberships": [
+        {
+          "userId": "clock-user-01",
+          "hourlyRate": null,
+          "targetId": "clock-workspace-01",
+          "membershipType": "WORKSPACE",
+          "membershipStatus": "ACTIVE"
+        },
+        {
+          "userId": "clock-user-02",
+          "hourlyRate": null,
+          "targetId": "clock-workspace-01",
+          "membershipType": "WORKSPACE",
+          "membershipStatus": "ACTIVE"
+        }
+      ],
+      "workspaceSettings": {
+        "timeRoundingInReports": false,
+        "onlyAdminsSeeBillableRates": true,
+        "onlyAdminsCreateProject": true,
+        "onlyAdminsSeeDashboard": false,
+        "defaultBillableProjects": true,
+        "lockTimeEntries": null,
+        "round": {
+          "round": "Round to nearest",
+          "minutes": "15"
+        },
+        "projectFavorites": true,
+        "canSeeTimeSheet": false,
+        "projectPickerSpecialFilter": false,
+        "forceProjects": false,
+        "forceTasks": false,
+        "forceTags": false,
+        "forceDescription": false,
+        "onlyAdminsSeeAllTimeEntries": false,
+        "onlyAdminsSeePublicProjectsEntries": false,
+        "trackTimeDownToSecond": true,
+        "projectGroupingLabel": "client",
+        "adminOnlyPages": [],
+        "automaticLock": null,
+        "onlyAdminsCreateTag": false
+      },
+      "imageUrl": ""
+    }
+  ]
+}
