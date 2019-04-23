@@ -140,6 +140,26 @@ async function getEntityGroupRecordsInWorkspace(workspaceId, entityGroup) {
     return await fetchTimeEntriesInWorkspace(workspaceId);
   }
 
+  if (entityGroup === 'projects') {
+    const options = {
+      method: 'POST',
+      body: {
+        page: 0,
+        pageSize: 100,
+        search: '',
+        clientIds: [],
+        userFilterIds: [],
+        sortOrder: 'ASCENDING',
+        sortColumn: 'name',
+      },
+    };
+    const result = await clockifyFetch(
+      `/workspaces/${workspaceId}/projects/filtered`,
+      options,
+    );
+    return _.get(result, 'project', []);
+  }
+
   const endpoint = getEntityGroupEndpoint(workspaceId, entityGroup);
   return await clockifyFetch(endpoint);
 }
