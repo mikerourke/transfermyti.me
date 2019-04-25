@@ -1,28 +1,42 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { When } from 'react-if';
 import { connect } from 'react-redux';
 import { Button } from 'bloomer';
 import { css } from 'emotion';
 import { get } from 'lodash';
-import { selectTotalCountOfPendingTransfers } from '~/redux/entities/entitiesSelectors';
+import { updateCountsOverallBeforeTransfer } from '~/redux/app/appActions';
+import {
+  selectInTransferDetails,
+  selectAggregateTransferCounts,
+} from '~/redux/app/appSelectors';
 import { transferEntitiesToClockifyWorkspace } from '~/redux/entities/workspaces/workspacesActions';
 import { selectTogglIncludedWorkspacesById } from '~/redux/entities/workspaces/workspacesSelectors';
 import Flex from '~/components/flex/Flex';
 import StepPage, { StepPageProps } from '~/components/stepPage/StepPage';
 import ConfirmationModal from './components/ConfirmationModal';
+import InstructionsList from './components/InstructionsList';
+import ProgressIndicators from './components/ProgressIndicators';
 import TransferSuccess from './components/TransferSuccess';
-import ProgressIndicators from './ProgressIndicators';
-import { CompoundWorkspaceModel, ReduxDispatch, ReduxState } from '~/types';
+import {
+  AggregateTransferCountsModel,
+  CompoundWorkspaceModel,
+  InTransferDetailsModel,
+  ReduxDispatch,
+  ReduxState,
+  TransferCountsModel,
+} from '~/types';
 
 interface ConnectStateProps {
   togglWorkspacesById: Record<string, CompoundWorkspaceModel>;
-  totalPendingCount: number;
+  inTransferDetails: InTransferDetailsModel;
+  aggregateTransferCounts: AggregateTransferCountsModel;
 }
 
 interface ConnectDispatchProps {
   onTransferEntitiesToClockifyWorkspace: (
     workspace: CompoundWorkspaceModel,
   ) => Promise<any>;
+  onUpdateCountTotalOverallBeforeTransfer: () => void;
 }
 
 type Props = ConnectStateProps & ConnectDispatchProps & StepPageProps;
@@ -41,14 +55,31 @@ export const TransferProgressStepComponent: React.FC<Props> = props => {
   const [inTransferWorkspace, setInTransferWorkspace] = useState<
     CompoundWorkspaceModel | {}
   >({});
+  const [workspaceTransferCounts, setWorkspaceTransferCounts] = useState<
+    TransferCountsModel
+  >({ countCurrent: 0, countTotal: 0 });
+
+  useEffect(() => {
+    props.onUpdateCountTotalOverallBeforeTransfer();
+  }, []);
 
   const transferAllEntitiesToClockify = async () => {
     setTransferStatus(TransferStatus.InProgress);
+
+    let workspaceNumber = 1;
     const workspaces = Object.values(props.togglWorkspacesById);
     for (const workspace of workspaces) {
       setInTransferWorkspace(workspace);
+      setWorkspaceTransferCounts({
+        countCurrent: workspaceNumber,
+        countTotal: workspaces.length,
+      });
+
       await props.onTransferEntitiesToClockifyWorkspace(workspace);
+
+      workspaceNumber += 1;
     }
+
     setTransferStatus(TransferStatus.Complete);
   };
 
@@ -56,6 +87,8 @@ export const TransferProgressStepComponent: React.FC<Props> = props => {
     setIsModalActive(false);
     await transferAllEntitiesToClockify();
   };
+
+  const workspaceName = get(inTransferWorkspace, 'name', 'None');
 
   return (
     <>
@@ -75,13 +108,15 @@ export const TransferProgressStepComponent: React.FC<Props> = props => {
               `}
             >
               Press the start button to below to begin transferring your data to
-              Clockify. A progress indicator will let you know how things are
-              going.
+              Clockify. After confirming the transfer, you&apos;ll see three
+              progress indicators:
             </p>
+            <InstructionsList />
             <p
               className={css`
                 color: var(--info);
-                font-weight: bold;
+                font-weight: 700;
+                margin-top: 1rem;
               `}
             >
               Just an FYI: the transfer might take a little while, so please be
@@ -113,10 +148,12 @@ export const TransferProgressStepComponent: React.FC<Props> = props => {
             </Button>
           </When>
           <When condition={transferStatus === TransferStatus.InProgress}>
-            <Flex direction="column">
-              <div>{get(inTransferWorkspace, 'name')}</div>
-              <ProgressIndicators totalPendingCount={props.totalPendingCount} />
-            </Flex>
+            <ProgressIndicators
+              inTransferDetails={props.inTransferDetails}
+              workspaceName={workspaceName}
+              aggregateTransferCounts={props.aggregateTransferCounts}
+              workspaceTransferCounts={workspaceTransferCounts}
+            />
           </When>
           <When condition={transferStatus === TransferStatus.Complete}>
             <TransferSuccess />
@@ -134,12 +171,15 @@ export const TransferProgressStepComponent: React.FC<Props> = props => {
 
 const mapStateToProps = (state: ReduxState) => ({
   togglWorkspacesById: selectTogglIncludedWorkspacesById(state),
-  totalPendingCount: selectTotalCountOfPendingTransfers(state),
+  inTransferDetails: selectInTransferDetails(state),
+  aggregateTransferCounts: selectAggregateTransferCounts(state),
 });
 
 const mapDispatchToProps = (dispatch: ReduxDispatch) => ({
   onTransferEntitiesToClockifyWorkspace: (workspace: CompoundWorkspaceModel) =>
     dispatch(transferEntitiesToClockifyWorkspace(workspace)),
+  onUpdateCountTotalOverallBeforeTransfer: () =>
+    dispatch(updateCountsOverallBeforeTransfer()),
 });
 
 export default connect<ConnectStateProps, ConnectDispatchProps>(

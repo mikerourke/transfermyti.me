@@ -39,8 +39,8 @@ export async function batchClockifyTransferRequests<TEntity, TResponse>({
   const fetchResults: Array<TResponse> = [];
   const fetchErrors: Array<FetchErrorModel> = [];
 
-  const countTotal = entityRecordsInWorkspace.length;
-  let countCurrent = 1;
+  const countTotalInGroup = entityRecordsInWorkspace.length;
+  let countCurrentInGroup = 1;
 
   for (const entityRecord of entityRecordsInWorkspace) {
     // Update state with the details of the in-transfer entity record.
@@ -48,8 +48,8 @@ export async function batchClockifyTransferRequests<TEntity, TResponse>({
     // get the corresponding data easily out of state and not rely on the
     // Clockify entities existing:
     const inTransferDetails = {
-      countTotal,
-      countCurrent,
+      countTotalInGroup,
+      countCurrentInGroup,
       entityGroup,
       workspaceId: togglWorkspaceId,
     };
@@ -69,7 +69,7 @@ export async function batchClockifyTransferRequests<TEntity, TResponse>({
       });
     }
 
-    countCurrent += 1;
+    countCurrentInGroup += 1;
   }
 
   displayFetchErrors(fetchErrors);

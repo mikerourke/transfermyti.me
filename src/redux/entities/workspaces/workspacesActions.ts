@@ -1,22 +1,25 @@
 import { createAsyncAction, createStandardAction } from 'typesafe-actions';
 import { isNil } from 'lodash';
 import {
+  apiCreateClockifyWorkspace,
   apiFetchClockifyWorkspaces,
   apiFetchTogglWorkspaces,
-  apiCreateClockifyWorkspace,
 } from '~/redux/entities/api/workspaces';
 import {
   showFetchErrorNotification,
-  updateTotalTransferredCount,
+  updateCountsInWorkspace,
 } from '~/redux/app/appActions';
 import * as clientsActions from '~/redux/entities/clients/clientsActions';
 import * as projectsActions from '~/redux/entities/projects/projectsActions';
 import * as tagsActions from '~/redux/entities/tags/tagsActions';
 import * as tasksActions from '~/redux/entities/tasks/tasksActions';
 import * as timeEntriesActions from '~/redux/entities/timeEntries/timeEntriesActions';
-import * as userGroupsActions from '../userGroups/userGroupsActions';
+import * as userGroupsActions from '~/redux/entities/userGroups/userGroupsActions';
 import * as usersActions from '~/redux/entities/users/usersActions';
-import { selectTogglIncludedWorkspaceNames } from './workspacesSelectors';
+import {
+  selectTogglIncludedWorkspaceNames,
+  selectCountTotalOfTransfersInWorkspace,
+} from './workspacesSelectors';
 import {
   ClockifyWorkspaceModel,
   CompoundEntityModel,
@@ -141,7 +144,7 @@ export const fetchTogglEntitiesInWorkspace = ({
 
 export const transferEntitiesToClockifyWorkspace = (
   workspace: CompoundWorkspaceModel,
-) => async (dispatch: ReduxDispatch) => {
+) => async (dispatch: ReduxDispatch, getState: ReduxGetState) => {
   const { name, id: togglWorkspaceId, linkedId } = workspace;
 
   let clockifyWorkspaceId = linkedId;
@@ -156,7 +159,16 @@ export const transferEntitiesToClockifyWorkspace = (
       dispatch(clockifyWorkspaceTransfer.success([workspace]));
     }
 
-    dispatch(updateTotalTransferredCount(0));
+    const countTotal = selectCountTotalOfTransfersInWorkspace(getState())(
+      togglWorkspaceId,
+    );
+
+    dispatch(
+      updateCountsInWorkspace({
+        countCurrent: 0,
+        countTotal,
+      }),
+    );
 
     await dispatch(
       clientsActions.transferClientsToClockify(
@@ -190,7 +202,13 @@ export const transferEntitiesToClockifyWorkspace = (
       ),
     );
 
-    dispatch(updateTotalTransferredCount(0));
+    dispatch(
+      updateCountsInWorkspace({
+        countCurrent: 0,
+        countTotal: 0,
+      }),
+    );
+
     return dispatch(updateWorkspaceNameBeingFetched(null));
   } catch (error) {
     dispatch(showFetchErrorNotification(error));

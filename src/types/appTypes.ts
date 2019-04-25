@@ -18,8 +18,20 @@ export enum TransferType {
 }
 
 export interface InTransferDetailsModel {
-  countTotal: number;
-  countCurrent: number;
+  countCurrentInGroup: number;
+  countTotalInGroup: number;
   entityGroup: EntityGroup | null;
   workspaceId: string | null;
+}
+
+export interface TransferCountsModel {
+  countCurrent: number;
+  countTotal: number;
+}
+
+export interface AggregateTransferCountsModel {
+  countCurrentInWorkspace: number;
+  countTotalInWorkspace: number;
+  countCurrentOverall: number;
+  countTotalOverall: number;
 }

@@ -88,14 +88,4 @@ export interface DetailedTimeEntryModel extends CompoundTimeEntryModel {
   workspace: CompoundWorkspaceModel;
 }
 
-export interface CreateTimeEntryRequestModel {
-  start: string;
-  billable: boolean;
-  description: string;
-  projectId: string;
-  taskId: string;
-  end: string;
-  tagIds: Array<string>;
-}
-
 export type TimeEntryForTool = ClockifyTimeEntryModel | TogglTimeEntryModel;

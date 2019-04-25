@@ -154,6 +154,51 @@ export const selectTogglCountsByGroupByWorkspace = createSelector(
     ),
 );
 
+export const selectCountTotalOfTransfersInWorkspace = createSelector(
+  selectTogglEntitiesByGroupByWorkspaceFactory(true),
+  entitiesByGroupByWorkspace => (workspaceIdToGet: string): number => {
+    const workspaceEntitiesByGroup = get(
+      entitiesByGroupByWorkspace,
+      workspaceIdToGet,
+      null,
+    );
+    if (isNil(workspaceEntitiesByGroup)) return 0;
+
+    const countsByEntityGroup = calculateRecordCountsByEntityGroup(
+      workspaceEntitiesByGroup,
+    );
+
+    const entityGroupsToInclude = [
+      EntityGroup.Projects,
+      EntityGroup.Clients,
+      EntityGroup.Tags,
+      EntityGroup.Tasks,
+      EntityGroup.TimeEntries,
+    ];
+
+    let totalCount = 0;
+
+    entityGroupsToInclude.forEach(entityGroup => {
+      const { includedRecordCount } = get(countsByEntityGroup, entityGroup, {
+        includedRecordCount: 0,
+      });
+      totalCount += includedRecordCount;
+    });
+
+    return totalCount;
+  },
+);
+
+export const selectCountTotalOfTransfersOverall = createSelector(
+  selectCountTotalOfTransfersInWorkspace,
+  selectTogglWorkspaceIds,
+  (getTotalCountOfPendingTransfers, workspaceIds) =>
+    workspaceIds.reduce((acc, workspaceId) => {
+      const totalCount = getTotalCountOfPendingTransfers(workspaceId);
+      return acc + totalCount;
+    }, 0),
+);
+
 function selectTogglEntitiesByGroupByWorkspaceFactory(inclusionsOnly: boolean) {
   return createSelector(
     selectTogglWorkspaceIds,

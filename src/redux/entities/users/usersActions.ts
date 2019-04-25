@@ -116,8 +116,8 @@ export const inviteUsersToClockify = (
     userEmailsToInvite.forEach((userEmail, emailIndex) => {
       dispatch(
         updateInTransferDetails({
-          countTotal: userEmailsToInvite.length,
-          countCurrent: emailIndex,
+          countTotalInGroup: userEmailsToInvite.length,
+          countCurrentInGroup: emailIndex,
           entityGroup: EntityGroup.Users,
           workspaceId: togglWorkspaceId,
         }),

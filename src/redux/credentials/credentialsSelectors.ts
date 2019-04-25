@@ -6,11 +6,6 @@ export const selectCredentials = createSelector(
   (credentials): CredentialsModel => credentials,
 );
 
-export const selectTogglUserEmail = createSelector(
-  selectCredentials,
-  (credentials): string => credentials.togglEmail,
-);
-
 export const selectIsValidating = (state: ReduxState): boolean =>
   state.credentials.isValidating;
 

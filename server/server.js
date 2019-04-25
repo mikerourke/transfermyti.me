@@ -25,14 +25,18 @@ function assignMiddleware(thisApp) {
     next();
   };
 
-  // Specify an artificial delay for API responses (can be updated in the .env
-  // file):
+  // Adds an artificial delay for API calls:
   const addDelayMiddleware = (req, res, next) => {
     if (req.method === 'OPTIONS') {
       return next();
     }
 
-    const delayInMs = process.env.LOCAL_API_DELAY_MS || 250;
+    let delayInMs = 250;
+
+    // Increase the delay when performing the transfer:
+    if (req.method === 'POST' && /clockify/g.test(req.url)) {
+      delayInMs = 1000;
+    }
 
     setTimeout(() => {
       next();

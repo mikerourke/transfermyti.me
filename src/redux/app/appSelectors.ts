@@ -1,5 +1,9 @@
 import { createSelector } from 'reselect';
-import { NotificationModel, ReduxState } from '~/types';
+import {
+  AggregateTransferCountsModel,
+  NotificationModel,
+  ReduxState,
+} from '~/types';
 
 export const selectNotifications = createSelector(
   (state: ReduxState) => state.app.notifications,
@@ -14,7 +18,32 @@ export const selectInTransferDetails = createSelector(
   inTransferDetails => inTransferDetails,
 );
 
-export const selectCountTransferred = createSelector(
-  (state: ReduxState) => state.app.countTransferred,
-  countTransferred => countTransferred,
+export const selectCountCurrentInWorkspace = (state: ReduxState) =>
+  state.app.countCurrentInWorkspace;
+
+export const selectCountTotalInWorkspace = (state: ReduxState) =>
+  state.app.countTotalInWorkspace;
+
+export const selectCountCurrentOverall = (state: ReduxState) =>
+  state.app.countCurrentOverall;
+
+export const selectCountTotalOverall = (state: ReduxState) =>
+  state.app.countTotalOverall;
+
+export const selectAggregateTransferCounts = createSelector(
+  selectCountCurrentInWorkspace,
+  selectCountTotalInWorkspace,
+  selectCountCurrentOverall,
+  selectCountTotalOverall,
+  (
+    countCurrentInWorkspace,
+    countTotalInWorkspace,
+    countCurrentOverall,
+    countTotalOverall,
+  ): AggregateTransferCountsModel => ({
+    countCurrentInWorkspace,
+    countTotalInWorkspace,
+    countCurrentOverall,
+    countTotalOverall,
+  }),
 );
