@@ -3,18 +3,16 @@ import classnames from 'classnames';
 import { Box, Column, Title } from 'bloomer';
 import { css } from 'emotion';
 
+// TODO: Get rid of `isDisabled` when multi-user mode is working.
+
 interface Props {
+  isDisabled: boolean;
   isSelected: boolean;
   title: string;
   onSelect: () => void;
 }
 
-const TransferTypeColumn: React.FC<Props> = ({
-  children,
-  title,
-  isSelected,
-  onSelect,
-}) => {
+const TransferTypeColumn: React.FC<Props> = props => {
   const selectedClass = css`
     background-color: var(--info);
     color: white;
@@ -32,28 +30,30 @@ const TransferTypeColumn: React.FC<Props> = ({
               opacity: 0.5;
             }
           `,
-          { [selectedClass]: isSelected },
+          { [selectedClass]: props.isSelected },
         )}
-        onClick={onSelect}
+        onClick={props.isDisabled ? undefined : props.onSelect}
       >
         <Title
           className={css`
             color: inherit;
+            ${props.isDisabled && 'text-decoration: line-through'};
           `}
           isSize={2}
         >
-          {title}
+          {props.title}
         </Title>
         <p
           className={css`
             font-size: 20px;
+            ${props.isDisabled && 'text-decoration: line-through'};
 
             strong {
               color: inherit;
             }
           `}
         >
-          {children}
+          {props.children}
         </p>
       </Box>
     </Column>

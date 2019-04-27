@@ -53,6 +53,10 @@ export const EnterCredentialsStepComponent: React.FC<Props> = ({
     };
   }, []);
 
+  useEffect(() => {
+    if (props.isValid) props.onNextClick();
+  }, [props.isValid]);
+
   const validateInputs = () => {
     const requiredCredentials = omit(
       credentials,
@@ -92,10 +96,6 @@ export const EnterCredentialsStepComponent: React.FC<Props> = ({
   const handleNextClick = async () => {
     if (!validateInputs()) return;
     await props.onValidateCredentials();
-
-    setTimeout(() => {
-      if (props.isValid) props.onNextClick();
-    }, 100);
   };
 
   const apiClass = css`

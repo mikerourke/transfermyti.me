@@ -11,12 +11,6 @@ const InstructionsList: React.FC = () => (
         li:not(:last-child) {
           margin-bottom: 0.75rem;
         }
-
-        span {
-          font-weight: 700;
-          margin: 0 4px;
-          vertical-align: bottom;
-        }
       `}
     >
       <li>

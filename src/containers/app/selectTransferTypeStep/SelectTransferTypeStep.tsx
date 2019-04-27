@@ -8,6 +8,8 @@ import StepPage, { StepPageProps } from '~/components/stepPage/StepPage';
 import TransferTypeColumn from './components/TransferTypeColumn';
 import { ReduxDispatch, ReduxState, TransferType } from '~/types';
 
+// TODO: Disable multi-user mode button and add column to delete all entries.
+
 interface ConnectStateProps {
   currentTransferType: TransferType;
 }
@@ -44,8 +46,9 @@ export const SelectTransferTypeStepComponent: React.FC<Props> = ({
       >
         <Columns isCentered>
           <TransferTypeColumn
-            title="Single User"
+            isDisabled={false}
             isSelected={currentTransferType === TransferType.SingleUser}
+            title="Single User"
             onSelect={handleTransferTypeSelect(TransferType.SingleUser)}
           >
             Select this option if you&apos;re not the owner/admin of an
@@ -53,8 +56,9 @@ export const SelectTransferTypeStepComponent: React.FC<Props> = ({
             to Clockify.
           </TransferTypeColumn>
           <TransferTypeColumn
-            title="Multiple Users"
+            isDisabled={true}
             isSelected={currentTransferType === TransferType.MultipleUsers}
+            title="Multiple Users"
             onSelect={handleTransferTypeSelect(TransferType.MultipleUsers)}
           >
             Select this option if you have multiple user groups/users and

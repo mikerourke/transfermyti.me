@@ -8,6 +8,10 @@ import Header from './components/Header';
 import TransferWizard from './components/TransferWizard';
 import { ReduxState, TransferType } from '~/types';
 
+// TODO: Add link to first page directing user to Clockify if they don't
+//       already have an account (see email).
+// TODO: Ensure that the production release isn't using the mock server.
+
 interface Props {
   currentTransferType: TransferType;
 }
