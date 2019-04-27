@@ -28,5 +28,8 @@ CLI tool I created for transferring entries from Toggl to Clockify.
 
 ## Development
 
-1. Install dependencies with `yarn install`
-2. Start the app with `yarn start`
+- Install dependencies with `yarn install`
+- To start the app with the mock server, run `yarn start` (no data will
+   be transferred from Toggl to Clockify
+- To start the app with the ability to actually transfer data, run
+   `yarn start:web` and navigate to `http://localhost:3000`
