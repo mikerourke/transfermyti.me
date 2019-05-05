@@ -33,6 +33,10 @@ export const credentialsValidation = createAsyncAction(
   '@credentials/CREDENTIALS_VALIDATION_FAILURE',
 )<void, CredentialsModel, void>();
 
+export const updateAreCredentialsValid = createStandardAction(
+  '@credentials/UPDATE_ARE_CREDENTIALS_VALID'
+)<boolean>();
+
 export const updateCredentialsField = createStandardAction(
   '@credentials/UPDATE_FIELD',
 )<{ field: CredentialsField; value: string }>();

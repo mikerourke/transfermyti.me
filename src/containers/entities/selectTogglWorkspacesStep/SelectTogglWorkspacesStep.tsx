@@ -8,6 +8,7 @@ import {
   dismissAllNotifications,
   showNotification,
 } from '~/redux/app/appActions';
+import { updateAreCredentialsValid } from '~/redux/credentials/credentialsActions';
 import {
   fetchTogglWorkspaces,
   flipIsWorkspaceIncluded,
@@ -38,6 +39,7 @@ interface ConnectDispatchProps {
   onDismissAllNotifications: () => void;
   onFetchTogglWorkspaces: () => Promise<any>;
   onFlipIsWorkspaceIncluded: (workspaceId: string) => void;
+  onResetAreCredentialsValid: () => void;
   onShowNotification: (notification: Partial<NotificationModel>) => void;
 }
 
@@ -47,6 +49,11 @@ export const SelectTogglWorkspacesStepComponent: React.FC<Props> = props => {
   useEffect(() => {
     props.onFetchTogglWorkspaces();
   }, []);
+
+  const handlePreviousClick = () => {
+    props.onResetAreCredentialsValid();
+    props.onPreviousClick();
+  };
 
   const handleNextClick = () => {
     if (props.countOfWorkspacesIncluded === 0) {
@@ -74,7 +81,7 @@ export const SelectTogglWorkspacesStepComponent: React.FC<Props> = props => {
           <StepPage
             stepNumber={props.stepNumber}
             subtitle="Select Toggl Workspaces to Transfer"
-            onPreviousClick={props.onPreviousClick}
+            onPreviousClick={handlePreviousClick}
             onNextClick={handleNextClick}
             onRefreshClick={props.onFetchTogglWorkspaces}
             instructions={
@@ -133,6 +140,7 @@ const mapDispatchToProps = (dispatch: ReduxDispatch) => ({
   onFetchTogglWorkspaces: () => dispatch(fetchTogglWorkspaces()),
   onFlipIsWorkspaceIncluded: (workspaceId: string) =>
     dispatch(flipIsWorkspaceIncluded(workspaceId)),
+  onResetAreCredentialsValid: () => dispatch(updateAreCredentialsValid(false)),
   onShowNotification: (notification: Partial<NotificationModel>) =>
     dispatch(showNotification(notification)),
 });

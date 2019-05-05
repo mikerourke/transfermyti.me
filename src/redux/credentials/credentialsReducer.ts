@@ -44,6 +44,14 @@ export const credentialsReducer = handleActions(
       isValid: false,
     }),
 
+    [getType(credentialsActions.updateAreCredentialsValid)]: (
+      state: CredentialsState,
+      { payload: isValid }: ReduxAction<boolean>,
+    ): CredentialsState => ({
+      ...state,
+      isValid,
+    }),
+
     [getType(credentialsActions.credentialsValidation.request)]: (
       state: CredentialsState,
     ): CredentialsState => ({
