@@ -93,7 +93,7 @@ function extrapolateFromUrl(
 }
 
 function getApiUrl(toolName: ToolName, context: Context): string {
-  if (process.env.NODE_ENV === 'development') {
+  if (process.env.USE_LOCAL_API === 'true') {
     return `${LOCAL_API_URL}/${toolName}`;
   }
 
