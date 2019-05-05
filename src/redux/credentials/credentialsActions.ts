@@ -1,10 +1,10 @@
 import { createAsyncAction, createStandardAction } from 'typesafe-actions';
-import { capitalize, first, set } from 'lodash';
+import { capitalize } from 'lodash';
 import storage from 'store';
 import { STORAGE_KEY } from '~/constants';
 import { getIfDev } from '~/utils/getIfDev';
 import {
-  apiFetchClockifyUserDetails,
+  apiFetchClockifyMeDetails,
   apiFetchTogglMeDetails,
 } from '~/redux/entities/api/users';
 import { apiFetchClockifyWorkspaces } from '~/redux/entities/api/workspaces';
@@ -20,7 +20,6 @@ import {
   NotificationType,
   ReduxDispatch,
   ReduxGetState,
-  ToolName,
 } from '~/types';
 
 export const allCredentialsStored = createStandardAction('@credentials/STORED')<
@@ -34,7 +33,7 @@ export const credentialsValidation = createAsyncAction(
 )<void, CredentialsModel, void>();
 
 export const updateAreCredentialsValid = createStandardAction(
-  '@credentials/UPDATE_ARE_CREDENTIALS_VALID'
+  '@credentials/UPDATE_ARE_CREDENTIALS_VALID',
 )<boolean>();
 
 export const updateCredentialsField = createStandardAction(
@@ -57,22 +56,11 @@ export const storeAllCredentials = () => (
   return dispatch(allCredentialsStored(credentials));
 };
 
-const fetchClockifyUserDetails = () => async (dispatch: ReduxDispatch) => {
+const fetchClockifyMeDetails = () => async (dispatch: ReduxDispatch) => {
   const workspaces = await apiFetchClockifyWorkspaces();
   dispatch(clockifyWorkspacesFetch.success(workspaces));
 
-  const validMemberships = first(workspaces).memberships.filter(
-    ({ membershipType }) => membershipType === 'WORKSPACE',
-  );
-
-  if (validMemberships.length === 0) {
-    const userError = new Error('No memberships found for user');
-    set(userError, 'toolName', ToolName.Clockify);
-    throw userError;
-  }
-
-  const [{ userId }] = validMemberships;
-  const { id } = await apiFetchClockifyUserDetails(userId);
+  const { id } = await apiFetchClockifyMeDetails();
   return id;
 };
 
@@ -91,7 +79,7 @@ export const validateCredentials = () => async (dispatch: ReduxDispatch) => {
 
   try {
     const { togglEmail, togglUserId } = await dispatch(fetchTogglMeDetails());
-    const clockifyUserId = await dispatch(fetchClockifyUserDetails());
+    const clockifyUserId = await dispatch(fetchClockifyMeDetails());
 
     const credentials = {
       [CredentialsField.ClockifyUserId]: clockifyUserId,

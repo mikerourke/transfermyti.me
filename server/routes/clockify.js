@@ -12,6 +12,10 @@ export function assignClockifyRoutes(router) {
   let entriesCreated = 20;
 
   router
+    .get('/v1/user', (req, res) => {
+      const [firstUser] = db.users;
+      res.status(200).send(firstUser);
+    })
     .get('/users/:userId', (req, res) => {
       const [firstUser] = db.users;
       res.status(200).send(firstUser);
