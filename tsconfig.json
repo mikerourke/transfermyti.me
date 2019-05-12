@@ -33,6 +33,7 @@
     ".cache",
     "build",
     "coverage",
+    "dist",
     "node_modules",
     "public",
     "requests",
