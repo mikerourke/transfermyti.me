@@ -9,7 +9,7 @@ import {
 export const apiFetchClockifyClients = (
   workspaceId: string,
 ): Promise<Array<ClockifyClientModel>> =>
-  fetchArray(`/clockify/api/workspaces/${workspaceId}/clients/`);
+  fetchArray(`/clockify/api/v1/workspaces/${workspaceId}/clients`);
 
 export const apiFetchTogglClients = (
   workspaceId: string,
@@ -20,7 +20,7 @@ export const apiCreateClockifyClient = (
   workspaceId: string,
   client: EntityWithName,
 ): Promise<ClockifyClientModel> =>
-  fetchObject(`/clockify/api/workspaces/${workspaceId}/clients/`, {
+  fetchObject(`/clockify/api/v1/workspaces/${workspaceId}/clients`, {
     method: HttpMethod.Post,
     body: client as any,
   });

@@ -16,27 +16,19 @@ export function assignClockifyRoutes(router) {
       const [firstUser] = db.users;
       res.status(200).send(firstUser);
     })
-    .get("/users/:userId", (req, res) => {
-      const [firstUser] = db.users;
-      res.status(200).send(firstUser);
-    })
-    .get("/workspaces/:workspaceId/clients/", (req, res) =>
+    .get("/v1/workspaces/:workspaceId/clients", (req, res) =>
       res.status(200).send(isEmpty ? [] : db.clients),
     )
-    .post("/workspaces/:workspaceId/projects/filtered", (req, res) => {
-      const { projects } = db;
-      const payload = isEmpty
-        ? { project: [], count: 0 }
-        : { project: projects, count: projects.length };
-      res.status(200).send(payload);
+    .get("/v1/workspaces/:workspaceId/projects", (req, res) => {
+      res.status(200).send(db.projects);
     })
     .get("/workspaces/:workspaceId/projects/:projectId/users/", (req, res) =>
       res.status(200).send(isEmpty ? [] : db.users),
     )
-    .get("/workspaces/:workspaceId/tags/", (req, res) =>
+    .get("/v1/workspaces/:workspaceId/tags", (req, res) =>
       res.status(200).send(isEmpty ? [] : db.tags),
     )
-    .get("/workspaces/:workspaceId/projects/:projectId/tasks/", (req, res) =>
+    .get("/v1/workspaces/:workspaceId/projects/:projectId/tasks", (req, res) =>
       res.status(200).send(isEmpty ? [] : db.tasks),
     )
     .post(
@@ -75,10 +67,10 @@ export function assignClockifyRoutes(router) {
     .get("/workspaces/:workspaceId/users", (req, res) =>
       res.status(200).send(isEmpty ? [] : db.users),
     )
-    .get("/workspaces/", (req, res) => res.status(200).send(db.workspaces));
+    .get("/v1/workspaces", (req, res) => res.status(200).send(db.workspaces));
 
   router
-    .post("/workspaces/:workspaceId/clients/", (req, res) => {
+    .post("/v1/workspaces/:workspaceId/clients", (req, res) => {
       const newClient = {
         id: uniqueId("clock-client-0"),
         name: req.body.name,
@@ -87,7 +79,7 @@ export function assignClockifyRoutes(router) {
 
       res.status(200).send(newClient);
     })
-    .post("/workspaces/:workspaceId/projects", (req, res) => {
+    .post("/v1/workspaces/:workspaceId/projects", (req, res) => {
       const newProject = {
         id: uniqueId("clock-client-0"),
         name: req.body.name,
@@ -103,12 +95,12 @@ export function assignClockifyRoutes(router) {
         duration: "PT0S",
         clientName: get(db.clients, [req.body.clientId, "name"], null),
         public: req.body.isPublic,
-        billable: req.body.isBillable,
+        billable: req.body.billable,
       };
 
       res.status(200).send(newProject);
     })
-    .post("/workspaces/:workspaceId/tags/", (req, res) => {
+    .post("/v1/workspaces/:workspaceId/tags", (req, res) => {
       const newTag = {
         id: uniqueId("clock-tag-0"),
         name: req.body.name,
@@ -117,7 +109,7 @@ export function assignClockifyRoutes(router) {
 
       res.status(200).send(newTag);
     })
-    .post("/workspaces/:workspaceId/tasks/", (req, res) => {
+    .post("/v1/workspaces/:workspaceId/tasks", (req, res) => {
       const newTask = {
         id: uniqueId("clock-task-0"),
         name: req.body.name,
@@ -126,7 +118,7 @@ export function assignClockifyRoutes(router) {
 
       res.status(200).send(newTask);
     })
-    .post("/workspaces/:workspaceId/timeEntries/", (req, res) => {
+    .post("/v1/workspaces/:workspaceId/time-entries", (req, res) => {
       const [firstUser] = db.users;
       entriesCreated += 1;
 
@@ -162,7 +154,7 @@ export function assignClockifyRoutes(router) {
       const workspace = get(db.workspaces, req.params.workspaceId, {});
       res.status(200).send(workspace);
     })
-    .post("/workspaces/", (req, res) => {
+    .post("/v1/workspaces", (req, res) => {
       const [firstWorkspace] = db.workspaces;
       const newWorkspace = {
         ...firstWorkspace,

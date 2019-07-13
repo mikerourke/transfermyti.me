@@ -9,7 +9,7 @@ import {
 export const apiFetchClockifyTags = (
   workspaceId: string,
 ): Promise<Array<ClockifyTagModel>> =>
-  fetchArray(`/clockify/api/workspaces/${workspaceId}/tags/`);
+  fetchArray(`/clockify/api/v1/workspaces/${workspaceId}/tags`);
 
 export const apiFetchTogglTags = (
   workspaceId: string,
@@ -20,7 +20,7 @@ export const apiCreateClockifyTag = (
   workspaceId: string,
   tag: EntityWithName,
 ): Promise<ClockifyTagModel> =>
-  fetchObject(`/clockify/api/workspaces/${workspaceId}/tags/`, {
+  fetchObject(`/clockify/api/v1/workspaces/${workspaceId}/tags`, {
     method: HttpMethod.Post,
     body: tag as any,
   });

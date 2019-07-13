@@ -50,7 +50,7 @@ export const fetchClockifyProjects = (workspaceId: string) => async (
 ) => {
   dispatch(clockifyProjectsFetch.request());
   try {
-    const { project: projects } = await apiFetchClockifyProjects(workspaceId);
+    const projects = await apiFetchClockifyProjects(workspaceId);
     await appendUserIdsToProject(
       projects,
       apiFetchClockifyUsersInProject,

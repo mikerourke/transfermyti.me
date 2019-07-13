@@ -1,26 +1,17 @@
 import { fetchArray, fetchObject } from "./fetchByPayloadType";
 import {
   ClockifyProjectModel,
-  CreateProjectRequestModel,
+  ClockifyProjectRequestModel,
   HttpMethod,
   TogglProjectModel,
 } from "~/types";
 
 export const apiFetchClockifyProjects = (
   workspaceId: string,
-): Promise<{ project: Array<ClockifyProjectModel>; count: number }> =>
-  fetchObject(`/clockify/api/workspaces/${workspaceId}/projects/filtered`, {
-    method: HttpMethod.Post,
-    body: {
-      page: 0,
-      pageSize: 100,
-      search: "",
-      clientIds: [],
-      userFilterIds: [],
-      sortOrder: "ASCENDING",
-      sortColumn: "name",
-    } as any,
-  });
+): Promise<Array<ClockifyProjectModel>> =>
+  fetchArray(
+    `/clockify/api/v1/workspaces/${workspaceId}/projects?page-size=100`,
+  );
 
 export const apiFetchTogglProjects = (
   workspaceId: string,
@@ -29,9 +20,9 @@ export const apiFetchTogglProjects = (
 
 export const apiCreateClockifyProject = (
   workspaceId: string,
-  project: CreateProjectRequestModel,
+  project: ClockifyProjectRequestModel,
 ): Promise<ClockifyProjectModel> =>
-  fetchObject(`/clockify/api/workspaces/${workspaceId}/projects/`, {
+  fetchObject(`/clockify/api/v1/workspaces/${workspaceId}/projects`, {
     method: HttpMethod.Post,
     body: project as any,
   });
