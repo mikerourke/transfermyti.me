@@ -8,9 +8,9 @@ import { ClockifyUserModel, CompoundUserModel } from "./usersTypes";
 import { CompoundWorkspaceModel } from "./workspacesTypes";
 
 export interface ClockifyTimeIntervalModel {
-  start: string;
-  end: string;
   duration: string;
+  end: string;
+  start: string;
 }
 
 export interface ClockifyTimeEntryModel {
