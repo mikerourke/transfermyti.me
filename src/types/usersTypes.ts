@@ -1,44 +1,57 @@
 import { TogglWorkspaceModel } from "./workspacesTypes";
 import { BaseCompoundEntityModel } from "~/types/entityTypes";
 
-// TODO: Add the other options here.
-export enum ClockifyUserStatus {
-  Active = "ACTIVE",
+export interface ClockifyHourlyRateModel {
+  amount: number;
+  currency: string;
 }
 
 export interface ClockifyMembershipModel {
-  userId: string;
-  hourlyRate: number | null;
-  membershipType: string;
+  hourlyRate: ClockifyHourlyRateModel;
   membershipStatus: string;
-  target: string;
+  membershipType: string;
+  targetId: string;
+  userId: string;
 }
 
+type WeekStart =
+  | "MONDAY"
+  | "TUESDAY"
+  | "WEDNESDAY"
+  | "THURSDAY"
+  | "FRIDAY"
+  | "SATURDAY"
+  | "SUNDAY";
+
 export interface ClockifyUserModel {
-  id: string;
-  email: string;
-  name: string;
-  memberships: Array<ClockifyMembershipModel>;
-  profilePicture: string;
   activeWorkspace: string;
   defaultWorkspace: string;
+  email: string;
+  id: string;
+  memberships: Array<ClockifyMembershipModel>;
+  name: string;
+  profilePicture: string;
   settings: {
-    weekStart: string;
-    timeZone: string;
-    timeFormat: string;
+    collapseAllProjectLists: boolean;
+    dashboardPinToTop: boolean;
+    dashboardSelection: "ME" | "TEAM";
+    dashboardViewType: "PROJECT" | "BILLABILITY";
     dateFormat: string;
-    sendNewsletter: boolean;
-    weeklyUpdates: boolean;
+    isCompactViewOn: boolean;
     longRunning: boolean;
+    projectListCollapse: number;
+    sendNewsletter: boolean;
     summaryReportSettings: {
       group: string;
       subgroup: string;
     };
-    isCompactViewOn: boolean;
-    dashboardSelection: string;
+    timeFormat: string;
     timeTrackingManual: boolean;
+    timeZone: string;
+    weekStart: WeekStart;
+    weeklyUpdates: boolean;
   };
-  status: string;
+  status: "ACTIVE" | "PENDING_EMAIL_VERIFICATION" | "DELETED";
 }
 
 export interface TogglUserModel {

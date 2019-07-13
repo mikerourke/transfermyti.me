@@ -1,5 +1,6 @@
 import { createAsyncAction, createStandardAction } from "typesafe-actions";
 import { flatten, isNil } from "lodash";
+import { pause } from "~/utils/pause";
 import {
   batchClockifyTransferRequests,
   buildThrottler,
@@ -118,6 +119,8 @@ export const fetchTogglTimeEntries = (workspaceId: string) => async (
     const currentYear = new Date().getFullYear();
 
     for (let year = 2007; year <= currentYear; year += 1) {
+      // Ensure the rate limit doesn't get exceeded (1 request per second):
+      await pause(1_000);
       const timeEntriesForYear = await fetchTogglTimeEntriesForYear({
         togglEmail,
         workspaceId,
@@ -255,6 +258,7 @@ async function fetchTogglTimeEntriesForYear({
 
   if (totalCount <= perPage) return firstPageEntries;
 
+  await pause(1_000);
   const totalPages = Math.ceil(totalCount / perPage);
   const remainingPageEntries = await fetchTogglTimeEntriesForRemainingPages({
     email: togglEmail,
@@ -277,23 +281,18 @@ async function fetchTogglTimeEntriesForRemainingPages({
   year: number;
   totalPages: number;
 }): Promise<Array<TogglTimeEntryModel>> {
-  const { promiseThrottle, throttledFunc } = buildThrottler(
-    4,
-    apiFetchTogglTimeEntries,
-  );
-
   const timeEntriesForPage: Array<Array<TogglTimeEntryModel>> = [];
 
   // We already got the first page, don't want to fetch again:
   for (let currentPage = 2; currentPage <= totalPages; currentPage += 1) {
-    await promiseThrottle
-      .add(
-        // @ts-ignore
-        throttledFunc.bind(this, email, workspaceId, year, currentPage),
-      )
-      .then(({ data }: { data: Array<TogglTimeEntryModel> }) => {
-        timeEntriesForPage.push(data);
-      });
+    const { data } = await apiFetchTogglTimeEntries(
+      email,
+      workspaceId,
+      year,
+      currentPage,
+    );
+    timeEntriesForPage.push(data);
+    await pause(1_000);
   }
 
   return flatten(timeEntriesForPage);

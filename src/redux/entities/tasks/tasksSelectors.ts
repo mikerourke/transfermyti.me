@@ -2,7 +2,7 @@ import { createSelector } from "reselect";
 import { get, isNil } from "lodash";
 import { findTogglInclusions, groupByWorkspace } from "~/redux/utils";
 import { selectTogglClientMatchingId } from "~/redux/entities/clients/clientsSelectors";
-import { CompoundTaskModel, CreateTaskRequestModel, ReduxState } from "~/types";
+import { CompoundTaskModel, ClockifyTaskModel, ReduxState } from "~/types";
 
 export const selectTogglTasks = createSelector(
   (state: ReduxState) => Object.values(state.entities.tasks.toggl.byId),
@@ -24,7 +24,7 @@ export const selectTasksTransferPayloadForWorkspace = createSelector(
   selectTogglClientMatchingId,
   (inclusionsByWorkspace, getClientMatchingId) => (
     workspaceIdToGet: string,
-  ): Array<CreateTaskRequestModel> => {
+  ): Array<ClockifyTaskModel> => {
     const inclusions = get(
       inclusionsByWorkspace,
       workspaceIdToGet,

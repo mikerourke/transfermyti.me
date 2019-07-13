@@ -8,7 +8,7 @@ import {
 
 export const apiFetchClockifyWorkspaces = (): Promise<
   Array<ClockifyWorkspaceModel>
-> => fetchArray("/clockify/api/workspaces/");
+> => fetchArray("/clockify/api/v1/workspaces");
 
 export const apiFetchTogglWorkspaces = (): Promise<
   Array<TogglWorkspaceModel>
@@ -17,7 +17,7 @@ export const apiFetchTogglWorkspaces = (): Promise<
 export const apiCreateClockifyWorkspace = (
   workspace: EntityWithName,
 ): Promise<ClockifyWorkspaceModel> =>
-  fetchObject("/clockify/api/workspaces/", {
+  fetchObject("/clockify/api/v1/workspaces", {
     method: HttpMethod.Post,
     body: workspace as any,
   });

@@ -3,9 +3,8 @@ import { get } from "lodash";
 import { findTogglInclusions, groupByWorkspace } from "~/redux/utils";
 import { selectTogglClientMatchingId } from "~/redux/entities/clients/clientsSelectors";
 import {
-  ClockifyEstimateType,
+  ClockifyProjectRequestModel,
   CompoundProjectModel,
-  CreateProjectRequestModel,
   ReduxState,
 } from "~/types";
 
@@ -40,7 +39,7 @@ export const selectProjectsTransferPayloadForWorkspace = createSelector(
   selectTogglClientMatchingId,
   (inclusionsByWorkspace, getClientMatchingId) => (
     workspaceIdToGet: string,
-  ): Array<CreateProjectRequestModel> => {
+  ): Array<ClockifyProjectRequestModel> => {
     const inclusions = get(
       inclusionsByWorkspace,
       workspaceIdToGet,
@@ -57,15 +56,15 @@ export const selectProjectsTransferPayloadForWorkspace = createSelector(
       return [
         ...acc,
         {
-          clientId,
           name: project.name,
+          clientId,
           isPublic: project.isPublic,
-          isBillable: project.isBillable,
-          color: project.color,
           estimate: {
             estimate: "",
-            type: ClockifyEstimateType.Auto,
+            type: "AUTO",
           },
+          color: project.color,
+          billable: project.isBillable,
         },
       ];
     }, []);

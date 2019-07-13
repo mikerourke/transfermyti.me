@@ -6,7 +6,6 @@ import { togglTimeEntriesFetch } from "~/redux/entities/timeEntries/timeEntriesA
 import * as usersActions from "./usersActions";
 import {
   ClockifyUserModel,
-  ClockifyUserStatus,
   CompoundUserModel,
   EntitiesFetchPayloadModel,
   EntityGroup,
@@ -43,8 +42,7 @@ const getSchemaProcessStrategy = (workspaceId: string) => (
   name: "fullname" in value ? value.fullname : value.name,
   email: value.email,
   isAdmin: get(value, "admin", null),
-  isActive:
-    "status" in value ? value.status === ClockifyUserStatus.Active : true,
+  isActive: "status" in value ? value.status === "ACTIVE" : true,
   userGroupIds: "userGroupIds" in value ? value.userGroupIds : [],
   workspaceId,
   entryCount: 0,

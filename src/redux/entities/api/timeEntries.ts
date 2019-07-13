@@ -75,8 +75,11 @@ export const apiCreateClockifyTimeEntry = (
     tagIds,
   };
 
-  return fetchObject(`/clockify/api/workspaces/${workspaceId}/timeEntries/`, {
-    method: "POST",
-    body: validTimeEntry as any,
-  });
+  return fetchObject(
+    `/clockify/api/v1/workspaces/${workspaceId}/time-entries`,
+    {
+      method: "POST",
+      body: validTimeEntry as any,
+    },
+  );
 };

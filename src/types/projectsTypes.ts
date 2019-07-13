@@ -1,30 +1,32 @@
 import { ClockifyTaskModel } from "./tasksTypes";
-import { ClockifyMembershipModel } from "./usersTypes";
+import { ClockifyHourlyRateModel, ClockifyMembershipModel } from "./usersTypes";
 import { BaseCompoundEntityModel } from "~/types/entityTypes";
-
-export enum ClockifyEstimateType {
-  Auto = "AUTO",
-  Manual = "MANUAL",
-}
 
 export interface ClockifyEstimateModel {
   estimate: string;
-  type: ClockifyEstimateType;
+  type: "AUTO" | "MANUAL";
 }
 
-export interface ClockifyProjectModel {
-  id: string;
+interface ClockifyProjectBaseModel {
   name: string;
-  hourlyRate: string | null;
   clientId: string;
-  client: string | null;
-  workspaceId: string;
-  billable: boolean;
-  memberships: Array<ClockifyMembershipModel>;
-  color: string;
   estimate: ClockifyEstimateModel;
+  color: string;
+  billable: boolean;
+  hourlyRate: ClockifyHourlyRateModel;
+  memberships?: Array<ClockifyMembershipModel>;
+  tasks?: Array<ClockifyTaskModel>;
+}
+
+export interface ClockifyProjectRequestModel extends ClockifyProjectBaseModel {
+  isPublic: boolean;
+}
+
+export interface ClockifyProjectModel extends ClockifyProjectBaseModel {
+  id: string;
+  clientName: string | null;
+  workspaceId: string;
   archived: boolean;
-  tasks: Array<ClockifyTaskModel>;
   public: boolean;
 }
 
@@ -63,16 +65,4 @@ export interface CompoundProjectModel extends BaseCompoundEntityModel {
   isActive: boolean;
   color: string;
   userIds: Array<string>;
-}
-
-export interface CreateProjectRequestModel {
-  clientId: string;
-  name: string;
-  isPublic: boolean;
-  isBillable: boolean;
-  color: string;
-  estimate: {
-    estimate: string;
-    type: string;
-  };
 }

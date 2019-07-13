@@ -13,10 +13,6 @@ import {
 export const apiFetchClockifyMeDetails = (): Promise<ClockifyUserModel> =>
   fetchObject("/clockify/api/v1/user");
 
-export const apiFetchClockifyUserDetails = (
-  userId: string,
-): Promise<ClockifyUserModel> => fetchObject(`/clockify/api/users/${userId}`);
-
 export const apiFetchTogglMeDetails = (): Promise<TogglMeResponseModel> =>
   fetchObject("/toggl/api/me");
 
