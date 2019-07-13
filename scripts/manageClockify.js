@@ -1,13 +1,13 @@
-const path = require('path');
-const fetch = require('node-fetch');
-const { cyan, green, magenta, yellow } = require('chalk');
-const fs = require('fs-extra');
-const dateFns = require('date-fns');
-const _ = require('lodash');
-const jsonFile = require('jsonfile');
-const yargs = require('yargs');
-const PromiseThrottle = require('promise-throttle');
-const httpEnv = require('../http-client.private.env.json');
+const path = require("path");
+const fetch = require("node-fetch");
+const { cyan, green, magenta, yellow } = require("chalk");
+const fs = require("fs-extra");
+const dateFns = require("date-fns");
+const _ = require("lodash");
+const jsonFile = require("jsonfile");
+const yargs = require("yargs");
+const PromiseThrottle = require("promise-throttle");
+const httpEnv = require("../http-client.private.env.json");
 
 /**
  * You need to copy the http-client.private.env.example.json file in the root
@@ -16,21 +16,21 @@ const httpEnv = require('../http-client.private.env.json');
  * WebStorm's HTTP Client functionality that I use to test API requests
  * (see /requests directory in this repo, there isn't much to look at).
  */
-const clockifyApiKey = httpEnv.development['clockify-api-key'];
-const clockifyUserId = httpEnv.development['clockify-user-id'];
+const clockifyApiKey = httpEnv.development["clockify-api-key"];
+const clockifyUserId = httpEnv.development["clockify-user-id"];
 
 yargs
   .command({
-    command: 'delete',
-    desc: 'Delete all entities on Clockify testing workspace',
+    command: "delete",
+    desc: "Delete all entities on Clockify testing workspace",
     handler: async () => {
       await deleteEntitiesInWorkspaces();
     },
   })
   .command({
-    command: 'write',
+    command: "write",
     desc:
-      'Grabs all the Clockify entities and writes them to clockify.json in CWD',
+      "Grabs all the Clockify entities and writes them to clockify.json in CWD",
     handler: async () => {
       await writeEntitiesToOutputFile();
     },
@@ -46,16 +46,16 @@ async function deleteEntitiesInWorkspaces() {
   // Wait 1 second between each entity group, just to hedge my bets:
   for (const workspace of workspaces) {
     console.log(cyan(`Processing ${workspace.name}...`));
-    await deleteEntityGroupInWorkspace(workspace.id, 'timeEntries');
+    await deleteEntityGroupInWorkspace(workspace.id, "timeEntries");
     await pause(1);
 
-    await deleteEntityGroupInWorkspace(workspace.id, 'clients');
+    await deleteEntityGroupInWorkspace(workspace.id, "clients");
     await pause(1);
 
-    await deleteEntityGroupInWorkspace(workspace.id, 'tags');
+    await deleteEntityGroupInWorkspace(workspace.id, "tags");
     await pause(1);
 
-    await deleteEntityGroupInWorkspace(workspace.id, 'projects');
+    await deleteEntityGroupInWorkspace(workspace.id, "projects");
     console.log(green(`Processing complete for ${workspace.name}`));
   }
 }
@@ -65,7 +65,7 @@ async function deleteEntitiesInWorkspaces() {
  * entries for the user and outputs them to a "clockify.json" file in the CWD.
  */
 async function writeEntitiesToOutputFile() {
-  const outputPath = path.resolve(process.cwd(), 'clockify.json');
+  const outputPath = path.resolve(process.cwd(), "clockify.json");
   await fs.remove(outputPath);
 
   const workspaces = await fetchValidWorkspaces();
@@ -78,21 +78,21 @@ async function writeEntitiesToOutputFile() {
 
   for (const { id, name, ...workspace } of workspaces) {
     console.log(cyan(`Processing ${name}...`));
-    _.set(dataByWorkspaceName, [name, 'data'], { id, ...workspace });
-    await addEntityGroupToWorkspaceData(id, name, 'projects');
+    _.set(dataByWorkspaceName, [name, "data"], { id, ...workspace });
+    await addEntityGroupToWorkspaceData(id, name, "projects");
     await pause(1);
 
-    await addEntityGroupToWorkspaceData(id, name, 'clients');
+    await addEntityGroupToWorkspaceData(id, name, "clients");
     await pause(1);
 
-    await addEntityGroupToWorkspaceData(id, name, 'tags');
+    await addEntityGroupToWorkspaceData(id, name, "tags");
     await pause(1);
 
-    await addEntityGroupToWorkspaceData(id, name, 'timeEntries');
+    await addEntityGroupToWorkspaceData(id, name, "timeEntries");
   }
 
   await jsonFile.writeFile(outputPath, dataByWorkspaceName, { spaces: 2 });
-  console.log(green('Clockify entities written to file!'));
+  console.log(green("Clockify entities written to file!"));
 }
 
 /**
@@ -100,7 +100,7 @@ async function writeEntitiesToOutputFile() {
  *    workspace.
  */
 async function deleteEntityGroupInWorkspace(workspaceId, entityGroup) {
-  if (entityGroup === 'timeEntries') {
+  if (entityGroup === "timeEntries") {
     return await deleteTimeEntriesInWorkspace(workspaceId);
   }
 
@@ -115,7 +115,7 @@ async function deleteEntityGroupInWorkspace(workspaceId, entityGroup) {
 
   const baseEndpoint = getEntityGroupEndpoint(workspaceId, entityGroup);
   const apiDeleteEntity = entityId =>
-    clockifyFetch(`${baseEndpoint}${entityId}`, { method: 'DELETE' });
+    clockifyFetch(`${baseEndpoint}${entityId}`, { method: "DELETE" });
 
   const { promiseThrottle, throttledFn } = buildThrottler(apiDeleteEntity);
 
@@ -136,28 +136,28 @@ async function deleteEntityGroupInWorkspace(workspaceId, entityGroup) {
  * Fetches the records in the specified entity group and workspace.
  */
 async function getEntityGroupRecordsInWorkspace(workspaceId, entityGroup) {
-  if (entityGroup === 'timeEntries') {
+  if (entityGroup === "timeEntries") {
     return await fetchTimeEntriesInWorkspace(workspaceId);
   }
 
-  if (entityGroup === 'projects') {
+  if (entityGroup === "projects") {
     const options = {
-      method: 'POST',
+      method: "POST",
       body: {
         page: 0,
         pageSize: 100,
-        search: '',
+        search: "",
         clientIds: [],
         userFilterIds: [],
-        sortOrder: 'ASCENDING',
-        sortColumn: 'name',
+        sortOrder: "ASCENDING",
+        sortColumn: "name",
       },
     };
     const result = await clockifyFetch(
       `/workspaces/${workspaceId}/projects/filtered`,
       options,
     );
-    return _.get(result, 'project', []);
+    return _.get(result, "project", []);
   }
 
   const endpoint = getEntityGroupEndpoint(workspaceId, entityGroup);
@@ -179,7 +179,7 @@ async function deleteTimeEntriesInWorkspace(workspaceId) {
 
   const apiDeleteTimeEntryById = entryId =>
     clockifyFetch(`/workspaces/${workspaceId}/timeEntries/${entryId}`, {
-      method: 'DELETE',
+      method: "DELETE",
     });
 
   const { promiseThrottle, throttledFn } = buildThrottler(
@@ -223,7 +223,7 @@ async function fetchTimeEntriesInWorkspace(workspaceId) {
     return clockifyFetch(
       `/workspaces/${workspaceId}/timeEntries/user/${clockifyUserId}/entriesInRange`,
       {
-        method: 'POST',
+        method: "POST",
         body: {
           start: firstDay,
           end: lastDay,
@@ -261,7 +261,7 @@ async function fetchTimeEntriesInWorkspace(workspaceId) {
  * I had an issue with.
  */
 async function fetchValidWorkspaces() {
-  const workspaceResults = await clockifyFetch('/workspaces/');
+  const workspaceResults = await clockifyFetch("/workspaces/");
   return workspaceResults.reduce((acc, workspace) => {
     // This is due to an issue with one of my workspaces that wasn't deleted
     // properly (I suspect it may have been a Clockify bug). If I try deleting
@@ -309,8 +309,8 @@ async function clockifyFetch(endpoint, options) {
 
   let requestOptions = {
     headers: {
-      'X-Api-Key': clockifyApiKey,
-      'Content-Type': 'application/json',
+      "X-Api-Key": clockifyApiKey,
+      "Content-Type": "application/json",
     },
     ...options,
   };
@@ -319,7 +319,7 @@ async function clockifyFetch(endpoint, options) {
   // present (for POST request):
   if (!_.isNil(requestOptions.body)) {
     Object.assign(requestOptions.headers, {
-      Accept: 'application/json',
+      Accept: "application/json",
     });
     requestOptions.body = JSON.stringify(requestOptions.body);
   }

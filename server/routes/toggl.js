@@ -1,15 +1,15 @@
 /* eslint-disable @typescript-eslint/camelcase */
-import path from 'path';
-import fsExtra from 'fs-extra';
-import { isSameYear } from 'date-fns';
-import { take } from 'lodash';
+import path from "path";
+import fsExtra from "fs-extra";
+import { isSameYear } from "date-fns";
+import { take } from "lodash";
 
-const dbPath = path.resolve(__dirname, '..', 'db', 'toggl.json');
+const dbPath = path.resolve(__dirname, "..", "db", "toggl.json");
 const db = fsExtra.readJSONSync(dbPath);
 
 export function assignTogglRoutes(router) {
   router
-    .get('/me', (req, res) => {
+    .get("/me", (req, res) => {
       const [firstUser] = db.users;
       const payload = {
         since: 1555774945,
@@ -21,22 +21,22 @@ export function assignTogglRoutes(router) {
 
       res.status(200).send(payload);
     })
-    .get('/workspaces/:workspaceId/clients', (req, res) =>
+    .get("/workspaces/:workspaceId/clients", (req, res) =>
       res.status(200).send(db.clients),
     )
-    .get('/workspaces/:workspaceId/projects', (req, res) =>
+    .get("/workspaces/:workspaceId/projects", (req, res) =>
       res.status(200).send(db.projects),
     )
-    .get('/projects/:projectId/project_users', (req, res) =>
+    .get("/projects/:projectId/project_users", (req, res) =>
       res.status(200).send(db.projectUsers),
     )
-    .get('/workspaces/:workspaceId/tags', (req, res) =>
+    .get("/workspaces/:workspaceId/tags", (req, res) =>
       res.status(200).send(db.tags),
     )
-    .get('/workspaces/:workspaceId/tasks', (req, res) =>
+    .get("/workspaces/:workspaceId/tasks", (req, res) =>
       res.status(200).send(db.tasks),
     )
-    .get('/details', (req, res) => {
+    .get("/details", (req, res) => {
       const { since } = req.query;
       const queryDate = new Date(since);
 
@@ -55,14 +55,14 @@ export function assignTogglRoutes(router) {
 
       res.status(200).send(payload);
     })
-    .get('/workspaces/:workspaceId/groups', (req, res) =>
+    .get("/workspaces/:workspaceId/groups", (req, res) =>
       res.status(200).send(db.userGroups),
     )
-    .get('/workspaces/:workspaceId/users', (req, res) =>
+    .get("/workspaces/:workspaceId/users", (req, res) =>
       res.status(200).send(db.users),
     )
-    .get('/workspaces', (req, res) => res.status(200).send(db.workspaces))
-    .get('/workspaces/:workspaceId/workspace_users', (req, res) =>
+    .get("/workspaces", (req, res) => res.status(200).send(db.workspaces))
+    .get("/workspaces/:workspaceId/workspace_users", (req, res) =>
       res.status(200).send(db.workspaceUsers),
     );
 }
