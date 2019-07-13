@@ -1,17 +1,17 @@
-import { createAsyncAction, createStandardAction } from 'typesafe-actions';
-import { set } from 'lodash';
-import { batchClockifyTransferRequests, buildThrottler } from '~/redux/utils';
+import { createAsyncAction, createStandardAction } from "typesafe-actions";
+import { set } from "lodash";
+import { batchClockifyTransferRequests, buildThrottler } from "~/redux/utils";
 import {
   apiCreateClockifyProject,
   apiFetchClockifyProjects,
   apiFetchTogglProjects,
-} from '~/redux/entities/api/projects';
+} from "~/redux/entities/api/projects";
 import {
   apiFetchClockifyUsersInProject,
   apiFetchTogglUsersInProject,
-} from '~/redux/entities/api/users';
-import { showFetchErrorNotification } from '~/redux/app/appActions';
-import { selectProjectsTransferPayloadForWorkspace } from './projectsSelectors';
+} from "~/redux/entities/api/users";
+import { showFetchErrorNotification } from "~/redux/app/appActions";
+import { selectProjectsTransferPayloadForWorkspace } from "./projectsSelectors";
 import {
   ClockifyProjectModel,
   ClockifyUserModel,
@@ -21,28 +21,28 @@ import {
   ReduxGetState,
   TogglProjectModel,
   TogglProjectUserModel,
-} from '~/types';
+} from "~/types";
 
 export const clockifyProjectsFetch = createAsyncAction(
-  '@projects/CLOCKIFY_FETCH_REQUEST',
-  '@projects/CLOCKIFY_FETCH_SUCCESS',
-  '@projects/CLOCKIFY_FETCH_FAILURE',
+  "@projects/CLOCKIFY_FETCH_REQUEST",
+  "@projects/CLOCKIFY_FETCH_SUCCESS",
+  "@projects/CLOCKIFY_FETCH_FAILURE",
 )<void, EntitiesFetchPayloadModel<ClockifyProjectModel>, void>();
 
 export const togglProjectsFetch = createAsyncAction(
-  '@projects/TOGGL_FETCH_REQUEST',
-  '@projects/TOGGL_FETCH_SUCCESS',
-  '@projects/TOGGL_FETCH_FAILURE',
+  "@projects/TOGGL_FETCH_REQUEST",
+  "@projects/TOGGL_FETCH_SUCCESS",
+  "@projects/TOGGL_FETCH_FAILURE",
 )<void, EntitiesFetchPayloadModel<TogglProjectModel>, void>();
 
 export const clockifyProjectsTransfer = createAsyncAction(
-  '@projects/CLOCKIFY_TRANSFER_REQUEST',
-  '@projects/CLOCKIFY_TRANSFER_SUCCESS',
-  '@projects/CLOCKIFY_TRANSFER_FAILURE',
+  "@projects/CLOCKIFY_TRANSFER_REQUEST",
+  "@projects/CLOCKIFY_TRANSFER_SUCCESS",
+  "@projects/CLOCKIFY_TRANSFER_FAILURE",
 )<void, EntitiesFetchPayloadModel<ClockifyProjectModel>, void>();
 
 export const flipIsProjectIncluded = createStandardAction(
-  '@projects/FLIP_IS_INCLUDED',
+  "@projects/FLIP_IS_INCLUDED",
 )<string>();
 
 export const fetchClockifyProjects = (workspaceId: string) => async (
@@ -141,9 +141,9 @@ async function appendUserIdsToProject<TPayload>(
         .then(
           (projectUsers: Array<ClockifyUserModel | TogglProjectUserModel>) => {
             const userIds = projectUsers.map(projectUser =>
-              'uid' in projectUser ? projectUser.uid : projectUser.id,
+              "uid" in projectUser ? projectUser.uid : projectUser.id,
             );
-            set(project, 'userIds', userIds);
+            set(project, "userIds", userIds);
           },
         );
     } catch (error) {

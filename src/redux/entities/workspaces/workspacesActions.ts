@@ -1,25 +1,25 @@
-import { createAsyncAction, createStandardAction } from 'typesafe-actions';
-import { isNil } from 'lodash';
+import { createAsyncAction, createStandardAction } from "typesafe-actions";
+import { isNil } from "lodash";
 import {
   apiCreateClockifyWorkspace,
   apiFetchClockifyWorkspaces,
   apiFetchTogglWorkspaces,
-} from '~/redux/entities/api/workspaces';
+} from "~/redux/entities/api/workspaces";
 import {
   showFetchErrorNotification,
   updateCountsInWorkspace,
-} from '~/redux/app/appActions';
-import * as clientsActions from '~/redux/entities/clients/clientsActions';
-import * as projectsActions from '~/redux/entities/projects/projectsActions';
-import * as tagsActions from '~/redux/entities/tags/tagsActions';
-import * as tasksActions from '~/redux/entities/tasks/tasksActions';
-import * as timeEntriesActions from '~/redux/entities/timeEntries/timeEntriesActions';
-import * as userGroupsActions from '~/redux/entities/userGroups/userGroupsActions';
-import * as usersActions from '~/redux/entities/users/usersActions';
+} from "~/redux/app/appActions";
+import * as clientsActions from "~/redux/entities/clients/clientsActions";
+import * as projectsActions from "~/redux/entities/projects/projectsActions";
+import * as tagsActions from "~/redux/entities/tags/tagsActions";
+import * as tasksActions from "~/redux/entities/tasks/tasksActions";
+import * as timeEntriesActions from "~/redux/entities/timeEntries/timeEntriesActions";
+import * as userGroupsActions from "~/redux/entities/userGroups/userGroupsActions";
+import * as usersActions from "~/redux/entities/users/usersActions";
 import {
   selectTogglIncludedWorkspaceNames,
   selectCountTotalOfTransfersInWorkspace,
-} from './workspacesSelectors';
+} from "./workspacesSelectors";
 import {
   ClockifyWorkspaceModel,
   CompoundEntityModel,
@@ -30,44 +30,44 @@ import {
   ReduxGetState,
   TogglWorkspaceModel,
   ToolName,
-} from '~/types';
+} from "~/types";
 
 export const clockifyWorkspacesFetch = createAsyncAction(
-  '@workspaces/CLOCKIFY_FETCH_REQUEST',
-  '@workspaces/CLOCKIFY_FETCH_SUCCESS',
-  '@workspaces/CLOCKIFY_FETCH_FAILURE',
+  "@workspaces/CLOCKIFY_FETCH_REQUEST",
+  "@workspaces/CLOCKIFY_FETCH_SUCCESS",
+  "@workspaces/CLOCKIFY_FETCH_FAILURE",
 )<void, Array<ClockifyWorkspaceModel>, void>();
 
 export const togglWorkspacesFetch = createAsyncAction(
-  '@workspaces/TOGGL_FETCH_REQUEST',
-  '@workspaces/TOGGL_FETCH_SUCCESS',
-  '@workspaces/TOGGL_FETCH_FAILURE',
+  "@workspaces/TOGGL_FETCH_REQUEST",
+  "@workspaces/TOGGL_FETCH_SUCCESS",
+  "@workspaces/TOGGL_FETCH_FAILURE",
 )<void, Array<TogglWorkspaceModel>, void>();
 
 export const clockifyWorkspaceTransfer = createAsyncAction(
-  '@workspaces/CLOCKIFY_TRANSFER_REQUEST',
-  '@workspaces/CLOCKIFY_TRANSFER_SUCCESS',
-  '@workspaces/CLOCKIFY_TRANSFER_FAILURE',
+  "@workspaces/CLOCKIFY_TRANSFER_REQUEST",
+  "@workspaces/CLOCKIFY_TRANSFER_SUCCESS",
+  "@workspaces/CLOCKIFY_TRANSFER_FAILURE",
 )<void, Array<ClockifyWorkspaceModel>, void>();
 
 export const appendUserIdsToWorkspace = createStandardAction(
-  '@workspaces/APPEND_USER_IDS',
+  "@workspaces/APPEND_USER_IDS",
 )<{ toolName: ToolName; workspaceId: string; userIds: Array<string> }>();
 
 export const flipIsWorkspaceIncluded = createStandardAction(
-  '@workspaces/FLIP_IS_INCLUDED',
+  "@workspaces/FLIP_IS_INCLUDED",
 )<string>();
 
 export const updateIsWorkspaceYearIncluded = createStandardAction(
-  '@workspaces/UPDATE_IS_WORKSPACE_YEAR_INCLUDED',
+  "@workspaces/UPDATE_IS_WORKSPACE_YEAR_INCLUDED",
 )<UpdateIncludedWorkspaceYearModel>();
 
 export const updateWorkspaceNameBeingFetched = createStandardAction(
-  '@workspaces/UPDATE_NAME_BEING_FETCHED',
+  "@workspaces/UPDATE_NAME_BEING_FETCHED",
 )<string | null>();
 
 export const resetContentsForTool = createStandardAction(
-  '@workspaces/RESET_CONTENTS_FOR_TOOL',
+  "@workspaces/RESET_CONTENTS_FOR_TOOL",
 )<ToolName>();
 
 export const fetchClockifyWorkspaces = () => async (

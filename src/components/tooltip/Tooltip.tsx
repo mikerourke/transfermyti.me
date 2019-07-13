@@ -1,5 +1,5 @@
-import React from 'react';
-import ReactTooltip from 'react-tooltip';
+import React from "react";
+import ReactTooltip from "react-tooltip";
 
 // Needed this due to outdated type definitions for react-tooltip:
 interface TooltipProps extends ReactTooltip.Props {

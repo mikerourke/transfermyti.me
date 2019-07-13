@@ -1,6 +1,6 @@
-import { get, isNil, uniq } from 'lodash';
-import { normalize, schema, Schema } from 'normalizr';
-import { EntityGroup, ToolName } from '~/types';
+import { get, isNil, uniq } from "lodash";
+import { normalize, schema, Schema } from "normalizr";
+import { EntityGroup, ToolName } from "~/types";
 
 interface Params<TEntityState, TPayload> {
   toolName: ToolName;
@@ -35,11 +35,11 @@ export function normalizeState<TEntityState, TPayload>({
     [toolName]: {
       ...entityState[toolName],
       byId: {
-        ...get(entityState, [toolName, 'byId'], {}),
+        ...get(entityState, [toolName, "byId"], {}),
         ...entities[entityGroup],
       },
       idValues: uniq([
-        ...get(entityState, [toolName, 'idValues'], []),
+        ...get(entityState, [toolName, "idValues"], []),
         ...result,
       ]),
     },

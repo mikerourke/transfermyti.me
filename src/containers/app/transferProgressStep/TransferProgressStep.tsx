@@ -1,22 +1,22 @@
-import React, { useEffect, useState } from 'react';
-import { When } from 'react-if';
-import { connect } from 'react-redux';
-import { Button } from 'bloomer';
-import { css } from 'emotion';
-import { get } from 'lodash';
-import { updateCountsOverallBeforeTransfer } from '~/redux/app/appActions';
+import React, { useEffect, useState } from "react";
+import { When } from "react-if";
+import { connect } from "react-redux";
+import { Button } from "bloomer";
+import { css } from "emotion";
+import { get } from "lodash";
+import { updateCountsOverallBeforeTransfer } from "~/redux/app/appActions";
 import {
   selectInTransferDetails,
   selectAggregateTransferCounts,
-} from '~/redux/app/appSelectors';
-import { transferEntitiesToClockifyWorkspace } from '~/redux/entities/workspaces/workspacesActions';
-import { selectTogglIncludedWorkspacesById } from '~/redux/entities/workspaces/workspacesSelectors';
-import Flex from '~/components/flex/Flex';
-import StepPage, { StepPageProps } from '~/components/stepPage/StepPage';
-import ConfirmationModal from './components/ConfirmationModal';
-import InstructionsList from './components/InstructionsList';
-import ProgressIndicators from './components/ProgressIndicators';
-import TransferSuccess from './components/TransferSuccess';
+} from "~/redux/app/appSelectors";
+import { transferEntitiesToClockifyWorkspace } from "~/redux/entities/workspaces/workspacesActions";
+import { selectTogglIncludedWorkspacesById } from "~/redux/entities/workspaces/workspacesSelectors";
+import Flex from "~/components/flex/Flex";
+import StepPage, { StepPageProps } from "~/components/stepPage/StepPage";
+import ConfirmationModal from "./components/ConfirmationModal";
+import InstructionsList from "./components/InstructionsList";
+import ProgressIndicators from "./components/ProgressIndicators";
+import TransferSuccess from "./components/TransferSuccess";
 import {
   AggregateTransferCountsModel,
   CompoundWorkspaceModel,
@@ -24,7 +24,7 @@ import {
   ReduxDispatch,
   ReduxState,
   TransferCountsModel,
-} from '~/types';
+} from "~/types";
 
 interface ConnectStateProps {
   togglWorkspacesById: Record<string, CompoundWorkspaceModel>;
@@ -88,7 +88,7 @@ export const TransferProgressStepComponent: React.FC<Props> = props => {
     await transferAllEntitiesToClockify();
   };
 
-  const workspaceName = get(inTransferWorkspace, 'name', 'None');
+  const workspaceName = get(inTransferWorkspace, "name", "None");
 
   return (
     <>

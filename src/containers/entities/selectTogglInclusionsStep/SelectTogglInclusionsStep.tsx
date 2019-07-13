@@ -1,23 +1,23 @@
-import React, { useEffect } from 'react';
-import { connect } from 'react-redux';
-import { If, Then, Else } from 'react-if';
-import { css } from 'emotion';
-import { isNil } from 'lodash';
+import React, { useEffect } from "react";
+import { connect } from "react-redux";
+import { If, Then, Else } from "react-if";
+import { css } from "emotion";
+import { isNil } from "lodash";
 import {
   fetchTogglEntitiesInWorkspace,
   flipIsWorkspaceEntityIncluded,
   updateIsWorkspaceYearIncluded,
-} from '~/redux/entities/workspaces/workspacesActions';
+} from "~/redux/entities/workspaces/workspacesActions";
 import {
   selectTogglEntitiesByGroupByWorkspace,
   selectTogglCountsByGroupByWorkspace,
   selectTogglIncludedWorkspacesById,
   selectWorkspaceNameBeingFetched,
-} from '~/redux/entities/workspaces/workspacesSelectors';
-import EntitiesReviewPage from '~/components/entitiesReviewPage/EntitiesReviewPage';
-import Loader from '~/components/loader/Loader';
-import { StepPageProps } from '~/components/stepPage/StepPage';
-import InstructionsList from './components/InstructionsList';
+} from "~/redux/entities/workspaces/workspacesSelectors";
+import EntitiesReviewPage from "~/components/entitiesReviewPage/EntitiesReviewPage";
+import Loader from "~/components/loader/Loader";
+import { StepPageProps } from "~/components/stepPage/StepPage";
+import InstructionsList from "./components/InstructionsList";
 import {
   CompoundEntityModel,
   CompoundWorkspaceModel,
@@ -28,7 +28,7 @@ import {
   ReduxState,
   ToolName,
   UpdateIncludedWorkspaceYearModel,
-} from '~/types';
+} from "~/types";
 
 interface ConnectStateProps {
   countsByGroupByWorkspace: CountsByGroupByWorkspaceModel;

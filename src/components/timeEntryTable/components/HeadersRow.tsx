@@ -1,5 +1,5 @@
-import React from 'react';
-import { css } from 'emotion';
+import React from "react";
+import { css } from "emotion";
 
 interface Props {
   hasTopBorder: boolean;
@@ -8,13 +8,13 @@ interface Props {
 const HeadersRow: React.FC<Props> = ({ children, hasTopBorder }) => (
   <tr
     className={css`
-      ${hasTopBorder && 'border-top: 1px solid rgba(10, 10, 10, 0.1);'};
+      ${hasTopBorder && "border-top: 1px solid rgba(10, 10, 10, 0.1);"};
       td {
         color: var(--info);
         font-size: 12px;
         font-weight: 700;
         text-transform: uppercase;
-        ${hasTopBorder && 'padding-top: 4px'};
+        ${hasTopBorder && "padding-top: 4px"};
       }
     `}
   >

@@ -1,4 +1,4 @@
-import { isNil } from 'lodash';
+import { isNil } from "lodash";
 
 /**
  * Given the specified records (or possibly null), only return if its a valid

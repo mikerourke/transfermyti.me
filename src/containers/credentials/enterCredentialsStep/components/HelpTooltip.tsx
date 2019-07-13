@@ -1,6 +1,6 @@
-import React from 'react';
-import { css } from 'emotion';
-import Tooltip from '~/components/tooltip/Tooltip';
+import React from "react";
+import { css } from "emotion";
+import Tooltip from "~/components/tooltip/Tooltip";
 
 interface Props {
   tipId: string;
@@ -67,7 +67,7 @@ const HelpTooltip: React.FC<Props> = ({ children, tipId, size, color }) => (
 
 HelpTooltip.defaultProps = {
   size: 16,
-  color: 'var(--info)',
+  color: "var(--info)",
 };
 
 export default HelpTooltip;

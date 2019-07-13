@@ -1,4 +1,4 @@
-import PromiseThrottle from 'promise-throttle';
+import PromiseThrottle from "promise-throttle";
 
 /**
  * Utility function to provide a promiseThrottle instance for throttling

@@ -1,20 +1,20 @@
-import React from 'react';
-import { css } from 'emotion';
-import { Container, Hero, HeroBody, HeroHeader, Title } from 'bloomer';
-import Flex from '~/components/flex/Flex';
-import SvgIcon, { SvgIconName } from '~/components/svgIcon/SvgIcon';
-import { TransferType } from '~/types';
+import React from "react";
+import { css } from "emotion";
+import { Container, Hero, HeroBody, HeroHeader, Title } from "bloomer";
+import Flex from "~/components/flex/Flex";
+import SvgIcon, { SvgIconName } from "~/components/svgIcon/SvgIcon";
+import { TransferType } from "~/types";
 
 interface Props {
   currentTransferType: TransferType;
 }
 
 const Header: React.FC<Props> = ({ currentTransferType }) => {
-  let mode = 'Single User Mode';
+  let mode = "Single User Mode";
   let iconName = SvgIconName.Person;
 
   if (currentTransferType === TransferType.MultipleUsers) {
-    mode = 'Multiple User Mode';
+    mode = "Multiple User Mode";
     iconName = SvgIconName.People;
   }
 

@@ -1,5 +1,5 @@
-import React, { useState } from 'react';
-import { get } from 'lodash';
+import React, { useState } from "react";
+import { get } from "lodash";
 import {
   Button,
   Dropdown,
@@ -7,10 +7,10 @@ import {
   DropdownItem,
   DropdownMenu,
   DropdownTrigger,
-} from 'bloomer';
-import { css } from 'emotion';
-import SvgIcon, { SvgIconName } from '~/components/svgIcon/SvgIcon';
-import { CompoundWorkspaceModel } from '~/types';
+} from "bloomer";
+import { css } from "emotion";
+import SvgIcon, { SvgIconName } from "~/components/svgIcon/SvgIcon";
+import { CompoundWorkspaceModel } from "~/types";
 
 interface Props {
   workspacesById: Record<string, CompoundWorkspaceModel>;
@@ -18,7 +18,7 @@ interface Props {
   onItemClick: (workspaceId: string) => void;
 }
 
-const MIN_WIDTH = '12rem';
+const MIN_WIDTH = "12rem";
 
 const WorkspacesDropdown: React.FC<Props> = ({
   workspacesById,
@@ -59,7 +59,7 @@ const WorkspacesDropdown: React.FC<Props> = ({
           `}
           onClick={() => setIsActive(!isActive)}
         >
-          <span>{get(workspacesById, [activeWorkspaceId, 'name'], '')}</span>
+          <span>{get(workspacesById, [activeWorkspaceId, "name"], "")}</span>
           <SvgIcon
             name={SvgIconName.ExpandMore}
             color="var(--dark-gray)"

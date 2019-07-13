@@ -1,7 +1,7 @@
-import { flatten, get } from 'lodash';
-import { buildThrottler } from './buildThrottler';
-import { EntityGroup, ReduxDispatch } from '~/types';
-import { updateInTransferDetails } from '~/redux/app/appActions';
+import { flatten, get } from "lodash";
+import { buildThrottler } from "./buildThrottler";
+import { EntityGroup, ReduxDispatch } from "~/types";
+import { updateInTransferDetails } from "~/redux/app/appActions";
 
 interface Params<TEntity, TResponse> {
   requestsPerSecond: number;
@@ -64,7 +64,7 @@ export async function batchClockifyTransferRequests<TEntity, TResponse>({
         });
     } catch (error) {
       fetchErrors.push({
-        name: get(entityRecord, 'name'),
+        name: get(entityRecord, "name"),
         message: error.statusText,
       });
     }
@@ -83,7 +83,7 @@ function displayFetchErrors(fetchErrors: Array<FetchErrorModel>) {
 
   // Let the user know there was some issues without holding up the whole
   // kit and caboodle:
-  console.error('The following errors occurred:');
+  console.error("The following errors occurred:");
   fetchErrors.forEach(fetchError => {
     console.dir(fetchError);
   });

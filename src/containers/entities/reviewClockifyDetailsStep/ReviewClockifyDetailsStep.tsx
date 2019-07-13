@@ -1,22 +1,22 @@
-import React, { useEffect, useState } from 'react';
-import { connect } from 'react-redux';
-import { If, Then, Else } from 'react-if';
-import { css } from 'emotion';
+import React, { useEffect, useState } from "react";
+import { connect } from "react-redux";
+import { If, Then, Else } from "react-if";
+import { css } from "emotion";
 import {
   fetchClockifyEntitiesInWorkspace,
   fetchClockifyWorkspaces,
-} from '~/redux/entities/workspaces/workspacesActions';
+} from "~/redux/entities/workspaces/workspacesActions";
 import {
   selectClockifyIncludedWorkspacesById,
   selectTogglCountsByGroupByWorkspace,
   selectTogglEntitiesByGroupByWorkspace,
   selectTogglIncludedWorkspacesById,
   selectWorkspaceNameBeingFetched,
-} from '~/redux/entities/workspaces/workspacesSelectors';
-import EntitiesReviewPage from '~/components/entitiesReviewPage/EntitiesReviewPage';
-import Loader from '~/components/loader/Loader';
-import { StepPageProps } from '~/components/stepPage/StepPage';
-import InstructionsList from './components/InstructionsList';
+} from "~/redux/entities/workspaces/workspacesSelectors";
+import EntitiesReviewPage from "~/components/entitiesReviewPage/EntitiesReviewPage";
+import Loader from "~/components/loader/Loader";
+import { StepPageProps } from "~/components/stepPage/StepPage";
+import InstructionsList from "./components/InstructionsList";
 import {
   CompoundWorkspaceModel,
   CountsByGroupByWorkspaceModel,
@@ -24,7 +24,7 @@ import {
   ReduxDispatch,
   ReduxState,
   ToolName,
-} from '~/types';
+} from "~/types";
 
 interface ConnectStateProps {
   clockifyWorkspacesById: Record<string, CompoundWorkspaceModel>;

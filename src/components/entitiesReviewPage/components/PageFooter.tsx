@@ -1,13 +1,13 @@
-import React from 'react';
-import { Unless } from 'react-if';
-import { startCase } from 'lodash';
-import { css } from 'emotion';
-import { lookupTable } from '~/utils/lookupTable';
-import Checkbox from '~/components/checkbox/Checkbox';
-import Flex from '~/components/flex/Flex';
-import GroupTotalsDisplay from './GroupTotalsDisplay';
-import { EntityGroup } from '~/types/entityTypes';
-import { RecordCountsModel } from '~/types/workspacesTypes';
+import React from "react";
+import { Unless } from "react-if";
+import { startCase } from "lodash";
+import { css } from "emotion";
+import { lookupTable } from "~/utils/lookupTable";
+import Checkbox from "~/components/checkbox/Checkbox";
+import Flex from "~/components/flex/Flex";
+import GroupTotalsDisplay from "./GroupTotalsDisplay";
+import { EntityGroup } from "~/types/entityTypes";
+import { RecordCountsModel } from "~/types/workspacesTypes";
 
 interface Props {
   activeEntityGroup: EntityGroup;
@@ -27,9 +27,9 @@ const PageFooter: React.FC<Props> = ({
   const isTimeEntriesActive = true;
 
   const timeEntriesLabel = lookupTable(activeEntityGroup, {
-    [EntityGroup.Clients]: 'Time Entries With A Client',
-    [EntityGroup.Tags]: 'Time Entries With Tags',
-    default: 'Time Entries To Transfer',
+    [EntityGroup.Clients]: "Time Entries With A Client",
+    [EntityGroup.Tags]: "Time Entries With Tags",
+    default: "Time Entries To Transfer",
   });
 
   return (

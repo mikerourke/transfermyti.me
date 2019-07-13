@@ -1,18 +1,18 @@
-import { Store } from 'redux';
-import { State } from '~/redux/rootReducer';
-import { CompoundClientModel } from './clientsTypes';
-import { EntityGroup } from './entityTypes';
-import { CompoundProjectModel } from './projectsTypes';
-import { CompoundTagModel } from './tagsTypes';
-import { CompoundTaskModel } from './tasksTypes';
-import { CompoundTimeEntryModel } from './timeEntriesTypes';
-import { CompoundUserGroupModel } from './userGroupsTypes';
-import { CompoundUserModel } from './usersTypes';
-import { CompoundWorkspaceModel } from '~/types/workspacesTypes';
+import { Store } from "redux";
+import { State } from "~/redux/rootReducer";
+import { CompoundClientModel } from "./clientsTypes";
+import { EntityGroup } from "./entityTypes";
+import { CompoundProjectModel } from "./projectsTypes";
+import { CompoundTagModel } from "./tagsTypes";
+import { CompoundTaskModel } from "./tasksTypes";
+import { CompoundTimeEntryModel } from "./timeEntriesTypes";
+import { CompoundUserGroupModel } from "./userGroupsTypes";
+import { CompoundUserModel } from "./usersTypes";
+import { CompoundWorkspaceModel } from "~/types/workspacesTypes";
 
 export enum ToolName {
-  Clockify = 'clockify',
-  Toggl = 'toggl',
+  Clockify = "clockify",
+  Toggl = "toggl",
 }
 
 export interface TogglTotalCurrencyModel {
@@ -45,8 +45,8 @@ export interface EntitiesByGroupModel {
 }
 
 export enum HttpMethod {
-  Post = 'POST',
-  Delete = 'DELETE',
+  Post = "POST",
+  Delete = "DELETE",
 }
 
 export interface EntityWithName {

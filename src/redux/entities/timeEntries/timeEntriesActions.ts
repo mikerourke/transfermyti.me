@@ -1,29 +1,29 @@
-import { createAsyncAction, createStandardAction } from 'typesafe-actions';
-import { flatten, isNil } from 'lodash';
+import { createAsyncAction, createStandardAction } from "typesafe-actions";
+import { flatten, isNil } from "lodash";
 import {
   batchClockifyTransferRequests,
   buildThrottler,
   getValidEntities,
-} from '~/redux/utils';
+} from "~/redux/utils";
 import {
   apiCreateClockifyTimeEntry,
   apiFetchClockifyTimeEntries,
   apiFetchTogglTimeEntries,
-} from '~/redux/entities/api/timeEntries';
-import { showFetchErrorNotification } from '~/redux/app/appActions';
-import { selectCurrentTransferType } from '~/redux/app/appSelectors';
-import { selectCredentials } from '~/redux/credentials/credentialsSelectors';
-import { selectEntitiesByGroupFactory } from '~/redux/entities/entitiesSelectors';
-import { calculateUserGroupEntryCounts } from '~/redux/entities/userGroups/userGroupsActions';
+} from "~/redux/entities/api/timeEntries";
+import { showFetchErrorNotification } from "~/redux/app/appActions";
+import { selectCurrentTransferType } from "~/redux/app/appSelectors";
+import { selectCredentials } from "~/redux/credentials/credentialsSelectors";
+import { selectEntitiesByGroupFactory } from "~/redux/entities/entitiesSelectors";
+import { calculateUserGroupEntryCounts } from "~/redux/entities/userGroups/userGroupsActions";
 import {
   selectClockifyUsersById,
   selectTogglUsersById,
-} from '~/redux/entities/users/usersSelectors';
-import { updateIsWorkspaceYearIncluded } from '~/redux/entities/workspaces/workspacesActions';
-import { selectTogglWorkspaceIncludedYears } from '~/redux/entities/workspaces/workspacesSelectors';
-import { TimeEntryTransform } from './TimeEntryTransform';
-import { TimeEntriesState } from './timeEntriesReducer';
-import { selectTimeEntriesForWorkspace } from './timeEntriesSelectors';
+} from "~/redux/entities/users/usersSelectors";
+import { updateIsWorkspaceYearIncluded } from "~/redux/entities/workspaces/workspacesActions";
+import { selectTogglWorkspaceIncludedYears } from "~/redux/entities/workspaces/workspacesSelectors";
+import { TimeEntryTransform } from "./TimeEntryTransform";
+import { TimeEntriesState } from "./timeEntriesReducer";
+import { selectTimeEntriesForWorkspace } from "./timeEntriesSelectors";
 import {
   ClockifyTimeEntryModel,
   CompoundTimeEntryModel,
@@ -34,34 +34,34 @@ import {
   TogglTimeEntryModel,
   ToolName,
   TransferType,
-} from '~/types';
+} from "~/types";
 
 type TimeEntryForTool = ClockifyTimeEntryModel | TogglTimeEntryModel;
 
 export const clockifyTimeEntriesFetch = createAsyncAction(
-  '@timeEntries/CLOCKIFY_FETCH_REQUEST',
-  '@timeEntries/CLOCKIFY_FETCH_SUCCESS',
-  '@timeEntries/CLOCKIFY_FETCH_FAILURE',
+  "@timeEntries/CLOCKIFY_FETCH_REQUEST",
+  "@timeEntries/CLOCKIFY_FETCH_SUCCESS",
+  "@timeEntries/CLOCKIFY_FETCH_FAILURE",
 )<void, Array<CompoundTimeEntryModel>, void>();
 
 export const togglTimeEntriesFetch = createAsyncAction(
-  '@timeEntries/TOGGL_FETCH_REQUEST',
-  '@timeEntries/TOGGL_FETCH_SUCCESS',
-  '@timeEntries/TOGGL_FETCH_FAILURE',
+  "@timeEntries/TOGGL_FETCH_REQUEST",
+  "@timeEntries/TOGGL_FETCH_SUCCESS",
+  "@timeEntries/TOGGL_FETCH_FAILURE",
 )<void, Array<CompoundTimeEntryModel>, void>();
 
 export const clockifyTimeEntriesTransfer = createAsyncAction(
-  '@timeEntries/CLOCKIFY_TRANSFER_REQUEST',
-  '@timeEntries/CLOCKIFY_TRANSFER_SUCCESS',
-  '@timeEntries/CLOCKIFY_TRANSFER_FAILURE',
+  "@timeEntries/CLOCKIFY_TRANSFER_REQUEST",
+  "@timeEntries/CLOCKIFY_TRANSFER_SUCCESS",
+  "@timeEntries/CLOCKIFY_TRANSFER_FAILURE",
 )<void, Array<CompoundTimeEntryModel>, void>();
 
 export const flipIsTimeEntryIncluded = createStandardAction(
-  '@timeEntries/FLIP_IS_INCLUDED',
+  "@timeEntries/FLIP_IS_INCLUDED",
 )<string>();
 
 export const addLinksToTimeEntries = createStandardAction(
-  '@timeEntries/ADD_LINKS_TO_TIME_ENTRIES',
+  "@timeEntries/ADD_LINKS_TO_TIME_ENTRIES",
 )<TimeEntriesState>();
 
 export const fetchClockifyTimeEntries = (workspaceId: string) => async (

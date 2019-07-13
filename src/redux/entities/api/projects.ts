@@ -1,10 +1,10 @@
-import { fetchArray, fetchObject } from './fetchByPayloadType';
+import { fetchArray, fetchObject } from "./fetchByPayloadType";
 import {
   ClockifyProjectModel,
   CreateProjectRequestModel,
   HttpMethod,
   TogglProjectModel,
-} from '~/types';
+} from "~/types";
 
 export const apiFetchClockifyProjects = (
   workspaceId: string,
@@ -14,11 +14,11 @@ export const apiFetchClockifyProjects = (
     body: {
       page: 0,
       pageSize: 100,
-      search: '',
+      search: "",
       clientIds: [],
       userFilterIds: [],
-      sortOrder: 'ASCENDING',
-      sortColumn: 'name',
+      sortOrder: "ASCENDING",
+      sortColumn: "name",
     } as any,
   });
 

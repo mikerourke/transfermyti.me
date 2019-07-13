@@ -1,11 +1,11 @@
-import React, { useState } from 'react';
-import { When } from 'react-if';
-import classnames from 'classnames';
-import { css } from 'emotion';
-import Flex from '~/components/flex/Flex';
-import SvgIcon, { SvgIconName } from '~/components/svgIcon/SvgIcon';
+import React, { useState } from "react";
+import { When } from "react-if";
+import classnames from "classnames";
+import { css } from "emotion";
+import Flex from "~/components/flex/Flex";
+import SvgIcon, { SvgIconName } from "~/components/svgIcon/SvgIcon";
 
-const BORDER_RAD = '0.5rem';
+const BORDER_RAD = "0.5rem";
 
 const InstructionsSection: React.FC = ({ children }) => {
   const [isExpanded, setIsExpanded] = useState<boolean>(true);
@@ -67,7 +67,7 @@ const InstructionsSection: React.FC = ({ children }) => {
           `}
           onClick={() => setIsExpanded(!isExpanded)}
         >
-          {isExpanded ? 'Hide' : 'Show'} Instructions
+          {isExpanded ? "Hide" : "Show"} Instructions
         </span>
       </Flex>
       <When condition={isExpanded}>

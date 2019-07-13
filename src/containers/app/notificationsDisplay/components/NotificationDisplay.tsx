@@ -1,7 +1,7 @@
-import React, { useEffect } from 'react';
-import { Delete, Notification } from 'bloomer';
-import { css } from 'emotion';
-import { NotificationModel } from '~/types';
+import React, { useEffect } from "react";
+import { Delete, Notification } from "bloomer";
+import { css } from "emotion";
+import { NotificationModel } from "~/types";
 
 interface Props {
   notification: NotificationModel;

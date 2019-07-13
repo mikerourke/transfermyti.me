@@ -1,9 +1,9 @@
-import { EntityGroup } from '~/types/entityTypes';
+import { EntityGroup } from "~/types/entityTypes";
 
 export enum NotificationType {
-  Error = 'danger',
-  Info = 'info',
-  Success = 'success',
+  Error = "danger",
+  Info = "info",
+  Success = "success",
 }
 
 export interface NotificationModel {
@@ -13,8 +13,8 @@ export interface NotificationModel {
 }
 
 export enum TransferType {
-  MultipleUsers = 'MULTIPLE',
-  SingleUser = 'SINGLE',
+  MultipleUsers = "MULTIPLE",
+  SingleUser = "SINGLE",
 }
 
 export interface InTransferDetailsModel {

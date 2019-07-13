@@ -1,9 +1,9 @@
-import { getType } from 'typesafe-actions';
-import { combineActions, handleActions } from 'redux-actions';
-import { get } from 'lodash';
-import * as utils from '~/redux/utils';
-import { togglTimeEntriesFetch } from '~/redux/entities/timeEntries/timeEntriesActions';
-import * as tagsActions from './tagsActions';
+import { getType } from "typesafe-actions";
+import { combineActions, handleActions } from "redux-actions";
+import { get } from "lodash";
+import * as utils from "~/redux/utils";
+import { togglTimeEntriesFetch } from "~/redux/entities/timeEntries/timeEntriesActions";
+import * as tagsActions from "./tagsActions";
 import {
   ClockifyTagModel,
   CompoundTagModel,
@@ -14,7 +14,7 @@ import {
   TogglTagModel,
   TogglTimeEntryModel,
   ToolName,
-} from '~/types';
+} from "~/types";
 
 export interface TagsState {
   readonly clockify: ReduxStateEntryForTool<CompoundTagModel>;
@@ -126,7 +126,7 @@ function appendEntryCountByTagName<TTimeEntry>(
   const tags = Object.values(state[toolName].byId);
 
   timeEntries.forEach(timeEntry => {
-    const tagNames = get(timeEntry, 'tagNames', []) as Array<string>;
+    const tagNames = get(timeEntry, "tagNames", []) as Array<string>;
 
     tagNames.forEach(tagName => {
       const { id = null } = tags.find(({ name }) => name === tagName);

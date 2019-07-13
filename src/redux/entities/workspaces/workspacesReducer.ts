@@ -1,8 +1,8 @@
-import { getType } from 'typesafe-actions';
-import { combineActions, handleActions } from 'redux-actions';
-import { get, uniq } from 'lodash';
-import * as utils from '~/redux/utils';
-import * as workspacesActions from './workspacesActions';
+import { getType } from "typesafe-actions";
+import { combineActions, handleActions } from "redux-actions";
+import { get, uniq } from "lodash";
+import * as utils from "~/redux/utils";
+import * as workspacesActions from "./workspacesActions";
 import {
   ClockifyWorkspaceModel,
   CompoundWorkspaceModel,
@@ -12,7 +12,7 @@ import {
   ReduxStateEntryForTool,
   TogglWorkspaceModel,
   ToolName,
-} from '~/types';
+} from "~/types";
 
 export interface WorkspacesState {
   readonly clockify: ReduxStateEntryForTool<CompoundWorkspaceModel>;
@@ -41,7 +41,7 @@ const schemaProcessStrategy = (
   name: value.name,
   userIds: [],
   inclusionsByYear: {},
-  isAdmin: get(value, 'admin', null),
+  isAdmin: get(value, "admin", null),
   workspaceId: value.id.toString(),
   entryCount: 0,
   linkedId: null,
@@ -144,7 +144,7 @@ export const workspacesReducer = handleActions(
     ): WorkspacesState => {
       const inclusionsByYear = get(
         state,
-        ['toggl', 'byId', workspaceId, 'inclusionsByYear'],
+        ["toggl", "byId", workspaceId, "inclusionsByYear"],
         {},
       );
 

@@ -1,10 +1,10 @@
-import { ClockifyTaskModel } from './tasksTypes';
-import { ClockifyMembershipModel } from './usersTypes';
-import { BaseCompoundEntityModel } from '~/types/entityTypes';
+import { ClockifyTaskModel } from "./tasksTypes";
+import { ClockifyMembershipModel } from "./usersTypes";
+import { BaseCompoundEntityModel } from "~/types/entityTypes";
 
 export enum ClockifyEstimateType {
-  Auto = 'AUTO',
-  Manual = 'MANUAL',
+  Auto = "AUTO",
+  Manual = "MANUAL",
 }
 
 export interface ClockifyEstimateModel {

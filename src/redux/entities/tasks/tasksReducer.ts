@@ -1,8 +1,8 @@
-import { getType } from 'typesafe-actions';
-import { combineActions, handleActions } from 'redux-actions';
-import * as utils from '~/redux/utils';
-import { togglTimeEntriesFetch } from '~/redux/entities/timeEntries/timeEntriesActions';
-import * as tasksActions from './tasksActions';
+import { getType } from "typesafe-actions";
+import { combineActions, handleActions } from "redux-actions";
+import * as utils from "~/redux/utils";
+import { togglTimeEntriesFetch } from "~/redux/entities/timeEntries/timeEntriesActions";
+import * as tasksActions from "./tasksActions";
 import {
   ClockifyTaskModel,
   ClockifyTaskStatus,
@@ -15,7 +15,7 @@ import {
   TogglTaskModel,
   TogglTimeEntryModel,
   ToolName,
-} from '~/types';
+} from "~/types";
 
 export interface TasksState {
   readonly clockify: ReduxStateEntryForTool<CompoundTaskModel>;
@@ -49,14 +49,14 @@ const getSchemaProcessStrategy = (workspaceId: string) => (
   id: value.id.toString(),
   name: value.name,
   estimate:
-    'estimated_seconds' in value
+    "estimated_seconds" in value
       ? convertSecondsToClockifyEstimate(value.estimated_seconds)
       : value.estimate,
   workspaceId,
   projectId: utils.findIdFieldValue(value, EntityType.Project),
   assigneeId: utils.findIdFieldValue(value, EntityType.User),
   isActive:
-    'active' in value
+    "active" in value
       ? value.active
       : value.status === ClockifyTaskStatus.Active,
   entryCount: 0,

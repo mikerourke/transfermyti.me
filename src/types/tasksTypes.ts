@@ -1,8 +1,8 @@
-import { BaseCompoundEntityModel } from '~/types/entityTypes';
+import { BaseCompoundEntityModel } from "~/types/entityTypes";
 
 export enum ClockifyTaskStatus {
-  Active = 'ACTIVE',
-  Done = 'DONE',
+  Active = "ACTIVE",
+  Done = "DONE",
 }
 
 export interface ClockifyTaskModel {

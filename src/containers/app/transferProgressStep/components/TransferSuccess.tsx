@@ -1,6 +1,6 @@
-import React from 'react';
-import { css } from 'emotion';
-import { Title } from 'bloomer';
+import React from "react";
+import { css } from "emotion";
+import { Title } from "bloomer";
 
 const TransferSuccess: React.FC = () => (
   <div
@@ -20,7 +20,7 @@ const TransferSuccess: React.FC = () => (
       // src="https://www.youtube.com/embed/dTmgL0XQehI?autoplay=1"
       src="https://www.youtube.com/embed/dTmgL0XQehI"
       frameBorder={0}
-      allow={['accelerometer', 'autoplay', 'encrypted-media'].join('; ')}
+      allow={["accelerometer", "autoplay", "encrypted-media"].join("; ")}
       allowFullScreen
     />
   </div>

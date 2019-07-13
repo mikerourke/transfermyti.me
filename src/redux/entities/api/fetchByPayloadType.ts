@@ -1,4 +1,4 @@
-import { isNil } from 'lodash';
+import { isNil } from "lodash";
 
 export async function fetchArray(endpoint: string, fetchOptions: any = {}) {
   const response = await fetch(endpoint, fetchOptions);

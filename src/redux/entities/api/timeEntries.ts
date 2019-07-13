@@ -1,11 +1,11 @@
-import { get, isNil } from 'lodash';
-import { firstAndLastDayOfYear } from '~/redux/utils';
-import { fetchArray, fetchObject } from './fetchByPayloadType';
+import { get, isNil } from "lodash";
+import { firstAndLastDayOfYear } from "~/redux/utils";
+import { fetchArray, fetchObject } from "./fetchByPayloadType";
 import {
   ClockifyTimeEntryModel,
   DetailedTimeEntryModel,
   TogglTimeEntriesFetchResponseModel,
-} from '~/types';
+} from "~/types";
 
 /**
  * Get time entries for specified userId in time range.
@@ -21,7 +21,7 @@ export const apiFetchClockifyTimeEntries = (
   return fetchArray(
     `/clockify/api/workspaces/${workspaceId}/timeEntries/user/${userId}/entriesInRange`,
     {
-      method: 'POST',
+      method: "POST",
       body: {
         start: firstDay,
         end: lastDay,
@@ -38,7 +38,7 @@ export const apiFetchTogglTimeEntries = (
 ): Promise<TogglTimeEntriesFetchResponseModel> => {
   const { firstDay, lastDay } = firstAndLastDayOfYear(
     year,
-    'YYYY-MM-DDTHH:mm:ssZ',
+    "YYYY-MM-DDTHH:mm:ssZ",
   );
 
   const queryString = [
@@ -47,7 +47,7 @@ export const apiFetchTogglTimeEntries = (
     `until=${lastDay}`,
     `user_agent=${email}`,
     `page=${page}`,
-  ].join('&');
+  ].join("&");
 
   return fetchObject(`/toggl/reports/details?${queryString}`);
 };
@@ -70,13 +70,13 @@ export const apiCreateClockifyTimeEntry = (
     billable: timeEntry.isBillable,
     description: timeEntry.description,
     end: timeEntry.end,
-    projectId: get(timeEntry, ['project', 'linkedId'], null),
-    taskId: get(timeEntry, ['task', 'linkedId'], null),
+    projectId: get(timeEntry, ["project", "linkedId"], null),
+    taskId: get(timeEntry, ["task", "linkedId"], null),
     tagIds,
   };
 
   return fetchObject(`/clockify/api/workspaces/${workspaceId}/timeEntries/`, {
-    method: 'POST',
+    method: "POST",
     body: validTimeEntry as any,
   });
 };

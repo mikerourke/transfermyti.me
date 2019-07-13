@@ -1,7 +1,7 @@
-import React from 'react';
-import classnames from 'classnames';
-import { Box, Column, Title } from 'bloomer';
-import { css } from 'emotion';
+import React from "react";
+import classnames from "classnames";
+import { Box, Column, Title } from "bloomer";
+import { css } from "emotion";
 
 // TODO: Get rid of `isDisabled` when multi-user mode is working.
 
@@ -37,7 +37,7 @@ const TransferTypeColumn: React.FC<Props> = props => {
         <Title
           className={css`
             color: inherit;
-            ${props.isDisabled && 'text-decoration: line-through'};
+            ${props.isDisabled && "text-decoration: line-through"};
           `}
           isSize={2}
         >
@@ -46,7 +46,7 @@ const TransferTypeColumn: React.FC<Props> = props => {
         <p
           className={css`
             font-size: 20px;
-            ${props.isDisabled && 'text-decoration: line-through'};
+            ${props.isDisabled && "text-decoration: line-through"};
 
             strong {
               color: inherit;

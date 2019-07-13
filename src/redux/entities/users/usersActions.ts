@@ -1,17 +1,17 @@
-import { createAsyncAction, createStandardAction } from 'typesafe-actions';
-import { get } from 'lodash';
+import { createAsyncAction, createStandardAction } from "typesafe-actions";
+import { get } from "lodash";
 import {
   apiAddClockifyUsersToWorkspace,
   apiFetchClockifyUsersInWorkspace,
   apiFetchTogglUsersInWorkspace,
   apiFetchTogglWorkspaceUsers,
-} from '~/redux/entities/api/users';
+} from "~/redux/entities/api/users";
 import {
   showFetchErrorNotification,
   updateInTransferDetails,
-} from '~/redux/app/appActions';
-import { appendUserIdsToWorkspace } from '~/redux/entities/workspaces/workspacesActions';
-import { selectUsersInvitePayloadForWorkspace } from './usersSelectors';
+} from "~/redux/app/appActions";
+import { appendUserIdsToWorkspace } from "~/redux/entities/workspaces/workspacesActions";
+import { selectUsersInvitePayloadForWorkspace } from "./usersSelectors";
 import {
   ClockifyUserModel,
   EntitiesFetchPayloadModel,
@@ -20,28 +20,28 @@ import {
   ReduxGetState,
   TogglUserModel,
   ToolName,
-} from '~/types';
+} from "~/types";
 
 export const clockifyUsersFetch = createAsyncAction(
-  '@users/CLOCKIFY_FETCH_REQUEST',
-  '@users/CLOCKIFY_FETCH_SUCCESS',
-  '@users/CLOCKIFY_FETCH_FAILURE',
+  "@users/CLOCKIFY_FETCH_REQUEST",
+  "@users/CLOCKIFY_FETCH_SUCCESS",
+  "@users/CLOCKIFY_FETCH_FAILURE",
 )<void, EntitiesFetchPayloadModel<ClockifyUserModel>, void>();
 
 export const togglUsersFetch = createAsyncAction(
-  '@users/TOGGL_FETCH_REQUEST',
-  '@users/TOGGL_FETCH_SUCCESS',
-  '@users/TOGGL_FETCH_FAILURE',
+  "@users/TOGGL_FETCH_REQUEST",
+  "@users/TOGGL_FETCH_SUCCESS",
+  "@users/TOGGL_FETCH_FAILURE",
 )<void, EntitiesFetchPayloadModel<TogglUserModel>, void>();
 
 export const clockifyUsersTransfer = createAsyncAction(
-  '@users/CLOCKIFY_TRANSFER_REQUEST',
-  '@users/CLOCKIFY_TRANSFER_SUCCESS',
-  '@users/CLOCKIFY_TRANSFER_FAILURE',
+  "@users/CLOCKIFY_TRANSFER_REQUEST",
+  "@users/CLOCKIFY_TRANSFER_SUCCESS",
+  "@users/CLOCKIFY_TRANSFER_FAILURE",
 )<void, EntitiesFetchPayloadModel<ClockifyUserModel>, void>();
 
 export const flipIsUserIncluded = createStandardAction(
-  '@users/FLIP_IS_INCLUDED',
+  "@users/FLIP_IS_INCLUDED",
 )<string>();
 
 export const fetchClockifyUsers = (workspaceId: string) => async (

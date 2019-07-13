@@ -1,5 +1,5 @@
-import { get, isEmpty, isNil } from 'lodash';
-import { findIdFieldValue } from '~/redux/utils';
+import { get, isEmpty, isNil } from "lodash";
+import { findIdFieldValue } from "~/redux/utils";
 import {
   CompoundClientModel,
   CompoundTimeEntryModel,
@@ -7,7 +7,7 @@ import {
   EntityGroup,
   EntityType,
   TimeEntryForTool,
-} from '~/types';
+} from "~/types";
 
 interface ClientDetails {
   clientId: string | null;
@@ -56,23 +56,23 @@ export class TimeEntryTransform {
   }
 
   private get isBillable() {
-    return 'is_billable' in this.timeEntryRecord
+    return "is_billable" in this.timeEntryRecord
       ? this.timeEntryRecord.is_billable
-      : get(this.timeEntryRecord, 'billable', false);
+      : get(this.timeEntryRecord, "billable", false);
   }
 
   private get startTime() {
-    return this.getTime('start');
+    return this.getTime("start");
   }
 
   private get endTime() {
-    return this.getTime('end');
+    return this.getTime("end");
   }
 
-  private getTime(field: 'start' | 'end') {
+  private getTime(field: "start" | "end") {
     const timeValue =
-      'timeInterval' in this.timeEntryRecord
-        ? get(this.timeEntryRecord, ['timeInterval', field], null)
+      "timeInterval" in this.timeEntryRecord
+        ? get(this.timeEntryRecord, ["timeInterval", field], null)
         : get(this.timeEntryRecord, field, null);
     return isNil(timeValue) ? null : new Date(timeValue);
   }
@@ -80,7 +80,7 @@ export class TimeEntryTransform {
   private determineIfActive(projectId: string) {
     return get(
       this.entitiesByGroup.projects.byId,
-      [projectId, 'isActive'],
+      [projectId, "isActive"],
       false,
     );
   }
@@ -112,11 +112,11 @@ export class TimeEntryTransform {
   }
 
   private get clientName() {
-    if ('client' in this.timeEntryRecord) {
+    if ("client" in this.timeEntryRecord) {
       return this.timeEntryRecord.client;
     }
 
-    return get(this.timeEntryRecord, ['project', 'clientName'], null);
+    return get(this.timeEntryRecord, ["project", "clientName"], null);
   }
 
   private findUserGroupIds(userId: string) {
@@ -125,6 +125,6 @@ export class TimeEntryTransform {
       return [];
     }
 
-    return get(usersById, [userId, 'userGroupIds'], []);
+    return get(usersById, [userId, "userGroupIds"], []);
   }
 }

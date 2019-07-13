@@ -1,5 +1,5 @@
-import { get, isEmpty } from 'lodash';
-import { EntityGroup, ToolName } from '~/types';
+import { get, isEmpty } from "lodash";
+import { EntityGroup, ToolName } from "~/types";
 
 type ModelWithName<T> = T & { name: string; isIncluded?: boolean };
 
@@ -11,8 +11,8 @@ export function linkEntitiesInStateByName<TEntityState>(
   entityGroup: EntityGroup,
   normalizedState: TEntityState,
 ): TEntityState {
-  const clockifyById = get(normalizedState, [ToolName.Clockify, 'byId'], {});
-  const togglById = get(normalizedState, [ToolName.Toggl, 'byId'], {});
+  const clockifyById = get(normalizedState, [ToolName.Clockify, "byId"], {});
+  const togglById = get(normalizedState, [ToolName.Toggl, "byId"], {});
 
   if (isEmpty(clockifyById) || isEmpty(togglById)) return normalizedState;
 
@@ -51,7 +51,7 @@ function linkEntitiesByName<TEntity>(
       ...acc,
       [entityId]: {
         ...entityRecord,
-        linkedId: get(linkFromEntitiesByName, [entityRecord.name, 'id'], null),
+        linkedId: get(linkFromEntitiesByName, [entityRecord.name, "id"], null),
       },
     }),
     {},

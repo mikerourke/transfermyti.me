@@ -1,4 +1,4 @@
-import { fetchArray, fetchObject } from './fetchByPayloadType';
+import { fetchArray, fetchObject } from "./fetchByPayloadType";
 import {
   AddUsersToWorkspaceRequestModel,
   ClockifyUserModel,
@@ -8,17 +8,17 @@ import {
   TogglProjectUserModel,
   TogglUserModel,
   TogglWorkspaceUserModel,
-} from '~/types';
+} from "~/types";
 
 export const apiFetchClockifyMeDetails = (): Promise<ClockifyUserModel> =>
-  fetchObject('/clockify/api/v1/user');
+  fetchObject("/clockify/api/v1/user");
 
 export const apiFetchClockifyUserDetails = (
   userId: string,
 ): Promise<ClockifyUserModel> => fetchObject(`/clockify/api/users/${userId}`);
 
 export const apiFetchTogglMeDetails = (): Promise<TogglMeResponseModel> =>
-  fetchObject('/toggl/api/me');
+  fetchObject("/toggl/api/me");
 
 export const apiFetchClockifyUsersInProject = (
   projectId: string,

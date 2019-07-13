@@ -1,6 +1,6 @@
-import React from 'react';
-import classnames from 'classnames';
-import { css, keyframes } from 'emotion';
+import React from "react";
+import classnames from "classnames";
+import { css, keyframes } from "emotion";
 
 const Loader: React.FC = ({ children }) => {
   const cubeFoldingAnimation = keyframes`
@@ -24,7 +24,7 @@ const Loader: React.FC = ({ children }) => {
     transform: scale(1.1);
 
     &:before {
-      content: '';
+      content: "";
       position: absolute;
       top: 0;
       left: 0;
@@ -37,9 +37,9 @@ const Loader: React.FC = ({ children }) => {
   `;
 
   const cubeOrientations = [
-    { rotation: '90deg', delay: '0.3s' },
-    { rotation: '270deg', delay: '0.9s' },
-    { rotation: '180deg', delay: '0.6s' },
+    { rotation: "90deg", delay: "0.3s" },
+    { rotation: "270deg", delay: "0.9s" },
+    { rotation: "180deg", delay: "0.6s" },
   ];
 
   return (
@@ -81,7 +81,7 @@ const Loader: React.FC = ({ children }) => {
 };
 
 Loader.defaultProps = {
-  message: 'Loading, please wait...',
+  message: "Loading, please wait...",
 };
 
 export default Loader;

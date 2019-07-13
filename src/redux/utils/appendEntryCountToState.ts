@@ -1,5 +1,5 @@
-import { get, isNil } from 'lodash';
-import { CompoundEntityModel, EntityType, ToolName } from '~/types';
+import { get, isNil } from "lodash";
+import { CompoundEntityModel, EntityType, ToolName } from "~/types";
 
 interface Params<TEntityState, TTimeEntry> {
   entityType: EntityType;
@@ -18,12 +18,12 @@ export function appendEntryCountToState<TEntityState, TTimeEntry>({
   entityState,
   timeEntries,
 }: Params<TEntityState, TTimeEntry>): TEntityState {
-  const byIdForTool = get(entityState, [toolName, 'byId'], {});
+  const byIdForTool = get(entityState, [toolName, "byId"], {});
   const entityRecords: Array<CompoundEntityModel> = Object.values(byIdForTool);
 
   if (entityRecords.length === 0) return entityState;
 
-  const idField = entityType.concat('Id');
+  const idField = entityType.concat("Id");
   const entryCountsByEntityId = calculateEntryCountByEntityId(
     idField,
     timeEntries,

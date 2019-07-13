@@ -1,9 +1,9 @@
-import { getType } from 'typesafe-actions';
-import { combineActions, handleActions } from 'redux-actions';
-import { get } from 'lodash';
-import * as utils from '~/redux/utils';
-import { togglTimeEntriesFetch } from '~/redux/entities/timeEntries/timeEntriesActions';
-import * as projectsActions from './projectsActions';
+import { getType } from "typesafe-actions";
+import { combineActions, handleActions } from "redux-actions";
+import { get } from "lodash";
+import * as utils from "~/redux/utils";
+import { togglTimeEntriesFetch } from "~/redux/entities/timeEntries/timeEntriesActions";
+import * as projectsActions from "./projectsActions";
 import {
   ClockifyProjectModel,
   CompoundProjectModel,
@@ -15,7 +15,7 @@ import {
   TogglProjectModel,
   TogglTimeEntryModel,
   ToolName,
-} from '~/types';
+} from "~/types";
 
 export interface ProjectsState {
   readonly clockify: ReduxStateEntryForTool<CompoundProjectModel>;
@@ -43,10 +43,10 @@ const getSchemaProcessStrategy = (workspaceId: string) => (
   workspaceId,
   clientId: utils.findIdFieldValue(value, EntityType.Client),
   isBillable: value.billable,
-  isPublic: 'public' in value ? value.public : !value.is_private,
-  isActive: 'archived' in value ? value.archived : value.active,
-  color: 'hex_color' in value ? value.hex_color : value.color,
-  userIds: get(value, 'userIds', []).map((userId: number) => userId.toString()),
+  isPublic: "public" in value ? value.public : !value.is_private,
+  isActive: "archived" in value ? value.archived : value.active,
+  color: "hex_color" in value ? value.hex_color : value.color,
+  userIds: get(value, "userIds", []).map((userId: number) => userId.toString()),
   entryCount: 0,
   linkedId: null,
   isIncluded: true,

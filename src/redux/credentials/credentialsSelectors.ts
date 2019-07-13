@@ -1,5 +1,5 @@
-import { createSelector } from 'reselect';
-import { CredentialsModel, ReduxState } from '~/types';
+import { createSelector } from "reselect";
+import { CredentialsModel, ReduxState } from "~/types";
 
 export const selectCredentials = createSelector(
   (state: ReduxState) => state.credentials,

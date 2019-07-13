@@ -1,7 +1,7 @@
-import React from 'react';
-import { css } from 'emotion';
-import { Column, Columns, Container, Footer as BloomerFooter } from 'bloomer';
-import SvgIcon, { SvgIconName } from '~/components/svgIcon/SvgIcon';
+import React from "react";
+import { css } from "emotion";
+import { Column, Columns, Container, Footer as BloomerFooter } from "bloomer";
+import SvgIcon, { SvgIconName } from "~/components/svgIcon/SvgIcon";
 
 const Love = () => <SvgIcon name={SvgIconName.Heart} color="red" height={12} />;
 

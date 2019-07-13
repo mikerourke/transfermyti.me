@@ -1,9 +1,9 @@
-import React from 'react';
-import classnames from 'classnames';
-import { When } from 'react-if';
-import { Control, Field, Help, Input, Label } from 'bloomer';
-import { css } from 'emotion';
-import HelpTooltip from './HelpTooltip';
+import React from "react";
+import classnames from "classnames";
+import { When } from "react-if";
+import { Control, Field, Help, Input, Label } from "bloomer";
+import { css } from "emotion";
+import HelpTooltip from "./HelpTooltip";
 
 interface Props extends React.HTMLProps<HTMLInputElement> {
   name: string;
@@ -33,12 +33,12 @@ const InputField: React.FC<Props> = ({
         className={classnames(className, {
           [css`
             background-color: rgba(255, 0, 0, 0.1);
-          `]: errorText !== '',
+          `]: errorText !== "",
         })}
         {...inputProps}
       />
     </Control>
-    <When condition={errorText !== ''}>
+    <When condition={errorText !== ""}>
       <Help
         isColor="danger"
         className={css`
