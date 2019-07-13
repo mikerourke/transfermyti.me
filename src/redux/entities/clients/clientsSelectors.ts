@@ -1,7 +1,7 @@
-import { createSelector } from 'reselect';
-import { get, isNil } from 'lodash';
-import { findTogglInclusions, groupByWorkspace } from '~/redux/utils';
-import { CompoundClientModel, EntityWithName, ReduxState } from '~/types';
+import { createSelector } from "reselect";
+import { get, isNil } from "lodash";
+import { findTogglInclusions, groupByWorkspace } from "~/redux/utils";
+import { CompoundClientModel, EntityWithName, ReduxState } from "~/types";
 
 const selectTogglClientsById = createSelector(
   (state: ReduxState) => state.entities.clients.toggl.byId,

@@ -1,14 +1,14 @@
-import React, { useState } from 'react';
-import { Else, If, Then, When } from 'react-if';
-import { first, get, isNil } from 'lodash';
-import { css } from 'emotion';
-import EntitiesList from '~/components/entitiesList/EntitiesList';
-import StepPage, { StepPageProps } from '~/components/stepPage/StepPage';
-import EntityTabs from './components/EntityTabs';
-import IncludedYearsSelect from './components/IncludedYearsSelect';
-import NoRecordsDisplay from './components/NoRecordsDisplay';
-import PageFooter from './components/PageFooter';
-import WorkspacesDropdown from './components/WorkspacesDropdown';
+import React, { useState } from "react";
+import { Else, If, Then, When } from "react-if";
+import { first, get, isNil } from "lodash";
+import { css } from "emotion";
+import EntitiesList from "~/components/entitiesList/EntitiesList";
+import StepPage, { StepPageProps } from "~/components/stepPage/StepPage";
+import EntityTabs from "./components/EntityTabs";
+import IncludedYearsSelect from "./components/IncludedYearsSelect";
+import NoRecordsDisplay from "./components/NoRecordsDisplay";
+import PageFooter from "./components/PageFooter";
+import WorkspacesDropdown from "./components/WorkspacesDropdown";
 import {
   CompoundEntityModel,
   CompoundWorkspaceModel,
@@ -18,7 +18,7 @@ import {
   RecordCountsModel,
   ToolName,
   UpdateIncludedWorkspaceYearModel,
-} from '~/types';
+} from "~/types";
 
 interface Props extends StepPageProps {
   subtitle: string;

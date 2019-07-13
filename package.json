@@ -52,6 +52,8 @@
   "devDependencies": {
     "@babel/core": "^7.3.4",
     "@babel/plugin-syntax-json-strings": "^7.2.0",
+    "@testing-library/jest-dom": "^4.0.0",
+    "@testing-library/react": "^8.0.5",
     "@types/classnames": "^2.2.6",
     "@types/enzyme": "^3.9.1",
     "@types/jest": "^24.0.11",
@@ -73,9 +75,6 @@
     "chalk": "^2.4.2",
     "concurrently": "^4.1.0",
     "dotenv": "^8.0.0",
-    "enzyme": "^3.9.0",
-    "enzyme-adapter-react-16": "^1.12.1",
-    "enzyme-to-json": "^3.3.5",
     "eslint": "^5.16.0",
     "eslint-plugin-import": "^2.16.0",
     "eslint-plugin-react": "^7.12.4",
@@ -98,7 +97,7 @@
   },
   "prettier": {
     "bracketSpacing": true,
-    "singleQuote": true,
+    "singleQuote": false,
     "trailingComma": "all"
   },
   "babel": {

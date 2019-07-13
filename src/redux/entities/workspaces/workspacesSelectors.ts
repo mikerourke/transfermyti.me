@@ -1,12 +1,12 @@
-import { createSelector } from 'reselect';
-import { get, isNil } from 'lodash';
-import { selectTogglClientsByWorkspaceFactory } from '~/redux/entities/clients/clientsSelectors';
-import { selectTogglProjectsByWorkspaceFactory } from '~/redux/entities/projects/projectsSelectors';
-import { selectTogglTagsByWorkspaceFactory } from '~/redux/entities/tags/tagsSelectors';
-import { selectToggleTasksByWorkspaceFactory } from '~/redux/entities/tasks/tasksSelectors';
-import { selectTimeEntriesByWorkspaceFactory } from '~/redux/entities/timeEntries/timeEntriesSelectors';
-import { selectTogglUserGroupsByWorkspaceFactory } from '~/redux/entities/userGroups/userGroupsSelectors';
-import { selectTogglUsersByWorkspaceFactory } from '~/redux/entities/users/usersSelectors';
+import { createSelector } from "reselect";
+import { get, isNil } from "lodash";
+import { selectTogglClientsByWorkspaceFactory } from "~/redux/entities/clients/clientsSelectors";
+import { selectTogglProjectsByWorkspaceFactory } from "~/redux/entities/projects/projectsSelectors";
+import { selectTogglTagsByWorkspaceFactory } from "~/redux/entities/tags/tagsSelectors";
+import { selectToggleTasksByWorkspaceFactory } from "~/redux/entities/tasks/tasksSelectors";
+import { selectTimeEntriesByWorkspaceFactory } from "~/redux/entities/timeEntries/timeEntriesSelectors";
+import { selectTogglUserGroupsByWorkspaceFactory } from "~/redux/entities/userGroups/userGroupsSelectors";
+import { selectTogglUsersByWorkspaceFactory } from "~/redux/entities/users/usersSelectors";
 import {
   CompoundEntityModel,
   CompoundWorkspaceModel,
@@ -16,7 +16,7 @@ import {
   RecordCountsModel,
   ReduxState,
   ToolName,
-} from '~/types';
+} from "~/types";
 
 const selectClockifyWorkspacesById = createSelector(
   (state: ReduxState) => state.entities.workspaces.clockify.byId,
@@ -259,7 +259,7 @@ function calculateRecordCountsByEntityGroup(
       entityRecords.forEach(entityRecord => {
         if (entityRecord.isIncluded && isNil(entityRecord.linkedId)) {
           includedRecordCount += 1;
-          includedEntryCount += get(entityRecord, 'entryCount', 0);
+          includedEntryCount += get(entityRecord, "entryCount", 0);
         }
       });
 

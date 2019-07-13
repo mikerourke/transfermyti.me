@@ -1,11 +1,11 @@
-import React from 'react';
-import { Step, Steps, Wizard } from 'react-albus';
-import SelectTransferTypeStep from '~/containers/app/selectTransferTypeStep/SelectTransferTypeStep';
-import EnterCredentialsStep from '~/containers/credentials/enterCredentialsStep/EnterCredentialsStep';
-import ReviewClockifyDetailsStep from '~/containers/entities/reviewClockifyDetailsStep/ReviewClockifyDetailsStep';
-import SelectTogglInclusionsStep from '~/containers/entities/selectTogglInclusionsStep/SelectTogglInclusionsStep';
-import SelectTogglWorkspacesStep from '~/containers/entities/selectTogglWorkspacesStep/SelectTogglWorkspacesStep';
-import TransferProgressStep from '~/containers/app/transferProgressStep/TransferProgressStep';
+import React from "react";
+import { Step, Steps, Wizard } from "react-albus";
+import SelectTransferTypeStep from "~/containers/app/selectTransferTypeStep/SelectTransferTypeStep";
+import EnterCredentialsStep from "~/containers/credentials/enterCredentialsStep/EnterCredentialsStep";
+import ReviewClockifyDetailsStep from "~/containers/entities/reviewClockifyDetailsStep/ReviewClockifyDetailsStep";
+import SelectTogglInclusionsStep from "~/containers/entities/selectTogglInclusionsStep/SelectTogglInclusionsStep";
+import SelectTogglWorkspacesStep from "~/containers/entities/selectTogglWorkspacesStep/SelectTogglWorkspacesStep";
+import TransferProgressStep from "~/containers/app/transferProgressStep/TransferProgressStep";
 
 const TransferWizard: React.FC = () => (
   <Wizard>

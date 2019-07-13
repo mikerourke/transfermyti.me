@@ -11,7 +11,6 @@ process.on('unhandledRejection', err => {
   throw err;
 });
 
-const jestRunner = require('jest');
 const argv = process.argv.slice(2);
 
 /**
@@ -23,4 +22,4 @@ if (process.env.CI) {
   argv.push('--ci=true');
 }
 
-jestRunner.run(argv);
+require('jest').run(argv);

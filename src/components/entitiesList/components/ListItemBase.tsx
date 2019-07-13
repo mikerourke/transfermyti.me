@@ -1,9 +1,9 @@
-import React from 'react';
-import classnames from 'classnames';
-import { Box } from 'bloomer';
-import { css } from 'emotion';
-import { ListRowProps } from 'react-virtualized';
-import Flex from '~/components/flex/Flex';
+import React from "react";
+import classnames from "classnames";
+import { Box } from "bloomer";
+import { css } from "emotion";
+import { ListRowProps } from "react-virtualized";
+import Flex from "~/components/flex/Flex";
 
 interface Props extends Partial<ListRowProps> {
   height: number;

@@ -1,9 +1,9 @@
-import { getType } from 'typesafe-actions';
-import { combineActions, handleActions } from 'redux-actions';
-import { get } from 'lodash';
-import * as utils from '~/redux/utils';
-import { togglTimeEntriesFetch } from '~/redux/entities/timeEntries/timeEntriesActions';
-import * as usersActions from './usersActions';
+import { getType } from "typesafe-actions";
+import { combineActions, handleActions } from "redux-actions";
+import { get } from "lodash";
+import * as utils from "~/redux/utils";
+import { togglTimeEntriesFetch } from "~/redux/entities/timeEntries/timeEntriesActions";
+import * as usersActions from "./usersActions";
 import {
   ClockifyUserModel,
   ClockifyUserStatus,
@@ -16,7 +16,7 @@ import {
   TogglTimeEntryModel,
   TogglUserModel,
   ToolName,
-} from '~/types';
+} from "~/types";
 
 export interface UsersState {
   readonly clockify: ReduxStateEntryForTool<CompoundUserModel>;
@@ -40,12 +40,12 @@ const getSchemaProcessStrategy = (workspaceId: string) => (
   value: ClockifyUserModel | TogglUserModel,
 ): CompoundUserModel => ({
   id: value.id.toString(),
-  name: 'fullname' in value ? value.fullname : value.name,
+  name: "fullname" in value ? value.fullname : value.name,
   email: value.email,
-  isAdmin: get(value, 'admin', null),
+  isAdmin: get(value, "admin", null),
   isActive:
-    'status' in value ? value.status === ClockifyUserStatus.Active : true,
-  userGroupIds: 'userGroupIds' in value ? value.userGroupIds : [],
+    "status" in value ? value.status === ClockifyUserStatus.Active : true,
+  userGroupIds: "userGroupIds" in value ? value.userGroupIds : [],
   workspaceId,
   entryCount: 0,
   linkedId: null,

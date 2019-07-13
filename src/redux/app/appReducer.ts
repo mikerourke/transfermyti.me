@@ -1,12 +1,12 @@
-import { getType } from 'typesafe-actions';
-import { handleActions } from 'redux-actions';
-import * as appActions from './appActions';
+import { getType } from "typesafe-actions";
+import { handleActions } from "redux-actions";
+import * as appActions from "./appActions";
 import {
   InTransferDetailsModel,
   NotificationModel,
   ReduxAction,
   TransferType,
-} from '~/types';
+} from "~/types";
 
 export interface AppState {
   readonly notifications: Array<NotificationModel>;

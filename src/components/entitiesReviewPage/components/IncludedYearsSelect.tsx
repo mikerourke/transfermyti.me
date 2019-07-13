@@ -1,22 +1,22 @@
-import React, { CSSProperties } from 'react';
-import Select from 'react-select';
-import { compact, get } from 'lodash';
-import { css } from 'emotion';
-import makeAnimated from 'react-select/animated';
-import { FontWeightProperty } from 'csstype';
-import { ActionMeta, Theme } from 'react-select/src/types';
+import React, { CSSProperties } from "react";
+import Select from "react-select";
+import { compact, get } from "lodash";
+import { css } from "emotion";
+import makeAnimated from "react-select/animated";
+import { FontWeightProperty } from "csstype";
+import { ActionMeta, Theme } from "react-select/src/types";
 
 const getTheme = (theme: Theme) => ({
   ...theme,
   colors: {
     ...theme.colors,
-    primary: 'var(--info)',
+    primary: "var(--info)",
   },
 });
 
 const fontStyle = {
-  fontSize: '1rem',
-  fontWeight: 'bold' as FontWeightProperty,
+  fontSize: "1rem",
+  fontWeight: "bold" as FontWeightProperty,
 };
 
 const BORDER_RADIUS = 4;
@@ -24,16 +24,16 @@ const BORDER_RADIUS = 4;
 const colorStyles = {
   control: (styles: CSSProperties) => ({
     ...styles,
-    backgroundColor: 'white',
+    backgroundColor: "white",
   }),
   option: (styles: CSSProperties, { isDisabled }: { isDisabled: boolean }) => {
     return {
       ...styles,
       ...fontStyle,
-      background: 'white',
-      cursor: isDisabled ? 'not-allowed' : 'pointer',
-      ':hover': {
-        background: 'var(--light-gray)',
+      background: "white",
+      cursor: isDisabled ? "not-allowed" : "pointer",
+      ":hover": {
+        background: "var(--light-gray)",
       },
     };
   },
@@ -44,21 +44,21 @@ const colorStyles = {
   multiValueLabel: (styles: CSSProperties) => ({
     ...styles,
     ...fontStyle,
-    background: 'var(--info)',
+    background: "var(--info)",
     borderRadius: 0,
     borderBottomLeftRadius: BORDER_RADIUS,
     borderTopLeftRadius: BORDER_RADIUS,
-    color: 'white',
+    color: "white",
   }),
   multiValueRemove: (styles: CSSProperties) => ({
     ...styles,
-    background: 'var(--info)',
+    background: "var(--info)",
     borderRadius: 0,
     borderBottomRightRadius: BORDER_RADIUS,
     borderTopRightRadius: BORDER_RADIUS,
-    color: 'white',
-    ':hover': {
-      cursor: 'pointer',
+    color: "white",
+    ":hover": {
+      cursor: "pointer",
       opacity: 0.7,
     },
   }),
@@ -94,17 +94,17 @@ const IncludedYearsSelect: React.FC<Props> = ({
     actionMeta: ActionMeta,
   ) => {
     switch (actionMeta.action) {
-      case 'select-option':
-        const yearToInclude = get(actionMeta, ['option', 'value']);
+      case "select-option":
+        const yearToInclude = get(actionMeta, ["option", "value"]);
         onUpdateIncludedYear(yearToInclude, true);
         break;
 
-      case 'remove-value':
-        const yearToExclude = get(actionMeta, ['removedValue', 'value']);
+      case "remove-value":
+        const yearToExclude = get(actionMeta, ["removedValue", "value"]);
         onUpdateIncludedYear(yearToExclude, false);
         break;
 
-      case 'clear':
+      case "clear":
         options.forEach(({ value }) => onUpdateIncludedYear(value, false));
         break;
 

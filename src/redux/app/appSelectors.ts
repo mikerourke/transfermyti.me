@@ -1,9 +1,9 @@
-import { createSelector } from 'reselect';
+import { createSelector } from "reselect";
 import {
   AggregateTransferCountsModel,
   NotificationModel,
   ReduxState,
-} from '~/types';
+} from "~/types";
 
 export const selectNotifications = createSelector(
   (state: ReduxState) => state.app.notifications,

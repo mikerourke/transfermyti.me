@@ -1,8 +1,8 @@
-import React from 'react';
-import { Tab, TabLink, TabList, Tabs } from 'bloomer';
-import { css } from 'emotion';
-import { omit, startCase } from 'lodash';
-import { EntityGroup } from '~/types';
+import React from "react";
+import { Tab, TabLink, TabList, Tabs } from "bloomer";
+import { css } from "emotion";
+import { omit, startCase } from "lodash";
+import { EntityGroup } from "~/types";
 
 interface Props {
   activeTab: EntityGroup;
@@ -10,10 +10,10 @@ interface Props {
 }
 
 const EntityTabs: React.FC<Props> = ({ activeTab, onTabClick }) => {
-  const validGroups = omit(EntityGroup, 'Workspaces', 'UserGroups', 'Users');
+  const validGroups = omit(EntityGroup, "Workspaces", "UserGroups", "Users");
   const activeStyle = {
-    borderBottomColor: 'var(--info)',
-    color: 'var(--info)',
+    borderBottomColor: "var(--info)",
+    color: "var(--info)",
   };
 
   return (

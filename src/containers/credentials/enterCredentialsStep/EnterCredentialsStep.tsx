@@ -1,26 +1,26 @@
-import React, { useEffect, useState } from 'react';
-import { connect } from 'react-redux';
-import { Help } from 'bloomer';
-import { css } from 'emotion';
-import { omit } from 'lodash';
+import React, { useEffect, useState } from "react";
+import { connect } from "react-redux";
+import { Help } from "bloomer";
+import { css } from "emotion";
+import { omit } from "lodash";
 import {
   storeAllCredentials,
   updateCredentialsField,
   validateCredentials,
-} from '~/redux/credentials/credentialsActions';
+} from "~/redux/credentials/credentialsActions";
 import {
   selectCredentials,
   selectIsValid,
   selectIsValidating,
-} from '~/redux/credentials/credentialsSelectors';
-import StepPage, { StepPageProps } from '~/components/stepPage/StepPage';
-import InputField from './components/InputField';
+} from "~/redux/credentials/credentialsSelectors";
+import StepPage, { StepPageProps } from "~/components/stepPage/StepPage";
+import InputField from "./components/InputField";
 import {
   CredentialsModel,
   CredentialsField,
   ReduxDispatch,
   ReduxState,
-} from '~/types';
+} from "~/types";
 
 interface ConnectStateProps {
   credentials: CredentialsModel;
@@ -41,9 +41,9 @@ export const EnterCredentialsStepComponent: React.FC<Props> = ({
   ...props
 }) => {
   const [inputErrors, setInputErrors] = useState<Partial<CredentialsModel>>({
-    togglApiKey: '',
-    togglEmail: '',
-    clockifyApiKey: '',
+    togglApiKey: "",
+    togglEmail: "",
+    clockifyApiKey: "",
   });
 
   useEffect(() => {
@@ -60,19 +60,19 @@ export const EnterCredentialsStepComponent: React.FC<Props> = ({
   const validateInputs = () => {
     const requiredCredentials = omit(
       credentials,
-      'clockifyUserId',
-      'togglUserId',
+      "clockifyUserId",
+      "togglUserId",
     );
 
     let invalidCount = 0;
     const newInputErrors = Object.entries(requiredCredentials).reduce(
       (acc, [key, value]) => {
-        if (value !== '') return { ...acc, [key]: '' };
+        if (value !== "") return { ...acc, [key]: "" };
 
         invalidCount += 1;
         return {
           ...acc,
-          [key]: 'You must specify a value',
+          [key]: "You must specify a value",
         };
       },
       {},
@@ -87,7 +87,7 @@ export const EnterCredentialsStepComponent: React.FC<Props> = ({
 
     setInputErrors({
       ...inputErrors,
-      [name]: value === '' ? 'You must specify a value' : '',
+      [name]: value === "" ? "You must specify a value" : "",
     });
 
     props.onUpdateCredentialsField(name as CredentialsField, value);

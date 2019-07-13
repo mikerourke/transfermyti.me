@@ -1,5 +1,5 @@
-import { createSelector } from 'reselect';
-import { compact, filter, get } from 'lodash';
+import { createSelector } from "reselect";
+import { compact, filter, get } from "lodash";
 import {
   CompoundClientModel,
   CompoundProjectModel,
@@ -11,7 +11,7 @@ import {
   DetailedTimeEntryModel,
   ReduxState,
   ToolName,
-} from '~/types';
+} from "~/types";
 
 export const selectTogglTimeEntriesById = createSelector(
   (state: ReduxState) => state.entities.timeEntries.toggl.byId,

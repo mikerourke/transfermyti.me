@@ -1,14 +1,14 @@
-import React from 'react';
-import { List, ListRowProps } from 'react-virtualized';
-import { css } from 'emotion';
-import { isNil } from 'lodash';
-import BasicListItem from './components/BasicListItem';
-import TimeEntryListItem from './components/TimeEntryListItem';
+import React from "react";
+import { List, ListRowProps } from "react-virtualized";
+import { css } from "emotion";
+import { isNil } from "lodash";
+import BasicListItem from "./components/BasicListItem";
+import TimeEntryListItem from "./components/TimeEntryListItem";
 import {
   CompoundEntityModel,
   DetailedTimeEntryModel,
   EntityGroup,
-} from '~/types';
+} from "~/types";
 
 interface Props {
   entityGroup: EntityGroup;

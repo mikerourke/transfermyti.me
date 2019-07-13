@@ -1,13 +1,13 @@
-import React from 'react';
-import { ListRowProps } from 'react-virtualized';
-import { When } from 'react-if';
-import { css } from 'emotion';
-import { isNil } from 'lodash';
-import Checkbox from '~/components/checkbox/Checkbox';
-import Flex from '~/components/flex/Flex';
-import ListItemBase from './ListItemBase';
-import EntityTagsRow from './EntityTagsRow';
-import { CompoundEntityModel } from '~/types';
+import React from "react";
+import { ListRowProps } from "react-virtualized";
+import { When } from "react-if";
+import { css } from "emotion";
+import { isNil } from "lodash";
+import Checkbox from "~/components/checkbox/Checkbox";
+import Flex from "~/components/flex/Flex";
+import ListItemBase from "./ListItemBase";
+import EntityTagsRow from "./EntityTagsRow";
+import { CompoundEntityModel } from "~/types";
 
 interface Props extends ListRowProps {
   entityRecord: CompoundEntityModel;
@@ -25,7 +25,7 @@ const BasicListItem: React.FC<Props> = ({
 }) => {
   const { name, isIncluded, entryCount = 0 } = entityRecord;
 
-  const entryLabel = entryCount === 1 ? 'entry' : 'entries';
+  const entryLabel = entryCount === 1 ? "entry" : "entries";
   const hasClickEvent = !isNil(onItemClick);
 
   return (

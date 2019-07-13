@@ -1,5 +1,5 @@
-import React from 'react';
-import { css } from 'emotion';
+import React from "react";
+import { css } from "emotion";
 
 interface Props {
   isBottomPadded: boolean;
@@ -11,7 +11,7 @@ const ValuesRow: React.FC<Props> = ({ children, isBottomPadded }) => (
       td {
         font-size: 14px;
         font-weight: 400;
-        ${isBottomPadded && 'padding-bottom: 4px;'};
+        ${isBottomPadded && "padding-bottom: 4px;"};
       }
     `}
   >

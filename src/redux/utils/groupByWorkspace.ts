@@ -1,4 +1,4 @@
-import { compact, get, isNil, sortBy } from 'lodash';
+import { compact, get, isNil, sortBy } from "lodash";
 
 /**
  * Sorts the specified entity records by name and groups them by their
@@ -6,14 +6,14 @@ import { compact, get, isNil, sortBy } from 'lodash';
  */
 export function groupByWorkspace<TEntity>(entityRecords: Array<TEntity>) {
   const sortedEntityRecords = sortBy(entityRecords, record =>
-    get(record, 'name', null),
+    get(record, "name", null),
   ) as Array<TEntity>;
   const validEntityRecords = compact(sortedEntityRecords);
 
   const entitiesByWorkspace: Record<string, Array<TEntity>> = {};
 
   validEntityRecords.forEach(entityRecord => {
-    const workspaceId = get(entityRecord, 'workspaceId', null);
+    const workspaceId = get(entityRecord, "workspaceId", null);
     if (isNil(workspaceId)) return;
 
     entitiesByWorkspace[workspaceId] = [

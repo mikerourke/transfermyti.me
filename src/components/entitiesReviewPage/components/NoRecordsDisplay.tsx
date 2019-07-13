@@ -1,8 +1,8 @@
-import React from 'react';
-import { If, Then, Else } from 'react-if';
-import { css } from 'emotion';
-import { isNil } from 'lodash';
-import { EntityGroup, ToolName } from '~/types';
+import React from "react";
+import { If, Then, Else } from "react-if";
+import { css } from "emotion";
+import { isNil } from "lodash";
+import { EntityGroup, ToolName } from "~/types";
 
 interface Props {
   activeEntityGroup: string;
@@ -16,8 +16,8 @@ const NoRecordsDisplay: React.FC<Props> = ({
   toolName,
 }) => {
   let entityGroupDisplay = {
-    [EntityGroup.TimeEntries]: 'time entries',
-    [EntityGroup.UserGroups]: 'user groups',
+    [EntityGroup.TimeEntries]: "time entries",
+    [EntityGroup.UserGroups]: "user groups",
   }[activeEntityGroup];
   if (isNil(entityGroupDisplay)) entityGroupDisplay = activeEntityGroup;
 

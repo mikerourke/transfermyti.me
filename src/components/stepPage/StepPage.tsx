@@ -1,11 +1,11 @@
-import React, { useEffect, useRef } from 'react';
-import { Button, Container } from 'bloomer';
-import { When, Unless } from 'react-if';
-import { css } from 'emotion';
-import { isNil } from 'lodash';
-import Flex from '~/components/flex/Flex';
-import PageHeader from '~/components/pageHeader/PageHeader';
-import InstructionsSection from './components/InstructionsSection';
+import React, { useEffect, useRef } from "react";
+import { Button, Container } from "bloomer";
+import { When, Unless } from "react-if";
+import { css } from "emotion";
+import { isNil } from "lodash";
+import Flex from "~/components/flex/Flex";
+import PageHeader from "~/components/pageHeader/PageHeader";
+import InstructionsSection from "./components/InstructionsSection";
 
 export interface StepPageProps {
   stepNumber: number;
@@ -34,10 +34,10 @@ const StepPage: React.FC<Props> = ({
   };
 
   useEffect(() => {
-    window.addEventListener('resize', handleResize);
+    window.addEventListener("resize", handleResize);
     handleResize();
     return () => {
-      window.removeEventListener('resize', handleResize);
+      window.removeEventListener("resize", handleResize);
     };
   });
 

@@ -1,11 +1,11 @@
-import { get } from 'lodash';
-import { getType } from 'typesafe-actions';
-import { combineActions, handleActions } from 'redux-actions';
-import * as utils from '~/redux/utils';
-import { flipIsProjectIncluded } from '~/redux/entities/projects/projectsActions';
-import { flipIsTaskIncluded } from '~/redux/entities/tasks/tasksActions';
-import { flipIsUserIncluded } from '~/redux/entities/users/usersActions';
-import * as timeEntriesActions from './timeEntriesActions';
+import { get } from "lodash";
+import { getType } from "typesafe-actions";
+import { combineActions, handleActions } from "redux-actions";
+import * as utils from "~/redux/utils";
+import { flipIsProjectIncluded } from "~/redux/entities/projects/projectsActions";
+import { flipIsTaskIncluded } from "~/redux/entities/tasks/tasksActions";
+import { flipIsUserIncluded } from "~/redux/entities/users/usersActions";
+import * as timeEntriesActions from "./timeEntriesActions";
 import {
   ClockifyTimeEntryModel,
   CompoundTimeEntryModel,
@@ -15,8 +15,8 @@ import {
   TogglTimeEntryModel,
   ToolName,
   UpdateIncludedWorkspaceYearModel,
-} from '~/types';
-import { updateIsWorkspaceYearIncluded } from '~/redux/entities/workspaces/workspacesActions';
+} from "~/types";
+import { updateIsWorkspaceYearIncluded } from "~/redux/entities/workspaces/workspacesActions";
 
 export interface TimeEntriesState {
   readonly clockify: ReduxStateEntryForTool<CompoundTimeEntryModel>;
@@ -95,7 +95,7 @@ export const timeEntriesReducer = handleActions(
     ): TimeEntriesState =>
       pushInclusionFlipToTimeEntry({
         state,
-        parentIdFieldName: 'projectId',
+        parentIdFieldName: "projectId",
         parentId: projectId,
       }),
 
@@ -105,7 +105,7 @@ export const timeEntriesReducer = handleActions(
     ): TimeEntriesState =>
       pushInclusionFlipToTimeEntry({
         state,
-        parentIdFieldName: 'taskId',
+        parentIdFieldName: "taskId",
         parentId: taskId,
       }),
 
@@ -115,7 +115,7 @@ export const timeEntriesReducer = handleActions(
     ): TimeEntriesState =>
       pushInclusionFlipToTimeEntry({
         state,
-        parentIdFieldName: 'userId',
+        parentIdFieldName: "userId",
         parentId: userId,
       }),
 

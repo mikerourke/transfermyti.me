@@ -1,4 +1,4 @@
-import React from 'react';
+import React from "react";
 import {
   Button,
   Modal,
@@ -8,8 +8,8 @@ import {
   ModalCardFooter,
   ModalCardHeader,
   ModalCardTitle,
-} from 'bloomer';
-import { css } from 'emotion';
+} from "bloomer";
+import { css } from "emotion";
 
 interface Props {
   isActive: boolean;

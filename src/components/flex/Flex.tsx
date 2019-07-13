@@ -1,29 +1,29 @@
-import React from 'react';
-import classnames from 'classnames';
-import { css } from 'emotion';
-import { isNil } from 'lodash';
+import React from "react";
+import classnames from "classnames";
+import { css } from "emotion";
+import { isNil } from "lodash";
 
-type GlobalOption = 'inherit' | 'initial' | 'unset';
+type GlobalOption = "inherit" | "initial" | "unset";
 
 type CommonPositionalOption =
   | GlobalOption
-  | 'baseline'
-  | 'center'
-  | 'end'
-  | 'first baseline'
-  | 'flex-end'
-  | 'flex-start'
-  | 'last baseline'
-  | 'left'
-  | 'right'
-  | 'safe center'
-  | 'start'
-  | 'stretch'
-  | 'unsafe center';
+  | "baseline"
+  | "center"
+  | "end"
+  | "first baseline"
+  | "flex-end"
+  | "flex-start"
+  | "last baseline"
+  | "left"
+  | "right"
+  | "safe center"
+  | "start"
+  | "stretch"
+  | "unsafe center";
 
-type SelfPositionalOption = 'normal' | 'self-end' | 'self-start';
+type SelfPositionalOption = "normal" | "self-end" | "self-start";
 
-type SpacePositionalOption = 'space-around' | 'space-between' | 'space-evenly';
+type SpacePositionalOption = "space-around" | "space-between" | "space-evenly";
 
 export interface FlexProps {
   as?: string | React.ReactElement<any> | React.ReactNode;
@@ -32,7 +32,7 @@ export interface FlexProps {
   alignSelf?: CommonPositionalOption | SelfPositionalOption;
   justifyContent?: CommonPositionalOption | SpacePositionalOption;
   justifySelf?: CommonPositionalOption | SelfPositionalOption;
-  direction?: 'column' | 'column-reverse' | 'row' | 'row-reverse';
+  direction?: "column" | "column-reverse" | "row" | "row-reverse";
 }
 
 const Flex: React.FC<FlexProps | any> = ({
@@ -62,7 +62,7 @@ const Flex: React.FC<FlexProps | any> = ({
 };
 
 Flex.defaultProps = {
-  as: 'div',
+  as: "div",
 };
 
 export default Flex;

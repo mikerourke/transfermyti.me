@@ -1,21 +1,21 @@
-import { combineReducers } from 'redux';
-import { clientsReducer, ClientsState } from './clients/clientsReducer';
-import { projectsReducer, ProjectsState } from './projects/projectsReducer';
-import { tagsReducer, TagsState } from './tags/tagsReducer';
-import { tasksReducer, TasksState } from './tasks/tasksReducer';
+import { combineReducers } from "redux";
+import { clientsReducer, ClientsState } from "./clients/clientsReducer";
+import { projectsReducer, ProjectsState } from "./projects/projectsReducer";
+import { tagsReducer, TagsState } from "./tags/tagsReducer";
+import { tasksReducer, TasksState } from "./tasks/tasksReducer";
 import {
   timeEntriesReducer,
   TimeEntriesState,
-} from './timeEntries/timeEntriesReducer';
+} from "./timeEntries/timeEntriesReducer";
 import {
   userGroupsReducer,
   UserGroupsState,
-} from './userGroups/userGroupsReducer';
-import { usersReducer, UsersState } from './users/usersReducer';
+} from "./userGroups/userGroupsReducer";
+import { usersReducer, UsersState } from "./users/usersReducer";
 import {
   workspacesReducer,
   WorkspacesState,
-} from './workspaces/workspacesReducer';
+} from "./workspaces/workspacesReducer";
 
 export interface EntitiesState {
   clients: ClientsState;

@@ -1,12 +1,12 @@
-import { createAsyncAction, createStandardAction } from 'typesafe-actions';
-import { batchClockifyTransferRequests } from '~/redux/utils';
+import { createAsyncAction, createStandardAction } from "typesafe-actions";
+import { batchClockifyTransferRequests } from "~/redux/utils";
 import {
   apiCreateClockifyTag,
   apiFetchClockifyTags,
   apiFetchTogglTags,
-} from '~/redux/entities/api/tags';
-import { showFetchErrorNotification } from '~/redux/app/appActions';
-import { selectTagsTransferPayloadForWorkspace } from './tagsSelectors';
+} from "~/redux/entities/api/tags";
+import { showFetchErrorNotification } from "~/redux/app/appActions";
+import { selectTagsTransferPayloadForWorkspace } from "./tagsSelectors";
 import {
   ClockifyTagModel,
   EntitiesFetchPayloadModel,
@@ -14,27 +14,27 @@ import {
   ReduxDispatch,
   ReduxGetState,
   TogglTagModel,
-} from '~/types';
+} from "~/types";
 
 export const clockifyTagsFetch = createAsyncAction(
-  '@tags/CLOCKIFY_FETCH_REQUEST',
-  '@tags/CLOCKIFY_FETCH_SUCCESS',
-  '@tags/CLOCKIFY_FETCH_FAILURE',
+  "@tags/CLOCKIFY_FETCH_REQUEST",
+  "@tags/CLOCKIFY_FETCH_SUCCESS",
+  "@tags/CLOCKIFY_FETCH_FAILURE",
 )<void, EntitiesFetchPayloadModel<ClockifyTagModel>, void>();
 
 export const togglTagsFetch = createAsyncAction(
-  '@tags/TOGGL_FETCH_REQUEST',
-  '@tags/TOGGL_FETCH_SUCCESS',
-  '@tags/TOGGL_FETCH_FAILURE',
+  "@tags/TOGGL_FETCH_REQUEST",
+  "@tags/TOGGL_FETCH_SUCCESS",
+  "@tags/TOGGL_FETCH_FAILURE",
 )<void, EntitiesFetchPayloadModel<TogglTagModel>, void>();
 
 export const clockifyTagsTransfer = createAsyncAction(
-  '@tags/CLOCKIFY_TRANSFER_REQUEST',
-  '@tags/CLOCKIFY_TRANSFER_SUCCESS',
-  '@tags/CLOCKIFY_TRANSFER_FAILURE',
+  "@tags/CLOCKIFY_TRANSFER_REQUEST",
+  "@tags/CLOCKIFY_TRANSFER_SUCCESS",
+  "@tags/CLOCKIFY_TRANSFER_FAILURE",
 )<void, EntitiesFetchPayloadModel<ClockifyTagModel>, void>();
 
-export const flipIsTagIncluded = createStandardAction('@tags/FLIP_IS_INCLUDED')<
+export const flipIsTagIncluded = createStandardAction("@tags/FLIP_IS_INCLUDED")<
   string
 >();
 

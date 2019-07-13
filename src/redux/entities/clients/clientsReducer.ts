@@ -1,8 +1,8 @@
-import { getType } from 'typesafe-actions';
-import { combineActions, handleActions } from 'redux-actions';
-import * as utils from '~/redux/utils';
-import { togglTimeEntriesFetch } from '~/redux/entities/timeEntries/timeEntriesActions';
-import * as clientsActions from './clientsActions';
+import { getType } from "typesafe-actions";
+import { combineActions, handleActions } from "redux-actions";
+import * as utils from "~/redux/utils";
+import { togglTimeEntriesFetch } from "~/redux/entities/timeEntries/timeEntriesActions";
+import * as clientsActions from "./clientsActions";
 import {
   ClockifyClientModel,
   CompoundClientModel,
@@ -14,7 +14,7 @@ import {
   TogglClientModel,
   TogglTimeEntryModel,
   ToolName,
-} from '~/types';
+} from "~/types";
 
 export interface ClientsState {
   readonly clockify: ReduxStateEntryForTool<CompoundClientModel>;

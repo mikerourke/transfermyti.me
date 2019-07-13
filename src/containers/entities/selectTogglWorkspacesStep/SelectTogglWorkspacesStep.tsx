@@ -1,33 +1,33 @@
-import React, { useEffect } from 'react';
-import { If, Then, Else, When } from 'react-if';
-import { connect } from 'react-redux';
-import { sortBy } from 'lodash';
-import { Container, Content, Title } from 'bloomer';
-import { css } from 'emotion';
+import React, { useEffect } from "react";
+import { If, Then, Else, When } from "react-if";
+import { connect } from "react-redux";
+import { sortBy } from "lodash";
+import { Container, Content, Title } from "bloomer";
+import { css } from "emotion";
 import {
   dismissAllNotifications,
   showNotification,
-} from '~/redux/app/appActions';
-import { updateAreCredentialsValid } from '~/redux/credentials/credentialsActions';
+} from "~/redux/app/appActions";
+import { updateAreCredentialsValid } from "~/redux/credentials/credentialsActions";
 import {
   fetchTogglWorkspaces,
   flipIsWorkspaceIncluded,
-} from '~/redux/entities/workspaces/workspacesActions';
+} from "~/redux/entities/workspaces/workspacesActions";
 import {
   selectIfWorkspacesFetching,
   selectTogglIncludedWorkspacesCount,
   selectTogglWorkspaces,
-} from '~/redux/entities/workspaces/workspacesSelectors';
-import Loader from '~/components/loader/Loader';
-import StepPage, { StepPageProps } from '~/components/stepPage/StepPage';
-import WorkspaceRow from './components/WorkspaceRow';
+} from "~/redux/entities/workspaces/workspacesSelectors";
+import Loader from "~/components/loader/Loader";
+import StepPage, { StepPageProps } from "~/components/stepPage/StepPage";
+import WorkspaceRow from "./components/WorkspaceRow";
 import {
   CompoundWorkspaceModel,
   NotificationModel,
   NotificationType,
   ReduxDispatch,
   ReduxState,
-} from '~/types';
+} from "~/types";
 
 interface ConnectStateProps {
   areWorkspacesFetching: boolean;
@@ -58,7 +58,7 @@ export const SelectTogglWorkspacesStepComponent: React.FC<Props> = props => {
   const handleNextClick = () => {
     if (props.countOfWorkspacesIncluded === 0) {
       props.onShowNotification({
-        message: 'You must select at least one workspace',
+        message: "You must select at least one workspace",
         type: NotificationType.Error,
       });
     } else {
@@ -72,7 +72,7 @@ export const SelectTogglWorkspacesStepComponent: React.FC<Props> = props => {
   };
 
   const isTransferrable = props.workspaces.length !== 0;
-  const sortedWorkspaces = sortBy(props.workspaces, ['name']);
+  const sortedWorkspaces = sortBy(props.workspaces, ["name"]);
 
   return (
     <If condition={!props.areWorkspacesFetching}>

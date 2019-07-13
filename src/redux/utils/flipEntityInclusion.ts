@@ -1,4 +1,4 @@
-import { get } from 'lodash';
+import { get } from "lodash";
 
 /**
  * Switches the value of `inIncluded` for the entity record that corresponds
@@ -9,16 +9,16 @@ export function flipEntityInclusion<TEntityState>(
   entityState: TEntityState,
   entityId: string,
 ): TEntityState {
-  const entityRecord = get(entityState, ['toggl', 'byId', entityId], {
+  const entityRecord = get(entityState, ["toggl", "byId", entityId], {
     isIncluded: true,
   });
 
   return {
     ...entityState,
     toggl: {
-      ...get(entityState, 'toggl', {}),
+      ...get(entityState, "toggl", {}),
       byId: {
-        ...get(entityState, ['toggl', 'byId'], {}),
+        ...get(entityState, ["toggl", "byId"], {}),
         [entityId]: {
           ...entityRecord,
           isIncluded: !entityRecord.isIncluded,

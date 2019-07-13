@@ -1,6 +1,6 @@
-import { CompoundEntityModel } from './commonTypes';
-import { ClockifyMembershipModel } from './usersTypes';
-import { EntityGroup, BaseCompoundEntityModel } from '~/types/entityTypes';
+import { CompoundEntityModel } from "./commonTypes";
+import { ClockifyMembershipModel } from "./usersTypes";
+import { EntityGroup, BaseCompoundEntityModel } from "~/types/entityTypes";
 
 interface ClockifyWorkspaceSettingsModel {
   timeRoundingInReports: boolean;

@@ -1,10 +1,10 @@
-import { fetchArray, fetchObject } from './fetchByPayloadType';
+import { fetchArray, fetchObject } from "./fetchByPayloadType";
 import {
   ClockifyClientModel,
   EntityWithName,
   HttpMethod,
   TogglClientModel,
-} from '~/types';
+} from "~/types";
 
 export const apiFetchClockifyClients = (
   workspaceId: string,

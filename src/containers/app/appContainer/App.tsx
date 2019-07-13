@@ -1,12 +1,12 @@
-import React from 'react';
-import { connect } from 'react-redux';
-import { css } from 'emotion';
-import { selectCurrentTransferType } from '~/redux/app/appSelectors';
-import NotificationsDisplay from '~/containers/app/notificationsDisplay/NotificationsDisplay';
-import Footer from './components/Footer';
-import Header from './components/Header';
-import TransferWizard from './components/TransferWizard';
-import { ReduxState, TransferType } from '~/types';
+import React from "react";
+import { connect } from "react-redux";
+import { css } from "emotion";
+import { selectCurrentTransferType } from "~/redux/app/appSelectors";
+import NotificationsDisplay from "~/containers/app/notificationsDisplay/NotificationsDisplay";
+import Footer from "./components/Footer";
+import Header from "./components/Header";
+import TransferWizard from "./components/TransferWizard";
+import { ReduxState, TransferType } from "~/types";
 
 // TODO: Add link to first page directing user to Clockify if they don't
 //       already have an account (see email).

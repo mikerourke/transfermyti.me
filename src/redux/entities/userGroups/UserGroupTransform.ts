@@ -1,4 +1,4 @@
-import { get, isNil } from 'lodash';
+import { get, isNil } from "lodash";
 import {
   ClockifyUserGroupModel,
   CompoundTimeEntryModel,
@@ -6,7 +6,7 @@ import {
   CompoundUserModel,
   EntityGroup,
   TogglUserGroupModel,
-} from '~/types';
+} from "~/types";
 
 type UserGroupForTool = ClockifyUserGroupModel | TogglUserGroupModel;
 
@@ -56,7 +56,7 @@ export class UserGroupTransform {
     timeEntries: Array<CompoundTimeEntryModel>,
   ) {
     return timeEntries.reduce((acc, timeEntry) => {
-      const userId = get(timeEntry, 'userId');
+      const userId = get(timeEntry, "userId");
       if (isNil(userId)) return acc;
 
       return {
@@ -67,7 +67,7 @@ export class UserGroupTransform {
   }
 
   private getUserIds(users: Array<CompoundUserModel>) {
-    if ('userIds' in this.userGroupRecord) {
+    if ("userIds" in this.userGroupRecord) {
       return this.userGroupRecord.userIds;
     }
 

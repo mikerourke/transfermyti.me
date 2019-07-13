@@ -1,13 +1,13 @@
-import { createSelector } from 'reselect';
-import { get } from 'lodash';
-import { findTogglInclusions, groupByWorkspace } from '~/redux/utils';
-import { selectTogglClientMatchingId } from '~/redux/entities/clients/clientsSelectors';
+import { createSelector } from "reselect";
+import { get } from "lodash";
+import { findTogglInclusions, groupByWorkspace } from "~/redux/utils";
+import { selectTogglClientMatchingId } from "~/redux/entities/clients/clientsSelectors";
 import {
   ClockifyEstimateType,
   CompoundProjectModel,
   CreateProjectRequestModel,
   ReduxState,
-} from '~/types';
+} from "~/types";
 
 export const selectClockifyProjectIds = createSelector(
   (state: ReduxState) => state.entities.projects.clockify.idValues,
@@ -63,7 +63,7 @@ export const selectProjectsTransferPayloadForWorkspace = createSelector(
           isBillable: project.isBillable,
           color: project.color,
           estimate: {
-            estimate: '',
+            estimate: "",
             type: ClockifyEstimateType.Auto,
           },
         },

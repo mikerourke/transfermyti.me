@@ -1,9 +1,9 @@
-import { getType } from 'typesafe-actions';
-import { combineActions, handleActions } from 'redux-actions';
-import { get, uniq } from 'lodash';
-import * as utils from '~/redux/utils';
-import * as userGroupsActions from './userGroupsActions';
-import { UserGroupTransform } from './UserGroupTransform';
+import { getType } from "typesafe-actions";
+import { combineActions, handleActions } from "redux-actions";
+import { get, uniq } from "lodash";
+import * as utils from "~/redux/utils";
+import * as userGroupsActions from "./userGroupsActions";
+import { UserGroupTransform } from "./UserGroupTransform";
 import {
   ClockifyUserGroupModel,
   CompoundUserGroupModel,
@@ -13,7 +13,7 @@ import {
   ReduxStateEntryForTool,
   TogglUserGroupModel,
   ToolName,
-} from '~/types';
+} from "~/types";
 
 export interface UserGroupsState {
   readonly clockify: ReduxStateEntryForTool<CompoundUserGroupModel>;
@@ -102,7 +102,7 @@ export const userGroupsReducer = handleActions(
         payload: { userId, userGroupId },
       }: ReduxAction<{ userId: string; userGroupId: string }>,
     ): UserGroupsState => {
-      const userGroup = get(state, ['toggl', 'byId', userGroupId]);
+      const userGroup = get(state, ["toggl", "byId", userGroupId]);
       if (!userGroup) return state;
 
       const newUserIds = uniq([...userGroup.userIds, userId]);

@@ -1,11 +1,11 @@
-import { CompoundClientModel } from './clientsTypes';
-import { TogglTotalCurrencyModel } from './commonTypes';
-import { BaseCompoundEntityModel } from './entityTypes';
-import { ClockifyProjectModel, CompoundProjectModel } from './projectsTypes';
-import { CompoundTagModel } from './tagsTypes';
-import { CompoundTaskModel } from './tasksTypes';
-import { ClockifyUserModel, CompoundUserModel } from './usersTypes';
-import { CompoundWorkspaceModel } from './workspacesTypes';
+import { CompoundClientModel } from "./clientsTypes";
+import { TogglTotalCurrencyModel } from "./commonTypes";
+import { BaseCompoundEntityModel } from "./entityTypes";
+import { ClockifyProjectModel, CompoundProjectModel } from "./projectsTypes";
+import { CompoundTagModel } from "./tagsTypes";
+import { CompoundTaskModel } from "./tasksTypes";
+import { ClockifyUserModel, CompoundUserModel } from "./usersTypes";
+import { CompoundWorkspaceModel } from "./workspacesTypes";
 
 export interface ClockifyTimeIntervalModel {
   start: string;

@@ -16,7 +16,7 @@
   "roots": [
     "<rootDir>/src/"
   ],
-  "setupFilesAfterEnv": ["<rootDir>/src/setupJest.js"],
+  "setupFilesAfterEnv": ["@testing-library/react/cleanup-after-each"],
   "testEnvironment": "node",
   "testMatch": [
     "<rootDir>/src/**/__tests__/**/*.ts?(x)",

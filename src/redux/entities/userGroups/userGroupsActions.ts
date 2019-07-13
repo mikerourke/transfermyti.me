@@ -1,17 +1,17 @@
-import { createAsyncAction, createStandardAction } from 'typesafe-actions';
-import { batchClockifyTransferRequests, getValidEntities } from '~/redux/utils';
+import { createAsyncAction, createStandardAction } from "typesafe-actions";
+import { batchClockifyTransferRequests, getValidEntities } from "~/redux/utils";
 import {
   apiCreateClockifyUserGroup,
   apiFetchClockifyUserGroups,
   apiFetchTogglUserGroups,
-} from '~/redux/entities/api/userGroups';
-import { showFetchErrorNotification } from '~/redux/app/appActions';
+} from "~/redux/entities/api/userGroups";
+import { showFetchErrorNotification } from "~/redux/app/appActions";
 import {
   selectClockifyUsersByWorkspace,
   selectTogglUsersByWorkspaceFactory,
-} from '~/redux/entities/users/usersSelectors';
-import { selectUserGroupsTransferPayloadForWorkspace } from './userGroupsSelectors';
-import { UserGroupTransform } from './UserGroupTransform';
+} from "~/redux/entities/users/usersSelectors";
+import { selectUserGroupsTransferPayloadForWorkspace } from "./userGroupsSelectors";
+import { UserGroupTransform } from "./UserGroupTransform";
 import {
   ClockifyUserGroupModel,
   CompoundTimeEntryModel,
@@ -23,7 +23,7 @@ import {
   ReduxGetState,
   TogglUserGroupModel,
   ToolName,
-} from '~/types';
+} from "~/types";
 
 export interface EntryCountCalculatorModel {
   toolName: ToolName;
@@ -32,33 +32,33 @@ export interface EntryCountCalculatorModel {
 }
 
 export const clockifyUserGroupsFetch = createAsyncAction(
-  '@userGroups/CLOCKIFY_FETCH_REQUEST',
-  '@userGroups/CLOCKIFY_FETCH_SUCCESS',
-  '@userGroups/CLOCKIFY_FETCH_FAILURE',
+  "@userGroups/CLOCKIFY_FETCH_REQUEST",
+  "@userGroups/CLOCKIFY_FETCH_SUCCESS",
+  "@userGroups/CLOCKIFY_FETCH_FAILURE",
 )<void, EntitiesFetchPayloadModel<ClockifyUserGroupModel>, void>();
 
 export const togglUserGroupsFetch = createAsyncAction(
-  '@userGroups/TOGGL_FETCH_REQUEST',
-  '@userGroups/TOGGL_FETCH_SUCCESS',
-  '@userGroups/TOGGL_FETCH_FAILURE',
+  "@userGroups/TOGGL_FETCH_REQUEST",
+  "@userGroups/TOGGL_FETCH_SUCCESS",
+  "@userGroups/TOGGL_FETCH_FAILURE",
 )<void, EntitiesFetchPayloadModel<CompoundUserGroupModel>, void>();
 
 export const clockifyUserGroupsTransfer = createAsyncAction(
-  '@userGroups/CLOCKIFY_TRANSFER_REQUEST',
-  '@userGroups/CLOCKIFY_TRANSFER_SUCCESS',
-  '@userGroups/CLOCKIFY_TRANSFER_FAILURE',
+  "@userGroups/CLOCKIFY_TRANSFER_REQUEST",
+  "@userGroups/CLOCKIFY_TRANSFER_SUCCESS",
+  "@userGroups/CLOCKIFY_TRANSFER_FAILURE",
 )<void, EntitiesFetchPayloadModel<ClockifyUserGroupModel>, void>();
 
 export const flipIsUserGroupIncluded = createStandardAction(
-  '@userGroups/FLIP_IS_INCLUDED',
+  "@userGroups/FLIP_IS_INCLUDED",
 )<string>();
 
 export const addTogglUserIdToGroup = createStandardAction(
-  '@userGroups/ADD_TOGGL_USER_ID_TO_GROUP',
+  "@userGroups/ADD_TOGGL_USER_ID_TO_GROUP",
 )<{ userId: string; userGroupId: string }>();
 
 export const calculateUserGroupEntryCounts = createStandardAction(
-  '@userGroups/CALCULATE_ENTRY_COUNTS',
+  "@userGroups/CALCULATE_ENTRY_COUNTS",
 )<EntryCountCalculatorModel>();
 
 export const fetchClockifyUserGroups = (workspaceId: string) => async (

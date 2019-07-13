@@ -1,43 +1,43 @@
-import { createAsyncAction, createStandardAction } from 'typesafe-actions';
-import { capitalize } from 'lodash';
-import storage from 'store';
-import { STORAGE_KEY } from '~/constants';
-import { getIfDev } from '~/utils/getIfDev';
+import { createAsyncAction, createStandardAction } from "typesafe-actions";
+import { capitalize } from "lodash";
+import storage from "store";
+import { STORAGE_KEY } from "~/constants";
+import { getIfDev } from "~/utils/getIfDev";
 import {
   apiFetchClockifyMeDetails,
   apiFetchTogglMeDetails,
-} from '~/redux/entities/api/users';
-import { apiFetchClockifyWorkspaces } from '~/redux/entities/api/workspaces';
-import { selectCredentials } from './credentialsSelectors';
-import { showNotification } from '~/redux/app/appActions';
+} from "~/redux/entities/api/users";
+import { apiFetchClockifyWorkspaces } from "~/redux/entities/api/workspaces";
+import { selectCredentials } from "./credentialsSelectors";
+import { showNotification } from "~/redux/app/appActions";
 import {
   clockifyWorkspacesFetch,
   togglWorkspacesFetch,
-} from '~/redux/entities/workspaces/workspacesActions';
+} from "~/redux/entities/workspaces/workspacesActions";
 import {
   CredentialsField,
   CredentialsModel,
   NotificationType,
   ReduxDispatch,
   ReduxGetState,
-} from '~/types';
+} from "~/types";
 
-export const allCredentialsStored = createStandardAction('@credentials/STORED')<
+export const allCredentialsStored = createStandardAction("@credentials/STORED")<
   CredentialsModel
 >();
 
 export const credentialsValidation = createAsyncAction(
-  '@credentials/CREDENTIALS_VALIDATION_REQUEST',
-  '@credentials/CREDENTIALS_VALIDATION_SUCCESS',
-  '@credentials/CREDENTIALS_VALIDATION_FAILURE',
+  "@credentials/CREDENTIALS_VALIDATION_REQUEST",
+  "@credentials/CREDENTIALS_VALIDATION_SUCCESS",
+  "@credentials/CREDENTIALS_VALIDATION_FAILURE",
 )<void, CredentialsModel, void>();
 
 export const updateAreCredentialsValid = createStandardAction(
-  '@credentials/UPDATE_ARE_CREDENTIALS_VALID',
+  "@credentials/UPDATE_ARE_CREDENTIALS_VALID",
 )<boolean>();
 
 export const updateCredentialsField = createStandardAction(
-  '@credentials/UPDATE_FIELD',
+  "@credentials/UPDATE_FIELD",
 )<{ field: CredentialsField; value: string }>();
 
 export const storeAllCredentials = () => (
@@ -90,7 +90,7 @@ export const validateCredentials = () => async (dispatch: ReduxDispatch) => {
     return dispatch(credentialsValidation.success(credentials));
   } catch (error) {
     const message =
-      'An error occurred when attempting to validate your ' +
+      "An error occurred when attempting to validate your " +
       `${capitalize(error.toolName)} credentials.`;
     dispatch(showNotification({ message, type: NotificationType.Error }));
     return dispatch(credentialsValidation.failure());

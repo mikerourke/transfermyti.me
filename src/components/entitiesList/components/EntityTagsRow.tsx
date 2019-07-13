@@ -1,9 +1,9 @@
-import React from 'react';
-import { When } from 'react-if';
-import { get, isNil } from 'lodash';
-import EntityTag, { EntityTagType } from '~/components/entityTag/EntityTag';
-import Flex, { FlexProps } from '~/components/flex/Flex';
-import { CompoundEntityModel } from '~/types';
+import React from "react";
+import { When } from "react-if";
+import { get, isNil } from "lodash";
+import EntityTag, { EntityTagType } from "~/components/entityTag/EntityTag";
+import Flex, { FlexProps } from "~/components/flex/Flex";
+import { CompoundEntityModel } from "~/types";
 
 interface Props extends FlexProps {
   isTimeEntry: boolean;
@@ -15,11 +15,11 @@ const EntityTagsRow: React.FC<Props> = ({
   entityRecord,
   ...flexProps
 }) => {
-  const tagSize = isTimeEntry ? 'small' : 'large';
+  const tagSize = isTimeEntry ? "small" : "large";
 
   return (
     <Flex {...flexProps}>
-      <When condition={!get(entityRecord, 'isActive', true)}>
+      <When condition={!get(entityRecord, "isActive", true)}>
         <EntityTag size={tagSize} tagType={EntityTagType.Archived} />
       </When>
       <When condition={!entityRecord.isIncluded}>

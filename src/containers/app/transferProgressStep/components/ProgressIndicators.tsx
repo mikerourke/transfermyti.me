@@ -1,13 +1,13 @@
-import React from 'react';
-import { css } from 'emotion';
-import { startCase } from 'lodash';
-import { Columns } from 'bloomer';
-import ProgressIndicatorColumn from './ProgressIndicatorColumn';
+import React from "react";
+import { css } from "emotion";
+import { startCase } from "lodash";
+import { Columns } from "bloomer";
+import ProgressIndicatorColumn from "./ProgressIndicatorColumn";
 import {
   AggregateTransferCountsModel,
   InTransferDetailsModel,
   TransferCountsModel,
-} from '~/types';
+} from "~/types";
 
 interface Props {
   inTransferDetails: InTransferDetailsModel;
@@ -64,7 +64,7 @@ const ProgressIndicators: React.FC<Props> = props => {
         />
         <ProgressIndicatorColumn
           title="Group Progress"
-          subtitle={startCase(props.inTransferDetails.entityGroup || 'none')}
+          subtitle={startCase(props.inTransferDetails.entityGroup || "none")}
           countCurrent={countCurrentInGroup}
           countTotal={countTotalInGroup}
         />

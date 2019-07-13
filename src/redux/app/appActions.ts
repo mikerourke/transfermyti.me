@@ -1,7 +1,7 @@
-import { createStandardAction } from 'typesafe-actions';
-import { capitalize, isNil, uniqueId } from 'lodash';
-import { getIfDev } from '~/utils/getIfDev';
-import { selectCountTotalOfTransfersOverall } from '~/redux/entities/workspaces/workspacesSelectors';
+import { createStandardAction } from "typesafe-actions";
+import { capitalize, isNil, uniqueId } from "lodash";
+import { getIfDev } from "~/utils/getIfDev";
+import { selectCountTotalOfTransfersOverall } from "~/redux/entities/workspaces/workspacesSelectors";
 import {
   TransferCountsModel,
   InTransferDetailsModel,
@@ -11,42 +11,42 @@ import {
   ToolName,
   TransferType,
   ReduxGetState,
-} from '~/types';
+} from "~/types";
 
 export const notificationShown = createStandardAction(
-  '@app/NOTIFICATION_SHOWN',
+  "@app/NOTIFICATION_SHOWN",
 )<Partial<NotificationModel>>();
 
 export const dismissNotification = createStandardAction(
-  '@app/DISMISS_NOTIFICATION',
+  "@app/DISMISS_NOTIFICATION",
 )<string>();
 
 export const dismissAllNotifications = createStandardAction(
-  '@app/DISMISS_ALL_NOTIFICATIONS',
+  "@app/DISMISS_ALL_NOTIFICATIONS",
 )();
 
 export const updateTransferType = createStandardAction(
-  '@app/UPDATE_TRANSFER_TYPE',
+  "@app/UPDATE_TRANSFER_TYPE",
 )<TransferType>();
 
 export const updateInTransferDetails = createStandardAction(
-  '@app/UPDATE_IN_TRANSFER_DETAILS',
+  "@app/UPDATE_IN_TRANSFER_DETAILS",
 )<InTransferDetailsModel>();
 
 export const updateCountCurrentInWorkspace = createStandardAction(
-  '@app/UPDATE_COUNT_CURRENT_IN_AGGREGATE',
+  "@app/UPDATE_COUNT_CURRENT_IN_AGGREGATE",
 )<number>();
 
 export const updateCountTotalInWorkspace = createStandardAction(
-  '@app/UPDATE_COUNT_TOTAL_IN_AGGREGATE',
+  "@app/UPDATE_COUNT_TOTAL_IN_AGGREGATE",
 )<number>();
 
 export const updateCountCurrentOverall = createStandardAction(
-  '@app/UPDATE_COUNT_CURRENT_OVERALL',
+  "@app/UPDATE_COUNT_CURRENT_OVERALL",
 )<number>();
 
 export const updateCountTotalOverall = createStandardAction(
-  '@app/UPDATE_COUNT_TOTAL_OVERALL',
+  "@app/UPDATE_COUNT_TOTAL_OVERALL",
 )<number>();
 
 export const updateCountsInWorkspace = (
@@ -69,7 +69,7 @@ export const updateCountsOverallBeforeTransfer = () => (
 export const showNotification = (notification: Partial<NotificationModel>) => (
   dispatch: ReduxDispatch,
 ) => {
-  const id = isNil(notification.id) ? uniqueId('NTF') : notification.id;
+  const id = isNil(notification.id) ? uniqueId("NTF") : notification.id;
   dispatch(notificationShown({ ...notification, id }));
   return id;
 };

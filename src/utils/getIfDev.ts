@@ -3,7 +3,7 @@ export function getIfDev(): boolean {
     const nodeEnv = process.env.NODE_ENV;
     if (!nodeEnv) return false;
 
-    return nodeEnv.toString() === 'development';
+    return nodeEnv.toString() === "development";
   } catch (error) {
     return false;
   }

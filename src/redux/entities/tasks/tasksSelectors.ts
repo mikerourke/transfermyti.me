@@ -1,8 +1,8 @@
-import { createSelector } from 'reselect';
-import { get, isNil } from 'lodash';
-import { findTogglInclusions, groupByWorkspace } from '~/redux/utils';
-import { selectTogglClientMatchingId } from '~/redux/entities/clients/clientsSelectors';
-import { CompoundTaskModel, CreateTaskRequestModel, ReduxState } from '~/types';
+import { createSelector } from "reselect";
+import { get, isNil } from "lodash";
+import { findTogglInclusions, groupByWorkspace } from "~/redux/utils";
+import { selectTogglClientMatchingId } from "~/redux/entities/clients/clientsSelectors";
+import { CompoundTaskModel, CreateTaskRequestModel, ReduxState } from "~/types";
 
 export const selectTogglTasks = createSelector(
   (state: ReduxState) => Object.values(state.entities.tasks.toggl.byId),

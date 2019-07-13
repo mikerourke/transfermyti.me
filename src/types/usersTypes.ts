@@ -1,9 +1,9 @@
-import { TogglWorkspaceModel } from './workspacesTypes';
-import { BaseCompoundEntityModel } from '~/types/entityTypes';
+import { TogglWorkspaceModel } from "./workspacesTypes";
+import { BaseCompoundEntityModel } from "~/types/entityTypes";
 
 // TODO: Add the other options here.
 export enum ClockifyUserStatus {
-  Active = 'ACTIVE',
+  Active = "ACTIVE",
 }
 
 export interface ClockifyMembershipModel {

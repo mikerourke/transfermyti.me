@@ -1,6 +1,6 @@
 /* eslint-disable @typescript-eslint/indent */
-import { linkEntitiesInStateByName } from '~/redux/utils';
-import { EntityGroup } from '~/types/entityTypes';
+import { linkEntitiesInStateByName } from "~/redux/utils";
+import { EntityGroup } from "~/types/entityTypes";
 
 // prettier-ignore
 const tagsState = {
@@ -27,8 +27,8 @@ const tagsState = {
     },
 };
 
-describe('the linkEntitiesInState method', () => {
-  test('links entities with the same name and matches snapshot', () => {
+describe("the linkEntitiesInState method", () => {
+  test("links entities with the same name and matches snapshot", () => {
     const result = linkEntitiesInStateByName(EntityGroup.Tags, tagsState);
     expect(result).toMatchSnapshot();
   });

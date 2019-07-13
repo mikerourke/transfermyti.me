@@ -1,14 +1,14 @@
-import { createAsyncAction, createStandardAction } from 'typesafe-actions';
-import { flatten } from 'lodash';
-import { batchClockifyTransferRequests, buildThrottler } from '~/redux/utils';
+import { createAsyncAction, createStandardAction } from "typesafe-actions";
+import { flatten } from "lodash";
+import { batchClockifyTransferRequests, buildThrottler } from "~/redux/utils";
 import {
   apiCreateClockifyTask,
   apiFetchClockifyTasks,
   apiFetchTogglTasks,
-} from '~/redux/entities/api/tasks';
-import { showFetchErrorNotification } from '~/redux/app/appActions';
-import { selectClockifyProjectIds } from '~/redux/entities/projects/projectsSelectors';
-import { selectTasksTransferPayloadForWorkspace } from './tasksSelectors';
+} from "~/redux/entities/api/tasks";
+import { showFetchErrorNotification } from "~/redux/app/appActions";
+import { selectClockifyProjectIds } from "~/redux/entities/projects/projectsSelectors";
+import { selectTasksTransferPayloadForWorkspace } from "./tasksSelectors";
 import {
   ClockifyTaskModel,
   EntitiesFetchPayloadModel,
@@ -16,28 +16,28 @@ import {
   ReduxDispatch,
   ReduxGetState,
   TogglTaskModel,
-} from '~/types';
+} from "~/types";
 
 export const clockifyTasksFetch = createAsyncAction(
-  '@tasks/CLOCKIFY_FETCH_REQUEST',
-  '@tasks/CLOCKIFY_FETCH_SUCCESS',
-  '@tasks/CLOCKIFY_FETCH_FAILURE',
+  "@tasks/CLOCKIFY_FETCH_REQUEST",
+  "@tasks/CLOCKIFY_FETCH_SUCCESS",
+  "@tasks/CLOCKIFY_FETCH_FAILURE",
 )<void, EntitiesFetchPayloadModel<ClockifyTaskModel>, void>();
 
 export const togglTasksFetch = createAsyncAction(
-  '@tasks/TOGGL_FETCH_REQUEST',
-  '@tasks/TOGGL_FETCH_SUCCESS',
-  '@tasks/TOGGL_FETCH_FAILURE',
+  "@tasks/TOGGL_FETCH_REQUEST",
+  "@tasks/TOGGL_FETCH_SUCCESS",
+  "@tasks/TOGGL_FETCH_FAILURE",
 )<void, EntitiesFetchPayloadModel<TogglTaskModel>, void>();
 
 export const clockifyTasksTransfer = createAsyncAction(
-  '@tasks/CLOCKIFY_TRANSFER_REQUEST',
-  '@tasks/CLOCKIFY_TRANSFER_SUCCESS',
-  '@tasks/CLOCKIFY_TRANSFER_FAILURE',
+  "@tasks/CLOCKIFY_TRANSFER_REQUEST",
+  "@tasks/CLOCKIFY_TRANSFER_SUCCESS",
+  "@tasks/CLOCKIFY_TRANSFER_FAILURE",
 )<void, EntitiesFetchPayloadModel<ClockifyTaskModel>, void>();
 
 export const flipIsTaskIncluded = createStandardAction(
-  '@tasks/FLIP_IS_INCLUDED',
+  "@tasks/FLIP_IS_INCLUDED",
 )<string>();
 
 export const fetchClockifyTasks = (workspaceId: string) => async (

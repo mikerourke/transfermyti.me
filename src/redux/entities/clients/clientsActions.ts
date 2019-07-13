@@ -1,12 +1,12 @@
-import { createAsyncAction, createStandardAction } from 'typesafe-actions';
-import { batchClockifyTransferRequests } from '~/redux/utils';
+import { createAsyncAction, createStandardAction } from "typesafe-actions";
+import { batchClockifyTransferRequests } from "~/redux/utils";
 import {
   apiCreateClockifyClient,
   apiFetchClockifyClients,
   apiFetchTogglClients,
-} from '~/redux/entities/api/clients';
-import { showFetchErrorNotification } from '~/redux/app/appActions';
-import { selectClientsTransferPayloadForWorkspace } from './clientsSelectors';
+} from "~/redux/entities/api/clients";
+import { showFetchErrorNotification } from "~/redux/app/appActions";
+import { selectClientsTransferPayloadForWorkspace } from "./clientsSelectors";
 import {
   ClockifyClientModel,
   EntitiesFetchPayloadModel,
@@ -14,28 +14,28 @@ import {
   ReduxDispatch,
   ReduxGetState,
   TogglClientModel,
-} from '~/types';
+} from "~/types";
 
 export const clockifyClientsFetch = createAsyncAction(
-  '@clients/CLOCKIFY_FETCH_REQUEST',
-  '@clients/CLOCKIFY_FETCH_SUCCESS',
-  '@clients/CLOCKIFY_FETCH_FAILURE',
+  "@clients/CLOCKIFY_FETCH_REQUEST",
+  "@clients/CLOCKIFY_FETCH_SUCCESS",
+  "@clients/CLOCKIFY_FETCH_FAILURE",
 )<void, EntitiesFetchPayloadModel<ClockifyClientModel>, void>();
 
 export const togglClientsFetch = createAsyncAction(
-  '@clients/TOGGL_FETCH_REQUEST',
-  '@clients/TOGGL_FETCH_SUCCESS',
-  '@clients/TOGGL_FETCH_FAILURE',
+  "@clients/TOGGL_FETCH_REQUEST",
+  "@clients/TOGGL_FETCH_SUCCESS",
+  "@clients/TOGGL_FETCH_FAILURE",
 )<void, EntitiesFetchPayloadModel<TogglClientModel>, void>();
 
 export const clockifyClientsTransfer = createAsyncAction(
-  '@clients/CLOCKIFY_TRANSFER_REQUEST',
-  '@clients/CLOCKIFY_TRANSFER_SUCCESS',
-  '@clients/CLOCKIFY_TRANSFER_FAILURE',
+  "@clients/CLOCKIFY_TRANSFER_REQUEST",
+  "@clients/CLOCKIFY_TRANSFER_SUCCESS",
+  "@clients/CLOCKIFY_TRANSFER_FAILURE",
 )<void, EntitiesFetchPayloadModel<ClockifyClientModel>, void>();
 
 export const flipIsClientIncluded = createStandardAction(
-  '@clients/FLIP_IS_INCLUDED',
+  "@clients/FLIP_IS_INCLUDED",
 )<string>();
 
 export const fetchClockifyClients = (workspaceId: string) => async (

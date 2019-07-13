@@ -1,5 +1,5 @@
-import React from 'react';
-import { iconProps, SvgIconName } from './iconProps';
+import React from "react";
+import { iconProps, SvgIconName } from "./iconProps";
 
 interface Props extends React.SVGAttributes<SVGElement> {
   name: SvgIconName;
@@ -18,10 +18,10 @@ const SvgIcon: React.FC<Props> = ({ name, color, classes, ...svgProps }) => (
 
 SvgIcon.defaultProps = {
   classes: {
-    svg: '',
-    path: '',
+    svg: "",
+    path: "",
   },
 };
 
-export { SvgIconName } from './iconProps';
+export { SvgIconName } from "./iconProps";
 export default SvgIcon;
