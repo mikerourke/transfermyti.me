@@ -15,8 +15,9 @@ import {
   CountsByGroupByWorkspaceModel,
   EntitiesByGroupByWorkspaceModel,
   EntityGroup,
-  UpdateIncludedWorkspaceYearModel,
+  RecordCountsModel,
   ToolName,
+  UpdateIncludedWorkspaceYearModel,
 } from '~/types';
 
 interface Props extends StepPageProps {
@@ -59,7 +60,7 @@ const EntitiesReviewPage: React.FC<Props> = ({
     entitiesByGroupByWorkspace,
     [workspaceId, activeEntityGroup],
     [],
-  );
+  ) as Array<CompoundEntityModel>;
 
   if (showInclusionsOnly && activeEntityRecords.length !== 0) {
     activeEntityRecords = activeEntityRecords.reduce(
@@ -78,7 +79,7 @@ const EntitiesReviewPage: React.FC<Props> = ({
     countsByGroupByWorkspace,
     [workspaceId, activeEntityGroup],
     {},
-  );
+  ) as RecordCountsModel;
 
   const handleIncludedYearUpdate = (year: number, isIncluded: boolean) => {
     const updateDetails = { workspaceId, year, isIncluded };

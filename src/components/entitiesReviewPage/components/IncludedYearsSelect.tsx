@@ -2,9 +2,9 @@ import React, { CSSProperties } from 'react';
 import Select from 'react-select';
 import { compact, get } from 'lodash';
 import { css } from 'emotion';
-import makeAnimated from 'react-select/lib/animated';
+import makeAnimated from 'react-select/animated';
 import { FontWeightProperty } from 'csstype';
-import { ActionMeta, Theme } from 'react-select/lib/types';
+import { ActionMeta, Theme } from 'react-select/src/types';
 
 const getTheme = (theme: Theme) => ({
   ...theme,
