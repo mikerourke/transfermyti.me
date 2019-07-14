@@ -126,8 +126,8 @@ async function deleteEntityGroupInWorkspace(workspaceId, entityGroup) {
       .then(() => {
         console.log(green(`Delete ${name} successful`));
       })
-      .catch(error => {
-        console.log(magenta(`Error deleting ${entityGroup}: ${error}`));
+      .catch(err => {
+        console.log(magenta(`Error deleting ${entityGroup}: ${err}`));
       });
   }
 }
@@ -196,8 +196,8 @@ async function deleteTimeEntriesInWorkspace(workspaceId) {
         console.log(green(`Deleted ${currentEntry} of ${totalEntryCount}`));
         currentEntry += 1;
       })
-      .catch(error => {
-        console.log(magenta(`Error deleting time entries: ${error}`));
+      .catch(err => {
+        console.log(magenta(`Error deleting time entries: ${err}`));
       });
   }
 }
@@ -248,8 +248,8 @@ async function fetchTimeEntriesInWorkspace(workspaceId) {
           green(`Fetched ${timeEntries.length} entries for ${yearToFetch}`),
         );
       })
-      .catch(error => {
-        console.log(magenta(`Error fetching time entries: ${error}`));
+      .catch(err => {
+        console.log(magenta(`Error fetching time entries: ${err}`));
       });
   }
 
@@ -289,8 +289,8 @@ function buildThrottler(fetchFunc) {
         .then(response => {
           resolve(response);
         })
-        .catch(error => {
-          reject(error);
+        .catch(err => {
+          reject(err);
         }),
     );
 
@@ -328,11 +328,11 @@ async function clockifyFetch(endpoint, options) {
 
   try {
     return await response.json();
-  } catch (error) {
-    if (/invalid json/.test(error.message)) {
+  } catch (err) {
+    if (/invalid json/.test(err.message)) {
       return Promise.resolve();
     }
-    return Promise.reject(error);
+    return Promise.reject(err);
   }
 }
 

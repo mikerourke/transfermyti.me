@@ -70,8 +70,8 @@ export const fetchClockifyTasks = (workspaceId: string) => async (
     return dispatch(
       clockifyTasksFetch.success({ entityRecords: tasks, workspaceId }),
     );
-  } catch (error) {
-    dispatch(showFetchErrorNotification(error));
+  } catch (err) {
+    dispatch(showFetchErrorNotification(err));
     return dispatch(clockifyTasksFetch.failure());
   }
 };
@@ -86,8 +86,8 @@ export const fetchTogglTasks = (workspaceId: string) => async (
     return dispatch(
       togglTasksFetch.success({ entityRecords: tasks, workspaceId }),
     );
-  } catch (error) {
-    dispatch(showFetchErrorNotification(error));
+  } catch (err) {
+    dispatch(showFetchErrorNotification(err));
     return dispatch(togglTasksFetch.failure());
   }
 };
@@ -121,8 +121,8 @@ export const transferTasksToClockify = (
         workspaceId: clockifyWorkspaceId,
       }),
     );
-  } catch (error) {
-    dispatch(showFetchErrorNotification(error));
+  } catch (err) {
+    dispatch(showFetchErrorNotification(err));
     return dispatch(clockifyTasksTransfer.failure());
   }
 };

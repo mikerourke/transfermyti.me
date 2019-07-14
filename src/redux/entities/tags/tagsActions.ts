@@ -49,8 +49,8 @@ export const fetchClockifyTags = (workspaceId: string) => async (
     return dispatch(
       clockifyTagsFetch.success({ entityRecords: tags, workspaceId }),
     );
-  } catch (error) {
-    dispatch(showFetchErrorNotification(error));
+  } catch (err) {
+    dispatch(showFetchErrorNotification(err));
     return dispatch(clockifyTagsFetch.failure());
   }
 };
@@ -66,8 +66,8 @@ export const fetchTogglTags = (workspaceId: string) => async (
     return dispatch(
       togglTagsFetch.success({ entityRecords: tags, workspaceId }),
     );
-  } catch (error) {
-    dispatch(showFetchErrorNotification(error));
+  } catch (err) {
+    dispatch(showFetchErrorNotification(err));
     return dispatch(togglTagsFetch.failure());
   }
 };
@@ -101,8 +101,8 @@ export const transferTagsToClockify = (
         workspaceId: clockifyWorkspaceId,
       }),
     );
-  } catch (error) {
-    dispatch(showFetchErrorNotification(error));
+  } catch (err) {
+    dispatch(showFetchErrorNotification(err));
     return dispatch(clockifyTagsTransfer.failure());
   }
 };

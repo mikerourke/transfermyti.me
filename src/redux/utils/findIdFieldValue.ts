@@ -41,7 +41,7 @@ export function findIdFieldValue<TEntity>(
     // For Clockify entities, there may be an entity object with an "id" field
     // (e.g. "project": { "id": "someProjectId" }):
     return get(entityRecord, [entityType, "id"], null);
-  } catch (error) {
+  } catch (err) {
     return null;
   }
 }

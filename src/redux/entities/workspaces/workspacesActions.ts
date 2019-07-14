@@ -88,8 +88,8 @@ export const fetchClockifyWorkspaces = () => async (
     );
 
     return dispatch(clockifyWorkspacesFetch.success(includedWorkspaces));
-  } catch (error) {
-    dispatch(showFetchErrorNotification(error));
+  } catch (err) {
+    dispatch(showFetchErrorNotification(err));
     return dispatch(clockifyWorkspacesFetch.failure());
   }
 };
@@ -119,8 +119,8 @@ export const fetchTogglWorkspaces = () => async (dispatch: ReduxDispatch) => {
     const workspaces = await apiFetchTogglWorkspaces();
 
     return dispatch(togglWorkspacesFetch.success(workspaces));
-  } catch (error) {
-    dispatch(showFetchErrorNotification(error));
+  } catch (err) {
+    dispatch(showFetchErrorNotification(err));
     return dispatch(togglWorkspacesFetch.failure());
   }
 };
@@ -210,8 +210,8 @@ export const transferEntitiesToClockifyWorkspace = (
     );
 
     return dispatch(updateWorkspaceNameBeingFetched(null));
-  } catch (error) {
-    dispatch(showFetchErrorNotification(error));
+  } catch (err) {
+    dispatch(showFetchErrorNotification(err));
     return dispatch(clockifyWorkspaceTransfer.failure());
   }
 };
