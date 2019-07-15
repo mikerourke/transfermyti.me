@@ -1,6 +1,7 @@
 import React from "react";
 import { render } from "@testing-library/react";
 import TimeEntryListItem from "../TimeEntryListItem";
+import { DetailedTimeEntryModel } from "~/types";
 
 const TEST_TIME_ENTRY = {
   id: "8001",
@@ -13,8 +14,8 @@ const TEST_TIME_ENTRY = {
   clientId: "3001",
   clientName: "Test Client A",
   isBillable: false,
-  start: "2019-06-25T18:00:00.000Z",
-  end: "2019-06-25T23:00:00.000Z",
+  start: new Date("2019-06-25T18:00:00.000Z"),
+  end: new Date("2019-06-25T23:00:00.000Z"),
   year: 2019,
   tagNames: ["tag-a", "tag-b"],
   isActive: true,
@@ -92,23 +93,15 @@ const TEST_TIME_ENTRY = {
     isIncluded: true,
     memberOf: "workspaces",
   },
-};
-
-const setup = (propOverrides: any = {}) => {
-  const props = {
-    timeEntry: TEST_TIME_ENTRY,
-    isOmitted: false,
-    ...propOverrides,
-  };
-
-  const wrapper = render(<TimeEntryListItem {...props} />);
-
-  return { wrapper, props };
-};
+} as DetailedTimeEntryModel;
 
 describe("<TimeEntryListItem> Component", () => {
-  test(`renders successfully when props.isOmitted = true`, () => {
-    const { queryByTestId } = setup({ isOmitted: true }).wrapper;
+  test(`renders successfully with valid props`, () => {
+    const props: any = {
+      timeEntry: TEST_TIME_ENTRY,
+      isOmitted: false,
+    };
+    const { queryByTestId } = render(<TimeEntryListItem {...props} />);
 
     expect(queryByTestId("entity-tags-row")).not.toBeNull();
     expect(queryByTestId("time-entry-table")).not.toBeNull();

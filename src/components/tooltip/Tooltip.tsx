@@ -1,16 +1,11 @@
 import React from "react";
 import ReactTooltip from "react-tooltip";
 
-// Needed this due to outdated type definitions for react-tooltip:
-interface TooltipProps extends ReactTooltip.Props {
-  delayUpdate?: number;
-}
-
-const CustomTooltip: React.FC<TooltipProps> = props => (
+const CustomTooltip: React.FC<ReactTooltip.Props> = props => (
   <ReactTooltip {...props} />
 );
 
-interface Props extends TooltipProps {
+interface Props extends ReactTooltip.Props {
   id: string;
 }
 

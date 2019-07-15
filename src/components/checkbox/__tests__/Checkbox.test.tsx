@@ -12,7 +12,7 @@ describe("<Checkbox> Component", () => {
       );
       const pathD = getByTestId("checkbox-path").getAttribute("d");
 
-      expect(pathD).toEqual(options.expected);
+      expect(pathD).toBe(options.expected);
     },
     [
       {

@@ -9,6 +9,7 @@ interface Props {
 const PageHeader: React.FC<Props> = ({ title, subtitle }) => (
   <>
     <h1
+      data-testid="page-header-title"
       className={css`
         margin-bottom: 0;
         font-size: 1.5rem;
@@ -20,6 +21,7 @@ const PageHeader: React.FC<Props> = ({ title, subtitle }) => (
       {title}
     </h1>
     <h2
+      data-testid="page-header-subtitle"
       className={css`
         margin-bottom: 0.5rem;
         font-size: 2rem;

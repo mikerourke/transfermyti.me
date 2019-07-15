@@ -1,6 +1,6 @@
 import React from "react";
 import cases from "jest-in-case";
-import { fireEvent, getNodeText, render } from "@testing-library/react";
+import { fireEvent, render } from "@testing-library/react";
 import BasicListItem from "../BasicListItem";
 
 const TEST_ENTITY_RECORD = {
@@ -45,25 +45,25 @@ describe("<BasicListItem> Component", () => {
       const { getByTestId } = setup({
         entityRecord: options.entityRecord,
       }).wrapper;
-      const countLabel = getNodeText(getByTestId("list-item-count-label"));
+      const countLabel = getByTestId("list-item-count-label");
 
-      expect(countLabel).toMatch(new RegExp(options.expected));
+      expect(countLabel).toHaveTextContent(options.expected);
     },
     [
       {
         name: `shows "entry" if entry count = 1`,
         entityRecord: { ...TEST_ENTITY_RECORD, entryCount: 1 },
-        expected: "entry",
+        expected: /entry/g,
       },
       {
         name: `shows "entries" if entry count > 1`,
         entityRecord: { ...TEST_ENTITY_RECORD, entryCount: 5 },
-        expected: "entries",
+        expected: /entries/g,
       },
       {
         name: `shows "entries" if entry count = undefined`,
         entityRecord: { ...TEST_ENTITY_RECORD, entryCount: undefined },
-        expected: "entries",
+        expected: /entries/g,
       },
     ],
   );
