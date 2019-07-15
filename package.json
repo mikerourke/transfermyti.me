@@ -75,7 +75,6 @@
     "dotenv": "^8.0.0",
     "eslint": "^5.16.0",
     "eslint-plugin-import": "^2.16.0",
-    "eslint-plugin-react": "^7.12.4",
     "eslint-plugin-unicorn": "^8.0.2",
     "express": "^4.16.4",
     "fs-extra": "^8.0.0",
