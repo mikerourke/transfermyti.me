@@ -21,6 +21,7 @@ const ListItemBase: React.FC<Props> = ({
   return (
     <Flex {...listRowProps} alignItems="center" justifyContent="flex-start">
       <Flex
+        data-testid="list-item-base-inner"
         as={Box}
         alignItems="center"
         className={classnames(

@@ -29,7 +29,12 @@ const EntityTag: React.FC<Props> = ({ size, tagType }) => {
   }[tagType];
 
   return (
-    <Tag isColor={color} className={tagClass} style={entryStyle}>
+    <Tag
+      data-testid="entity-tag"
+      isColor={color}
+      className={tagClass}
+      style={entryStyle}
+    >
       {tagType}
     </Tag>
   );
