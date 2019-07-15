@@ -1,14 +1,14 @@
-import path from "path";
-import fsExtra from "fs-extra";
-import { isSameYear } from "date-fns";
-import { find, get, uniqueId } from "lodash";
+const path = require("path");
+const fsExtra = require("fs-extra");
+const { isSameYear } = require("date-fns");
+const { find, get, uniqueId } = require("lodash");
 
 const dbPath = path.resolve(__dirname, "..", "db", "clockify.json");
 const db = fsExtra.readJSONSync(dbPath);
 
 const isEmpty = process.env.LOCAL_API_CLOCKIFY_EMPTY;
 
-export function assignClockifyRoutes(router) {
+function assignClockifyRoutes(router) {
   let entriesCreated = 20;
 
   router
@@ -34,7 +34,7 @@ export function assignClockifyRoutes(router) {
     .post(
       "/workspaces/:workspaceId/timeEntries/user/:userId/entriesInRange",
       (req, res) => {
-        const { start } = req.query;
+        const { start } = req.body;
         const filterStart = new Date(start);
 
         const timeEntriesToSend = db.timeEntries.reduce((acc, timeEntry) => {
@@ -58,7 +58,7 @@ export function assignClockifyRoutes(router) {
           ];
         }, []);
 
-        res.status(200).send(isEmpty ? [] : timeEntriesToSend);
+        res.send(timeEntriesToSend);
       },
     )
     .get("/workspaces/:workspaceId/userGroups/", (req, res) =>
@@ -165,3 +165,5 @@ export function assignClockifyRoutes(router) {
       res.status(200).send(newWorkspace);
     });
 }
+
+module.exports = { assignClockifyRoutes };

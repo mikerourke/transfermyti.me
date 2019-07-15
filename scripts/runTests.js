@@ -1,5 +1,8 @@
 "use strict";
 
+const { run: runJest } = require("jest");
+const { startServer, stopServer } = require("../server/server");
+
 // Do this as the first thing so that any code reading it knows the right env.
 process.env.NODE_ENV = "test";
 process.env.PUBLIC_URL = "";
@@ -22,4 +25,10 @@ if (process.env.CI) {
   argv.push("--ci=true");
 }
 
-require("jest").run(argv);
+async function runTests() {
+  await startServer();
+  await runJest(argv);
+  process.exit(0);
+}
+
+runTests();
