@@ -68,7 +68,7 @@ export const selectTimeEntriesByWorkspaceFactory = (
       });
 
       const sortedEntries = timeEntries.sort(
-        (a, b) => b.start.getTime() - a.start.getTime(),
+        (a, b) => new Date(b.start).getTime() - new Date(a.start).getTime(),
       );
 
       return Object.keys(workspacesById).reduce(
