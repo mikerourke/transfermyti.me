@@ -23,6 +23,7 @@ const NoRecordsDisplay: React.FC<Props> = ({
 
   return (
     <div
+      data-testid="no-records-display"
       className={css`
         height: ${height}px;
         text-align: center;

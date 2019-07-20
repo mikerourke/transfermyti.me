@@ -48,14 +48,14 @@ describe("<EntitiesList> Component", () => {
     expect(props.onItemClick).toHaveBeenCalled();
   });
 
-  test(`does not show checkbox if props.onItemClick is undefined`, () => {
+  test("does not show checkbox if props.onItemClick is undefined", () => {
     const { queryAllByTestId } = setup({ onItemClick: undefined }).wrapper;
     const checkboxes = queryAllByTestId("checkbox-svg");
 
     expect(checkboxes).toHaveLength(0);
   });
 
-  test(`renders <TimeEntryListItem> when props.entityGroup is time entries`, () => {
+  test("renders <TimeEntryListItem> when props.entityGroup is time entries", () => {
     const { queryAllByTestId } = setup({
       entityGroup: EntityGroup.TimeEntries,
     }).wrapper;

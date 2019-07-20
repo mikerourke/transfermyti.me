@@ -4,7 +4,7 @@ import { iconProps, SvgIconName } from "../iconProps";
 import SvgIcon from "../SvgIcon";
 
 describe("<SvgIcon> Component", () => {
-  test(`displays the correct path and color based on props`, () => {
+  test("displays the correct path and color based on props", () => {
     const props = {
       name: SvgIconName.Person,
       color: "blue",

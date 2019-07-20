@@ -15,7 +15,7 @@ const setup = (propOverrides: any = {}) => {
 };
 
 describe("<ListItemBase> Component", () => {
-  test(`is partially transparent if props.isOmitted = true`, () => {
+  test("is partially transparent if props.isOmitted = true", () => {
     const { getByTestId } = setup({ isOmitted: true }).wrapper;
     const innerFlex = getByTestId("list-item-base-inner");
     const { opacity } = window.getComputedStyle(innerFlex);

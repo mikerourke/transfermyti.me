@@ -1,6 +1,6 @@
 import React, { useEffect, useRef } from "react";
 import { Button, Container } from "bloomer";
-import { When, Unless } from "react-if";
+import { When } from "react-if";
 import { css } from "emotion";
 import { isNil } from "lodash";
 import Flex from "~/components/flex/Flex";
@@ -42,15 +42,15 @@ const StepPage: React.FC<Props> = ({
   });
 
   return (
-    <Container>
+    <Container data-testid="step-page">
       <PageHeader
         title={`Step ${props.stepNumber}:`}
         subtitle={props.subtitle}
       />
       <div ref={contentsRef}>
-        <Unless condition={isNil(props.instructions)}>
+        <When condition={!isNil(props.instructions)}>
           <InstructionsSection>{props.instructions}</InstructionsSection>
-        </Unless>
+        </When>
         {props.children}
       </div>
       <Flex
@@ -62,6 +62,7 @@ const StepPage: React.FC<Props> = ({
         <Flex justifySelf="flex-start">
           <When condition={!isNil(props.onRefreshClick)}>
             <Button
+              data-testid="step-page-refresh-button"
               isSize="medium"
               onClick={props.onRefreshClick}
               className={css`
@@ -80,12 +81,18 @@ const StepPage: React.FC<Props> = ({
         </Flex>
         <Flex justifySelf="flex-end">
           <When condition={!isNil(onPreviousClick)}>
-            <Button isSize="medium" onClick={onPreviousClick} isColor="dark">
+            <Button
+              data-testid="step-page-previous-button"
+              isSize="medium"
+              onClick={onPreviousClick}
+              isColor="dark"
+            >
               Previous
             </Button>
           </When>
           <When condition={!isNil(onPreviousClick) && !isNil(onNextClick)}>
             <div
+              data-testid="step-page-button-separator"
               className={css`
                 margin-right: 1rem;
               `}
@@ -93,6 +100,7 @@ const StepPage: React.FC<Props> = ({
           </When>
           <When condition={!isNil(onNextClick)}>
             <Button
+              data-testid="step-page-next-button"
               isSize="medium"
               isLoading={props.isNextLoading}
               onClick={onNextClick}

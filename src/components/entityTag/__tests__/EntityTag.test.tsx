@@ -24,7 +24,7 @@ describe("<EntityTag> Component", () => {
   });
 
   cases(
-    `is the correct color based on props.tagType`,
+    "is the correct color based on props.tagType",
     options => {
       const { getByTestId } = setup({ tagType: options.tagType }).wrapper;
       const tagClasses = getByTestId("entity-tag").getAttribute("class");

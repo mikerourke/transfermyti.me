@@ -1,6 +1,6 @@
 import React from "react";
 import { render } from "@testing-library/react";
-import TimeEntryListItem from "../TimeEntryListItem";
+import TimeEntryTable from "../TimeEntryTable";
 
 const TEST_TIME_ENTRY: any = {
   id: "8001",
@@ -94,15 +94,12 @@ const TEST_TIME_ENTRY: any = {
   },
 };
 
-describe("<TimeEntryListItem> Component", () => {
+describe("<TimeEntryTable> Component", () => {
   test("renders successfully with valid props", () => {
-    const props: any = {
-      timeEntry: TEST_TIME_ENTRY,
-      isOmitted: false,
-    };
-    const { queryByTestId } = render(<TimeEntryListItem {...props} />);
+    const { getByTestId } = render(
+      <TimeEntryTable timeEntry={TEST_TIME_ENTRY} />,
+    );
 
-    expect(queryByTestId("entity-tags-row")).not.toBeNull();
-    expect(queryByTestId("time-entry-table")).not.toBeNull();
+    expect(getByTestId("time-entry-table")).toBeInTheDocument();
   });
 });

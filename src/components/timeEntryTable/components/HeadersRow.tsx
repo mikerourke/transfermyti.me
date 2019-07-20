@@ -7,6 +7,7 @@ interface Props {
 
 const HeadersRow: React.FC<Props> = ({ children, hasTopBorder }) => (
   <tr
+    data-testid="time-entry-table-headers-row"
     className={css`
       ${hasTopBorder && "border-top: 1px solid rgba(10, 10, 10, 0.1);"};
       td {

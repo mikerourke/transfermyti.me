@@ -10,7 +10,7 @@ describe("<Loader> Component", () => {
     expect(loaderMessage).toHaveTextContent("Loading, please wait...");
   });
 
-  test(`displays the message from props.children`, () => {
+  test("displays the message from props.children", () => {
     const expectedMessage = "Test Loading";
     const { getByTestId } = render(<Loader>{expectedMessage}</Loader>);
     const loaderMessage = getByTestId("loader-message");

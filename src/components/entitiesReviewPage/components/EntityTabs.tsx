@@ -21,6 +21,7 @@ const EntityTabs: React.FC<Props> = ({ activeTab, onTabClick }) => {
       <TabList>
         {Object.entries(validGroups).map(([key, value]) => (
           <Tab
+            data-testid="entity-tab"
             key={value}
             className={css`
               font-weight: 500;

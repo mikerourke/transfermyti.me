@@ -3,7 +3,7 @@ import { render } from "@testing-library/react";
 import PageHeader from "../PageHeader";
 
 describe("<PageHeader> Component", () => {
-  test(`renders successfully with valid props`, () => {
+  test("renders successfully with valid props", () => {
     const title = "Test Title";
     const subtitle = "Test Subtitle";
     const { getByTestId } = render(

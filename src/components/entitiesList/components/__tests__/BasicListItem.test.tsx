@@ -25,13 +25,13 @@ const setup = (propOverrides: any = {}) => {
 };
 
 describe("<BasicListItem> Component", () => {
-  test(`does not display the <Checkbox> when props.onItemClick is defined`, () => {
+  test("does not display the <Checkbox> when props.onItemClick is defined", () => {
     const { queryByTestId } = setup({ onItemClick: undefined }).wrapper;
 
     expect(queryByTestId("checkbox-svg")).toBeNull();
   });
 
-  test(`fires props.onItemClick when the inner <Checkbox> is clicked`, () => {
+  test("fires props.onItemClick when the inner <Checkbox> is clicked", () => {
     const { wrapper, props } = setup();
     const checkboxSvg = wrapper.getByTestId("checkbox-svg");
     fireEvent.click(checkboxSvg);
@@ -40,7 +40,7 @@ describe("<BasicListItem> Component", () => {
   });
 
   cases(
-    `displays the proper entry label based on entry count`,
+    "displays the proper entry label based on entry count",
     options => {
       const { getByTestId } = setup({
         entityRecord: options.entityRecord,

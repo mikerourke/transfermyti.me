@@ -18,7 +18,7 @@ const setup = (propOverrides: any = {}) => {
 };
 
 describe("<Flex> Component", () => {
-  test(`has the correct styles based on props`, () => {
+  test("has the correct styles based on props", () => {
     const { wrapper, props } = setup();
     const innerDiv = wrapper.container.querySelector("div");
     const styles = window.getComputedStyle(innerDiv);

@@ -22,7 +22,7 @@ const setup = (propOverrides: any = {}) => {
 };
 
 describe("<EntityTagsRow> Component", () => {
-  test(`displays the Archived tag when props.entityRecord.isActive = false`, () => {
+  test("displays the Archived tag when props.entityRecord.isActive = false", () => {
     const { queryByText } = setup({
       entityRecord: { ...TEST_ENTITY_RECORD, isActive: false },
     }).wrapper;
@@ -30,7 +30,7 @@ describe("<EntityTagsRow> Component", () => {
     expect(queryByText(/archived/gi)).not.toBeNull();
   });
 
-  test(`displays the Excluded tag when props.entityRecord.isIncluded = false`, () => {
+  test("displays the Excluded tag when props.entityRecord.isIncluded = false", () => {
     const { queryByText } = setup({
       entityRecord: { ...TEST_ENTITY_RECORD, isIncluded: false },
     }).wrapper;
@@ -38,7 +38,7 @@ describe("<EntityTagsRow> Component", () => {
     expect(queryByText(/excluded/gi)).not.toBeNull();
   });
 
-  test(`displays the Existing tag when props.entityRecord.linkedId is not null`, () => {
+  test("displays the Existing tag when props.entityRecord.linkedId is not null", () => {
     const { queryByText } = setup({
       entityRecord: { ...TEST_ENTITY_RECORD, linkedId: "100" },
     }).wrapper;
@@ -46,7 +46,7 @@ describe("<EntityTagsRow> Component", () => {
     expect(queryByText(/existing/gi)).not.toBeNull();
   });
 
-  test(`tags are smaller if props.isTimeEntry = true`, () => {
+  test("tags are smaller if props.isTimeEntry = true", () => {
     const { getByTestId } = setup({
       isTimeEntry: true,
       entityRecord: { ...TEST_ENTITY_RECORD, isIncluded: false },
