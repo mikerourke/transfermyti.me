@@ -34,6 +34,7 @@ const WorkspacesDropdown: React.FC<Props> = ({
 
   return (
     <Dropdown
+      data-testid="workspaces-dropdown"
       isActive={isActive}
       className={css`
         min-width: ${MIN_WIDTH};
@@ -48,6 +49,7 @@ const WorkspacesDropdown: React.FC<Props> = ({
         `}
       >
         <Button
+          data-testid="workspaces-dropdown-trigger-button"
           isOutlined
           aria-haspopup="true"
           aria-controls="dropdown-menu"
@@ -76,6 +78,7 @@ const WorkspacesDropdown: React.FC<Props> = ({
         <DropdownContent>
           {Object.values(workspacesById).map(({ id, name }) => (
             <DropdownItem
+              data-testid="workspaces-dropdown-item"
               key={id}
               className={css`
                 cursor: pointer;

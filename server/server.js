@@ -1,19 +1,24 @@
-import express, { Router } from "express";
-import bodyParser from "body-parser";
-import morgan from "morgan";
-import { assignClockifyRoutes } from "./routes/clockify";
-import { assignTogglRoutes } from "./routes/toggl";
+const express = require("express");
+const bodyParser = require("body-parser");
+const morgan = require("morgan");
+const { assignClockifyRoutes } = require("./routes/clockify");
+const { assignTogglRoutes } = require("./routes/toggl");
 
-const app = express();
+function startServer() {
+  const app = express();
 
-const port = process.env.LOCAL_API_PORT || 3005;
+  const port = process.env.LOCAL_API_PORT || 3005;
 
-assignMiddleware(app);
-assignRoutes(app);
+  assignMiddleware(app);
+  assignRoutes(app);
 
-app.listen(port, () => {
-  console.log(`Example app listening at http://localhost/${port}`);
-});
+  return new Promise(resolve => {
+    app.listen(port, () => {
+      console.log(`Example app listening at http://localhost/${port}`);
+      resolve();
+    });
+  });
+}
 
 function assignMiddleware(thisApp) {
   // We don't care about CORS because this will only ever run locally:
@@ -52,11 +57,11 @@ function assignMiddleware(thisApp) {
 }
 
 function assignRoutes(thisApp) {
-  const clockifyRouter = new Router();
+  const clockifyRouter = new express.Router();
   assignClockifyRoutes(clockifyRouter);
   thisApp.use("/api/clockify", clockifyRouter);
 
-  const togglRouter = new Router();
+  const togglRouter = new express.Router();
   assignTogglRoutes(togglRouter);
   thisApp.use("/api/toggl", togglRouter);
 
@@ -64,3 +69,5 @@ function assignRoutes(thisApp) {
     res.status(200).send(null);
   });
 }
+
+module.exports = { startServer };

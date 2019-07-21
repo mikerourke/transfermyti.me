@@ -14,7 +14,7 @@ enum CheckedState {
   Indeterminate,
 }
 
-const statePaths = [
+export const statePaths = [
   // CheckedState.Checked:
   "M19 3H5c-1.11 0-2 .9-2 2v14c0 1.1.89 2 2 2h14c1.11 0 2-.9 2-2V5c0-1.1-.89-2-2-2zm-9 14l-5-5 1.41-1.41L10 14.17l7.59-7.59L19 8l-9 9z",
   // CheckedState.Unchecked:
@@ -25,12 +25,18 @@ const statePaths = [
 
 const Checkbox: React.FC<Props> = ({ checked, size, onClick }) => {
   let state = CheckedState.Indeterminate;
+  let ariaChecked: any = "mixed";
+
   if (!isNil(checked)) {
     state = checked ? CheckedState.Checked : CheckedState.Unchecked;
+    ariaChecked = checked ? "true" : "false";
   }
 
   return (
     <svg
+      data-testid="checkbox-svg"
+      role="checkbox"
+      aria-checked={ariaChecked}
       viewBox="0 0 24 24"
       height={size}
       width={size}
@@ -39,7 +45,11 @@ const Checkbox: React.FC<Props> = ({ checked, size, onClick }) => {
         cursor: pointer;
       `}
     >
-      <path d={statePaths[state]} fill="var(--info)" />
+      <path
+        data-testid="checkbox-path"
+        d={statePaths[state]}
+        fill="var(--info)"
+      />
     </svg>
   );
 };

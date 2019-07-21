@@ -98,8 +98,8 @@ export const fetchClockifyTimeEntries = (workspaceId: string) => async (
     );
 
     return dispatch(clockifyTimeEntriesFetch.success(timeEntries));
-  } catch (error) {
-    dispatch(showFetchErrorNotification(error));
+  } catch (err) {
+    dispatch(showFetchErrorNotification(err));
     return dispatch(clockifyTimeEntriesFetch.failure());
   }
 };
@@ -168,8 +168,8 @@ export const fetchTogglTimeEntries = (workspaceId: string) => async (
     );
 
     return dispatch(togglTimeEntriesFetch.success(timeEntries));
-  } catch (error) {
-    dispatch(showFetchErrorNotification(error));
+  } catch (err) {
+    dispatch(showFetchErrorNotification(err));
     return dispatch(togglTimeEntriesFetch.failure());
   }
 };
@@ -204,8 +204,8 @@ export const transferTimeEntriesToClockify = (
     });
 
     return dispatch(clockifyTimeEntriesTransfer.success(timeEntries));
-  } catch (error) {
-    dispatch(showFetchErrorNotification(error));
+  } catch (err) {
+    dispatch(showFetchErrorNotification(err));
     return dispatch(clockifyTimeEntriesTransfer.failure());
   }
 };

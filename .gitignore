@@ -63,7 +63,6 @@ typings/
 .next
 build
 .cache
-data.ts
 http-client.private.env.json
-state.js
 dist
+.env

@@ -69,6 +69,7 @@ const Loader: React.FC = ({ children }) => {
         ))}
       </div>
       <div
+        data-testid="loader-message"
         className={css`
           text-align: center;
           font-size: 2rem;
@@ -81,7 +82,7 @@ const Loader: React.FC = ({ children }) => {
 };
 
 Loader.defaultProps = {
-  message: "Loading, please wait...",
+  children: "Loading, please wait...",
 };
 
 export default Loader;

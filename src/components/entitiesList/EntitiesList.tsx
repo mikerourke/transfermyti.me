@@ -54,6 +54,7 @@ const EntitiesList: React.FC<Props> = props => {
 
   return (
     <List
+      data-testid="entities-list"
       width={props.width}
       height={props.height}
       className={css`

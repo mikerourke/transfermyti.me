@@ -30,6 +30,7 @@ const BasicListItem: React.FC<Props> = ({
 
   return (
     <ListItemBase
+      data-testid="basic-list-item"
       height={48}
       isOmitted={isOmitted}
       className={css`
@@ -37,7 +38,7 @@ const BasicListItem: React.FC<Props> = ({
       `}
       {...listRowProps}
     >
-      <Flex alignItems="center">
+      <Flex alignItems="center" data-testid="list-item-inner">
         <When condition={hasClickEvent}>
           <Checkbox
             checked={isIncluded}
@@ -56,7 +57,7 @@ const BasicListItem: React.FC<Props> = ({
         </span>
         <EntityTagsRow isTimeEntry={false} entityRecord={entityRecord} />
       </Flex>
-      <div>
+      <div data-testid="list-item-count-label">
         <strong>{entryCount}</strong> time {entryLabel}
       </div>
     </ListItemBase>

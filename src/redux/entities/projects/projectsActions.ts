@@ -60,8 +60,8 @@ export const fetchClockifyProjects = (workspaceId: string) => async (
     return dispatch(
       clockifyProjectsFetch.success({ entityRecords: projects, workspaceId }),
     );
-  } catch (error) {
-    dispatch(showFetchErrorNotification(error));
+  } catch (err) {
+    dispatch(showFetchErrorNotification(err));
     return dispatch(clockifyProjectsFetch.failure());
   }
 };
@@ -77,8 +77,8 @@ export const fetchTogglProjects = (workspaceId: string) => async (
     return dispatch(
       togglProjectsFetch.success({ entityRecords: projects, workspaceId }),
     );
-  } catch (error) {
-    dispatch(showFetchErrorNotification(error));
+  } catch (err) {
+    dispatch(showFetchErrorNotification(err));
     return dispatch(togglProjectsFetch.failure());
   }
 };
@@ -112,8 +112,8 @@ export const transferProjectsToClockify = (
         workspaceId: clockifyWorkspaceId,
       }),
     );
-  } catch (error) {
-    dispatch(showFetchErrorNotification(error));
+  } catch (err) {
+    dispatch(showFetchErrorNotification(err));
     dispatch(clockifyProjectsTransfer.failure());
   }
 };
@@ -146,8 +146,8 @@ async function appendUserIdsToProject<TPayload>(
             set(project, "userIds", userIds);
           },
         );
-    } catch (error) {
-      if (error.status !== 403) throw error;
+    } catch (err) {
+      if (err.status !== 403) throw err;
     }
   }
 }

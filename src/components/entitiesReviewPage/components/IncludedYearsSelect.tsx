@@ -115,6 +115,7 @@ const IncludedYearsSelect: React.FC<Props> = ({
 
   return (
     <div
+      data-testid="included-years-select-wrapper"
       className={css`
         margin: 0 1rem 0.75rem 1rem;
       `}

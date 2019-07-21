@@ -62,10 +62,10 @@ export async function batchClockifyTransferRequests<TEntity, TResponse>({
           fetchResults.push(result);
           dispatch(updateInTransferDetails(inTransferDetails));
         });
-    } catch (error) {
+    } catch (err) {
       fetchErrors.push({
         name: get(entityRecord, "name"),
-        message: error.statusText,
+        message: err.statusText,
       });
     }
 

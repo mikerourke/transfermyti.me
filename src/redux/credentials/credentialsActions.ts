@@ -88,10 +88,10 @@ export const validateCredentials = () => async (dispatch: ReduxDispatch) => {
     };
 
     return dispatch(credentialsValidation.success(credentials));
-  } catch (error) {
+  } catch (err) {
     const message =
       "An error occurred when attempting to validate your " +
-      `${capitalize(error.toolName)} credentials.`;
+      `${capitalize(err.toolName)} credentials.`;
     dispatch(showNotification({ message, type: NotificationType.Error }));
     return dispatch(credentialsValidation.failure());
   }

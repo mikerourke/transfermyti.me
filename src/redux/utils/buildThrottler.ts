@@ -20,8 +20,8 @@ export function buildThrottler<TResponse>(
         .then((response: TResponse) => {
           resolve(response);
         })
-        .catch((error: Error) => {
-          reject(error);
+        .catch((err: Error) => {
+          reject(err);
         }),
     );
 

@@ -17,6 +17,7 @@ const GroupTotalsDisplay: React.FC<Props> = ({ label, included, total }) => (
     `}
   >
     <div
+      data-testid="group-totals-display-label"
       className={css`
         font-size: 12px;
         font-weight: 700;

@@ -84,8 +84,8 @@ export const fetchClockifyUserGroups = (workspaceId: string) => async (
         workspaceId,
       }),
     );
-  } catch (error) {
-    dispatch(showFetchErrorNotification(error));
+  } catch (err) {
+    dispatch(showFetchErrorNotification(err));
     return dispatch(clockifyUserGroupsFetch.failure());
   }
 };
@@ -111,8 +111,8 @@ export const fetchTogglUserGroups = (workspaceId: string) => async (
     return dispatch(
       togglUserGroupsFetch.success({ entityRecords: userGroups, workspaceId }),
     );
-  } catch (error) {
-    dispatch(showFetchErrorNotification(error));
+  } catch (err) {
+    dispatch(showFetchErrorNotification(err));
     return dispatch(togglUserGroupsFetch.failure());
   }
 };
@@ -146,8 +146,8 @@ export const transferUserGroupsToClockify = (
         workspaceId: clockifyWorkspaceId,
       }),
     );
-  } catch (error) {
-    dispatch(showFetchErrorNotification(error));
+  } catch (err) {
+    dispatch(showFetchErrorNotification(err));
     return dispatch(clockifyUserGroupsTransfer.failure());
   }
 };

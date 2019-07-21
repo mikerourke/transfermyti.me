@@ -18,6 +18,7 @@ const InstructionsSection: React.FC = ({ children }) => {
 
   return (
     <div
+      data-testid="instructions-section"
       className={css`
         margin-bottom: 1rem;
       `}
@@ -42,6 +43,7 @@ const InstructionsSection: React.FC = ({ children }) => {
         )}
       >
         <button
+          data-testid="toggle-expanded-button"
           className={css`
             background: transparent;
             border: 0;
@@ -61,6 +63,7 @@ const InstructionsSection: React.FC = ({ children }) => {
           />
         </button>
         <span
+          data-testid="toggle-expanded-label"
           className={css`
             cursor: pointer;
             font-size: 18px;

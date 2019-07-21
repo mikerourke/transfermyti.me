@@ -1,13 +1,13 @@
 /* eslint-disable @typescript-eslint/camelcase */
-import path from "path";
-import fsExtra from "fs-extra";
-import { isSameYear } from "date-fns";
-import { take } from "lodash";
+const path = require("path");
+const fsExtra = require("fs-extra");
+const { isSameYear } = require("date-fns");
+const { take } = require("lodash");
 
 const dbPath = path.resolve(__dirname, "..", "db", "toggl.json");
 const db = fsExtra.readJSONSync(dbPath);
 
-export function assignTogglRoutes(router) {
+function assignTogglRoutes(router) {
   router
     .get("/me", (req, res) => {
       const [firstUser] = db.users;
@@ -66,3 +66,5 @@ export function assignTogglRoutes(router) {
       res.status(200).send(db.workspaceUsers),
     );
 }
+
+module.exports = { assignTogglRoutes };

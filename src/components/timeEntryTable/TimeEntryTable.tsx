@@ -27,6 +27,7 @@ const TimeEntryTable: React.FC<Props> = ({ timeEntry }) => {
 
   return (
     <table
+      data-testid="time-entry-table"
       className={css`
         table-layout: fixed;
         width: 100%;

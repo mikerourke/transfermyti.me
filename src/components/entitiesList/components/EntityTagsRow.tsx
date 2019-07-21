@@ -18,7 +18,7 @@ const EntityTagsRow: React.FC<Props> = ({
   const tagSize = isTimeEntry ? "small" : "large";
 
   return (
-    <Flex {...flexProps}>
+    <Flex {...flexProps} data-testid="entity-tags-row">
       <When condition={!get(entityRecord, "isActive", true)}>
         <EntityTag size={tagSize} tagType={EntityTagType.Archived} />
       </When>

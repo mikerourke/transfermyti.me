@@ -36,7 +36,7 @@ export interface FlexProps {
 }
 
 const Flex: React.FC<FlexProps | any> = ({
-  as,
+  as: Element,
   className,
   alignItems,
   alignSelf,
@@ -57,7 +57,6 @@ const Flex: React.FC<FlexProps | any> = ({
     `,
   );
 
-  const Element = as;
   return <Element className={classes} {...props} />;
 };
 
