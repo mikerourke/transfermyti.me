@@ -19,12 +19,7 @@ interface Props {
 const App: React.FC<Props> = ({ currentTransferType }) => (
   <div>
     <Header currentTransferType={currentTransferType} />
-    <main
-      className={css`
-        overflow-y: auto;
-        padding: 1.5rem;
-      `}
-    >
+    <main className={css({ overflowY: "auto", padding: "1.5rem" })}>
       <TransferWizard />
     </main>
     <Footer />

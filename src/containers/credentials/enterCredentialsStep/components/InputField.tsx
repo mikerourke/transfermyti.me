@@ -31,20 +31,13 @@ const InputField: React.FC<Props> = ({
         name={name}
         placeholder={`Enter ${label}`}
         className={classnames(className, {
-          [css`
-            background-color: rgba(255, 0, 0, 0.1);
-          `]: errorText !== "",
+          [css({ backgroundColor: "rgba(255, 0, 0, 0.1)" })]: errorText !== "",
         })}
         {...inputProps}
       />
     </Control>
     <When condition={errorText !== ""}>
-      <Help
-        isColor="danger"
-        className={css`
-          font-weight: bold;
-        `}
-      >
+      <Help isColor="danger" className={css({ fontWeight: "bold" })}>
         {errorText}
       </Help>
     </When>

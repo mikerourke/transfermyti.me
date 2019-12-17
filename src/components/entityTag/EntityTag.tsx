@@ -14,11 +14,6 @@ interface Props {
 }
 
 const EntityTag: React.FC<Props> = ({ size, tagType }) => {
-  const tagClass = css`
-    font-weight: bold;
-    margin-right: 0.625rem;
-  `;
-
   const entryStyle =
     size === "small" ? { height: "1.5rem", fontSize: "0.675rem" } : {};
 
@@ -32,7 +27,7 @@ const EntityTag: React.FC<Props> = ({ size, tagType }) => {
     <Tag
       data-testid="entity-tag"
       isColor={color}
-      className={tagClass}
+      className={css({ fontWeight: "bold", marginRight: "0.625rem" })}
       style={entryStyle}
     >
       {tagType}

@@ -21,10 +21,10 @@ const NotificationDisplay: React.FC<Props> = ({
   return (
     <Notification
       isColor={type}
-      className={css`
-        font-size: 1.25rem;
-        font-weight: bold;
-      `}
+      className={css({
+        fontSize: "1.25rem",
+        fontWeight: "bold",
+      })}
     >
       <Delete onClick={() => onDismiss(id)} />
       {message}

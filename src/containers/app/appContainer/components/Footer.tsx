@@ -28,24 +28,20 @@ const LinkToIssues = () => (
 const Footer: React.FC = () => (
   <BloomerFooter
     isPaddingless
-    className={css`
-      position: absolute;
-      right: 0;
-      bottom: 0;
-      left: 0;
-      height: var(--footer-height);
-      display: flex;
-      align-items: center;
-    `}
+    className={css({
+      position: "absolute",
+      right: 0,
+      bottom: 0,
+      left: 0,
+      height: "var(--footer-height)",
+      display: "flex",
+      alignItems: "center",
+    })}
   >
     <Container>
       <Columns isGapless isVCentered>
         <Column isSize="1/2">
-          <p
-            className={css`
-              margin-bottom: 0.5rem;
-            `}
-          >
+          <p className={css({ marginBottom: "0.5rem" })}>
             Made with <Love /> by <LinkToMe />
           </p>
           <a
@@ -59,10 +55,7 @@ const Footer: React.FC = () => (
         <Column
           isSize="1/2"
           hasTextAlign="right"
-          className={css`
-            font-size: 13px;
-            font-weight: 700;
-          `}
+          className={css({ fontSize: 13, fontWeight: 700 })}
         >
           <p>FYI, Clockify is not responsible for this tool.</p>
           <p>

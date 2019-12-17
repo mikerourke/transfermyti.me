@@ -23,11 +23,9 @@ const EntityTabs: React.FC<Props> = ({ activeTab, onTabClick }) => {
           <Tab
             data-testid="entity-tab"
             key={value}
-            className={css`
-              font-weight: 500;
-            `}
+            className={css({ fontWeight: 500 })}
             isActive={value === activeTab}
-            onClick={() => onTabClick(value)}
+            onClick={(): void => onTabClick(value)}
           >
             <TabLink style={value === activeTab ? activeStyle : {}}>
               {startCase(key)}

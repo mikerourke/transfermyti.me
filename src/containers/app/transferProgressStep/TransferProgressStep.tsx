@@ -102,22 +102,18 @@ export const TransferProgressStepComponent: React.FC<Props> = props => {
         }
         instructions={
           <>
-            <p
-              className={css`
-                margin-bottom: 1rem;
-              `}
-            >
+            <p className={css({ marginBottom: "1rem" })}>
               Press the start button to below to begin transferring your data to
               Clockify. After confirming the transfer, you&apos;ll see three
               progress indicators:
             </p>
             <InstructionsList />
             <p
-              className={css`
-                color: var(--info);
-                font-weight: 700;
-                margin-top: 1rem;
-              `}
+              className={css({
+                color: "var(--info)",
+                fontWeight: 700,
+                marginTop: "1rem",
+              })}
             >
               Just an FYI: the transfer might take a little while, so please be
               patient. Maybe go grab a snack or something.
@@ -127,18 +123,15 @@ export const TransferProgressStepComponent: React.FC<Props> = props => {
       >
         <Flex
           justifyContent="center"
-          className={css`
-            margin-top: 1rem;
-            padding: 1rem;
-          `}
+          className={css({ marginTop: "1rem", padding: "1rem" })}
         >
           <When condition={transferStatus === TransferStatus.Waiting}>
             <Button
-              className={css`
-                text-transform: uppercase;
-                font-weight: bold;
-                margin: 4rem 0;
-              `}
+              className={css({
+                textTransform: "uppercase",
+                fontWeight: "bold",
+                margin: "4rem 0",
+              })}
               isSize="large"
               isColor="info"
               isOutlined

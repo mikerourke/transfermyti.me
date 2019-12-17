@@ -5,30 +5,30 @@ import EntityTag, { EntityTagType } from "~/components/entityTag/EntityTag";
 const InstructionsList: React.FC = () => (
   <div>
     <ul
-      className={css`
-        list-style: circle;
-        margin-left: 1rem;
+      className={css({
+        listStyle: "circle",
+        marginLeft: "1rem",
 
-        li:not(:last-child) {
-          margin-bottom: 0.75rem;
-        }
+        "li:not(:last-child)": {
+          marginBottom: "0.75rem",
+        },
 
-        li:last-child {
-          color: var(--info);
-          font-weight: 500;
-        }
+        "li:last-child": {
+          color: "var(--info)",
+          fontWeight: 500,
+        },
 
-        li:last-child > strong {
-          color: var(--info);
-          font-weight: 700;
-        }
+        "li:last-child > strong": {
+          color: "var(--info)",
+          fontWeight: 700,
+        },
 
-        span {
-          font-weight: 700;
-          margin: 0 4px;
-          vertical-align: bottom;
-        }
-      `}
+        span: {
+          fontWeight: 700,
+          margin: "0 4px",
+          verticalAlign: "bottom",
+        },
+      })}
     >
       <li>
         The

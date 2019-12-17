@@ -4,14 +4,14 @@ import { css } from "emotion";
 const InstructionsList: React.FC = () => (
   <div>
     <ul
-      className={css`
-        list-style: circle;
-        margin-left: 1rem;
+      className={css({
+        listStyle: "circle",
+        marginLeft: "1rem",
 
-        li:not(:last-child) {
-          margin-bottom: 0.75rem;
-        }
-      `}
+        "li:not(:last-child)": {
+          marginBottom: "0.75rem",
+        },
+      })}
     >
       <li>
         The progress indicator in the <strong>left</strong> column represents

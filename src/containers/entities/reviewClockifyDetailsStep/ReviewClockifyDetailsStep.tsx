@@ -71,7 +71,9 @@ export class ReviewClockifyDetailsStepComponent extends React.Component<
 
   private fetchClockifyEntitiesInAllWorkspaces = async () => {
     const workspaces = Object.values(this.props.clockifyWorkspacesById);
-    if (workspaces.length === 0) return;
+    if (workspaces.length === 0) {
+      return;
+    }
 
     for (const workspace of workspaces) {
       await this.props.onFetchClockifyEntitiesInWorkspace(workspace);
@@ -103,21 +105,17 @@ export class ReviewClockifyDetailsStepComponent extends React.Component<
             onRefreshClick={this.fetchClockifyEntitiesInAllWorkspaces}
             instructions={
               <>
-                <p
-                  className={css`
-                    margin-bottom: 1rem;
-                  `}
-                >
+                <p className={css({ marginBottom: "1rem" })}>
                   This page contains all the records that <strong>will</strong>{" "}
                   be created on Clockify. Press <strong>Next</strong> to move to
                   the final step.
                 </p>
                 <p
-                  className={css`
-                    color: var(--info);
-                    font-weight: bold;
-                    margin-bottom: 1rem;
-                  `}
+                  className={css({
+                    color: "var(-info)",
+                    fontWeight: "bold",
+                    marginBottom: "1rem",
+                  })}
                 >
                   The transfer will not start until you confirm it on the next
                   page.

@@ -81,7 +81,10 @@ const EntitiesReviewPage: React.FC<Props> = ({
     {},
   ) as RecordCountsModel;
 
-  const handleIncludedYearUpdate = (year: number, isIncluded: boolean) => {
+  const handleIncludedYearUpdate = (
+    year: number,
+    isIncluded: boolean,
+  ): void => {
     const updateDetails = { workspaceId, year, isIncluded };
     onUpdateIsWorkspaceYearIncluded(updateDetails);
   };
@@ -94,12 +97,7 @@ const EntitiesReviewPage: React.FC<Props> = ({
 
   return (
     <StepPage onResize={setContentsWidth} {...stepPageProps}>
-      <div
-        className={css`
-          margin-bottom: 1rem;
-          position: relative;
-        `}
-      >
+      <div className={css({ marginBottom: "1rem", position: "relative" })}>
         <EntityTabs
           activeTab={activeEntityGroup}
           onTabClick={setActiveEntityGroup}

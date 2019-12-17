@@ -25,7 +25,7 @@ export const statePaths = [
 
 const Checkbox: React.FC<Props> = ({ checked, size, onClick }) => {
   let state = CheckedState.Indeterminate;
-  let ariaChecked: any = "mixed";
+  let ariaChecked: "mixed" | "true" | "false" = "mixed";
 
   if (!isNil(checked)) {
     state = checked ? CheckedState.Checked : CheckedState.Unchecked;
@@ -41,9 +41,7 @@ const Checkbox: React.FC<Props> = ({ checked, size, onClick }) => {
       height={size}
       width={size}
       onClick={onClick}
-      className={css`
-        cursor: pointer;
-      `}
+      className={css({ cursor: "pointer" })}
     >
       <path
         data-testid="checkbox-path"

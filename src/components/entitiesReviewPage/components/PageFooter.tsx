@@ -36,12 +36,12 @@ const PageFooter: React.FC<Props> = ({
     <Flex
       alignItems="center"
       justifyContent="space-between"
-      className={css`
-        border-top: 1px solid #dbdbdb;
-        color: var(--dark-gray);
-        margin-top: 1rem;
-        padding-top: 0.5rem;
-      `}
+      className={css({
+        borderTop: "1px solid #dbdbdb",
+        color: "var(--dark-gray)",
+        marginTop: "1rem",
+        paddingTop: "0.5rem",
+      })}
     >
       <Flex>
         <GroupTotalsDisplay
@@ -63,12 +63,7 @@ const PageFooter: React.FC<Props> = ({
           size={18}
           onClick={onFlipInclusionsOnly}
         />
-        <span
-          className={css`
-            margin-left: 0.5em;
-            font-weight: bold;
-          `}
-        >
+        <span className={css({ marginLeft: "0.5rem", fontWeight: "bold" })}>
           Show Included Records Only
         </span>
       </Flex>

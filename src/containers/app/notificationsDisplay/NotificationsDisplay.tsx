@@ -25,12 +25,12 @@ const NotificationsDisplayComponent: React.FC<Props> = ({
     alignItems="center"
     justifyContent="center"
     direction="column"
-    className={css`
-      bottom: 1rem;
-      margin: 0 auto;
-      position: absolute;
-      width: 100%;
-    `}
+    className={css({
+      bottom: "1rem",
+      margin: "0 auto",
+      position: "absolute",
+      width: "100%",
+    })}
   >
     {notifications.map(notification => (
       <NotificationDisplay

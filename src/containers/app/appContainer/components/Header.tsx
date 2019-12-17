@@ -25,19 +25,14 @@ const Header: React.FC<Props> = ({ currentTransferType }) => {
           <Flex
             alignItems="center"
             justifyContent="space-between"
-            className={css`
-              padding: 0.5rem 1rem;
-              border-bottom: 1px solid var(--light-gray);
-            `}
+            className={css({
+              padding: "0.5rem 1rem",
+              borderBottom: "1px solid var(--light-gray)",
+            })}
           >
             <Flex alignItems="center">
               <SvgIcon name={iconName} color="white" height={16} />
-              <span
-                className={css`
-                  margin-left: 0.5rem;
-                  font-weight: 600;
-                `}
-              >
+              <span className={css({ marginLeft: "0.5rem", fontWeight: 600 })}>
                 {mode}
               </span>
             </Flex>
@@ -50,21 +45,12 @@ const Header: React.FC<Props> = ({ currentTransferType }) => {
             </a>
           </Flex>
         </HeroHeader>
-        <HeroBody
-          className={css`
-            padding: 1rem !important;
-          `}
-        >
+        <HeroBody style={{ padding: "1rem" }}>
           <Container>
             <Title isSize={1} isMarginless>
               Toggl to Clockify
             </Title>
-            <Title
-              isSize={5}
-              className={css`
-                margin-top: 1rem;
-              `}
-            >
+            <Title isSize={5} className={css({ marginTop: "1rem" })}>
               Transfer all of your Toggl entries to Clockify.me
             </Title>
           </Container>

@@ -39,11 +39,7 @@ export const SelectTransferTypeStepComponent: React.FC<Props> = ({
       }
       {...stepPageProps}
     >
-      <div
-        className={css`
-          padding: 0 0.25rem 2rem 0.25rem;
-        `}
-      >
+      <div className={css({ padding: "0 0.25rem 2rem 0.25rem" })}>
         <Columns isCentered>
           <TransferTypeColumn
             isDisabled={false}

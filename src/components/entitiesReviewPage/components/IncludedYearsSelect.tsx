@@ -6,7 +6,7 @@ import makeAnimated from "react-select/animated";
 import { FontWeightProperty } from "csstype";
 import { ActionMeta, Theme } from "react-select/src/types";
 
-const getTheme = (theme: Theme) => ({
+const getTheme = (theme: Theme): Theme => ({
   ...theme,
   colors: {
     ...theme.colors,
@@ -22,26 +22,27 @@ const fontStyle = {
 const BORDER_RADIUS = 4;
 
 const colorStyles = {
-  control: (styles: CSSProperties) => ({
+  control: (styles: CSSProperties): CSSProperties => ({
     ...styles,
     backgroundColor: "white",
   }),
-  option: (styles: CSSProperties, { isDisabled }: { isDisabled: boolean }) => {
-    return {
-      ...styles,
-      ...fontStyle,
-      background: "white",
-      cursor: isDisabled ? "not-allowed" : "pointer",
-      ":hover": {
-        background: "var(--light-gray)",
-      },
-    };
-  },
-  multiValue: (styles: CSSProperties) => ({
+  option: (
+    styles: CSSProperties,
+    { isDisabled }: { isDisabled: boolean },
+  ): CSSProperties & { ":hover": unknown } => ({
+    ...styles,
+    ...fontStyle,
+    background: "white",
+    cursor: isDisabled ? "not-allowed" : "pointer",
+    ":hover": {
+      background: "var(--light-gray)",
+    },
+  }),
+  multiValue: (styles: CSSProperties): CSSProperties => ({
     ...styles,
     ...fontStyle,
   }),
-  multiValueLabel: (styles: CSSProperties) => ({
+  multiValueLabel: (styles: CSSProperties): CSSProperties => ({
     ...styles,
     ...fontStyle,
     background: "var(--info)",
@@ -50,7 +51,9 @@ const colorStyles = {
     borderTopLeftRadius: BORDER_RADIUS,
     color: "white",
   }),
-  multiValueRemove: (styles: CSSProperties) => ({
+  multiValueRemove: (
+    styles: CSSProperties,
+  ): CSSProperties & { ":hover": unknown } => ({
     ...styles,
     background: "var(--info)",
     borderRadius: 0,
@@ -92,7 +95,7 @@ const IncludedYearsSelect: React.FC<Props> = ({
   const onChange = (
     selectOption: Array<OptionType>,
     actionMeta: ActionMeta,
-  ) => {
+  ): void => {
     switch (actionMeta.action) {
       case "select-option":
         const yearToInclude = get(actionMeta, ["option", "value"]);
@@ -116,9 +119,7 @@ const IncludedYearsSelect: React.FC<Props> = ({
   return (
     <div
       data-testid="included-years-select-wrapper"
-      className={css`
-        margin: 0 1rem 0.75rem 1rem;
-      `}
+      className={css({ margin: "0 1rem 0.75rem 1rem" })}
     >
       <Select
         isMulti

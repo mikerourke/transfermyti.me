@@ -27,28 +27,24 @@ const ProgressIndicators: React.FC<Props> = props => {
   const { countCurrent, countTotal } = props.workspaceTransferCounts;
 
   return (
-    <div
-      className={css`
-        width: 100%;
-      `}
-    >
+    <div className={css({ width: "100%" })}>
       <Columns
         isCentered
-        className={css`
-          .box {
-            padding-bottom: 1.5rem;
-          }
+        className={css({
+          ".box": {
+            paddingBottom: "1.5rem",
+          },
 
-          .heading {
-            margin-top: 1rem;
-            font-size: 16px;
-            font-weight: bold;
-          }
+          ".heading": {
+            marginTop: "1rem",
+            fontSize: 16,
+            fontWeight: "bold",
+          },
 
-          strong {
-            color: var(--info);
-          }
-        `}
+          strong: {
+            color: "var(--info)",
+          },
+        })}
       >
         <ProgressIndicatorColumn
           title="Overall Progress"

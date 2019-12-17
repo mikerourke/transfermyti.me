@@ -94,11 +94,11 @@ export const SelectTogglWorkspacesStepComponent: React.FC<Props> = props => {
             }
           >
             <Container
-              className={css`
-                max-height: 50vh;
-                overflow: auto;
-                padding: 0.25rem;
-              `}
+              className={css({
+                maxHeight: "50vh",
+                overflow: "auto",
+                padding: "0.25rem",
+              })}
             >
               {sortedWorkspaces.map(workspace => (
                 <WorkspaceRow

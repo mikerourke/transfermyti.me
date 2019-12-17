@@ -13,7 +13,7 @@ interface Props {
 const DATE_FORMAT = "M/D/YY hh:mma";
 
 const TimeEntryTable: React.FC<Props> = ({ timeEntry }) => {
-  const getTagsList = () => {
+  const getTagsList = (): string => {
     if (timeEntry.tags.length === 0) {
       return "";
     }
@@ -28,15 +28,15 @@ const TimeEntryTable: React.FC<Props> = ({ timeEntry }) => {
   return (
     <table
       data-testid="time-entry-table"
-      className={css`
-        table-layout: fixed;
-        width: 100%;
+      className={css({
+        tableLayout: "fixed",
+        width: "100%",
 
-        td {
-          padding-left: 2px;
-          text-align: left;
-        }
-      `}
+        td: {
+          paddingLeft: 2,
+          textAlign: "left",
+        },
+      })}
     >
       <tbody>
         <HeadersRow hasTopBorder={false}>
@@ -49,11 +49,11 @@ const TimeEntryTable: React.FC<Props> = ({ timeEntry }) => {
           <td>{get(timeEntry, ["client", "name"], "")}</td>
           <td
             colSpan={2}
-            className={css`
-              text-overflow: ellipsis;
-              white-space: nowrap;
-              overflow: hidden;
-            `}
+            className={css({
+              textOverflow: "ellipsis",
+              whiteSpace: "nowrap",
+              overflow: "hidden",
+            })}
           >
             {timeEntry.description}
           </td>
