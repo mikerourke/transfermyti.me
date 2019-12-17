@@ -103,7 +103,9 @@ export const userGroupsReducer = handleActions(
       }: ReduxAction<{ userId: string; userGroupId: string }>,
     ): UserGroupsState => {
       const userGroup = get(state, ["toggl", "byId", userGroupId]);
-      if (!userGroup) return state;
+      if (!userGroup) {
+        return state;
+      }
 
       const newUserIds = uniq([...userGroup.userIds, userId]);
       return {

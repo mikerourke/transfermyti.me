@@ -1,4 +1,4 @@
-import { createAsyncAction, createStandardAction } from "typesafe-actions";
+import { createAsyncAction, createAction } from "typesafe-actions";
 import { flatten } from "lodash";
 import { batchClockifyTransferRequests, buildThrottler } from "~/redux/utils";
 import {
@@ -36,7 +36,7 @@ export const clockifyTasksTransfer = createAsyncAction(
   "@tasks/CLOCKIFY_TRANSFER_FAILURE",
 )<void, EntitiesFetchPayloadModel<ClockifyTaskModel>, void>();
 
-export const flipIsTaskIncluded = createStandardAction(
+export const flipIsTaskIncluded = createAction(
   "@tasks/FLIP_IS_INCLUDED",
 )<string>();
 
@@ -100,7 +100,9 @@ export const transferTasksToClockify = (
   const tasksInWorkspace = selectTasksTransferPayloadForWorkspace(state)(
     togglWorkspaceId,
   );
-  if (tasksInWorkspace.length === 0) return Promise.resolve();
+  if (tasksInWorkspace.length === 0) {
+    return Promise.resolve();
+  }
 
   dispatch(clockifyTasksTransfer.request());
 

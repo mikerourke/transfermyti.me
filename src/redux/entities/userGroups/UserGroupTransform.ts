@@ -44,7 +44,9 @@ export class UserGroupTransform {
 
     const entryCountForUserGroup = userGroupUserIds.reduce((acc, userId) => {
       const matchingUser = get(usersById, userId, null);
-      if (isNil(matchingUser)) return acc;
+      if (isNil(matchingUser)) {
+        return acc;
+      }
 
       return acc + get(entryCountByUserId, userId, 0);
     }, 0);
@@ -57,7 +59,9 @@ export class UserGroupTransform {
   ) {
     return timeEntries.reduce((acc, timeEntry) => {
       const userId = get(timeEntry, "userId");
-      if (isNil(userId)) return acc;
+      if (isNil(userId)) {
+        return acc;
+      }
 
       return {
         ...acc,
@@ -84,7 +88,9 @@ export class UserGroupTransform {
   }
 
   private getUsersInUserGroup(users: Array<CompoundUserModel>) {
-    if (users.length === 0) return [];
+    if (users.length === 0) {
+      return [];
+    }
 
     const userGroupId = this.userGroupId;
     return users.filter(({ userGroupIds }) =>

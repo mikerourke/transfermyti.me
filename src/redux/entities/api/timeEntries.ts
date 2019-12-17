@@ -34,7 +34,7 @@ export const apiFetchTogglTimeEntries = (
   email: string,
   workspaceId: string,
   year: number,
-  page: number = 1,
+  page = 1,
 ): Promise<TogglTimeEntriesFetchResponseModel> => {
   const { firstDay, lastDay } = firstAndLastDayOfYear(
     year,
@@ -61,7 +61,9 @@ export const apiCreateClockifyTimeEntry = (
   timeEntry: DetailedTimeEntryModel,
 ): Promise<ClockifyTimeEntryModel> => {
   const tagIds = timeEntry.tags.reduce((acc, { linkedId, isIncluded }) => {
-    if (isNil(linkedId) || !isIncluded) return acc;
+    if (isNil(linkedId) || !isIncluded) {
+      return acc;
+    }
     return [...acc, linkedId];
   }, []);
 

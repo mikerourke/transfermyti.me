@@ -45,7 +45,9 @@ export const selectProjectsTransferPayloadForWorkspace = createSelector(
       workspaceIdToGet,
       [],
     ) as Array<CompoundProjectModel>;
-    if (inclusions.length === 0) return [];
+    if (inclusions.length === 0) {
+      return [];
+    }
 
     return inclusions.reduce((acc, project) => {
       const matchingClient = getClientMatchingId(project.clientId);

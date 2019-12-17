@@ -130,7 +130,9 @@ function appendEntryCountByTagName<TTimeEntry>(
 
     tagNames.forEach(tagName => {
       const { id = null } = tags.find(({ name }) => name === tagName);
-      if (!id) return;
+      if (!id) {
+        return;
+      }
 
       const existingCount = get(timeEntryCountByTagId, id, 0);
       timeEntryCountByTagId[id] = existingCount + 1;

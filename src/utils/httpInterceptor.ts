@@ -25,7 +25,9 @@ export function initInterceptor(store: Store) {
 
       const { credentials } = store.getState();
 
-      if (config.body) config.body = JSON.stringify(config.body);
+      if (config.body) {
+        config.body = JSON.stringify(config.body);
+      }
 
       const baseHeaders = getHeaders(toolName, credentials);
       if (config.headers) {

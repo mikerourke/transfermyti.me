@@ -22,10 +22,14 @@ export function normalizeState<TEntityState, TPayload>({
   schemaProcessStrategy,
 }: Params<TEntityState, TPayload>): TEntityState {
   // If for some reason the payload is null, just return original state:
-  if (isNil(payload)) return entityState;
+  if (isNil(payload)) {
+    return entityState;
+  }
 
   // If the payload is an empty array, return original state:
-  if (Array.isArray(payload) && payload.length === 0) return entityState;
+  if (Array.isArray(payload) && payload.length === 0) {
+    return entityState;
+  }
 
   const entitySchema = getEntitySchema(entityGroup, schemaProcessStrategy);
   const { entities, result } = normalize(payload, entitySchema);

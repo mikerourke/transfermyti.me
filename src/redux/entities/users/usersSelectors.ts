@@ -65,10 +65,14 @@ export const selectUsersInvitePayloadForWorkspace = createSelector(
       workspaceIdToGet,
       [],
     ) as Array<CompoundUserModel>;
-    if (inclusions.length === 0) return [];
+    if (inclusions.length === 0) {
+      return [];
+    }
 
     return inclusions.reduce((acc, { email }) => {
-      if (email === togglEmail) return acc;
+      if (email === togglEmail) {
+        return acc;
+      }
       return [...acc, email];
     }, []);
   },
@@ -81,7 +85,9 @@ function getValidUsers(
 ) {
   return userIds.reduce((acc, userId) => {
     const userRecord = get(usersById, userId, { linkedId: null });
-    if (userId === meUserId) return acc;
+    if (userId === meUserId) {
+      return acc;
+    }
 
     return [...acc, userRecord];
   }, []);

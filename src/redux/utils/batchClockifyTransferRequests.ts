@@ -79,7 +79,9 @@ export async function batchClockifyTransferRequests<TEntity, TResponse>({
 
 // TODO: Change this to return and render in component.
 function displayFetchErrors(fetchErrors: Array<FetchErrorModel>) {
-  if (fetchErrors.length === 0) return;
+  if (fetchErrors.length === 0) {
+    return;
+  }
 
   // Let the user know there was some issues without holding up the whole
   // kit and caboodle:

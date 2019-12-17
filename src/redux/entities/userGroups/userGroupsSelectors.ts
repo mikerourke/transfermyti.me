@@ -33,10 +33,14 @@ export const selectUserGroupsTransferPayloadForWorkspace = createSelector(
       workspaceIdToGet,
       [],
     ) as Array<CompoundUserGroupModel>;
-    if (inclusions.length === 0) return [];
+    if (inclusions.length === 0) {
+      return [];
+    }
 
     return inclusions.reduce((acc, { workspaceId, name }) => {
-      if (workspaceId !== workspaceIdToGet) return acc;
+      if (workspaceId !== workspaceIdToGet) {
+        return acc;
+      }
       return [...acc, { name }];
     }, []);
   },

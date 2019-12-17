@@ -1,4 +1,4 @@
-import { createAsyncAction, createStandardAction } from "typesafe-actions";
+import { createAsyncAction, createAction } from "typesafe-actions";
 import { flatten, isNil } from "lodash";
 import { pause } from "~/utils/pause";
 import {
@@ -57,11 +57,11 @@ export const clockifyTimeEntriesTransfer = createAsyncAction(
   "@timeEntries/CLOCKIFY_TRANSFER_FAILURE",
 )<void, Array<CompoundTimeEntryModel>, void>();
 
-export const flipIsTimeEntryIncluded = createStandardAction(
+export const flipIsTimeEntryIncluded = createAction(
   "@timeEntries/FLIP_IS_INCLUDED",
 )<string>();
 
-export const addLinksToTimeEntries = createStandardAction(
+export const addLinksToTimeEntries = createAction(
   "@timeEntries/ADD_LINKS_TO_TIME_ENTRIES",
 )<TimeEntriesState>();
 
@@ -182,7 +182,9 @@ export const transferTimeEntriesToClockify = (
   const timeEntriesInWorkspace = selectTimeEntriesForWorkspace(state)(
     togglWorkspaceId,
   );
-  if (timeEntriesInWorkspace.length === 0) return Promise.resolve();
+  if (timeEntriesInWorkspace.length === 0) {
+    return Promise.resolve();
+  }
 
   dispatch(clockifyTimeEntriesTransfer.request());
 
@@ -254,9 +256,13 @@ async function fetchTogglTimeEntriesForYear({
     data: firstPageEntries,
   } = await apiFetchTogglTimeEntries(togglEmail, workspaceId, year, 1);
 
-  if (totalCount === 0) return [];
+  if (totalCount === 0) {
+    return [];
+  }
 
-  if (totalCount <= perPage) return firstPageEntries;
+  if (totalCount <= perPage) {
+    return firstPageEntries;
+  }
 
   await pause(1_000);
   const totalPages = Math.ceil(totalCount / perPage);
@@ -307,7 +313,9 @@ function convertToCompoundTimeEntries({
   timeEntries: Array<TimeEntryForTool>;
   entitiesByGroup: EntitiesByGroupModel;
 }): Array<CompoundTimeEntryModel> {
-  if (getValidEntities(timeEntries).length === 0) return [];
+  if (getValidEntities(timeEntries).length === 0) {
+    return [];
+  }
 
   return timeEntries.map(timeEntry => {
     const transform = new TimeEntryTransform(timeEntry);

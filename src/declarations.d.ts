@@ -4,7 +4,10 @@ declare module "promise-throttle";
 declare module "redux-actions";
 declare module "react-sweet-progress";
 
+declare type VoidPromise = () => Promise<void>;
+
 declare namespace jest {
+  // @ts-ignore
   interface Matchers<R> {
     toBeInTheDocument(): R;
     toBeVisible(): R;

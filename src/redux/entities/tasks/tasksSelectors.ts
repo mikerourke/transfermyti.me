@@ -30,7 +30,9 @@ export const selectTasksTransferPayloadForWorkspace = createSelector(
       workspaceIdToGet,
       [],
     ) as Array<CompoundTaskModel>;
-    if (inclusions.length === 0) return [];
+    if (inclusions.length === 0) {
+      return [];
+    }
 
     return inclusions.reduce(
       (acc, { projectId, name, estimate, assigneeId }) => {

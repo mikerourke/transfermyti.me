@@ -6,13 +6,13 @@ import {
   TogglWorkspaceModel,
 } from "~/types";
 
-export const apiFetchClockifyWorkspaces = (): Promise<
-  Array<ClockifyWorkspaceModel>
-> => fetchArray("/clockify/api/v1/workspaces");
+export const apiFetchClockifyWorkspaces = (): Promise<Array<
+  ClockifyWorkspaceModel
+>> => fetchArray("/clockify/api/v1/workspaces");
 
-export const apiFetchTogglWorkspaces = (): Promise<
-  Array<TogglWorkspaceModel>
-> => fetchArray("/toggl/api/workspaces");
+export const apiFetchTogglWorkspaces = (): Promise<Array<
+  TogglWorkspaceModel
+>> => fetchArray("/toggl/api/workspaces");
 
 export const apiCreateClockifyWorkspace = (
   workspace: EntityWithName,

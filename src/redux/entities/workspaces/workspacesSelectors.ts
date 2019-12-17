@@ -47,7 +47,9 @@ export const selectTogglIncludedWorkspacesById = createSelector(
   (workspacesById): Record<string, CompoundWorkspaceModel> =>
     Object.entries(workspacesById).reduce(
       (acc, [workspaceId, workspaceRecord]) => {
-        if (!workspaceRecord.isIncluded) return acc;
+        if (!workspaceRecord.isIncluded) {
+          return acc;
+        }
 
         return {
           ...acc,
@@ -87,7 +89,9 @@ export const selectClockifyIncludedWorkspacesById = createSelector(
   (clockifyWorkspacesById, togglWorkspacesByName) =>
     Object.entries(clockifyWorkspacesById).reduce(
       (acc, [workspaceId, workspaceRecord]) => {
-        if (isNil(togglWorkspacesByName[workspaceRecord.name])) return acc;
+        if (isNil(togglWorkspacesByName[workspaceRecord.name])) {
+          return acc;
+        }
 
         return {
           ...acc,
@@ -115,16 +119,22 @@ export const selectTogglWorkspaceIncludedYears = createSelector(
     const { linkedId } = get(clockifyWorkspacesById, clockifyWorkspaceId, {
       linkedId: null,
     });
-    if (isNil(linkedId)) return [];
+    if (isNil(linkedId)) {
+      return [];
+    }
 
     const { inclusionsByYear } = get(togglWorkspacesById, linkedId, {
       inclusionsByYear: null,
     });
-    if (isNil(inclusionsByYear)) return [];
+    if (isNil(inclusionsByYear)) {
+      return [];
+    }
 
     return Object.entries(inclusionsByYear).reduce(
       (acc, [year, isIncluded]) => {
-        if (!isIncluded) return acc;
+        if (!isIncluded) {
+          return acc;
+        }
         return [...acc, year];
       },
       [],
@@ -162,7 +172,9 @@ export const selectCountTotalOfTransfersInWorkspace = createSelector(
       workspaceIdToGet,
       null,
     );
-    if (isNil(workspaceEntitiesByGroup)) return 0;
+    if (isNil(workspaceEntitiesByGroup)) {
+      return 0;
+    }
 
     const countsByEntityGroup = calculateRecordCountsByEntityGroup(
       workspaceEntitiesByGroup,

@@ -1,4 +1,4 @@
-import { createAsyncAction, createStandardAction } from "typesafe-actions";
+import { createAsyncAction, createAction } from "typesafe-actions";
 import { batchClockifyTransferRequests } from "~/redux/utils";
 import {
   apiCreateClockifyTag,
@@ -34,7 +34,7 @@ export const clockifyTagsTransfer = createAsyncAction(
   "@tags/CLOCKIFY_TRANSFER_FAILURE",
 )<void, EntitiesFetchPayloadModel<ClockifyTagModel>, void>();
 
-export const flipIsTagIncluded = createStandardAction("@tags/FLIP_IS_INCLUDED")<
+export const flipIsTagIncluded = createAction("@tags/FLIP_IS_INCLUDED")<
   string
 >();
 
@@ -80,7 +80,9 @@ export const transferTagsToClockify = (
   const tagsInWorkspace = selectTagsTransferPayloadForWorkspace(state)(
     togglWorkspaceId,
   );
-  if (tagsInWorkspace.length === 0) return Promise.resolve();
+  if (tagsInWorkspace.length === 0) {
+    return Promise.resolve();
+  }
 
   dispatch(clockifyTagsTransfer.request());
 

@@ -14,7 +14,9 @@ export function groupByWorkspace<TEntity>(entityRecords: Array<TEntity>) {
 
   validEntityRecords.forEach(entityRecord => {
     const workspaceId = get(entityRecord, "workspaceId", null);
-    if (isNil(workspaceId)) return;
+    if (isNil(workspaceId)) {
+      return;
+    }
 
     entitiesByWorkspace[workspaceId] = [
       ...get(entitiesByWorkspace, workspaceId, []),

@@ -1,4 +1,4 @@
-import { createAsyncAction, createStandardAction } from "typesafe-actions";
+import { createAsyncAction, createAction } from "typesafe-actions";
 import { batchClockifyTransferRequests, getValidEntities } from "~/redux/utils";
 import {
   apiCreateClockifyUserGroup,
@@ -49,15 +49,15 @@ export const clockifyUserGroupsTransfer = createAsyncAction(
   "@userGroups/CLOCKIFY_TRANSFER_FAILURE",
 )<void, EntitiesFetchPayloadModel<ClockifyUserGroupModel>, void>();
 
-export const flipIsUserGroupIncluded = createStandardAction(
+export const flipIsUserGroupIncluded = createAction(
   "@userGroups/FLIP_IS_INCLUDED",
 )<string>();
 
-export const addTogglUserIdToGroup = createStandardAction(
+export const addTogglUserIdToGroup = createAction(
   "@userGroups/ADD_TOGGL_USER_ID_TO_GROUP",
 )<{ userId: string; userGroupId: string }>();
 
-export const calculateUserGroupEntryCounts = createStandardAction(
+export const calculateUserGroupEntryCounts = createAction(
   "@userGroups/CALCULATE_ENTRY_COUNTS",
 )<EntryCountCalculatorModel>();
 
@@ -125,7 +125,9 @@ export const transferUserGroupsToClockify = (
   const userGroupsInWorkspace = selectUserGroupsTransferPayloadForWorkspace(
     state,
   )(togglWorkspaceId);
-  if (userGroupsInWorkspace.length === 0) return Promise.resolve();
+  if (userGroupsInWorkspace.length === 0) {
+    return Promise.resolve();
+  }
 
   dispatch(clockifyUserGroupsTransfer.request());
 
@@ -161,7 +163,9 @@ function convertToCompoundUserGroups({
   userGroups: Array<TogglUserGroupModel | ClockifyUserGroupModel>;
   usersByWorkspace: Record<string, Array<CompoundUserModel>>;
 }): Array<CompoundUserGroupModel> {
-  if (getValidEntities(userGroups).length === 0) return [];
+  if (getValidEntities(userGroups).length === 0) {
+    return [];
+  }
 
   return userGroups.map(userGroup => {
     const transform = new UserGroupTransform(userGroup);

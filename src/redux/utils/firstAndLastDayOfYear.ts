@@ -34,7 +34,9 @@ export function firstAndLastDayOfYear(
  * @param [dateFormat] Optional format to apply to the date.
  */
 function formatDate(dateValue: Date, dateFormat?: string): string {
-  if (!isNil(dateFormat)) return format(dateValue, dateFormat);
+  if (!isNil(dateFormat)) {
+    return format(dateValue, dateFormat);
+  }
 
   // Determine the offset hours to get an accurate start and end time:
   const utcOffsetHours = dateValue.getTimezoneOffset() / 60;

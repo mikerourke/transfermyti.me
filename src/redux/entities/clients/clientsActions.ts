@@ -1,4 +1,4 @@
-import { createAsyncAction, createStandardAction } from "typesafe-actions";
+import { createAsyncAction, createAction } from "typesafe-actions";
 import { batchClockifyTransferRequests } from "~/redux/utils";
 import {
   apiCreateClockifyClient,
@@ -34,7 +34,7 @@ export const clockifyClientsTransfer = createAsyncAction(
   "@clients/CLOCKIFY_TRANSFER_FAILURE",
 )<void, EntitiesFetchPayloadModel<ClockifyClientModel>, void>();
 
-export const flipIsClientIncluded = createStandardAction(
+export const flipIsClientIncluded = createAction(
   "@clients/FLIP_IS_INCLUDED",
 )<string>();
 
@@ -80,7 +80,9 @@ export const transferClientsToClockify = (
   const clientsInWorkspace = selectClientsTransferPayloadForWorkspace(state)(
     togglWorkspaceId,
   );
-  if (clientsInWorkspace.length === 0) return Promise.resolve();
+  if (clientsInWorkspace.length === 0) {
+    return Promise.resolve();
+  }
 
   dispatch(clockifyClientsTransfer.request());
 

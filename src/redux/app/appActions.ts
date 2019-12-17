@@ -1,4 +1,4 @@
-import { createStandardAction } from "typesafe-actions";
+import { createAction } from "typesafe-actions";
 import { capitalize, isNil, uniqueId } from "lodash";
 import { getIfDev } from "~/utils/getIfDev";
 import { selectCountTotalOfTransfersOverall } from "~/redux/entities/workspaces/workspacesSelectors";
@@ -13,39 +13,39 @@ import {
   ReduxGetState,
 } from "~/types";
 
-export const notificationShown = createStandardAction(
+export const notificationShown = createAction(
   "@app/NOTIFICATION_SHOWN",
 )<Partial<NotificationModel>>();
 
-export const dismissNotification = createStandardAction(
+export const dismissNotification = createAction(
   "@app/DISMISS_NOTIFICATION",
 )<string>();
 
-export const dismissAllNotifications = createStandardAction(
+export const dismissAllNotifications = createAction(
   "@app/DISMISS_ALL_NOTIFICATIONS",
 )();
 
-export const updateTransferType = createStandardAction(
+export const updateTransferType = createAction(
   "@app/UPDATE_TRANSFER_TYPE",
 )<TransferType>();
 
-export const updateInTransferDetails = createStandardAction(
+export const updateInTransferDetails = createAction(
   "@app/UPDATE_IN_TRANSFER_DETAILS",
 )<InTransferDetailsModel>();
 
-export const updateCountCurrentInWorkspace = createStandardAction(
+export const updateCountCurrentInWorkspace = createAction(
   "@app/UPDATE_COUNT_CURRENT_IN_AGGREGATE",
 )<number>();
 
-export const updateCountTotalInWorkspace = createStandardAction(
+export const updateCountTotalInWorkspace = createAction(
   "@app/UPDATE_COUNT_TOTAL_IN_AGGREGATE",
 )<number>();
 
-export const updateCountCurrentOverall = createStandardAction(
+export const updateCountCurrentOverall = createAction(
   "@app/UPDATE_COUNT_CURRENT_OVERALL",
 )<number>();
 
-export const updateCountTotalOverall = createStandardAction(
+export const updateCountTotalOverall = createAction(
   "@app/UPDATE_COUNT_TOTAL_OVERALL",
 )<number>();
 
@@ -77,7 +77,9 @@ export const showNotification = (notification: Partial<NotificationModel>) => (
 export const showFetchErrorNotification = (
   error: Error & { toolName: ToolName },
 ) => (dispatch: ReduxDispatch): string => {
-  if (getIfDev()) console.error(error);
+  if (getIfDev()) {
+    console.error(error);
+  }
 
   const name = capitalize(error.toolName);
   const message = `An error occurred when making a request to the ${name} API`;

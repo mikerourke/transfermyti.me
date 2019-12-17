@@ -36,7 +36,9 @@ export const initialState: TasksState = {
 
 const convertSecondsToClockifyEstimate = (seconds: number): string => {
   const minutes = seconds / 60;
-  if (minutes < 60) return `PT${minutes}M`;
+  if (minutes < 60) {
+    return `PT${minutes}M`;
+  }
 
   const hours = minutes / 60;
   return `PT${hours}H`;

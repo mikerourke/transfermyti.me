@@ -1,4 +1,4 @@
-import { createAsyncAction, createStandardAction } from "typesafe-actions";
+import { createAsyncAction, createAction } from "typesafe-actions";
 import { get } from "lodash";
 import {
   apiAddClockifyUsersToWorkspace,
@@ -40,7 +40,7 @@ export const clockifyUsersTransfer = createAsyncAction(
   "@users/CLOCKIFY_TRANSFER_FAILURE",
 )<void, EntitiesFetchPayloadModel<ClockifyUserModel>, void>();
 
-export const flipIsUserIncluded = createStandardAction(
+export const flipIsUserIncluded = createAction(
   "@users/FLIP_IS_INCLUDED",
 )<string>();
 
@@ -99,7 +99,9 @@ export const inviteUsersToClockify = (
     togglWorkspaceId,
   );
   const countOfUserEmails = userEmailsToInvite.length;
-  if (countOfUserEmails === 0) return Promise.resolve();
+  if (countOfUserEmails === 0) {
+    return Promise.resolve();
+  }
 
   dispatch(clockifyUsersTransfer.request());
 
@@ -170,8 +172,12 @@ async function appendTogglUserGroupIdsToUsers(
   users.forEach(user => {
     Object.assign(user, { userGroupIds: [] });
     const workspaceUser = get(workspaceUsersById, user.id.toString());
-    if (!workspaceUser) return;
-    if (!workspaceUser.group_ids) return;
+    if (!workspaceUser) {
+      return;
+    }
+    if (!workspaceUser.group_ids) {
+      return;
+    }
 
     workspaceUser.group_ids.forEach((userGroupId: number) => {
       const validGroupId = userGroupId.toString();

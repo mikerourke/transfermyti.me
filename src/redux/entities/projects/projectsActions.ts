@@ -1,4 +1,4 @@
-import { createAsyncAction, createStandardAction } from "typesafe-actions";
+import { createAsyncAction, createAction } from "typesafe-actions";
 import { set } from "lodash";
 import { batchClockifyTransferRequests, buildThrottler } from "~/redux/utils";
 import {
@@ -41,7 +41,7 @@ export const clockifyProjectsTransfer = createAsyncAction(
   "@projects/CLOCKIFY_TRANSFER_FAILURE",
 )<void, EntitiesFetchPayloadModel<ClockifyProjectModel>, void>();
 
-export const flipIsProjectIncluded = createStandardAction(
+export const flipIsProjectIncluded = createAction(
   "@projects/FLIP_IS_INCLUDED",
 )<string>();
 
@@ -91,7 +91,9 @@ export const transferProjectsToClockify = (
   const projectsInWorkspace = selectProjectsTransferPayloadForWorkspace(state)(
     togglWorkspaceId,
   );
-  if (projectsInWorkspace.length === 0) return Promise.resolve();
+  if (projectsInWorkspace.length === 0) {
+    return Promise.resolve();
+  }
 
   dispatch(clockifyProjectsTransfer.request());
 
@@ -147,7 +149,9 @@ async function appendUserIdsToProject<TPayload>(
           },
         );
     } catch (err) {
-      if (err.status !== 403) throw err;
+      if (err.status !== 403) {
+        throw err;
+      }
     }
   }
 }

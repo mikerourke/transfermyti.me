@@ -1,4 +1,4 @@
-import { createAsyncAction, createStandardAction } from "typesafe-actions";
+import { createAsyncAction, createAction } from "typesafe-actions";
 import { isNil } from "lodash";
 import {
   apiCreateClockifyWorkspace,
@@ -50,23 +50,23 @@ export const clockifyWorkspaceTransfer = createAsyncAction(
   "@workspaces/CLOCKIFY_TRANSFER_FAILURE",
 )<void, Array<ClockifyWorkspaceModel>, void>();
 
-export const appendUserIdsToWorkspace = createStandardAction(
+export const appendUserIdsToWorkspace = createAction(
   "@workspaces/APPEND_USER_IDS",
 )<{ toolName: ToolName; workspaceId: string; userIds: Array<string> }>();
 
-export const flipIsWorkspaceIncluded = createStandardAction(
+export const flipIsWorkspaceIncluded = createAction(
   "@workspaces/FLIP_IS_INCLUDED",
 )<string>();
 
-export const updateIsWorkspaceYearIncluded = createStandardAction(
+export const updateIsWorkspaceYearIncluded = createAction(
   "@workspaces/UPDATE_IS_WORKSPACE_YEAR_INCLUDED",
 )<UpdateIncludedWorkspaceYearModel>();
 
-export const updateWorkspaceNameBeingFetched = createStandardAction(
+export const updateWorkspaceNameBeingFetched = createAction(
   "@workspaces/UPDATE_NAME_BEING_FETCHED",
 )<string | null>();
 
-export const resetContentsForTool = createStandardAction(
+export const resetContentsForTool = createAction(
   "@workspaces/RESET_CONTENTS_FOR_TOOL",
 )<ToolName>();
 

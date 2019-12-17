@@ -14,7 +14,9 @@ export function linkEntitiesInStateByName<TEntityState>(
   const clockifyById = get(normalizedState, [ToolName.Clockify, "byId"], {});
   const togglById = get(normalizedState, [ToolName.Toggl, "byId"], {});
 
-  if (isEmpty(clockifyById) || isEmpty(togglById)) return normalizedState;
+  if (isEmpty(clockifyById) || isEmpty(togglById)) {
+    return normalizedState;
+  }
 
   return {
     ...normalizedState,
