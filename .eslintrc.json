@@ -4,12 +4,7 @@
     "plugin:react/recommended",
     "plugin:@typescript-eslint/recommended"
   ],
-  "plugins": [
-    "@typescript-eslint",
-    "react",
-    "unicorn",
-    "import"
-  ],
+  "plugins": ["@typescript-eslint", "react", "unicorn", "import"],
   "settings": {
     "react": {
       "version": "detect"
@@ -28,22 +23,22 @@
     "ecmaFeatures": {
       "jsx": true
     },
-    "extraFileExtensions": [
-      ".ts",
-      ".tsx"
-    ]
+    "extraFileExtensions": [".ts", ".tsx"]
   },
   "rules": {
+    "curly": "error",
     "indent": "off",
     "no-unused-vars": "off",
-    "@typescript-eslint/array-type": [
+    "@typescript-eslint/array-type": ["error", { "default": "generic" }],
+    "@typescript-eslint/explicit-function-return-type": [
       "error",
-      "generic"
+      {
+        "allowExpressions": true,
+        "allowTypedFunctionExpressions": true
+      }
     ],
-    "@typescript-eslint/indent": ["error", 2],
-    "@typescript-eslint/explicit-function-return-type": "off",
+    "@typescript-eslint/indent": "off",
     "@typescript-eslint/member-ordering": "error",
-    "@typescript-eslint/no-explicit-any": "off",
     "@typescript-eslint/no-parameter-properties": "off",
     "@typescript-eslint/no-unused-vars": [
       "error",
@@ -53,15 +48,15 @@
         "args": "after-used"
       }
     ],
-    "@typescript-eslint/no-use-before-define": "off",
     "@typescript-eslint/no-var-requires": "off",
-    "react/prop-types": "off",
+    "import/no-default-export": "error",
     "react/jsx-curly-spacing": [
       "error",
       {
         "when": "never"
       }
     ],
+    "react/prop-types": "off",
     "unicorn/catch-error-name": [
       "error",
       {
@@ -77,8 +72,7 @@
     "unicorn/new-for-builtins": "error",
     "unicorn/no-new-buffer": "error",
     "unicorn/prefer-add-event-listener": "error",
-    "unicorn/throw-new-error": "error",
-    "import/no-default-export": "error"
+    "unicorn/throw-new-error": "error"
   },
   "overrides": [
     {
@@ -88,10 +82,26 @@
       }
     },
     {
+      "files": ["src/**/*.test.*"],
+      "rules": {
+        "@typescript-eslint/explicit-function-return-type": "off",
+        "@typescript-eslint/no-explicit-any": "off",
+        "no-console": "off",
+        "no-var": "off"
+      }
+    },
+    {
       "files": ["*.tsx"],
       "rules": {
         "@typescript-eslint/member-ordering": "off",
         "import/no-default-export": "off"
+      }
+    },
+    {
+      "files": ["*.d.ts"],
+      "rules": {
+        "@typescript-eslint/ban-ts-ignore": "off",
+        "@typescript-eslint/no-explicit-any": "off"
       }
     }
   ]
