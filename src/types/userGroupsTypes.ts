@@ -13,5 +13,5 @@ export interface TogglUserGroupModel {
   at: string;
 }
 
-// prettier-ignore
-export type CompoundUserGroupModel = ClockifyUserGroupModel & BaseCompoundEntityModel;
+export type CompoundUserGroupModel = ClockifyUserGroupModel &
+  BaseCompoundEntityModel;

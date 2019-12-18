@@ -1,8 +1,9 @@
-import { createStore, applyMiddleware, compose } from "redux";
+import { createStore, applyMiddleware, compose, AnyAction } from "redux";
 import thunkMiddleware from "redux-thunk";
 import storage from "store";
 import { STORAGE_KEY } from "~/constants";
 import { getIfDev } from "~/utils/getIfDev";
+import { validateCredentials } from "./credentials/credentialsActions";
 import { initialState as initialCredentialsState } from "./credentials/credentialsReducer";
 import { rootReducer } from "./rootReducer";
 import { ReduxStore } from "~/types";
@@ -23,9 +24,15 @@ export function configureStore(): ReduxStore {
     }
   }
 
-  return createStore(
+  const store = createStore(
     rootReducer,
     { credentials },
     composeEnhancers(applyMiddleware(...middleware)),
   );
+
+  if (process.env.USE_LOCAL_API === "true") {
+    store.dispatch(validateCredentials() as AnyAction);
+  }
+
+  return store;
 }

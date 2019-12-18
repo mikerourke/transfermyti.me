@@ -10,7 +10,7 @@
   "scripts": {
     "prebuild": "yarn tidy",
     "build": "parcel build ./src/index.html --out-dir build --no-source-maps --no-cache",
-    "start:web": "parcel ./src/index.html --port 3000",
+    "start:web": "parcel serve src/index.html --port 3000 --no-source-maps --no-cache",
     "start:server": "nodemon ./server/index.js",
     "start": "concurrently --kill-others \"yarn start:server\" \"yarn start:web\"",
     "lint": "eslint -c .eslintrc.json --ext .ts,.tsx src",
