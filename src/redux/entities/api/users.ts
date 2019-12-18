@@ -50,5 +50,5 @@ export const apiAddClockifyUsersToWorkspace = (
 ): Promise<ClockifyWorkspaceModel> =>
   fetchObject(`/clockify/api/workspaces/${workspaceId}/users/`, {
     method: HttpMethod.Post,
-    body: requestBody as any,
+    body: requestBody as unknown,
   });

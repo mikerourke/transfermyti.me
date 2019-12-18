@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React from "react";
 import { When } from "react-if";
 import { connect } from "react-redux";
 import { Button } from "bloomer";
@@ -21,7 +21,6 @@ import {
   AggregateTransferCountsModel,
   CompoundWorkspaceModel,
   InTransferDetailsModel,
-  ReduxDispatch,
   ReduxState,
   TransferCountsModel,
 } from "~/types";
@@ -35,7 +34,7 @@ interface ConnectStateProps {
 interface ConnectDispatchProps {
   onTransferEntitiesToClockifyWorkspace: (
     workspace: CompoundWorkspaceModel,
-  ) => Promise<any>;
+  ) => void;
   onUpdateCountTotalOverallBeforeTransfer: () => void;
 }
 
@@ -48,22 +47,22 @@ enum TransferStatus {
 }
 
 export const TransferProgressStepComponent: React.FC<Props> = props => {
-  const [isModalActive, setIsModalActive] = useState<boolean>(false);
-  const [transferStatus, setTransferStatus] = useState<TransferStatus>(
+  const [isModalActive, setIsModalActive] = React.useState<boolean>(false);
+  const [transferStatus, setTransferStatus] = React.useState<TransferStatus>(
     TransferStatus.Waiting,
   );
-  const [inTransferWorkspace, setInTransferWorkspace] = useState<
+  const [inTransferWorkspace, setInTransferWorkspace] = React.useState<
     CompoundWorkspaceModel | {}
   >({});
-  const [workspaceTransferCounts, setWorkspaceTransferCounts] = useState<
+  const [workspaceTransferCounts, setWorkspaceTransferCounts] = React.useState<
     TransferCountsModel
   >({ countCurrent: 0, countTotal: 0 });
 
-  useEffect(() => {
+  React.useEffect(() => {
     props.onUpdateCountTotalOverallBeforeTransfer();
   }, []);
 
-  const transferAllEntitiesToClockify = async () => {
+  const transferAllEntitiesToClockify = async (): Promise<void> => {
     setTransferStatus(TransferStatus.InProgress);
 
     let workspaceNumber = 1;
@@ -83,7 +82,7 @@ export const TransferProgressStepComponent: React.FC<Props> = props => {
     setTransferStatus(TransferStatus.Complete);
   };
 
-  const handleModalConfirmClick = async () => {
+  const handleModalConfirmClick = async (): Promise<void> => {
     setIsModalActive(false);
     await transferAllEntitiesToClockify();
   };
@@ -162,20 +161,18 @@ export const TransferProgressStepComponent: React.FC<Props> = props => {
   );
 };
 
-const mapStateToProps = (state: ReduxState) => ({
+const mapStateToProps = (state: ReduxState): ConnectStateProps => ({
   togglWorkspacesById: selectTogglIncludedWorkspacesById(state),
   inTransferDetails: selectInTransferDetails(state),
   aggregateTransferCounts: selectAggregateTransferCounts(state),
 });
 
-const mapDispatchToProps = (dispatch: ReduxDispatch) => ({
-  onTransferEntitiesToClockifyWorkspace: (workspace: CompoundWorkspaceModel) =>
-    dispatch(transferEntitiesToClockifyWorkspace(workspace)),
-  onUpdateCountTotalOverallBeforeTransfer: () =>
-    dispatch(updateCountsOverallBeforeTransfer()),
-});
+const mapDispatchToProps: ConnectDispatchProps = {
+  onTransferEntitiesToClockifyWorkspace: transferEntitiesToClockifyWorkspace,
+  onUpdateCountTotalOverallBeforeTransfer: updateCountsOverallBeforeTransfer,
+};
 
-export default connect<ConnectStateProps, ConnectDispatchProps>(
+export default connect(
   mapStateToProps,
   mapDispatchToProps,
 )(TransferProgressStepComponent);

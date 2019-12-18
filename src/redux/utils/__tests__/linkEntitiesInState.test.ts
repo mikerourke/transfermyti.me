@@ -1,6 +1,5 @@
-/* eslint-disable @typescript-eslint/indent */
 import { linkEntitiesInStateByName } from "~/redux/utils";
-import { EntityGroup } from "~/types/entityTypes";
+import { EntityGroup } from "~/types";
 
 // prettier-ignore
 const tagsState = {

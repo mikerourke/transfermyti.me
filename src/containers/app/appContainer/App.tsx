@@ -27,7 +27,7 @@ const App: React.FC<Props> = ({ currentTransferType }) => (
   </div>
 );
 
-const mapStateToProps = (state: ReduxState) => ({
+const mapStateToProps = (state: ReduxState): Props => ({
   currentTransferType: selectCurrentTransferType(state),
 });
 

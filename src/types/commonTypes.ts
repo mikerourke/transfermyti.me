@@ -9,7 +9,7 @@ import { CompoundTaskModel } from "./tasksTypes";
 import { CompoundTimeEntryModel } from "./timeEntriesTypes";
 import { CompoundUserGroupModel } from "./userGroupsTypes";
 import { CompoundUserModel } from "./usersTypes";
-import { CompoundWorkspaceModel } from "~/types/workspacesTypes";
+import { CompoundWorkspaceModel } from "./workspacesTypes";
 
 export enum ToolName {
   Clockify = "clockify",

@@ -36,9 +36,9 @@ export const clockifyTasksTransfer = createAsyncAction(
   "@tasks/CLOCKIFY_TRANSFER_FAILURE",
 )<void, EntitiesFetchPayloadModel<ClockifyTaskModel>, void>();
 
-export const flipIsTaskIncluded = createAction(
-  "@tasks/FLIP_IS_INCLUDED",
-)<string>();
+export const flipIsTaskIncluded = createAction("@tasks/FLIP_IS_INCLUDED")<
+  string
+>();
 
 export const fetchClockifyTasks = (workspaceId: string) => async (
   dispatch: ReduxDispatch,

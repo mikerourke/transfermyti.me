@@ -3,9 +3,11 @@ import { css } from "emotion";
 import { Column, Columns, Container, Footer as BloomerFooter } from "bloomer";
 import SvgIcon, { SvgIconName } from "~/components/svgIcon/SvgIcon";
 
-const Love = () => <SvgIcon name={SvgIconName.Heart} color="red" height={12} />;
+const Love = (): JSX.Element => (
+  <SvgIcon name={SvgIconName.Heart} color="red" height={12} />
+);
 
-const LinkToMe = () => (
+const LinkToMe = (): JSX.Element => (
   <a
     href="https://github.com/mikerourke"
     target="_blank"
@@ -15,7 +17,7 @@ const LinkToMe = () => (
   </a>
 );
 
-const LinkToIssues = () => (
+const LinkToIssues = (): JSX.Element => (
   <a
     href="https://github.com/mikerourke/toggl-to-clockify-web/issues"
     target="_blank"

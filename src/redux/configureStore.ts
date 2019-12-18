@@ -5,11 +5,12 @@ import { STORAGE_KEY } from "~/constants";
 import { getIfDev } from "~/utils/getIfDev";
 import { initialState as initialCredentialsState } from "./credentials/credentialsReducer";
 import { rootReducer } from "./rootReducer";
+import { ReduxStore } from "~/types";
 
-const devTools = (window as any).__REDUX_DEVTOOLS_EXTENSION_COMPOSE__;
-const composeEnhancers: any = devTools || compose;
+const devTools = window.__REDUX_DEVTOOLS_EXTENSION_COMPOSE__;
+const composeEnhancers: Function = devTools || compose;
 
-export function configureStore() {
+export function configureStore(): ReduxStore {
   const middleware = [thunkMiddleware];
 
   let credentials = initialCredentialsState;

@@ -1,13 +1,13 @@
 import { get, isNil, uniq } from "lodash";
 import { normalize, schema, Schema } from "normalizr";
-import { EntityGroup, ToolName } from "~/types";
+import { CompoundEntityModel, EntityGroup, ToolName } from "~/types";
 
 interface Params<TEntityState, TPayload> {
   toolName: ToolName;
   entityGroup: EntityGroup;
   entityState: TEntityState;
   payload: TPayload;
-  schemaProcessStrategy?: schema.StrategyFunction;
+  schemaProcessStrategy?: schema.StrategyFunction<CompoundEntityModel>;
 }
 
 /**
@@ -55,7 +55,7 @@ export function normalizeState<TEntityState, TPayload>({
  */
 function getEntitySchema(
   entityGroup: EntityGroup,
-  schemaProcessStrategy?: schema.StrategyFunction,
+  schemaProcessStrategy?: schema.StrategyFunction<CompoundEntityModel>,
 ): Schema {
   const entitySchema = new schema.Entity(
     entityGroup,

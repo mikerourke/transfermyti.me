@@ -97,7 +97,9 @@ export const fetchClockifyWorkspaces = () => async (
 export const fetchClockifyEntitiesInWorkspace = ({
   name,
   id,
-}: CompoundWorkspaceModel) => async (dispatch: ReduxDispatch) => {
+}: CompoundWorkspaceModel) => async (
+  dispatch: ReduxDispatch,
+): Promise<void> => {
   dispatch(updateWorkspaceNameBeingFetched(name));
 
   await dispatch(clientsActions.fetchClockifyClients(id));
@@ -108,7 +110,7 @@ export const fetchClockifyEntitiesInWorkspace = ({
   await dispatch(userGroupsActions.fetchClockifyUserGroups(id));
   await dispatch(timeEntriesActions.fetchClockifyTimeEntries(id));
 
-  return dispatch(updateWorkspaceNameBeingFetched(null));
+  dispatch(updateWorkspaceNameBeingFetched(null));
 };
 
 export const fetchTogglWorkspaces = () => async (dispatch: ReduxDispatch) => {

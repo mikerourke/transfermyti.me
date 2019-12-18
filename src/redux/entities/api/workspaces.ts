@@ -19,5 +19,5 @@ export const apiCreateClockifyWorkspace = (
 ): Promise<ClockifyWorkspaceModel> =>
   fetchObject("/clockify/api/v1/workspaces", {
     method: HttpMethod.Post,
-    body: workspace as any,
+    body: workspace as unknown,
   });

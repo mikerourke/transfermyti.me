@@ -1,4 +1,4 @@
-import { createSelector } from "reselect";
+import { createSelector, Selector } from "reselect";
 import { get } from "lodash";
 import { findTogglInclusions, groupByWorkspace } from "~/redux/utils";
 import { selectTogglClientMatchingId } from "~/redux/entities/clients/clientsSelectors";
@@ -20,7 +20,7 @@ export const selectTogglProjectsById = createSelector(
 
 export const selectTogglProjectsByWorkspaceFactory = (
   inclusionsOnly: boolean,
-) =>
+): Selector<ReduxState, Record<string, Array<CompoundProjectModel>>> =>
   createSelector(
     selectTogglProjectsById,
     (projectsById): Record<string, Array<CompoundProjectModel>> => {

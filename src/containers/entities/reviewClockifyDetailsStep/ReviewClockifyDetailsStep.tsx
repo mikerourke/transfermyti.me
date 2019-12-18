@@ -21,7 +21,6 @@ import {
   CompoundWorkspaceModel,
   CountsByGroupByWorkspaceModel,
   EntitiesByGroupByWorkspaceModel,
-  ReduxDispatch,
   ReduxState,
   ToolName,
 } from "~/types";
@@ -37,8 +36,8 @@ interface ConnectStateProps {
 interface ConnectDispatchProps {
   onFetchClockifyEntitiesInWorkspace: (
     workspace: CompoundWorkspaceModel,
-  ) => Promise<any>;
-  onFetchClockifyWorkspaces: () => Promise<any>;
+  ) => void;
+  onFetchClockifyWorkspaces: () => void;
 }
 
 type Props = ConnectStateProps & ConnectDispatchProps & StepPageProps;
@@ -64,12 +63,12 @@ export class ReviewClockifyDetailsStepComponent extends React.Component<
       .catch(() => this.setState({ isFetching: false }));
   }
 
-  private performFetchActions = async () => {
+  private performFetchActions = async (): Promise<void> => {
     await this.props.onFetchClockifyWorkspaces();
     await this.fetchClockifyEntitiesInAllWorkspaces();
   };
 
-  private fetchClockifyEntitiesInAllWorkspaces = async () => {
+  private fetchClockifyEntitiesInAllWorkspaces = async (): Promise<void> => {
     const workspaces = Object.values(this.props.clockifyWorkspacesById);
     if (workspaces.length === 0) {
       return;
@@ -80,7 +79,7 @@ export class ReviewClockifyDetailsStepComponent extends React.Component<
     }
   };
 
-  public render() {
+  public render(): JSX.Element {
     const {
       togglEntitiesByGroupByWorkspace,
       togglCountsByGroupByWorkspace,
@@ -130,7 +129,7 @@ export class ReviewClockifyDetailsStepComponent extends React.Component<
   }
 }
 
-const mapStateToProps = (state: ReduxState) => ({
+const mapStateToProps = (state: ReduxState): ConnectStateProps => ({
   clockifyWorkspacesById: selectClockifyIncludedWorkspacesById(state),
   togglEntitiesByGroupByWorkspace: selectTogglEntitiesByGroupByWorkspace(state),
   togglCountsByGroupByWorkspace: selectTogglCountsByGroupByWorkspace(state),
@@ -138,11 +137,10 @@ const mapStateToProps = (state: ReduxState) => ({
   workspaceNameBeingFetched: selectWorkspaceNameBeingFetched(state),
 });
 
-const mapDispatchToProps = (dispatch: ReduxDispatch) => ({
-  onFetchClockifyEntitiesInWorkspace: (workspace: CompoundWorkspaceModel) =>
-    dispatch(fetchClockifyEntitiesInWorkspace(workspace)),
-  onFetchClockifyWorkspaces: () => dispatch(fetchClockifyWorkspaces()),
-});
+const mapDispatchToProps: ConnectDispatchProps = {
+  onFetchClockifyEntitiesInWorkspace: fetchClockifyEntitiesInWorkspace,
+  onFetchClockifyWorkspaces: fetchClockifyWorkspaces,
+};
 
 export default connect<ConnectStateProps, ConnectDispatchProps, StepPageProps>(
   mapStateToProps,

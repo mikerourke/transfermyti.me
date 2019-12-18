@@ -20,7 +20,6 @@ import {
   NotificationType,
   ReduxDispatch,
   ReduxGetState,
-  ReduxThunkAction,
 } from "~/types";
 
 export const allCredentialsStored = createAction("@credentials/STORED")<

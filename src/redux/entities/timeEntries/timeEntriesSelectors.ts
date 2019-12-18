@@ -1,4 +1,4 @@
-import { createSelector } from "reselect";
+import { createSelector, Selector } from "reselect";
 import { compact, filter, get } from "lodash";
 import {
   CompoundClientModel,
@@ -9,6 +9,7 @@ import {
   CompoundUserModel,
   CompoundWorkspaceModel,
   DetailedTimeEntryModel,
+  EntityGroupsByKey,
   ReduxState,
   ToolName,
 } from "~/types";
@@ -21,7 +22,7 @@ export const selectTogglTimeEntriesById = createSelector(
 export const selectTimeEntriesByWorkspaceFactory = (
   toolName: ToolName,
   inclusionsOnly: boolean,
-) =>
+): Selector<ReduxState, EntityGroupsByKey<DetailedTimeEntryModel>> =>
   createSelector(
     (state: ReduxState) => state.entities.clients[toolName].byId,
     (state: ReduxState) => state.entities.projects[toolName].byId,
@@ -38,7 +39,7 @@ export const selectTimeEntriesByWorkspaceFactory = (
       timeEntriesById: Record<string, CompoundTimeEntryModel>,
       usersById: Record<string, CompoundUserModel>,
       workspacesById: Record<string, CompoundWorkspaceModel>,
-    ): Record<string, Array<DetailedTimeEntryModel>> => {
+    ): EntityGroupsByKey<DetailedTimeEntryModel> => {
       const allTimeEntries = Object.values(timeEntriesById);
 
       const tagsByName = Object.values(tagsById).reduce(

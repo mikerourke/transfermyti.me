@@ -1,4 +1,4 @@
-import { createSelector } from "reselect";
+import { createSelector, Selector } from "reselect";
 import { get, isNil } from "lodash";
 import { selectTogglClientsByWorkspaceFactory } from "~/redux/entities/clients/clientsSelectors";
 import { selectTogglProjectsByWorkspaceFactory } from "~/redux/entities/projects/projectsSelectors";
@@ -23,7 +23,7 @@ const selectClockifyWorkspacesById = createSelector(
   (workspacesById): Record<string, CompoundWorkspaceModel> => workspacesById,
 );
 
-export const selectIfWorkspacesFetching = (state: ReduxState) =>
+export const selectIfWorkspacesFetching = (state: ReduxState): boolean =>
   state.entities.workspaces.isFetching;
 
 export const selectTogglWorkspaceIds = createSelector(
@@ -110,7 +110,7 @@ export const selectTogglIncludedWorkspacesCount = createSelector(
 export const selectTogglWorkspaceIncludedYears = createSelector(
   selectTogglWorkspacesById,
   selectClockifyWorkspacesById,
-  (_: any, clockifyWorkspaceId: string) => clockifyWorkspaceId,
+  (_: unknown, clockifyWorkspaceId: string) => clockifyWorkspaceId,
   (
     togglWorkspacesById,
     clockifyWorkspacesById,
@@ -211,7 +211,9 @@ export const selectCountTotalOfTransfersOverall = createSelector(
     }, 0),
 );
 
-function selectTogglEntitiesByGroupByWorkspaceFactory(inclusionsOnly: boolean) {
+function selectTogglEntitiesByGroupByWorkspaceFactory(
+  inclusionsOnly: boolean,
+): Selector<ReduxState, EntitiesByGroupByWorkspaceModel> {
   return createSelector(
     selectTogglWorkspaceIds,
     selectTogglClientsByWorkspaceFactory(inclusionsOnly),
@@ -285,7 +287,6 @@ function calculateRecordCountsByEntityGroup(
         },
       };
     },
-    // eslint-disable-next-line @typescript-eslint/no-object-literal-type-assertion
     {} as Record<EntityGroup, RecordCountsModel>,
   );
 }

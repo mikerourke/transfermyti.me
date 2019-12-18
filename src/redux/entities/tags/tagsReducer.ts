@@ -121,7 +121,7 @@ function appendEntryCountByTagName<TTimeEntry>(
   toolName: ToolName,
   state: TagsState,
   timeEntries: Array<TTimeEntry>,
-) {
+): TagsState {
   const timeEntryCountByTagId = {};
   const tags = Object.values(state[toolName].byId);
 

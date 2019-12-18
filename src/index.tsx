@@ -4,6 +4,7 @@ import "react-virtualized/styles.css";
 import "react-sweet-progress/lib/style.css";
 import React from "react";
 import { render } from "react-dom";
+import { AnyAction } from "redux";
 import { Provider } from "react-redux";
 import { configureStore } from "./redux/configureStore";
 import { validateCredentials } from "./redux/credentials/credentialsActions";
@@ -18,13 +19,13 @@ updateCredentialsForDebug()
   .then(renderApp)
   .catch(renderApp);
 
-async function updateCredentialsForDebug() {
+async function updateCredentialsForDebug(): Promise<void> {
   if (process.env.USE_LOCAL_API === "true") {
-    await store.dispatch(validateCredentials() as any);
+    await store.dispatch(validateCredentials() as AnyAction);
   }
 }
 
-function renderApp() {
+function renderApp(): void {
   render(
     <Provider store={store}>
       <App />

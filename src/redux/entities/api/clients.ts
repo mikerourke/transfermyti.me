@@ -22,5 +22,5 @@ export const apiCreateClockifyClient = (
 ): Promise<ClockifyClientModel> =>
   fetchObject(`/clockify/api/v1/workspaces/${workspaceId}/clients`, {
     method: HttpMethod.Post,
-    body: client as any,
+    body: client as unknown,
   });

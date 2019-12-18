@@ -1,10 +1,13 @@
 import { compact, get, isNil, sortBy } from "lodash";
+import { EntityGroupsByKey } from "~/types";
 
 /**
  * Sorts the specified entity records by name and groups them by their
  * corresponding workspaceId.
  */
-export function groupByWorkspace<TEntity>(entityRecords: Array<TEntity>) {
+export function groupByWorkspace<TEntity>(
+  entityRecords: Array<TEntity>,
+): EntityGroupsByKey<TEntity> {
   const sortedEntityRecords = sortBy(entityRecords, record =>
     get(record, "name", null),
   ) as Array<TEntity>;

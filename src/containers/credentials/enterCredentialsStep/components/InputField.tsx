@@ -8,7 +8,7 @@ import HelpTooltip from "./HelpTooltip";
 interface Props extends React.HTMLProps<HTMLInputElement> {
   name: string;
   label: string;
-  tooltip: React.ReactElement<any> | React.ReactChild;
+  tooltip: React.ReactElement<unknown> | React.ReactChild;
   className?: string;
   errorText?: string;
 }

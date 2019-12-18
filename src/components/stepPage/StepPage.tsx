@@ -9,7 +9,7 @@ import InstructionsSection from "./components/InstructionsSection";
 
 export interface StepPageProps {
   stepNumber: number;
-  instructions?: React.ReactElement<any> | string;
+  instructions?: React.ReactElement<unknown> | string;
   onNextClick?: () => void;
   onPreviousClick?: () => void;
 }

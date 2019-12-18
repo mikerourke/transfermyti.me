@@ -6,14 +6,17 @@ import PromiseThrottle from "promise-throttle";
  */
 export function buildThrottler<TResponse>(
   requestsPerSecond: number,
-  fetchFunc: (...fetchArgs: Array<any>) => TResponse,
-) {
+  fetchFunc: (...fetchArgs: Array<unknown>) => TResponse,
+): {
+  promiseThrottle: typeof PromiseThrottle;
+  throttledFunc: (...args: Array<unknown>) => Promise<TResponse>;
+} {
   const promiseThrottle = new PromiseThrottle({
     requestsPerSecond,
     promiseImplementation: Promise,
   });
 
-  const throttledFunc = (...args: Array<any>) =>
+  const throttledFunc = (...args: Array<unknown>): Promise<TResponse> =>
     new Promise((resolve, reject) =>
       fetchFunc
         .call(null, ...args)

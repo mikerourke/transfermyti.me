@@ -1,7 +1,12 @@
-import { createSelector } from "reselect";
+import { createSelector, Selector } from "reselect";
 import { get } from "lodash";
 import { findTogglInclusions, groupByWorkspace } from "~/redux/utils";
-import { CompoundUserGroupModel, EntityWithName, ReduxState } from "~/types";
+import {
+  CompoundUserGroupModel,
+  EntityGroupsByKey,
+  EntityWithName,
+  ReduxState,
+} from "~/types";
 
 export const selectTogglUserGroups = createSelector(
   (state: ReduxState) => state.entities.userGroups.toggl.byId,
@@ -11,10 +16,10 @@ export const selectTogglUserGroups = createSelector(
 
 export const selectTogglUserGroupsByWorkspaceFactory = (
   inclusionsOnly: boolean,
-) =>
+): Selector<ReduxState, EntityGroupsByKey<CompoundUserGroupModel>> =>
   createSelector(
     selectTogglUserGroups,
-    (userGroups): Record<string, Array<CompoundUserGroupModel>> => {
+    (userGroups): EntityGroupsByKey<CompoundUserGroupModel> => {
       const userGroupsToUse = inclusionsOnly
         ? findTogglInclusions(userGroups)
         : userGroups;

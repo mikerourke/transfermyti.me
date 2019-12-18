@@ -23,7 +23,7 @@ export const apiCreateClockifyTask = (
     `/clockify/api/v1/workspaces/${workspaceId}/projects/${projectId}/tasks`,
     {
       method: HttpMethod.Post,
-      body: task as any,
+      body: task as unknown,
     },
   );
 };

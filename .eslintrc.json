@@ -18,7 +18,6 @@
   },
   "parserOptions": {
     "ecmaVersion": 2018,
-    "project": "./tsconfig.json",
     "sourceType": "module",
     "ecmaFeatures": {
       "jsx": true
@@ -26,10 +25,11 @@
     "extraFileExtensions": [".ts", ".tsx"]
   },
   "rules": {
-    "curly": "error",
+    "curly": ["error", "all"],
     "indent": "off",
     "no-unused-vars": "off",
     "@typescript-eslint/array-type": ["error", { "default": "generic" }],
+    "@typescript-eslint/ban-ts-ignore": "off",
     "@typescript-eslint/explicit-function-return-type": [
       "error",
       {
@@ -47,6 +47,10 @@
         "argsIgnorePattern": "props|args|_",
         "args": "after-used"
       }
+    ],
+    "@typescript-eslint/no-use-before-define": [
+      "error",
+      { "functions": false, "classes": true }
     ],
     "@typescript-eslint/no-var-requires": "off",
     "import/no-default-export": "error",
@@ -84,8 +88,8 @@
     {
       "files": ["src/**/*.test.*"],
       "rules": {
-        "@typescript-eslint/explicit-function-return-type": "off",
         "@typescript-eslint/no-explicit-any": "off",
+        "@typescript-eslint/explicit-function-return-type": "off",
         "no-console": "off",
         "no-var": "off"
       }
@@ -100,7 +104,6 @@
     {
       "files": ["*.d.ts"],
       "rules": {
-        "@typescript-eslint/ban-ts-ignore": "off",
         "@typescript-eslint/no-explicit-any": "off"
       }
     }

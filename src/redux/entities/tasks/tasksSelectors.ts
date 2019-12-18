@@ -1,15 +1,22 @@
-import { createSelector } from "reselect";
+import { createSelector, Selector } from "reselect";
 import { get, isNil } from "lodash";
 import { findTogglInclusions, groupByWorkspace } from "~/redux/utils";
 import { selectTogglClientMatchingId } from "~/redux/entities/clients/clientsSelectors";
-import { CompoundTaskModel, ClockifyTaskModel, ReduxState } from "~/types";
+import {
+  CompoundTaskModel,
+  ClockifyTaskModel,
+  ReduxState,
+  EntityGroupsByKey,
+} from "~/types";
 
 export const selectTogglTasks = createSelector(
   (state: ReduxState) => Object.values(state.entities.tasks.toggl.byId),
   (tasks): Array<CompoundTaskModel> => tasks,
 );
 
-export const selectToggleTasksByWorkspaceFactory = (inclusionsOnly: boolean) =>
+export const selectToggleTasksByWorkspaceFactory = (
+  inclusionsOnly: boolean,
+): Selector<ReduxState, EntityGroupsByKey<CompoundTaskModel>> =>
   createSelector(
     selectTogglTasks,
     (tasks): Record<string, Array<CompoundTaskModel>> => {

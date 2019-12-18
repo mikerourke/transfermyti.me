@@ -34,7 +34,7 @@ export class UserGroupTransform {
   public appendEntryCount(
     usersById: Record<string, CompoundUserModel>,
     timeEntries: Array<CompoundTimeEntryModel>,
-  ) {
+  ): UserGroupForTool & { entryCount: number } {
     const userGroupUserIds = this.getUserIds(Object.values(usersById));
     if (userGroupUserIds.length === 0) {
       return { ...this.userGroupRecord, entryCount: 0 };
@@ -56,7 +56,7 @@ export class UserGroupTransform {
 
   private getTimeEntryCountByUserId(
     timeEntries: Array<CompoundTimeEntryModel>,
-  ) {
+  ): Record<string, number> {
     return timeEntries.reduce((acc, timeEntry) => {
       const userId = get(timeEntry, "userId");
       if (isNil(userId)) {
@@ -70,7 +70,7 @@ export class UserGroupTransform {
     }, {});
   }
 
-  private getUserIds(users: Array<CompoundUserModel>) {
+  private getUserIds(users: Array<CompoundUserModel>): Array<string> {
     if ("userIds" in this.userGroupRecord) {
       return this.userGroupRecord.userIds;
     }
@@ -87,7 +87,9 @@ export class UserGroupTransform {
     return idsOfUsers;
   }
 
-  private getUsersInUserGroup(users: Array<CompoundUserModel>) {
+  private getUsersInUserGroup(
+    users: Array<CompoundUserModel>,
+  ): Array<CompoundUserModel> {
     if (users.length === 0) {
       return [];
     }
@@ -98,7 +100,7 @@ export class UserGroupTransform {
     );
   }
 
-  private get userGroupId() {
+  private get userGroupId(): string {
     return this.userGroupRecord.id.toString();
   }
 }

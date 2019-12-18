@@ -22,5 +22,5 @@ export const apiCreateClockifyTag = (
 ): Promise<ClockifyTagModel> =>
   fetchObject(`/clockify/api/v1/workspaces/${workspaceId}/tags`, {
     method: HttpMethod.Post,
-    body: tag as any,
+    body: tag as unknown,
   });

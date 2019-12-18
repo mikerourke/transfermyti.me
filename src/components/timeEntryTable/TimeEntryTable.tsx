@@ -10,7 +10,7 @@ interface Props {
   timeEntry: DetailedTimeEntryModel;
 }
 
-const DATE_FORMAT = "M/D/YY hh:mma";
+const DATE_FORMAT = "M/d/yy hh:mma";
 
 const TimeEntryTable: React.FC<Props> = ({ timeEntry }) => {
   const getTagsList = (): string => {
@@ -65,8 +65,8 @@ const TimeEntryTable: React.FC<Props> = ({ timeEntry }) => {
           <td>Tag(s)</td>
         </HeadersRow>
         <ValuesRow isBottomPadded={false}>
-          <td>{format(timeEntry.start, DATE_FORMAT)}</td>
-          <td>{format(timeEntry.end, DATE_FORMAT)}</td>
+          <td>{format(new Date(timeEntry.start), DATE_FORMAT)}</td>
+          <td>{format(new Date(timeEntry.end), DATE_FORMAT)}</td>
           <td>{get(timeEntry, ["user", "name"], "")}</td>
           <td>{getTagsList()}</td>
         </ValuesRow>

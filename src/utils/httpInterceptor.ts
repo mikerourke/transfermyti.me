@@ -14,11 +14,11 @@ enum Context {
 }
 
 interface RequestConfig {
-  body?: any;
+  body?: unknown;
   headers?: Record<string, string>;
 }
 
-export function initInterceptor(store: Store) {
+export function initInterceptor(store: Store): VoidFunction {
   return fetchIntercept.register({
     request(url, config: RequestConfig = {}) {
       const { toolName, context, endpoint } = extrapolateFromUrl(url);
@@ -43,6 +43,7 @@ export function initInterceptor(store: Store) {
 
       return [fullUrl, config];
     },
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
     response(response): any {
       if (!response.ok) {
         const toolName = response.url.includes("clockify")
@@ -53,7 +54,7 @@ export function initInterceptor(store: Store) {
 
         return response
           .json()
-          .then(result => Promise.reject({ ...result, toolName }))
+          .then((result: object) => Promise.reject({ ...result, toolName }))
           .catch(() => Promise.reject({ url, status, statusText, toolName }));
       }
       const type = response.headers.get("content-type") || "json";
@@ -65,7 +66,10 @@ export function initInterceptor(store: Store) {
   });
 }
 
-function getHeaders(toolName: ToolName, credentials: CredentialsModel) {
+function getHeaders(
+  toolName: ToolName,
+  credentials: CredentialsModel,
+): Record<string, string> {
   if (toolName === ToolName.Clockify) {
     return {
       "Content-Type": "application/json",

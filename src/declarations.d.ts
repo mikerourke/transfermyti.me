@@ -6,6 +6,10 @@ declare module "react-sweet-progress";
 
 declare type VoidPromise = () => Promise<void>;
 
+declare interface Window {
+  __REDUX_DEVTOOLS_EXTENSION_COMPOSE__: any;
+}
+
 declare namespace jest {
   // @ts-ignore
   interface Matchers<R> {

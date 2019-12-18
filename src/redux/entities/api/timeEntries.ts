@@ -25,7 +25,7 @@ export const apiFetchClockifyTimeEntries = (
       body: {
         start: firstDay,
         end: lastDay,
-      } as any,
+      } as unknown,
     },
   );
 };
@@ -38,7 +38,7 @@ export const apiFetchTogglTimeEntries = (
 ): Promise<TogglTimeEntriesFetchResponseModel> => {
   const { firstDay, lastDay } = firstAndLastDayOfYear(
     year,
-    "YYYY-MM-DDTHH:mm:ssZ",
+    "yyyy-MM-DDTHH:mm:ssZ",
   );
 
   const queryString = [
@@ -81,7 +81,7 @@ export const apiCreateClockifyTimeEntry = (
     `/clockify/api/v1/workspaces/${workspaceId}/time-entries`,
     {
       method: "POST",
-      body: validTimeEntry as any,
+      body: validTimeEntry as unknown,
     },
   );
 };

@@ -1,9 +1,9 @@
 import { isNil } from "lodash";
 import format from "date-fns/format";
-import addHours from "date-fns/add_hours";
-import subHours from "date-fns/sub_hours";
-import startOfYear from "date-fns/start_of_year";
-import endOfYear from "date-fns/end_of_year";
+import addHours from "date-fns/addHours";
+import subHours from "date-fns/subHours";
+import startOfYear from "date-fns/startOfYear";
+import endOfYear from "date-fns/endOfYear";
 
 /**
  * Returns the first and last day of the year (in ISO format) for specifying

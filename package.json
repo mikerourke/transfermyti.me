@@ -14,7 +14,7 @@
     "start:server": "nodemon ./server/index.js",
     "start": "concurrently --kill-others \"yarn start:server\" \"yarn start:web\"",
     "lint": "eslint -c .eslintrc.json --ext .ts,.tsx src",
-    "prettier": "prettier --write \"{scripts,src,server}/**/*.{js,ts,tsx}\"",
+    "prettier": "prettier --write \"{scripts,src,server}/**/*.{js,ts,tsx,css,html}\"",
     "tidy": "rimraf ./.cache && rimraf ./build && rimraf ./dist",
     "typecheck": "tsc -p tsconfig.json --noEmit --skipLibCheck",
     "clockify:delete": "node ./scripts/manageClockify.js delete",

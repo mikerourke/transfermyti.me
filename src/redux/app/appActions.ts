@@ -13,21 +13,21 @@ import {
   ReduxGetState,
 } from "~/types";
 
-export const notificationShown = createAction(
-  "@app/NOTIFICATION_SHOWN",
-)<Partial<NotificationModel>>();
+export const notificationShown = createAction("@app/NOTIFICATION_SHOWN")<
+  Partial<NotificationModel>
+>();
 
-export const dismissNotification = createAction(
-  "@app/DISMISS_NOTIFICATION",
-)<string>();
+export const dismissNotification = createAction("@app/DISMISS_NOTIFICATION")<
+  string
+>();
 
 export const dismissAllNotifications = createAction(
   "@app/DISMISS_ALL_NOTIFICATIONS",
 )();
 
-export const updateTransferType = createAction(
-  "@app/UPDATE_TRANSFER_TYPE",
-)<TransferType>();
+export const updateTransferType = createAction("@app/UPDATE_TRANSFER_TYPE")<
+  TransferType
+>();
 
 export const updateInTransferDetails = createAction(
   "@app/UPDATE_IN_TRANSFER_DETAILS",

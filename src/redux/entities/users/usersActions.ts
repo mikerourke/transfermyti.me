@@ -40,9 +40,9 @@ export const clockifyUsersTransfer = createAsyncAction(
   "@users/CLOCKIFY_TRANSFER_FAILURE",
 )<void, EntitiesFetchPayloadModel<ClockifyUserModel>, void>();
 
-export const flipIsUserIncluded = createAction(
-  "@users/FLIP_IS_INCLUDED",
-)<string>();
+export const flipIsUserIncluded = createAction("@users/FLIP_IS_INCLUDED")<
+  string
+>();
 
 export const fetchClockifyUsers = (workspaceId: string) => async (
   dispatch: ReduxDispatch,
@@ -141,7 +141,7 @@ export const inviteUsersToClockify = (
 async function fetchClockifyUsersAndAppendUserIds(
   dispatch: ReduxDispatch,
   workspaceId: string,
-) {
+): Promise<Array<ClockifyUserModel>> {
   const users = await apiFetchClockifyUsersInWorkspace(workspaceId);
   const userIds = users.map(({ id }) => id.toString());
 
@@ -159,7 +159,7 @@ async function fetchClockifyUsersAndAppendUserIds(
 async function appendTogglUserGroupIdsToUsers(
   workspaceId: string,
   users: Array<TogglUserModel>,
-) {
+): Promise<void> {
   const workspaceUsers = await apiFetchTogglWorkspaceUsers(workspaceId);
   const workspaceUsersById = workspaceUsers.reduce(
     (acc, workspaceUserRecord) => ({

@@ -249,7 +249,7 @@ async function fetchTogglTimeEntriesForYear({
   togglEmail: string;
   workspaceId: string;
   year: number;
-}) {
+}): Promise<Array<TogglTimeEntryModel>> {
   const {
     total_count: totalCount,
     per_page: perPage,

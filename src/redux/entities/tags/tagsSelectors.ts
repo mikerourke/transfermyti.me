@@ -1,14 +1,21 @@
-import { createSelector } from "reselect";
+import { createSelector, Selector } from "reselect";
 import { get } from "lodash";
 import { findTogglInclusions, groupByWorkspace } from "~/redux/utils";
-import { CompoundTagModel, EntityWithName, ReduxState } from "~/types";
+import {
+  CompoundTagModel,
+  EntityGroupsByKey,
+  EntityWithName,
+  ReduxState,
+} from "~/types";
 
 export const selectTogglTags = createSelector(
   (state: ReduxState) => Object.values(state.entities.tags.toggl.byId),
   (tags): Array<CompoundTagModel> => tags,
 );
 
-export const selectTogglTagsByWorkspaceFactory = (inclusionsOnly: boolean) =>
+export const selectTogglTagsByWorkspaceFactory = (
+  inclusionsOnly: boolean,
+): Selector<ReduxState, EntityGroupsByKey<CompoundTagModel>> =>
   createSelector(selectTogglTags, tags => {
     const tagsToUse = inclusionsOnly ? findTogglInclusions(tags) : tags;
     return groupByWorkspace(tagsToUse);

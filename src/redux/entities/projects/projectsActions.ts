@@ -41,9 +41,9 @@ export const clockifyProjectsTransfer = createAsyncAction(
   "@projects/CLOCKIFY_TRANSFER_FAILURE",
 )<void, EntitiesFetchPayloadModel<ClockifyProjectModel>, void>();
 
-export const flipIsProjectIncluded = createAction(
-  "@projects/FLIP_IS_INCLUDED",
-)<string>();
+export const flipIsProjectIncluded = createAction("@projects/FLIP_IS_INCLUDED")<
+  string
+>();
 
 export const fetchClockifyProjects = (workspaceId: string) => async (
   dispatch: ReduxDispatch,

@@ -22,5 +22,5 @@ export const apiCreateClockifyUserGroup = (
 ): Promise<ClockifyUserGroupModel> =>
   fetchObject(`/clockify/api/workspaces/${workspaceId}/userGroups/`, {
     method: HttpMethod.Post,
-    body: userGroup as any,
+    body: userGroup as unknown,
   });
