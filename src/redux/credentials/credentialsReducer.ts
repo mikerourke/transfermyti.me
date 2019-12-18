@@ -1,7 +1,8 @@
-import { getType } from "typesafe-actions";
-import { handleActions, combineActions } from "redux-actions";
+import { createReducer, ActionType } from "typesafe-actions";
 import * as credentialsActions from "./credentialsActions";
-import { CredentialsModel, ReduxAction } from "~/types";
+import { CredentialsModel } from "~/types";
+
+type CredentialsAction = ActionType<typeof credentialsActions>;
 
 export interface CredentialsState extends CredentialsModel {
   readonly isValid: boolean;
@@ -18,64 +19,46 @@ export const initialState: CredentialsState = {
   isValidating: false,
 };
 
-export const credentialsReducer = handleActions(
-  {
-    [getType(credentialsActions.allCredentialsStored)]: (
-      state: CredentialsState,
-      { payload: credentials }: ReduxAction<CredentialsModel>,
-    ): CredentialsState => ({
+export const credentialsReducer = createReducer<
+  CredentialsState,
+  CredentialsAction
+>(initialState)
+  .handleAction(
+    credentialsActions.allCredentialsStored,
+    (state, { payload }) => ({
       ...state,
-      ...credentials,
+      ...payload,
     }),
-
-    [getType(credentialsActions.credentialsValidation.success)]: (
-      state: CredentialsState,
-      { payload: credentials }: ReduxAction<CredentialsModel>,
-    ): CredentialsState => ({
+  )
+  .handleAction(
+    credentialsActions.credentialsValidation.success,
+    (state, { payload }) => ({
       ...state,
-      ...credentials,
+      ...payload,
       isValid: true,
-    }),
-
-    [getType(credentialsActions.credentialsValidation.failure)]: (
-      state: CredentialsState,
-    ): CredentialsState => ({
-      ...state,
-      isValid: false,
-    }),
-
-    [getType(credentialsActions.updateAreCredentialsValid)]: (
-      state: CredentialsState,
-      { payload: isValid }: ReduxAction<boolean>,
-    ): CredentialsState => ({
-      ...state,
-      isValid,
-    }),
-
-    [getType(credentialsActions.credentialsValidation.request)]: (
-      state: CredentialsState,
-    ): CredentialsState => ({
-      ...state,
-      isValidating: true,
-    }),
-
-    [combineActions(
-      getType(credentialsActions.credentialsValidation.success),
-      getType(credentialsActions.credentialsValidation.failure),
-    )]: (state: CredentialsState): CredentialsState => ({
-      ...state,
       isValidating: false,
     }),
-
-    [getType(credentialsActions.updateCredentialsField)]: (
-      state: CredentialsState,
-      {
-        payload: { field, value },
-      }: ReduxAction<{ field: string; value: string }>,
-    ): CredentialsState => ({
+  )
+  .handleAction(credentialsActions.credentialsValidation.failure, state => ({
+    ...state,
+    isValid: false,
+    isValidating: false,
+  }))
+  .handleAction(
+    credentialsActions.updateAreCredentialsValid,
+    (state, { payload }) => ({
       ...state,
-      [field]: value,
+      isValid: payload,
     }),
-  },
-  initialState,
-);
+  )
+  .handleAction(credentialsActions.credentialsValidation.request, state => ({
+    ...state,
+    isValidating: true,
+  }))
+  .handleAction(
+    credentialsActions.updateCredentialsField,
+    (state, { payload }) => ({
+      ...state,
+      [payload.field]: payload.value,
+    }),
+  );

@@ -15,13 +15,15 @@ const store = configureStore();
 
 initInterceptor(store);
 
-updateCredentialsForDebug()
-  .then(renderApp)
-  .catch(renderApp);
+updateCredentialsForDebug().then(renderApp);
 
 async function updateCredentialsForDebug(): Promise<void> {
-  if (process.env.USE_LOCAL_API === "true") {
-    await store.dispatch(validateCredentials() as AnyAction);
+  try {
+    if (process.env.USE_LOCAL_API === "true") {
+      await store.dispatch(validateCredentials() as AnyAction);
+    }
+  } catch {
+    // Do nothing.
   }
 }
 

@@ -53,7 +53,7 @@ export const storeAllCredentials = () => (
     storage.set(STORAGE_KEY, { ...storedCredentials, ...credentials });
   }
 
-  return dispatch(allCredentialsStored(credentials));
+  dispatch(allCredentialsStored(credentials));
 };
 
 const fetchClockifyMeDetails = () => async (dispatch: ReduxDispatch) => {

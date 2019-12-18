@@ -97,10 +97,10 @@ export const fetchClockifyTimeEntries = (workspaceId: string) => async (
       }),
     );
 
-    return dispatch(clockifyTimeEntriesFetch.success(timeEntries));
+    dispatch(clockifyTimeEntriesFetch.success(timeEntries));
   } catch (err) {
     dispatch(showFetchErrorNotification(err));
-    return dispatch(clockifyTimeEntriesFetch.failure());
+    dispatch(clockifyTimeEntriesFetch.failure());
   }
 };
 
@@ -167,10 +167,10 @@ export const fetchTogglTimeEntries = (workspaceId: string) => async (
       }),
     );
 
-    return dispatch(togglTimeEntriesFetch.success(timeEntries));
+    dispatch(togglTimeEntriesFetch.success(timeEntries));
   } catch (err) {
     dispatch(showFetchErrorNotification(err));
-    return dispatch(togglTimeEntriesFetch.failure());
+    dispatch(togglTimeEntriesFetch.failure());
   }
 };
 
@@ -183,7 +183,7 @@ export const transferTimeEntriesToClockify = (
     togglWorkspaceId,
   );
   if (timeEntriesInWorkspace.length === 0) {
-    return Promise.resolve();
+    return;
   }
 
   dispatch(clockifyTimeEntriesTransfer.request());
@@ -205,10 +205,10 @@ export const transferTimeEntriesToClockify = (
       entitiesByGroup: selectEntitiesByGroupFactory(ToolName.Clockify)(state),
     });
 
-    return dispatch(clockifyTimeEntriesTransfer.success(timeEntries));
+    dispatch(clockifyTimeEntriesTransfer.success(timeEntries));
   } catch (err) {
     dispatch(showFetchErrorNotification(err));
-    return dispatch(clockifyTimeEntriesTransfer.failure());
+    dispatch(clockifyTimeEntriesTransfer.failure());
   }
 };
 

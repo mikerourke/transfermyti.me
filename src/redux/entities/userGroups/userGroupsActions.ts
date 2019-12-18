@@ -78,7 +78,7 @@ export const fetchClockifyUserGroups = (workspaceId: string) => async (
       usersByWorkspace,
     });
 
-    return dispatch(
+    dispatch(
       clockifyUserGroupsFetch.success({
         entityRecords: userGroups,
         workspaceId,
@@ -86,7 +86,7 @@ export const fetchClockifyUserGroups = (workspaceId: string) => async (
     );
   } catch (err) {
     dispatch(showFetchErrorNotification(err));
-    return dispatch(clockifyUserGroupsFetch.failure());
+    dispatch(clockifyUserGroupsFetch.failure());
   }
 };
 
@@ -108,12 +108,12 @@ export const fetchTogglUserGroups = (workspaceId: string) => async (
       usersByWorkspace,
     });
 
-    return dispatch(
+    dispatch(
       togglUserGroupsFetch.success({ entityRecords: userGroups, workspaceId }),
     );
   } catch (err) {
     dispatch(showFetchErrorNotification(err));
-    return dispatch(togglUserGroupsFetch.failure());
+    dispatch(togglUserGroupsFetch.failure());
   }
 };
 
@@ -126,7 +126,7 @@ export const transferUserGroupsToClockify = (
     state,
   )(togglWorkspaceId);
   if (userGroupsInWorkspace.length === 0) {
-    return Promise.resolve();
+    return;
   }
 
   dispatch(clockifyUserGroupsTransfer.request());
@@ -142,7 +142,7 @@ export const transferUserGroupsToClockify = (
       togglWorkspaceId,
     });
 
-    return dispatch(
+    dispatch(
       clockifyUserGroupsTransfer.success({
         entityRecords: userGroups,
         workspaceId: clockifyWorkspaceId,
@@ -150,7 +150,7 @@ export const transferUserGroupsToClockify = (
     );
   } catch (err) {
     dispatch(showFetchErrorNotification(err));
-    return dispatch(clockifyUserGroupsTransfer.failure());
+    dispatch(clockifyUserGroupsTransfer.failure());
   }
 };
 

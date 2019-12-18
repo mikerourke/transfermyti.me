@@ -57,12 +57,12 @@ export const fetchClockifyProjects = (workspaceId: string) => async (
       workspaceId,
     );
 
-    return dispatch(
+    dispatch(
       clockifyProjectsFetch.success({ entityRecords: projects, workspaceId }),
     );
   } catch (err) {
     dispatch(showFetchErrorNotification(err));
-    return dispatch(clockifyProjectsFetch.failure());
+    dispatch(clockifyProjectsFetch.failure());
   }
 };
 
@@ -73,13 +73,12 @@ export const fetchTogglProjects = (workspaceId: string) => async (
   try {
     const projects = await apiFetchTogglProjects(workspaceId);
     await appendUserIdsToProject(projects, apiFetchTogglUsersInProject);
-
-    return dispatch(
+    dispatch(
       togglProjectsFetch.success({ entityRecords: projects, workspaceId }),
     );
   } catch (err) {
     dispatch(showFetchErrorNotification(err));
-    return dispatch(togglProjectsFetch.failure());
+    dispatch(togglProjectsFetch.failure());
   }
 };
 
@@ -92,7 +91,7 @@ export const transferProjectsToClockify = (
     togglWorkspaceId,
   );
   if (projectsInWorkspace.length === 0) {
-    return Promise.resolve();
+    return;
   }
 
   dispatch(clockifyProjectsTransfer.request());
@@ -108,7 +107,7 @@ export const transferProjectsToClockify = (
       togglWorkspaceId,
     });
 
-    return dispatch(
+    dispatch(
       clockifyProjectsTransfer.success({
         entityRecords: projects,
         workspaceId: clockifyWorkspaceId,

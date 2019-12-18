@@ -31,6 +31,7 @@ import {
   TogglWorkspaceModel,
   ToolName,
 } from "~/types";
+import { pause } from "~/utils/pause";
 
 export const clockifyWorkspacesFetch = createAsyncAction(
   "@workspaces/CLOCKIFY_FETCH_REQUEST",
@@ -87,10 +88,10 @@ export const fetchClockifyWorkspaces = () => async (
       togglIncludedNames.includes(name),
     );
 
-    return dispatch(clockifyWorkspacesFetch.success(includedWorkspaces));
+    dispatch(clockifyWorkspacesFetch.success(includedWorkspaces));
   } catch (err) {
     dispatch(showFetchErrorNotification(err));
-    return dispatch(clockifyWorkspacesFetch.failure());
+    dispatch(clockifyWorkspacesFetch.failure());
   }
 };
 
@@ -120,10 +121,10 @@ export const fetchTogglWorkspaces = () => async (dispatch: ReduxDispatch) => {
     dispatch(resetContentsForTool(ToolName.Toggl));
     const workspaces = await apiFetchTogglWorkspaces();
 
-    return dispatch(togglWorkspacesFetch.success(workspaces));
+    dispatch(togglWorkspacesFetch.success(workspaces));
   } catch (err) {
     dispatch(showFetchErrorNotification(err));
-    return dispatch(togglWorkspacesFetch.failure());
+    dispatch(togglWorkspacesFetch.failure());
   }
 };
 
@@ -134,14 +135,20 @@ export const fetchTogglEntitiesInWorkspace = ({
   dispatch(updateWorkspaceNameBeingFetched(name));
 
   await dispatch(clientsActions.fetchTogglClients(id));
+  await pause(1_000);
   await dispatch(projectsActions.fetchTogglProjects(id));
+  await pause(1_000);
   await dispatch(tagsActions.fetchTogglTags(id));
+  await pause(1_000);
   await dispatch(tasksActions.fetchTogglTasks(id));
+  await pause(1_000);
   await dispatch(usersActions.fetchTogglUsers(id));
+  await pause(1_000);
   await dispatch(userGroupsActions.fetchTogglUserGroups(id));
+  await pause(1_000);
   await dispatch(timeEntriesActions.fetchTogglTimeEntries(id));
 
-  return dispatch(updateWorkspaceNameBeingFetched(null));
+  dispatch(updateWorkspaceNameBeingFetched(null));
 };
 
 export const transferEntitiesToClockifyWorkspace = (
@@ -211,10 +218,10 @@ export const transferEntitiesToClockifyWorkspace = (
       }),
     );
 
-    return dispatch(updateWorkspaceNameBeingFetched(null));
+    dispatch(updateWorkspaceNameBeingFetched(null));
   } catch (err) {
     dispatch(showFetchErrorNotification(err));
-    return dispatch(clockifyWorkspaceTransfer.failure());
+    dispatch(clockifyWorkspaceTransfer.failure());
   }
 };
 
@@ -231,5 +238,5 @@ export const flipIsWorkspaceEntityIncluded = (
     [EntityGroup.Users]: usersActions.flipIsUserIncluded,
   }[entityGroup];
 
-  return dispatch(updateAction(id));
+  dispatch(updateAction(id));
 };

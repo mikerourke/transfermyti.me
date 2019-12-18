@@ -3,18 +3,18 @@ import { capitalize, isNil, uniqueId } from "lodash";
 import { getIfDev } from "~/utils/getIfDev";
 import { selectCountTotalOfTransfersOverall } from "~/redux/entities/workspaces/workspacesSelectors";
 import {
-  TransferCountsModel,
   InTransferDetailsModel,
   NotificationModel,
   NotificationType,
   ReduxDispatch,
-  ToolName,
-  TransferType,
   ReduxGetState,
+  ToolName,
+  TransferCountsModel,
+  TransferType,
 } from "~/types";
 
 export const notificationShown = createAction("@app/NOTIFICATION_SHOWN")<
-  Partial<NotificationModel>
+  NotificationModel
 >();
 
 export const dismissNotification = createAction("@app/DISMISS_NOTIFICATION")<
@@ -23,7 +23,7 @@ export const dismissNotification = createAction("@app/DISMISS_NOTIFICATION")<
 
 export const dismissAllNotifications = createAction(
   "@app/DISMISS_ALL_NOTIFICATIONS",
-)();
+)<undefined>();
 
 export const updateTransferType = createAction("@app/UPDATE_TRANSFER_TYPE")<
   TransferType
@@ -54,7 +54,7 @@ export const updateCountsInWorkspace = (
 ) => (dispatch: ReduxDispatch) => {
   const { countCurrent, countTotal } = workspaceTransferCounts;
   dispatch(updateCountCurrentInWorkspace(countCurrent));
-  return dispatch(updateCountTotalInWorkspace(countTotal));
+  dispatch(updateCountTotalInWorkspace(countTotal));
 };
 
 export const updateCountsOverallBeforeTransfer = () => (
@@ -63,20 +63,21 @@ export const updateCountsOverallBeforeTransfer = () => (
 ) => {
   const countTotalOverall = selectCountTotalOfTransfersOverall(getState());
   dispatch(updateCountCurrentOverall(0));
-  return dispatch(updateCountTotalOverall(countTotalOverall));
+  dispatch(updateCountTotalOverall(countTotalOverall));
 };
 
 export const showNotification = (notification: Partial<NotificationModel>) => (
   dispatch: ReduxDispatch,
-) => {
+): string => {
   const id = isNil(notification.id) ? uniqueId("NTF") : notification.id;
-  dispatch(notificationShown({ ...notification, id }));
+  const validNotification = { ...notification, id } as NotificationModel;
+  dispatch(notificationShown(validNotification));
   return id;
 };
 
 export const showFetchErrorNotification = (
   error: Error & { toolName: ToolName },
-) => (dispatch: ReduxDispatch): string => {
+) => (dispatch: ReduxDispatch): void => {
   if (getIfDev()) {
     console.error(error);
   }
@@ -85,5 +86,5 @@ export const showFetchErrorNotification = (
   const message = `An error occurred when making a request to the ${name} API`;
 
   const notification = { message, type: NotificationType.Error };
-  return dispatch(showNotification(notification));
+  dispatch(showNotification(notification));
 };

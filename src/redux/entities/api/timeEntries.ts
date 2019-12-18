@@ -40,6 +40,7 @@ export const apiFetchTogglTimeEntries = (
     year,
     "yyyy-MM-DDTHH:mm:ssZ",
   );
+  console.log(firstDay, lastDay);
 
   const queryString = [
     `workspace_id=${workspaceId}`,

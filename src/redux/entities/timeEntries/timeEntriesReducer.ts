@@ -1,22 +1,25 @@
+import { createReducer, ActionType } from "typesafe-actions";
 import { get } from "lodash";
-import { getType } from "typesafe-actions";
-import { combineActions, handleActions } from "redux-actions";
 import * as utils from "~/redux/utils";
 import { flipIsProjectIncluded } from "~/redux/entities/projects/projectsActions";
 import { flipIsTaskIncluded } from "~/redux/entities/tasks/tasksActions";
 import { flipIsUserIncluded } from "~/redux/entities/users/usersActions";
+import { updateIsWorkspaceYearIncluded } from "~/redux/entities/workspaces/workspacesActions";
 import * as timeEntriesActions from "./timeEntriesActions";
 import {
-  ClockifyTimeEntryModel,
   CompoundTimeEntryModel,
   EntityGroup,
-  ReduxAction,
   ReduxStateEntryForTool,
-  TogglTimeEntryModel,
   ToolName,
-  UpdateIncludedWorkspaceYearModel,
 } from "~/types";
-import { updateIsWorkspaceYearIncluded } from "~/redux/entities/workspaces/workspacesActions";
+
+type TimeEntriesAction = ActionType<
+  | typeof timeEntriesActions
+  | typeof flipIsProjectIncluded
+  | typeof flipIsTaskIncluded
+  | typeof flipIsUserIncluded
+  | typeof updateIsWorkspaceYearIncluded
+>;
 
 export interface TimeEntriesState {
   readonly clockify: ReduxStateEntryForTool<CompoundTimeEntryModel>;
@@ -36,136 +39,122 @@ export const initialState: TimeEntriesState = {
   isFetching: false,
 };
 
-export const timeEntriesReducer = handleActions(
-  {
-    [combineActions(
-      getType(timeEntriesActions.clockifyTimeEntriesFetch.success),
-      getType(timeEntriesActions.clockifyTimeEntriesTransfer.success),
-    )]: (
-      state: TimeEntriesState,
-      { payload: timeEntries }: ReduxAction<Array<ClockifyTimeEntryModel>>,
-    ): TimeEntriesState =>
-      utils.normalizeState({
+export const timeEntriesReducer = createReducer<
+  TimeEntriesState,
+  TimeEntriesAction
+>(initialState)
+  .handleAction(
+    [
+      timeEntriesActions.clockifyTimeEntriesFetch.success,
+      timeEntriesActions.clockifyTimeEntriesTransfer.success,
+    ],
+    (state, { payload }) => {
+      const normalizedState = utils.normalizeState({
         toolName: ToolName.Clockify,
         entityGroup: EntityGroup.TimeEntries,
         entityState: state,
-        payload: timeEntries,
-      }),
-
-    [getType(timeEntriesActions.togglTimeEntriesFetch.success)]: (
-      state: TimeEntriesState,
-      { payload: timeEntries }: ReduxAction<Array<TogglTimeEntryModel>>,
-    ): TimeEntriesState =>
-      utils.normalizeState({
+        payload,
+      });
+      return { ...normalizedState, isFetching: false };
+    },
+  )
+  .handleAction(
+    timeEntriesActions.togglTimeEntriesFetch.success,
+    (state, { payload }) => {
+      const normalizedState = utils.normalizeState({
         toolName: ToolName.Toggl,
         entityGroup: EntityGroup.TimeEntries,
         entityState: state,
-        payload: timeEntries,
-      }),
-
-    [combineActions(
-      getType(timeEntriesActions.clockifyTimeEntriesFetch.request),
-      getType(timeEntriesActions.togglTimeEntriesFetch.request),
-      getType(timeEntriesActions.clockifyTimeEntriesTransfer.request),
-    )]: (state: TimeEntriesState): TimeEntriesState => ({
+        payload,
+      });
+      return { ...normalizedState, isFetching: false };
+    },
+  )
+  .handleAction(
+    [
+      timeEntriesActions.clockifyTimeEntriesFetch.request,
+      timeEntriesActions.clockifyTimeEntriesTransfer.request,
+      timeEntriesActions.togglTimeEntriesFetch.request,
+    ],
+    state => ({
       ...state,
       isFetching: true,
     }),
-
-    [combineActions(
-      getType(timeEntriesActions.clockifyTimeEntriesFetch.success),
-      getType(timeEntriesActions.clockifyTimeEntriesFetch.failure),
-      getType(timeEntriesActions.togglTimeEntriesFetch.success),
-      getType(timeEntriesActions.togglTimeEntriesFetch.failure),
-      getType(timeEntriesActions.clockifyTimeEntriesTransfer.success),
-      getType(timeEntriesActions.clockifyTimeEntriesTransfer.failure),
-    )]: (state: TimeEntriesState): TimeEntriesState => ({
+  )
+  .handleAction(
+    [
+      timeEntriesActions.clockifyTimeEntriesFetch.failure,
+      timeEntriesActions.clockifyTimeEntriesTransfer.failure,
+      timeEntriesActions.togglTimeEntriesFetch.failure,
+    ],
+    state => ({
       ...state,
       isFetching: false,
     }),
-
-    [getType(timeEntriesActions.flipIsTimeEntryIncluded)]: (
-      state: TimeEntriesState,
-      { payload: timeEntryId }: ReduxAction<string>,
-    ): TimeEntriesState => utils.flipEntityInclusion(state, timeEntryId),
-
-    [getType(flipIsProjectIncluded)]: (
-      state: TimeEntriesState,
-      { payload: projectId }: ReduxAction<string>,
-    ): TimeEntriesState =>
-      pushInclusionFlipToTimeEntry({
-        state,
-        parentIdFieldName: "projectId",
-        parentId: projectId,
-      }),
-
-    [getType(flipIsTaskIncluded)]: (
-      state: TimeEntriesState,
-      { payload: taskId }: ReduxAction<string>,
-    ): TimeEntriesState =>
-      pushInclusionFlipToTimeEntry({
-        state,
-        parentIdFieldName: "taskId",
-        parentId: taskId,
-      }),
-
-    [getType(flipIsUserIncluded)]: (
-      state: TimeEntriesState,
-      { payload: userId }: ReduxAction<string>,
-    ): TimeEntriesState =>
-      pushInclusionFlipToTimeEntry({
-        state,
-        parentIdFieldName: "userId",
-        parentId: userId,
-      }),
-
-    [getType(timeEntriesActions.addLinksToTimeEntries)]: (
-      state: TimeEntriesState,
-      { payload: newTimeEntriesState }: ReduxAction<TimeEntriesState>,
-    ): TimeEntriesState => ({
+  )
+  .handleAction(
+    timeEntriesActions.flipIsTimeEntryIncluded,
+    (state, { payload }) => utils.flipEntityInclusion(state, payload),
+  )
+  .handleAction(
+    timeEntriesActions.addLinksToTimeEntries,
+    (state, { payload }) => ({
       ...state,
-      ...newTimeEntriesState,
+      ...payload,
     }),
+  )
+  .handleAction(flipIsProjectIncluded, (state, { payload }) =>
+    pushInclusionFlipToTimeEntry({
+      state,
+      parentIdFieldName: "projectId",
+      parentId: payload,
+    }),
+  )
+  .handleAction(flipIsTaskIncluded, (state, { payload }) =>
+    pushInclusionFlipToTimeEntry({
+      state,
+      parentIdFieldName: "taskId",
+      parentId: payload,
+    }),
+  )
+  .handleAction(flipIsUserIncluded, (state, { payload }) =>
+    pushInclusionFlipToTimeEntry({
+      state,
+      parentIdFieldName: "userId",
+      parentId: payload,
+    }),
+  )
+  .handleAction(updateIsWorkspaceYearIncluded, (state, { payload }) => {
+    const updatedEntriesById = Object.entries(state.toggl.byId).reduce(
+      (acc, [timeEntryId, timeEntry]) => {
+        let isIncludedToUse = timeEntry.isIncluded;
 
-    [getType(updateIsWorkspaceYearIncluded)]: (
-      state: TimeEntriesState,
-      {
-        payload: { workspaceId, year, isIncluded },
-      }: ReduxAction<UpdateIncludedWorkspaceYearModel>,
-    ): TimeEntriesState => {
-      const updatedEntriesById = Object.entries(state.toggl.byId).reduce(
-        (acc, [timeEntryId, timeEntry]) => {
-          let isIncludedToUse = timeEntry.isIncluded;
+        if (
+          timeEntry.workspaceId === payload.workspaceId &&
+          +timeEntry.year === +payload.year
+        ) {
+          isIncludedToUse = payload.isIncluded;
+        }
 
-          if (
-            timeEntry.workspaceId === workspaceId &&
-            +timeEntry.year === +year
-          ) {
-            isIncludedToUse = isIncluded;
-          }
+        return {
+          ...acc,
+          [timeEntryId]: {
+            ...timeEntry,
+            isIncluded: isIncludedToUse,
+          },
+        };
+      },
+      {},
+    );
 
-          return {
-            ...acc,
-            [timeEntryId]: {
-              ...timeEntry,
-              isIncluded: isIncludedToUse,
-            },
-          };
-        },
-        {},
-      );
-
-      return {
-        ...state,
-        toggl: {
-          ...state.toggl,
-          byId: updatedEntriesById,
-        },
-      };
-    },
-  },
-  initialState,
-);
+    return {
+      ...state,
+      toggl: {
+        ...state.toggl,
+        byId: updatedEntriesById,
+      },
+    };
+  });
 
 function pushInclusionFlipToTimeEntry({
   state,

@@ -1,19 +1,16 @@
-import { getType } from "typesafe-actions";
-import { combineActions, handleActions } from "redux-actions";
+import { createReducer, ActionType } from "typesafe-actions";
 import { get, uniq } from "lodash";
 import * as utils from "~/redux/utils";
 import * as userGroupsActions from "./userGroupsActions";
 import { UserGroupTransform } from "./UserGroupTransform";
 import {
-  ClockifyUserGroupModel,
   CompoundUserGroupModel,
-  EntitiesFetchPayloadModel,
   EntityGroup,
-  ReduxAction,
   ReduxStateEntryForTool,
-  TogglUserGroupModel,
   ToolName,
 } from "~/types";
+
+type UserGroupsAction = ActionType<typeof userGroupsActions>;
 
 export interface UserGroupsState {
   readonly clockify: ReduxStateEntryForTool<CompoundUserGroupModel>;
@@ -33,88 +30,84 @@ export const initialState: UserGroupsState = {
   isFetching: false,
 };
 
-export const userGroupsReducer = handleActions(
-  {
-    [combineActions(
-      getType(userGroupsActions.clockifyUserGroupsFetch.success),
-      getType(userGroupsActions.clockifyUserGroupsTransfer.success),
-    )]: (
-      state: UserGroupsState,
-      {
-        payload: { entityRecords },
-      }: ReduxAction<EntitiesFetchPayloadModel<ClockifyUserGroupModel>>,
-    ): UserGroupsState => {
+export const userGroupsReducer = createReducer<
+  UserGroupsState,
+  UserGroupsAction
+>(initialState)
+  .handleAction(
+    [
+      userGroupsActions.clockifyUserGroupsFetch.success,
+      userGroupsActions.clockifyUserGroupsTransfer.success,
+    ],
+    (state, { payload }) => {
       const normalizedState = utils.normalizeState({
         toolName: ToolName.Clockify,
         entityGroup: EntityGroup.UserGroups,
         entityState: state,
-        payload: entityRecords,
+        payload: payload.entityRecords,
       });
 
-      return utils.linkEntitiesInStateByName(
+      const linkedState = utils.linkEntitiesInStateByName(
         EntityGroup.UserGroups,
         normalizedState,
       );
+      return { ...linkedState, isFetching: false };
     },
-
-    [getType(userGroupsActions.togglUserGroupsFetch.success)]: (
-      state: UserGroupsState,
-      {
-        payload: { entityRecords },
-      }: ReduxAction<EntitiesFetchPayloadModel<TogglUserGroupModel>>,
-    ): UserGroupsState =>
-      utils.normalizeState({
+  )
+  .handleAction(
+    userGroupsActions.togglUserGroupsFetch.success,
+    (state, { payload }) => {
+      const normalizedState = utils.normalizeState({
         toolName: ToolName.Toggl,
         entityGroup: EntityGroup.UserGroups,
         entityState: state,
-        payload: entityRecords,
-      }),
-
-    [combineActions(
-      getType(userGroupsActions.clockifyUserGroupsFetch.request),
-      getType(userGroupsActions.togglUserGroupsFetch.request),
-      getType(userGroupsActions.clockifyUserGroupsTransfer.request),
-    )]: (state: UserGroupsState): UserGroupsState => ({
+        payload: payload.entityRecords,
+      });
+      return { ...normalizedState, isFetching: false };
+    },
+  )
+  .handleAction(
+    [
+      userGroupsActions.clockifyUserGroupsFetch.request,
+      userGroupsActions.clockifyUserGroupsTransfer.request,
+      userGroupsActions.togglUserGroupsFetch.request,
+    ],
+    state => ({
       ...state,
       isFetching: true,
     }),
-
-    [combineActions(
-      getType(userGroupsActions.clockifyUserGroupsFetch.success),
-      getType(userGroupsActions.clockifyUserGroupsFetch.failure),
-      getType(userGroupsActions.togglUserGroupsFetch.success),
-      getType(userGroupsActions.togglUserGroupsFetch.failure),
-      getType(userGroupsActions.clockifyUserGroupsTransfer.success),
-      getType(userGroupsActions.clockifyUserGroupsTransfer.failure),
-    )]: (state: UserGroupsState): UserGroupsState => ({
+  )
+  .handleAction(
+    [
+      userGroupsActions.clockifyUserGroupsFetch.failure,
+      userGroupsActions.clockifyUserGroupsTransfer.failure,
+      userGroupsActions.togglUserGroupsFetch.failure,
+    ],
+    state => ({
       ...state,
       isFetching: false,
     }),
-
-    [getType(userGroupsActions.flipIsUserGroupIncluded)]: (
-      state: UserGroupsState,
-      { payload: userGroupId }: ReduxAction<string>,
-    ): UserGroupsState => utils.flipEntityInclusion(state, userGroupId),
-
-    [getType(userGroupsActions.addTogglUserIdToGroup)]: (
-      state: UserGroupsState,
-      {
-        payload: { userId, userGroupId },
-      }: ReduxAction<{ userId: string; userGroupId: string }>,
-    ): UserGroupsState => {
-      const userGroup = get(state, ["toggl", "byId", userGroupId]);
+  )
+  .handleAction(
+    userGroupsActions.flipIsUserGroupIncluded,
+    (state, { payload }) => utils.flipEntityInclusion(state, payload),
+  )
+  .handleAction(
+    userGroupsActions.addTogglUserIdToGroup,
+    (state, { payload }) => {
+      const userGroup = get(state, ["toggl", "byId", payload.userGroupId]);
       if (!userGroup) {
         return state;
       }
 
-      const newUserIds = uniq([...userGroup.userIds, userId]);
+      const newUserIds = uniq([...userGroup.userIds, payload.userId]);
       return {
         ...state,
         toggl: {
           ...state.toggl,
           byId: {
             ...state.toggl.byId,
-            [userGroupId]: {
+            [payload.userGroupId]: {
               ...userGroup,
               userIds: newUserIds,
             },
@@ -122,13 +115,11 @@ export const userGroupsReducer = handleActions(
         },
       };
     },
-
-    [getType(userGroupsActions.calculateUserGroupEntryCounts)]: (
-      state: UserGroupsState,
-      {
-        payload: { toolName, timeEntries, usersById },
-      }: ReduxAction<userGroupsActions.EntryCountCalculatorModel>,
-    ) => {
+  )
+  .handleAction(
+    userGroupsActions.calculateUserGroupEntryCounts,
+    (state, { payload }) => {
+      const { toolName, timeEntries, usersById } = payload;
       const userGroupsById = state[toolName].byId;
 
       const updatedUserGroupsById = Object.entries(userGroupsById).reduce(
@@ -150,6 +141,4 @@ export const userGroupsReducer = handleActions(
         },
       };
     },
-  },
-  initialState,
-);
+  );
