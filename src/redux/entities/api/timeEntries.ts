@@ -1,11 +1,13 @@
 import { get, isNil } from "lodash";
-import { firstAndLastDayOfYear } from "~/redux/utils";
+import { firstAndLastDayOfYear, DateFormat } from "~/redux/utils";
 import { fetchArray, fetchObject } from "./fetchByPayloadType";
 import {
   ClockifyTimeEntryModel,
   DetailedTimeEntryModel,
   TogglTimeEntriesFetchResponseModel,
 } from "~/types";
+import qs from "qs";
+import { API_PAGE_SIZE } from "~/constants";
 
 /**
  * Get time entries for specified userId in time range.
@@ -14,19 +16,11 @@ import {
 export const apiFetchClockifyTimeEntries = (
   userId: string,
   workspaceId: string,
-  year: number,
+  page: number,
 ): Promise<Array<ClockifyTimeEntryModel>> => {
-  const { firstDay, lastDay } = firstAndLastDayOfYear(year);
-
+  const query = qs.stringify({ page, "page-size": API_PAGE_SIZE });
   return fetchArray(
-    `/clockify/api/workspaces/${workspaceId}/timeEntries/user/${userId}/entriesInRange`,
-    {
-      method: "POST",
-      body: {
-        start: firstDay,
-        end: lastDay,
-      } as unknown,
-    },
+    `/clockify/api/v1/workspaces/${workspaceId}/user/${userId}/time-entries?${query}`,
   );
 };
 
@@ -36,11 +30,7 @@ export const apiFetchTogglTimeEntries = (
   year: number,
   page = 1,
 ): Promise<TogglTimeEntriesFetchResponseModel> => {
-  const { firstDay, lastDay } = firstAndLastDayOfYear(
-    year,
-    "yyyy-MM-DDTHH:mm:ssZ",
-  );
-  console.log(firstDay, lastDay);
+  const { firstDay, lastDay } = firstAndLastDayOfYear(year, DateFormat.Long);
 
   const queryString = [
     `workspace_id=${workspaceId}`,

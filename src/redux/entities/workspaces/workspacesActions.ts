@@ -31,7 +31,6 @@ import {
   TogglWorkspaceModel,
   ToolName,
 } from "~/types";
-import { pause } from "~/utils/pause";
 
 export const clockifyWorkspacesFetch = createAsyncAction(
   "@workspaces/CLOCKIFY_FETCH_REQUEST",
@@ -135,17 +134,11 @@ export const fetchTogglEntitiesInWorkspace = ({
   dispatch(updateWorkspaceNameBeingFetched(name));
 
   await dispatch(clientsActions.fetchTogglClients(id));
-  await pause(1_000);
   await dispatch(projectsActions.fetchTogglProjects(id));
-  await pause(1_000);
   await dispatch(tagsActions.fetchTogglTags(id));
-  await pause(1_000);
   await dispatch(tasksActions.fetchTogglTasks(id));
-  await pause(1_000);
   await dispatch(usersActions.fetchTogglUsers(id));
-  await pause(1_000);
   await dispatch(userGroupsActions.fetchTogglUserGroups(id));
-  await pause(1_000);
   await dispatch(timeEntriesActions.fetchTogglTimeEntries(id));
 
   dispatch(updateWorkspaceNameBeingFetched(null));

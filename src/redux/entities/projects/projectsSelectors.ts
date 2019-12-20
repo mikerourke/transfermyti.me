@@ -62,7 +62,7 @@ export const selectProjectsTransferPayloadForWorkspace = createSelector(
           clientId,
           isPublic: project.isPublic,
           estimate: {
-            estimate: "",
+            estimate: 0,
             type: "AUTO",
           },
           color: project.color,

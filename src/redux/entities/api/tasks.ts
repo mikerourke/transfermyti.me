@@ -1,13 +1,18 @@
+import qs from "qs";
+import { API_PAGE_SIZE } from "~/constants";
 import { fetchArray, fetchObject } from "./fetchByPayloadType";
 import { ClockifyTaskModel, HttpMethod, TogglTaskModel } from "~/types";
 
 export const apiFetchClockifyTasks = (
   workspaceId: string,
   projectId: string,
-): Promise<Array<ClockifyTaskModel>> =>
-  fetchArray(
-    `/clockify/api/v1/workspaces/${workspaceId}/projects/${projectId}/tasks`,
+  page: number,
+): Promise<Array<ClockifyTaskModel>> => {
+  const query = qs.stringify({ page, "page-size": API_PAGE_SIZE });
+  return fetchArray(
+    `/clockify/api/v1/workspaces/${workspaceId}/projects/${projectId}/tasks?${query}`,
   );
+};
 
 export const apiFetchTogglTasks = (
   workspaceId: string,

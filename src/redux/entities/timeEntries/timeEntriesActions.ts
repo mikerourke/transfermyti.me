@@ -3,8 +3,8 @@ import { flatten, isNil } from "lodash";
 import { pause } from "~/utils/pause";
 import {
   batchClockifyTransferRequests,
-  buildThrottler,
   getValidEntities,
+  paginatedFetch,
 } from "~/redux/utils";
 import {
   apiCreateClockifyTimeEntry,
@@ -21,7 +21,6 @@ import {
   selectTogglUsersById,
 } from "~/redux/entities/users/usersSelectors";
 import { updateIsWorkspaceYearIncluded } from "~/redux/entities/workspaces/workspacesActions";
-import { selectTogglWorkspaceIncludedYears } from "~/redux/entities/workspaces/workspacesSelectors";
 import { TimeEntryTransform } from "./TimeEntryTransform";
 import { TimeEntriesState } from "./timeEntriesReducer";
 import { selectTimeEntriesForWorkspace } from "./timeEntriesSelectors";
@@ -74,12 +73,10 @@ export const fetchClockifyTimeEntries = (workspaceId: string) => async (
   try {
     const state = getState();
     const { clockifyUserId } = selectCredentials(state);
-    const includedYears = selectTogglWorkspaceIncludedYears(state, workspaceId);
 
-    const clockifyTimeEntries = await fetchClockifyTimeEntriesForIncludedYears({
-      userId: clockifyUserId,
-      workspaceId,
-      years: includedYears,
+    const clockifyTimeEntries = await paginatedFetch({
+      apiFetchFunc: apiFetchClockifyTimeEntries,
+      funcArgs: [clockifyUserId, workspaceId],
     });
 
     const usersById = selectClockifyUsersById(state);
@@ -96,7 +93,6 @@ export const fetchClockifyTimeEntries = (workspaceId: string) => async (
         usersById,
       }),
     );
-
     dispatch(clockifyTimeEntriesFetch.success(timeEntries));
   } catch (err) {
     dispatch(showFetchErrorNotification(err));
@@ -211,35 +207,6 @@ export const transferTimeEntriesToClockify = (
     dispatch(clockifyTimeEntriesTransfer.failure());
   }
 };
-
-async function fetchClockifyTimeEntriesForIncludedYears({
-  userId,
-  workspaceId,
-  years,
-}: {
-  userId: string;
-  workspaceId: string;
-  years: Array<number>;
-}): Promise<Array<ClockifyTimeEntryModel>> {
-  const { promiseThrottle, throttledFunc } = buildThrottler(
-    4,
-    apiFetchClockifyTimeEntries,
-  );
-
-  const allYearsTimeEntries: Array<Array<ClockifyTimeEntryModel>> = [];
-  for (const year of years) {
-    await promiseThrottle
-      .add(
-        // @ts-ignore
-        throttledFunc.bind(this, userId, workspaceId, year),
-      )
-      .then((yearEntries: Array<ClockifyTimeEntryModel>) => {
-        allYearsTimeEntries.push(yearEntries);
-      });
-  }
-
-  return flatten(allYearsTimeEntries);
-}
 
 async function fetchTogglTimeEntriesForYear({
   togglEmail,

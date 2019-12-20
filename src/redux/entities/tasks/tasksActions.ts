@@ -1,6 +1,5 @@
 import { createAsyncAction, createAction } from "typesafe-actions";
-import { flatten } from "lodash";
-import { batchClockifyTransferRequests, buildThrottler } from "~/redux/utils";
+import { batchClockifyTransferRequests, paginatedFetch } from "~/redux/utils";
 import {
   apiCreateClockifyTask,
   apiFetchClockifyTasks,
@@ -50,22 +49,15 @@ export const fetchClockifyTasks = (workspaceId: string) => async (
     const state = getState();
     const projectIds = selectClockifyProjectIds(state);
 
-    const { promiseThrottle, throttledFunc } = buildThrottler(
-      4,
-      apiFetchClockifyTasks,
-    );
-
-    const projectTasks: Array<Array<ClockifyTaskModel>> = [];
+    const tasks: Array<ClockifyTaskModel> = [];
     for (const projectId of projectIds) {
-      await promiseThrottle
-        // @ts-ignore
-        .add(throttledFunc.bind(this, workspaceId, projectId))
-        .then((tasks: Array<ClockifyTaskModel>) => {
-          projectTasks.push(tasks);
-        });
+      const projectTasks = await paginatedFetch({
+        apiFetchFunc: apiFetchClockifyTasks,
+        funcArgs: [workspaceId, projectId],
+      });
+      tasks.push(...projectTasks);
     }
 
-    const tasks = flatten(projectTasks);
     dispatch(clockifyTasksFetch.success({ entityRecords: tasks, workspaceId }));
   } catch (err) {
     dispatch(showFetchErrorNotification(err));

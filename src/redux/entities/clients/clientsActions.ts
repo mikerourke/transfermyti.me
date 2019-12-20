@@ -1,5 +1,5 @@
 import { createAsyncAction, createAction } from "typesafe-actions";
-import { batchClockifyTransferRequests } from "~/redux/utils";
+import { batchClockifyTransferRequests, paginatedFetch } from "~/redux/utils";
 import {
   apiCreateClockifyClient,
   apiFetchClockifyClients,
@@ -44,7 +44,10 @@ export const fetchClockifyClients = (workspaceId: string) => async (
   dispatch(clockifyClientsFetch.request());
 
   try {
-    const clients = await apiFetchClockifyClients(workspaceId);
+    const clients = await paginatedFetch({
+      apiFetchFunc: apiFetchClockifyClients,
+      funcArgs: [workspaceId],
+    });
     dispatch(
       clockifyClientsFetch.success({ entityRecords: clients, workspaceId }),
     );

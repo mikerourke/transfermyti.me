@@ -5,6 +5,11 @@ import subHours from "date-fns/subHours";
 import startOfYear from "date-fns/startOfYear";
 import endOfYear from "date-fns/endOfYear";
 
+export enum DateFormat {
+  Short = "yyyy-MM-dd",
+  Long = "yyyy-MM-dd'T'HH:mm:ss",
+}
+
 /**
  * Returns the first and last day of the year (in ISO format) for specifying
  * start and end date ranges for the whole year.
@@ -13,7 +18,7 @@ import endOfYear from "date-fns/endOfYear";
  */
 export function firstAndLastDayOfYear(
   year: number,
-  dateFormat?: string,
+  dateFormat?: DateFormat,
 ): { firstDay: string; lastDay: string } {
   const currentDate = new Date();
   currentDate.setFullYear(year);
@@ -33,7 +38,7 @@ export function firstAndLastDayOfYear(
  * @param dateValue Value of the date to format.
  * @param [dateFormat] Optional format to apply to the date.
  */
-function formatDate(dateValue: Date, dateFormat?: string): string {
+function formatDate(dateValue: Date, dateFormat?: DateFormat): string {
   if (!isNil(dateFormat)) {
     return format(dateValue, dateFormat);
   }

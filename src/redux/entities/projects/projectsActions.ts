@@ -1,6 +1,10 @@
 import { createAsyncAction, createAction } from "typesafe-actions";
 import { set } from "lodash";
-import { batchClockifyTransferRequests, buildThrottler } from "~/redux/utils";
+import {
+  batchClockifyTransferRequests,
+  buildThrottler,
+  paginatedFetch,
+} from "~/redux/utils";
 import {
   apiCreateClockifyProject,
   apiFetchClockifyProjects,
@@ -50,7 +54,11 @@ export const fetchClockifyProjects = (workspaceId: string) => async (
 ) => {
   dispatch(clockifyProjectsFetch.request());
   try {
-    const projects = await apiFetchClockifyProjects(workspaceId);
+    const projects = await paginatedFetch({
+      apiFetchFunc: apiFetchClockifyProjects,
+      funcArgs: [workspaceId],
+    });
+
     await appendUserIdsToProject(
       projects,
       apiFetchClockifyUsersInProject,

@@ -3,7 +3,7 @@ import { ClockifyTaskModel } from "./tasksTypes";
 import { ClockifyHourlyRateModel, ClockifyMembershipModel } from "./usersTypes";
 
 export interface ClockifyEstimateModel {
-  estimate: string;
+  estimate: number;
   type: "AUTO" | "MANUAL";
 }
 

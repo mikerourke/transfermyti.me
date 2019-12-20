@@ -1,3 +1,5 @@
+import qs from "qs";
+import { API_PAGE_SIZE } from "~/constants";
 import { fetchArray, fetchObject } from "./fetchByPayloadType";
 import {
   ClockifyTagModel,
@@ -8,8 +10,11 @@ import {
 
 export const apiFetchClockifyTags = (
   workspaceId: string,
-): Promise<Array<ClockifyTagModel>> =>
-  fetchArray(`/clockify/api/v1/workspaces/${workspaceId}/tags`);
+  page: number,
+): Promise<Array<ClockifyTagModel>> => {
+  const query = qs.stringify({ page, "page-size": API_PAGE_SIZE });
+  return fetchArray(`/clockify/api/v1/workspaces/${workspaceId}/tags?${query}`);
+};
 
 export const apiFetchTogglTags = (
   workspaceId: string,
