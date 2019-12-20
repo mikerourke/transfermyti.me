@@ -1,5 +1,5 @@
 import { get, isNil } from "lodash";
-import { EntityGroup } from "~/common/commonTypes";
+import { EntityGroup } from "~/commonTypes";
 import { CompoundTimeEntryModel } from "~/timeEntries/timeEntriesTypes";
 import { CompoundUserModel } from "~/users/usersTypes";
 import {

@@ -2,7 +2,7 @@ import { createAction } from "typesafe-actions";
 import { capitalize, isNil, uniqueId } from "lodash";
 import { getIfDev } from "~/utils";
 import { selectCountTotalOfTransfersOverall } from "~/workspaces/workspacesSelectors";
-import { ToolName } from "~/common/commonTypes";
+import { ToolName } from "~/commonTypes";
 import { ReduxDispatch, ReduxGetState } from "~/redux/reduxTypes";
 import {
   InTransferDetailsModel,

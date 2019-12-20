@@ -1,5 +1,5 @@
 import { fetchArray, fetchObject } from "~/utils";
-import { EntityWithName, HttpMethod } from "~/common/commonTypes";
+import { EntityWithName, HttpMethod } from "~/commonTypes";
 import { ClockifyWorkspaceModel, TogglWorkspaceModel } from "./workspacesTypes";
 
 export const apiFetchClockifyWorkspaces = (): Promise<Array<

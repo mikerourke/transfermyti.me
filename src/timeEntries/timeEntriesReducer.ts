@@ -6,7 +6,7 @@ import { flipIsTaskIncluded } from "~/tasks/tasksActions";
 import { flipIsUserIncluded } from "~/users/usersActions";
 import { updateIsWorkspaceYearIncluded } from "~/workspaces/workspacesActions";
 import * as timeEntriesActions from "./timeEntriesActions";
-import { EntityGroup, ToolName } from "~/common/commonTypes";
+import { EntityGroup, ToolName } from "~/commonTypes";
 import { ReduxStateEntryForTool } from "~/redux/reduxTypes";
 import { CompoundTimeEntryModel } from "./timeEntriesTypes";
 

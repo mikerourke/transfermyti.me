@@ -7,7 +7,7 @@ import {
   apiFetchTogglClients,
 } from "./clientsApi";
 import { selectClientsTransferPayloadForWorkspace } from "./clientsSelectors";
-import { EntitiesFetchPayloadModel, EntityGroup } from "~/common/commonTypes";
+import { EntitiesFetchPayloadModel, EntityGroup } from "~/commonTypes";
 import { ReduxDispatch, ReduxGetState } from "~/redux/reduxTypes";
 import { ClockifyClientModel, TogglClientModel } from "./clientsTypes";
 

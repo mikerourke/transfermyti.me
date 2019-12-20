@@ -2,7 +2,7 @@ import {
   BaseCompoundEntityModel,
   CompoundEntityModel,
   EntityGroup,
-} from "~/common/commonTypes";
+} from "~/commonTypes";
 import { ClockifyMembershipModel } from "~/users/usersTypes";
 
 interface ClockifyWorkspaceSettingsModel {

@@ -1,9 +1,5 @@
 import { get, isNil } from "lodash";
-import {
-  CompoundEntityModel,
-  EntityType,
-  ToolName,
-} from "~/common/commonTypes";
+import { CompoundEntityModel, EntityType, ToolName } from "~/commonTypes";
 
 interface Params<TEntityState, TTimeEntry> {
   entityType: EntityType;

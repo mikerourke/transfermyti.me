@@ -1,4 +1,4 @@
-import { BaseCompoundEntityModel } from "~/common/commonTypes";
+import { BaseCompoundEntityModel } from "~/commonTypes";
 import { TogglWorkspaceModel } from "~/workspaces/workspacesTypes";
 
 export interface ClockifyHourlyRateModel {

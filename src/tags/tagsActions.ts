@@ -7,7 +7,7 @@ import {
   apiFetchTogglTags,
 } from "./tagsApi";
 import { selectTagsTransferPayloadForWorkspace } from "./tagsSelectors";
-import { EntitiesFetchPayloadModel, EntityGroup } from "~/common/commonTypes";
+import { EntitiesFetchPayloadModel, EntityGroup } from "~/commonTypes";
 import { ReduxDispatch, ReduxGetState } from "~/redux/reduxTypes";
 import { ClockifyTagModel, TogglTagModel } from "./tagsTypes";
 

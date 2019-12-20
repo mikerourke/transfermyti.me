@@ -16,7 +16,7 @@ import {
   apiFetchTogglProjects,
 } from "./projectsApi";
 import { selectProjectsTransferPayloadForWorkspace } from "./projectsSelectors";
-import { EntitiesFetchPayloadModel, EntityGroup } from "~/common/commonTypes";
+import { EntitiesFetchPayloadModel, EntityGroup } from "~/commonTypes";
 import { ReduxDispatch, ReduxGetState } from "~/redux/reduxTypes";
 import { ClockifyUserModel } from "~/users/usersTypes";
 import {

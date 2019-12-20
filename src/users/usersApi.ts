@@ -1,5 +1,5 @@
 import { fetchArray, fetchObject } from "~/utils/fetchByPayloadType";
-import { HttpMethod } from "~/common/commonTypes";
+import { HttpMethod } from "~/commonTypes";
 import { TogglProjectUserModel } from "~/projects/projectsTypes";
 import { ClockifyWorkspaceModel } from "~/workspaces/workspacesTypes";
 import {

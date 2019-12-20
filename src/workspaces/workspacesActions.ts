@@ -20,11 +20,7 @@ import {
   selectTogglIncludedWorkspaceNames,
   selectCountTotalOfTransfersInWorkspace,
 } from "./workspacesSelectors";
-import {
-  CompoundEntityModel,
-  EntityGroup,
-  ToolName,
-} from "~/common/commonTypes";
+import { CompoundEntityModel, EntityGroup, ToolName } from "~/commonTypes";
 import { ReduxDispatch, ReduxGetState } from "~/redux/reduxTypes";
 import {
   ClockifyWorkspaceModel,

@@ -1,7 +1,7 @@
 import { flatten, get } from "lodash";
 import { buildThrottler } from "./buildThrottler";
 import { updateInTransferDetails } from "~/app/appActions";
-import { EntityGroup } from "~/common/commonTypes";
+import { EntityGroup } from "~/commonTypes";
 import { ReduxDispatch } from "~/redux/reduxTypes";
 
 interface Params<TEntity, TResponse> {

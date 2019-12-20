@@ -16,7 +16,7 @@ import {
   EntitiesFetchPayloadModel,
   EntityGroup,
   ToolName,
-} from "~/common/commonTypes";
+} from "~/commonTypes";
 import { ReduxDispatch, ReduxGetState } from "~/redux/reduxTypes";
 import { CompoundTimeEntryModel } from "~/timeEntries/timeEntriesTypes";
 import { CompoundUserModel } from "~/users/usersTypes";

@@ -27,11 +27,7 @@ import {
   selectTimeEntriesForWorkspace,
 } from "./timeEntriesSelectors";
 import { TransferType } from "~/app/appTypes";
-import {
-  EntitiesByGroupModel,
-  EntityGroup,
-  ToolName,
-} from "~/common/commonTypes";
+import { EntitiesByGroupModel, EntityGroup, ToolName } from "~/commonTypes";
 import { ReduxDispatch, ReduxGetState } from "~/redux/reduxTypes";
 import {
   ClockifyTimeEntryModel,

@@ -1,10 +1,6 @@
 import { get, isNil, uniq } from "lodash";
 import { normalize, schema, Schema } from "normalizr";
-import {
-  CompoundEntityModel,
-  EntityGroup,
-  ToolName,
-} from "~/common/commonTypes";
+import { CompoundEntityModel, EntityGroup, ToolName } from "~/commonTypes";
 
 interface Params<TEntityState, TPayload> {
   toolName: ToolName;

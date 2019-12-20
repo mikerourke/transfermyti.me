@@ -3,7 +3,7 @@ import { get, uniq } from "lodash";
 import * as utils from "~/utils";
 import * as userGroupsActions from "./userGroupsActions";
 import { UserGroupTransform } from "./UserGroupTransform";
-import { EntityGroup, ToolName } from "~/common/commonTypes";
+import { EntityGroup, ToolName } from "~/commonTypes";
 import { ReduxStateEntryForTool } from "~/redux/reduxTypes";
 import { CompoundUserGroupModel } from "./userGroupsTypes";
 

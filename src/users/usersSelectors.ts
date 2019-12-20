@@ -5,7 +5,7 @@ import { selectCredentials } from "~/credentials/credentialsSelectors";
 import { selectTogglTimeEntriesById } from "~/timeEntries/timeEntriesSelectors";
 import { ReduxState } from "~/redux/reduxTypes";
 import { CompoundUserModel } from "~/users/usersTypes";
-import { EntityGroupsByKey } from "~/common/commonTypes";
+import { EntityGroupsByKey } from "~/commonTypes";
 
 export const selectClockifyUsersById = createSelector(
   (state: ReduxState) => state.users.clockify.byId,

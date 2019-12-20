@@ -5,7 +5,7 @@ import {
   EntityGroup,
   EntityGroupsByKey,
   ToolName,
-} from "~/common/commonTypes";
+} from "~/commonTypes";
 import { CompoundClientModel } from "~/clients/clientsTypes";
 import { CompoundProjectModel } from "~/projects/projectsTypes";
 import { ReduxState } from "~/redux/reduxTypes";

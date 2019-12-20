@@ -2,7 +2,7 @@ import { createReducer, ActionType } from "typesafe-actions";
 import { get, uniq } from "lodash";
 import * as utils from "~/utils";
 import * as workspacesActions from "./workspacesActions";
-import { EntityGroup, ToolName } from "~/common/commonTypes";
+import { EntityGroup, ToolName } from "~/commonTypes";
 import { ReduxStateEntryForTool } from "~/redux/reduxTypes";
 import {
   ClockifyWorkspaceModel,

@@ -8,7 +8,7 @@ import { render } from "react-dom";
 import { Provider } from "react-redux";
 import { configureStore } from "./redux/configureStore";
 import { initInterceptor } from "./utils/httpInterceptor";
-import App from "./containers/app/appContainer/App";
+import App from "./containers/appContainer/App";
 
 const store = configureStore();
 

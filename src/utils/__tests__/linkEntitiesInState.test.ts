@@ -1,5 +1,5 @@
 import { linkEntitiesInStateByName } from "~/utils";
-import { EntityGroup } from "~/common/commonTypes";
+import { EntityGroup } from "~/commonTypes";
 
 // prettier-ignore
 const tagsState = {

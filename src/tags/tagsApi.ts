@@ -1,7 +1,7 @@
 import qs from "qs";
 import { API_PAGE_SIZE } from "~/constants";
 import { fetchArray, fetchObject } from "~/utils";
-import { EntityWithName, HttpMethod } from "~/common/commonTypes";
+import { EntityWithName, HttpMethod } from "~/commonTypes";
 import { ClockifyTagModel, TogglTagModel } from "./tagsTypes";
 
 export const apiFetchClockifyTags = (

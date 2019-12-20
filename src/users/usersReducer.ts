@@ -3,7 +3,7 @@ import { get } from "lodash";
 import * as utils from "~/utils";
 import { togglTimeEntriesFetch } from "~/timeEntries/timeEntriesActions";
 import * as usersActions from "./usersActions";
-import { EntityGroup, EntityType, ToolName } from "~/common/commonTypes";
+import { EntityGroup, EntityType, ToolName } from "~/commonTypes";
 import { ReduxStateEntryForTool } from "~/redux/reduxTypes";
 import {
   ClockifyUserModel,
