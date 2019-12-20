@@ -1,7 +1,6 @@
 import React, { useEffect, useState } from "react";
 import { connect } from "react-redux";
 import { Help } from "bloomer";
-import { css } from "emotion";
 import { omit } from "lodash";
 import {
   storeAllCredentials,
@@ -142,7 +141,7 @@ export const EnterCredentialsStepComponent: React.FC<Props> = ({
           onChange={handleInputChange}
           type="text"
           value={credentials[CredentialsField.TogglApiKey]}
-          className={css({ fontFamily: "monospace" })}
+          css={{ fontFamily: "monospace" }}
           tooltip={
             <span>
               API key associated with your Toggl account.
@@ -165,7 +164,7 @@ export const EnterCredentialsStepComponent: React.FC<Props> = ({
           onChange={handleInputChange}
           type="text"
           value={credentials[CredentialsField.ClockifyApiKey]}
-          className={css({ fontFamily: "monospace" })}
+          css={{ fontFamily: "monospace" }}
           tooltip={
             <span>
               API key associated with your Clockify account.

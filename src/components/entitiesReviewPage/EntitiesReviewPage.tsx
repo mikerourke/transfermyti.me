@@ -1,7 +1,6 @@
 import React, { useState } from "react";
 import { Else, If, Then, When } from "react-if";
 import { first, get, isNil } from "lodash";
-import { css } from "emotion";
 import EntitiesList from "../entitiesList/EntitiesList";
 import StepPage, { StepPageProps } from "../stepPage/StepPage";
 import EntityTabs from "./EntityTabs";
@@ -95,7 +94,7 @@ const EntitiesReviewPage: React.FC<Props> = ({
 
   return (
     <StepPage onResize={setContentsWidth} {...stepPageProps}>
-      <div className={css({ marginBottom: "1rem", position: "relative" })}>
+      <div css={{ marginBottom: "1rem", position: "relative" }}>
         <EntityTabs
           activeTab={activeEntityGroup}
           onTabClick={setActiveEntityGroup}

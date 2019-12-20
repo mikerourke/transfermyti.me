@@ -1,5 +1,4 @@
 import React from "react";
-import { css } from "emotion";
 import { Container, Hero, HeroBody, HeroHeader, Title } from "bloomer";
 import { Flex, Icon, IconName } from "~/components";
 import { TransferType } from "~/app/appTypes";
@@ -24,14 +23,14 @@ const Header: React.FC<Props> = ({ currentTransferType }) => {
           <Flex
             alignItems="center"
             justifyContent="space-between"
-            className={css({
+            css={{
               padding: "0.5rem 1rem",
               borderBottom: "1px solid var(--light-gray)",
-            })}
+            }}
           >
             <Flex alignItems="center">
               <Icon name={iconName} color="white" height={16} />
-              <span className={css({ marginLeft: "0.5rem", fontWeight: 600 })}>
+              <span css={{ marginLeft: "0.5rem", fontWeight: 600 }}>
                 {mode}
               </span>
             </Flex>
@@ -49,7 +48,7 @@ const Header: React.FC<Props> = ({ currentTransferType }) => {
             <Title isSize={1} isMarginless>
               Toggl to Clockify
             </Title>
-            <Title isSize={5} className={css({ marginTop: "1rem" })}>
+            <Title isSize={5} css={{ marginTop: "1rem" }}>
               Transfer all of your Toggl entries to Clockify.me
             </Title>
           </Container>

@@ -1,13 +1,20 @@
 import React from "react";
 import { Unless } from "react-if";
 import { startCase } from "lodash";
-import { css } from "emotion";
-import { lookupTable } from "~/utils/lookupTable";
+import styled from "@emotion/styled";
+import { lookupTable } from "~/utils";
 import Checkbox from "../Checkbox";
 import Flex from "../Flex";
 import GroupTotalsDisplay from "./GroupTotalsDisplay";
 import { EntityGroup } from "~/commonTypes";
 import { RecordCountsModel } from "~/workspaces/workspacesTypes";
+
+const Root = styled(Flex)({
+  borderTop: "1px solid #dbdbdb",
+  color: "var(--dark-gray)",
+  marginTop: "1rem",
+  paddingTop: "0.5rem",
+});
 
 interface Props {
   activeEntityGroup: EntityGroup;
@@ -33,16 +40,7 @@ const PageFooter: React.FC<Props> = ({
   });
 
   return (
-    <Flex
-      alignItems="center"
-      justifyContent="space-between"
-      className={css({
-        borderTop: "1px solid #dbdbdb",
-        color: "var(--dark-gray)",
-        marginTop: "1rem",
-        paddingTop: "0.5rem",
-      })}
-    >
+    <Root alignItems="center" justifyContent="space-between">
       <Flex>
         <GroupTotalsDisplay
           label={`${startCase(activeEntityGroup)} to Transfer`}
@@ -63,11 +61,11 @@ const PageFooter: React.FC<Props> = ({
           size={18}
           onClick={onFlipInclusionsOnly}
         />
-        <span className={css({ marginLeft: "0.5rem", fontWeight: "bold" })}>
+        <span css={{ marginLeft: "0.5rem", fontWeight: "bold" }}>
           Show Included Records Only
         </span>
       </Flex>
-    </Flex>
+    </Root>
   );
 };
 

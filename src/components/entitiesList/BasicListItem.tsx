@@ -1,13 +1,19 @@
 import React from "react";
 import { ListRowProps } from "react-virtualized";
 import { When } from "react-if";
-import { css } from "emotion";
 import { isNil } from "lodash";
+import styled from "@emotion/styled";
 import Checkbox from "../Checkbox";
 import Flex from "../Flex";
 import ListItemBase from "./ListItemBase";
 import EntityTagsRow from "./EntityTagsRow";
 import { CompoundEntityModel } from "~/commonTypes";
+
+const NameDisplay = styled.span({
+  fontWeight: 400,
+  marginLeft: "0.5rem",
+  marginRight: "1rem",
+});
 
 interface Props extends ListRowProps {
   entityRecord: CompoundEntityModel;
@@ -21,7 +27,7 @@ const BasicListItem: React.FC<Props> = ({
   onItemClick,
   isScrolling,
   isVisible,
-  ...listRowProps
+  ...props
 }) => {
   const { name, isIncluded, entryCount = 0 } = entityRecord;
 
@@ -33,8 +39,8 @@ const BasicListItem: React.FC<Props> = ({
       data-testid="basic-list-item"
       height={48}
       isOmitted={isOmitted}
-      className={css({ justifyContent: "space-between" })}
-      {...listRowProps}
+      css={{ justifyContent: "space-between" }}
+      {...props}
     >
       <Flex alignItems="center" data-testid="list-item-inner">
         <When condition={hasClickEvent}>
@@ -44,15 +50,7 @@ const BasicListItem: React.FC<Props> = ({
             onClick={hasClickEvent ? onItemClick : undefined}
           />
         </When>
-        <span
-          className={css({
-            fontWeight: 400,
-            marginLeft: "0.5rem",
-            marginRight: "1rem",
-          })}
-        >
-          {name}
-        </span>
+        <NameDisplay>{name}</NameDisplay>
         <EntityTagsRow isTimeEntry={false} entityRecord={entityRecord} />
       </Flex>
       <div data-testid="list-item-count-label">

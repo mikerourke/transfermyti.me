@@ -1,6 +1,5 @@
 import React from "react";
 import { connect } from "react-redux";
-import { css } from "emotion";
 import { selectCurrentTransferType } from "~/app/appSelectors";
 import NotificationsDisplay from "~/containers/notificationsDisplay/NotificationsDisplay";
 import Footer from "./Footer";
@@ -20,7 +19,7 @@ interface Props {
 const App: React.FC<Props> = ({ currentTransferType }) => (
   <div>
     <Header currentTransferType={currentTransferType} />
-    <main className={css({ overflowY: "auto", padding: "1.5rem" })}>
+    <main css={{ overflowY: "auto", padding: "1.5rem" }}>
       <TransferWizard />
     </main>
     <Footer />

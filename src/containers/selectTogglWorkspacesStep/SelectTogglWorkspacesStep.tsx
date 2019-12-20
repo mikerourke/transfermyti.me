@@ -1,9 +1,9 @@
 import React, { useEffect } from "react";
-import { If, Then, Else, When } from "react-if";
+import { If, Then, Else } from "react-if";
 import { connect } from "react-redux";
 import { sortBy } from "lodash";
 import { Container, Content, Title } from "bloomer";
-import { css } from "emotion";
+import styled from "@emotion/styled";
 import { dismissAllNotifications, showNotification } from "~/app/appActions";
 import { updateAreCredentialsValid } from "~/credentials/credentialsActions";
 import {
@@ -20,6 +20,12 @@ import WorkspaceRow from "./WorkspaceRow";
 import { NotificationModel, NotificationType } from "~/app/appTypes";
 import { ReduxState } from "~/redux/reduxTypes";
 import { CompoundWorkspaceModel } from "~/workspaces/workspacesTypes";
+
+const WorkspaceRows = styled(Container)({
+  maxHeight: "50vh",
+  overflow: "auto",
+  padding: "0.25rem",
+});
 
 interface ConnectStateProps {
   areWorkspacesFetching: boolean;
@@ -63,59 +69,52 @@ export const SelectTogglWorkspacesStepComponent: React.FC<Props> = props => {
     props.onDismissAllNotifications();
   };
 
-  const isTransferrable = props.workspaces.length !== 0;
+  const isTransferable = props.workspaces.length !== 0;
   const sortedWorkspaces = sortBy(props.workspaces, ["name"]);
 
+  if (!props.areWorkspacesFetching) {
+    return <Loader>Fetching workspaces...</Loader>;
+  }
+
   return (
-    <If condition={!props.areWorkspacesFetching}>
+    <If condition={isTransferable}>
       <Then>
-        <When condition={isTransferrable}>
-          <StepPage
-            stepNumber={props.stepNumber}
-            subtitle="Select Toggl Workspaces to Transfer"
-            onPreviousClick={handlePreviousClick}
-            onNextClick={handleNextClick}
-            onRefreshClick={props.onFetchTogglWorkspaces}
-            instructions={
-              <p>
-                Select which workspaces you want to transfer to Clockify. All of
-                them are included by default. Press the
-                <strong> Next</strong> button when you&apos;re ready to move
-                onto the next step.
-              </p>
-            }
-          >
-            <Container
-              className={css({
-                maxHeight: "50vh",
-                overflow: "auto",
-                padding: "0.25rem",
-              })}
-            >
-              {sortedWorkspaces.map(workspace => (
-                <WorkspaceRow
-                  key={workspace.id}
-                  workspace={workspace}
-                  onWorkspaceClick={handleWorkspaceClick}
-                />
-              ))}
-            </Container>
-          </StepPage>
-        </When>
-        <When condition={!isTransferrable}>
-          <Container>
-            <Title isSize={1}>This is awkward...</Title>
-            <Content isSize="large">
-              <p>
-                It looks like you don&apos;t have any workspaces setup on Toggl.
-              </p>
-              <p>This tool is officially useless for you. Bummer :(.</p>
-            </Content>
-          </Container>
-        </When>
+        <StepPage
+          stepNumber={props.stepNumber}
+          subtitle="Select Toggl Workspaces to Transfer"
+          onPreviousClick={handlePreviousClick}
+          onNextClick={handleNextClick}
+          onRefreshClick={props.onFetchTogglWorkspaces}
+          instructions={
+            <p>
+              Select which workspaces you want to transfer to Clockify. All of
+              them are included by default. Press the
+              <strong> Next</strong> button when you&apos;re ready to move onto
+              the next step.
+            </p>
+          }
+        >
+          <WorkspaceRows>
+            {sortedWorkspaces.map(workspace => (
+              <WorkspaceRow
+                key={workspace.id}
+                workspace={workspace}
+                onWorkspaceClick={handleWorkspaceClick}
+              />
+            ))}
+          </WorkspaceRows>
+        </StepPage>
       </Then>
       <Else>
-        <Loader>Fetching workspaces...</Loader>
+        <Container>
+          <Title isSize={1}>This is awkward...</Title>
+          <Content isSize="large">
+            <p>
+              It looks like you don&apos;t have any workspaces setup on Toggl.
+            </p>
+            <p>This tool is officially useless for you. Bummer :(.</p>
+          </Content>
+        </Container>
       </Else>
     </If>
   );

@@ -1,5 +1,4 @@
 import React from "react";
-import { css } from "emotion";
 import { Tooltip } from "~/components";
 
 interface Props {
@@ -9,7 +8,7 @@ interface Props {
 }
 
 const HelpTooltip: React.FC<Props> = ({ children, tipId, size, color }) => (
-  <span className={css({ marginLeft: 8 })}>
+  <span css={{ marginLeft: 8 }}>
     <svg
       viewBox="929 882 46 46"
       width={size}

@@ -1,23 +1,21 @@
 import React from "react";
-import { css } from "emotion";
 
 interface Props {
   isBottomPadded: boolean;
 }
 
-const ValuesRow: React.FC<Props> = ({ children, isBottomPadded }) => (
+const ValuesRow: React.FC<Props> = ({ isBottomPadded, ...props }) => (
   <tr
     data-testid="time-entry-table-values-row"
-    className={css({
+    css={{
       td: {
         fontSize: 14,
         fontWeight: 400,
         paddingBottom: isBottomPadded ? 4 : undefined,
       },
-    })}
-  >
-    {children}
-  </tr>
+    }}
+    {...props}
+  />
 );
 
 export default ValuesRow;

@@ -1,11 +1,21 @@
 import React, { useEffect, useRef } from "react";
 import { Button, Container } from "bloomer";
 import { When } from "react-if";
-import { css } from "emotion";
 import { isNil } from "lodash";
+import styled from "@emotion/styled";
 import Flex from "../Flex";
 import PageHeader from "../PageHeader";
 import InstructionsSection from "./InstructionsSection";
+
+const RefreshButton = styled(Button)({
+  background: "rgba(125, 103, 198, 1)",
+  color: "white",
+
+  "&:hover": {
+    background: "rgba(125, 103, 198, 0.8)",
+    color: "white",
+  },
+});
 
 export interface StepPageProps {
   stepNumber: number;
@@ -55,28 +65,16 @@ const StepPage: React.FC<Props> = ({
         </When>
         {props.children}
       </div>
-      <Flex
-        justifyContent="space-between"
-        className={css({ marginTop: "1.5rem" })}
-      >
+      <Flex justifyContent="space-between" css={{ marginTop: "1.5rem" }}>
         <Flex justifySelf="flex-start">
           <When condition={!isNil(props.onRefreshClick)}>
-            <Button
+            <RefreshButton
               data-testid="step-page-refresh-button"
               isSize="medium"
               onClick={props.onRefreshClick}
-              className={css({
-                background: "rgba(125, 103, 198, 1)",
-                color: "white",
-
-                "&:hover": {
-                  background: "rgba(125, 103, 198, 0.8)",
-                  color: "white",
-                },
-              })}
             >
               Refresh
-            </Button>
+            </RefreshButton>
           </When>
         </Flex>
         <Flex justifySelf="flex-end">
@@ -93,7 +91,7 @@ const StepPage: React.FC<Props> = ({
           <When condition={!isNil(onPreviousClick) && !isNil(onNextClick)}>
             <div
               data-testid="step-page-button-separator"
-              className={css({ marginRight: "1rem" })}
+              css={{ marginRight: "1rem" }}
             />
           </When>
           <When condition={!isNil(onNextClick)}>

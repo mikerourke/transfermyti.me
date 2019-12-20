@@ -1,7 +1,7 @@
 import React from "react";
 import { connect } from "react-redux";
 import { If, Then, Else } from "react-if";
-import { css } from "emotion";
+import styled from "@emotion/styled";
 import {
   fetchClockifyEntitiesInWorkspace,
   fetchClockifyWorkspaces,
@@ -22,6 +22,12 @@ import {
   CountsByGroupByWorkspaceModel,
   EntitiesByGroupByWorkspaceModel,
 } from "~/workspaces/workspacesTypes";
+
+const TransferNote = styled.p({
+  color: "var(-info)",
+  fontWeight: "bold",
+  marginBottom: "1rem",
+});
 
 interface ConnectStateProps {
   clockifyWorkspacesById: Record<string, CompoundWorkspaceModel>;
@@ -102,21 +108,15 @@ export class ReviewClockifyDetailsStepComponent extends React.Component<
             onRefreshClick={this.fetchClockifyEntitiesInAllWorkspaces}
             instructions={
               <>
-                <p className={css({ marginBottom: "1rem" })}>
+                <p css={{ marginBottom: "1rem" }}>
                   This page contains all the records that <strong>will</strong>{" "}
                   be created on Clockify. Press <strong>Next</strong> to move to
                   the final step.
                 </p>
-                <p
-                  className={css({
-                    color: "var(-info)",
-                    fontWeight: "bold",
-                    marginBottom: "1rem",
-                  })}
-                >
+                <TransferNote>
                   The transfer will not start until you confirm it on the next
                   page.
-                </p>
+                </TransferNote>
                 <InstructionsList />
               </>
             }

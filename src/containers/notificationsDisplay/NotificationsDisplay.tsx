@@ -1,12 +1,19 @@
 import React from "react";
 import { connect } from "react-redux";
-import { css } from "emotion";
+import styled from "@emotion/styled";
 import { dismissNotification } from "~/app/appActions";
 import { selectNotifications } from "~/app/appSelectors";
 import { Flex } from "~/components";
 import NotificationDisplay from "./NotificationDisplay";
 import { NotificationModel } from "~/app/appTypes";
 import { ReduxState } from "~/redux/reduxTypes";
+
+const Root = styled(Flex)({
+  bottom: "1rem",
+  margin: "0 auto",
+  position: "absolute",
+  width: "100%",
+});
 
 interface ConnectStateProps {
   notifications: Array<NotificationModel>;
@@ -22,17 +29,7 @@ const NotificationsDisplayComponent: React.FC<Props> = ({
   notifications,
   onDismissNotification,
 }) => (
-  <Flex
-    alignItems="center"
-    justifyContent="center"
-    direction="column"
-    className={css({
-      bottom: "1rem",
-      margin: "0 auto",
-      position: "absolute",
-      width: "100%",
-    })}
-  >
+  <Root alignItems="center" justifyContent="center" direction="column">
     {notifications.map(notification => (
       <NotificationDisplay
         key={notification.id}
@@ -40,7 +37,7 @@ const NotificationsDisplayComponent: React.FC<Props> = ({
         onDismiss={onDismissNotification}
       />
     ))}
-  </Flex>
+  </Root>
 );
 
 const mapStateToProps = (state: ReduxState): ConnectStateProps => ({

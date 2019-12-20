@@ -1,6 +1,4 @@
 import React from "react";
-import classnames from "classnames";
-import { css } from "emotion";
 
 type GlobalOption = "inherit" | "initial" | "unset";
 
@@ -26,7 +24,6 @@ type SpacePositionalOption = "space-around" | "space-between" | "space-evenly";
 
 export interface FlexProps {
   as?: string | React.ReactElement<unknown> | React.ReactNode;
-  className?: string;
   alignItems?: CommonPositionalOption | SelfPositionalOption;
   alignSelf?: CommonPositionalOption | SelfPositionalOption;
   justifyContent?: CommonPositionalOption | SpacePositionalOption;
@@ -37,28 +34,25 @@ export interface FlexProps {
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
 const Flex: React.FC<FlexProps | any> = ({
   as: Element,
-  className,
   alignItems,
   alignSelf,
   justifyContent,
   justifySelf,
   direction,
   ...props
-}) => {
-  const classes = classnames(
-    className,
-    css({
+}) => (
+  <Element
+    css={{
       display: "flex",
       alignItems,
       alignSelf,
       justifyContent,
       justifySelf,
       flexDirection: direction,
-    }),
-  );
-
-  return <Element className={classes} {...props} />;
-};
+    }}
+    {...props}
+  />
+);
 
 Flex.defaultProps = {
   as: "div",

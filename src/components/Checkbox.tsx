@@ -1,6 +1,5 @@
 import React from "react";
 import { isNil } from "lodash";
-import { css } from "emotion";
 
 interface Props {
   checked?: boolean;
@@ -41,7 +40,7 @@ const Checkbox: React.FC<Props> = ({ checked, size, onClick }) => {
       height={size}
       width={size}
       onClick={onClick}
-      className={css({ cursor: "pointer" })}
+      css={{ cursor: "pointer" }}
     >
       <path
         data-testid="checkbox-path"

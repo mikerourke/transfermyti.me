@@ -1,6 +1,5 @@
 import React from "react";
 import { List, ListRowProps } from "react-virtualized";
-import { css } from "emotion";
 import { isNil } from "lodash";
 import BasicListItem from "./BasicListItem";
 import TimeEntryListItem from "./TimeEntryListItem";
@@ -54,13 +53,8 @@ const EntitiesList: React.FC<Props> = props => {
       data-testid="entities-list"
       width={props.width}
       height={props.height}
-      className={css({
-        "&:focus": {
-          outline: 0,
-        },
-      })}
+      css={{ "&:focus": { outline: 0 } }}
       rowHeight={listRowHeight}
-      rowClassName={css({ cursor: "pointer" })}
       rowCount={props.entityRecords.length}
       rowRenderer={listRowRenderer}
     />

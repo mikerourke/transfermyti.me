@@ -32,5 +32,6 @@ declare namespace jest {
       options?: { normalizeWhitespace: boolean },
     ): R;
     toHaveValue(value?: string | Array<string> | number): R;
+    toHaveStyleRule(attrName: string, attrValue: string, selectors?: any): R;
   }
 }

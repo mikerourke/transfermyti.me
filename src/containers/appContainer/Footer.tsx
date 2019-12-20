@@ -1,7 +1,17 @@
 import React from "react";
-import { css } from "emotion";
 import { Column, Columns, Container, Footer as BloomerFooter } from "bloomer";
+import styled from "@emotion/styled";
 import { Icon } from "~/components";
+
+const Root = styled(BloomerFooter)({
+  position: "absolute",
+  right: 0,
+  bottom: 0,
+  left: 0,
+  height: "var(--footer-height)",
+  display: "flex",
+  alignItems: "center",
+});
 
 const Love = (): JSX.Element => <Icon name="heart" color="red" height={12} />;
 
@@ -26,22 +36,11 @@ const LinkToIssues = (): JSX.Element => (
 );
 
 const Footer: React.FC = () => (
-  <BloomerFooter
-    isPaddingless
-    className={css({
-      position: "absolute",
-      right: 0,
-      bottom: 0,
-      left: 0,
-      height: "var(--footer-height)",
-      display: "flex",
-      alignItems: "center",
-    })}
-  >
+  <Root isPaddingless>
     <Container>
       <Columns isGapless isVCentered>
         <Column isSize="1/2">
-          <p className={css({ marginBottom: "0.5rem" })}>
+          <p css={{ marginBottom: "0.5rem" }}>
             Made with <Love /> by <LinkToMe />
           </p>
           <a
@@ -55,7 +54,7 @@ const Footer: React.FC = () => (
         <Column
           isSize="1/2"
           hasTextAlign="right"
-          className={css({ fontSize: 13, fontWeight: 700 })}
+          css={{ fontSize: 13, fontWeight: 700 }}
         >
           <p>FYI, Clockify is not responsible for this tool.</p>
           <p>
@@ -64,7 +63,7 @@ const Footer: React.FC = () => (
         </Column>
       </Columns>
     </Container>
-  </BloomerFooter>
+  </Root>
 );
 
 export default Footer;

@@ -9,7 +9,6 @@ import {
   ModalCardHeader,
   ModalCardTitle,
 } from "bloomer";
-import { css } from "emotion";
 
 interface Props {
   isActive: boolean;
@@ -26,19 +25,11 @@ const ConfirmationModal: React.FC<Props> = ({
     <ModalBackground />
     <ModalCard>
       <ModalCardHeader>
-        <ModalCardTitle
-          className={css({ fontSize: "2.5rem", fontWeight: 500 })}
-        >
+        <ModalCardTitle css={{ fontSize: "2.5rem", fontWeight: 500 }}>
           Confirmation
         </ModalCardTitle>
       </ModalCardHeader>
-      <ModalCardBody
-        className={css({
-          "p:not(:last-child)": {
-            marginBottom: "1rem",
-          },
-        })}
-      >
+      <ModalCardBody css={{ "p:not(:last-child)": { marginBottom: "1rem" } }}>
         <p>
           If you&apos;re psychologically and emotionally ready to proceed, just
           hit that ol&apos; yellow button down there. The transfer process will
@@ -49,7 +40,7 @@ const ConfirmationModal: React.FC<Props> = ({
           <strong> Cancel</strong> button and regroup.
         </p>
       </ModalCardBody>
-      <ModalCardFooter className={css({ justifyContent: "flex-end" })}>
+      <ModalCardFooter css={{ justifyContent: "flex-end" }}>
         <Button isSize="medium" onClick={onCancelClick} isColor="dark">
           Cancel
         </Button>

@@ -1,7 +1,6 @@
 import React, { useEffect } from "react";
 import { connect } from "react-redux";
 import { If, Then, Else } from "react-if";
-import { css } from "emotion";
 import { isNil } from "lodash";
 import {
   fetchTogglEntitiesInWorkspace,
@@ -51,7 +50,7 @@ export const SelectTogglInclusionsStepComponent: React.FC<Props> = ({
   workspaceNameBeingFetched,
   workspacesById,
   onFetchEntitiesForWorkspace,
-  ...reviewPageProps
+  ...props
 }) => {
   const fetchEntitiesForAllWorkspaces = async (): Promise<void> => {
     const workspaceRecords = Object.values(workspacesById);
@@ -74,13 +73,13 @@ export const SelectTogglInclusionsStepComponent: React.FC<Props> = ({
           onRefreshClick={fetchEntitiesForAllWorkspaces}
           instructions={
             <>
-              <p className={css({ marginBotom: "1rem" })}>
+              <p css={{ marginBottom: "1rem" }}>
                 Select which entities/records you want to transfer and press the
                 <strong> Next</strong> button when you&apos;re ready to move
                 onto the next step. There are a few things to be aware of:
               </p>
               <InstructionsList />
-              <p className={css({ marginTop: "1rem" })}>
+              <p css={{ marginTop: "1rem" }}>
                 If you need to change what&apos;s included in a different
                 workspace, you can select it from the dropdown to the right of
                 the entity tabs. Don&apos;t worry, all of your changes are
@@ -88,7 +87,7 @@ export const SelectTogglInclusionsStepComponent: React.FC<Props> = ({
               </p>
             </>
           }
-          {...reviewPageProps}
+          {...props}
         />
       </Then>
       <Else>

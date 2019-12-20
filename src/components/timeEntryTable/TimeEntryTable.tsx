@@ -1,10 +1,26 @@
 import React from "react";
-import { css } from "emotion";
 import { first, get } from "lodash";
 import format from "date-fns/format";
+import styled from "@emotion/styled";
 import HeadersRow from "./HeadersRow";
 import ValuesRow from "./ValuesRow";
 import { DetailedTimeEntryModel } from "~/timeEntries/timeEntriesTypes";
+
+const Table = styled.table({
+  tableLayout: "fixed",
+  width: "100%",
+
+  td: {
+    paddingLeft: 2,
+    textAlign: "left",
+  },
+});
+
+const DescriptionCell = styled.td({
+  textOverflow: "ellipsis",
+  whiteSpace: "nowrap",
+  overflow: "hidden",
+});
 
 interface Props {
   timeEntry: DetailedTimeEntryModel;
@@ -26,18 +42,7 @@ const TimeEntryTable: React.FC<Props> = ({ timeEntry }) => {
   };
 
   return (
-    <table
-      data-testid="time-entry-table"
-      className={css({
-        tableLayout: "fixed",
-        width: "100%",
-
-        td: {
-          paddingLeft: 2,
-          textAlign: "left",
-        },
-      })}
-    >
+    <Table data-testid="time-entry-table">
       <tbody>
         <HeadersRow hasTopBorder={false}>
           <td>Project</td>
@@ -47,16 +52,7 @@ const TimeEntryTable: React.FC<Props> = ({ timeEntry }) => {
         <ValuesRow isBottomPadded>
           <td>{get(timeEntry, ["project", "name"], "")}</td>
           <td>{get(timeEntry, ["client", "name"], "")}</td>
-          <td
-            colSpan={2}
-            className={css({
-              textOverflow: "ellipsis",
-              whiteSpace: "nowrap",
-              overflow: "hidden",
-            })}
-          >
-            {timeEntry.description}
-          </td>
+          <DescriptionCell colSpan={2}>{timeEntry.description}</DescriptionCell>
         </ValuesRow>
         <HeadersRow hasTopBorder>
           <td>Start Time</td>
@@ -71,7 +67,7 @@ const TimeEntryTable: React.FC<Props> = ({ timeEntry }) => {
           <td>{getTagsList()}</td>
         </ValuesRow>
       </tbody>
-    </table>
+    </Table>
   );
 };
 

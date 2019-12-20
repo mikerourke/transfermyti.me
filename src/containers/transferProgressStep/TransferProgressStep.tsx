@@ -2,8 +2,8 @@ import React from "react";
 import { When } from "react-if";
 import { connect } from "react-redux";
 import { Button } from "bloomer";
-import { css } from "emotion";
 import { get } from "lodash";
+import styled from "@emotion/styled";
 import { updateCountsOverallBeforeTransfer } from "~/app/appActions";
 import {
   selectInTransferDetails,
@@ -24,6 +24,18 @@ import {
 } from "~/app/appTypes";
 import { ReduxState } from "~/redux/reduxTypes";
 import { CompoundWorkspaceModel } from "~/workspaces/workspacesTypes";
+
+const InstructionsNote = styled.p({
+  color: "var(--info)",
+  fontWeight: 700,
+  marginTop: "1rem",
+});
+
+const StartButton = styled(Button)({
+  textTransform: "uppercase",
+  fontWeight: "bold",
+  margin: "4rem 0",
+});
 
 interface ConnectStateProps {
   togglWorkspacesById: Record<string, CompoundWorkspaceModel>;
@@ -101,43 +113,32 @@ export const TransferProgressStepComponent: React.FC<Props> = props => {
         }
         instructions={
           <>
-            <p className={css({ marginBottom: "1rem" })}>
+            <p css={{ marginBottom: "1rem" }}>
               Press the start button to below to begin transferring your data to
               Clockify. After confirming the transfer, you&apos;ll see three
               progress indicators:
             </p>
             <InstructionsList />
-            <p
-              className={css({
-                color: "var(--info)",
-                fontWeight: 700,
-                marginTop: "1rem",
-              })}
-            >
+            <InstructionsNote>
               Just an FYI: the transfer might take a little while, so please be
               patient. Maybe go grab a snack or something.
-            </p>
+            </InstructionsNote>
           </>
         }
       >
         <Flex
           justifyContent="center"
-          className={css({ marginTop: "1rem", padding: "1rem" })}
+          css={{ marginTop: "1rem", padding: "1rem" }}
         >
           <When condition={transferStatus === TransferStatus.Waiting}>
-            <Button
-              className={css({
-                textTransform: "uppercase",
-                fontWeight: "bold",
-                margin: "4rem 0",
-              })}
+            <StartButton
               isSize="large"
               isColor="info"
               isOutlined
               onClick={() => setIsModalActive(true)}
             >
               ⚡ Start the Transfer ⚡
-            </Button>
+            </StartButton>
           </When>
           <When condition={transferStatus === TransferStatus.InProgress}>
             <ProgressIndicators

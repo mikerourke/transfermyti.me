@@ -1,35 +1,35 @@
 import React from "react";
-import { css } from "emotion";
+import styled from "@emotion/styled";
 import { EntityTag, EntityTagType } from "~/components";
+
+const List = styled.ul({
+  listStyle: "circle",
+  marginLeft: "1rem",
+
+  "li:not(:last-child)": {
+    marginBottom: "0.75rem",
+  },
+
+  "li:last-child": {
+    color: "var(--info)",
+    fontWeight: 500,
+  },
+
+  "li:last-child > strong": {
+    color: "var(--info)",
+    fontWeight: 700,
+  },
+
+  span: {
+    fontWeight: 700,
+    margin: "0 4px",
+    verticalAlign: "bottom",
+  },
+});
 
 const InstructionsList: React.FC = () => (
   <div>
-    <ul
-      className={css({
-        listStyle: "circle",
-        marginLeft: "1rem",
-
-        "li:not(:last-child)": {
-          marginBottom: "0.75rem",
-        },
-
-        "li:last-child": {
-          color: "var(--info)",
-          fontWeight: 500,
-        },
-
-        "li:last-child > strong": {
-          color: "var(--info)",
-          fontWeight: 700,
-        },
-
-        span: {
-          fontWeight: 700,
-          margin: "0 4px",
-          verticalAlign: "bottom",
-        },
-      })}
-    >
+    <List>
       <li>
         The
         <EntityTag size="small" tagType={EntityTagType.Archived} />
@@ -57,7 +57,7 @@ const InstructionsList: React.FC = () => (
         Once you hit the <strong>Next</strong> button, you&apos;ll have a chance
         to review what will be transferred to Clockify.
       </li>
-    </ul>
+    </List>
   </div>
 );
 

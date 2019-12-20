@@ -1,7 +1,6 @@
 import React from "react";
 import { connect } from "react-redux";
 import { Columns } from "bloomer";
-import { css } from "emotion";
 import { updateTransferType } from "~/app/appActions";
 import { selectCurrentTransferType } from "~/app/appSelectors";
 import { StepPage, StepPageProps } from "~/components";
@@ -42,7 +41,7 @@ export const SelectTransferTypeStepComponent: React.FC<Props> = ({
       }
       {...stepPageProps}
     >
-      <div className={css({ padding: "0 0.25rem 2rem 0.25rem" })}>
+      <div css={{ padding: "0 0.25rem 2rem 0.25rem" }}>
         <Columns isCentered>
           <TransferTypeColumn
             isDisabled={false}

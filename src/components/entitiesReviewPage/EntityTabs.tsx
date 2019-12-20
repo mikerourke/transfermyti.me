@@ -1,6 +1,5 @@
 import React from "react";
 import { Tab, TabLink, TabList, Tabs } from "bloomer";
-import { css } from "emotion";
 import { omit, startCase } from "lodash";
 import { EntityGroup } from "~/commonTypes";
 
@@ -23,7 +22,7 @@ const EntityTabs: React.FC<Props> = ({ activeTab, onTabClick }) => {
           <Tab
             data-testid="entity-tab"
             key={value}
-            className={css({ fontWeight: 500 })}
+            css={{ fontWeight: 500 }}
             isActive={value === activeTab}
             onClick={(): void => onTabClick(value)}
           >

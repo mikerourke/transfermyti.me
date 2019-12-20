@@ -9,13 +9,14 @@
     "constants/index.ts",
     "state.ts"
   ],
+  "coverageReporters": ["lcov"],
   "moduleFileExtensions": ["js", "json", "jsx", "ts", "tsx"],
   "moduleNameMapper": {
     "^~/(.*)$": "<rootDir>/src/$1"
   },
-  "preset": "ts-jest",
   "roots": ["<rootDir>/src/"],
   "setupFilesAfterEnv": ["<rootDir>/src/setupJest.ts"],
+  "snapshotSerializers": ["jest-emotion"],
   "testEnvironment": "node",
   "testMatch": [
     "<rootDir>/src/**/__tests__/**/*.ts?(x)",

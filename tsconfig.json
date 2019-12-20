@@ -29,7 +29,8 @@
     "strictNullChecks": false,
     "paths": {
       "~/*": ["./src/*"]
-    }
+    },
+    "types": ["@emotion/core"]
   },
   "exclude": [
     ".cache",

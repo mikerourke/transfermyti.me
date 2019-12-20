@@ -1,7 +1,35 @@
 import React from "react";
-import classnames from "classnames";
 import { Box, Column, Title } from "bloomer";
-import { css } from "emotion";
+import styled from "@emotion/styled";
+
+const Wrapper = styled(Box)(
+  {
+    height: "100%",
+    minHeight: "14rem",
+    cursor: "pointer",
+
+    "&:hover": {
+      opacity: 0.5,
+    },
+  },
+  ({ isSelected }: { isSelected: boolean }) => ({
+    backgroundColor: isSelected && "var(--info)",
+    color: isSelected && "white",
+  }),
+);
+
+const Content = styled.p<{ isDisabled: boolean }>(
+  {
+    fontSize: 20,
+
+    strong: {
+      color: "inherit",
+    },
+  },
+  ({ isDisabled }) => ({
+    textDecoration: isDisabled ? "line-through" : undefined,
+  }),
+);
 
 // TODO: Get rid of `isDisabled` when multi-user mode is working.
 
@@ -12,53 +40,24 @@ interface Props {
   onSelect: () => void;
 }
 
-const TransferTypeColumn: React.FC<Props> = props => {
-  const selectedClass = css({
-    backgroundColor: "var(--info)",
-    color: "white",
-  });
-
-  return (
-    <Column isSize="1/2">
-      <Box
-        className={classnames(
-          css({
-            height: "100%",
-            minHeight: "14rem",
-            cursor: "pointer",
-
-            "&:hover": {
-              opacity: 0.5,
-            },
-          }),
-          { [selectedClass]: props.isSelected },
-        )}
-        onClick={props.isDisabled ? undefined : props.onSelect}
+const TransferTypeColumn: React.FC<Props> = props => (
+  <Column isSize="1/2">
+    <Wrapper
+      isSelected={props.isSelected}
+      onClick={props.isDisabled ? undefined : props.onSelect}
+    >
+      <Title
+        css={{
+          color: "inherit",
+          textDecoration: props.isDisabled ? "line-through" : undefined,
+        }}
+        isSize={2}
       >
-        <Title
-          className={css({
-            color: "inherit",
-            textDecoration: props.isDisabled ? "line-through" : undefined,
-          })}
-          isSize={2}
-        >
-          {props.title}
-        </Title>
-        <p
-          className={css({
-            fontSize: 20,
-            textDecoration: props.isDisabled ? "line-through" : undefined,
-
-            strong: {
-              color: "inherit",
-            },
-          })}
-        >
-          {props.children}
-        </p>
-      </Box>
-    </Column>
-  );
-};
+        {props.title}
+      </Title>
+      <Content isDisabled={props.isDisabled}>{props.children}</Content>
+    </Wrapper>
+  </Column>
+);
 
 export default TransferTypeColumn;

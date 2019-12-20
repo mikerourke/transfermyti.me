@@ -1,13 +1,29 @@
 import React from "react";
-import { css } from "emotion";
 import { startCase } from "lodash";
 import { Columns } from "bloomer";
+import styled from "@emotion/styled";
 import ProgressIndicatorColumn from "./ProgressIndicatorColumn";
 import {
   AggregateTransferCountsModel,
   InTransferDetailsModel,
   TransferCountsModel,
 } from "~/app/appTypes";
+
+const ProgressIndicatorColumns = styled(Columns)({
+  ".box": {
+    paddingBottom: "1.5rem",
+  },
+
+  ".heading": {
+    marginTop: "1rem",
+    fontSize: 16,
+    fontWeight: "bold",
+  },
+
+  strong: {
+    color: "var(--info)",
+  },
+});
 
 interface Props {
   inTransferDetails: InTransferDetailsModel;
@@ -27,25 +43,8 @@ const ProgressIndicators: React.FC<Props> = props => {
   const { countCurrent, countTotal } = props.workspaceTransferCounts;
 
   return (
-    <div className={css({ width: "100%" })}>
-      <Columns
-        isCentered
-        className={css({
-          ".box": {
-            paddingBottom: "1.5rem",
-          },
-
-          ".heading": {
-            marginTop: "1rem",
-            fontSize: 16,
-            fontWeight: "bold",
-          },
-
-          strong: {
-            color: "var(--info)",
-          },
-        })}
-      >
+    <div css={{ width: "100%" }}>
+      <ProgressIndicatorColumns isCentered>
         <ProgressIndicatorColumn
           title="Overall Progress"
           subtitle={`Workspace ${countCurrent} of ${countTotal}`}
@@ -64,7 +63,7 @@ const ProgressIndicators: React.FC<Props> = props => {
           countCurrent={countCurrentInGroup}
           countTotal={countTotalInGroup}
         />
-      </Columns>
+      </ProgressIndicatorColumns>
     </div>
   );
 };

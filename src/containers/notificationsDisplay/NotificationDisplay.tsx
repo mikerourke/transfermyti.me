@@ -1,6 +1,5 @@
 import React, { useEffect } from "react";
 import { Delete, Notification } from "bloomer";
-import { css } from "emotion";
 import { NotificationModel } from "~/app/appTypes";
 
 interface Props {
@@ -21,10 +20,7 @@ const NotificationDisplay: React.FC<Props> = ({
   return (
     <Notification
       isColor={type}
-      className={css({
-        fontSize: "1.25rem",
-        fontWeight: "bold",
-      })}
+      css={{ fontSize: "1.25rem", fontWeight: "bold" }}
     >
       <Delete onClick={() => onDismiss(id)} />
       {message}

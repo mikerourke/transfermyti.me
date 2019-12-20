@@ -8,7 +8,6 @@ import {
   DropdownMenu,
   DropdownTrigger,
 } from "bloomer";
-import { css } from "emotion";
 import Icon from "../Icon";
 import { CompoundWorkspaceModel } from "~/workspaces/workspacesTypes";
 
@@ -36,25 +35,25 @@ const WorkspacesDropdown: React.FC<Props> = ({
     <Dropdown
       data-testid="workspaces-dropdown"
       isActive={isActive}
-      className={css({
+      css={{
         minWidth: MIN_WIDTH,
         position: "absolute",
         top: 0,
         right: 0,
-      })}
+      }}
     >
-      <DropdownTrigger className={css({ minWidth: MIN_WIDTH })}>
+      <DropdownTrigger css={{ minWidth: MIN_WIDTH }}>
         <Button
           data-testid="workspaces-dropdown-trigger-button"
           isOutlined
           aria-haspopup="true"
           aria-controls="dropdown-menu"
-          className={css({
+          css={{
             fontSize: "1rem",
             fontWeight: "bold",
             width: "100%",
             justifyContent: "space-between",
-          })}
+          }}
           onClick={() => setIsActive(!isActive)}
         >
           <span>{get(workspacesById, [activeWorkspaceId, "name"], "")}</span>
@@ -66,13 +65,13 @@ const WorkspacesDropdown: React.FC<Props> = ({
           />
         </Button>
       </DropdownTrigger>
-      <DropdownMenu className={css({ minWidth: MIN_WIDTH })}>
+      <DropdownMenu css={{ minWidth: MIN_WIDTH }}>
         <DropdownContent>
           {Object.values(workspacesById).map(({ id, name }) => (
             <DropdownItem
               data-testid="workspaces-dropdown-item"
               key={id}
-              className={css({
+              css={{
                 cursor: "pointer",
                 fontSize: "1rem",
                 fontWeight: "bold",
@@ -81,7 +80,7 @@ const WorkspacesDropdown: React.FC<Props> = ({
                   backgroundColor: "var(--info)",
                   color: "white",
                 },
-              })}
+              }}
               onClick={() => handleItemClick(id)}
             >
               {name}

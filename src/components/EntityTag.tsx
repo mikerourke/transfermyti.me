@@ -1,5 +1,4 @@
 import React from "react";
-import { css } from "emotion";
 import { Tag } from "bloomer";
 
 export enum EntityTagType {
@@ -27,7 +26,7 @@ const EntityTag: React.FC<Props> = ({ size, tagType }) => {
     <Tag
       data-testid="entity-tag"
       isColor={color}
-      className={css({ fontWeight: "bold", marginRight: "0.625rem" })}
+      css={{ fontWeight: "bold", marginRight: "0.625rem" }}
       style={entryStyle}
     >
       {tagType}

@@ -1,0 +1,44 @@
+{
+  "presets": [
+    ["@babel/preset-env",
+      {
+        "targets": {
+          "node": "current"
+        }
+      }],
+    "@babel/preset-typescript"
+  ],
+  "plugins": [
+    [
+      "module-resolver",
+      {
+        "alias": {
+          "^~/(.+)": "./src/\\1"
+        }
+      }
+    ],
+    ["transform-inline-environment-variables", {
+      "exclude": [
+        "ELECTRON_IS_DEV",
+        "PARCEL_SERVE"
+      ]
+    }],
+    [
+      "jsx-pragmatic",
+      { "export": "jsx", "module": "@emotion/core", "import": "___EmotionJSX" }
+    ],
+    [
+      "@babel/plugin-transform-react-jsx",
+      { "pragma": "___EmotionJSX", "pragmaFrag": "React.Fragment" }
+    ],
+    [
+      "emotion",
+      {
+        "autoLabel": true,
+        "labelFormat": "[filename]-[local]"
+      }
+    ],
+    "lodash",
+    "@babel/plugin-proposal-numeric-separator"
+  ]
+}

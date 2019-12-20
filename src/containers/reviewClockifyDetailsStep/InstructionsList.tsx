@@ -1,35 +1,35 @@
 import React from "react";
-import { css } from "emotion";
+import styled from "@emotion/styled";
 import { EntityTag, EntityTagType } from "~/components";
+
+const List = styled.ul({
+  listStyle: "circle",
+  marginLeft: "1rem",
+
+  "li:not(:last-child)": {
+    marginBottom: "0.75rem",
+  },
+
+  "li:last-child": {
+    color: "var(--info)",
+    fontWeight: 500,
+  },
+
+  "li:last-child > strong": {
+    color: "var(--info)",
+    fontWeight: 700,
+  },
+
+  span: {
+    fontWeight: 700,
+    margin: "0 4px",
+    verticalAlign: "bottom",
+  },
+});
 
 const InstructionsList: React.FC = () => (
   <div>
-    <ul
-      className={css({
-        listStyle: "circle",
-        marginLeft: "1rem",
-
-        "li:not(:last-child)": {
-          marginBottom: "0.75rem",
-        },
-
-        "li:last-child": {
-          color: "var(--info)",
-          fontWeight: 500,
-        },
-
-        "li:last-child > strong": {
-          color: "var(--info)",
-          fontWeight: 700,
-        },
-
-        span: {
-          fontWeight: 700,
-          margin: "0 4px",
-          verticalAlign: "bottom",
-        },
-      })}
-    >
+    <List>
       <li>
         Items with an
         <EntityTag size="small" tagType={EntityTagType.Existing} />
@@ -49,7 +49,7 @@ const InstructionsList: React.FC = () => (
         Once you hit the <strong>Next</strong> button, you&apos;ll be asked to
         confirm the transfer before going buck wild.
       </li>
-    </ul>
+    </List>
   </div>
 );
 

@@ -22,20 +22,12 @@ const setup = (propOverrides: any = {}) => {
 
 describe("<ValuesRow> Component", () => {
   test("renders without bottom padding when props.isBottomPadded = false", () => {
-    const { getByTestId } = setup({ isBottomPadded: false }).wrapper;
-    const valuesRow = getByTestId("time-entry-table-values-row");
-    const firstCell = valuesRow.querySelector("td");
-    const styles = window.getComputedStyle(firstCell);
-
-    expect(styles["padding-bottom"]).toBe("");
+    const { wrapper } = setup({ isBottomPadded: false });
+    expect(wrapper.getByText("TEST")).not.toHaveStyle("padding-bottom: 4px;");
   });
 
   test("renders with bottom padding when props.isBottomPadded = true", () => {
-    const { getByTestId } = setup({ isBottomPadded: true }).wrapper;
-    const valuesRow = getByTestId("time-entry-table-values-row");
-    const firstCell = valuesRow.querySelector("td");
-    const styles = window.getComputedStyle(firstCell);
-
-    expect(styles["padding-bottom"]).toBeDefined();
+    const { wrapper } = setup({ isBottomPadded: true });
+    expect(wrapper.getByText("TEST")).toHaveStyle("padding-bottom: 4px;");
   });
 });

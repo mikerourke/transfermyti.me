@@ -1,6 +1,5 @@
 import React from "react";
 import { ListRowProps } from "react-virtualized";
-import { css } from "emotion";
 import TimeEntryTable from "../timeEntryTable/TimeEntryTable";
 import EntityTagsRow from "./EntityTagsRow";
 import ListItemBase from "./ListItemBase";
@@ -16,22 +15,18 @@ const TimeEntryListItem: React.FC<Props> = ({
   isOmitted,
   isScrolling,
   isVisible,
-  ...listItemProps
+  ...props
 }) => (
   <ListItemBase
     data-testid="time-entry-list-item"
-    className={css({ position: "relative" })}
+    css={{ position: "relative" }}
     height={104}
     isOmitted={isOmitted}
-    {...listItemProps}
+    {...props}
   >
     <TimeEntryTable timeEntry={timeEntry} />
     <EntityTagsRow
-      className={css({
-        position: "absolute",
-        right: 0,
-        top: "-0.5rem",
-      })}
+      css={{ position: "absolute", right: 0, top: "-0.5rem" }}
       isTimeEntry
       entityRecord={timeEntry}
     />

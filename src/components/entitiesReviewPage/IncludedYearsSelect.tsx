@@ -1,7 +1,6 @@
 import React, { CSSProperties } from "react";
 import Select from "react-select";
 import { compact, get } from "lodash";
-import { css } from "emotion";
 import makeAnimated from "react-select/animated";
 import { FontWeightProperty } from "csstype";
 import { ActionMeta, Theme } from "react-select/src/types";
@@ -119,7 +118,7 @@ const IncludedYearsSelect: React.FC<Props> = ({
   return (
     <div
       data-testid="included-years-select-wrapper"
-      className={css({ margin: "0 1rem 0.75rem 1rem" })}
+      css={{ margin: "0 1rem 0.75rem 1rem" }}
     >
       <Select
         isMulti

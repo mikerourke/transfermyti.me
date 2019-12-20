@@ -1,5 +1,4 @@
 import React from "react";
-import { css } from "emotion";
 
 interface Props {
   hasTopBorder: boolean;
@@ -8,7 +7,7 @@ interface Props {
 const HeadersRow: React.FC<Props> = ({ children, hasTopBorder }) => (
   <tr
     data-testid="time-entry-table-headers-row"
-    className={css({
+    css={{
       borderTop: hasTopBorder ? "1px solid rgba(10, 10, 10, 0.1)" : undefined,
 
       td: {
@@ -18,7 +17,7 @@ const HeadersRow: React.FC<Props> = ({ children, hasTopBorder }) => (
         textTransform: "uppercase",
         paddingTop: hasTopBorder ? 4 : undefined,
       },
-    })}
+    }}
   >
     {children}
   </tr>

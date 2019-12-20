@@ -19,14 +19,14 @@
     "typecheck": "tsc -p tsconfig.json --noEmit --skipLibCheck",
     "clockify:delete": "node ./scripts/manageClockify.js delete",
     "clockify:write": "node ./scripts/manageClockify.js write",
-    "test": "node ./scripts/runTests.js --env=jsdom --coverageReporters=lcov --config jest.config.json"
+    "test": "node ./scripts/runTests.js --env=jsdom --config jest.config.json"
   },
   "dependencies": {
+    "@emotion/core": "^10.0.22",
+    "@emotion/styled": "^10.0.23",
     "bloomer": "^0.6.5",
     "bulma": "^0.7.2",
-    "classnames": "^2.2.6",
     "date-fns": "^2.8.1",
-    "emotion": "^10.0.5",
     "fetch-intercept": "^2.3.1",
     "lodash": "^4.17.14",
     "normalizr": "^3.3.0",
@@ -50,10 +50,13 @@
   },
   "devDependencies": {
     "@babel/core": "^7.7.7",
+    "@babel/plugin-proposal-numeric-separator": "^7.7.4",
     "@babel/plugin-syntax-json-strings": "^7.7.4",
+    "@babel/plugin-transform-react-jsx": "^7.7.7",
+    "@babel/preset-env": "^7.7.7",
+    "@babel/preset-typescript": "^7.7.7",
     "@testing-library/jest-dom": "^4.2.4",
     "@testing-library/react": "^9.4.0",
-    "@types/classnames": "^2.2.6",
     "@types/jest": "^24.0.24",
     "@types/jest-in-case": "^1.0.1",
     "@types/lodash": "^4.14.149",
@@ -68,8 +71,12 @@
     "@types/store": "^2.0.1",
     "@typescript-eslint/eslint-plugin": "^2.12.0",
     "@typescript-eslint/parser": "^2.12.0",
+    "babel-jest": "^24.9.0",
+    "babel-plugin-emotion": "^10.0.23",
+    "babel-plugin-jsx-pragmatic": "^1.0.2",
     "babel-plugin-lodash": "^3.3.4",
     "babel-plugin-module-resolver": "^4.0.0",
+    "babel-plugin-transform-inline-environment-variables": "^0.4.3",
     "body-parser": "^1.18.3",
     "chalk": "^3.0.0",
     "concurrently": "^5.0.2",
@@ -81,6 +88,7 @@
     "express": "^4.16.4",
     "fs-extra": "^8.0.0",
     "jest": "^24.9.0",
+    "jest-emotion": "^10.0.26",
     "jest-in-case": "^1.0.2",
     "jsonfile": "^5.0.0",
     "morgan": "^1.9.1",
@@ -89,7 +97,6 @@
     "parcel": "^1.12.4",
     "prettier": "^1.19.1",
     "rimraf": "^3.0.0",
-    "ts-jest": "^24.2.0",
     "typescript": "^3.7.3",
     "yargs": "^15.0.2"
   },
@@ -97,18 +104,5 @@
     "bracketSpacing": true,
     "singleQuote": false,
     "trailingComma": "all"
-  },
-  "babel": {
-    "plugins": [
-      "lodash",
-      [
-        "module-resolver",
-        {
-          "alias": {
-            "^~/(.+)": "./src/\\1"
-          }
-        }
-      ]
-    ]
   }
 }
