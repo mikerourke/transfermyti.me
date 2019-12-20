@@ -3,7 +3,7 @@ import { When } from "react-if";
 import { get, isNil } from "lodash";
 import EntityTag, { EntityTagType } from "~/components/EntityTag";
 import Flex, { FlexProps } from "~/components/Flex";
-import { CompoundEntityModel } from "~/types";
+import { CompoundEntityModel } from "~/common/commonTypes";
 
 interface Props extends FlexProps {
   isTimeEntry: boolean;

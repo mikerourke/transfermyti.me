@@ -5,25 +5,25 @@ import { css } from "emotion";
 import {
   fetchClockifyEntitiesInWorkspace,
   fetchClockifyWorkspaces,
-} from "~/redux/entities/workspaces/workspacesActions";
+} from "~/workspaces/workspacesActions";
 import {
   selectClockifyIncludedWorkspacesById,
   selectTogglCountsByGroupByWorkspace,
   selectTogglEntitiesByGroupByWorkspace,
   selectTogglIncludedWorkspacesById,
   selectWorkspaceNameBeingFetched,
-} from "~/redux/entities/workspaces/workspacesSelectors";
+} from "~/workspaces/workspacesSelectors";
 import EntitiesReviewPage from "~/components/entitiesReviewPage/EntitiesReviewPage";
 import Loader from "~/components/Loader";
 import { StepPageProps } from "~/components/stepPage/StepPage";
 import InstructionsList from "./components/InstructionsList";
+import { ToolName } from "~/common/commonTypes";
+import { ReduxState } from "~/redux/reduxTypes";
 import {
   CompoundWorkspaceModel,
   CountsByGroupByWorkspaceModel,
   EntitiesByGroupByWorkspaceModel,
-  ReduxState,
-  ToolName,
-} from "~/types";
+} from "~/workspaces/workspacesTypes";
 
 interface ConnectStateProps {
   clockifyWorkspacesById: Record<string, CompoundWorkspaceModel>;

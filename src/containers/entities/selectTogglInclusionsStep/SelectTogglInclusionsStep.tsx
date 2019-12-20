@@ -7,27 +7,29 @@ import {
   fetchTogglEntitiesInWorkspace,
   flipIsWorkspaceEntityIncluded,
   updateIsWorkspaceYearIncluded,
-} from "~/redux/entities/workspaces/workspacesActions";
+} from "~/workspaces/workspacesActions";
 import {
   selectTogglEntitiesByGroupByWorkspace,
   selectTogglCountsByGroupByWorkspace,
   selectTogglIncludedWorkspacesById,
   selectWorkspaceNameBeingFetched,
-} from "~/redux/entities/workspaces/workspacesSelectors";
+} from "~/workspaces/workspacesSelectors";
 import EntitiesReviewPage from "~/components/entitiesReviewPage/EntitiesReviewPage";
 import Loader from "~/components/Loader";
 import { StepPageProps } from "~/components/stepPage/StepPage";
 import InstructionsList from "./components/InstructionsList";
 import {
   CompoundEntityModel,
+  EntityGroup,
+  ToolName,
+} from "~/common/commonTypes";
+import { ReduxState } from "~/redux/reduxTypes";
+import {
   CompoundWorkspaceModel,
   CountsByGroupByWorkspaceModel,
   EntitiesByGroupByWorkspaceModel,
-  EntityGroup,
-  ReduxState,
-  ToolName,
   UpdateIncludedWorkspaceYearModel,
-} from "~/types";
+} from "~/workspaces/workspacesTypes";
 
 interface ConnectStateProps {
   countsByGroupByWorkspace: CountsByGroupByWorkspaceModel;

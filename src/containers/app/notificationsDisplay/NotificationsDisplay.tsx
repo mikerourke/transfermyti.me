@@ -1,11 +1,12 @@
 import React from "react";
 import { connect } from "react-redux";
 import { css } from "emotion";
-import { dismissNotification } from "~/redux/app/appActions";
-import { selectNotifications } from "~/redux/app/appSelectors";
+import { dismissNotification } from "~/app/appActions";
+import { selectNotifications } from "~/app/appSelectors";
 import Flex from "~/components/Flex";
 import NotificationDisplay from "./components/NotificationDisplay";
-import { NotificationModel, ReduxState } from "~/types";
+import { NotificationModel } from "~/app/appTypes";
+import { ReduxState } from "~/redux/reduxTypes";
 
 interface ConnectStateProps {
   notifications: Array<NotificationModel>;

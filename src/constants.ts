@@ -5,6 +5,6 @@ export const TOGGL_REPORTS_URL = "https://toggl.com/reports/api/v2";
 const API_PORT = process.env.LOCAL_API_PORT;
 export const LOCAL_API_URL = `http://localhost:${API_PORT}/api`;
 
-export const STORAGE_KEY = "togglToClockify";
+export const STORAGE_KEY = "transfermytime";
 
 export const API_PAGE_SIZE = 100;

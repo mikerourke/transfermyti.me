@@ -7,15 +7,19 @@ import {
   storeAllCredentials,
   updateCredentialsField,
   validateCredentials,
-} from "~/redux/credentials/credentialsActions";
+} from "~/credentials/credentialsActions";
 import {
   selectCredentials,
   selectIsValid,
   selectIsValidating,
-} from "~/redux/credentials/credentialsSelectors";
+} from "~/credentials/credentialsSelectors";
 import StepPage, { StepPageProps } from "~/components/stepPage/StepPage";
 import InputField from "./components/InputField";
-import { CredentialsModel, CredentialsField, ReduxState } from "~/types";
+import {
+  CredentialsField,
+  CredentialsModel,
+} from "~/credentials/credentialsTypes";
+import { ReduxState } from "~/redux/reduxTypes";
 
 interface ConnectStateProps {
   credentials: CredentialsModel;

@@ -3,9 +3,7 @@ import { css } from "emotion";
 import { Column, Columns, Container, Footer as BloomerFooter } from "bloomer";
 import Icon from "~/components/Icon";
 
-const Love = (): JSX.Element => (
-  <Icon name="heart" color="red" height={12} />
-);
+const Love = (): JSX.Element => <Icon name="heart" color="red" height={12} />;
 
 const LinkToMe = (): JSX.Element => (
   <a

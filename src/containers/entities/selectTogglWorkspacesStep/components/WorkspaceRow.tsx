@@ -3,7 +3,7 @@ import { Box } from "bloomer";
 import { css } from "emotion";
 import Flex from "~/components/Flex";
 import Checkbox from "~/components/Checkbox";
-import { CompoundWorkspaceModel } from "~/types";
+import { CompoundWorkspaceModel } from "~/workspaces/workspacesTypes";
 
 interface Props {
   workspace: CompoundWorkspaceModel;

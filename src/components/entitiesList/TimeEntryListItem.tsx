@@ -4,7 +4,7 @@ import { css } from "emotion";
 import TimeEntryTable from "~/components/timeEntryTable/TimeEntryTable";
 import EntityTagsRow from "./EntityTagsRow";
 import ListItemBase from "./ListItemBase";
-import { DetailedTimeEntryModel } from "~/types";
+import { DetailedTimeEntryModel } from "~/timeEntries/timeEntriesTypes";
 
 interface Props extends ListRowProps {
   timeEntry: DetailedTimeEntryModel;

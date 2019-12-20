@@ -7,7 +7,7 @@ import {
   AggregateTransferCountsModel,
   InTransferDetailsModel,
   TransferCountsModel,
-} from "~/types";
+} from "~/app/appTypes";
 
 interface Props {
   inTransferDetails: InTransferDetailsModel;

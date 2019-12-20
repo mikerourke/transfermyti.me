@@ -2,11 +2,12 @@ import React from "react";
 import { connect } from "react-redux";
 import { Columns } from "bloomer";
 import { css } from "emotion";
-import { updateTransferType } from "~/redux/app/appActions";
-import { selectCurrentTransferType } from "~/redux/app/appSelectors";
+import { updateTransferType } from "~/app/appActions";
+import { selectCurrentTransferType } from "~/app/appSelectors";
 import StepPage, { StepPageProps } from "~/components/stepPage/StepPage";
 import TransferTypeColumn from "./components/TransferTypeColumn";
-import { ReduxState, TransferType } from "~/types";
+import { TransferType } from "~/app/appTypes";
+import { ReduxState } from "~/redux/reduxTypes";
 
 // TODO: Disable multi-user mode button and add column to delete all entries.
 

@@ -1,7 +1,7 @@
 import React from "react";
 import { fireEvent, render } from "@testing-library/react";
 import state from "~/redux/__fixtures__/state";
-import { selectTogglWorkspacesById } from "~/redux/entities/workspaces/workspacesSelectors";
+import { selectTogglWorkspacesById } from "~/workspaces/workspacesSelectors";
 import WorkspacesDropdown from "../WorkspacesDropdown";
 
 const WORKSPACE_ID = "1001";

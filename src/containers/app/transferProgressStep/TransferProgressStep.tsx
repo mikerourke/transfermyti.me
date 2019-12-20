@@ -4,13 +4,13 @@ import { connect } from "react-redux";
 import { Button } from "bloomer";
 import { css } from "emotion";
 import { get } from "lodash";
-import { updateCountsOverallBeforeTransfer } from "~/redux/app/appActions";
+import { updateCountsOverallBeforeTransfer } from "~/app/appActions";
 import {
   selectInTransferDetails,
   selectAggregateTransferCounts,
-} from "~/redux/app/appSelectors";
-import { transferEntitiesToClockifyWorkspace } from "~/redux/entities/workspaces/workspacesActions";
-import { selectTogglIncludedWorkspacesById } from "~/redux/entities/workspaces/workspacesSelectors";
+} from "~/app/appSelectors";
+import { transferEntitiesToClockifyWorkspace } from "~/workspaces/workspacesActions";
+import { selectTogglIncludedWorkspacesById } from "~/workspaces/workspacesSelectors";
 import Flex from "~/components/Flex";
 import StepPage, { StepPageProps } from "~/components/stepPage/StepPage";
 import ConfirmationModal from "./components/ConfirmationModal";
@@ -19,11 +19,11 @@ import ProgressIndicators from "./components/ProgressIndicators";
 import TransferSuccess from "./components/TransferSuccess";
 import {
   AggregateTransferCountsModel,
-  CompoundWorkspaceModel,
   InTransferDetailsModel,
-  ReduxState,
   TransferCountsModel,
-} from "~/types";
+} from "~/app/appTypes";
+import { ReduxState } from "~/redux/reduxTypes";
+import { CompoundWorkspaceModel } from "~/workspaces/workspacesTypes";
 
 interface ConnectStateProps {
   togglWorkspacesById: Record<string, CompoundWorkspaceModel>;

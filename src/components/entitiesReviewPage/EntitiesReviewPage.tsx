@@ -11,14 +11,16 @@ import PageFooter from "./PageFooter";
 import WorkspacesDropdown from "./WorkspacesDropdown";
 import {
   CompoundEntityModel,
+  EntityGroup,
+  ToolName,
+} from "~/common/commonTypes";
+import {
   CompoundWorkspaceModel,
   CountsByGroupByWorkspaceModel,
   EntitiesByGroupByWorkspaceModel,
-  EntityGroup,
   RecordCountsModel,
-  ToolName,
   UpdateIncludedWorkspaceYearModel,
-} from "~/types";
+} from "~/workspaces/workspacesTypes";
 
 interface Props extends StepPageProps {
   subtitle: string;

@@ -4,7 +4,7 @@ import { first, get } from "lodash";
 import format from "date-fns/format";
 import HeadersRow from "./HeadersRow";
 import ValuesRow from "./ValuesRow";
-import { DetailedTimeEntryModel } from "~/types";
+import { DetailedTimeEntryModel } from "~/timeEntries/timeEntriesTypes";
 
 interface Props {
   timeEntry: DetailedTimeEntryModel;

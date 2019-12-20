@@ -2,9 +2,9 @@ import React from "react";
 import { fireEvent, render } from "@testing-library/react";
 import { get } from "lodash";
 import state from "~/redux/__fixtures__/state";
-import { selectTogglEntitiesByGroupByWorkspace } from "~/redux/entities/workspaces/workspacesSelectors";
+import { selectTogglEntitiesByGroupByWorkspace } from "~/workspaces/workspacesSelectors";
 import EntitiesList from "../EntitiesList";
-import { EntityGroup } from "~/types";
+import { EntityGroup } from "~/common/commonTypes";
 
 const entitiesByGroupByWorkspace = selectTogglEntitiesByGroupByWorkspace(state);
 

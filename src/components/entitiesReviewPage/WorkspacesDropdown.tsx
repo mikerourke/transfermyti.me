@@ -10,7 +10,7 @@ import {
 } from "bloomer";
 import { css } from "emotion";
 import Icon from "~/components/Icon";
-import { CompoundWorkspaceModel } from "~/types";
+import { CompoundWorkspaceModel } from "~/workspaces/workspacesTypes";
 
 interface Props {
   workspacesById: Record<string, CompoundWorkspaceModel>;

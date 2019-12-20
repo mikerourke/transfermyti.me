@@ -5,10 +5,10 @@ import {
   selectTogglCountsByGroupByWorkspace,
   selectTogglEntitiesByGroupByWorkspace,
   selectTogglWorkspacesById,
-} from "~/redux/entities/workspaces/workspacesSelectors";
+} from "~/workspaces/workspacesSelectors";
 import state from "~/redux/__fixtures__/state";
 import EntitiesReviewPage from "../EntitiesReviewPage";
-import { ToolName } from "~/types";
+import { ToolName } from "~/common/commonTypes";
 
 const WORKSPACE_ID = "1001";
 const entitiesByGroupByWorkspace = selectTogglEntitiesByGroupByWorkspace(state);

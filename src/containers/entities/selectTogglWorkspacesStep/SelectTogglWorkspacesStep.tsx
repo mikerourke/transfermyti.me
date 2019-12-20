@@ -4,29 +4,23 @@ import { connect } from "react-redux";
 import { sortBy } from "lodash";
 import { Container, Content, Title } from "bloomer";
 import { css } from "emotion";
-import {
-  dismissAllNotifications,
-  showNotification,
-} from "~/redux/app/appActions";
-import { updateAreCredentialsValid } from "~/redux/credentials/credentialsActions";
+import { dismissAllNotifications, showNotification } from "~/app/appActions";
+import { updateAreCredentialsValid } from "~/credentials/credentialsActions";
 import {
   fetchTogglWorkspaces,
   flipIsWorkspaceIncluded,
-} from "~/redux/entities/workspaces/workspacesActions";
+} from "~/workspaces/workspacesActions";
 import {
   selectIfWorkspacesFetching,
   selectTogglIncludedWorkspacesCount,
   selectTogglWorkspaces,
-} from "~/redux/entities/workspaces/workspacesSelectors";
+} from "~/workspaces/workspacesSelectors";
 import Loader from "~/components/Loader";
 import StepPage, { StepPageProps } from "~/components/stepPage/StepPage";
 import WorkspaceRow from "./components/WorkspaceRow";
-import {
-  CompoundWorkspaceModel,
-  NotificationModel,
-  NotificationType,
-  ReduxState,
-} from "~/types";
+import { NotificationModel, NotificationType } from "~/app/appTypes";
+import { ReduxState } from "~/redux/reduxTypes";
+import { CompoundWorkspaceModel } from "~/workspaces/workspacesTypes";
 
 interface ConnectStateProps {
   areWorkspacesFetching: boolean;

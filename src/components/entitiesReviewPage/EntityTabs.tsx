@@ -2,7 +2,7 @@ import React from "react";
 import { Tab, TabLink, TabList, Tabs } from "bloomer";
 import { css } from "emotion";
 import { omit, startCase } from "lodash";
-import { EntityGroup } from "~/types";
+import { EntityGroup } from "~/common/commonTypes";
 
 interface Props {
   activeTab: EntityGroup;

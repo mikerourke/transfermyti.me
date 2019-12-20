@@ -1,10 +1,8 @@
 /**
- * Pauses execution for the specified delayInMs argument.
+ * Pauses execution for the specified duration in milliseconds.
  */
-export function pause(delayInMs: number): Promise<void> {
+export function pause(duration: number): Promise<void> {
   return new Promise(resolve => {
-    setTimeout(() => {
-      resolve();
-    }, delayInMs);
+    setTimeout(resolve, duration);
   });
 }

@@ -1,7 +1,7 @@
 import React from "react";
 import { fireEvent, render } from "@testing-library/react";
 import EntityTabs from "../EntityTabs";
-import { EntityGroup } from "~/types";
+import { EntityGroup } from "~/common/commonTypes";
 
 const setup = (propOverrides: any = {}) => {
   const props = {
