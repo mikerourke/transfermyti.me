@@ -2,7 +2,7 @@ import React from "react";
 import { css } from "emotion";
 import { Container, Hero, HeroBody, HeroHeader, Title } from "bloomer";
 import Flex from "~/components/Flex";
-import SvgIcon, { IconName } from "~/components/SvgIcon";
+import Icon, { IconName } from "~/components/Icon";
 import { TransferType } from "~/types";
 
 interface Props {
@@ -31,7 +31,7 @@ const Header: React.FC<Props> = ({ currentTransferType }) => {
             })}
           >
             <Flex alignItems="center">
-              <SvgIcon name={iconName} color="white" height={16} />
+              <Icon name={iconName} color="white" height={16} />
               <span className={css({ marginLeft: "0.5rem", fontWeight: 600 })}>
                 {mode}
               </span>
@@ -41,7 +41,7 @@ const Header: React.FC<Props> = ({ currentTransferType }) => {
               target="_blank"
               rel="noopener noreferrer"
             >
-              <SvgIcon name="github" color="white" height={16} />
+              <Icon name="github" color="white" height={16} />
             </a>
           </Flex>
         </HeroHeader>

@@ -83,7 +83,7 @@ interface Props extends React.SVGAttributes<SVGElement> {
   };
 }
 
-const SvgIcon: React.FC<Props> = ({ name, color, classes, ...svgProps }) => (
+const Icon: React.FC<Props> = ({ name, color, classes, ...svgProps }) => (
   <svg
     className={classes.svg}
     viewBox={iconAttributes[name].viewBox}
@@ -98,11 +98,11 @@ const SvgIcon: React.FC<Props> = ({ name, color, classes, ...svgProps }) => (
   </svg>
 );
 
-SvgIcon.defaultProps = {
+Icon.defaultProps = {
   classes: {
     svg: "",
     path: "",
   },
 };
 
-export default SvgIcon;
+export default Icon;

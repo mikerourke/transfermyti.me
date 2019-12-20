@@ -3,7 +3,7 @@ import { When } from "react-if";
 import classnames from "classnames";
 import { css } from "emotion";
 import Flex from "~/components/Flex";
-import SvgIcon from "~/components/SvgIcon";
+import Icon from "~/components/Icon";
 
 const BORDER_RAD = "0.5rem";
 
@@ -53,7 +53,7 @@ const InstructionsSection: React.FC = ({ children }) => {
           })}
           onClick={() => setIsExpanded(!isExpanded)}
         >
-          <SvgIcon
+          <Icon
             name={isExpanded ? "expandLess" : "expandMore"}
             color="white"
             height={12}

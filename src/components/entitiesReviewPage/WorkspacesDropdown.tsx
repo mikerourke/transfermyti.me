@@ -9,7 +9,7 @@ import {
   DropdownTrigger,
 } from "bloomer";
 import { css } from "emotion";
-import SvgIcon from "~/components/SvgIcon";
+import Icon from "~/components/Icon";
 import { CompoundWorkspaceModel } from "~/types";
 
 interface Props {
@@ -58,7 +58,7 @@ const WorkspacesDropdown: React.FC<Props> = ({
           onClick={() => setIsActive(!isActive)}
         >
           <span>{get(workspacesById, [activeWorkspaceId, "name"], "")}</span>
-          <SvgIcon
+          <Icon
             name="expandMore"
             color="var(--dark-gray)"
             height={16}

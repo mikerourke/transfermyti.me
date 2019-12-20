@@ -1,10 +1,10 @@
 import React from "react";
 import { css } from "emotion";
 import { Column, Columns, Container, Footer as BloomerFooter } from "bloomer";
-import SvgIcon from "~/components/SvgIcon";
+import Icon from "~/components/Icon";
 
 const Love = (): JSX.Element => (
-  <SvgIcon name="heart" color="red" height={12} />
+  <Icon name="heart" color="red" height={12} />
 );
 
 const LinkToMe = (): JSX.Element => (
