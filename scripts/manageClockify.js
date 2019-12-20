@@ -1,8 +1,8 @@
 const path = require("path");
+const qs = require("querystring");
 const fetch = require("node-fetch");
 const { cyan, green, magenta, yellow } = require("chalk");
 const fs = require("fs-extra");
-const dateFns = require("date-fns");
 const _ = require("lodash");
 const jsonFile = require("jsonfile");
 const yargs = require("yargs");
@@ -46,14 +46,14 @@ async function deleteEntitiesInWorkspaces() {
   // Wait 1 second between each entity group, just to hedge my bets:
   for (const workspace of workspaces) {
     console.log(cyan(`Processing ${workspace.name}...`));
-    await deleteEntityGroupInWorkspace(workspace.id, "timeEntries");
-    await pause(1);
+    await deleteEntityGroupInWorkspace(workspace.id, "time-entries");
+    await pause(1000);
 
     await deleteEntityGroupInWorkspace(workspace.id, "clients");
-    await pause(1);
+    await pause(1000);
 
     await deleteEntityGroupInWorkspace(workspace.id, "tags");
-    await pause(1);
+    await pause(1000);
 
     await deleteEntityGroupInWorkspace(workspace.id, "projects");
     console.log(green(`Processing complete for ${workspace.name}`));
@@ -80,15 +80,15 @@ async function writeEntitiesToOutputFile() {
     console.log(cyan(`Processing ${name}...`));
     _.set(dataByWorkspaceName, [name, "data"], { id, ...workspace });
     await addEntityGroupToWorkspaceData(id, name, "projects");
-    await pause(1);
+    await pause(1000);
 
     await addEntityGroupToWorkspaceData(id, name, "clients");
-    await pause(1);
+    await pause(1000);
 
     await addEntityGroupToWorkspaceData(id, name, "tags");
-    await pause(1);
+    await pause(1000);
 
-    await addEntityGroupToWorkspaceData(id, name, "timeEntries");
+    await addEntityGroupToWorkspaceData(id, name, "time-entries");
   }
 
   await jsonFile.writeFile(outputPath, dataByWorkspaceName, { spaces: 2 });
@@ -97,10 +97,10 @@ async function writeEntitiesToOutputFile() {
 
 /**
  * Deletes all of the entities in the specified group from the specified
- *    workspace.
+ * workspace.
  */
 async function deleteEntityGroupInWorkspace(workspaceId, entityGroup) {
-  if (entityGroup === "timeEntries") {
+  if (entityGroup === "time-entries") {
     return await deleteTimeEntriesInWorkspace(workspaceId);
   }
 
@@ -136,28 +136,8 @@ async function deleteEntityGroupInWorkspace(workspaceId, entityGroup) {
  * Fetches the records in the specified entity group and workspace.
  */
 async function getEntityGroupRecordsInWorkspace(workspaceId, entityGroup) {
-  if (entityGroup === "timeEntries") {
+  if (entityGroup === "time-entries") {
     return await fetchTimeEntriesInWorkspace(workspaceId);
-  }
-
-  if (entityGroup === "projects") {
-    const options = {
-      method: "POST",
-      body: {
-        page: 0,
-        pageSize: 100,
-        search: "",
-        clientIds: [],
-        userFilterIds: [],
-        sortOrder: "ASCENDING",
-        sortColumn: "name",
-      },
-    };
-    const result = await clockifyFetch(
-      `/workspaces/${workspaceId}/projects/filtered`,
-      options,
-    );
-    return _.get(result, "project", []);
   }
 
   const endpoint = getEntityGroupEndpoint(workspaceId, entityGroup);
@@ -168,7 +148,7 @@ async function getEntityGroupRecordsInWorkspace(workspaceId, entityGroup) {
  * Returns the endpoint for the specified workspace and entity group.
  */
 function getEntityGroupEndpoint(workspaceId, entityGroup) {
-  return `/workspaces/${workspaceId}/${entityGroup}/`;
+  return `/workspaces/${workspaceId}/${entityGroup}`;
 }
 
 /**
@@ -178,7 +158,7 @@ async function deleteTimeEntriesInWorkspace(workspaceId) {
   const timeEntries = await fetchTimeEntriesInWorkspace(workspaceId);
 
   const apiDeleteTimeEntryById = entryId =>
-    clockifyFetch(`/workspaces/${workspaceId}/timeEntries/${entryId}`, {
+    clockifyFetch(`/workspaces/${workspaceId}/time-entries/${entryId}`, {
       method: "DELETE",
     });
 
@@ -203,14 +183,12 @@ async function deleteTimeEntriesInWorkspace(workspaceId) {
 }
 
 /**
- * Pause execution for the specified seconds. This is used to ensure the
+ * Pause execution for the specified milliseconds. This is used to ensure the
  * rate limits aren't exceeded.
  */
-function pause(seconds = 1) {
+function pause(duration = 1000) {
   return new Promise(resolve => {
-    setTimeout(() => {
-      resolve();
-    }, seconds * 1000);
+    setTimeout(resolve, duration);
   });
 }
 
@@ -218,42 +196,50 @@ function pause(seconds = 1) {
  * Fetches all time entries (for all years) for the specified workspace ID.
  */
 async function fetchTimeEntriesInWorkspace(workspaceId) {
-  const apiFetchTimeEntriesForYear = year => {
-    const { firstDay, lastDay } = getFirstAndLastDayOfYear(year);
-    return clockifyFetch(
-      `/workspaces/${workspaceId}/timeEntries/user/${clockifyUserId}/entriesInRange`,
-      {
-        method: "POST",
-        body: {
-          start: firstDay,
-          end: lastDay,
-        },
-      },
-    );
+  const apiFetchTimeEntriesForYear = page => {
+    const endpointUrl = [
+      "workspaces",
+      workspaceId,
+      "user",
+      clockifyUserId,
+      "time-entries",
+    ].join("/");
+    const query = qs.stringify({ page, "page-size": 100 });
+
+    return clockifyFetch(`/${endpointUrl}?${query}`, {
+      method: "GET",
+    });
   };
 
   const { promiseThrottle, throttledFn } = buildThrottler(
     apiFetchTimeEntriesForYear,
   );
 
-  const allYearsEntries = [];
+  const allEntries = [];
 
-  const yearsToFetch = [2018, 2017, 2016];
-  for (const yearToFetch of yearsToFetch) {
+  let keepFetching = true;
+  let currentPage = 1;
+
+  while (keepFetching) {
     await promiseThrottle
-      .add(throttledFn.bind(this, yearToFetch))
+      .add(throttledFn.bind(this, currentPage))
       .then(timeEntries => {
-        allYearsEntries.push(timeEntries);
+        keepFetching = timeEntries.length === 100;
+        allEntries.push(timeEntries);
         console.log(
-          green(`Fetched ${timeEntries.length} entries for ${yearToFetch}`),
+          green(
+            `Fetched ${timeEntries.length} entries for page ${currentPage}`,
+          ),
         );
       })
       .catch(err => {
+        keepFetching = false;
         console.log(magenta(`Error fetching time entries: ${err}`));
       });
+    currentPage += 1;
   }
 
-  return _.flatten(allYearsEntries);
+  return _.flatten(allEntries);
 }
 
 /**
@@ -261,12 +247,14 @@ async function fetchTimeEntriesInWorkspace(workspaceId) {
  * I had an issue with.
  */
 async function fetchValidWorkspaces() {
-  const workspaceResults = await clockifyFetch("/workspaces/");
+  const workspaceResults = await clockifyFetch("/workspaces");
   return workspaceResults.reduce((acc, workspace) => {
     // This is due to an issue with one of my workspaces that wasn't deleted
     // properly (I suspect it may have been a Clockify bug). If I try deleting
     // stuff from here, I get all kinds of errors:
-    if (/Pandera/.test(workspace.name)) return acc;
+    if (/Pandera/.test(workspace.name)) {
+      return acc;
+    }
 
     return [...acc, workspace];
   }, []);
@@ -274,7 +262,7 @@ async function fetchValidWorkspaces() {
 
 /**
  * Returns a PromiseThrottle instance and throttler function for throttling
- *    API requests.
+ * API requests.
  */
 function buildThrottler(fetchFunc) {
   const promiseThrottle = new PromiseThrottle({
@@ -302,12 +290,12 @@ function buildThrottler(fetchFunc) {
 
 /**
  * Makes a fetch call to the Clockify API to the specifed endpoint with
- *    specified options.
+ * specified options.
  */
 async function clockifyFetch(endpoint, options) {
-  const fullUrl = `https://api.clockify.me/api${endpoint}`;
+  const fullUrl = `https://api.clockify.me/api/v1${endpoint}`;
 
-  let requestOptions = {
+  const requestOptions = {
     headers: {
       "X-Api-Key": clockifyApiKey,
       "Content-Type": "application/json",
@@ -334,31 +322,4 @@ async function clockifyFetch(endpoint, options) {
     }
     return Promise.reject(err);
   }
-}
-
-/**
- * Returns the first and last day of the year (in ISO format) for specifying
- *    the date range of time entries.
- */
-function getFirstAndLastDayOfYear(year) {
-  const currentDate = new Date();
-  currentDate.setFullYear(year);
-
-  // Determine the offset hours to get an accurate start and end time:
-  const utcOffsetHours = currentDate.getTimezoneOffset() / 60;
-
-  let firstDay = dateFns.startOfYear(currentDate);
-  let lastDay = dateFns.endOfYear(currentDate);
-
-  // In order to get the correct date/time, we need to ensure the toISOString()
-  // doesn't return the UTC offset date/time. This either adds or subtracts
-  // hours to ensure the times are accurate:
-  const dateMathFn = utcOffsetHours < 0 ? dateFns.addHours : dateFns.subHours;
-  firstDay = dateMathFn(firstDay, utcOffsetHours);
-  lastDay = dateMathFn(lastDay, utcOffsetHours);
-
-  return {
-    firstDay: firstDay.toISOString(),
-    lastDay: lastDay.toISOString(),
-  };
 }
