@@ -1,8 +1,8 @@
 import React from "react";
 import { When } from "react-if";
 import { get, isNil } from "lodash";
-import EntityTag, { EntityTagType } from "~/components/entityTag/EntityTag";
-import Flex, { FlexProps } from "~/components/flex/Flex";
+import EntityTag, { EntityTagType } from "~/components/EntityTag";
+import Flex, { FlexProps } from "~/components/Flex";
 import { CompoundEntityModel } from "~/types";
 
 interface Props extends FlexProps {

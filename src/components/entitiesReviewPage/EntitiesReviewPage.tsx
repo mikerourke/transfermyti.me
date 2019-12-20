@@ -4,11 +4,11 @@ import { first, get, isNil } from "lodash";
 import { css } from "emotion";
 import EntitiesList from "~/components/entitiesList/EntitiesList";
 import StepPage, { StepPageProps } from "~/components/stepPage/StepPage";
-import EntityTabs from "./components/EntityTabs";
-import IncludedYearsSelect from "./components/IncludedYearsSelect";
-import NoRecordsDisplay from "./components/NoRecordsDisplay";
-import PageFooter from "./components/PageFooter";
-import WorkspacesDropdown from "./components/WorkspacesDropdown";
+import EntityTabs from "./EntityTabs";
+import IncludedYearsSelect from "./IncludedYearsSelect";
+import NoRecordsDisplay from "./NoRecordsDisplay";
+import PageFooter from "./PageFooter";
+import WorkspacesDropdown from "./WorkspacesDropdown";
 import {
   CompoundEntityModel,
   CompoundWorkspaceModel,

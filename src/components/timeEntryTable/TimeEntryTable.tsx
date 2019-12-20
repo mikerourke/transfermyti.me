@@ -2,8 +2,8 @@ import React from "react";
 import { css } from "emotion";
 import { first, get } from "lodash";
 import format from "date-fns/format";
-import HeadersRow from "./components/HeadersRow";
-import ValuesRow from "./components/ValuesRow";
+import HeadersRow from "./HeadersRow";
+import ValuesRow from "./ValuesRow";
 import { DetailedTimeEntryModel } from "~/types";
 
 interface Props {

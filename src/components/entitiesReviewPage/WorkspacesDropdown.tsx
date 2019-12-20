@@ -9,7 +9,7 @@ import {
   DropdownTrigger,
 } from "bloomer";
 import { css } from "emotion";
-import SvgIcon from "~/components/svgIcon/SvgIcon";
+import SvgIcon from "~/components/SvgIcon";
 import { CompoundWorkspaceModel } from "~/types";
 
 interface Props {

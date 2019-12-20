@@ -2,7 +2,7 @@ import React from "react";
 import { divide, isNaN, round } from "lodash";
 import { Box, Column, Heading, Subtitle, Title } from "bloomer";
 import { Progress } from "react-sweet-progress";
-import Flex from "~/components/flex/Flex";
+import Flex from "~/components/Flex";
 import { TransferCountsModel } from "~/types";
 
 interface Props extends TransferCountsModel {

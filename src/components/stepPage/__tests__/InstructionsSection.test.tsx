@@ -1,7 +1,7 @@
 import React from "react";
 import cases from "jest-in-case";
 import { fireEvent, render } from "@testing-library/react";
-import { iconAttributes } from "~/components/svgIcon/SvgIcon";
+import { iconAttributes } from "~/components/SvgIcon";
 import InstructionsSection from "../InstructionsSection";
 
 describe("<InstructionsSection> Component", () => {

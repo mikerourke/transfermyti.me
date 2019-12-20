@@ -3,8 +3,8 @@ import { Unless } from "react-if";
 import { startCase } from "lodash";
 import { css } from "emotion";
 import { lookupTable } from "~/utils/lookupTable";
-import Checkbox from "~/components/checkbox/Checkbox";
-import Flex from "~/components/flex/Flex";
+import Checkbox from "~/components/Checkbox";
+import Flex from "~/components/Flex";
 import GroupTotalsDisplay from "./GroupTotalsDisplay";
 import { EntityGroup, RecordCountsModel } from "~/types";
 

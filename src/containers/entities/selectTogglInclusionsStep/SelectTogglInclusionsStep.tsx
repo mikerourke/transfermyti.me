@@ -15,7 +15,7 @@ import {
   selectWorkspaceNameBeingFetched,
 } from "~/redux/entities/workspaces/workspacesSelectors";
 import EntitiesReviewPage from "~/components/entitiesReviewPage/EntitiesReviewPage";
-import Loader from "~/components/loader/Loader";
+import Loader from "~/components/Loader";
 import { StepPageProps } from "~/components/stepPage/StepPage";
 import InstructionsList from "./components/InstructionsList";
 import {

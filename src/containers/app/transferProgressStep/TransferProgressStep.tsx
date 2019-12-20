@@ -11,7 +11,7 @@ import {
 } from "~/redux/app/appSelectors";
 import { transferEntitiesToClockifyWorkspace } from "~/redux/entities/workspaces/workspacesActions";
 import { selectTogglIncludedWorkspacesById } from "~/redux/entities/workspaces/workspacesSelectors";
-import Flex from "~/components/flex/Flex";
+import Flex from "~/components/Flex";
 import StepPage, { StepPageProps } from "~/components/stepPage/StepPage";
 import ConfirmationModal from "./components/ConfirmationModal";
 import InstructionsList from "./components/InstructionsList";

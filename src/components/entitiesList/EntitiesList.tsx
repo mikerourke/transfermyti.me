@@ -2,8 +2,8 @@ import React from "react";
 import { List, ListRowProps } from "react-virtualized";
 import { css } from "emotion";
 import { isNil } from "lodash";
-import BasicListItem from "./components/BasicListItem";
-import TimeEntryListItem from "./components/TimeEntryListItem";
+import BasicListItem from "./BasicListItem";
+import TimeEntryListItem from "./TimeEntryListItem";
 import {
   CompoundEntityModel,
   DetailedTimeEntryModel,

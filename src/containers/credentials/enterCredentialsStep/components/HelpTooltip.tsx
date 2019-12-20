@@ -1,6 +1,6 @@
 import React from "react";
 import { css } from "emotion";
-import Tooltip from "~/components/tooltip/Tooltip";
+import Tooltip from "~/components/Tooltip";
 
 interface Props {
   tipId: string;

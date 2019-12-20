@@ -1,7 +1,7 @@
 import React from "react";
 import { css } from "emotion";
 import { Progress } from "bloomer";
-import Flex from "~/components/flex/Flex";
+import Flex from "~/components/Flex";
 
 interface Props {
   label: string;

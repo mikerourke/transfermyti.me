@@ -3,7 +3,7 @@ import { connect } from "react-redux";
 import { css } from "emotion";
 import { dismissNotification } from "~/redux/app/appActions";
 import { selectNotifications } from "~/redux/app/appSelectors";
-import Flex from "~/components/flex/Flex";
+import Flex from "~/components/Flex";
 import NotificationDisplay from "./components/NotificationDisplay";
 import { NotificationModel, ReduxState } from "~/types";
 

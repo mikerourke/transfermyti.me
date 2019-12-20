@@ -18,7 +18,7 @@ import {
   selectTogglIncludedWorkspacesCount,
   selectTogglWorkspaces,
 } from "~/redux/entities/workspaces/workspacesSelectors";
-import Loader from "~/components/loader/Loader";
+import Loader from "~/components/Loader";
 import StepPage, { StepPageProps } from "~/components/stepPage/StepPage";
 import WorkspaceRow from "./components/WorkspaceRow";
 import {

@@ -2,8 +2,8 @@ import React, { useState } from "react";
 import { When } from "react-if";
 import classnames from "classnames";
 import { css } from "emotion";
-import Flex from "~/components/flex/Flex";
-import SvgIcon from "~/components/svgIcon/SvgIcon";
+import Flex from "~/components/Flex";
+import SvgIcon from "~/components/SvgIcon";
 
 const BORDER_RAD = "0.5rem";
 

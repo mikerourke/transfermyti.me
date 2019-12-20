@@ -3,9 +3,9 @@ import { Button, Container } from "bloomer";
 import { When } from "react-if";
 import { css } from "emotion";
 import { isNil } from "lodash";
-import Flex from "~/components/flex/Flex";
-import PageHeader from "~/components/pageHeader/PageHeader";
-import InstructionsSection from "./components/InstructionsSection";
+import Flex from "~/components/Flex";
+import PageHeader from "~/components/PageHeader";
+import InstructionsSection from "./InstructionsSection";
 
 export interface StepPageProps {
   stepNumber: number;
