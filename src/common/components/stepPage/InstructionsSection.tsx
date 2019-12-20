@@ -2,8 +2,8 @@ import React, { useState } from "react";
 import { When } from "react-if";
 import classnames from "classnames";
 import { css } from "emotion";
-import Flex from "~/components/Flex";
-import Icon from "~/components/Icon";
+import Flex from "../Flex";
+import Icon from "../Icon";
 
 const BORDER_RAD = "0.5rem";
 

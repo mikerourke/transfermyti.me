@@ -1,7 +1,7 @@
 import React from "react";
 import { ListRowProps } from "react-virtualized";
 import { css } from "emotion";
-import TimeEntryTable from "~/components/timeEntryTable/TimeEntryTable";
+import TimeEntryTable from "../timeEntryTable/TimeEntryTable";
 import EntityTagsRow from "./EntityTagsRow";
 import ListItemBase from "./ListItemBase";
 import { DetailedTimeEntryModel } from "~/timeEntries/timeEntriesTypes";

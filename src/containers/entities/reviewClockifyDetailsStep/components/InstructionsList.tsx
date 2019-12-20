@@ -1,6 +1,6 @@
 import React from "react";
 import { css } from "emotion";
-import EntityTag, { EntityTagType } from "~/components/EntityTag";
+import { EntityTag, EntityTagType } from "~/common/components";
 
 const InstructionsList: React.FC = () => (
   <div>

@@ -1,7 +1,7 @@
 import React from "react";
 import { css } from "emotion";
 import { Column, Columns, Container, Footer as BloomerFooter } from "bloomer";
-import Icon from "~/components/Icon";
+import { Icon } from "~/common/components";
 
 const Love = (): JSX.Element => <Icon name="heart" color="red" height={12} />;
 

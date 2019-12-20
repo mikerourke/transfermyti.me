@@ -3,8 +3,8 @@ import { Button, Container } from "bloomer";
 import { When } from "react-if";
 import { css } from "emotion";
 import { isNil } from "lodash";
-import Flex from "~/components/Flex";
-import PageHeader from "~/components/PageHeader";
+import Flex from "../Flex";
+import PageHeader from "../PageHeader";
 import InstructionsSection from "./InstructionsSection";
 
 export interface StepPageProps {

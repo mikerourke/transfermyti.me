@@ -9,7 +9,7 @@ import {
   DropdownTrigger,
 } from "bloomer";
 import { css } from "emotion";
-import Icon from "~/components/Icon";
+import Icon from "../Icon";
 import { CompoundWorkspaceModel } from "~/workspaces/workspacesTypes";
 
 interface Props {

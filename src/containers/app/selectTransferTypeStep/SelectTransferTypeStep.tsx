@@ -4,7 +4,7 @@ import { Columns } from "bloomer";
 import { css } from "emotion";
 import { updateTransferType } from "~/app/appActions";
 import { selectCurrentTransferType } from "~/app/appSelectors";
-import StepPage, { StepPageProps } from "~/components/stepPage/StepPage";
+import { StepPage, StepPageProps } from "~/common/components";
 import TransferTypeColumn from "./components/TransferTypeColumn";
 import { TransferType } from "~/app/appTypes";
 import { ReduxState } from "~/redux/reduxTypes";

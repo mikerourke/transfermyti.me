@@ -15,8 +15,7 @@ import {
   selectTogglIncludedWorkspacesCount,
   selectTogglWorkspaces,
 } from "~/workspaces/workspacesSelectors";
-import Loader from "~/components/Loader";
-import StepPage, { StepPageProps } from "~/components/stepPage/StepPage";
+import { Loader, StepPage, StepPageProps } from "~/common/components";
 import WorkspaceRow from "./components/WorkspaceRow";
 import { NotificationModel, NotificationType } from "~/app/appTypes";
 import { ReduxState } from "~/redux/reduxTypes";

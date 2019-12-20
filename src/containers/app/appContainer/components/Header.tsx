@@ -1,8 +1,7 @@
 import React from "react";
 import { css } from "emotion";
 import { Container, Hero, HeroBody, HeroHeader, Title } from "bloomer";
-import Flex from "~/components/Flex";
-import Icon, { IconName } from "~/components/Icon";
+import { Flex, Icon, IconName } from "~/common/components";
 import { TransferType } from "~/app/appTypes";
 
 interface Props {

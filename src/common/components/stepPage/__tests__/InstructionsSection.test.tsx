@@ -1,7 +1,7 @@
 import React from "react";
 import cases from "jest-in-case";
 import { fireEvent, render } from "@testing-library/react";
-import { iconAttributes } from "~/components/Icon";
+import { iconAttributes } from "~/common/components/Icon";
 import InstructionsSection from "../InstructionsSection";
 
 describe("<InstructionsSection> Component", () => {

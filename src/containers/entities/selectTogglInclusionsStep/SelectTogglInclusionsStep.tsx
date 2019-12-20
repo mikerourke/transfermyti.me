@@ -14,9 +14,7 @@ import {
   selectTogglIncludedWorkspacesById,
   selectWorkspaceNameBeingFetched,
 } from "~/workspaces/workspacesSelectors";
-import EntitiesReviewPage from "~/components/entitiesReviewPage/EntitiesReviewPage";
-import Loader from "~/components/Loader";
-import { StepPageProps } from "~/components/stepPage/StepPage";
+import { EntitiesReviewPage, Loader, StepPageProps } from "~/common/components";
 import InstructionsList from "./components/InstructionsList";
 import {
   CompoundEntityModel,

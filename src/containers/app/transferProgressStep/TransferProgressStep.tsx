@@ -11,8 +11,8 @@ import {
 } from "~/app/appSelectors";
 import { transferEntitiesToClockifyWorkspace } from "~/workspaces/workspacesActions";
 import { selectTogglIncludedWorkspacesById } from "~/workspaces/workspacesSelectors";
-import Flex from "~/components/Flex";
-import StepPage, { StepPageProps } from "~/components/stepPage/StepPage";
+import Flex from "~/common/components/Flex";
+import StepPage, { StepPageProps } from "~/common/components/stepPage/StepPage";
 import ConfirmationModal from "./components/ConfirmationModal";
 import InstructionsList from "./components/InstructionsList";
 import ProgressIndicators from "./components/ProgressIndicators";

@@ -13,7 +13,7 @@ import {
   selectIsValid,
   selectIsValidating,
 } from "~/credentials/credentialsSelectors";
-import StepPage, { StepPageProps } from "~/components/stepPage/StepPage";
+import { StepPage, StepPageProps } from "~/common/components";
 import InputField from "./components/InputField";
 import {
   CredentialsField,
