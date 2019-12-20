@@ -1,5 +1,4 @@
-import { getType } from "typesafe-actions";
-import { combineActions, handleActions } from "redux-actions";
+import { createReducer, ActionType } from "typesafe-actions";
 import { get, uniq } from "lodash";
 import * as utils from "~/redux/utils";
 import * as workspacesActions from "./workspacesActions";
@@ -7,12 +6,12 @@ import {
   ClockifyWorkspaceModel,
   CompoundWorkspaceModel,
   EntityGroup,
-  UpdateIncludedWorkspaceYearModel,
-  ReduxAction,
   ReduxStateEntryForTool,
   TogglWorkspaceModel,
   ToolName,
 } from "~/types";
+
+type WorkspacesAction = ActionType<typeof workspacesActions>;
 
 export interface WorkspacesState {
   readonly clockify: ReduxStateEntryForTool<CompoundWorkspaceModel>;
@@ -49,99 +48,111 @@ const schemaProcessStrategy = (
   memberOf: EntityGroup.Workspaces,
 });
 
-export const workspacesReducer = handleActions(
-  {
-    [combineActions(
-      getType(workspacesActions.clockifyWorkspacesFetch.success),
-      getType(workspacesActions.clockifyWorkspaceTransfer.success),
-    )]: (
-      state: WorkspacesState,
-      { payload: workspaces }: ReduxAction<Array<ClockifyWorkspaceModel>>,
-    ): WorkspacesState => {
+export const workspacesReducer = createReducer<
+  WorkspacesState,
+  WorkspacesAction
+>(initialState)
+  .handleAction(
+    [
+      workspacesActions.clockifyWorkspacesFetch.success,
+      workspacesActions.clockifyWorkspaceTransfer.success,
+    ],
+    (state, { payload }) => {
       const normalizedState = utils.normalizeState({
         toolName: ToolName.Clockify,
         entityGroup: EntityGroup.Workspaces,
         entityState: state,
-        payload: workspaces,
+        payload,
         schemaProcessStrategy,
       });
 
-      return utils.linkEntitiesInStateByName(
+      const linkedState = utils.linkEntitiesInStateByName(
         EntityGroup.Workspaces,
         normalizedState,
       );
+      return { ...linkedState, isFetching: false };
     },
-
-    [getType(workspacesActions.togglWorkspacesFetch.success)]: (
-      state: WorkspacesState,
-      { payload: workspaces }: ReduxAction<Array<TogglWorkspaceModel>>,
-    ): WorkspacesState =>
-      utils.normalizeState({
+  )
+  .handleAction(
+    workspacesActions.togglWorkspacesFetch.success,
+    (state, { payload }) => {
+      const normalizedState = utils.normalizeState({
         toolName: ToolName.Toggl,
         entityGroup: EntityGroup.Workspaces,
         entityState: state,
-        payload: workspaces,
-        schemaProcessStrategy: schemaProcessStrategy,
-      }),
-
-    [combineActions(
-      getType(workspacesActions.clockifyWorkspacesFetch.request),
-      getType(workspacesActions.togglWorkspacesFetch.request),
-      getType(workspacesActions.clockifyWorkspaceTransfer.request),
-    )]: (state: WorkspacesState): WorkspacesState => ({
+        payload,
+        schemaProcessStrategy,
+      });
+      return { ...normalizedState, isFetching: false };
+    },
+  )
+  .handleAction(
+    [
+      workspacesActions.clockifyWorkspacesFetch.request,
+      workspacesActions.clockifyWorkspaceTransfer.request,
+      workspacesActions.togglWorkspacesFetch.request,
+    ],
+    state => ({
       ...state,
       isFetching: true,
     }),
-
-    [combineActions(
-      getType(workspacesActions.clockifyWorkspacesFetch.success),
-      getType(workspacesActions.clockifyWorkspacesFetch.failure),
-      getType(workspacesActions.togglWorkspacesFetch.success),
-      getType(workspacesActions.togglWorkspacesFetch.failure),
-      getType(workspacesActions.clockifyWorkspaceTransfer.success),
-      getType(workspacesActions.clockifyWorkspaceTransfer.failure),
-    )]: (state: WorkspacesState): WorkspacesState => ({
+  )
+  .handleAction(
+    [
+      workspacesActions.clockifyWorkspacesFetch.failure,
+      workspacesActions.clockifyWorkspaceTransfer.failure,
+      workspacesActions.togglWorkspacesFetch.failure,
+    ],
+    state => ({
       ...state,
       isFetching: false,
     }),
-
-    [getType(workspacesActions.appendUserIdsToWorkspace)]: (
-      state: WorkspacesState,
-      {
-        payload: { toolName, workspaceId, userIds },
-      }: ReduxAction<{
-        toolName: ToolName;
-        workspaceId: string;
-        userIds: Array<string>;
-      }>,
-    ): WorkspacesState => ({
+  )
+  .handleAction(
+    workspacesActions.updateWorkspaceNameBeingFetched,
+    (state, { payload }) => ({
       ...state,
-      [toolName]: {
-        ...state[toolName],
-        byId: {
-          ...state[toolName].byId,
-          [workspaceId]: {
-            ...state[toolName].byId[workspaceId],
-            userIds: uniq([
-              ...state[toolName].byId[workspaceId].userIds,
-              ...userIds,
-            ]),
+      workspaceNameBeingFetched: payload,
+    }),
+  )
+  .handleAction(
+    workspacesActions.resetContentsForTool,
+    (state, { payload }) => ({
+      ...state,
+      [payload]: initialState[payload],
+    }),
+  )
+  .handleAction(
+    workspacesActions.appendUserIdsToWorkspace,
+    (state, { payload }) => {
+      const { toolName, workspaceId, userIds } = payload;
+
+      return {
+        ...state,
+        [toolName]: {
+          ...state[toolName],
+          byId: {
+            ...state[toolName].byId,
+            [workspaceId]: {
+              ...state[toolName].byId[workspaceId],
+              userIds: uniq([
+                ...state[toolName].byId[workspaceId].userIds,
+                ...userIds,
+              ]),
+            },
           },
         },
-      },
-    }),
-
-    [getType(workspacesActions.flipIsWorkspaceIncluded)]: (
-      state: WorkspacesState,
-      { payload: workspaceId }: ReduxAction<string>,
-    ): WorkspacesState => utils.flipEntityInclusion(state, workspaceId),
-
-    [getType(workspacesActions.updateIsWorkspaceYearIncluded)]: (
-      state: WorkspacesState,
-      {
-        payload: { workspaceId, year, isIncluded },
-      }: ReduxAction<UpdateIncludedWorkspaceYearModel>,
-    ): WorkspacesState => {
+      };
+    },
+  )
+  .handleAction(
+    workspacesActions.flipIsWorkspaceIncluded,
+    (state, { payload }) => utils.flipEntityInclusion(state, payload),
+  )
+  .handleAction(
+    workspacesActions.updateIsWorkspaceYearIncluded,
+    (state, { payload }) => {
+      const { workspaceId, year, isIncluded } = payload;
       const inclusionsByYear = get(
         state,
         ["toggl", "byId", workspaceId, "inclusionsByYear"],
@@ -165,22 +176,4 @@ export const workspacesReducer = handleActions(
         },
       };
     },
-
-    [getType(workspacesActions.updateWorkspaceNameBeingFetched)]: (
-      state: WorkspacesState,
-      { payload: workspaceName }: ReduxAction<string>,
-    ): WorkspacesState => ({
-      ...state,
-      workspaceNameBeingFetched: workspaceName,
-    }),
-
-    [getType(workspacesActions.resetContentsForTool)]: (
-      state: WorkspacesState,
-      { payload: toolName }: ReduxAction<string>,
-    ): WorkspacesState => ({
-      ...state,
-      [toolName]: initialState[toolName],
-    }),
-  },
-  initialState,
-);
+  );

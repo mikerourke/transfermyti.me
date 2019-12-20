@@ -1,12 +1,12 @@
-import { getType } from "typesafe-actions";
-import { handleActions } from "redux-actions";
+import { createReducer, ActionType } from "typesafe-actions";
 import * as appActions from "./appActions";
 import {
   InTransferDetailsModel,
   NotificationModel,
-  ReduxAction,
   TransferType,
 } from "~/types";
+
+type AppAction = ActionType<typeof appActions>;
 
 export interface AppState {
   readonly notifications: Array<NotificationModel>;
@@ -33,84 +33,48 @@ export const initialState: AppState = {
   countTotalOverall: 0,
 };
 
-export const appReducer = handleActions(
-  {
-    [getType(appActions.notificationShown)]: (
-      state: AppState,
-      { payload: notification }: ReduxAction<NotificationModel>,
-    ): AppState => ({
+export const appReducer = createReducer<AppState, AppAction>(initialState)
+  .handleAction(appActions.notificationShown, (state, { payload }) => ({
+    ...state,
+    notifications: [...state.notifications, payload],
+  }))
+  .handleAction(appActions.dismissNotification, (state, { payload }) => ({
+    ...state,
+    notifications: state.notifications.filter(({ id }) => id !== payload),
+  }))
+  .handleAction(appActions.dismissAllNotifications, state => ({
+    ...state,
+    notifications: [],
+  }))
+  .handleAction(appActions.updateTransferType, (state, { payload }) => ({
+    ...state,
+    currentTransferType: payload,
+  }))
+  .handleAction(appActions.updateInTransferDetails, (state, { payload }) => ({
+    ...state,
+    inTransferDetails: payload,
+    countCurrentInWorkspace: state.countCurrentInWorkspace + 1,
+    countCurrentOverall: state.countCurrentOverall + 1,
+  }))
+  .handleAction(
+    appActions.updateCountCurrentInWorkspace,
+    (state, { payload }) => ({
       ...state,
-      notifications: [...state.notifications, notification],
+      countCurrentInWorkspace: payload,
     }),
-
-    [getType(appActions.dismissNotification)]: (
-      state: AppState,
-      { payload: notificationId }: ReduxAction<string>,
-    ): AppState => ({
+  )
+  .handleAction(
+    appActions.updateCountTotalInWorkspace,
+    (state, { payload }) => ({
       ...state,
-      notifications: state.notifications.filter(
-        ({ id }) => id !== notificationId,
-      ),
+      countTotalInWorkspace: payload,
     }),
-
-    [getType(appActions.dismissAllNotifications)]: (
-      state: AppState,
-    ): AppState => ({
-      ...state,
-      notifications: [],
-    }),
-
-    [getType(appActions.updateTransferType)]: (
-      state: AppState,
-      { payload: currentTransferType }: ReduxAction<TransferType>,
-    ): AppState => ({
-      ...state,
-      currentTransferType,
-    }),
-
-    [getType(appActions.updateInTransferDetails)]: (
-      state: AppState,
-      { payload: inTransferDetails }: ReduxAction<InTransferDetailsModel>,
-    ): AppState => {
-      return {
-        ...state,
-        inTransferDetails,
-        countCurrentInWorkspace: state.countCurrentInWorkspace + 1,
-        countCurrentOverall: state.countCurrentOverall + 1,
-      };
-    },
-
-    [getType(appActions.updateCountCurrentInWorkspace)]: (
-      state: AppState,
-      { payload: countCurrentInWorkspace }: ReduxAction<number>,
-    ): AppState => ({
-      ...state,
-      countCurrentInWorkspace,
-    }),
-
-    [getType(appActions.updateCountTotalInWorkspace)]: (
-      state: AppState,
-      { payload: countTotalInWorkspace }: ReduxAction<number>,
-    ): AppState => ({
-      ...state,
-      countTotalInWorkspace,
-    }),
-
-    [getType(appActions.updateCountCurrentOverall)]: (
-      state: AppState,
-      { payload: countCurrentOverall }: ReduxAction<number>,
-    ): AppState => ({
-      ...state,
-      countCurrentOverall,
-    }),
-
-    [getType(appActions.updateCountTotalOverall)]: (
-      state: AppState,
-      { payload: countTotalOverall }: ReduxAction<number>,
-    ): AppState => ({
-      ...state,
-      countTotalOverall,
-    }),
-  },
-  initialState,
-);
+  )
+  .handleAction(appActions.updateCountCurrentOverall, (state, { payload }) => ({
+    ...state,
+    countCurrentOverall: payload,
+  }))
+  .handleAction(appActions.updateCountTotalOverall, (state, { payload }) => ({
+    ...state,
+    countTotalOverall: payload,
+  }));

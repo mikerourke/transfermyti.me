@@ -1,11 +1,13 @@
 import { get, isNil } from "lodash";
-import { firstAndLastDayOfYear } from "~/redux/utils";
+import { firstAndLastDayOfYear, DateFormat } from "~/redux/utils";
 import { fetchArray, fetchObject } from "./fetchByPayloadType";
 import {
   ClockifyTimeEntryModel,
   DetailedTimeEntryModel,
   TogglTimeEntriesFetchResponseModel,
 } from "~/types";
+import qs from "qs";
+import { API_PAGE_SIZE } from "~/constants";
 
 /**
  * Get time entries for specified userId in time range.
@@ -14,19 +16,11 @@ import {
 export const apiFetchClockifyTimeEntries = (
   userId: string,
   workspaceId: string,
-  year: number,
+  page: number,
 ): Promise<Array<ClockifyTimeEntryModel>> => {
-  const { firstDay, lastDay } = firstAndLastDayOfYear(year);
-
+  const query = qs.stringify({ page, "page-size": API_PAGE_SIZE });
   return fetchArray(
-    `/clockify/api/workspaces/${workspaceId}/timeEntries/user/${userId}/entriesInRange`,
-    {
-      method: "POST",
-      body: {
-        start: firstDay,
-        end: lastDay,
-      } as any,
-    },
+    `/clockify/api/v1/workspaces/${workspaceId}/user/${userId}/time-entries?${query}`,
   );
 };
 
@@ -34,12 +28,9 @@ export const apiFetchTogglTimeEntries = (
   email: string,
   workspaceId: string,
   year: number,
-  page: number = 1,
+  page = 1,
 ): Promise<TogglTimeEntriesFetchResponseModel> => {
-  const { firstDay, lastDay } = firstAndLastDayOfYear(
-    year,
-    "YYYY-MM-DDTHH:mm:ssZ",
-  );
+  const { firstDay, lastDay } = firstAndLastDayOfYear(year, DateFormat.Long);
 
   const queryString = [
     `workspace_id=${workspaceId}`,
@@ -61,7 +52,9 @@ export const apiCreateClockifyTimeEntry = (
   timeEntry: DetailedTimeEntryModel,
 ): Promise<ClockifyTimeEntryModel> => {
   const tagIds = timeEntry.tags.reduce((acc, { linkedId, isIncluded }) => {
-    if (isNil(linkedId) || !isIncluded) return acc;
+    if (isNil(linkedId) || !isIncluded) {
+      return acc;
+    }
     return [...acc, linkedId];
   }, []);
 
@@ -79,7 +72,7 @@ export const apiCreateClockifyTimeEntry = (
     `/clockify/api/v1/workspaces/${workspaceId}/time-entries`,
     {
       method: "POST",
-      body: validTimeEntry as any,
+      body: validTimeEntry as unknown,
     },
   );
 };

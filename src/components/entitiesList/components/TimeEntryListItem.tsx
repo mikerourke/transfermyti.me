@@ -20,20 +20,18 @@ const TimeEntryListItem: React.FC<Props> = ({
 }) => (
   <ListItemBase
     data-testid="time-entry-list-item"
-    className={css`
-      position: relative;
-    `}
+    className={css({ position: "relative" })}
     height={104}
     isOmitted={isOmitted}
     {...listItemProps}
   >
     <TimeEntryTable timeEntry={timeEntry} />
     <EntityTagsRow
-      className={css`
-        position: absolute;
-        right: 0;
-        top: -0.5rem;
-      `}
+      className={css({
+        position: "absolute",
+        right: 0,
+        top: "-0.5rem",
+      })}
       isTimeEntry
       entityRecord={timeEntry}
     />

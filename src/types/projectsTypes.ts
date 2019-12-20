@@ -1,9 +1,9 @@
+import { BaseCompoundEntityModel } from "./entityTypes";
 import { ClockifyTaskModel } from "./tasksTypes";
 import { ClockifyHourlyRateModel, ClockifyMembershipModel } from "./usersTypes";
-import { BaseCompoundEntityModel } from "~/types/entityTypes";
 
 export interface ClockifyEstimateModel {
-  estimate: string;
+  estimate: number;
   type: "AUTO" | "MANUAL";
 }
 

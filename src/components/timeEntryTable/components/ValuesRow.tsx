@@ -8,13 +8,13 @@ interface Props {
 const ValuesRow: React.FC<Props> = ({ children, isBottomPadded }) => (
   <tr
     data-testid="time-entry-table-values-row"
-    className={css`
-      td {
-        font-size: 14px;
-        font-weight: 400;
-        ${isBottomPadded && "padding-bottom: 4px;"};
-      }
-    `}
+    className={css({
+      td: {
+        fontSize: 14,
+        fontWeight: 400,
+        paddingBottom: isBottomPadded ? 4 : undefined,
+      },
+    })}
   >
     {children}
   </tr>

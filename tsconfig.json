@@ -1,7 +1,7 @@
 {
   "compilerOptions": {
     "baseUrl": ".",
-    "outDir": "./build/",
+    "outDir": "./build",
     "module": "esnext",
     "target": "es5",
     "lib": [
@@ -12,12 +12,14 @@
     "experimentalDecorators": true,
     "esModuleInterop": true,
     "allowSyntheticDefaultImports": true,
-    "sourceMap": true,
+    "sourceMap": false,
+    "skipLibCheck": true,
+    "noEmit": true,
     "allowJs": true,
     "jsx": "react",
     "moduleResolution": "node",
-    "pretty": true,
     "rootDir": "src",
+    "resolveJsonModule": true,
     "forceConsistentCasingInFileNames": true,
     "noImplicitReturns": true,
     "noImplicitThis": true,
@@ -40,7 +42,7 @@
     "responses",
     "scripts",
     "server",
-    "src/setupJest.js",
+    "src/setupJest",
     "state.js"
   ]
 }

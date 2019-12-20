@@ -3,6 +3,7 @@ import {
   AggregateTransferCountsModel,
   NotificationModel,
   ReduxState,
+  TransferType,
 } from "~/types";
 
 export const selectNotifications = createSelector(
@@ -10,7 +11,7 @@ export const selectNotifications = createSelector(
   (notifications): Array<NotificationModel> => notifications,
 );
 
-export const selectCurrentTransferType = (state: ReduxState) =>
+export const selectCurrentTransferType = (state: ReduxState): TransferType =>
   state.app.currentTransferType;
 
 export const selectInTransferDetails = createSelector(
@@ -18,16 +19,16 @@ export const selectInTransferDetails = createSelector(
   inTransferDetails => inTransferDetails,
 );
 
-export const selectCountCurrentInWorkspace = (state: ReduxState) =>
+export const selectCountCurrentInWorkspace = (state: ReduxState): number =>
   state.app.countCurrentInWorkspace;
 
-export const selectCountTotalInWorkspace = (state: ReduxState) =>
+export const selectCountTotalInWorkspace = (state: ReduxState): number =>
   state.app.countTotalInWorkspace;
 
-export const selectCountCurrentOverall = (state: ReduxState) =>
+export const selectCountCurrentOverall = (state: ReduxState): number =>
   state.app.countCurrentOverall;
 
-export const selectCountTotalOverall = (state: ReduxState) =>
+export const selectCountTotalOverall = (state: ReduxState): number =>
   state.app.countTotalOverall;
 
 export const selectAggregateTransferCounts = createSelector(

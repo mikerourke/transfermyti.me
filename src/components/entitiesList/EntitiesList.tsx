@@ -25,7 +25,7 @@ const EntitiesList: React.FC<Props> = props => {
   const listRowHeight =
     props.entityGroup === EntityGroup.TimeEntries ? 120 : 64;
 
-  const listRowRenderer = (listRowProps: ListRowProps) => {
+  const listRowRenderer = (listRowProps: ListRowProps): JSX.Element => {
     const entityRecord = props.entityRecords[listRowProps.index];
     const isOmitted = !entityRecord.isIncluded || !isNil(entityRecord.linkedId);
 
@@ -39,7 +39,7 @@ const EntitiesList: React.FC<Props> = props => {
       );
     }
 
-    const handleItemClick = () =>
+    const handleItemClick = (): void =>
       props.onItemClick(props.entityGroup, entityRecord);
 
     return (
@@ -57,15 +57,13 @@ const EntitiesList: React.FC<Props> = props => {
       data-testid="entities-list"
       width={props.width}
       height={props.height}
-      className={css`
-        &:focus {
-          outline: 0;
-        }
-      `}
+      className={css({
+        "&:focus": {
+          outline: 0,
+        },
+      })}
       rowHeight={listRowHeight}
-      rowClassName={css`
-        cursor: pointer;
-      `}
+      rowClassName={css({ cursor: "pointer" })}
       rowCount={props.entityRecords.length}
       rowRenderer={listRowRenderer}
     />

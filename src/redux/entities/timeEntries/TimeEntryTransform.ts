@@ -55,21 +55,21 @@ export class TimeEntryTransform {
     };
   }
 
-  private get isBillable() {
+  private get isBillable(): boolean {
     return "is_billable" in this.timeEntryRecord
       ? this.timeEntryRecord.is_billable
       : get(this.timeEntryRecord, "billable", false);
   }
 
-  private get startTime() {
+  private get startTime(): Date {
     return this.getTime("start");
   }
 
-  private get endTime() {
+  private get endTime(): Date {
     return this.getTime("end");
   }
 
-  private getTime(field: "start" | "end") {
+  private getTime(field: "start" | "end"): Date | null {
     const timeValue =
       "timeInterval" in this.timeEntryRecord
         ? get(this.timeEntryRecord, ["timeInterval", field], null)
@@ -77,7 +77,7 @@ export class TimeEntryTransform {
     return isNil(timeValue) ? null : new Date(timeValue);
   }
 
-  private determineIfActive(projectId: string) {
+  private determineIfActive(projectId: string): boolean {
     return get(
       this.entitiesByGroup.projects.byId,
       [projectId, "isActive"],
@@ -111,7 +111,7 @@ export class TimeEntryTransform {
     return { clientId: matchingClient.id, clientName };
   }
 
-  private get clientName() {
+  private get clientName(): string {
     if ("client" in this.timeEntryRecord) {
       return this.timeEntryRecord.client;
     }
@@ -119,7 +119,7 @@ export class TimeEntryTransform {
     return get(this.timeEntryRecord, ["project", "clientName"], null);
   }
 
-  private findUserGroupIds(userId: string) {
+  private findUserGroupIds(userId: string): Array<string> {
     const usersById = this.entitiesByGroup.users.byId;
     if (isEmpty(usersById)) {
       return [];

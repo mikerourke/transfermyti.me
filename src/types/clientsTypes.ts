@@ -1,4 +1,4 @@
-import { BaseCompoundEntityModel } from "~/types/entityTypes";
+import { BaseCompoundEntityModel } from "./entityTypes";
 
 export interface ClockifyClientModel {
   id: string;

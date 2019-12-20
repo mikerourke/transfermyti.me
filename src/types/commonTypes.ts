@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 import { Store } from "redux";
 import { State } from "~/redux/rootReducer";
 import { CompoundClientModel } from "./clientsTypes";
@@ -8,7 +9,7 @@ import { CompoundTaskModel } from "./tasksTypes";
 import { CompoundTimeEntryModel } from "./timeEntriesTypes";
 import { CompoundUserGroupModel } from "./userGroupsTypes";
 import { CompoundUserModel } from "./usersTypes";
-import { CompoundWorkspaceModel } from "~/types/workspacesTypes";
+import { CompoundWorkspaceModel } from "./workspacesTypes";
 
 export enum ToolName {
   Clockify = "clockify",
@@ -66,18 +67,20 @@ export type ReduxState = State;
 
 export type ReduxGetState = () => ReduxState;
 
-export type ThunkAction<TResult, TExtra = undefined> = (
+interface ReduxThunkDispatch {
+  <TResult, TExtra>(asyncAction: ReduxThunkAction<TResult, TExtra>): TResult;
+}
+
+interface ReduxStandardDispatch {
+  <TAction>(action: TAction & { type: any }): TAction & { type: any };
+}
+export type ReduxDispatch = ReduxStandardDispatch & ReduxThunkDispatch;
+
+export type ReduxThunkAction<TResult, TExtra = undefined> = (
   dispatch: ReduxDispatch,
   getState: () => ReduxState,
   extraArgument?: TExtra,
 ) => TResult;
-
-export interface ReduxDispatch {
-  <TResult, TExtra>(asyncAction: ThunkAction<TResult, TExtra>): TResult;
-}
-export interface ReduxDispatch {
-  <TAction>(action: TAction & { type: any }): TAction & { type: any };
-}
 
 export interface ReduxAction<TPayload = {}> {
   type: string;

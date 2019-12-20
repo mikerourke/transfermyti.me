@@ -1,7 +1,6 @@
 import React from "react";
 import classnames from "classnames";
 import { css } from "emotion";
-import { isNil } from "lodash";
 
 type GlobalOption = "inherit" | "initial" | "unset";
 
@@ -26,7 +25,7 @@ type SelfPositionalOption = "normal" | "self-end" | "self-start";
 type SpacePositionalOption = "space-around" | "space-between" | "space-evenly";
 
 export interface FlexProps {
-  as?: string | React.ReactElement<any> | React.ReactNode;
+  as?: string | React.ReactElement<unknown> | React.ReactNode;
   className?: string;
   alignItems?: CommonPositionalOption | SelfPositionalOption;
   alignSelf?: CommonPositionalOption | SelfPositionalOption;
@@ -35,6 +34,7 @@ export interface FlexProps {
   direction?: "column" | "column-reverse" | "row" | "row-reverse";
 }
 
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
 const Flex: React.FC<FlexProps | any> = ({
   as: Element,
   className,
@@ -47,14 +47,14 @@ const Flex: React.FC<FlexProps | any> = ({
 }) => {
   const classes = classnames(
     className,
-    css`
-      display: flex;
-      ${!isNil(alignItems) && `align-items: ${alignItems};`}
-      ${!isNil(alignSelf) && `align-self: ${alignSelf};`}
-      ${!isNil(justifyContent) && `justify-content: ${justifyContent};`}
-      ${!isNil(justifySelf) && `justify-self: ${justifySelf};`}
-      ${!isNil(direction) && `flex-direction: ${direction};`}
-    `,
+    css({
+      display: "flex",
+      alignItems,
+      alignSelf,
+      justifyContent,
+      justifySelf,
+      flexDirection: direction,
+    }),
   );
 
   return <Element className={classes} {...props} />;

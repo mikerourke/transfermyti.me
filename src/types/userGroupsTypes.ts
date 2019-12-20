@@ -1,4 +1,4 @@
-import { BaseCompoundEntityModel } from "~/types/entityTypes";
+import { BaseCompoundEntityModel } from "./entityTypes";
 
 export interface ClockifyUserGroupModel {
   id: string;
@@ -13,5 +13,5 @@ export interface TogglUserGroupModel {
   at: string;
 }
 
-// prettier-ignore
-export type CompoundUserGroupModel = ClockifyUserGroupModel & BaseCompoundEntityModel;
+export type CompoundUserGroupModel = ClockifyUserGroupModel &
+  BaseCompoundEntityModel;

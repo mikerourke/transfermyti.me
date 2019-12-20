@@ -21,7 +21,9 @@ export function appendEntryCountToState<TEntityState, TTimeEntry>({
   const byIdForTool = get(entityState, [toolName, "byId"], {});
   const entityRecords: Array<CompoundEntityModel> = Object.values(byIdForTool);
 
-  if (entityRecords.length === 0) return entityState;
+  if (entityRecords.length === 0) {
+    return entityState;
+  }
 
   const idField = entityType.concat("Id");
   const entryCountsByEntityId = calculateEntryCountByEntityId(
@@ -77,7 +79,9 @@ function calculateEntryCountByEntityId<TTimeEntry>(
     // If the timeEntry record has the specified idField (e.g. projectId),
     // increment the value associated with that ID value by 1:
     const entityId = get(timeEntry, idField, null);
-    if (isNil(entityId)) return acc;
+    if (isNil(entityId)) {
+      return acc;
+    }
 
     // If the accumulator object doesn't already have a key for the
     // entityId, add it to the object with a value of 1:

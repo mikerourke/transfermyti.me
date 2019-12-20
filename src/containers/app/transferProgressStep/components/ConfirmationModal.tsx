@@ -27,20 +27,17 @@ const ConfirmationModal: React.FC<Props> = ({
     <ModalCard>
       <ModalCardHeader>
         <ModalCardTitle
-          className={css`
-            font-size: 2.5rem;
-            font-weight: 500;
-          `}
+          className={css({ fontSize: "2.5rem", fontWeight: 500 })}
         >
           Confirmation
         </ModalCardTitle>
       </ModalCardHeader>
       <ModalCardBody
-        className={css`
-          p:not(:last-child) {
-            margin-bottom: 1rem;
-          }
-        `}
+        className={css({
+          "p:not(:last-child)": {
+            marginBottom: "1rem",
+          },
+        })}
       >
         <p>
           If you&apos;re psychologically and emotionally ready to proceed, just
@@ -52,11 +49,7 @@ const ConfirmationModal: React.FC<Props> = ({
           <strong> Cancel</strong> button and regroup.
         </p>
       </ModalCardBody>
-      <ModalCardFooter
-        className={css`
-          justify-content: flex-end;
-        `}
-      >
+      <ModalCardFooter className={css({ justifyContent: "flex-end" })}>
         <Button isSize="medium" onClick={onCancelClick} isColor="dark">
           Cancel
         </Button>

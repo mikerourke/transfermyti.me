@@ -34,7 +34,7 @@ export class UserGroupTransform {
   public appendEntryCount(
     usersById: Record<string, CompoundUserModel>,
     timeEntries: Array<CompoundTimeEntryModel>,
-  ) {
+  ): UserGroupForTool & { entryCount: number } {
     const userGroupUserIds = this.getUserIds(Object.values(usersById));
     if (userGroupUserIds.length === 0) {
       return { ...this.userGroupRecord, entryCount: 0 };
@@ -44,7 +44,9 @@ export class UserGroupTransform {
 
     const entryCountForUserGroup = userGroupUserIds.reduce((acc, userId) => {
       const matchingUser = get(usersById, userId, null);
-      if (isNil(matchingUser)) return acc;
+      if (isNil(matchingUser)) {
+        return acc;
+      }
 
       return acc + get(entryCountByUserId, userId, 0);
     }, 0);
@@ -54,10 +56,12 @@ export class UserGroupTransform {
 
   private getTimeEntryCountByUserId(
     timeEntries: Array<CompoundTimeEntryModel>,
-  ) {
+  ): Record<string, number> {
     return timeEntries.reduce((acc, timeEntry) => {
       const userId = get(timeEntry, "userId");
-      if (isNil(userId)) return acc;
+      if (isNil(userId)) {
+        return acc;
+      }
 
       return {
         ...acc,
@@ -66,7 +70,7 @@ export class UserGroupTransform {
     }, {});
   }
 
-  private getUserIds(users: Array<CompoundUserModel>) {
+  private getUserIds(users: Array<CompoundUserModel>): Array<string> {
     if ("userIds" in this.userGroupRecord) {
       return this.userGroupRecord.userIds;
     }
@@ -83,8 +87,12 @@ export class UserGroupTransform {
     return idsOfUsers;
   }
 
-  private getUsersInUserGroup(users: Array<CompoundUserModel>) {
-    if (users.length === 0) return [];
+  private getUsersInUserGroup(
+    users: Array<CompoundUserModel>,
+  ): Array<CompoundUserModel> {
+    if (users.length === 0) {
+      return [];
+    }
 
     const userGroupId = this.userGroupId;
     return users.filter(({ userGroupIds }) =>
@@ -92,7 +100,7 @@ export class UserGroupTransform {
     );
   }
 
-  private get userGroupId() {
+  private get userGroupId(): string {
     return this.userGroupRecord.id.toString();
   }
 }

@@ -15,10 +15,10 @@ const WorkspaceRow: React.FC<Props> = ({
   onWorkspaceClick,
 }) => (
   <Box
-    className={css`
-      font-weight: bold;
-      padding: 1rem;
-    `}
+    className={css({
+      fontWeight: "bold",
+      padding: "1rem",
+    })}
   >
     <Flex alignItems="center">
       <Checkbox
@@ -27,10 +27,10 @@ const WorkspaceRow: React.FC<Props> = ({
         onClick={() => onWorkspaceClick(id)}
       />
       <span
-        className={css`
-          margin-left: 0.75rem;
-          font-size: 1.5rem;
-        `}
+        className={css({
+          marginLeft: "0.75rem",
+          fontSize: "1.5rem",
+        })}
       >
         {name}
       </span>

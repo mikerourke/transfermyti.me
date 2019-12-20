@@ -1,9 +1,9 @@
-import { createSelector } from "reselect";
+import { createSelector, Selector } from "reselect";
 import { get } from "lodash";
 import { findTogglInclusions } from "~/redux/utils";
 import { selectCredentials } from "~/redux/credentials/credentialsSelectors";
 import { selectTogglTimeEntriesById } from "~/redux/entities/timeEntries/timeEntriesSelectors";
-import { CompoundUserModel, ReduxState } from "~/types";
+import { CompoundUserModel, EntityGroupsByKey, ReduxState } from "~/types";
 
 export const selectClockifyUsersById = createSelector(
   (state: ReduxState) => state.entities.users.clockify.byId,
@@ -28,7 +28,9 @@ export const selectTogglUsersById = createSelector(
   (usersById): Record<string, CompoundUserModel> => usersById,
 );
 
-export const selectTogglUsersByWorkspaceFactory = (inclusionsOnly: boolean) =>
+export const selectTogglUsersByWorkspaceFactory = (
+  inclusionsOnly: boolean,
+): Selector<ReduxState, EntityGroupsByKey<CompoundUserModel>> =>
   createSelector(
     selectCredentials,
     selectTogglUsersById,
@@ -39,7 +41,7 @@ export const selectTogglUsersByWorkspaceFactory = (inclusionsOnly: boolean) =>
       usersById,
       timeEntriesById,
       workspacesById,
-    ): Record<string, Array<CompoundUserModel>> => {
+    ): EntityGroupsByKey<CompoundUserModel> => {
       return Object.values(workspacesById).reduce((acc, { id, userIds }) => {
         const validUsers = getValidUsers(usersById, userIds, togglUserId);
         const usersToUse = inclusionsOnly
@@ -65,10 +67,14 @@ export const selectUsersInvitePayloadForWorkspace = createSelector(
       workspaceIdToGet,
       [],
     ) as Array<CompoundUserModel>;
-    if (inclusions.length === 0) return [];
+    if (inclusions.length === 0) {
+      return [];
+    }
 
     return inclusions.reduce((acc, { email }) => {
-      if (email === togglEmail) return acc;
+      if (email === togglEmail) {
+        return acc;
+      }
       return [...acc, email];
     }, []);
   },
@@ -78,10 +84,12 @@ function getValidUsers(
   usersById: Record<string, CompoundUserModel>,
   userIds: Array<string>,
   meUserId: string,
-) {
+): Array<CompoundUserModel> {
   return userIds.reduce((acc, userId) => {
     const userRecord = get(usersById, userId, { linkedId: null });
-    if (userId === meUserId) return acc;
+    if (userId === meUserId) {
+      return acc;
+    }
 
     return [...acc, userRecord];
   }, []);

@@ -8,7 +8,7 @@ interface Params<TEntity, TResponse> {
   dispatch: ReduxDispatch;
   entityGroup: EntityGroup;
   entityRecordsInWorkspace: Array<TEntity>;
-  apiFunc: (...args: Array<any>) => Promise<TResponse>;
+  apiFunc: (...args: Array<unknown>) => Promise<TResponse>;
   clockifyWorkspaceId: string;
   togglWorkspaceId: string;
 }
@@ -78,8 +78,10 @@ export async function batchClockifyTransferRequests<TEntity, TResponse>({
 }
 
 // TODO: Change this to return and render in component.
-function displayFetchErrors(fetchErrors: Array<FetchErrorModel>) {
-  if (fetchErrors.length === 0) return;
+function displayFetchErrors(fetchErrors: Array<FetchErrorModel>): void {
+  if (fetchErrors.length === 0) {
+    return;
+  }
 
   // Let the user know there was some issues without holding up the whole
   // kit and caboodle:

@@ -1,4 +1,4 @@
-import { createAsyncAction, createStandardAction } from "typesafe-actions";
+import { createAsyncAction, createAction } from "typesafe-actions";
 import { batchClockifyTransferRequests, getValidEntities } from "~/redux/utils";
 import {
   apiCreateClockifyUserGroup,
@@ -49,15 +49,15 @@ export const clockifyUserGroupsTransfer = createAsyncAction(
   "@userGroups/CLOCKIFY_TRANSFER_FAILURE",
 )<void, EntitiesFetchPayloadModel<ClockifyUserGroupModel>, void>();
 
-export const flipIsUserGroupIncluded = createStandardAction(
+export const flipIsUserGroupIncluded = createAction(
   "@userGroups/FLIP_IS_INCLUDED",
 )<string>();
 
-export const addTogglUserIdToGroup = createStandardAction(
+export const addTogglUserIdToGroup = createAction(
   "@userGroups/ADD_TOGGL_USER_ID_TO_GROUP",
 )<{ userId: string; userGroupId: string }>();
 
-export const calculateUserGroupEntryCounts = createStandardAction(
+export const calculateUserGroupEntryCounts = createAction(
   "@userGroups/CALCULATE_ENTRY_COUNTS",
 )<EntryCountCalculatorModel>();
 
@@ -78,7 +78,7 @@ export const fetchClockifyUserGroups = (workspaceId: string) => async (
       usersByWorkspace,
     });
 
-    return dispatch(
+    dispatch(
       clockifyUserGroupsFetch.success({
         entityRecords: userGroups,
         workspaceId,
@@ -86,7 +86,7 @@ export const fetchClockifyUserGroups = (workspaceId: string) => async (
     );
   } catch (err) {
     dispatch(showFetchErrorNotification(err));
-    return dispatch(clockifyUserGroupsFetch.failure());
+    dispatch(clockifyUserGroupsFetch.failure());
   }
 };
 
@@ -108,12 +108,12 @@ export const fetchTogglUserGroups = (workspaceId: string) => async (
       usersByWorkspace,
     });
 
-    return dispatch(
+    dispatch(
       togglUserGroupsFetch.success({ entityRecords: userGroups, workspaceId }),
     );
   } catch (err) {
     dispatch(showFetchErrorNotification(err));
-    return dispatch(togglUserGroupsFetch.failure());
+    dispatch(togglUserGroupsFetch.failure());
   }
 };
 
@@ -125,7 +125,9 @@ export const transferUserGroupsToClockify = (
   const userGroupsInWorkspace = selectUserGroupsTransferPayloadForWorkspace(
     state,
   )(togglWorkspaceId);
-  if (userGroupsInWorkspace.length === 0) return Promise.resolve();
+  if (userGroupsInWorkspace.length === 0) {
+    return;
+  }
 
   dispatch(clockifyUserGroupsTransfer.request());
 
@@ -140,7 +142,7 @@ export const transferUserGroupsToClockify = (
       togglWorkspaceId,
     });
 
-    return dispatch(
+    dispatch(
       clockifyUserGroupsTransfer.success({
         entityRecords: userGroups,
         workspaceId: clockifyWorkspaceId,
@@ -148,7 +150,7 @@ export const transferUserGroupsToClockify = (
     );
   } catch (err) {
     dispatch(showFetchErrorNotification(err));
-    return dispatch(clockifyUserGroupsTransfer.failure());
+    dispatch(clockifyUserGroupsTransfer.failure());
   }
 };
 
@@ -161,7 +163,9 @@ function convertToCompoundUserGroups({
   userGroups: Array<TogglUserGroupModel | ClockifyUserGroupModel>;
   usersByWorkspace: Record<string, Array<CompoundUserModel>>;
 }): Array<CompoundUserGroupModel> {
-  if (getValidEntities(userGroups).length === 0) return [];
+  if (getValidEntities(userGroups).length === 0) {
+    return [];
+  }
 
   return userGroups.map(userGroup => {
     const transform = new UserGroupTransform(userGroup);

@@ -1,5 +1,5 @@
+import { BaseCompoundEntityModel } from "./entityTypes";
 import { TogglWorkspaceModel } from "./workspacesTypes";
-import { BaseCompoundEntityModel } from "~/types/entityTypes";
 
 export interface ClockifyHourlyRateModel {
   amount: number;
@@ -74,9 +74,9 @@ export interface TogglUserModel {
   render_timeline: boolean;
   timeline_enabled: boolean;
   timeline_experiment: boolean;
-  new_blog_post: any;
+  new_blog_post: unknown;
   should_upgrade: boolean;
-  invitation: any;
+  invitation: unknown;
   userGroupIds?: Array<string>;
 }
 

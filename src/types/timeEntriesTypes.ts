@@ -19,7 +19,7 @@ export interface ClockifyTimeEntryModel {
   tags: Array<string> | null;
   user: ClockifyUserModel;
   billable: boolean;
-  task: any;
+  task: unknown;
   project: ClockifyProjectModel;
   timeInterval: ClockifyTimeIntervalModel;
   workspaceId: string;

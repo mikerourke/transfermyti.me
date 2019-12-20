@@ -24,7 +24,6 @@ import {
   CountsByGroupByWorkspaceModel,
   EntitiesByGroupByWorkspaceModel,
   EntityGroup,
-  ReduxDispatch,
   ReduxState,
   ToolName,
   UpdateIncludedWorkspaceYearModel,
@@ -40,7 +39,7 @@ interface ConnectStateProps {
 interface ConnectDispatchProps {
   onFetchEntitiesForWorkspace: (
     workspaceRecord: CompoundWorkspaceModel,
-  ) => Promise<any>;
+  ) => void;
   onFlipIsWorkspaceEntityIncluded: (
     entityGroup: EntityGroup,
     entityRecord: CompoundEntityModel,
@@ -58,7 +57,7 @@ export const SelectTogglInclusionsStepComponent: React.FC<Props> = ({
   onFetchEntitiesForWorkspace,
   ...reviewPageProps
 }) => {
-  const fetchEntitiesForAllWorkspaces = async () => {
+  const fetchEntitiesForAllWorkspaces = async (): Promise<void> => {
     const workspaceRecords = Object.values(workspacesById);
     for (const workspaceRecord of workspaceRecords) {
       await onFetchEntitiesForWorkspace(workspaceRecord);
@@ -79,21 +78,13 @@ export const SelectTogglInclusionsStepComponent: React.FC<Props> = ({
           onRefreshClick={fetchEntitiesForAllWorkspaces}
           instructions={
             <>
-              <p
-                className={css`
-                  margin-bottom: 1rem;
-                `}
-              >
+              <p className={css({ marginBotom: "1rem" })}>
                 Select which entities/records you want to transfer and press the
                 <strong> Next</strong> button when you&apos;re ready to move
                 onto the next step. There are a few things to be aware of:
               </p>
               <InstructionsList />
-              <p
-                className={css`
-                  margin-top: 1rem;
-                `}
-              >
+              <p className={css({ marginTop: "1rem" })}>
                 If you need to change what&apos;s included in a different
                 workspace, you can select it from the dropdown to the right of
                 the entity tabs. Don&apos;t worry, all of your changes are
@@ -114,24 +105,18 @@ export const SelectTogglInclusionsStepComponent: React.FC<Props> = ({
   );
 };
 
-const mapStateToProps = (state: ReduxState) => ({
+const mapStateToProps = (state: ReduxState): ConnectStateProps => ({
   countsByGroupByWorkspace: selectTogglCountsByGroupByWorkspace(state),
   entitiesByGroupByWorkspace: selectTogglEntitiesByGroupByWorkspace(state),
   workspaceNameBeingFetched: selectWorkspaceNameBeingFetched(state),
   workspacesById: selectTogglIncludedWorkspacesById(state),
 });
 
-const mapDispatchToProps = (dispatch: ReduxDispatch) => ({
-  onFetchEntitiesForWorkspace: (workspaceRecord: CompoundWorkspaceModel) =>
-    dispatch(fetchTogglEntitiesInWorkspace(workspaceRecord)),
-  onFlipIsWorkspaceEntityIncluded: (
-    entityGroup: EntityGroup,
-    entityRecord: CompoundEntityModel,
-  ) => dispatch(flipIsWorkspaceEntityIncluded(entityGroup, entityRecord)),
-  onUpdateIsWorkspaceYearIncluded: (
-    updateDetails: UpdateIncludedWorkspaceYearModel,
-  ) => dispatch(updateIsWorkspaceYearIncluded(updateDetails)),
-});
+const mapDispatchToProps: ConnectDispatchProps = {
+  onFetchEntitiesForWorkspace: fetchTogglEntitiesInWorkspace,
+  onFlipIsWorkspaceEntityIncluded: flipIsWorkspaceEntityIncluded,
+  onUpdateIsWorkspaceYearIncluded: updateIsWorkspaceYearIncluded,
+};
 
 export default connect<ConnectStateProps, ConnectDispatchProps, StepPageProps>(
   mapStateToProps,

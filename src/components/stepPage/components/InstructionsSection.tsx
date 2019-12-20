@@ -11,32 +11,31 @@ const InstructionsSection: React.FC = ({ children }) => {
   const [isExpanded, setIsExpanded] = useState<boolean>(true);
 
   const { ExpandMore, ExpandLess } = SvgIconName;
-  const bottomRadiusClass = css`
-    border-bottom-left-radius: ${BORDER_RAD};
-    border-bottom-right-radius: ${BORDER_RAD};
-  `;
+
+  const bottomRadiusClass = css({
+    borderBottomLeftRadius: BORDER_RAD,
+    borderBottomRightRadius: BORDER_RAD,
+  });
 
   return (
     <div
       data-testid="instructions-section"
-      className={css`
-        margin-bottom: 1rem;
-      `}
+      className={css({ marginBottom: "1rem" })}
     >
       <Flex
         alignItems="center"
         className={classnames(
-          css`
-            background-color: var(--dark-gray);
-            border: 1px solid var(--dark-gray);
-            border-top-left-radius: ${BORDER_RAD};
-            border-top-right-radius: ${BORDER_RAD};
-            color: #fff;
-            font-weight: 700;
-            line-height: 1.25;
-            padding: 0.75rem 1rem;
-            position: relative;
-          `,
+          css({
+            backgroundColor: "var(--dark-gray)",
+            border: "1px solid var(--dark-gray)",
+            borderTopLeftRadius: BORDER_RAD,
+            borderTopRightRadius: BORDER_RAD,
+            color: "#fff",
+            fontWeight: 700,
+            lineHeight: 1.25,
+            padding: "0.75rem 1rem",
+            position: "relative",
+          }),
           {
             [bottomRadiusClass]: !isExpanded,
           },
@@ -44,16 +43,16 @@ const InstructionsSection: React.FC = ({ children }) => {
       >
         <button
           data-testid="toggle-expanded-button"
-          className={css`
-            background: transparent;
-            border: 0;
-            cursor: pointer;
-            margin-right: 0.5rem;
+          className={css({
+            background: "transparent",
+            border: 0,
+            cursor: "pointer",
+            marginRight: "0.5rem",
 
-            &:focus {
-              outline: none;
-            }
-          `}
+            "&:focus": {
+              outline: "none",
+            },
+          })}
           onClick={() => setIsExpanded(!isExpanded)}
         >
           <SvgIcon
@@ -64,10 +63,7 @@ const InstructionsSection: React.FC = ({ children }) => {
         </button>
         <span
           data-testid="toggle-expanded-label"
-          className={css`
-            cursor: pointer;
-            font-size: 18px;
-          `}
+          className={css({ cursor: "pointer", fontSize: 18 })}
           onClick={() => setIsExpanded(!isExpanded)}
         >
           {isExpanded ? "Hide" : "Show"} Instructions
@@ -76,12 +72,12 @@ const InstructionsSection: React.FC = ({ children }) => {
       <When condition={isExpanded}>
         <div
           className={classnames(
-            css`
-              background-color: var(--light-gray);
-              border: 1px solid var(--dark-gray);
-              color: var(--dark-gray);
-              padding: 1rem;
-            `,
+            css({
+              backgroundColor: "var(--light-gray)",
+              border: "1px solid var(--dark-gray)",
+              color: "var(--dark-gray)",
+              padding: "1rem",
+            }),
             bottomRadiusClass,
           )}
         >

@@ -19,18 +19,20 @@ const NoRecordsDisplay: React.FC<Props> = ({
     [EntityGroup.TimeEntries]: "time entries",
     [EntityGroup.UserGroups]: "user groups",
   }[activeEntityGroup];
-  if (isNil(entityGroupDisplay)) entityGroupDisplay = activeEntityGroup;
+  if (isNil(entityGroupDisplay)) {
+    entityGroupDisplay = activeEntityGroup;
+  }
 
   return (
     <div
       data-testid="no-records-display"
-      className={css`
-        height: ${height}px;
-        text-align: center;
-        padding-top: ${Math.ceil(height / 4)}px;
-        font-size: 2.5rem;
-        font-weight: 500;
-      `}
+      className={css({
+        height,
+        textAlign: "center",
+        paddingTop: Math.ceil(height / 4),
+        fontSize: "2.5rem",
+        fontWeight: 500,
+      })}
     >
       <If condition={toolName === ToolName.Toggl}>
         <Then>No {entityGroupDisplay} found!</Then>

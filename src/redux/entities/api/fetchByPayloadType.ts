@@ -3,7 +3,10 @@ import { isNil } from "lodash";
 /**
  * Ensures a valid array is returned from a fetch call.
  */
-export async function fetchArray(endpoint: string, fetchOptions: any = {}) {
+export async function fetchArray<TResponse>(
+  endpoint: string,
+  fetchOptions: unknown = {},
+): Promise<TResponse> {
   const response = await fetch(endpoint, fetchOptions);
   return isNil(response) ? [] : response;
 }
@@ -11,7 +14,10 @@ export async function fetchArray(endpoint: string, fetchOptions: any = {}) {
 /**
  * Ensures a valid object is returned from a fetch call.
  */
-export async function fetchObject(endpoint: string, fetchOptions: any = {}) {
+export async function fetchObject<TResponse>(
+  endpoint: string,
+  fetchOptions: unknown = {},
+): Promise<TResponse> {
   const response = await fetch(endpoint, fetchOptions);
   return isNil(response) ? {} : response;
 }

@@ -1,4 +1,4 @@
-import { createAsyncAction, createStandardAction } from "typesafe-actions";
+import { createAsyncAction, createAction } from "typesafe-actions";
 import { isNil } from "lodash";
 import {
   apiCreateClockifyWorkspace,
@@ -50,23 +50,23 @@ export const clockifyWorkspaceTransfer = createAsyncAction(
   "@workspaces/CLOCKIFY_TRANSFER_FAILURE",
 )<void, Array<ClockifyWorkspaceModel>, void>();
 
-export const appendUserIdsToWorkspace = createStandardAction(
+export const appendUserIdsToWorkspace = createAction(
   "@workspaces/APPEND_USER_IDS",
 )<{ toolName: ToolName; workspaceId: string; userIds: Array<string> }>();
 
-export const flipIsWorkspaceIncluded = createStandardAction(
+export const flipIsWorkspaceIncluded = createAction(
   "@workspaces/FLIP_IS_INCLUDED",
 )<string>();
 
-export const updateIsWorkspaceYearIncluded = createStandardAction(
+export const updateIsWorkspaceYearIncluded = createAction(
   "@workspaces/UPDATE_IS_WORKSPACE_YEAR_INCLUDED",
 )<UpdateIncludedWorkspaceYearModel>();
 
-export const updateWorkspaceNameBeingFetched = createStandardAction(
+export const updateWorkspaceNameBeingFetched = createAction(
   "@workspaces/UPDATE_NAME_BEING_FETCHED",
 )<string | null>();
 
-export const resetContentsForTool = createStandardAction(
+export const resetContentsForTool = createAction(
   "@workspaces/RESET_CONTENTS_FOR_TOOL",
 )<ToolName>();
 
@@ -87,17 +87,19 @@ export const fetchClockifyWorkspaces = () => async (
       togglIncludedNames.includes(name),
     );
 
-    return dispatch(clockifyWorkspacesFetch.success(includedWorkspaces));
+    dispatch(clockifyWorkspacesFetch.success(includedWorkspaces));
   } catch (err) {
     dispatch(showFetchErrorNotification(err));
-    return dispatch(clockifyWorkspacesFetch.failure());
+    dispatch(clockifyWorkspacesFetch.failure());
   }
 };
 
 export const fetchClockifyEntitiesInWorkspace = ({
   name,
   id,
-}: CompoundWorkspaceModel) => async (dispatch: ReduxDispatch) => {
+}: CompoundWorkspaceModel) => async (
+  dispatch: ReduxDispatch,
+): Promise<void> => {
   dispatch(updateWorkspaceNameBeingFetched(name));
 
   await dispatch(clientsActions.fetchClockifyClients(id));
@@ -108,7 +110,7 @@ export const fetchClockifyEntitiesInWorkspace = ({
   await dispatch(userGroupsActions.fetchClockifyUserGroups(id));
   await dispatch(timeEntriesActions.fetchClockifyTimeEntries(id));
 
-  return dispatch(updateWorkspaceNameBeingFetched(null));
+  dispatch(updateWorkspaceNameBeingFetched(null));
 };
 
 export const fetchTogglWorkspaces = () => async (dispatch: ReduxDispatch) => {
@@ -118,10 +120,10 @@ export const fetchTogglWorkspaces = () => async (dispatch: ReduxDispatch) => {
     dispatch(resetContentsForTool(ToolName.Toggl));
     const workspaces = await apiFetchTogglWorkspaces();
 
-    return dispatch(togglWorkspacesFetch.success(workspaces));
+    dispatch(togglWorkspacesFetch.success(workspaces));
   } catch (err) {
     dispatch(showFetchErrorNotification(err));
-    return dispatch(togglWorkspacesFetch.failure());
+    dispatch(togglWorkspacesFetch.failure());
   }
 };
 
@@ -139,7 +141,7 @@ export const fetchTogglEntitiesInWorkspace = ({
   await dispatch(userGroupsActions.fetchTogglUserGroups(id));
   await dispatch(timeEntriesActions.fetchTogglTimeEntries(id));
 
-  return dispatch(updateWorkspaceNameBeingFetched(null));
+  dispatch(updateWorkspaceNameBeingFetched(null));
 };
 
 export const transferEntitiesToClockifyWorkspace = (
@@ -209,10 +211,10 @@ export const transferEntitiesToClockifyWorkspace = (
       }),
     );
 
-    return dispatch(updateWorkspaceNameBeingFetched(null));
+    dispatch(updateWorkspaceNameBeingFetched(null));
   } catch (err) {
     dispatch(showFetchErrorNotification(err));
-    return dispatch(clockifyWorkspaceTransfer.failure());
+    dispatch(clockifyWorkspaceTransfer.failure());
   }
 };
 
@@ -229,5 +231,5 @@ export const flipIsWorkspaceEntityIncluded = (
     [EntityGroup.Users]: usersActions.flipIsUserIncluded,
   }[entityGroup];
 
-  return dispatch(updateAction(id));
+  dispatch(updateAction(id));
 };

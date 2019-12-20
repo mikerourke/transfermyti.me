@@ -25,7 +25,6 @@ import {
   CompoundWorkspaceModel,
   NotificationModel,
   NotificationType,
-  ReduxDispatch,
   ReduxState,
 } from "~/types";
 
@@ -37,9 +36,9 @@ interface ConnectStateProps {
 
 interface ConnectDispatchProps {
   onDismissAllNotifications: () => void;
-  onFetchTogglWorkspaces: () => Promise<any>;
+  onFetchTogglWorkspaces: () => void;
   onFlipIsWorkspaceIncluded: (workspaceId: string) => void;
-  onResetAreCredentialsValid: () => void;
+  onUpdateAreCredentialsValid: (areValid: boolean) => void;
   onShowNotification: (notification: Partial<NotificationModel>) => void;
 }
 
@@ -50,12 +49,12 @@ export const SelectTogglWorkspacesStepComponent: React.FC<Props> = props => {
     props.onFetchTogglWorkspaces();
   }, []);
 
-  const handlePreviousClick = () => {
-    props.onResetAreCredentialsValid();
+  const handlePreviousClick = (): void => {
+    props.onUpdateAreCredentialsValid(false);
     props.onPreviousClick();
   };
 
-  const handleNextClick = () => {
+  const handleNextClick = (): void => {
     if (props.countOfWorkspacesIncluded === 0) {
       props.onShowNotification({
         message: "You must select at least one workspace",
@@ -66,7 +65,7 @@ export const SelectTogglWorkspacesStepComponent: React.FC<Props> = props => {
     }
   };
 
-  const handleWorkspaceClick = (workspaceId: string) => {
+  const handleWorkspaceClick = (workspaceId: string): void => {
     props.onFlipIsWorkspaceIncluded(workspaceId);
     props.onDismissAllNotifications();
   };
@@ -94,11 +93,11 @@ export const SelectTogglWorkspacesStepComponent: React.FC<Props> = props => {
             }
           >
             <Container
-              className={css`
-                max-height: 50vh;
-                overflow: auto;
-                padding: 0.25rem;
-              `}
+              className={css({
+                maxHeight: "50vh",
+                overflow: "auto",
+                padding: "0.25rem",
+              })}
             >
               {sortedWorkspaces.map(workspace => (
                 <WorkspaceRow
@@ -129,21 +128,19 @@ export const SelectTogglWorkspacesStepComponent: React.FC<Props> = props => {
   );
 };
 
-const mapStateToProps = (state: ReduxState) => ({
+const mapStateToProps = (state: ReduxState): ConnectStateProps => ({
   areWorkspacesFetching: selectIfWorkspacesFetching(state),
   countOfWorkspacesIncluded: selectTogglIncludedWorkspacesCount(state),
   workspaces: selectTogglWorkspaces(state),
 });
 
-const mapDispatchToProps = (dispatch: ReduxDispatch) => ({
-  onDismissAllNotifications: () => dispatch(dismissAllNotifications()),
-  onFetchTogglWorkspaces: () => dispatch(fetchTogglWorkspaces()),
-  onFlipIsWorkspaceIncluded: (workspaceId: string) =>
-    dispatch(flipIsWorkspaceIncluded(workspaceId)),
-  onResetAreCredentialsValid: () => dispatch(updateAreCredentialsValid(false)),
-  onShowNotification: (notification: Partial<NotificationModel>) =>
-    dispatch(showNotification(notification)),
-});
+const mapDispatchToProps: ConnectDispatchProps = {
+  onDismissAllNotifications: dismissAllNotifications,
+  onFetchTogglWorkspaces: fetchTogglWorkspaces,
+  onFlipIsWorkspaceIncluded: flipIsWorkspaceIncluded,
+  onUpdateAreCredentialsValid: updateAreCredentialsValid,
+  onShowNotification: showNotification,
+};
 
 export default connect<ConnectStateProps, ConnectDispatchProps, StepPageProps>(
   mapStateToProps,

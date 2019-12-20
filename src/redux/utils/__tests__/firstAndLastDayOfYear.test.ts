@@ -1,4 +1,4 @@
-import { firstAndLastDayOfYear } from "~/redux/utils";
+import { firstAndLastDayOfYear, DateFormat } from "~/redux/utils";
 
 describe("the firstAndLastDayOfYear method", () => {
   test("returns the first and last day of the year with the default format", () => {
@@ -12,7 +12,7 @@ describe("the firstAndLastDayOfYear method", () => {
   });
 
   test("returns the first and last day of the year with a custom format", () => {
-    const result = firstAndLastDayOfYear(2019, "YYYY-MM-DD");
+    const result = firstAndLastDayOfYear(2019, DateFormat.Short);
     const expected = {
       firstDay: "2019-01-01",
       lastDay: "2019-12-31",

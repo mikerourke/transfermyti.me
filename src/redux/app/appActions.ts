@@ -1,51 +1,51 @@
-import { createStandardAction } from "typesafe-actions";
+import { createAction } from "typesafe-actions";
 import { capitalize, isNil, uniqueId } from "lodash";
 import { getIfDev } from "~/utils/getIfDev";
 import { selectCountTotalOfTransfersOverall } from "~/redux/entities/workspaces/workspacesSelectors";
 import {
-  TransferCountsModel,
   InTransferDetailsModel,
   NotificationModel,
   NotificationType,
   ReduxDispatch,
-  ToolName,
-  TransferType,
   ReduxGetState,
+  ToolName,
+  TransferCountsModel,
+  TransferType,
 } from "~/types";
 
-export const notificationShown = createStandardAction(
-  "@app/NOTIFICATION_SHOWN",
-)<Partial<NotificationModel>>();
+export const notificationShown = createAction("@app/NOTIFICATION_SHOWN")<
+  NotificationModel
+>();
 
-export const dismissNotification = createStandardAction(
-  "@app/DISMISS_NOTIFICATION",
-)<string>();
+export const dismissNotification = createAction("@app/DISMISS_NOTIFICATION")<
+  string
+>();
 
-export const dismissAllNotifications = createStandardAction(
+export const dismissAllNotifications = createAction(
   "@app/DISMISS_ALL_NOTIFICATIONS",
-)();
+)<undefined>();
 
-export const updateTransferType = createStandardAction(
-  "@app/UPDATE_TRANSFER_TYPE",
-)<TransferType>();
+export const updateTransferType = createAction("@app/UPDATE_TRANSFER_TYPE")<
+  TransferType
+>();
 
-export const updateInTransferDetails = createStandardAction(
+export const updateInTransferDetails = createAction(
   "@app/UPDATE_IN_TRANSFER_DETAILS",
 )<InTransferDetailsModel>();
 
-export const updateCountCurrentInWorkspace = createStandardAction(
+export const updateCountCurrentInWorkspace = createAction(
   "@app/UPDATE_COUNT_CURRENT_IN_AGGREGATE",
 )<number>();
 
-export const updateCountTotalInWorkspace = createStandardAction(
+export const updateCountTotalInWorkspace = createAction(
   "@app/UPDATE_COUNT_TOTAL_IN_AGGREGATE",
 )<number>();
 
-export const updateCountCurrentOverall = createStandardAction(
+export const updateCountCurrentOverall = createAction(
   "@app/UPDATE_COUNT_CURRENT_OVERALL",
 )<number>();
 
-export const updateCountTotalOverall = createStandardAction(
+export const updateCountTotalOverall = createAction(
   "@app/UPDATE_COUNT_TOTAL_OVERALL",
 )<number>();
 
@@ -54,7 +54,7 @@ export const updateCountsInWorkspace = (
 ) => (dispatch: ReduxDispatch) => {
   const { countCurrent, countTotal } = workspaceTransferCounts;
   dispatch(updateCountCurrentInWorkspace(countCurrent));
-  return dispatch(updateCountTotalInWorkspace(countTotal));
+  dispatch(updateCountTotalInWorkspace(countTotal));
 };
 
 export const updateCountsOverallBeforeTransfer = () => (
@@ -63,25 +63,28 @@ export const updateCountsOverallBeforeTransfer = () => (
 ) => {
   const countTotalOverall = selectCountTotalOfTransfersOverall(getState());
   dispatch(updateCountCurrentOverall(0));
-  return dispatch(updateCountTotalOverall(countTotalOverall));
+  dispatch(updateCountTotalOverall(countTotalOverall));
 };
 
 export const showNotification = (notification: Partial<NotificationModel>) => (
   dispatch: ReduxDispatch,
-) => {
+): string => {
   const id = isNil(notification.id) ? uniqueId("NTF") : notification.id;
-  dispatch(notificationShown({ ...notification, id }));
+  const validNotification = { ...notification, id } as NotificationModel;
+  dispatch(notificationShown(validNotification));
   return id;
 };
 
 export const showFetchErrorNotification = (
   error: Error & { toolName: ToolName },
-) => (dispatch: ReduxDispatch): string => {
-  if (getIfDev()) console.error(error);
+) => (dispatch: ReduxDispatch): void => {
+  if (getIfDev()) {
+    console.error(error);
+  }
 
   const name = capitalize(error.toolName);
   const message = `An error occurred when making a request to the ${name} API`;
 
   const notification = { message, type: NotificationType.Error };
-  return dispatch(showNotification(notification));
+  dispatch(showNotification(notification));
 };

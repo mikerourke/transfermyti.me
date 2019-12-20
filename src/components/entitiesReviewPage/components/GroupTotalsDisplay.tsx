@@ -10,27 +10,20 @@ interface Props {
 }
 
 const GroupTotalsDisplay: React.FC<Props> = ({ label, included, total }) => (
-  <Flex
-    direction="column"
-    className={css`
-      margin-right: 1rem;
-    `}
-  >
+  <Flex className={css({ marginRight: "1rem" })} direction="column">
     <div
       data-testid="group-totals-display-label"
-      className={css`
-        font-size: 12px;
-        font-weight: 700;
-        text-transform: uppercase;
-        margin-bottom: 0.25rem;
-      `}
+      className={css({
+        fontSize: 12,
+        fontWeight: 700,
+        textTransform: "uppercase",
+        marginBottom: "0.25rem",
+      })}
     >
       {label} ({included}/{total})
     </div>
     <Progress
-      className={css`
-        min-width: 16rem;
-      `}
+      className={css({ minWidth: "16rem" })}
       isMarginless
       isColor="info"
       isSize="small"

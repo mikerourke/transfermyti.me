@@ -1,9 +1,14 @@
 import { isNil } from "lodash";
 import format from "date-fns/format";
-import addHours from "date-fns/add_hours";
-import subHours from "date-fns/sub_hours";
-import startOfYear from "date-fns/start_of_year";
-import endOfYear from "date-fns/end_of_year";
+import addHours from "date-fns/addHours";
+import subHours from "date-fns/subHours";
+import startOfYear from "date-fns/startOfYear";
+import endOfYear from "date-fns/endOfYear";
+
+export enum DateFormat {
+  Short = "yyyy-MM-dd",
+  Long = "yyyy-MM-dd'T'HH:mm:ss",
+}
 
 /**
  * Returns the first and last day of the year (in ISO format) for specifying
@@ -13,7 +18,7 @@ import endOfYear from "date-fns/end_of_year";
  */
 export function firstAndLastDayOfYear(
   year: number,
-  dateFormat?: string,
+  dateFormat?: DateFormat,
 ): { firstDay: string; lastDay: string } {
   const currentDate = new Date();
   currentDate.setFullYear(year);
@@ -33,8 +38,10 @@ export function firstAndLastDayOfYear(
  * @param dateValue Value of the date to format.
  * @param [dateFormat] Optional format to apply to the date.
  */
-function formatDate(dateValue: Date, dateFormat?: string): string {
-  if (!isNil(dateFormat)) return format(dateValue, dateFormat);
+function formatDate(dateValue: Date, dateFormat?: DateFormat): string {
+  if (!isNil(dateFormat)) {
+    return format(dateValue, dateFormat);
+  }
 
   // Determine the offset hours to get an accurate start and end time:
   const utcOffsetHours = dateValue.getTimezoneOffset() / 60;

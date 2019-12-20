@@ -10,24 +10,17 @@
     "state.ts"
   ],
   "moduleFileExtensions": ["js", "json", "jsx", "ts", "tsx"],
-  "moduleNameMapper":  {
+  "moduleNameMapper": {
     "^~/(.*)$": "<rootDir>/src/$1"
   },
   "preset": "ts-jest",
-  "roots": [
-    "<rootDir>/src/"
-  ],
-  "setupFilesAfterEnv": [
-    "@testing-library/react/cleanup-after-each",
-    "<rootDir>/src/setupJest.js"
-  ],
+  "roots": ["<rootDir>/src/"],
+  "setupFilesAfterEnv": ["<rootDir>/src/setupJest.ts"],
   "testEnvironment": "node",
   "testMatch": [
     "<rootDir>/src/**/__tests__/**/*.ts?(x)",
     "<rootDir>/src/**/?(*.)(spec|test).ts?(x)"
   ],
-  "testPathIgnorePatterns": [
-    "<rootDir>/scripts/runTests.js"
-  ],
+  "testPathIgnorePatterns": ["<rootDir>/scripts/runTests.js"],
   "testURL": "http://localhost"
 }

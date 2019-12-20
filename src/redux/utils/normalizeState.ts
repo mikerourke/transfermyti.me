@@ -1,13 +1,13 @@
 import { get, isNil, uniq } from "lodash";
 import { normalize, schema, Schema } from "normalizr";
-import { EntityGroup, ToolName } from "~/types";
+import { CompoundEntityModel, EntityGroup, ToolName } from "~/types";
 
 interface Params<TEntityState, TPayload> {
   toolName: ToolName;
   entityGroup: EntityGroup;
   entityState: TEntityState;
   payload: TPayload;
-  schemaProcessStrategy?: schema.StrategyFunction;
+  schemaProcessStrategy?: schema.StrategyFunction<CompoundEntityModel>;
 }
 
 /**
@@ -22,10 +22,14 @@ export function normalizeState<TEntityState, TPayload>({
   schemaProcessStrategy,
 }: Params<TEntityState, TPayload>): TEntityState {
   // If for some reason the payload is null, just return original state:
-  if (isNil(payload)) return entityState;
+  if (isNil(payload)) {
+    return entityState;
+  }
 
   // If the payload is an empty array, return original state:
-  if (Array.isArray(payload) && payload.length === 0) return entityState;
+  if (Array.isArray(payload) && payload.length === 0) {
+    return entityState;
+  }
 
   const entitySchema = getEntitySchema(entityGroup, schemaProcessStrategy);
   const { entities, result } = normalize(payload, entitySchema);
@@ -51,7 +55,7 @@ export function normalizeState<TEntityState, TPayload>({
  */
 function getEntitySchema(
   entityGroup: EntityGroup,
-  schemaProcessStrategy?: schema.StrategyFunction,
+  schemaProcessStrategy?: schema.StrategyFunction<CompoundEntityModel>,
 ): Schema {
   const entitySchema = new schema.Entity(
     entityGroup,

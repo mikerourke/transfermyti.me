@@ -1,4 +1,4 @@
-import { createAsyncAction, createStandardAction } from "typesafe-actions";
+import { createAsyncAction, createAction } from "typesafe-actions";
 import { get } from "lodash";
 import {
   apiAddClockifyUsersToWorkspace,
@@ -40,9 +40,9 @@ export const clockifyUsersTransfer = createAsyncAction(
   "@users/CLOCKIFY_TRANSFER_FAILURE",
 )<void, EntitiesFetchPayloadModel<ClockifyUserModel>, void>();
 
-export const flipIsUserIncluded = createStandardAction(
-  "@users/FLIP_IS_INCLUDED",
-)<string>();
+export const flipIsUserIncluded = createAction("@users/FLIP_IS_INCLUDED")<
+  string
+>();
 
 export const fetchClockifyUsers = (workspaceId: string) => async (
   dispatch: ReduxDispatch,
@@ -54,12 +54,10 @@ export const fetchClockifyUsers = (workspaceId: string) => async (
       workspaceId,
     );
 
-    return dispatch(
-      clockifyUsersFetch.success({ entityRecords: users, workspaceId }),
-    );
+    dispatch(clockifyUsersFetch.success({ entityRecords: users, workspaceId }));
   } catch (err) {
     dispatch(showFetchErrorNotification(err));
-    return dispatch(clockifyUsersFetch.failure());
+    dispatch(clockifyUsersFetch.failure());
   }
 };
 
@@ -81,12 +79,10 @@ export const fetchTogglUsers = (workspaceId: string) => async (
 
     await appendTogglUserGroupIdsToUsers(workspaceId, users);
 
-    return dispatch(
-      togglUsersFetch.success({ entityRecords: users, workspaceId }),
-    );
+    dispatch(togglUsersFetch.success({ entityRecords: users, workspaceId }));
   } catch (err) {
     dispatch(showFetchErrorNotification(err));
-    return dispatch(togglUsersFetch.failure());
+    dispatch(togglUsersFetch.failure());
   }
 };
 
@@ -99,7 +95,9 @@ export const inviteUsersToClockify = (
     togglWorkspaceId,
   );
   const countOfUserEmails = userEmailsToInvite.length;
-  if (countOfUserEmails === 0) return Promise.resolve();
+  if (countOfUserEmails === 0) {
+    return;
+  }
 
   dispatch(clockifyUsersTransfer.request());
 
@@ -124,7 +122,7 @@ export const inviteUsersToClockify = (
       );
     });
 
-    return dispatch(
+    dispatch(
       clockifyUsersTransfer.success({
         entityRecords: users,
         workspaceId: clockifyWorkspaceId,
@@ -132,14 +130,14 @@ export const inviteUsersToClockify = (
     );
   } catch (err) {
     dispatch(showFetchErrorNotification(err));
-    return dispatch(clockifyUsersTransfer.failure());
+    dispatch(clockifyUsersTransfer.failure());
   }
 };
 
 async function fetchClockifyUsersAndAppendUserIds(
   dispatch: ReduxDispatch,
   workspaceId: string,
-) {
+): Promise<Array<ClockifyUserModel>> {
   const users = await apiFetchClockifyUsersInWorkspace(workspaceId);
   const userIds = users.map(({ id }) => id.toString());
 
@@ -157,7 +155,7 @@ async function fetchClockifyUsersAndAppendUserIds(
 async function appendTogglUserGroupIdsToUsers(
   workspaceId: string,
   users: Array<TogglUserModel>,
-) {
+): Promise<void> {
   const workspaceUsers = await apiFetchTogglWorkspaceUsers(workspaceId);
   const workspaceUsersById = workspaceUsers.reduce(
     (acc, workspaceUserRecord) => ({
@@ -170,8 +168,12 @@ async function appendTogglUserGroupIdsToUsers(
   users.forEach(user => {
     Object.assign(user, { userGroupIds: [] });
     const workspaceUser = get(workspaceUsersById, user.id.toString());
-    if (!workspaceUser) return;
-    if (!workspaceUser.group_ids) return;
+    if (!workspaceUser) {
+      return;
+    }
+    if (!workspaceUser.group_ids) {
+      return;
+    }
 
     workspaceUser.group_ids.forEach((userGroupId: number) => {
       const validGroupId = userGroupId.toString();

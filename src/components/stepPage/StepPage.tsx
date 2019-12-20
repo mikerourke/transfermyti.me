@@ -9,7 +9,7 @@ import InstructionsSection from "./components/InstructionsSection";
 
 export interface StepPageProps {
   stepNumber: number;
-  instructions?: React.ReactElement<any> | string;
+  instructions?: React.ReactElement<unknown> | string;
   onNextClick?: () => void;
   onPreviousClick?: () => void;
 }
@@ -28,9 +28,11 @@ const StepPage: React.FC<Props> = ({
 }) => {
   const contentsRef = useRef(null);
 
-  const handleResize = () => {
+  const handleResize = (): void => {
     const width = contentsRef.current.clientWidth;
-    if (!isNil(props.onResize)) props.onResize(width);
+    if (!isNil(props.onResize)) {
+      props.onResize(width);
+    }
   };
 
   useEffect(() => {
@@ -55,9 +57,7 @@ const StepPage: React.FC<Props> = ({
       </div>
       <Flex
         justifyContent="space-between"
-        className={css`
-          margin-top: 1.5rem;
-        `}
+        className={css({ marginTop: "1.5rem" })}
       >
         <Flex justifySelf="flex-start">
           <When condition={!isNil(props.onRefreshClick)}>
@@ -65,15 +65,15 @@ const StepPage: React.FC<Props> = ({
               data-testid="step-page-refresh-button"
               isSize="medium"
               onClick={props.onRefreshClick}
-              className={css`
-                background: rgba(125, 103, 198, 1);
-                color: white;
+              className={css({
+                background: "rgba(125, 103, 198, 1)",
+                color: "white",
 
-                &:hover {
-                  background: rgba(125, 103, 198, 0.8);
-                  color: white;
-                }
-              `}
+                "&:hover": {
+                  background: "rgba(125, 103, 198, 0.8)",
+                  color: "white",
+                },
+              })}
             >
               Refresh
             </Button>
@@ -93,9 +93,7 @@ const StepPage: React.FC<Props> = ({
           <When condition={!isNil(onPreviousClick) && !isNil(onNextClick)}>
             <div
               data-testid="step-page-button-separator"
-              className={css`
-                margin-right: 1rem;
-              `}
+              className={css({ marginRight: "1rem" })}
             />
           </When>
           <When condition={!isNil(onNextClick)}>

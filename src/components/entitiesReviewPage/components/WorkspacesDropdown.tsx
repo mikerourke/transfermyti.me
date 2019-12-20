@@ -27,7 +27,7 @@ const WorkspacesDropdown: React.FC<Props> = ({
 }) => {
   const [isActive, setIsActive] = useState(false);
 
-  const handleItemClick = (workspaceId: string) => {
+  const handleItemClick = (workspaceId: string): void => {
     onItemClick(workspaceId);
     setIsActive(false);
   };
@@ -36,29 +36,25 @@ const WorkspacesDropdown: React.FC<Props> = ({
     <Dropdown
       data-testid="workspaces-dropdown"
       isActive={isActive}
-      className={css`
-        min-width: ${MIN_WIDTH};
-        position: absolute;
-        top: 0;
-        right: 0;
-      `}
+      className={css({
+        minWidth: MIN_WIDTH,
+        position: "absolute",
+        top: 0,
+        right: 0,
+      })}
     >
-      <DropdownTrigger
-        className={css`
-          min-width: ${MIN_WIDTH};
-        `}
-      >
+      <DropdownTrigger className={css({ minWidth: MIN_WIDTH })}>
         <Button
           data-testid="workspaces-dropdown-trigger-button"
           isOutlined
           aria-haspopup="true"
           aria-controls="dropdown-menu"
-          className={css`
-            font-size: 1rem;
-            font-weight: bold;
-            width: 100%;
-            justify-content: space-between;
-          `}
+          className={css({
+            fontSize: "1rem",
+            fontWeight: "bold",
+            width: "100%",
+            justifyContent: "space-between",
+          })}
           onClick={() => setIsActive(!isActive)}
         >
           <span>{get(workspacesById, [activeWorkspaceId, "name"], "")}</span>
@@ -70,26 +66,22 @@ const WorkspacesDropdown: React.FC<Props> = ({
           />
         </Button>
       </DropdownTrigger>
-      <DropdownMenu
-        className={css`
-          min-width: ${MIN_WIDTH};
-        `}
-      >
+      <DropdownMenu className={css({ minWidth: MIN_WIDTH })}>
         <DropdownContent>
           {Object.values(workspacesById).map(({ id, name }) => (
             <DropdownItem
               data-testid="workspaces-dropdown-item"
               key={id}
-              className={css`
-                cursor: pointer;
-                font-size: 1rem;
-                font-weight: bold;
+              className={css({
+                cursor: "pointer",
+                fontSize: "1rem",
+                fontWeight: "bold",
 
-                &:hover {
-                  background-color: var(--info);
-                  color: white;
-                }
-              `}
+                "&:hover": {
+                  backgroundColor: "var(--info)",
+                  color: "white",
+                },
+              })}
               onClick={() => handleItemClick(id)}
             >
               {name}

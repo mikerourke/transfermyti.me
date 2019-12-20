@@ -21,7 +21,6 @@ import {
   CompoundWorkspaceModel,
   CountsByGroupByWorkspaceModel,
   EntitiesByGroupByWorkspaceModel,
-  ReduxDispatch,
   ReduxState,
   ToolName,
 } from "~/types";
@@ -37,8 +36,8 @@ interface ConnectStateProps {
 interface ConnectDispatchProps {
   onFetchClockifyEntitiesInWorkspace: (
     workspace: CompoundWorkspaceModel,
-  ) => Promise<any>;
-  onFetchClockifyWorkspaces: () => Promise<any>;
+  ) => void;
+  onFetchClockifyWorkspaces: () => void;
 }
 
 type Props = ConnectStateProps & ConnectDispatchProps & StepPageProps;
@@ -64,21 +63,23 @@ export class ReviewClockifyDetailsStepComponent extends React.Component<
       .catch(() => this.setState({ isFetching: false }));
   }
 
-  private performFetchActions = async () => {
+  private performFetchActions = async (): Promise<void> => {
     await this.props.onFetchClockifyWorkspaces();
     await this.fetchClockifyEntitiesInAllWorkspaces();
   };
 
-  private fetchClockifyEntitiesInAllWorkspaces = async () => {
+  private fetchClockifyEntitiesInAllWorkspaces = async (): Promise<void> => {
     const workspaces = Object.values(this.props.clockifyWorkspacesById);
-    if (workspaces.length === 0) return;
+    if (workspaces.length === 0) {
+      return;
+    }
 
     for (const workspace of workspaces) {
       await this.props.onFetchClockifyEntitiesInWorkspace(workspace);
     }
   };
 
-  public render() {
+  public render(): JSX.Element {
     const {
       togglEntitiesByGroupByWorkspace,
       togglCountsByGroupByWorkspace,
@@ -103,21 +104,17 @@ export class ReviewClockifyDetailsStepComponent extends React.Component<
             onRefreshClick={this.fetchClockifyEntitiesInAllWorkspaces}
             instructions={
               <>
-                <p
-                  className={css`
-                    margin-bottom: 1rem;
-                  `}
-                >
+                <p className={css({ marginBottom: "1rem" })}>
                   This page contains all the records that <strong>will</strong>{" "}
                   be created on Clockify. Press <strong>Next</strong> to move to
                   the final step.
                 </p>
                 <p
-                  className={css`
-                    color: var(--info);
-                    font-weight: bold;
-                    margin-bottom: 1rem;
-                  `}
+                  className={css({
+                    color: "var(-info)",
+                    fontWeight: "bold",
+                    marginBottom: "1rem",
+                  })}
                 >
                   The transfer will not start until you confirm it on the next
                   page.
@@ -132,7 +129,7 @@ export class ReviewClockifyDetailsStepComponent extends React.Component<
   }
 }
 
-const mapStateToProps = (state: ReduxState) => ({
+const mapStateToProps = (state: ReduxState): ConnectStateProps => ({
   clockifyWorkspacesById: selectClockifyIncludedWorkspacesById(state),
   togglEntitiesByGroupByWorkspace: selectTogglEntitiesByGroupByWorkspace(state),
   togglCountsByGroupByWorkspace: selectTogglCountsByGroupByWorkspace(state),
@@ -140,11 +137,10 @@ const mapStateToProps = (state: ReduxState) => ({
   workspaceNameBeingFetched: selectWorkspaceNameBeingFetched(state),
 });
 
-const mapDispatchToProps = (dispatch: ReduxDispatch) => ({
-  onFetchClockifyEntitiesInWorkspace: (workspace: CompoundWorkspaceModel) =>
-    dispatch(fetchClockifyEntitiesInWorkspace(workspace)),
-  onFetchClockifyWorkspaces: () => dispatch(fetchClockifyWorkspaces()),
-});
+const mapDispatchToProps: ConnectDispatchProps = {
+  onFetchClockifyEntitiesInWorkspace: fetchClockifyEntitiesInWorkspace,
+  onFetchClockifyWorkspaces: fetchClockifyWorkspaces,
+};
 
 export default connect<ConnectStateProps, ConnectDispatchProps, StepPageProps>(
   mapStateToProps,

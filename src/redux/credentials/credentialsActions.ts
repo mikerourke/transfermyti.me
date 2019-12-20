@@ -1,4 +1,4 @@
-import { createAsyncAction, createStandardAction } from "typesafe-actions";
+import { createAsyncAction, createAction } from "typesafe-actions";
 import { capitalize } from "lodash";
 import storage from "store";
 import { STORAGE_KEY } from "~/constants";
@@ -22,7 +22,7 @@ import {
   ReduxGetState,
 } from "~/types";
 
-export const allCredentialsStored = createStandardAction("@credentials/STORED")<
+export const allCredentialsStored = createAction("@credentials/STORED")<
   CredentialsModel
 >();
 
@@ -32,11 +32,11 @@ export const credentialsValidation = createAsyncAction(
   "@credentials/CREDENTIALS_VALIDATION_FAILURE",
 )<void, CredentialsModel, void>();
 
-export const updateAreCredentialsValid = createStandardAction(
+export const updateAreCredentialsValid = createAction(
   "@credentials/UPDATE_ARE_CREDENTIALS_VALID",
 )<boolean>();
 
-export const updateCredentialsField = createStandardAction(
+export const updateCredentialsField = createAction(
   "@credentials/UPDATE_FIELD",
 )<{ field: CredentialsField; value: string }>();
 
@@ -53,7 +53,7 @@ export const storeAllCredentials = () => (
     storage.set(STORAGE_KEY, { ...storedCredentials, ...credentials });
   }
 
-  return dispatch(allCredentialsStored(credentials));
+  dispatch(allCredentialsStored(credentials));
 };
 
 const fetchClockifyMeDetails = () => async (dispatch: ReduxDispatch) => {
@@ -74,7 +74,9 @@ const fetchTogglMeDetails = () => async (dispatch: ReduxDispatch) => {
   };
 };
 
-export const validateCredentials = () => async (dispatch: ReduxDispatch) => {
+export const validateCredentials = (): unknown => async (
+  dispatch: ReduxDispatch,
+): Promise<void> => {
   dispatch(credentialsValidation.request());
 
   try {
@@ -87,12 +89,12 @@ export const validateCredentials = () => async (dispatch: ReduxDispatch) => {
       [CredentialsField.TogglUserId]: togglUserId,
     };
 
-    return dispatch(credentialsValidation.success(credentials));
+    dispatch(credentialsValidation.success(credentials));
   } catch (err) {
     const message =
       "An error occurred when attempting to validate your " +
       `${capitalize(err.toolName)} credentials.`;
     dispatch(showNotification({ message, type: NotificationType.Error }));
-    return dispatch(credentialsValidation.failure());
+    dispatch(credentialsValidation.failure());
   }
 };

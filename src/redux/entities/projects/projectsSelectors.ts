@@ -1,4 +1,4 @@
-import { createSelector } from "reselect";
+import { createSelector, Selector } from "reselect";
 import { get } from "lodash";
 import { findTogglInclusions, groupByWorkspace } from "~/redux/utils";
 import { selectTogglClientMatchingId } from "~/redux/entities/clients/clientsSelectors";
@@ -20,7 +20,7 @@ export const selectTogglProjectsById = createSelector(
 
 export const selectTogglProjectsByWorkspaceFactory = (
   inclusionsOnly: boolean,
-) =>
+): Selector<ReduxState, Record<string, Array<CompoundProjectModel>>> =>
   createSelector(
     selectTogglProjectsById,
     (projectsById): Record<string, Array<CompoundProjectModel>> => {
@@ -45,7 +45,9 @@ export const selectProjectsTransferPayloadForWorkspace = createSelector(
       workspaceIdToGet,
       [],
     ) as Array<CompoundProjectModel>;
-    if (inclusions.length === 0) return [];
+    if (inclusions.length === 0) {
+      return [];
+    }
 
     return inclusions.reduce((acc, project) => {
       const matchingClient = getClientMatchingId(project.clientId);
@@ -60,7 +62,7 @@ export const selectProjectsTransferPayloadForWorkspace = createSelector(
           clientId,
           isPublic: project.isPublic,
           estimate: {
-            estimate: "",
+            estimate: 0,
             type: "AUTO",
           },
           color: project.color,

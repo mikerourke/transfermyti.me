@@ -27,3 +27,5 @@ export interface BaseCompoundEntityModel {
   entryCount?: number;
   memberOf?: EntityGroup;
 }
+
+export type EntityGroupsByKey<TEntity> = Record<string, Array<TEntity>>;

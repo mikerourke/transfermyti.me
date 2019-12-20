@@ -9,11 +9,7 @@ interface Props {
 }
 
 const HelpTooltip: React.FC<Props> = ({ children, tipId, size, color }) => (
-  <span
-    className={css`
-      margin-left: 8px;
-    `}
-  >
+  <span className={css({ marginLeft: 8 })}>
     <svg
       viewBox="929 882 46 46"
       width={size}

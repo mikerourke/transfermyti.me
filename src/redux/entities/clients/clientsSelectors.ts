@@ -1,7 +1,12 @@
-import { createSelector } from "reselect";
+import { createSelector, Selector } from "reselect";
 import { get, isNil } from "lodash";
 import { findTogglInclusions, groupByWorkspace } from "~/redux/utils";
-import { CompoundClientModel, EntityWithName, ReduxState } from "~/types";
+import {
+  CompoundClientModel,
+  EntityGroupsByKey,
+  EntityWithName,
+  ReduxState,
+} from "~/types";
 
 const selectTogglClientsById = createSelector(
   (state: ReduxState) => state.entities.clients.toggl.byId,
@@ -13,10 +18,12 @@ export const selectTogglClients = createSelector(
   (clientsById): Array<CompoundClientModel> => Object.values(clientsById),
 );
 
-export const selectTogglClientsByWorkspaceFactory = (inclusionsOnly: boolean) =>
+export const selectTogglClientsByWorkspaceFactory = (
+  inclusionsOnly: boolean,
+): Selector<ReduxState, EntityGroupsByKey<CompoundClientModel>> =>
   createSelector(
     selectTogglClients,
-    (clients): Record<string, Array<CompoundClientModel>> => {
+    (clients): EntityGroupsByKey<CompoundClientModel> => {
       const clientsToUse = inclusionsOnly
         ? findTogglInclusions(clients)
         : clients;
@@ -34,7 +41,9 @@ export const selectClientsTransferPayloadForWorkspace = createSelector(
       workspaceIdToGet,
       [],
     ) as Array<CompoundClientModel>;
-    if (inclusions.length === 0) return [];
+    if (inclusions.length === 0) {
+      return [];
+    }
 
     return inclusions.reduce((acc, { name }) => [...acc, { name }], []);
   },

@@ -15,12 +15,7 @@ import {
 } from "~/redux/credentials/credentialsSelectors";
 import StepPage, { StepPageProps } from "~/components/stepPage/StepPage";
 import InputField from "./components/InputField";
-import {
-  CredentialsModel,
-  CredentialsField,
-  ReduxDispatch,
-  ReduxState,
-} from "~/types";
+import { CredentialsModel, CredentialsField, ReduxState } from "~/types";
 
 interface ConnectStateProps {
   credentials: CredentialsModel;
@@ -29,9 +24,12 @@ interface ConnectStateProps {
 }
 
 interface ConnectDispatchProps {
-  onStoreAllCredentials: () => void;
-  onUpdateCredentialsField: (field: CredentialsField, value: string) => void;
-  onValidateCredentials: () => Promise<any>;
+  onStoreAllCredentials: VoidFunction;
+  onUpdateCredentialsField: (details: {
+    field: CredentialsField;
+    value: string;
+  }) => void;
+  onValidateCredentials: VoidPromise;
 }
 
 type Props = ConnectStateProps & ConnectDispatchProps & StepPageProps;
@@ -54,10 +52,12 @@ export const EnterCredentialsStepComponent: React.FC<Props> = ({
   }, []);
 
   useEffect(() => {
-    if (props.isValid) props.onNextClick();
+    if (props.isValid) {
+      props.onNextClick();
+    }
   }, [props.isValid]);
 
-  const validateInputs = () => {
+  const validateInputs = (): boolean => {
     const requiredCredentials = omit(
       credentials,
       "clockifyUserId",
@@ -67,7 +67,9 @@ export const EnterCredentialsStepComponent: React.FC<Props> = ({
     let invalidCount = 0;
     const newInputErrors = Object.entries(requiredCredentials).reduce(
       (acc, [key, value]) => {
-        if (value !== "") return { ...acc, [key]: "" };
+        if (value !== "") {
+          return { ...acc, [key]: "" };
+        }
 
         invalidCount += 1;
         return {
@@ -82,7 +84,9 @@ export const EnterCredentialsStepComponent: React.FC<Props> = ({
     return invalidCount === 0;
   };
 
-  const handleInputChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+  const handleInputChange = (
+    event: React.ChangeEvent<HTMLInputElement>,
+  ): void => {
     const { name, value } = event.currentTarget;
 
     setInputErrors({
@@ -90,17 +94,16 @@ export const EnterCredentialsStepComponent: React.FC<Props> = ({
       [name]: value === "" ? "You must specify a value" : "",
     });
 
-    props.onUpdateCredentialsField(name as CredentialsField, value);
+    const validName = name as CredentialsField;
+    props.onUpdateCredentialsField({ field: validName, value });
   };
 
-  const handleNextClick = async () => {
-    if (!validateInputs()) return;
+  const handleNextClick = async (): Promise<void> => {
+    if (!validateInputs()) {
+      return;
+    }
     await props.onValidateCredentials();
   };
-
-  const apiClass = css`
-    font-family: monospace;
-  `;
 
   return (
     <StepPage
@@ -135,7 +138,7 @@ export const EnterCredentialsStepComponent: React.FC<Props> = ({
           onChange={handleInputChange}
           type="text"
           value={credentials[CredentialsField.TogglApiKey]}
-          className={apiClass}
+          className={css({ fontFamily: "monospace" })}
           tooltip={
             <span>
               API key associated with your Toggl account.
@@ -158,7 +161,7 @@ export const EnterCredentialsStepComponent: React.FC<Props> = ({
           onChange={handleInputChange}
           type="text"
           value={credentials[CredentialsField.ClockifyApiKey]}
-          className={apiClass}
+          className={css({ fontFamily: "monospace" })}
           tooltip={
             <span>
               API key associated with your Clockify account.
@@ -180,18 +183,17 @@ export const EnterCredentialsStepComponent: React.FC<Props> = ({
   );
 };
 
-const mapStateToProps = (state: ReduxState) => ({
+const mapStateToProps = (state: ReduxState): ConnectStateProps => ({
   credentials: selectCredentials(state),
   isValid: selectIsValid(state),
   isValidating: selectIsValidating(state),
 });
 
-const mapDispatchToProps = (dispatch: ReduxDispatch) => ({
-  onStoreAllCredentials: () => dispatch(storeAllCredentials()),
-  onUpdateCredentialsField: (field: CredentialsField, value: string) =>
-    dispatch(updateCredentialsField({ field, value })),
-  onValidateCredentials: () => dispatch(validateCredentials()),
-});
+const mapDispatchToProps: ConnectDispatchProps = {
+  onStoreAllCredentials: storeAllCredentials,
+  onUpdateCredentialsField: updateCredentialsField,
+  onValidateCredentials: validateCredentials as VoidPromise,
+};
 
 export default connect<ConnectStateProps, ConnectDispatchProps, StepPageProps>(
   mapStateToProps,

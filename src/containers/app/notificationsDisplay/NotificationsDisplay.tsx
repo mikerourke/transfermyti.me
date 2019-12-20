@@ -5,7 +5,7 @@ import { dismissNotification } from "~/redux/app/appActions";
 import { selectNotifications } from "~/redux/app/appSelectors";
 import Flex from "~/components/flex/Flex";
 import NotificationDisplay from "./components/NotificationDisplay";
-import { NotificationModel, ReduxDispatch, ReduxState } from "~/types";
+import { NotificationModel, ReduxState } from "~/types";
 
 interface ConnectStateProps {
   notifications: Array<NotificationModel>;
@@ -25,12 +25,12 @@ const NotificationsDisplayComponent: React.FC<Props> = ({
     alignItems="center"
     justifyContent="center"
     direction="column"
-    className={css`
-      bottom: 1rem;
-      margin: 0 auto;
-      position: absolute;
-      width: 100%;
-    `}
+    className={css({
+      bottom: "1rem",
+      margin: "0 auto",
+      position: "absolute",
+      width: "100%",
+    })}
   >
     {notifications.map(notification => (
       <NotificationDisplay
@@ -42,16 +42,15 @@ const NotificationsDisplayComponent: React.FC<Props> = ({
   </Flex>
 );
 
-const mapStateToProps = (state: ReduxState) => ({
+const mapStateToProps = (state: ReduxState): ConnectStateProps => ({
   notifications: selectNotifications(state),
 });
 
-const mapDispatchToProps = (dispatch: ReduxDispatch) => ({
-  onDismissNotification: (notificationId: string) =>
-    dispatch(dismissNotification(notificationId)),
-});
+const mapDispatchToProps: ConnectDispatchProps = {
+  onDismissNotification: dismissNotification,
+};
 
-export default connect<ConnectStateProps, ConnectDispatchProps>(
+export default connect(
   mapStateToProps,
   mapDispatchToProps,
 )(NotificationsDisplayComponent);

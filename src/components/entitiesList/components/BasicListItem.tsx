@@ -33,9 +33,7 @@ const BasicListItem: React.FC<Props> = ({
       data-testid="basic-list-item"
       height={48}
       isOmitted={isOmitted}
-      className={css`
-        justify-content: space-between;
-      `}
+      className={css({ justifyContent: "space-between" })}
       {...listRowProps}
     >
       <Flex alignItems="center" data-testid="list-item-inner">
@@ -47,11 +45,11 @@ const BasicListItem: React.FC<Props> = ({
           />
         </When>
         <span
-          className={css`
-            font-weight: 400;
-            margin-left: 0.5rem;
-            margin-right: 1rem;
-          `}
+          className={css({
+            fontWeight: 400,
+            marginLeft: "0.5rem",
+            marginRight: "1rem",
+          })}
         >
           {name}
         </span>

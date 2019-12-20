@@ -16,25 +16,25 @@ const Loader: React.FC = ({ children }) => {
     }
   `;
 
-  const cubeClass = css`
-    float: left;
-    width: 50%;
-    height: 50%;
-    position: relative;
-    transform: scale(1.1);
+  const cubeClass = css({
+    float: "left",
+    width: "50%",
+    height: "50%",
+    position: "relative",
+    transform: "scale(1.1)",
 
-    &:before {
-      content: "";
-      position: absolute;
-      top: 0;
-      left: 0;
-      width: 100%;
-      height: 100%;
-      animation: ${cubeFoldingAnimation} 2.4s infinite linear both;
-      background-color: var(--info);
-      transform-origin: 100% 100%;
-    }
-  `;
+    "&:before": {
+      content: `""`,
+      position: "absolute",
+      top: 0,
+      left: 0,
+      width: "100%",
+      height: "100%",
+      animation: `${cubeFoldingAnimation} 2.4s infinite linear both`,
+      backgroundColor: "var(--info)",
+      transformOrigin: "100% 100%",
+    },
+  });
 
   const cubeOrientations = [
     { rotation: "90deg", delay: "0.3s" },
@@ -45,12 +45,12 @@ const Loader: React.FC = ({ children }) => {
   return (
     <div>
       <div
-        className={css`
-          margin: 3rem auto;
-          width: 6rem;
-          height: 6rem;
-          transform: rotateZ(45deg);
-        `}
+        className={css({
+          margin: "3rem auto",
+          width: "6rem",
+          height: "6rem",
+          transform: "rotateZ(45deg)",
+        })}
       >
         <div className={cubeClass} />
         {cubeOrientations.map(({ rotation, delay }) => (
@@ -58,22 +58,20 @@ const Loader: React.FC = ({ children }) => {
             key={rotation}
             className={classnames(
               cubeClass,
-              css`
-                transform: scale(1.1) rotateZ(${rotation});
-                &:before {
-                  animation-delay: ${delay};
-                }
-              `,
+              css({
+                transform: `scale(1.1) rotateZ(${rotation})`,
+
+                "&:before": {
+                  animationDelay: delay,
+                },
+              }),
             )}
           />
         ))}
       </div>
       <div
         data-testid="loader-message"
-        className={css`
-          text-align: center;
-          font-size: 2rem;
-        `}
+        className={css({ textAlign: "center", fontSize: "2rem" })}
       >
         {children}
       </div>

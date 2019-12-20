@@ -8,16 +8,17 @@ interface Props {
 const HeadersRow: React.FC<Props> = ({ children, hasTopBorder }) => (
   <tr
     data-testid="time-entry-table-headers-row"
-    className={css`
-      ${hasTopBorder && "border-top: 1px solid rgba(10, 10, 10, 0.1);"};
-      td {
-        color: var(--info);
-        font-size: 12px;
-        font-weight: 700;
-        text-transform: uppercase;
-        ${hasTopBorder && "padding-top: 4px"};
-      }
-    `}
+    className={css({
+      borderTop: hasTopBorder ? "1px solid rgba(10, 10, 10, 0.1)" : undefined,
+
+      td: {
+        color: "var(--info)",
+        fontSize: 12,
+        fontWeight: 700,
+        textTransform: "uppercase",
+        paddingTop: hasTopBorder ? 4 : undefined,
+      },
+    })}
   >
     {children}
   </tr>

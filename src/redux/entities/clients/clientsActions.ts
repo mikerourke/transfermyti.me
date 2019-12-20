@@ -1,5 +1,5 @@
-import { createAsyncAction, createStandardAction } from "typesafe-actions";
-import { batchClockifyTransferRequests } from "~/redux/utils";
+import { createAsyncAction, createAction } from "typesafe-actions";
+import { batchClockifyTransferRequests, paginatedFetch } from "~/redux/utils";
 import {
   apiCreateClockifyClient,
   apiFetchClockifyClients,
@@ -34,9 +34,9 @@ export const clockifyClientsTransfer = createAsyncAction(
   "@clients/CLOCKIFY_TRANSFER_FAILURE",
 )<void, EntitiesFetchPayloadModel<ClockifyClientModel>, void>();
 
-export const flipIsClientIncluded = createStandardAction(
-  "@clients/FLIP_IS_INCLUDED",
-)<string>();
+export const flipIsClientIncluded = createAction("@clients/FLIP_IS_INCLUDED")<
+  string
+>();
 
 export const fetchClockifyClients = (workspaceId: string) => async (
   dispatch: ReduxDispatch,
@@ -44,14 +44,16 @@ export const fetchClockifyClients = (workspaceId: string) => async (
   dispatch(clockifyClientsFetch.request());
 
   try {
-    const clients = await apiFetchClockifyClients(workspaceId);
-
-    return dispatch(
+    const clients = await paginatedFetch({
+      apiFetchFunc: apiFetchClockifyClients,
+      funcArgs: [workspaceId],
+    });
+    dispatch(
       clockifyClientsFetch.success({ entityRecords: clients, workspaceId }),
     );
   } catch (err) {
     dispatch(showFetchErrorNotification(err));
-    return dispatch(clockifyClientsFetch.failure());
+    dispatch(clockifyClientsFetch.failure());
   }
 };
 
@@ -62,13 +64,12 @@ export const fetchTogglClients = (workspaceId: string) => async (
 
   try {
     const clients = await apiFetchTogglClients(workspaceId);
-
-    return dispatch(
+    dispatch(
       togglClientsFetch.success({ entityRecords: clients, workspaceId }),
     );
   } catch (err) {
     dispatch(showFetchErrorNotification(err));
-    return dispatch(togglClientsFetch.failure());
+    dispatch(togglClientsFetch.failure());
   }
 };
 
@@ -80,7 +81,9 @@ export const transferClientsToClockify = (
   const clientsInWorkspace = selectClientsTransferPayloadForWorkspace(state)(
     togglWorkspaceId,
   );
-  if (clientsInWorkspace.length === 0) return Promise.resolve();
+  if (clientsInWorkspace.length === 0) {
+    return;
+  }
 
   dispatch(clockifyClientsTransfer.request());
 
@@ -95,7 +98,7 @@ export const transferClientsToClockify = (
       togglWorkspaceId,
     });
 
-    return dispatch(
+    dispatch(
       clockifyClientsTransfer.success({
         entityRecords: clients,
         workspaceId: clockifyWorkspaceId,

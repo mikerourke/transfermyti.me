@@ -6,7 +6,7 @@ import { updateTransferType } from "~/redux/app/appActions";
 import { selectCurrentTransferType } from "~/redux/app/appSelectors";
 import StepPage, { StepPageProps } from "~/components/stepPage/StepPage";
 import TransferTypeColumn from "./components/TransferTypeColumn";
-import { ReduxDispatch, ReduxState, TransferType } from "~/types";
+import { ReduxState, TransferType } from "~/types";
 
 // TODO: Disable multi-user mode button and add column to delete all entries.
 
@@ -23,7 +23,9 @@ export const SelectTransferTypeStepComponent: React.FC<Props> = ({
   onUpdateTransferType,
   ...stepPageProps
 }) => {
-  const handleTransferTypeSelect = (transferType: TransferType) => () => {
+  const handleTransferTypeSelect = (
+    transferType: TransferType,
+  ): VoidFunction => (): void => {
     onUpdateTransferType(transferType);
   };
 
@@ -39,11 +41,7 @@ export const SelectTransferTypeStepComponent: React.FC<Props> = ({
       }
       {...stepPageProps}
     >
-      <div
-        className={css`
-          padding: 0 0.25rem 2rem 0.25rem;
-        `}
-      >
+      <div className={css({ padding: "0 0.25rem 2rem 0.25rem" })}>
         <Columns isCentered>
           <TransferTypeColumn
             isDisabled={false}
@@ -73,14 +71,13 @@ export const SelectTransferTypeStepComponent: React.FC<Props> = ({
 
 type Props = ConnectStateProps & ConnectDispatchProps & StepPageProps;
 
-const mapStateToProps = (state: ReduxState) => ({
+const mapStateToProps = (state: ReduxState): ConnectStateProps => ({
   currentTransferType: selectCurrentTransferType(state),
 });
 
-const mapDispatchToProps = (dispatch: ReduxDispatch) => ({
-  onUpdateTransferType: (newTransferType: TransferType) =>
-    dispatch(updateTransferType(newTransferType)),
-});
+const mapDispatchToProps: ConnectDispatchProps = {
+  onUpdateTransferType: updateTransferType,
+};
 
 export default connect<ConnectStateProps, ConnectDispatchProps, StepPageProps>(
   mapStateToProps,

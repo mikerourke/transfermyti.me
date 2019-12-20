@@ -1,5 +1,4 @@
-import { getType } from "typesafe-actions";
-import { combineActions, handleActions } from "redux-actions";
+import { createReducer, ActionType } from "typesafe-actions";
 import { get } from "lodash";
 import * as utils from "~/redux/utils";
 import { togglTimeEntriesFetch } from "~/redux/entities/timeEntries/timeEntriesActions";
@@ -7,15 +6,16 @@ import * as usersActions from "./usersActions";
 import {
   ClockifyUserModel,
   CompoundUserModel,
-  EntitiesFetchPayloadModel,
   EntityGroup,
   EntityType,
-  ReduxAction,
   ReduxStateEntryForTool,
-  TogglTimeEntryModel,
   TogglUserModel,
   ToolName,
 } from "~/types";
+
+type UsersAction = ActionType<
+  typeof usersActions & typeof togglTimeEntriesFetch
+>;
 
 export interface UsersState {
   readonly clockify: ReduxStateEntryForTool<CompoundUserModel>;
@@ -51,81 +51,68 @@ const getSchemaProcessStrategy = (workspaceId: string) => (
   memberOf: EntityGroup.Users,
 });
 
-export const usersReducer = handleActions(
-  {
-    [combineActions(
-      getType(usersActions.clockifyUsersFetch.success),
-      getType(usersActions.clockifyUsersTransfer.success),
-    )]: (
-      state: UsersState,
-      {
-        payload: { entityRecords, workspaceId },
-      }: ReduxAction<EntitiesFetchPayloadModel<ClockifyUserModel>>,
-    ): UsersState => {
+export const usersReducer = createReducer<UsersState, UsersAction>(initialState)
+  .handleAction(
+    [
+      usersActions.clockifyUsersFetch.success,
+      usersActions.clockifyUsersTransfer.success,
+    ],
+    (state, { payload }) => {
       const normalizedState = utils.normalizeState({
         toolName: ToolName.Clockify,
         entityGroup: EntityGroup.Users,
         entityState: state,
-        payload: entityRecords,
-        schemaProcessStrategy: getSchemaProcessStrategy(workspaceId),
+        payload: payload.entityRecords,
+        schemaProcessStrategy: getSchemaProcessStrategy(payload.workspaceId),
       });
 
-      return utils.linkEntitiesInStateByName(
+      const linkedState = utils.linkEntitiesInStateByName(
         EntityGroup.Users,
         normalizedState,
       );
+      return { ...linkedState, isFetching: false };
     },
-
-    [getType(usersActions.togglUsersFetch.success)]: (
-      state: UsersState,
-      {
-        payload: { entityRecords, workspaceId },
-      }: ReduxAction<EntitiesFetchPayloadModel<TogglUserModel>>,
-    ): UsersState =>
-      utils.normalizeState({
-        toolName: ToolName.Toggl,
-        entityGroup: EntityGroup.Users,
-        entityState: state,
-        payload: entityRecords,
-        schemaProcessStrategy: getSchemaProcessStrategy(workspaceId),
-      }),
-
-    [combineActions(
-      getType(usersActions.clockifyUsersFetch.request),
-      getType(usersActions.togglUsersFetch.request),
-      getType(usersActions.clockifyUsersTransfer.request),
-    )]: (state: UsersState): UsersState => ({
+  )
+  .handleAction(usersActions.togglUsersFetch.success, (state, { payload }) => {
+    const normalizedState = utils.normalizeState({
+      toolName: ToolName.Toggl,
+      entityGroup: EntityGroup.Users,
+      entityState: state,
+      payload: payload.entityRecords,
+      schemaProcessStrategy: getSchemaProcessStrategy(payload.workspaceId),
+    });
+    return { ...normalizedState, isFetching: false };
+  })
+  .handleAction(
+    [
+      usersActions.clockifyUsersFetch.request,
+      usersActions.clockifyUsersTransfer.request,
+      usersActions.togglUsersFetch.request,
+    ],
+    state => ({
       ...state,
       isFetching: true,
     }),
-
-    [combineActions(
-      getType(usersActions.clockifyUsersFetch.success),
-      getType(usersActions.clockifyUsersFetch.failure),
-      getType(usersActions.togglUsersFetch.success),
-      getType(usersActions.togglUsersFetch.failure),
-      getType(usersActions.clockifyUsersTransfer.success),
-      getType(usersActions.clockifyUsersTransfer.failure),
-    )]: (state: UsersState): UsersState => ({
+  )
+  .handleAction(
+    [
+      usersActions.clockifyUsersFetch.failure,
+      usersActions.clockifyUsersTransfer.failure,
+      usersActions.togglUsersFetch.failure,
+    ],
+    state => ({
       ...state,
       isFetching: false,
     }),
-
-    [getType(usersActions.flipIsUserIncluded)]: (
-      state: UsersState,
-      { payload: userId }: ReduxAction<string>,
-    ): UsersState => utils.flipEntityInclusion(state, userId),
-
-    [getType(togglTimeEntriesFetch.success)]: (
-      state: UsersState,
-      { payload: timeEntries }: ReduxAction<Array<TogglTimeEntryModel>>,
-    ) =>
-      utils.appendEntryCountToState({
-        entityType: EntityType.User,
-        toolName: ToolName.Toggl,
-        entityState: state,
-        timeEntries,
-      }),
-  },
-  initialState,
-);
+  )
+  .handleAction(usersActions.flipIsUserIncluded, (state, { payload }) =>
+    utils.flipEntityInclusion(state, payload),
+  )
+  .handleAction(togglTimeEntriesFetch.success, (state, { payload }) =>
+    utils.appendEntryCountToState({
+      entityType: EntityType.User,
+      toolName: ToolName.Toggl,
+      entityState: state,
+      timeEntries: payload,
+    }),
+  );

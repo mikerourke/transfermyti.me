@@ -1,3 +1,5 @@
+import qs from "qs";
+import { API_PAGE_SIZE } from "~/constants";
 import { fetchArray, fetchObject } from "./fetchByPayloadType";
 import {
   ClockifyClientModel,
@@ -8,8 +10,13 @@ import {
 
 export const apiFetchClockifyClients = (
   workspaceId: string,
-): Promise<Array<ClockifyClientModel>> =>
-  fetchArray(`/clockify/api/v1/workspaces/${workspaceId}/clients`);
+  page: number,
+): Promise<Array<ClockifyClientModel>> => {
+  const query = qs.stringify({ page, "page-size": API_PAGE_SIZE });
+  return fetchArray(
+    `/clockify/api/v1/workspaces/${workspaceId}/clients?${query}`,
+  );
+};
 
 export const apiFetchTogglClients = (
   workspaceId: string,
@@ -22,5 +29,5 @@ export const apiCreateClockifyClient = (
 ): Promise<ClockifyClientModel> =>
   fetchObject(`/clockify/api/v1/workspaces/${workspaceId}/clients`, {
     method: HttpMethod.Post,
-    body: client as any,
+    body: client as unknown,
   });

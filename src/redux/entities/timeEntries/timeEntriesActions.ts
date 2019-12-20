@@ -1,10 +1,10 @@
-import { createAsyncAction, createStandardAction } from "typesafe-actions";
+import { createAsyncAction, createAction } from "typesafe-actions";
 import { flatten, isNil } from "lodash";
 import { pause } from "~/utils/pause";
 import {
   batchClockifyTransferRequests,
-  buildThrottler,
   getValidEntities,
+  paginatedFetch,
 } from "~/redux/utils";
 import {
   apiCreateClockifyTimeEntry,
@@ -21,7 +21,6 @@ import {
   selectTogglUsersById,
 } from "~/redux/entities/users/usersSelectors";
 import { updateIsWorkspaceYearIncluded } from "~/redux/entities/workspaces/workspacesActions";
-import { selectTogglWorkspaceIncludedYears } from "~/redux/entities/workspaces/workspacesSelectors";
 import { TimeEntryTransform } from "./TimeEntryTransform";
 import { TimeEntriesState } from "./timeEntriesReducer";
 import { selectTimeEntriesForWorkspace } from "./timeEntriesSelectors";
@@ -57,11 +56,11 @@ export const clockifyTimeEntriesTransfer = createAsyncAction(
   "@timeEntries/CLOCKIFY_TRANSFER_FAILURE",
 )<void, Array<CompoundTimeEntryModel>, void>();
 
-export const flipIsTimeEntryIncluded = createStandardAction(
+export const flipIsTimeEntryIncluded = createAction(
   "@timeEntries/FLIP_IS_INCLUDED",
 )<string>();
 
-export const addLinksToTimeEntries = createStandardAction(
+export const addLinksToTimeEntries = createAction(
   "@timeEntries/ADD_LINKS_TO_TIME_ENTRIES",
 )<TimeEntriesState>();
 
@@ -74,12 +73,10 @@ export const fetchClockifyTimeEntries = (workspaceId: string) => async (
   try {
     const state = getState();
     const { clockifyUserId } = selectCredentials(state);
-    const includedYears = selectTogglWorkspaceIncludedYears(state, workspaceId);
 
-    const clockifyTimeEntries = await fetchClockifyTimeEntriesForIncludedYears({
-      userId: clockifyUserId,
-      workspaceId,
-      years: includedYears,
+    const clockifyTimeEntries = await paginatedFetch({
+      apiFetchFunc: apiFetchClockifyTimeEntries,
+      funcArgs: [clockifyUserId, workspaceId],
     });
 
     const usersById = selectClockifyUsersById(state);
@@ -96,11 +93,10 @@ export const fetchClockifyTimeEntries = (workspaceId: string) => async (
         usersById,
       }),
     );
-
-    return dispatch(clockifyTimeEntriesFetch.success(timeEntries));
+    dispatch(clockifyTimeEntriesFetch.success(timeEntries));
   } catch (err) {
     dispatch(showFetchErrorNotification(err));
-    return dispatch(clockifyTimeEntriesFetch.failure());
+    dispatch(clockifyTimeEntriesFetch.failure());
   }
 };
 
@@ -167,10 +163,10 @@ export const fetchTogglTimeEntries = (workspaceId: string) => async (
       }),
     );
 
-    return dispatch(togglTimeEntriesFetch.success(timeEntries));
+    dispatch(togglTimeEntriesFetch.success(timeEntries));
   } catch (err) {
     dispatch(showFetchErrorNotification(err));
-    return dispatch(togglTimeEntriesFetch.failure());
+    dispatch(togglTimeEntriesFetch.failure());
   }
 };
 
@@ -182,7 +178,9 @@ export const transferTimeEntriesToClockify = (
   const timeEntriesInWorkspace = selectTimeEntriesForWorkspace(state)(
     togglWorkspaceId,
   );
-  if (timeEntriesInWorkspace.length === 0) return Promise.resolve();
+  if (timeEntriesInWorkspace.length === 0) {
+    return;
+  }
 
   dispatch(clockifyTimeEntriesTransfer.request());
 
@@ -203,41 +201,12 @@ export const transferTimeEntriesToClockify = (
       entitiesByGroup: selectEntitiesByGroupFactory(ToolName.Clockify)(state),
     });
 
-    return dispatch(clockifyTimeEntriesTransfer.success(timeEntries));
+    dispatch(clockifyTimeEntriesTransfer.success(timeEntries));
   } catch (err) {
     dispatch(showFetchErrorNotification(err));
-    return dispatch(clockifyTimeEntriesTransfer.failure());
+    dispatch(clockifyTimeEntriesTransfer.failure());
   }
 };
-
-async function fetchClockifyTimeEntriesForIncludedYears({
-  userId,
-  workspaceId,
-  years,
-}: {
-  userId: string;
-  workspaceId: string;
-  years: Array<number>;
-}): Promise<Array<ClockifyTimeEntryModel>> {
-  const { promiseThrottle, throttledFunc } = buildThrottler(
-    4,
-    apiFetchClockifyTimeEntries,
-  );
-
-  const allYearsTimeEntries: Array<Array<ClockifyTimeEntryModel>> = [];
-  for (const year of years) {
-    await promiseThrottle
-      .add(
-        // @ts-ignore
-        throttledFunc.bind(this, userId, workspaceId, year),
-      )
-      .then((yearEntries: Array<ClockifyTimeEntryModel>) => {
-        allYearsTimeEntries.push(yearEntries);
-      });
-  }
-
-  return flatten(allYearsTimeEntries);
-}
 
 async function fetchTogglTimeEntriesForYear({
   togglEmail,
@@ -247,16 +216,20 @@ async function fetchTogglTimeEntriesForYear({
   togglEmail: string;
   workspaceId: string;
   year: number;
-}) {
+}): Promise<Array<TogglTimeEntryModel>> {
   const {
     total_count: totalCount,
     per_page: perPage,
     data: firstPageEntries,
   } = await apiFetchTogglTimeEntries(togglEmail, workspaceId, year, 1);
 
-  if (totalCount === 0) return [];
+  if (totalCount === 0) {
+    return [];
+  }
 
-  if (totalCount <= perPage) return firstPageEntries;
+  if (totalCount <= perPage) {
+    return firstPageEntries;
+  }
 
   await pause(1_000);
   const totalPages = Math.ceil(totalCount / perPage);
@@ -307,7 +280,9 @@ function convertToCompoundTimeEntries({
   timeEntries: Array<TimeEntryForTool>;
   entitiesByGroup: EntitiesByGroupModel;
 }): Array<CompoundTimeEntryModel> {
-  if (getValidEntities(timeEntries).length === 0) return [];
+  if (getValidEntities(timeEntries).length === 0) {
+    return [];
+  }
 
   return timeEntries.map(timeEntry => {
     const transform = new TimeEntryTransform(timeEntry);

@@ -1,6 +1,5 @@
-import { createAsyncAction, createStandardAction } from "typesafe-actions";
-import { flatten } from "lodash";
-import { batchClockifyTransferRequests, buildThrottler } from "~/redux/utils";
+import { createAsyncAction, createAction } from "typesafe-actions";
+import { batchClockifyTransferRequests, paginatedFetch } from "~/redux/utils";
 import {
   apiCreateClockifyTask,
   apiFetchClockifyTasks,
@@ -36,9 +35,9 @@ export const clockifyTasksTransfer = createAsyncAction(
   "@tasks/CLOCKIFY_TRANSFER_FAILURE",
 )<void, EntitiesFetchPayloadModel<ClockifyTaskModel>, void>();
 
-export const flipIsTaskIncluded = createStandardAction(
-  "@tasks/FLIP_IS_INCLUDED",
-)<string>();
+export const flipIsTaskIncluded = createAction("@tasks/FLIP_IS_INCLUDED")<
+  string
+>();
 
 export const fetchClockifyTasks = (workspaceId: string) => async (
   dispatch: ReduxDispatch,
@@ -50,29 +49,19 @@ export const fetchClockifyTasks = (workspaceId: string) => async (
     const state = getState();
     const projectIds = selectClockifyProjectIds(state);
 
-    const { promiseThrottle, throttledFunc } = buildThrottler(
-      4,
-      apiFetchClockifyTasks,
-    );
-
-    const projectTasks: Array<Array<ClockifyTaskModel>> = [];
+    const tasks: Array<ClockifyTaskModel> = [];
     for (const projectId of projectIds) {
-      await promiseThrottle
-        // @ts-ignore
-        .add(throttledFunc.bind(this, workspaceId, projectId))
-        .then((tasks: Array<ClockifyTaskModel>) => {
-          projectTasks.push(tasks);
-        });
+      const projectTasks = await paginatedFetch({
+        apiFetchFunc: apiFetchClockifyTasks,
+        funcArgs: [workspaceId, projectId],
+      });
+      tasks.push(...projectTasks);
     }
 
-    const tasks = flatten(projectTasks);
-
-    return dispatch(
-      clockifyTasksFetch.success({ entityRecords: tasks, workspaceId }),
-    );
+    dispatch(clockifyTasksFetch.success({ entityRecords: tasks, workspaceId }));
   } catch (err) {
     dispatch(showFetchErrorNotification(err));
-    return dispatch(clockifyTasksFetch.failure());
+    dispatch(clockifyTasksFetch.failure());
   }
 };
 
@@ -83,12 +72,10 @@ export const fetchTogglTasks = (workspaceId: string) => async (
 
   try {
     const tasks = await apiFetchTogglTasks(workspaceId);
-    return dispatch(
-      togglTasksFetch.success({ entityRecords: tasks, workspaceId }),
-    );
+    dispatch(togglTasksFetch.success({ entityRecords: tasks, workspaceId }));
   } catch (err) {
     dispatch(showFetchErrorNotification(err));
-    return dispatch(togglTasksFetch.failure());
+    dispatch(togglTasksFetch.failure());
   }
 };
 
@@ -100,7 +87,9 @@ export const transferTasksToClockify = (
   const tasksInWorkspace = selectTasksTransferPayloadForWorkspace(state)(
     togglWorkspaceId,
   );
-  if (tasksInWorkspace.length === 0) return Promise.resolve();
+  if (tasksInWorkspace.length === 0) {
+    return;
+  }
 
   dispatch(clockifyTasksTransfer.request());
 
@@ -115,7 +104,7 @@ export const transferTasksToClockify = (
       togglWorkspaceId,
     });
 
-    return dispatch(
+    dispatch(
       clockifyTasksTransfer.success({
         entityRecords: tasks,
         workspaceId: clockifyWorkspaceId,
@@ -123,6 +112,6 @@ export const transferTasksToClockify = (
     );
   } catch (err) {
     dispatch(showFetchErrorNotification(err));
-    return dispatch(clockifyTasksTransfer.failure());
+    dispatch(clockifyTasksTransfer.failure());
   }
 };
