@@ -1,7 +1,7 @@
 import React from "react";
 import cases from "jest-in-case";
 import { fireEvent, render } from "@testing-library/react";
-import { iconProps, SvgIconName } from "~/components/svgIcon/iconProps";
+import { iconAttributes } from "~/components/svgIcon/SvgIcon";
 import InstructionsSection from "../InstructionsSection";
 
 describe("<InstructionsSection> Component", () => {
@@ -35,12 +35,12 @@ describe("<InstructionsSection> Component", () => {
   test("displays the correct icon based on whether the instructions are expanded", () => {
     const { getByTestId } = render(<InstructionsSection />);
     expect(getByTestId("svg-icon-path").getAttribute("d")).toBe(
-      iconProps[SvgIconName.ExpandLess].path,
+      iconAttributes.expandLess.path,
     );
 
     fireEvent.click(getByTestId("toggle-expanded-button"));
     expect(getByTestId("svg-icon-path").getAttribute("d")).toBe(
-      iconProps[SvgIconName.ExpandMore].path,
+      iconAttributes.expandMore.path,
     );
   });
 });

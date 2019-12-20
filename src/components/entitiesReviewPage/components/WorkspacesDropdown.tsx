@@ -9,7 +9,7 @@ import {
   DropdownTrigger,
 } from "bloomer";
 import { css } from "emotion";
-import SvgIcon, { SvgIconName } from "~/components/svgIcon/SvgIcon";
+import SvgIcon from "~/components/svgIcon/SvgIcon";
 import { CompoundWorkspaceModel } from "~/types";
 
 interface Props {
@@ -59,7 +59,7 @@ const WorkspacesDropdown: React.FC<Props> = ({
         >
           <span>{get(workspacesById, [activeWorkspaceId, "name"], "")}</span>
           <SvgIcon
-            name={SvgIconName.ExpandMore}
+            name="expandMore"
             color="var(--dark-gray)"
             height={16}
             width={16}

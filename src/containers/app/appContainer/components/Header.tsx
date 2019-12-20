@@ -2,7 +2,7 @@ import React from "react";
 import { css } from "emotion";
 import { Container, Hero, HeroBody, HeroHeader, Title } from "bloomer";
 import Flex from "~/components/flex/Flex";
-import SvgIcon, { SvgIconName } from "~/components/svgIcon/SvgIcon";
+import SvgIcon, { IconName } from "~/components/svgIcon/SvgIcon";
 import { TransferType } from "~/types";
 
 interface Props {
@@ -11,11 +11,11 @@ interface Props {
 
 const Header: React.FC<Props> = ({ currentTransferType }) => {
   let mode = "Single User Mode";
-  let iconName = SvgIconName.Person;
+  let iconName: IconName = "person";
 
   if (currentTransferType === TransferType.MultipleUsers) {
     mode = "Multiple User Mode";
-    iconName = SvgIconName.People;
+    iconName = "people";
   }
 
   return (
@@ -41,7 +41,7 @@ const Header: React.FC<Props> = ({ currentTransferType }) => {
               target="_blank"
               rel="noopener noreferrer"
             >
-              <SvgIcon name={SvgIconName.GitHub} color="white" height={16} />
+              <SvgIcon name="github" color="white" height={16} />
             </a>
           </Flex>
         </HeroHeader>

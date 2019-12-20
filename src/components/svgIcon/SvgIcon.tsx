@@ -1,8 +1,81 @@
 import React from "react";
-import { iconProps, SvgIconName } from "./iconProps";
+
+export type IconName =
+  | "chevronDown"
+  | "expandLess"
+  | "expandMore"
+  | "github"
+  | "heart"
+  | "person"
+  | "people";
+
+export const iconAttributes = {
+  chevronDown: {
+    viewBox: "0 0 448 512",
+    path: [
+      "M207.029 381.476 L12.686 187.132 c-9.373-9.373-9.373-24.569 0-33.941 ",
+      "l22.667-22.667 c9.357-9.357 24.522-9.375 33.901-.04 L224 284.505 ",
+      "l154.745-154.021 c9.379-9.335 24.544-9.317 33.901.04 l22.667 22.667 ",
+      "c9.373 9.373 9.373 24.569 0 33.941 L240.971 381.476 ",
+      "c-9.373 9.372-24.569 9.372-33.942 0z",
+    ].join(""),
+  },
+  expandLess: {
+    viewBox: "0 0 24 14.83",
+    path: "M12 0L0 12l2.83 2.83L12 5.66l9.17 9.17L24 12z",
+  },
+  expandMore: {
+    viewBox: "0 0 24 14.83",
+    path: "M21.17 0L12 9.17 2.83 0 0 2.83l12 12 12-12z",
+  },
+  github: {
+    viewBox: "0 0 1024 998",
+    path: [
+      "M0 512q0 166 95.5 298.5T343 996q6 1 10 1t6.5-1.5 4-3 2-5 .5-4.5",
+      "V882q-37 4-66-.5t-45.5-14-29-23.5-17-25.5-9-24T194 780q-9-15-27-27.5",
+      "t-27-20-2-14.5q50-26 113 66 34 51 119 30 10-41 40-70-116-21-172-86",
+      "t-56-158q0-87 55-151-22-65 6-137 29-2 65 11.5t50.5 23T384 264",
+      "q57-16 128.5-16T642 264q13-9 29-19t49-21.5 61-9.5",
+      "q27 71 6 135 56 64 56 152 0 92-56.5 157.5T615 744",
+      "q43 43 43 104v129q0 1 1 3 0 6 .5 9t4.5 6 11 3q154-52 251.5-185.5",
+      "T1024 512q0-104-40.5-199t-109-163.5T711 40.5 512 0 313 40.5",
+      "t-163.5 109T40.5 313 0 512z",
+    ].join(""),
+  },
+  heart: {
+    viewBox: "0 0 1792 1536",
+    path: [
+      "M896 1536q-26 0-44-18L228 916q-10-8-27.5-26",
+      "T145 824.5 77 727 23.5 606 0 468q0-220 127-344T478 0",
+      "q62 0 126.5 21.5t120 58T820 148t76 68q36-36 76-68",
+      "t95.5-68.5 120-58T1314 0q224 0 351 124t127 344",
+      "q0 221-229 450l-623 600q-18 18-44 18z",
+    ].join(""),
+  },
+  people: {
+    viewBox: "0 0 448 288",
+    path: [
+      "M305.454 120c33.599 0 61.092-27.002 61.092-60 0-32.997-27.493-60-61.092-60",
+      "s-61.09 27.003-61.09 60c0 32.998 27.491 60 61.09 60zm-162.908 0",
+      "c33.599 0 61.09-27.002 61.09-60 0-32.997-27.491-60-61.09-60",
+      "S81.454 27.003 81.454 60c0 32.998 27.493 60 61.092 60zm0 44",
+      "C94.688 164 0 186.998 0 234v54h288v-54c0-47.002-97.599-70-145.454-70",
+      "zm162.908 11.003c-6.105 0-10.325 0-17.454.997 23.426 17.002 32 28 32 58",
+      "v54h128v-54c0-47.002-94.688-58.997-142.546-58.997z",
+    ].join(""),
+  },
+  person: {
+    viewBox: "0 0 384 384",
+    path: [
+      "M192 192c52.805 0 96-43.201 96-96S244.805 0 192 0 96 43.201 96 96",
+      "s43.195 96 96 96zm0 48c-63.598 0-192 32.402-192 96v48h384v-48",
+      "c0-63.598-128.402-96-192-96z",
+    ].join(""),
+  },
+};
 
 interface Props extends React.SVGAttributes<SVGElement> {
-  name: SvgIconName;
+  name: IconName;
   color: string;
   classes?: {
     svg?: string;
@@ -11,11 +84,15 @@ interface Props extends React.SVGAttributes<SVGElement> {
 }
 
 const SvgIcon: React.FC<Props> = ({ name, color, classes, ...svgProps }) => (
-  <svg className={classes.svg} viewBox={iconProps[name].viewBox} {...svgProps}>
+  <svg
+    className={classes.svg}
+    viewBox={iconAttributes[name].viewBox}
+    {...svgProps}
+  >
     <path
       data-testid="svg-icon-path"
       className={classes.path}
-      d={iconProps[name].path}
+      d={iconAttributes[name].path}
       fill={color}
     />
   </svg>
@@ -28,5 +105,4 @@ SvgIcon.defaultProps = {
   },
 };
 
-export { SvgIconName } from "./iconProps";
 export default SvgIcon;

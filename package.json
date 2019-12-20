@@ -1,9 +1,9 @@
 {
-  "name": "toggl-to-clockify-web",
+  "name": "transfer-my-time",
   "version": "0.0.1",
-  "description": "Web-based tool to transfer Toggl data to Clockify.",
+  "description": "Web app to transfer data between time tracking tools.",
   "main": "index.js",
-  "repository": "https://github.com/mikerourke/toggl-to-clockify-web.git",
+  "repository": "https://github.com/mikerourke/transfer-my-time.git",
   "author": "Mike Rourke <mike.w.rourke@gmail.com>",
   "license": "MIT",
   "private": false,

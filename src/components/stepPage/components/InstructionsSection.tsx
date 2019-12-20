@@ -3,14 +3,12 @@ import { When } from "react-if";
 import classnames from "classnames";
 import { css } from "emotion";
 import Flex from "~/components/flex/Flex";
-import SvgIcon, { SvgIconName } from "~/components/svgIcon/SvgIcon";
+import SvgIcon from "~/components/svgIcon/SvgIcon";
 
 const BORDER_RAD = "0.5rem";
 
 const InstructionsSection: React.FC = ({ children }) => {
   const [isExpanded, setIsExpanded] = useState<boolean>(true);
-
-  const { ExpandMore, ExpandLess } = SvgIconName;
 
   const bottomRadiusClass = css({
     borderBottomLeftRadius: BORDER_RAD,
@@ -56,7 +54,7 @@ const InstructionsSection: React.FC = ({ children }) => {
           onClick={() => setIsExpanded(!isExpanded)}
         >
           <SvgIcon
-            name={isExpanded ? ExpandLess : ExpandMore}
+            name={isExpanded ? "expandLess" : "expandMore"}
             color="white"
             height={12}
           />
