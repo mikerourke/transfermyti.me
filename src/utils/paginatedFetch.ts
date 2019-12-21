@@ -7,14 +7,14 @@ export async function paginatedFetch<TEntity>({
   funcArgs,
   requestsPerSecond = 4,
 }: {
-  apiFetchFunc: (...args: Array<unknown>) => Promise<Array<TEntity>>;
-  funcArgs: Array<unknown>;
+  apiFetchFunc: (...args: unknown[]) => Promise<TEntity[]>;
+  funcArgs: unknown[];
   requestsPerSecond?: number;
-}): Promise<Array<TEntity>> {
+}): Promise<TEntity[]> {
   let keepFetching = true;
   let currentPage = 1;
 
-  const allEntities: Array<TEntity> = [];
+  const allEntities: TEntity[] = [];
 
   while (keepFetching) {
     const entities = await apiFetchFunc(...funcArgs, currentPage);

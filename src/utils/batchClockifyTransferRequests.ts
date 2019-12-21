@@ -8,8 +8,8 @@ interface Params<TEntity, TResponse> {
   requestsPerSecond: number;
   dispatch: ReduxDispatch;
   entityGroup: EntityGroup;
-  entityRecordsInWorkspace: Array<TEntity>;
-  apiFunc: (...args: Array<unknown>) => Promise<TResponse>;
+  entityRecordsInWorkspace: TEntity[];
+  apiFunc: (...args: unknown[]) => Promise<TResponse>;
   clockifyWorkspaceId: string;
   togglWorkspaceId: string;
 }
@@ -31,14 +31,14 @@ export async function batchClockifyTransferRequests<TEntity, TResponse>({
   apiFunc,
   clockifyWorkspaceId,
   togglWorkspaceId,
-}: Params<TEntity, TResponse>): Promise<Array<TResponse>> {
+}: Params<TEntity, TResponse>): Promise<TResponse[]> {
   const { promiseThrottle, throttledFunc } = buildThrottler(
     requestsPerSecond,
     apiFunc,
   );
 
-  const fetchResults: Array<TResponse> = [];
-  const fetchErrors: Array<FetchErrorModel> = [];
+  const fetchResults: TResponse[] = [];
+  const fetchErrors: FetchErrorModel[] = [];
 
   const countTotalInGroup = entityRecordsInWorkspace.length;
   let countCurrentInGroup = 1;
@@ -79,7 +79,7 @@ export async function batchClockifyTransferRequests<TEntity, TResponse>({
 }
 
 // TODO: Change this to return and render in component.
-function displayFetchErrors(fetchErrors: Array<FetchErrorModel>): void {
+function displayFetchErrors(fetchErrors: FetchErrorModel[]): void {
   if (fetchErrors.length === 0) {
     return;
   }

@@ -8,7 +8,7 @@ export const apiFetchClockifyTasks = (
   workspaceId: string,
   projectId: string,
   page: number,
-): Promise<Array<ClockifyTaskModel>> => {
+): Promise<ClockifyTaskModel[]> => {
   const query = qs.stringify({ page, "page-size": API_PAGE_SIZE });
   return fetchArray(
     `/clockify/api/v1/workspaces/${workspaceId}/projects/${projectId}/tasks?${query}`,
@@ -17,7 +17,7 @@ export const apiFetchClockifyTasks = (
 
 export const apiFetchTogglTasks = (
   workspaceId: string,
-): Promise<Array<TogglTaskModel>> =>
+): Promise<TogglTaskModel[]> =>
   fetchArray(`/toggl/api/workspaces/${workspaceId}/tasks?active=both`);
 
 export const apiCreateClockifyTask = (

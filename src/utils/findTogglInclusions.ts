@@ -6,8 +6,8 @@ import { get, isNil } from "lodash";
  * be included in the transfer to Clockify.
  */
 export function findTogglInclusions<TEntity>(
-  entityRecords: Array<TEntity>,
-): Array<TEntity> {
+  entityRecords: TEntity[],
+): TEntity[] {
   return entityRecords.reduce(
     (acc, entityRecord: TEntity & { isIncluded: boolean }) => {
       // If there is no corresponding entity with the same name on Clockify

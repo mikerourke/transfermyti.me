@@ -6,14 +6,14 @@ import { EntityGroupsByKey } from "~/common/commonTypes";
  * corresponding workspaceId.
  */
 export function groupByWorkspace<TEntity>(
-  entityRecords: Array<TEntity>,
+  entityRecords: TEntity[],
 ): EntityGroupsByKey<TEntity> {
   const sortedEntityRecords = sortBy(entityRecords, record =>
     get(record, "name", null),
-  ) as Array<TEntity>;
+  ) as TEntity[];
   const validEntityRecords = compact(sortedEntityRecords);
 
-  const entitiesByWorkspace: Record<string, Array<TEntity>> = {};
+  const entitiesByWorkspace: Record<string, TEntity[]> = {};
 
   validEntityRecords.forEach(entityRecord => {
     const workspaceId = get(entityRecord, "workspaceId", null);

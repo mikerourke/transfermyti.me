@@ -7,7 +7,7 @@ import { CompoundTagModel } from "./tagsTypes";
 
 export const selectTogglTags = createSelector(
   (state: ReduxState) => Object.values(state.tags.toggl.byId),
-  (tags): Array<CompoundTagModel> => tags,
+  (tags): CompoundTagModel[] => tags,
 );
 
 export const selectTogglTagsByWorkspaceFactory = (
@@ -20,14 +20,12 @@ export const selectTogglTagsByWorkspaceFactory = (
 
 export const selectTagsTransferPayloadForWorkspace = createSelector(
   selectTogglTagsByWorkspaceFactory(true),
-  inclusionsByWorkspace => (
-    workspaceIdToGet: string,
-  ): Array<EntityWithName> => {
+  inclusionsByWorkspace => (workspaceIdToGet: string): EntityWithName[] => {
     const inclusions = get(
       inclusionsByWorkspace,
       workspaceIdToGet,
       [],
-    ) as Array<CompoundTagModel>;
+    ) as CompoundTagModel[];
     if (inclusions.length === 0) {
       return [];
     }

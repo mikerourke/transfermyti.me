@@ -28,7 +28,7 @@ export interface ClockifyUserModel {
   defaultWorkspace: string;
   email: string;
   id: string;
-  memberships: Array<ClockifyMembershipModel>;
+  memberships: ClockifyMembershipModel[];
   name: string;
   profilePicture: string;
   settings: {
@@ -77,7 +77,7 @@ export interface TogglUserModel {
   new_blog_post: unknown;
   should_upgrade: boolean;
   invitation: unknown;
-  userGroupIds?: Array<string>;
+  userGroupIds?: string[];
 }
 
 export interface TogglWorkspaceUserModel {
@@ -92,7 +92,7 @@ export interface TogglWorkspaceUserModel {
   inactive: boolean;
   at: string;
   name: string;
-  group_ids: Array<number> | null;
+  group_ids: number[] | null;
   rate: string | null;
   labour_cost: string | null;
   invite_url: string | null;
@@ -110,7 +110,7 @@ export interface TogglMeResponseModel {
     at: string;
     created_at: string;
     timezone: string;
-    workspaces: Array<TogglWorkspaceModel>;
+    workspaces: TogglWorkspaceModel[];
   };
 }
 
@@ -120,9 +120,9 @@ export interface CompoundUserModel extends BaseCompoundEntityModel {
   email: string;
   isAdmin: boolean | null;
   isActive: boolean;
-  userGroupIds: Array<string> | null;
+  userGroupIds: string[] | null;
 }
 
 export interface AddUsersToWorkspaceRequestModel {
-  emails: Array<string>;
+  emails: string[];
 }

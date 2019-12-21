@@ -44,7 +44,7 @@ export const fetchClockifyTasks = (workspaceId: string) => async (
     const state = getState();
     const projectIds = selectClockifyProjectIds(state);
 
-    const tasks: Array<ClockifyTaskModel> = [];
+    const tasks: ClockifyTaskModel[] = [];
     for (const projectId of projectIds) {
       const projectTasks = await paginatedFetch({
         apiFetchFunc: apiFetchClockifyTasks,

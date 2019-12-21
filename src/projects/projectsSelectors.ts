@@ -10,7 +10,7 @@ import {
 
 export const selectClockifyProjectIds = createSelector(
   (state: ReduxState) => state.projects.clockify.idValues,
-  (projectIds): Array<string> => projectIds,
+  (projectIds): string[] => projectIds,
 );
 
 export const selectTogglProjectsById = createSelector(
@@ -20,10 +20,10 @@ export const selectTogglProjectsById = createSelector(
 
 export const selectTogglProjectsByWorkspaceFactory = (
   inclusionsOnly: boolean,
-): Selector<ReduxState, Record<string, Array<CompoundProjectModel>>> =>
+): Selector<ReduxState, Record<string, CompoundProjectModel[]>> =>
   createSelector(
     selectTogglProjectsById,
-    (projectsById): Record<string, Array<CompoundProjectModel>> => {
+    (projectsById): Record<string, CompoundProjectModel[]> => {
       const projects = Object.values(projectsById);
 
       const projectsToUse = inclusionsOnly
@@ -39,12 +39,12 @@ export const selectProjectsTransferPayloadForWorkspace = createSelector(
   selectTogglClientMatchingId,
   (inclusionsByWorkspace, getClientMatchingId) => (
     workspaceIdToGet: string,
-  ): Array<ClockifyProjectRequestModel> => {
+  ): ClockifyProjectRequestModel[] => {
     const inclusions = get(
       inclusionsByWorkspace,
       workspaceIdToGet,
       [],
-    ) as Array<CompoundProjectModel>;
+    ) as CompoundProjectModel[];
     if (inclusions.length === 0) {
       return [];
     }

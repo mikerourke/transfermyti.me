@@ -36,7 +36,7 @@ export interface ClockifyWorkspaceModel {
     amount: number;
     currency: string;
   };
-  memberships: Array<ClockifyMembershipModel>;
+  memberships: ClockifyMembershipModel[];
   workspaceSettings: ClockifyWorkspaceSettingsModel;
   imageUrl: string;
 }
@@ -64,13 +64,13 @@ export interface CompoundWorkspaceModel extends BaseCompoundEntityModel {
   id: string;
   name: string;
   inclusionsByYear?: Record<string, boolean>;
-  userIds?: Array<string>;
+  userIds?: string[];
   isAdmin: boolean | null;
 }
 
 export type EntitiesByGroupByWorkspaceModel = Record<
   string,
-  Record<EntityGroup, Array<CompoundEntityModel>>
+  Record<EntityGroup, CompoundEntityModel[]>
 >;
 
 export interface RecordCountsModel {

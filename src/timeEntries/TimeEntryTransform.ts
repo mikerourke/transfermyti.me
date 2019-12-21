@@ -1,7 +1,11 @@
 import { get, isEmpty, isNil } from "lodash";
 import { findIdFieldValue } from "~/utils";
 import { CompoundClientModel } from "~/clients/clientsTypes";
-import { EntitiesByGroupModel, EntityGroup, EntityType } from "~/common/commonTypes";
+import {
+  EntitiesByGroupModel,
+  EntityGroup,
+  EntityType,
+} from "~/common/commonTypes";
 import { CompoundTimeEntryModel, TimeEntryForTool } from "./timeEntriesTypes";
 
 interface ClientDetails {
@@ -91,9 +95,9 @@ export class TimeEntryTransform {
       return nullClientDetails;
     }
 
-    const clients = Object.values(this.entitiesByGroup.clients.byId) as Array<
-      CompoundClientModel
-    >;
+    const clients = Object.values(
+      this.entitiesByGroup.clients.byId,
+    ) as CompoundClientModel[];
     if (clients.length === 0) {
       return nullClientDetails;
     }
@@ -114,7 +118,7 @@ export class TimeEntryTransform {
     return get(this.timeEntryRecord, ["project", "clientName"], null);
   }
 
-  private findUserGroupIds(userId: string): Array<string> {
+  private findUserGroupIds(userId: string): string[] {
     const usersById = this.entitiesByGroup.users.byId;
     if (isEmpty(usersById)) {
       return [];

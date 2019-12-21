@@ -17,7 +17,11 @@ import {
   apiFetchTogglWorkspaces,
 } from "./workspacesApi";
 import { selectCountTotalOfTransfersInWorkspace } from "./workspacesSelectors";
-import { CompoundEntityModel, EntityGroup, ToolName } from "~/common/commonTypes";
+import {
+  CompoundEntityModel,
+  EntityGroup,
+  ToolName,
+} from "~/common/commonTypes";
 import { ReduxDispatch, ReduxGetState } from "~/redux/reduxTypes";
 import {
   ClockifyWorkspaceModel,
@@ -30,23 +34,23 @@ export const clockifyWorkspacesFetch = createAsyncAction(
   "@workspaces/CLOCKIFY_FETCH_REQUEST",
   "@workspaces/CLOCKIFY_FETCH_SUCCESS",
   "@workspaces/CLOCKIFY_FETCH_FAILURE",
-)<void, Array<ClockifyWorkspaceModel>, void>();
+)<void, ClockifyWorkspaceModel[], void>();
 
 export const togglWorkspacesFetch = createAsyncAction(
   "@workspaces/TOGGL_FETCH_REQUEST",
   "@workspaces/TOGGL_FETCH_SUCCESS",
   "@workspaces/TOGGL_FETCH_FAILURE",
-)<void, Array<TogglWorkspaceModel>, void>();
+)<void, TogglWorkspaceModel[], void>();
 
 export const clockifyWorkspaceTransfer = createAsyncAction(
   "@workspaces/CLOCKIFY_TRANSFER_REQUEST",
   "@workspaces/CLOCKIFY_TRANSFER_SUCCESS",
   "@workspaces/CLOCKIFY_TRANSFER_FAILURE",
-)<void, Array<ClockifyWorkspaceModel>, void>();
+)<void, ClockifyWorkspaceModel[], void>();
 
 export const appendUserIdsToWorkspace = createAction(
   "@workspaces/APPEND_USER_IDS",
-)<{ toolName: ToolName; workspaceId: string; userIds: Array<string> }>();
+)<{ toolName: ToolName; workspaceId: string; userIds: string[] }>();
 
 export const flipIsWorkspaceIncluded = createAction(
   "@workspaces/FLIP_IS_INCLUDED",

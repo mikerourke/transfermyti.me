@@ -63,12 +63,12 @@ export const selectUsersInvitePayloadForWorkspace = createSelector(
   selectCredentials,
   (inclusionsByWorkspace, { togglEmail }) => (
     workspaceIdToGet: string,
-  ): Array<string> => {
+  ): string[] => {
     const inclusions = get(
       inclusionsByWorkspace,
       workspaceIdToGet,
       [],
-    ) as Array<CompoundUserModel>;
+    ) as CompoundUserModel[];
     if (inclusions.length === 0) {
       return [];
     }
@@ -84,9 +84,9 @@ export const selectUsersInvitePayloadForWorkspace = createSelector(
 
 function getValidUsers(
   usersById: Record<string, CompoundUserModel>,
-  userIds: Array<string>,
+  userIds: string[],
   meUserId: string,
-): Array<CompoundUserModel> {
+): CompoundUserModel[] {
   return userIds.reduce((acc, userId) => {
     const userRecord = get(usersById, userId, { linkedId: null });
     if (userId === meUserId) {

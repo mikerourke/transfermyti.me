@@ -19,7 +19,7 @@ const Main = styled.main({
 });
 
 export interface ConnectStateProps {
-  notifications: Array<NotificationModel>;
+  notifications: NotificationModel[];
 }
 
 export interface ConnectDispatchProps {

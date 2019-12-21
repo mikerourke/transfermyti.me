@@ -35,3 +35,12 @@ export interface AggregateTransferCountsModel {
   countCurrentOverall: number;
   countTotalOverall: number;
 }
+
+export enum RoutePath {
+  TransferType = "/transfer-type",
+  Credentials = "/credentials",
+  Workspaces = "/workspaces",
+  ReviewSource = "/review-source",
+  ReviewTarget = "/review-target",
+  PerformTransfer = "/perform-transfer",
+}

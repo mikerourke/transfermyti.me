@@ -12,7 +12,7 @@ const selectTogglClientsById = createSelector(
 
 export const selectTogglClients = createSelector(
   selectTogglClientsById,
-  (clientsById): Array<CompoundClientModel> => Object.values(clientsById),
+  (clientsById): CompoundClientModel[] => Object.values(clientsById),
 );
 
 export const selectTogglClientsByWorkspaceFactory = (
@@ -30,14 +30,12 @@ export const selectTogglClientsByWorkspaceFactory = (
 
 export const selectClientsTransferPayloadForWorkspace = createSelector(
   selectTogglClientsByWorkspaceFactory(true),
-  inclusionsByWorkspace => (
-    workspaceIdToGet: string,
-  ): Array<EntityWithName> => {
+  inclusionsByWorkspace => (workspaceIdToGet: string): EntityWithName[] => {
     const inclusions = get(
       inclusionsByWorkspace,
       workspaceIdToGet,
       [],
-    ) as Array<CompoundClientModel>;
+    ) as CompoundClientModel[];
     if (inclusions.length === 0) {
       return [];
     }

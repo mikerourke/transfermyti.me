@@ -8,7 +8,11 @@ import IncludedYearsSelect from "./IncludedYearsSelect";
 import NoRecordsDisplay from "./NoRecordsDisplay";
 import PageFooter from "./PageFooter";
 import WorkspacesDropdown from "./WorkspacesDropdown";
-import { CompoundEntityModel, EntityGroup, ToolName } from "~/common/commonTypes";
+import {
+  CompoundEntityModel,
+  EntityGroup,
+  ToolName,
+} from "~/common/commonTypes";
 import {
   CompoundWorkspaceModel,
   CountsByGroupByWorkspaceModel,
@@ -57,11 +61,11 @@ const EntitiesReviewPage: React.FC<Props> = ({
     entitiesByGroupByWorkspace,
     [workspaceId, activeEntityGroup],
     [],
-  ) as Array<CompoundEntityModel>;
+  ) as CompoundEntityModel[];
 
   if (showInclusionsOnly && activeEntityRecords.length !== 0) {
     activeEntityRecords = activeEntityRecords.reduce(
-      (acc: Array<CompoundEntityModel>, entityRecord: CompoundEntityModel) => {
+      (acc: CompoundEntityModel[], entityRecord: CompoundEntityModel) => {
         if (!isNil(entityRecord.linkedId) || !entityRecord.isIncluded) {
           return acc;
         }

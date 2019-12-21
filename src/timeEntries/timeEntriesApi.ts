@@ -21,7 +21,7 @@ export const apiFetchClockifyTimeEntries = (
   userId: string,
   workspaceId: string,
   page: number,
-): Promise<Array<ClockifyTimeEntryModel>> => {
+): Promise<ClockifyTimeEntryModel[]> => {
   const query = qs.stringify({ page, "page-size": API_PAGE_SIZE });
   return fetchArray(
     `/clockify/api/v1/workspaces/${workspaceId}/user/${userId}/time-entries?${query}`,

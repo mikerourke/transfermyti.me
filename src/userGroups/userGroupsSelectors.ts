@@ -7,7 +7,7 @@ import { CompoundUserGroupModel } from "./userGroupsTypes";
 
 export const selectTogglUserGroups = createSelector(
   (state: ReduxState) => state.userGroups.toggl.byId,
-  (userGroupsById): Array<CompoundUserGroupModel> =>
+  (userGroupsById): CompoundUserGroupModel[] =>
     Object.values(userGroupsById).filter(({ name }) => !/Admin/gi.test(name)),
 );
 
@@ -27,14 +27,12 @@ export const selectTogglUserGroupsByWorkspaceFactory = (
 
 export const selectUserGroupsTransferPayloadForWorkspace = createSelector(
   selectTogglUserGroupsByWorkspaceFactory(true),
-  inclusionsByWorkspace => (
-    workspaceIdToGet: string,
-  ): Array<EntityWithName> => {
+  inclusionsByWorkspace => (workspaceIdToGet: string): EntityWithName[] => {
     const inclusions = get(
       inclusionsByWorkspace,
       workspaceIdToGet,
       [],
-    ) as Array<CompoundUserGroupModel>;
+    ) as CompoundUserGroupModel[];
     if (inclusions.length === 0) {
       return [];
     }

@@ -92,7 +92,7 @@ const IncludedYearsSelect: React.FC<Props> = ({
   );
 
   const onChange = (
-    selectOption: Array<OptionType>,
+    selectOption: OptionType[],
     actionMeta: ActionMeta,
   ): void => {
     switch (actionMeta.action) {

@@ -7,14 +7,14 @@ import { ClockifyTagModel, TogglTagModel } from "./tagsTypes";
 export const apiFetchClockifyTags = (
   workspaceId: string,
   page: number,
-): Promise<Array<ClockifyTagModel>> => {
+): Promise<ClockifyTagModel[]> => {
   const query = qs.stringify({ page, "page-size": API_PAGE_SIZE });
   return fetchArray(`/clockify/api/v1/workspaces/${workspaceId}/tags?${query}`);
 };
 
 export const apiFetchTogglTags = (
   workspaceId: string,
-): Promise<Array<TogglTagModel>> =>
+): Promise<TogglTagModel[]> =>
   fetchArray(`/toggl/api/workspaces/${workspaceId}/tags`);
 
 export const apiCreateClockifyTag = (

@@ -1,11 +1,15 @@
 import { get, isNil } from "lodash";
-import { CompoundEntityModel, EntityType, ToolName } from "~/common/commonTypes";
+import {
+  CompoundEntityModel,
+  EntityType,
+  ToolName,
+} from "~/common/commonTypes";
 
 interface Params<TEntityState, TTimeEntry> {
   entityType: EntityType;
   toolName: ToolName;
   entityState: TEntityState;
-  timeEntries: Array<TTimeEntry>;
+  timeEntries: TTimeEntry[];
 }
 
 /**
@@ -19,7 +23,7 @@ export function appendEntryCountToState<TEntityState, TTimeEntry>({
   timeEntries,
 }: Params<TEntityState, TTimeEntry>): TEntityState {
   const byIdForTool = get(entityState, [toolName, "byId"], {});
-  const entityRecords: Array<CompoundEntityModel> = Object.values(byIdForTool);
+  const entityRecords: CompoundEntityModel[] = Object.values(byIdForTool);
 
   if (entityRecords.length === 0) {
     return entityState;
@@ -73,7 +77,7 @@ export function appendEntryCountToState<TEntityState, TTimeEntry>({
  */
 function calculateEntryCountByEntityId<TTimeEntry>(
   idField: string,
-  timeEntries: Array<TTimeEntry>,
+  timeEntries: TTimeEntry[],
 ): Record<string, number> {
   return timeEntries.reduce((acc, timeEntry) => {
     // If the timeEntry record has the specified idField (e.g. projectId),

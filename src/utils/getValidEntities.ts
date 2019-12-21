@@ -5,8 +5,8 @@ import { isNil } from "lodash";
  * array with a length greater than 0.
  */
 export function getValidEntities<TEntity>(
-  entityRecords?: Array<TEntity> | null,
-): Array<TEntity> {
+  entityRecords?: TEntity[] | null,
+): TEntity[] {
   if (isNil(entityRecords)) {
     return [];
   }

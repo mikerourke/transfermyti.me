@@ -7,7 +7,7 @@ import { ClockifyClientModel, TogglClientModel } from "./clientsTypes";
 export const apiFetchClockifyClients = (
   workspaceId: string,
   page: number,
-): Promise<Array<ClockifyClientModel>> => {
+): Promise<ClockifyClientModel[]> => {
   const query = qs.stringify({ page, "page-size": API_PAGE_SIZE });
   return fetchArray(
     `/clockify/api/v1/workspaces/${workspaceId}/clients?${query}`,
@@ -16,7 +16,7 @@ export const apiFetchClockifyClients = (
 
 export const apiFetchTogglClients = (
   workspaceId: string,
-): Promise<Array<TogglClientModel>> =>
+): Promise<TogglClientModel[]> =>
   fetchArray(`/toggl/api/workspaces/${workspaceId}/clients`);
 
 export const apiCreateClockifyClient = (

@@ -109,6 +109,6 @@ export const selectTimeEntriesForWorkspace = createSelector(
   selectTimeEntriesByWorkspaceFactory(ToolName.Toggl, true),
   inclusionsByWorkspace => (
     workspaceIdToGet: string,
-  ): Array<DetailedTimeEntryModel> =>
+  ): DetailedTimeEntryModel[] =>
     get(inclusionsByWorkspace, workspaceIdToGet, []),
 );

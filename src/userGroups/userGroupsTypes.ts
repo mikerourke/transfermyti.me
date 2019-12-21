@@ -3,7 +3,7 @@ import { BaseCompoundEntityModel } from "~/common/commonTypes";
 export interface ClockifyUserGroupModel {
   id: string;
   name: string;
-  userIds: Array<string>;
+  userIds: string[];
 }
 
 export interface TogglUserGroupModel {

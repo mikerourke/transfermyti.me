@@ -8,7 +8,7 @@ import { DetailedTimeEntryModel } from "~/timeEntries/timeEntriesTypes";
 
 interface Props {
   entityGroup: EntityGroup;
-  entityRecords: Array<CompoundEntityModel>;
+  entityRecords: CompoundEntityModel[];
   height: number;
   width: number;
   onItemClick?: (

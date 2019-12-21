@@ -17,8 +17,8 @@ interface ClockifyProjectBaseModel {
   color: string;
   billable: boolean;
   hourlyRate: ClockifyHourlyRateModel;
-  memberships?: Array<ClockifyMembershipModel>;
-  tasks?: Array<ClockifyTaskModel>;
+  memberships?: ClockifyMembershipModel[];
+  tasks?: ClockifyTaskModel[];
 }
 
 export interface ClockifyProjectRequestModel extends ClockifyProjectBaseModel {
@@ -67,5 +67,5 @@ export interface CompoundProjectModel extends BaseCompoundEntityModel {
   isPublic: boolean;
   isActive: boolean;
   color: string;
-  userIds: Array<string>;
+  userIds: string[];
 }

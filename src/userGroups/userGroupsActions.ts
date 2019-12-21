@@ -28,7 +28,7 @@ import {
 
 export interface EntryCountCalculatorModel {
   toolName: ToolName;
-  timeEntries: Array<CompoundTimeEntryModel>;
+  timeEntries: CompoundTimeEntryModel[];
   usersById: Record<string, CompoundUserModel>;
 }
 
@@ -161,9 +161,9 @@ function convertToCompoundUserGroups({
   usersByWorkspace,
 }: {
   workspaceId: string;
-  userGroups: Array<TogglUserGroupModel | ClockifyUserGroupModel>;
-  usersByWorkspace: Record<string, Array<CompoundUserModel>>;
-}): Array<CompoundUserGroupModel> {
+  userGroups: (TogglUserGroupModel | ClockifyUserGroupModel)[];
+  usersByWorkspace: Record<string, CompoundUserModel[]>;
+}): CompoundUserGroupModel[] {
   if (getValidEntities(userGroups).length === 0) {
     return [];
   }

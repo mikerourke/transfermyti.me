@@ -14,7 +14,11 @@ import {
   EntitiesByGroupByWorkspaceModel,
   RecordCountsModel,
 } from "~/workspaces/workspacesTypes";
-import { CompoundEntityModel, EntityGroup, ToolName } from "~/common/commonTypes";
+import {
+  CompoundEntityModel,
+  EntityGroup,
+  ToolName,
+} from "~/common/commonTypes";
 
 const selectClockifyWorkspacesById = createSelector(
   (state: ReduxState) => state.workspaces.clockify.byId,
@@ -26,7 +30,7 @@ export const selectIfWorkspacesFetching = (state: ReduxState): boolean =>
 
 export const selectTogglWorkspaceIds = createSelector(
   (state: ReduxState) => state.workspaces.toggl.idValues,
-  (workspaceIds): Array<string> => workspaceIds,
+  (workspaceIds): string[] => workspaceIds,
 );
 
 export const selectTogglWorkspacesById = createSelector(
@@ -36,8 +40,7 @@ export const selectTogglWorkspacesById = createSelector(
 
 export const selectTogglWorkspaces = createSelector(
   selectTogglWorkspacesById,
-  (workspacesById): Array<CompoundWorkspaceModel> =>
-    Object.values(workspacesById),
+  (workspacesById): CompoundWorkspaceModel[] => Object.values(workspacesById),
 );
 
 export const selectTogglIncludedWorkspacesById = createSelector(
@@ -60,8 +63,7 @@ export const selectTogglIncludedWorkspacesById = createSelector(
 
 export const selectTogglIncludedWorkspaces = createSelector(
   selectTogglIncludedWorkspacesById,
-  (workspacesById): Array<CompoundWorkspaceModel> =>
-    Object.values(workspacesById),
+  (workspacesById): CompoundWorkspaceModel[] => Object.values(workspacesById),
 );
 
 const selectTogglIncludedWorkspacesByName = createSelector(
@@ -78,7 +80,7 @@ const selectTogglIncludedWorkspacesByName = createSelector(
 
 export const selectTogglIncludedWorkspaceNames = createSelector(
   selectTogglIncludedWorkspacesByName,
-  (workspacesByName): Array<string> => Object.keys(workspacesByName),
+  (workspacesByName): string[] => Object.keys(workspacesByName),
 );
 
 export const selectClockifyIncludedWorkspacesById = createSelector(
@@ -113,7 +115,7 @@ export const selectTogglWorkspaceIncludedYears = createSelector(
     togglWorkspacesById,
     clockifyWorkspacesById,
     clockifyWorkspaceId,
-  ): Array<number> => {
+  ): number[] => {
     const { linkedId } = get(clockifyWorkspacesById, clockifyWorkspaceId, {
       linkedId: null,
     });
@@ -222,14 +224,14 @@ function selectTogglEntitiesByGroupByWorkspaceFactory(
     selectTogglUserGroupsByWorkspaceFactory(inclusionsOnly),
     selectTogglUsersByWorkspaceFactory(inclusionsOnly),
     (
-      workspaceIds: Array<string>,
-      clientsByWorkspace: Record<string, Array<CompoundEntityModel>>,
-      projectsByWorkspace: Record<string, Array<CompoundEntityModel>>,
-      tagsByWorkspace: Record<string, Array<CompoundEntityModel>>,
-      tasksByWorkspace: Record<string, Array<CompoundEntityModel>>,
-      timeEntriesByWorkspace: Record<string, Array<CompoundEntityModel>>,
-      userGroupsByWorkspace: Record<string, Array<CompoundEntityModel>>,
-      usersByWorkspace: Record<string, Array<CompoundEntityModel>>,
+      workspaceIds: string[],
+      clientsByWorkspace: Record<string, CompoundEntityModel[]>,
+      projectsByWorkspace: Record<string, CompoundEntityModel[]>,
+      tagsByWorkspace: Record<string, CompoundEntityModel[]>,
+      tasksByWorkspace: Record<string, CompoundEntityModel[]>,
+      timeEntriesByWorkspace: Record<string, CompoundEntityModel[]>,
+      userGroupsByWorkspace: Record<string, CompoundEntityModel[]>,
+      usersByWorkspace: Record<string, CompoundEntityModel[]>,
     ): EntitiesByGroupByWorkspaceModel =>
       workspaceIds.reduce(
         (acc, workspaceId) => ({
@@ -258,7 +260,7 @@ function selectTogglEntitiesByGroupByWorkspaceFactory(
 }
 
 function calculateRecordCountsByEntityGroup(
-  entitiesByGroup: Record<EntityGroup, Array<CompoundEntityModel>>,
+  entitiesByGroup: Record<EntityGroup, CompoundEntityModel[]>,
 ): Record<EntityGroup, RecordCountsModel> {
   const totalEntryCount = entitiesByGroup[EntityGroup.TimeEntries].length;
 

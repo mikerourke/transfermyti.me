@@ -8,7 +8,7 @@ import { EntityGroupsByKey } from "~/common/commonTypes";
 
 export const selectTogglTasks = createSelector(
   (state: ReduxState) => Object.values(state.tasks.toggl.byId),
-  (tasks): Array<CompoundTaskModel> => tasks,
+  (tasks): CompoundTaskModel[] => tasks,
 );
 
 export const selectToggleTasksByWorkspaceFactory = (
@@ -16,7 +16,7 @@ export const selectToggleTasksByWorkspaceFactory = (
 ): Selector<ReduxState, EntityGroupsByKey<CompoundTaskModel>> =>
   createSelector(
     selectTogglTasks,
-    (tasks): Record<string, Array<CompoundTaskModel>> => {
+    (tasks): Record<string, CompoundTaskModel[]> => {
       const tasksToUse = inclusionsOnly ? findTogglInclusions(tasks) : tasks;
 
       return groupByWorkspace(tasksToUse);
@@ -28,12 +28,12 @@ export const selectTasksTransferPayloadForWorkspace = createSelector(
   selectTogglClientMatchingId,
   (inclusionsByWorkspace, getClientMatchingId) => (
     workspaceIdToGet: string,
-  ): Array<ClockifyTaskModel> => {
+  ): ClockifyTaskModel[] => {
     const inclusions = get(
       inclusionsByWorkspace,
       workspaceIdToGet,
       [],
-    ) as Array<CompoundTaskModel>;
+    ) as CompoundTaskModel[];
     if (inclusions.length === 0) {
       return [];
     }

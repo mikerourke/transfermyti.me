@@ -4,7 +4,7 @@ import { State } from "./rootReducer";
 
 export interface ReduxStateEntryForTool<TModel> {
   readonly byId: Record<string, TModel>;
-  readonly idValues: Array<string>;
+  readonly idValues: string[];
 }
 
 /**

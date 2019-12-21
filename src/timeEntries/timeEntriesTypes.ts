@@ -21,7 +21,7 @@ export interface ClockifyTimeIntervalModel {
 export interface ClockifyTimeEntryModel {
   id: string;
   description: string;
-  tags: Array<string> | null;
+  tags: string[] | null;
   user: ClockifyUserModel;
   billable: boolean;
   task: unknown;
@@ -54,16 +54,16 @@ export interface TogglTimeEntryModel {
   billable: number | null;
   is_billable: boolean;
   cur: string | null;
-  tags: Array<string>;
+  tags: string[];
 }
 
 export interface TogglTimeEntriesFetchResponseModel {
   total_grand: number;
   total_billable: number | null;
-  total_currencies: Array<TogglTotalCurrencyModel>;
+  total_currencies: TogglTotalCurrencyModel[];
   total_count: number;
   per_page: number;
-  data: Array<TogglTimeEntryModel>;
+  data: TogglTimeEntryModel[];
 }
 
 export interface CompoundTimeEntryModel extends BaseCompoundEntityModel {
@@ -72,14 +72,14 @@ export interface CompoundTimeEntryModel extends BaseCompoundEntityModel {
   projectId: string;
   taskId: string | null;
   userId: string | null;
-  userGroupIds: Array<string> | null;
+  userGroupIds: string[] | null;
   clientName: string | null;
   clientId?: string | null;
   isBillable: boolean;
   start: Date | null;
   end: Date | null;
   year: number;
-  tagNames: Array<string>;
+  tagNames: string[];
   isActive: boolean;
   name: null; // Not used, included because other entities have a "name".
 }
@@ -88,7 +88,7 @@ export interface DetailedTimeEntryModel extends CompoundTimeEntryModel {
   client: CompoundClientModel | null;
   project: CompoundProjectModel | null;
   task: CompoundTaskModel | null;
-  tags: Array<CompoundTagModel>;
+  tags: CompoundTagModel[];
   user: CompoundUserModel | null;
   workspace: CompoundWorkspaceModel;
 }

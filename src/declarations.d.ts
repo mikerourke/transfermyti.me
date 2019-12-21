@@ -23,7 +23,7 @@ declare namespace jest {
     toContainElement(element: HTMLElement | SVGElement | null): R;
     toContainHTML(htmlText: string): R;
     toHaveAttribute(attr: string, value?: any): R;
-    toHaveClass(...classNames: Array<string>): R;
+    toHaveClass(...classNames: string[]): R;
     toHaveFocus(): R;
     toHaveFormValues(expectedValues: { [name: string]: any }): R;
     toHaveStyle(css: string): R;
@@ -31,7 +31,7 @@ declare namespace jest {
       text: string | RegExp,
       options?: { normalizeWhitespace: boolean },
     ): R;
-    toHaveValue(value?: string | Array<string> | number): R;
+    toHaveValue(value?: string | string[] | number): R;
     toHaveStyleRule(attrName: string, attrValue: string, selectors?: any): R;
   }
 }

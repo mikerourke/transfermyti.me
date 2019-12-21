@@ -65,7 +65,7 @@ export interface BaseCompoundEntityModel {
   memberOf?: EntityGroup;
 }
 
-export type EntityGroupsByKey<TEntity> = Record<string, Array<TEntity>>;
+export type EntityGroupsByKey<TEntity> = Record<string, TEntity[]>;
 
 export interface EntitiesByGroupModel {
   [EntityGroup.Clients]: ReduxStateEntryForTool<CompoundClientModel>;

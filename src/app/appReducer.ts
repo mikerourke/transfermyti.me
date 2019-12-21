@@ -9,7 +9,7 @@ import {
 type AppAction = ActionType<typeof appActions>;
 
 export interface AppState {
-  readonly notifications: Array<NotificationModel>;
+  readonly notifications: NotificationModel[];
   readonly currentTransferType: TransferType;
   readonly inTransferDetails: InTransferDetailsModel;
   readonly countCurrentInWorkspace: number;

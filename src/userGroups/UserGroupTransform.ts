@@ -15,7 +15,7 @@ export class UserGroupTransform {
 
   public compound(
     workspaceId: string,
-    usersByWorkspace: Record<string, Array<CompoundUserModel>>,
+    usersByWorkspace: Record<string, CompoundUserModel[]>,
   ): CompoundUserGroupModel {
     const workspaceUsers = get(usersByWorkspace, workspaceId, []);
 
@@ -33,7 +33,7 @@ export class UserGroupTransform {
 
   public appendEntryCount(
     usersById: Record<string, CompoundUserModel>,
-    timeEntries: Array<CompoundTimeEntryModel>,
+    timeEntries: CompoundTimeEntryModel[],
   ): UserGroupForTool & { entryCount: number } {
     const userGroupUserIds = this.getUserIds(Object.values(usersById));
     if (userGroupUserIds.length === 0) {
@@ -55,7 +55,7 @@ export class UserGroupTransform {
   }
 
   private getTimeEntryCountByUserId(
-    timeEntries: Array<CompoundTimeEntryModel>,
+    timeEntries: CompoundTimeEntryModel[],
   ): Record<string, number> {
     return timeEntries.reduce((acc, timeEntry) => {
       const userId = get(timeEntry, "userId");
@@ -70,13 +70,13 @@ export class UserGroupTransform {
     }, {});
   }
 
-  private getUserIds(users: Array<CompoundUserModel>): Array<string> {
+  private getUserIds(users: CompoundUserModel[]): string[] {
     if ("userIds" in this.userGroupRecord) {
       return this.userGroupRecord.userIds;
     }
 
     const usersInUserGroup = this.getUsersInUserGroup(users);
-    const idsOfUsers: Array<string> = [];
+    const idsOfUsers: string[] = [];
 
     if (usersInUserGroup.length !== 0) {
       usersInUserGroup.forEach(user => {
@@ -87,9 +87,7 @@ export class UserGroupTransform {
     return idsOfUsers;
   }
 
-  private getUsersInUserGroup(
-    users: Array<CompoundUserModel>,
-  ): Array<CompoundUserModel> {
+  private getUsersInUserGroup(users: CompoundUserModel[]): CompoundUserModel[] {
     if (users.length === 0) {
       return [];
     }

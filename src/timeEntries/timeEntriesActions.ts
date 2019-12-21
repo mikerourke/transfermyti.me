@@ -25,7 +25,11 @@ import {
   selectEntitiesByGroupFactory,
   selectTimeEntriesForWorkspace,
 } from "./timeEntriesSelectors";
-import { EntitiesByGroupModel, EntityGroup, ToolName } from "~/common/commonTypes";
+import {
+  EntitiesByGroupModel,
+  EntityGroup,
+  ToolName,
+} from "~/common/commonTypes";
 import { ReduxDispatch, ReduxGetState } from "~/redux/reduxTypes";
 import {
   ClockifyTimeEntryModel,
@@ -39,19 +43,19 @@ export const clockifyTimeEntriesFetch = createAsyncAction(
   "@timeEntries/CLOCKIFY_FETCH_REQUEST",
   "@timeEntries/CLOCKIFY_FETCH_SUCCESS",
   "@timeEntries/CLOCKIFY_FETCH_FAILURE",
-)<void, Array<CompoundTimeEntryModel>, void>();
+)<void, CompoundTimeEntryModel[], void>();
 
 export const togglTimeEntriesFetch = createAsyncAction(
   "@timeEntries/TOGGL_FETCH_REQUEST",
   "@timeEntries/TOGGL_FETCH_SUCCESS",
   "@timeEntries/TOGGL_FETCH_FAILURE",
-)<void, Array<CompoundTimeEntryModel>, void>();
+)<void, CompoundTimeEntryModel[], void>();
 
 export const clockifyTimeEntriesTransfer = createAsyncAction(
   "@timeEntries/CLOCKIFY_TRANSFER_REQUEST",
   "@timeEntries/CLOCKIFY_TRANSFER_SUCCESS",
   "@timeEntries/CLOCKIFY_TRANSFER_FAILURE",
-)<void, Array<CompoundTimeEntryModel>, void>();
+)<void, CompoundTimeEntryModel[], void>();
 
 export const flipIsTimeEntryIncluded = createAction(
   "@timeEntries/FLIP_IS_INCLUDED",
@@ -211,7 +215,7 @@ async function fetchTogglTimeEntriesForYear({
   togglEmail: string;
   workspaceId: string;
   year: number;
-}): Promise<Array<TogglTimeEntryModel>> {
+}): Promise<TogglTimeEntryModel[]> {
   const {
     total_count: totalCount,
     per_page: perPage,
@@ -248,8 +252,8 @@ async function fetchTogglTimeEntriesForRemainingPages({
   workspaceId: string;
   year: number;
   totalPages: number;
-}): Promise<Array<TogglTimeEntryModel>> {
-  const timeEntriesForPage: Array<Array<TogglTimeEntryModel>> = [];
+}): Promise<TogglTimeEntryModel[]> {
+  const timeEntriesForPage: TogglTimeEntryModel[][] = [];
 
   // We already got the first page, don't want to fetch again:
   for (let currentPage = 2; currentPage <= totalPages; currentPage += 1) {
@@ -272,9 +276,9 @@ function convertToCompoundTimeEntries({
   entitiesByGroup,
 }: {
   workspaceId: string;
-  timeEntries: Array<TimeEntryForTool>;
+  timeEntries: TimeEntryForTool[];
   entitiesByGroup: EntitiesByGroupModel;
-}): Array<CompoundTimeEntryModel> {
+}): CompoundTimeEntryModel[] {
   if (getValidEntities(timeEntries).length === 0) {
     return [];
   }

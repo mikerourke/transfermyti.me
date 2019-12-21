@@ -24,7 +24,7 @@ import { Else, If, Then } from "react-if";
 interface ConnectStateProps {
   areWorkspacesFetching: boolean;
   countOfWorkspacesIncluded: number;
-  workspaces: Array<CompoundWorkspaceModel>;
+  workspaces: CompoundWorkspaceModel[];
 }
 
 interface ConnectDispatchProps {

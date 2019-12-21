@@ -108,13 +108,13 @@ export const tagsReducer = createReducer<TagsState, TagsAction>(initialState)
 function appendEntryCountByTagName<TTimeEntry>(
   toolName: ToolName,
   state: TagsState,
-  timeEntries: Array<TTimeEntry>,
+  timeEntries: TTimeEntry[],
 ): TagsState {
   const timeEntryCountByTagId = {};
   const tags = Object.values(state[toolName].byId);
 
   timeEntries.forEach(timeEntry => {
-    const tagNames = get(timeEntry, "tagNames", []) as Array<string>;
+    const tagNames = get(timeEntry, "tagNames", []) as string[];
 
     tagNames.forEach(tagName => {
       const { id = null } = tags.find(({ name }) => name === tagName);
