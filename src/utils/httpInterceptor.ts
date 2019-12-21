@@ -6,7 +6,7 @@ import {
   TOGGL_API_URL,
   TOGGL_REPORTS_URL,
 } from "~/constants";
-import { ToolName } from "~/commonTypes";
+import { ToolName } from "~/common/commonTypes";
 import { CredentialsModel } from "~/credentials/credentialsTypes";
 
 enum Context {

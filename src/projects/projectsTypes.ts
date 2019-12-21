@@ -1,4 +1,4 @@
-import { BaseCompoundEntityModel } from "~/commonTypes";
+import { BaseCompoundEntityModel } from "~/common/commonTypes";
 import { ClockifyTaskModel } from "~/tasks/tasksTypes";
 import {
   ClockifyHourlyRateModel,

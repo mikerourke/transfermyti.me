@@ -15,7 +15,7 @@ import {
 } from "~/workspaces/workspacesSelectors";
 import { EntitiesReviewPage, Loader, StepPageProps } from "~/components";
 import InstructionsList from "./InstructionsList";
-import { ToolName } from "~/commonTypes";
+import { ToolName } from "~/common/commonTypes";
 import { ReduxState } from "~/redux/reduxTypes";
 import {
   CompoundWorkspaceModel,

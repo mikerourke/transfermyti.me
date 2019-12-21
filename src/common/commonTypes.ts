@@ -1,17 +1,24 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import { CompoundClientModel } from "~/clients/clientsTypes";
 import { CompoundProjectModel } from "~/projects/projectsTypes";
+import { ReduxStateEntryForTool } from "~/redux/reduxTypes";
 import { CompoundTagModel } from "~/tags/tagsTypes";
 import { CompoundTaskModel } from "~/tasks/tasksTypes";
 import { CompoundTimeEntryModel } from "~/timeEntries/timeEntriesTypes";
 import { CompoundUserGroupModel } from "~/userGroups/userGroupsTypes";
 import { CompoundUserModel } from "~/users/usersTypes";
 import { CompoundWorkspaceModel } from "~/workspaces/workspacesTypes";
-import { ReduxStateEntryForTool } from "~/redux/reduxTypes";
+import { schema } from "normalizr";
 
 export enum ToolName {
+  None = "none",
   Clockify = "clockify",
   Toggl = "toggl",
+}
+
+export enum Relationship {
+  Source,
+  Target,
 }
 
 export interface TogglTotalCurrencyModel {
@@ -80,6 +87,13 @@ export interface EntityWithName {
 }
 
 export interface EntitiesFetchPayloadModel<TEntity> {
-  entityRecords: Array<TEntity>;
+  entityRecords: TEntity[];
   workspaceId: string;
+}
+
+export interface ToolEntitiesPayload<TEntity> {
+  relationship: Relationship;
+  entityGroup: EntityGroup;
+  entityRecords: TEntity[];
+  schemaProcessStrategy?: schema.StrategyFunction<TEntity[]>;
 }

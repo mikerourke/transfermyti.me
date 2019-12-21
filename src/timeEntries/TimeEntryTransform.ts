@@ -1,7 +1,7 @@
 import { get, isEmpty, isNil } from "lodash";
 import { findIdFieldValue } from "~/utils";
 import { CompoundClientModel } from "~/clients/clientsTypes";
-import { EntitiesByGroupModel, EntityGroup, EntityType } from "~/commonTypes";
+import { EntitiesByGroupModel, EntityGroup, EntityType } from "~/common/commonTypes";
 import { CompoundTimeEntryModel, TimeEntryForTool } from "./timeEntriesTypes";
 
 interface ClientDetails {

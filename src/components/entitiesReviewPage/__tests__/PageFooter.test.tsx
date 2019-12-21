@@ -4,7 +4,7 @@ import { fireEvent, render } from "@testing-library/react";
 import state from "~/redux/__fixtures__/state";
 import { selectTogglCountsByGroupByWorkspace } from "~/workspaces/workspacesSelectors";
 import PageFooter from "../PageFooter";
-import { EntityGroup } from "~/commonTypes";
+import { EntityGroup } from "~/common/commonTypes";
 
 const WORKSPACE_ID = "1001";
 const countsByGroupByWorkspace = selectTogglCountsByGroupByWorkspace(state);

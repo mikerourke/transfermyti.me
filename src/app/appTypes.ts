@@ -1,4 +1,4 @@
-import { EntityGroup } from "~/commonTypes";
+import { EntityGroup, ToolName } from "~/common/commonTypes";
 
 export enum NotificationType {
   Error = "danger",

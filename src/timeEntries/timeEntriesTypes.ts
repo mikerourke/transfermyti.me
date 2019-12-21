@@ -2,7 +2,7 @@ import { CompoundClientModel } from "~/clients/clientsTypes";
 import {
   BaseCompoundEntityModel,
   TogglTotalCurrencyModel,
-} from "~/commonTypes";
+} from "~/common/commonTypes";
 import {
   ClockifyProjectModel,
   CompoundProjectModel,

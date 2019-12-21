@@ -2,7 +2,7 @@ import { createAction } from "typesafe-actions";
 import { capitalize, isNil, uniqueId } from "lodash";
 import { getIfDev } from "~/utils";
 import { selectCountTotalOfTransfersOverall } from "~/workspaces/workspacesSelectors";
-import { ToolName } from "~/commonTypes";
+import { ToolName } from "~/common/commonTypes";
 import { ReduxDispatch, ReduxGetState } from "~/redux/reduxTypes";
 import {
   InTransferDetailsModel,
@@ -24,9 +24,9 @@ export const dismissAllNotifications = createAction(
   "@app/DISMISS_ALL_NOTIFICATIONS",
 )<undefined>();
 
-export const updateTransferType = createAction("@app/UPDATE_TRANSFER_TYPE")<
-  TransferType
->();
+export const updateCurrentTransferType = createAction(
+  "@app/UPDATE_CURRENT_TRANSFER_TYPE",
+)<TransferType>();
 
 export const updateInTransferDetails = createAction(
   "@app/UPDATE_IN_TRANSFER_DETAILS",

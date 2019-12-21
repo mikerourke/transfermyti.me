@@ -8,7 +8,7 @@ import {
   apiFetchTogglTasks,
 } from "./tasksApi";
 import { selectTasksTransferPayloadForWorkspace } from "./tasksSelectors";
-import { EntitiesFetchPayloadModel, EntityGroup } from "~/commonTypes";
+import { EntitiesFetchPayloadModel, EntityGroup } from "~/common/commonTypes";
 import { ReduxDispatch, ReduxGetState } from "~/redux/reduxTypes";
 import { ClockifyTaskModel, TogglTaskModel } from "./tasksTypes";
 

@@ -4,7 +4,7 @@ import { findTogglInclusions, groupByWorkspace } from "~/utils";
 import { selectTogglClientMatchingId } from "~/clients/clientsSelectors";
 import { ReduxState } from "~/redux/reduxTypes";
 import { ClockifyTaskModel, CompoundTaskModel } from "~/tasks/tasksTypes";
-import { EntityGroupsByKey } from "~/commonTypes";
+import { EntityGroupsByKey } from "~/common/commonTypes";
 
 export const selectTogglTasks = createSelector(
   (state: ReduxState) => Object.values(state.tasks.toggl.byId),

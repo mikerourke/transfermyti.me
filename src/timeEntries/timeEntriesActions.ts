@@ -7,7 +7,6 @@ import {
   paginatedFetch,
 } from "~/utils";
 import { showFetchErrorNotification } from "~/app/appActions";
-import { selectCurrentTransferType } from "~/app/appSelectors";
 import { selectCredentials } from "~/credentials/credentialsSelectors";
 import { calculateUserGroupEntryCounts } from "~/userGroups/userGroupsActions";
 import {
@@ -26,8 +25,7 @@ import {
   selectEntitiesByGroupFactory,
   selectTimeEntriesForWorkspace,
 } from "./timeEntriesSelectors";
-import { TransferType } from "~/app/appTypes";
-import { EntitiesByGroupModel, EntityGroup, ToolName } from "~/commonTypes";
+import { EntitiesByGroupModel, EntityGroup, ToolName } from "~/common/commonTypes";
 import { ReduxDispatch, ReduxGetState } from "~/redux/reduxTypes";
 import {
   ClockifyTimeEntryModel,
@@ -108,7 +106,6 @@ export const fetchTogglTimeEntries = (workspaceId: string) => async (
   try {
     const state = getState();
     const { togglEmail, togglUserId } = selectCredentials(state);
-    const currentTransferType = selectCurrentTransferType(state);
 
     const allTimeEntries = [];
     const currentYear = new Date().getFullYear();
@@ -134,10 +131,9 @@ export const fetchTogglTimeEntries = (workspaceId: string) => async (
       entitiesByGroup: selectEntitiesByGroupFactory(ToolName.Toggl)(state),
     });
 
-    const timeEntries =
-      currentTransferType === TransferType.SingleUser
-        ? compoundTimeEntries.filter(({ userId }) => userId === togglUserId)
-        : compoundTimeEntries;
+    const timeEntries = compoundTimeEntries.filter(
+      ({ userId }) => userId === togglUserId,
+    );
 
     for (let year = 2007; year <= currentYear; year += 1) {
       const entryInYear = timeEntries.find(

@@ -1,7 +1,7 @@
 import qs from "qs";
 import { API_PAGE_SIZE } from "~/constants";
 import { fetchArray, fetchObject } from "~/utils";
-import { HttpMethod } from "~/commonTypes";
+import { HttpMethod } from "~/common/commonTypes";
 import {
   ClockifyProjectModel,
   ClockifyProjectRequestModel,

@@ -8,7 +8,7 @@ import {
 } from "~/workspaces/workspacesSelectors";
 import state from "~/redux/__fixtures__/state";
 import EntitiesReviewPage from "../EntitiesReviewPage";
-import { ToolName } from "~/commonTypes";
+import { ToolName } from "~/common/commonTypes";
 
 const WORKSPACE_ID = "1001";
 const entitiesByGroupByWorkspace = selectTogglEntitiesByGroupByWorkspace(state);

@@ -4,7 +4,7 @@ import { get } from "lodash";
 import state from "~/redux/__fixtures__/state";
 import { selectTogglEntitiesByGroupByWorkspace } from "~/workspaces/workspacesSelectors";
 import EntitiesList from "../EntitiesList";
-import { EntityGroup } from "~/commonTypes";
+import { EntityGroup } from "~/common/commonTypes";
 
 const entitiesByGroupByWorkspace = selectTogglEntitiesByGroupByWorkspace(state);
 

@@ -8,7 +8,7 @@ import IncludedYearsSelect from "./IncludedYearsSelect";
 import NoRecordsDisplay from "./NoRecordsDisplay";
 import PageFooter from "./PageFooter";
 import WorkspacesDropdown from "./WorkspacesDropdown";
-import { CompoundEntityModel, EntityGroup, ToolName } from "~/commonTypes";
+import { CompoundEntityModel, EntityGroup, ToolName } from "~/common/commonTypes";
 import {
   CompoundWorkspaceModel,
   CountsByGroupByWorkspaceModel,

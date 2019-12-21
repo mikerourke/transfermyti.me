@@ -1,5 +1,5 @@
 import { get, isNil } from "lodash";
-import { EntityType } from "~/commonTypes";
+import { EntityType } from "~/common/commonTypes";
 
 /**
  * Extrapolates the ID field value from the specified entityRecord based on

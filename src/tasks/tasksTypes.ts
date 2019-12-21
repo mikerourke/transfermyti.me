@@ -1,4 +1,4 @@
-import { BaseCompoundEntityModel } from "~/commonTypes";
+import { BaseCompoundEntityModel } from "~/common/commonTypes";
 
 export interface ClockifyTaskRequestModel {
   assigneeId: string;

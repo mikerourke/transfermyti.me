@@ -2,7 +2,7 @@ import React from "react";
 import { If, Then, Else } from "react-if";
 import styled from "@emotion/styled";
 import { lookupTable } from "~/utils";
-import { EntityGroup, ToolName } from "~/commonTypes";
+import { EntityGroup, ToolName } from "~/common/commonTypes";
 
 const Root = styled.div<{ height: number }>(
   {

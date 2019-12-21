@@ -1,7 +1,7 @@
 import React from "react";
 import { Tab, TabLink, TabList, Tabs } from "bloomer";
 import { omit, startCase } from "lodash";
-import { EntityGroup } from "~/commonTypes";
+import { EntityGroup } from "~/common/commonTypes";
 
 interface Props {
   activeTab: EntityGroup;

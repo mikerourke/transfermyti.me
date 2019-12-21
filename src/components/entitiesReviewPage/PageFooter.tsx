@@ -6,7 +6,7 @@ import { lookupTable } from "~/utils";
 import Checkbox from "../Checkbox";
 import Flex from "../Flex";
 import GroupTotalsDisplay from "./GroupTotalsDisplay";
-import { EntityGroup } from "~/commonTypes";
+import { EntityGroup } from "~/common/commonTypes";
 import { RecordCountsModel } from "~/workspaces/workspacesTypes";
 
 const Root = styled(Flex)({

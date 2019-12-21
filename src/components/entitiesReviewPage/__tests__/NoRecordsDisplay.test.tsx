@@ -2,7 +2,7 @@ import React from "react";
 import cases from "jest-in-case";
 import { render } from "@testing-library/react";
 import NoRecordsDisplay from "../NoRecordsDisplay";
-import { EntityGroup, ToolName } from "~/commonTypes";
+import { EntityGroup, ToolName } from "~/common/commonTypes";
 
 const setup = (propOverrides: any = {}) => {
   const props = {

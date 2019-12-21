@@ -7,7 +7,7 @@ import Checkbox from "../Checkbox";
 import Flex from "../Flex";
 import ListItemBase from "./ListItemBase";
 import EntityTagsRow from "./EntityTagsRow";
-import { CompoundEntityModel } from "~/commonTypes";
+import { CompoundEntityModel } from "~/common/commonTypes";
 
 const NameDisplay = styled.span({
   fontWeight: 400,

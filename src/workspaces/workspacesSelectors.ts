@@ -14,7 +14,7 @@ import {
   EntitiesByGroupByWorkspaceModel,
   RecordCountsModel,
 } from "~/workspaces/workspacesTypes";
-import { CompoundEntityModel, EntityGroup, ToolName } from "~/commonTypes";
+import { CompoundEntityModel, EntityGroup, ToolName } from "~/common/commonTypes";
 
 const selectClockifyWorkspacesById = createSelector(
   (state: ReduxState) => state.workspaces.clockify.byId,

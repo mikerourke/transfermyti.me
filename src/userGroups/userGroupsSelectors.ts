@@ -1,7 +1,7 @@
 import { createSelector, Selector } from "reselect";
 import { get } from "lodash";
 import { findTogglInclusions, groupByWorkspace } from "~/utils";
-import { EntityGroupsByKey, EntityWithName } from "~/commonTypes";
+import { EntityGroupsByKey, EntityWithName } from "~/common/commonTypes";
 import { ReduxState } from "~/redux/reduxTypes";
 import { CompoundUserGroupModel } from "./userGroupsTypes";
 

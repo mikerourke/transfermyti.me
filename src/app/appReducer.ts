@@ -1,4 +1,4 @@
-import { createReducer, ActionType } from "typesafe-actions";
+import { ActionType, createReducer } from "typesafe-actions";
 import * as appActions from "./appActions";
 import {
   InTransferDetailsModel,
@@ -46,9 +46,12 @@ export const appReducer = createReducer<AppState, AppAction>(initialState)
     ...state,
     notifications: [],
   }))
-  .handleAction(appActions.updateTransferType, (state, { payload }) => ({
+  .handleAction(appActions.updateCurrentTransferType, (state, { payload }) => ({
     ...state,
-    currentTransferType: payload,
+    currentTransferType: {
+      ...state.currentTransferType,
+      ...payload,
+    },
   }))
   .handleAction(appActions.updateInTransferDetails, (state, { payload }) => ({
     ...state,

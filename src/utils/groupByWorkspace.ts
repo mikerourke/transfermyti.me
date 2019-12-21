@@ -1,5 +1,5 @@
 import { compact, get, isNil, sortBy } from "lodash";
-import { EntityGroupsByKey } from "~/commonTypes";
+import { EntityGroupsByKey } from "~/common/commonTypes";
 
 /**
  * Sorts the specified entity records by name and groups them by their

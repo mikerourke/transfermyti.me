@@ -3,7 +3,7 @@ import { List, ListRowProps } from "react-virtualized";
 import { isNil } from "lodash";
 import BasicListItem from "./BasicListItem";
 import TimeEntryListItem from "./TimeEntryListItem";
-import { CompoundEntityModel, EntityGroup } from "~/commonTypes";
+import { CompoundEntityModel, EntityGroup } from "~/common/commonTypes";
 import { DetailedTimeEntryModel } from "~/timeEntries/timeEntriesTypes";
 
 interface Props {
