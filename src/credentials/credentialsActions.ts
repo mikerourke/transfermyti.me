@@ -1,22 +1,15 @@
 import { createAsyncAction, createAction } from "typesafe-actions";
-import { capitalize } from "lodash";
 import storage from "store";
+import { isEmpty } from "lodash";
 import { STORAGE_KEY } from "~/constants";
 import { getIfDev } from "~/utils";
-import { showNotification } from "~/app/appActions";
 import {
   apiFetchClockifyMeDetails,
   apiFetchTogglMeDetails,
 } from "~/users/usersApi";
-import {
-  clockifyWorkspacesFetch,
-  togglWorkspacesFetch,
-} from "~/workspaces/workspacesActions";
-import { apiFetchClockifyWorkspaces } from "~/workspaces/workspacesApi";
 import { selectCredentials } from "./credentialsSelectors";
-import { NotificationType } from "~/app/appTypes";
 import { ReduxDispatch, ReduxGetState } from "~/redux/reduxTypes";
-import { CredentialsField, CredentialsModel } from "./credentialsTypes";
+import { CredentialsModel } from "./credentialsTypes";
 
 export const allCredentialsStored = createAction("@credentials/STORED")<
   CredentialsModel
@@ -32,14 +25,14 @@ export const updateAreCredentialsValid = createAction(
   "@credentials/UPDATE_ARE_CREDENTIALS_VALID",
 )<boolean>();
 
-export const updateCredentialsField = createAction(
-  "@credentials/UPDATE_FIELD",
-)<{ field: CredentialsField; value: string }>();
+export const updateCredentials = createAction(
+  "@credentials/UPDATE_CREDENTIALS",
+)<Partial<CredentialsModel>>();
 
 export const storeAllCredentials = () => (
   dispatch: ReduxDispatch,
   getState: ReduxGetState,
-) => {
+): void => {
   const state = getState();
 
   const credentials = selectCredentials(state);
@@ -52,45 +45,38 @@ export const storeAllCredentials = () => (
   dispatch(allCredentialsStored(credentials));
 };
 
-const fetchClockifyMeDetails = () => async (dispatch: ReduxDispatch) => {
-  const workspaces = await apiFetchClockifyWorkspaces();
-  dispatch(clockifyWorkspacesFetch.success(workspaces));
-
-  const { id } = await apiFetchClockifyMeDetails();
-  return id;
-};
-
-const fetchTogglMeDetails = () => async (dispatch: ReduxDispatch) => {
-  const { data } = await apiFetchTogglMeDetails();
-  dispatch(togglWorkspacesFetch.success(data.workspaces));
-
-  return {
-    togglEmail: data.email,
-    togglUserId: data.id.toString(),
-  };
-};
-
 export const validateCredentials = (): unknown => async (
   dispatch: ReduxDispatch,
 ): Promise<void> => {
   dispatch(credentialsValidation.request());
 
+  const credentials: Partial<CredentialsModel> = {
+    clockifyUserId: "",
+    togglEmail: "",
+    togglUserId: "",
+  };
+
+  const validationErrorByTool: Record<string, string> = {};
+
   try {
-    const { togglEmail, togglUserId } = await dispatch(fetchTogglMeDetails());
-    const clockifyUserId = await dispatch(fetchClockifyMeDetails());
-
-    const credentials = {
-      [CredentialsField.ClockifyUserId]: clockifyUserId,
-      [CredentialsField.TogglEmail]: togglEmail,
-      [CredentialsField.TogglUserId]: togglUserId,
-    };
-
-    dispatch(credentialsValidation.success(credentials));
+    const { id: clockifyUserId } = await apiFetchClockifyMeDetails();
+    credentials.clockifyUserId = clockifyUserId;
   } catch (err) {
-    const message =
-      "An error occurred when attempting to validate your " +
-      `${capitalize(err.toolName)} credentials.`;
-    dispatch(showNotification({ message, type: NotificationType.Error }));
+    validationErrorByTool[err.toolName] = "Invalid API key";
+  }
+
+  try {
+    const { data: togglData } = await apiFetchTogglMeDetails();
+    credentials.togglEmail = togglData.email;
+    credentials.togglUserId = togglData.id.toString();
+  } catch (err) {
+    validationErrorByTool[err.toolName] = "Invalid API key";
+  }
+
+  if (isEmpty(validationErrorByTool)) {
+    dispatch(credentialsValidation.success(credentials));
+  } else {
     dispatch(credentialsValidation.failure());
+    throw validationErrorByTool;
   }
 };

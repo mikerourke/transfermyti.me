@@ -35,3 +35,19 @@ export interface ReduxAction<TPayload = {}> {
   error?: boolean;
   meta?: any;
 }
+
+/**
+ * We need to manually specify the types for RouterState here (instead of
+ * importing from the connected-react-router library) so we don't have to
+ * include connected-react-router in the main dependencies.
+ */
+export interface RouterState {
+  location: {
+    pathname: string;
+    search: string;
+    hash: string;
+    key: string;
+    state: any;
+  };
+  action: "POP" | "PUSH" | "REPLACE";
+}

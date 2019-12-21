@@ -1,4 +1,5 @@
 import React from "react";
+import { isNil } from "lodash";
 
 type GlobalOption = "inherit" | "initial" | "unset";
 
@@ -23,39 +24,61 @@ type SelfPositionalOption = "normal" | "self-end" | "self-start";
 type SpacePositionalOption = "space-around" | "space-between" | "space-evenly";
 
 export interface FlexProps {
-  as?: string | React.ReactElement<unknown> | React.ReactNode;
+  inline?: boolean;
+  alignContent?: CommonPositionalOption;
   alignItems?: CommonPositionalOption | SelfPositionalOption;
   alignSelf?: CommonPositionalOption | SelfPositionalOption;
   justifyContent?: CommonPositionalOption | SpacePositionalOption;
   justifySelf?: CommonPositionalOption | SelfPositionalOption;
   direction?: "column" | "column-reverse" | "row" | "row-reverse";
+  flex?: number;
+  grow?: number;
+  shrink?: number;
+  wrap?: GlobalOption | "nowrap" | "wrap" | "wrap-reverse";
 }
 
-// eslint-disable-next-line @typescript-eslint/no-explicit-any
-const Flex: React.FC<FlexProps | any> = ({
-  as: Element,
+interface Props extends FlexProps, React.HTMLAttributes<HTMLElement> {
+  as?: string | React.ReactElement<unknown> | React.ReactNode;
+  innerRef?: React.Ref<HTMLElement>;
+}
+
+const Flex: React.FC<Props> = ({
+  as = "div",
+  innerRef,
+  inline,
+  alignContent,
   alignItems,
   alignSelf,
   justifyContent,
   justifySelf,
   direction,
+  flex,
+  grow,
+  shrink,
+  wrap,
   ...props
-}) => (
-  <Element
-    css={{
-      display: "flex",
-      alignItems,
-      alignSelf,
-      justifyContent,
-      justifySelf,
-      flexDirection: direction,
-    }}
-    {...props}
-  />
-);
-
-Flex.defaultProps = {
-  as: "div",
+}) => {
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  const Element = as as any;
+  return (
+    <Element
+      ref={isNil(innerRef) ? undefined : innerRef}
+      css={{
+        display: inline ? "inline-flex" : "flex",
+        alignContent,
+        alignItems,
+        alignSelf,
+        justifyContent,
+        justifySelf,
+        flexDirection: direction,
+        flex,
+        flexGrow: grow,
+        flexShrink: shrink,
+        flexWrap: wrap,
+      }}
+      {...props}
+    />
+  );
 };
 
 export default Flex;

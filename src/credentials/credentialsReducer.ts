@@ -55,10 +55,7 @@ export const credentialsReducer = createReducer<
     ...state,
     isValidating: true,
   }))
-  .handleAction(
-    credentialsActions.updateCredentialsField,
-    (state, { payload }) => ({
-      ...state,
-      [payload.field]: payload.value,
-    }),
-  );
+  .handleAction(credentialsActions.updateCredentials, (state, { payload }) => ({
+    ...state,
+    ...payload,
+  }));

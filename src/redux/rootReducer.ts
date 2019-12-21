@@ -1,4 +1,4 @@
-import { combineReducers } from "redux";
+import { combineReducers, Reducer } from "redux";
 import { appReducer, AppState } from "~/app/appReducer";
 import { clientsReducer, ClientsState } from "~/clients/clientsReducer";
 import {
@@ -21,12 +21,16 @@ import {
   workspacesReducer,
   WorkspacesState,
 } from "~/workspaces/workspacesReducer";
+import { RouterState } from "~/redux/reduxTypes";
+
+export type RouterReducer = Reducer<RouterState>;
 
 export interface State {
   app: AppState;
   clients: ClientsState;
   credentials: CredentialsState;
   projects: ProjectsState;
+  router: RouterState;
   tags: TagsState;
   tasks: TasksState;
   timeEntries: TimeEntriesState;
@@ -35,15 +39,19 @@ export interface State {
   workspaces: WorkspacesState;
 }
 
-export const rootReducer = combineReducers({
-  app: appReducer,
-  clients: clientsReducer,
-  credentials: credentialsReducer,
-  projects: projectsReducer,
-  tags: tagsReducer,
-  tasks: tasksReducer,
-  timeEntries: timeEntriesReducer,
-  userGroups: userGroupsReducer,
-  users: usersReducer,
-  workspaces: workspacesReducer,
-});
+export const createRootReducer = (
+  router: RouterReducer | null = null,
+): Reducer<State> =>
+  combineReducers({
+    app: appReducer,
+    clients: clientsReducer,
+    credentials: credentialsReducer,
+    projects: projectsReducer,
+    router,
+    tags: tagsReducer,
+    tasks: tasksReducer,
+    timeEntries: timeEntriesReducer,
+    userGroups: userGroupsReducer,
+    users: usersReducer,
+    workspaces: workspacesReducer,
+  });

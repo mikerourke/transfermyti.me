@@ -20,7 +20,7 @@ export async function paginatedFetch<TEntity>({
     const entities = await apiFetchFunc(...funcArgs, currentPage);
     keepFetching = entities.length === API_PAGE_SIZE;
     allEntities.push(...entities);
-    await pause(1000 / requestsPerSecond);
+    await pause(1_000 / requestsPerSecond);
 
     currentPage += 1;
   }

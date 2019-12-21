@@ -4,7 +4,17 @@ import {
   AggregateTransferCountsModel,
   NotificationModel,
   TransferType,
+  RoutePath,
 } from "./appTypes";
+
+export const selectCurrentPath = (state: ReduxState): string =>
+  state.router.location.pathname;
+
+export const selectCurrentTransferStep = createSelector(
+  selectCurrentPath,
+  (currentPath): number =>
+    Object.values(RoutePath).indexOf(currentPath as RoutePath),
+);
 
 export const selectNotifications = createSelector(
   (state: ReduxState) => state.app.notifications,

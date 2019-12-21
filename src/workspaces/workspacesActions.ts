@@ -16,11 +16,8 @@ import {
   apiFetchClockifyWorkspaces,
   apiFetchTogglWorkspaces,
 } from "./workspacesApi";
-import {
-  selectTogglIncludedWorkspaceNames,
-  selectCountTotalOfTransfersInWorkspace,
-} from "./workspacesSelectors";
-import { CompoundEntityModel, EntityGroup, ToolName } from "~/commonTypes";
+import { selectCountTotalOfTransfersInWorkspace } from "./workspacesSelectors";
+import { CompoundEntityModel, EntityGroup, ToolName } from "~/common/commonTypes";
 import { ReduxDispatch, ReduxGetState } from "~/redux/reduxTypes";
 import {
   ClockifyWorkspaceModel,
@@ -69,22 +66,12 @@ export const resetContentsForTool = createAction(
 
 export const fetchClockifyWorkspaces = () => async (
   dispatch: ReduxDispatch,
-  getState: ReduxGetState,
 ) => {
-  const state = getState();
-
   dispatch(clockifyWorkspacesFetch.request());
 
   try {
-    dispatch(resetContentsForTool(ToolName.Clockify));
-    const togglIncludedNames = selectTogglIncludedWorkspaceNames(state);
-
     const workspaces = await apiFetchClockifyWorkspaces();
-    const includedWorkspaces = workspaces.filter(({ name }) =>
-      togglIncludedNames.includes(name),
-    );
-
-    dispatch(clockifyWorkspacesFetch.success(includedWorkspaces));
+    dispatch(clockifyWorkspacesFetch.success(workspaces));
   } catch (err) {
     dispatch(showFetchErrorNotification(err));
     dispatch(clockifyWorkspacesFetch.failure());
@@ -114,9 +101,7 @@ export const fetchTogglWorkspaces = () => async (dispatch: ReduxDispatch) => {
   dispatch(togglWorkspacesFetch.request());
 
   try {
-    dispatch(resetContentsForTool(ToolName.Toggl));
     const workspaces = await apiFetchTogglWorkspaces();
-
     dispatch(togglWorkspacesFetch.success(workspaces));
   } catch (err) {
     dispatch(showFetchErrorNotification(err));
