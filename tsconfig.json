@@ -16,7 +16,7 @@
     "skipLibCheck": true,
     "noEmit": true,
     "allowJs": true,
-    "jsx": "react",
+    "jsx": "preserve",
     "moduleResolution": "node",
     "rootDir": "src",
     "resolveJsonModule": true,
@@ -34,16 +34,14 @@
   },
   "exclude": [
     ".cache",
+    ".idea",
     "build",
     "coverage",
     "dist",
     "node_modules",
     "public",
     "requests",
-    "responses",
     "scripts",
-    "server",
-    "src/setupJest",
-    "state.js"
+    "server"
   ]
 }

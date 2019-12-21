@@ -6,7 +6,8 @@
           "node": "current"
         }
       }],
-    "@babel/preset-typescript"
+    "@babel/preset-typescript",
+    "rsuite"
   ],
   "plugins": [
     [
@@ -17,12 +18,9 @@
         }
       }
     ],
-    ["transform-inline-environment-variables", {
-      "exclude": [
-        "ELECTRON_IS_DEV",
-        "PARCEL_SERVE"
-      ]
-    }],
+    "lodash",
+    "@babel/plugin-proposal-numeric-separator",
+    "transform-inline-environment-variables",
     [
       "jsx-pragmatic",
       { "export": "jsx", "module": "@emotion/core", "import": "___EmotionJSX" }
@@ -37,8 +35,6 @@
         "autoLabel": true,
         "labelFormat": "[filename]-[local]"
       }
-    ],
-    "lodash",
-    "@babel/plugin-proposal-numeric-separator"
+    ]
   ]
 }
