@@ -1,12 +1,9 @@
 import { createReducer, ActionType } from "typesafe-actions";
-import { mod, toggle } from "shades";
-import { fetchTogglTimeEntries } from "~/timeEntries/timeEntriesActions";
+import R from "ramda";
 import * as usersActions from "./usersActions";
 import { UserModel } from "./usersTypes";
 
-type UsersAction = ActionType<
-  typeof usersActions & typeof fetchTogglTimeEntries
->;
+type UsersAction = ActionType<typeof usersActions>;
 
 export interface UsersState {
   readonly source: Record<string, UserModel>;
@@ -62,5 +59,5 @@ export const usersReducer = createReducer<UsersState, UsersAction>(initialState)
     }),
   )
   .handleAction(usersActions.flipIsUserIncluded, (state, { payload }) =>
-    mod("source", payload, "isIncluded")(toggle)(state),
+    R.over(R.lensPath(["source", payload, "isIncluded"]), R.not, state),
   );

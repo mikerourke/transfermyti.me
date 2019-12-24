@@ -1,5 +1,5 @@
 import { createReducer, ActionType } from "typesafe-actions";
-import { mod, toggle } from "shades";
+import R from "ramda";
 import * as tagsActions from "./tagsActions";
 import { TagModel } from "~/tags/tagsTypes";
 
@@ -26,6 +26,7 @@ export const tagsReducer = createReducer<TagsState, TagsAction>(initialState)
         ...state[payload.mapping],
         ...payload.recordsById,
       },
+      isFetching: false,
     }),
   )
   .handleAction(
@@ -55,5 +56,5 @@ export const tagsReducer = createReducer<TagsState, TagsAction>(initialState)
     }),
   )
   .handleAction(tagsActions.flipIsTagIncluded, (state, { payload }) =>
-    mod("source", payload, "isIncluded")(toggle)(state),
+    R.over(R.lensPath(["source", payload, "isIncluded"]), R.not, state),
   );

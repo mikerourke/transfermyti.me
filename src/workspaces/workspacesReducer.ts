@@ -1,6 +1,5 @@
 import { createReducer, ActionType } from "typesafe-actions";
-import { uniq } from "lodash";
-import { mod, toggle } from "shades";
+import R from "ramda";
 import * as workspacesActions from "./workspacesActions";
 import { WorkspaceModel } from "./workspacesTypes";
 
@@ -35,6 +34,7 @@ export const workspacesReducer = createReducer<
         ...state[payload.mapping],
         ...payload.recordsById,
       },
+      isFetching: false,
     }),
   )
   .handleAction(
@@ -68,7 +68,7 @@ export const workspacesReducer = createReducer<
     }),
   )
   .handleAction(
-    workspacesActions.resetContentsForTool,
+    workspacesActions.resetContentsForMapping,
     (state, { payload }) => ({
       ...state,
       [payload]: initialState[payload],
@@ -77,34 +77,27 @@ export const workspacesReducer = createReducer<
   .handleAction(
     workspacesActions.appendUserIdsToWorkspace,
     (state, { payload }) => {
-      const { toolName, workspaceId, userIds } = payload;
-
-      return {
-        ...state,
-        [toolName]: {
-          ...state[toolName],
-          byId: {
-            ...state[toolName].byId,
-            [workspaceId]: {
-              ...state[toolName].byId[workspaceId],
-              userIds: uniq([
-                ...state[toolName].byId[workspaceId].userIds,
-                ...userIds,
-              ]),
-            },
-          },
-        },
-      };
+      const { mapping, workspaceId, userIds } = payload;
+      const userIdLens = R.lensPath([mapping, workspaceId, "userIds"]);
+      const newUserIds = R.uniq(
+        R.concat(R.view(userIdLens, state) as string[], userIds),
+      );
+      return R.set(userIdLens, newUserIds, state);
     },
   )
   .handleAction(
     workspacesActions.flipIsWorkspaceIncluded,
-    (state, { payload }) => mod("source", payload, "isIncluded")(toggle)(state),
+    (state, { payload }) =>
+      R.over(R.lensPath(["source", payload, "isIncluded"]), R.not, state),
   )
   .handleAction(
     workspacesActions.updateIsWorkspaceYearIncluded,
     (state, { payload }) => {
       const { mapping, workspaceId, year, isIncluded } = payload;
-      return mod(mapping, workspaceId, "inclusionsByYear", year, isIncluded);
+      return R.set(
+        R.lensPath([mapping, workspaceId, "inclusionsByYear", year]),
+        isIncluded,
+        state,
+      );
     },
   );

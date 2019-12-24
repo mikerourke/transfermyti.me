@@ -1,12 +1,12 @@
 import { call, put } from "redux-saga/effects";
 import { push } from "connected-react-router";
-import { isEmpty } from "lodash";
+import R from "ramda";
+import { SagaIterator } from "@redux-saga/types";
 import { fetchObject } from "~/utils";
+import { TogglWorkspaceResponseModel } from "~/workspaces/sagas/togglWorkspacesSaga";
 import { validateCredentials } from "~/credentials/credentialsActions";
-import { CredentialsModel } from "~/credentials/credentialsTypes";
-import { ClockifyUserModel } from "~/users/usersTypes";
-import { TogglWorkspaceModel } from "~/workspaces/workspacesTypes";
 import { RoutePath } from "~/app/appTypes";
+import { CredentialsModel } from "~/credentials/credentialsTypes";
 
 interface TogglMeResponseModel {
   since: number;
@@ -18,11 +18,11 @@ interface TogglMeResponseModel {
     at: string;
     created_at: string;
     timezone: string;
-    workspaces: TogglWorkspaceModel[];
+    workspaces: TogglWorkspaceResponseModel[];
   };
 }
 
-export function* validateCredentialsSaga(): Generator {
+export function* validateCredentialsSaga(): SagaIterator {
   const credentials: Partial<CredentialsModel> = {
     clockifyUserId: "",
     togglEmail: "",
@@ -32,23 +32,24 @@ export function* validateCredentialsSaga(): Generator {
   const validationErrorByTool: Record<string, string> = {};
 
   try {
-    const apiResponse = yield call(fetchObject, "/clockify/api/v1/user");
-    const { id: clockifyUserId } = apiResponse as ClockifyUserModel;
-    credentials.clockifyUserId = clockifyUserId;
+    const clockifyUser = yield call(fetchObject, "/clockify/api/v1/user");
+    credentials.clockifyUserId = clockifyUser.id;
   } catch (err) {
     validationErrorByTool[err.toolName] = "Invalid API key";
   }
 
   try {
-    const apiResponse = yield call(fetchObject, "/toggl/api/me");
-    const { data } = apiResponse as TogglMeResponseModel;
-    credentials.togglEmail = data.email;
-    credentials.togglUserId = data.id.toString();
+    const togglUser: TogglMeResponseModel = yield call(
+      fetchObject,
+      "/toggl/api/me",
+    );
+    credentials.togglEmail = togglUser.data.email;
+    credentials.togglUserId = togglUser.data.id.toString();
   } catch (err) {
     validationErrorByTool[err.toolName] = "Invalid API key";
   }
 
-  if (isEmpty(validationErrorByTool)) {
+  if (R.isEmpty(validationErrorByTool)) {
     yield put(push(RoutePath.Workspaces));
     yield put(validateCredentials.success(credentials));
   } else {

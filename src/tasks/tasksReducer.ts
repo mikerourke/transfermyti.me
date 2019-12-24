@@ -1,5 +1,5 @@
 import { createReducer, ActionType } from "typesafe-actions";
-import { mod, toggle } from "shades";
+import R from "ramda";
 import * as tasksActions from "./tasksActions";
 import { TaskModel } from "./tasksTypes";
 
@@ -59,5 +59,5 @@ export const tasksReducer = createReducer<TasksState, TasksAction>(initialState)
     }),
   )
   .handleAction(tasksActions.flipIsTaskIncluded, (state, { payload }) =>
-    mod("source", payload, "isIncluded")(toggle)(state),
+    R.over(R.lensPath(["source", payload, "isIncluded"]), R.not, state),
   );

@@ -87,7 +87,7 @@ function getHeaders(
   }
 
   const authString = `${credentials.togglApiKey}:api_token`;
-  const encodedAuth = Buffer.from(authString).toString("base64");
+  const encodedAuth = window.btoa(authString);
   return {
     "Content-Type": "application/json",
     Authorization: `Basic ${encodedAuth}`,
@@ -108,6 +108,7 @@ function extrapolateFromUrl(
 }
 
 function getApiUrl(toolName: ToolName, context: Context): string {
+  // @ts-ignore
   if (process.env.USE_LOCAL_API === "true" || process.env.NODE_ENV === "test") {
     return `${LOCAL_API_URL}/${toolName}`;
   }

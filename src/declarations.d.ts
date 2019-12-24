@@ -2,7 +2,6 @@ declare function fetch(input: RequestInfo, init?: RequestInit): any;
 
 declare module "promise-throttle";
 declare module "react-sweet-progress";
-declare module "shades";
 
 declare type VoidPromise = () => Promise<void>;
 

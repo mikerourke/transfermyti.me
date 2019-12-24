@@ -1,12 +1,13 @@
 import React from "react";
 import { connect } from "react-redux";
 import { push } from "connected-react-router";
-import { isEmpty } from "lodash";
+import R from "ramda";
 import { ControlLabel, Form, FormControl, FormGroup } from "rsuite";
 import { PayloadActionCreator } from "typesafe-actions";
 import { Path } from "history";
 import { selectToolHelpDetailsByMapping } from "~/app/appSelectors";
 import {
+  resetIsValidating,
   storeCredentials,
   updateCredentials,
   validateCredentials,
@@ -33,6 +34,7 @@ interface ConnectStateProps {
 
 interface ConnectDispatchProps {
   onPush: (path: Path) => void;
+  onResetIfValidating: PayloadActionCreator<string, void>;
   onStoreCredentials: PayloadActionCreator<string, void>;
   onUpdateCredentials: (credentials: Partial<CredentialsModel>) => void;
   onValidateCredentials: PayloadActionCreator<string, void>;
@@ -55,14 +57,15 @@ const EnterCredentialsStepComponent: React.FC<Props> = props => {
   });
 
   React.useEffect(() => {
-    // Do nothing.
+    props.onResetIfValidating();
+
     return () => {
       props.onStoreCredentials();
     };
   }, []);
 
   useDeepCompareEffect(() => {
-    if (!isEmpty(props.validationErrorsByTool)) {
+    if (!R.isEmpty(props.validationErrorsByTool)) {
       setInputErrors({ ...defaultErrors, ...props.validationErrorsByTool });
     }
   }, [props.isValidating, props.validationErrorsByTool]);
@@ -158,6 +161,7 @@ const mapStateToProps = (state: ReduxState): ConnectStateProps => ({
 
 const mapDispatchToProps: ConnectDispatchProps = {
   onPush: push,
+  onResetIfValidating: resetIsValidating,
   onStoreCredentials: storeCredentials.request,
   onUpdateCredentials: updateCredentials,
   onValidateCredentials: validateCredentials.request,

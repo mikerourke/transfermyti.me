@@ -1,6 +1,6 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
-import { flatten } from "lodash";
 import qs from "qs";
+import R from "ramda";
 import { call, delay, put } from "redux-saga/effects";
 import { SagaIterator } from "@redux-saga/types";
 import { API_PAGE_SIZE } from "~/constants";
@@ -44,5 +44,5 @@ export function* paginatedClockifyFetch<TEntity>(apiUrl: string): SagaIterator {
     currentPage += 1;
   }
 
-  return flatten(allEntities);
+  return R.flatten(allEntities);
 }

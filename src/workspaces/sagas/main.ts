@@ -1,8 +1,9 @@
 import { all, select, put, takeEvery } from "redux-saga/effects";
-import { SagaIterator } from "@redux-saga/types";
 import { ActionType } from "typesafe-actions";
+import { SagaIterator } from "@redux-saga/types";
 import {
   createClockifyWorkspaces,
+  createWorkspaces,
   fetchClockifyWorkspaces,
   fetchTogglWorkspaces,
   fetchWorkspaces,
@@ -22,11 +23,24 @@ import { ToolName } from "~/common/commonTypes";
 
 export function* workspacesSaga(): SagaIterator {
   yield all([
-    takeEvery(fetchWorkspaces, fetchWorkspacesSaga),
     takeEvery(createClockifyWorkspaces.request, createClockifyWorkspacesSaga),
+    takeEvery(createWorkspaces, createWorkspacesSaga),
     takeEvery(fetchClockifyWorkspaces.request, fetchClockifyWorkspacesSaga),
     takeEvery(fetchTogglWorkspaces.request, fetchTogglWorkspacesSaga),
+    takeEvery(fetchWorkspaces, fetchWorkspacesSaga),
   ]);
+}
+
+function* createWorkspacesSaga(): SagaIterator {
+  const transferMapping = yield select(selectTransferMapping);
+  switch (transferMapping.target) {
+    case ToolName.Clockify:
+      yield put(createClockifyWorkspaces.request());
+      break;
+
+    default:
+      break;
+  }
 }
 
 function* fetchWorkspacesSaga(

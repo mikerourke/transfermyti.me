@@ -7,13 +7,13 @@ import { showFetchErrorNotification } from "~/app/appActions";
 import { selectToolMapping } from "~/app/appSelectors";
 import { createTogglUsers, fetchTogglUsers } from "~/users/usersActions";
 import { selectTargetUsersForTransfer } from "~/users/usersSelectors";
-import { UserModel } from "~/users/usersTypes";
 import {
   EntityGroup,
   HttpMethod,
   Mapping,
   ToolName,
 } from "~/common/commonTypes";
+import { UserModel } from "~/users/usersTypes";
 
 interface TogglUserResponseModel {
   id: number;

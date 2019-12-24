@@ -13,6 +13,10 @@ export const validateCredentials = createAsyncAction(
   "@credentials/VALIDATE_CREDENTIALS_FAILURE",
 )<void, Partial<CredentialsModel>, Record<string, string>>();
 
+export const resetIsValidating = createAction(
+  "@credentials/RESET_IS_VALIDATING",
+)<void>();
+
 export const updateCredentials = createAction(
   "@credentials/UPDATE_CREDENTIALS",
 )<Partial<CredentialsModel>>();

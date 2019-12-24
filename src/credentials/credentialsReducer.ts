@@ -52,6 +52,10 @@ export const credentialsReducer = createReducer<
       validationErrorsByTool: {},
     }),
   )
+  .handleAction(credentialsActions.resetIsValidating, (state, { payload }) => ({
+    ...state,
+    isValidating: false,
+  }))
   .handleAction(credentialsActions.updateCredentials, (state, { payload }) => ({
     ...state,
     ...payload,

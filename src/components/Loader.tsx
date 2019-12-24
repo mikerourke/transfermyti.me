@@ -1,6 +1,6 @@
 import React from "react";
-import { When } from "react-if";
-import { isNil } from "lodash";
+import { Unless } from "react-if";
+import R from "ramda";
 import { keyframes } from "@emotion/core";
 import styled from "@emotion/styled";
 import Flex from "~/components/Flex";
@@ -85,11 +85,11 @@ const Loader: React.FC<Props> = ({ size = "small", children, ...props }) => (
       <Cube rotation={270} delay={0.9} />
       <Cube rotation={180} delay={0.6} />
     </CubesContainer>
-    <When condition={!isNil(children)}>
+    <Unless condition={R.isNil(children)}>
       <LoadingMessage data-testid="loader-message" size={size}>
         {children}
       </LoadingMessage>
-    </When>
+    </Unless>
   </Flex>
 );
 

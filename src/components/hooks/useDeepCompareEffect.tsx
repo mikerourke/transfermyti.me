@@ -1,5 +1,5 @@
 import React from "react";
-import { isEqual } from "lodash";
+import R from "ramda";
 
 export function useDeepCompareEffect(
   callback: VoidFunction,
@@ -11,7 +11,7 @@ export function useDeepCompareEffect(
 function useDeepCompareMemoize<TValue>(value: TValue): TValue {
   const ref = React.useRef<TValue>();
 
-  if (!isEqual(value, ref.current)) {
+  if (!R.equals(value, ref.current)) {
     ref.current = value;
   }
 

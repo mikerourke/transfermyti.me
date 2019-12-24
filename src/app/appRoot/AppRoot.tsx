@@ -1,8 +1,8 @@
 import React from "react";
 import { connect } from "react-redux";
 import { Notification } from "rsuite";
-import { capitalize } from "lodash";
 import styled from "@emotion/styled";
+import { capitalize } from "~/utils";
 import { dismissNotification } from "~/app/appActions";
 import { selectNotifications } from "~/app/appSelectors";
 import Footer from "./Footer";

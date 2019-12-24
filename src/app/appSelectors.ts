@@ -1,5 +1,5 @@
 import { createSelector } from "reselect";
-import { capitalize } from "lodash";
+import { capitalize } from "~/utils";
 import {
   EntityGroup,
   Mapping,

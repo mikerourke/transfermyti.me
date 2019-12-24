@@ -7,13 +7,13 @@ import { showFetchErrorNotification } from "~/app/appActions";
 import { selectToolMapping } from "~/app/appSelectors";
 import { createTogglTags, fetchTogglTags } from "~/tags/tagsActions";
 import { selectTargetTagsForTransfer } from "~/tags/tagsSelectors";
-import { TagModel } from "~/tags/tagsTypes";
 import {
   EntityGroup,
   HttpMethod,
   Mapping,
   ToolName,
 } from "~/common/commonTypes";
+import { TagModel } from "~/tags/tagsTypes";
 
 interface TogglTagResponseModel {
   id: number;

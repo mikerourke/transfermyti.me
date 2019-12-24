@@ -1,6 +1,6 @@
 import React from "react";
-import { When } from "react-if";
-import { isNil } from "lodash";
+import { Unless } from "react-if";
+import R from "ramda";
 import { Button } from "rsuite";
 import styled from "@emotion/styled";
 
@@ -34,11 +34,11 @@ const NavigationButtonsRow: React.FC<Props> = ({
     <Button appearance="primary" onClick={onNextClick} loading={isLoading}>
       Next
     </Button>
-    <When condition={!isNil(onRefreshClick)}>
+    <Unless condition={R.isNil(onRefreshClick)}>
       <Button color="violet" onClick={onRefreshClick}>
         Refresh
       </Button>
-    </When>
+    </Unless>
   </Root>
 );
 

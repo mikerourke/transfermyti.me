@@ -1,5 +1,5 @@
 import { createReducer, ActionType } from "typesafe-actions";
-import { mod, toggle } from "shades";
+import R from "ramda";
 import * as timeEntriesActions from "./timeEntriesActions";
 import { TimeEntryModel } from "./timeEntriesTypes";
 
@@ -61,7 +61,8 @@ export const timeEntriesReducer = createReducer<
   )
   .handleAction(
     timeEntriesActions.flipIsTimeEntryIncluded,
-    (state, { payload }) => mod("source", payload, "isIncluded")(toggle)(state),
+    (state, { payload }) =>
+      R.over(R.lensPath(["source", payload, "isIncluded"]), R.not, state),
   )
   .handleAction(
     timeEntriesActions.addLinksToTimeEntries,

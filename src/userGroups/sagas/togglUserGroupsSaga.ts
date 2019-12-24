@@ -10,13 +10,13 @@ import {
   fetchTogglUserGroups,
 } from "~/userGroups/userGroupsActions";
 import { selectTargetUserGroupsForTransfer } from "~/userGroups/userGroupsSelectors";
-import { UserGroupModel } from "~/userGroups/userGroupsTypes";
 import {
   EntityGroup,
   HttpMethod,
   Mapping,
   ToolName,
 } from "~/common/commonTypes";
+import { UserGroupModel } from "~/userGroups/userGroupsTypes";
 
 interface TogglUserGroupResponseModel {
   id: number;

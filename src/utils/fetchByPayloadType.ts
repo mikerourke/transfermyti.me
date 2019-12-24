@@ -1,4 +1,4 @@
-import { isNil } from "lodash";
+import R from "ramda";
 
 /**
  * Ensures a valid array is returned from a fetch call.
@@ -8,7 +8,7 @@ export async function fetchArray<TResponse>(
   fetchOptions: unknown = {},
 ): Promise<TResponse> {
   const response = await fetch(endpoint, fetchOptions as RequestInit);
-  return isNil(response) ? [] : response;
+  return R.isNil(response) ? [] : response;
 }
 
 /**
@@ -19,5 +19,5 @@ export async function fetchObject<TResponse>(
   fetchOptions: unknown = {},
 ): Promise<TResponse> {
   const response = await fetch(endpoint, fetchOptions as RequestInit);
-  return isNil(response) ? {} : response;
+  return R.isNil(response) ? {} : response;
 }

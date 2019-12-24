@@ -1,5 +1,5 @@
 import { createReducer, ActionType } from "typesafe-actions";
-import { mod, toggle } from "shades";
+import R from "ramda";
 import * as clientsActions from "./clientsActions";
 import { ClientModel } from "./clientsTypes";
 
@@ -31,7 +31,7 @@ export const clientsReducer = createReducer<ClientsState, ClientsAction>(
         ...state[payload.mapping],
         ...payload.recordsById,
       },
-      isFetching: true,
+      isFetching: false,
     }),
   )
   .handleAction(
@@ -61,5 +61,5 @@ export const clientsReducer = createReducer<ClientsState, ClientsAction>(
     }),
   )
   .handleAction(clientsActions.flipIsClientIncluded, (state, { payload }) =>
-    mod("source", payload, "isIncluded")(toggle)(state),
+    R.over(R.lensPath(["source", payload, "isIncluded"]), R.not, state),
   );

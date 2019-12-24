@@ -11,6 +11,12 @@ import { initialState as initialCredentialsState } from "~/credentials/credentia
 import { clientsSaga } from "~/clients/sagas/main";
 import { credentialsSaga } from "~/credentials/sagas/main";
 import { projectsSaga } from "~/projects/sagas/main";
+import { tagsSaga } from "~/tags/sagas/main";
+import { tasksSaga } from "~/tasks/sagas/main";
+import { timeEntriesSaga } from "~/timeEntries/sagas/main";
+import { userGroupsSaga } from "~/userGroups/sagas/main";
+import { usersSaga } from "~/users/sagas/main";
+import { workspacesSaga } from "~/workspaces/sagas/main";
 import { createRootReducer, RouterReducer } from "./rootReducer";
 import { ReduxStore } from "~/redux/reduxTypes";
 
@@ -47,7 +53,14 @@ export function configureStore(history: History): ReduxStore {
   sagaMiddleware.run(clientsSaga);
   sagaMiddleware.run(credentialsSaga);
   sagaMiddleware.run(projectsSaga);
+  sagaMiddleware.run(tagsSaga);
+  sagaMiddleware.run(tasksSaga);
+  sagaMiddleware.run(timeEntriesSaga);
+  sagaMiddleware.run(userGroupsSaga);
+  sagaMiddleware.run(usersSaga);
+  sagaMiddleware.run(workspacesSaga);
 
+  // @ts-ignore
   if (process.env.USE_LOCAL_API === "true") {
     store.dispatch(validateCredentials.request() as AnyAction);
   }

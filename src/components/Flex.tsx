@@ -1,5 +1,5 @@
 import React from "react";
-import { isNil } from "lodash";
+import R from "ramda";
 
 type GlobalOption = "inherit" | "initial" | "unset";
 
@@ -62,7 +62,7 @@ const Flex: React.FC<Props> = ({
   const Element = as as any;
   return (
     <Element
-      ref={isNil(innerRef) ? undefined : innerRef}
+      ref={R.isNil(innerRef) ? undefined : innerRef}
       css={{
         display: inline ? "inline-flex" : "flex",
         alignContent,

@@ -7,13 +7,13 @@ import { showFetchErrorNotification } from "~/app/appActions";
 import { selectToolMapping } from "~/app/appSelectors";
 import { createTogglTasks, fetchTogglTasks } from "~/tasks/tasksActions";
 import { selectTargetTasksForTransfer } from "~/tasks/tasksSelectors";
-import { TaskModel } from "~/tasks/tasksTypes";
 import {
   EntityGroup,
   HttpMethod,
   Mapping,
   ToolName,
 } from "~/common/commonTypes";
+import { TaskModel } from "~/tasks/tasksTypes";
 
 interface TogglTaskResponseModel {
   name: string;

@@ -1,5 +1,5 @@
+import R from "ramda";
 import { call, put, select, delay } from "redux-saga/effects";
-import { get, isNil } from "lodash";
 import { ActionType } from "typesafe-actions";
 import { SagaIterator } from "@redux-saga/types";
 import {
@@ -144,7 +144,7 @@ function transformToRequest(
     billable: timeEntry.isBillable,
     description: timeEntry.description,
     projectId: timeEntry.projectId,
-    taskId: isNil(timeEntry.taskId) ? undefined : timeEntry.taskId,
+    taskId: R.isNil(timeEntry.taskId) ? undefined : timeEntry.taskId,
     end: timeEntry.end,
     tagIds,
   };
@@ -155,7 +155,7 @@ function transformFromResponse(
   workspaceId: string,
 ): TimeEntryModel {
   const startTime = getTime(timeEntry, "start");
-  const tags = get(timeEntry, "tags", []) as ClockifyTagResponseModel[];
+  const tags = R.pathOr([], ["tags"], timeEntry);
 
   return {
     id: timeEntry.id,
@@ -184,6 +184,6 @@ function getTime(
   timeEntry: ClockifyTimeEntryResponseModel,
   field: "start" | "end",
 ): Date {
-  const value = get(timeEntry, ["timeInterval", field], null);
-  return isNil(value) ? new Date() : new Date(value);
+  const value = R.pathOr(null, ["timeInterval", field], null);
+  return R.isNil(value) ? new Date() : new Date(value);
 }

@@ -1,5 +1,5 @@
 import { createReducer, ActionType } from "typesafe-actions";
-import { mod, toggle } from "shades";
+import R from "ramda";
 import * as userGroupsActions from "./userGroupsActions";
 import { UserGroupModel } from "./userGroupsTypes";
 
@@ -63,5 +63,6 @@ export const userGroupsReducer = createReducer<
   )
   .handleAction(
     userGroupsActions.flipIsUserGroupIncluded,
-    (state, { payload }) => mod("source", payload, "isIncluded")(toggle)(state),
+    (state, { payload }) =>
+      R.over(R.lensPath(["source", payload, "isIncluded"]), R.not, state),
   );

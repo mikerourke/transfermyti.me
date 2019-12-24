@@ -1,9 +1,5 @@
 import { createAsyncAction, createAction } from "typesafe-actions";
-import {
-  MappedEntityRecordsModel,
-  Mapping,
-  ToolName,
-} from "~/common/commonTypes";
+import { MappedEntityRecordsModel, Mapping } from "~/common/commonTypes";
 import {
   UpdateIncludedWorkspaceYearModel,
   WorkspaceModel,
@@ -11,6 +7,10 @@ import {
 
 export const fetchWorkspaces = createAction("@workspaces/FETCH_WORKSPACES")<
   Mapping
+>();
+
+export const createWorkspaces = createAction("@workspaces/CREATE_WORKSPACES")<
+  void
 >();
 
 export const createClockifyWorkspaces = createAsyncAction(
@@ -33,7 +33,7 @@ export const fetchTogglWorkspaces = createAsyncAction(
 
 export const appendUserIdsToWorkspace = createAction(
   "@workspaces/APPEND_USER_IDS",
-)<{ toolName: ToolName; workspaceId: string; userIds: string[] }>();
+)<{ mapping: Mapping; workspaceId: string; userIds: string[] }>();
 
 export const flipIsWorkspaceIncluded = createAction(
   "@workspaces/FLIP_IS_INCLUDED",
@@ -47,6 +47,6 @@ export const updateWorkspaceNameBeingFetched = createAction(
   "@workspaces/UPDATE_WORKSPACE_NAME_BEING_FETCHED",
 )<string | null>();
 
-export const resetContentsForTool = createAction(
-  "@workspaces/RESET_CONTENTS_FOR_TOOL",
-)<ToolName>();
+export const resetContentsForMapping = createAction(
+  "@workspaces/RESET_CONTENTS_FOR_MAPPING",
+)<Mapping>();

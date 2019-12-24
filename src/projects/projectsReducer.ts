@@ -1,5 +1,5 @@
 import { createReducer, ActionType } from "typesafe-actions";
-import { mod, toggle } from "shades";
+import R from "ramda";
 import * as projectsActions from "./projectsActions";
 import { ProjectModel } from "./projectsTypes";
 
@@ -61,5 +61,5 @@ export const projectsReducer = createReducer<ProjectsState, ProjectsAction>(
     }),
   )
   .handleAction(projectsActions.flipIsProjectIncluded, (state, { payload }) =>
-    mod("source", payload, "isIncluded")(toggle)(state),
+    R.over(R.lensPath(["source", payload, "isIncluded"]), R.not, state),
   );

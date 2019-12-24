@@ -1,6 +1,6 @@
 import { createAction } from "typesafe-actions";
-import { capitalize, uniqueId } from "lodash";
-import { getIfDev } from "~/utils";
+import cuid from "cuid";
+import { capitalize, getIfDev } from "~/utils";
 import {
   EntityGroup,
   ToolName,
@@ -11,7 +11,7 @@ import { NotificationModel, NotificationType } from "./appTypes";
 export const showNotification = createAction(
   "@app/SHOW_NOTIFICATION",
   (notification: Partial<NotificationModel>) => {
-    return { id: uniqueId("NTF"), ...notification } as NotificationModel;
+    return { id: cuid(), ...notification } as NotificationModel;
   },
 )<NotificationModel>();
 
@@ -26,7 +26,7 @@ export const showFetchErrorNotification = createAction(
     const message = `An error occurred when making a request to the ${name} API`;
 
     return {
-      id: uniqueId("NTF"),
+      id: cuid(),
       message,
       type: NotificationType.Error,
     };

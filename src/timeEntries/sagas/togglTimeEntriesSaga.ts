@@ -1,6 +1,6 @@
 /* eslint-disable @typescript-eslint/camelcase */
+import R from "ramda";
 import { call, put, select, delay } from "redux-saga/effects";
-import { get, isNil } from "lodash";
 import qs from "qs";
 import format from "date-fns/format";
 import startOfYear from "date-fns/startOfYear";
@@ -18,13 +18,13 @@ import {
   fetchTogglTimeEntries,
 } from "~/timeEntries/timeEntriesActions";
 import { selectTargetTimeEntriesForTransfer } from "~/timeEntries/timeEntriesSelectors";
-import { TimeEntryModel } from "~/timeEntries/timeEntriesTypes";
 import {
   EntityGroup,
   HttpMethod,
   Mapping,
   ToolName,
 } from "~/common/commonTypes";
+import { TimeEntryModel } from "~/timeEntries/timeEntriesTypes";
 
 interface TogglTotalCurrencyModel {
   currency: string | null;
@@ -256,7 +256,7 @@ function transformToRequest(
       start: timeEntry.start.toISOString(),
       wid: +timeEntry.workspaceId,
       pid: +timeEntry.projectId,
-      tid: isNil(timeEntry.taskId) ? undefined : +timeEntry.taskId,
+      tid: R.isNil(timeEntry.taskId) ? undefined : +timeEntry.taskId,
       billable: timeEntry.isBillable,
       created_with: "transfermyti.me",
     },
@@ -280,7 +280,7 @@ function transformFromResponse(
     projectId: timeEntry.pid.toString(),
     tagIds: [],
     tagNames: timeEntry.tags,
-    taskId: isNil(timeEntry.tid) ? null : timeEntry.tid.toString(),
+    taskId: R.isNil(timeEntry.tid) ? null : timeEntry.tid.toString(),
     userId: timeEntry.uid.toString(),
     userGroupIds: [],
     workspaceId,
@@ -295,6 +295,6 @@ function getTime(
   timeEntry: TogglTimeEntryResponseModel,
   field: "start" | "end",
 ): Date {
-  const value = get(timeEntry, field, null);
-  return isNil(value) ? new Date() : new Date(value);
+  const value = R.pathOr(null, [field], null);
+  return R.isNil(value) ? new Date() : new Date(value);
 }

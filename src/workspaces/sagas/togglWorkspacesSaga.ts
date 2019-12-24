@@ -4,10 +4,10 @@ import { fetchArray } from "~/utils";
 import { showFetchErrorNotification } from "~/app/appActions";
 import { selectToolMapping } from "~/app/appSelectors";
 import { fetchTogglWorkspaces } from "~/workspaces/workspacesActions";
-import { WorkspaceModel } from "~/workspaces/workspacesTypes";
 import { EntityGroup, Mapping, ToolName } from "~/common/commonTypes";
+import { WorkspaceModel } from "~/workspaces/workspacesTypes";
 
-interface TogglWorkspaceResponseModel {
+export interface TogglWorkspaceResponseModel {
   id: number;
   wid: number;
   name: string;
