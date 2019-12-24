@@ -1,9 +1,9 @@
 import React from "react";
 import { FlexboxGrid, Panel, Toggle } from "rsuite";
-import { CompoundWorkspaceModel } from "~/workspaces/workspacesTypes";
+import { WorkspaceModel } from "~/workspaces/workspacesTypes";
 
 interface Props {
-  workspace: CompoundWorkspaceModel;
+  workspace: WorkspaceModel;
   onToggleIncluded: (workspaceId: string) => void;
 }
 

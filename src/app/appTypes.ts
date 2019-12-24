@@ -1,4 +1,4 @@
-import { EntityGroup, ToolName } from "~/common/commonTypes";
+import { ToolName } from "~/common/commonTypes";
 
 export enum NotificationType {
   Error = "error",
@@ -17,18 +17,6 @@ export enum TransferType {
   SingleUser = "SINGLE",
 }
 
-export interface InTransferDetailsModel {
-  countCurrentInGroup: number;
-  countTotalInGroup: number;
-  entityGroup: EntityGroup | null;
-  workspaceId: string | null;
-}
-
-export interface TransferCountsModel {
-  countCurrent: number;
-  countTotal: number;
-}
-
 export interface AggregateTransferCountsModel {
   countCurrentInWorkspace: number;
   countTotalInWorkspace: number;
@@ -43,4 +31,10 @@ export enum RoutePath {
   ReviewSource = "/review-source",
   ReviewTarget = "/review-target",
   PerformTransfer = "/perform-transfer",
+}
+
+export interface ToolHelpDetailsModel {
+  toolName: ToolName;
+  displayName: string;
+  toolLink: string;
 }

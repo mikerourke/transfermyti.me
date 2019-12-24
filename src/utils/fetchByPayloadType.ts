@@ -7,7 +7,7 @@ export async function fetchArray<TResponse>(
   endpoint: string,
   fetchOptions: unknown = {},
 ): Promise<TResponse> {
-  const response = await fetch(endpoint, fetchOptions);
+  const response = await fetch(endpoint, fetchOptions as RequestInit);
   return isNil(response) ? [] : response;
 }
 
@@ -18,6 +18,6 @@ export async function fetchObject<TResponse>(
   endpoint: string,
   fetchOptions: unknown = {},
 ): Promise<TResponse> {
-  const response = await fetch(endpoint, fetchOptions);
+  const response = await fetch(endpoint, fetchOptions as RequestInit);
   return isNil(response) ? {} : response;
 }

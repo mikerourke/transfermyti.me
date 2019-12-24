@@ -1,29 +1,19 @@
 import { createReducer, ActionType } from "typesafe-actions";
-import { get, uniq } from "lodash";
-import * as utils from "~/utils";
+import { mod, toggle } from "shades";
 import * as userGroupsActions from "./userGroupsActions";
-import { UserGroupTransform } from "./UserGroupTransform";
-import { EntityGroup, ToolName } from "~/common/commonTypes";
-import { ReduxStateEntryForTool } from "~/redux/reduxTypes";
-import { CompoundUserGroupModel } from "./userGroupsTypes";
+import { UserGroupModel } from "./userGroupsTypes";
 
 type UserGroupsAction = ActionType<typeof userGroupsActions>;
 
 export interface UserGroupsState {
-  readonly clockify: ReduxStateEntryForTool<CompoundUserGroupModel>;
-  readonly toggl: ReduxStateEntryForTool<CompoundUserGroupModel>;
+  readonly source: Record<string, UserGroupModel>;
+  readonly target: Record<string, UserGroupModel>;
   readonly isFetching: boolean;
 }
 
 export const initialState: UserGroupsState = {
-  clockify: {
-    byId: {},
-    idValues: [],
-  },
-  toggl: {
-    byId: {},
-    idValues: [],
-  },
+  source: {},
+  target: {},
   isFetching: false,
 };
 
@@ -33,41 +23,24 @@ export const userGroupsReducer = createReducer<
 >(initialState)
   .handleAction(
     [
-      userGroupsActions.clockifyUserGroupsFetch.success,
-      userGroupsActions.clockifyUserGroupsTransfer.success,
+      userGroupsActions.fetchClockifyUserGroups.success,
+      userGroupsActions.fetchTogglUserGroups.success,
     ],
-    (state, { payload }) => {
-      const normalizedState = utils.normalizeState({
-        toolName: ToolName.Clockify,
-        entityGroup: EntityGroup.UserGroups,
-        entityState: state,
-        payload: payload.entityRecords,
-      });
-
-      const linkedState = utils.linkEntitiesInStateByName(
-        EntityGroup.UserGroups,
-        normalizedState,
-      );
-      return { ...linkedState, isFetching: false };
-    },
-  )
-  .handleAction(
-    userGroupsActions.togglUserGroupsFetch.success,
-    (state, { payload }) => {
-      const normalizedState = utils.normalizeState({
-        toolName: ToolName.Toggl,
-        entityGroup: EntityGroup.UserGroups,
-        entityState: state,
-        payload: payload.entityRecords,
-      });
-      return { ...normalizedState, isFetching: false };
-    },
+    (state, { payload }) => ({
+      ...state,
+      [payload.mapping]: {
+        ...state[payload.mapping],
+        ...payload.recordsById,
+      },
+      isFetching: false,
+    }),
   )
   .handleAction(
     [
-      userGroupsActions.clockifyUserGroupsFetch.request,
-      userGroupsActions.clockifyUserGroupsTransfer.request,
-      userGroupsActions.togglUserGroupsFetch.request,
+      userGroupsActions.createClockifyUserGroups.request,
+      userGroupsActions.createTogglUserGroups.request,
+      userGroupsActions.fetchClockifyUserGroups.request,
+      userGroupsActions.fetchTogglUserGroups.request,
     ],
     state => ({
       ...state,
@@ -76,9 +49,12 @@ export const userGroupsReducer = createReducer<
   )
   .handleAction(
     [
-      userGroupsActions.clockifyUserGroupsFetch.failure,
-      userGroupsActions.clockifyUserGroupsTransfer.failure,
-      userGroupsActions.togglUserGroupsFetch.failure,
+      userGroupsActions.createClockifyUserGroups.success,
+      userGroupsActions.createTogglUserGroups.success,
+      userGroupsActions.createClockifyUserGroups.failure,
+      userGroupsActions.createTogglUserGroups.failure,
+      userGroupsActions.fetchClockifyUserGroups.failure,
+      userGroupsActions.fetchTogglUserGroups.failure,
     ],
     state => ({
       ...state,
@@ -87,55 +63,5 @@ export const userGroupsReducer = createReducer<
   )
   .handleAction(
     userGroupsActions.flipIsUserGroupIncluded,
-    (state, { payload }) => utils.flipEntityInclusion(state, payload),
-  )
-  .handleAction(
-    userGroupsActions.addTogglUserIdToGroup,
-    (state, { payload }) => {
-      const userGroup = get(state, ["toggl", "byId", payload.userGroupId]);
-      if (!userGroup) {
-        return state;
-      }
-
-      const newUserIds = uniq([...userGroup.userIds, payload.userId]);
-      return {
-        ...state,
-        toggl: {
-          ...state.toggl,
-          byId: {
-            ...state.toggl.byId,
-            [payload.userGroupId]: {
-              ...userGroup,
-              userIds: newUserIds,
-            },
-          },
-        },
-      };
-    },
-  )
-  .handleAction(
-    userGroupsActions.calculateUserGroupEntryCounts,
-    (state, { payload }) => {
-      const { toolName, timeEntries, usersById } = payload;
-      const userGroupsById = state[toolName].byId;
-
-      const updatedUserGroupsById = Object.entries(userGroupsById).reduce(
-        (userGroupsAcc, [userGroupId, userGroup]) => {
-          const transform = new UserGroupTransform(userGroup);
-          return {
-            ...userGroupsAcc,
-            [userGroupId]: transform.appendEntryCount(usersById, timeEntries),
-          };
-        },
-        {},
-      );
-
-      return {
-        ...state,
-        [toolName]: {
-          ...state[toolName],
-          byId: updatedUserGroupsById,
-        },
-      };
-    },
+    (state, { payload }) => mod("source", payload, "isIncluded")(toggle)(state),
   );

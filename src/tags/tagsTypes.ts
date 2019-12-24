@@ -1,16 +1,7 @@
-import { BaseCompoundEntityModel } from "~/common/commonTypes";
+import { BaseEntityModel } from "~/common/commonTypes";
 
-export interface ClockifyTagModel {
+export interface TagModel extends BaseEntityModel {
   id: string;
   name: string;
   workspaceId: string;
 }
-
-export interface TogglTagModel {
-  id: number;
-  wid: number;
-  name: string;
-  at: string;
-}
-
-export type CompoundTagModel = ClockifyTagModel & BaseCompoundEntityModel;

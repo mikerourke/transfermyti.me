@@ -1,17 +1,21 @@
 import { ActionType, createReducer } from "typesafe-actions";
 import * as appActions from "./appActions";
+import { NotificationModel } from "./appTypes";
 import {
-  InTransferDetailsModel,
-  NotificationModel,
-  TransferType,
-} from "./appTypes";
+  EntityGroup,
+  ToolName,
+  TransferMappingModel,
+} from "~/common/commonTypes";
 
 type AppAction = ActionType<typeof appActions>;
 
 export interface AppState {
   readonly notifications: NotificationModel[];
-  readonly currentTransferType: TransferType;
-  readonly inTransferDetails: InTransferDetailsModel;
+  readonly transferMapping: TransferMappingModel;
+  readonly currentEntityGroup: EntityGroup | null;
+  readonly currentWorkspaceId: string | null;
+  readonly countCurrentInGroup: number;
+  readonly countTotalInGroup: number;
   readonly countCurrentInWorkspace: number;
   readonly countTotalInWorkspace: number;
   readonly countCurrentOverall: number;
@@ -20,13 +24,14 @@ export interface AppState {
 
 export const initialState: AppState = {
   notifications: [],
-  currentTransferType: TransferType.SingleUser,
-  inTransferDetails: {
-    countCurrentInGroup: 0,
-    countTotalInGroup: 0,
-    entityGroup: null,
-    workspaceId: null,
+  transferMapping: {
+    source: ToolName.None,
+    target: ToolName.None,
   },
+  currentEntityGroup: null,
+  currentWorkspaceId: null,
+  countCurrentInGroup: 0,
+  countTotalInGroup: 0,
   countCurrentInWorkspace: 0,
   countTotalInWorkspace: 0,
   countCurrentOverall: 0,
@@ -34,10 +39,13 @@ export const initialState: AppState = {
 };
 
 export const appReducer = createReducer<AppState, AppAction>(initialState)
-  .handleAction(appActions.notificationShown, (state, { payload }) => ({
-    ...state,
-    notifications: [...state.notifications, payload],
-  }))
+  .handleAction(
+    [appActions.showNotification, appActions.showFetchErrorNotification],
+    (state, { payload }) => ({
+      ...state,
+      notifications: [...state.notifications, payload],
+    }),
+  )
   .handleAction(appActions.dismissNotification, (state, { payload }) => ({
     ...state,
     notifications: state.notifications.filter(({ id }) => id !== payload),
@@ -46,26 +54,41 @@ export const appReducer = createReducer<AppState, AppAction>(initialState)
     ...state,
     notifications: [],
   }))
-  .handleAction(appActions.updateCurrentTransferType, (state, { payload }) => ({
+  .handleAction(appActions.updateTransferMapping, (state, { payload }) => ({
     ...state,
-    currentTransferType: {
-      ...state.currentTransferType,
+    transferMapping: {
+      ...state.transferMapping,
       ...payload,
     },
   }))
-  .handleAction(appActions.updateInTransferDetails, (state, { payload }) => ({
+  .handleAction(appActions.updateCurrentEntityGroup, (state, { payload }) => ({
     ...state,
-    inTransferDetails: payload,
-    countCurrentInWorkspace: state.countCurrentInWorkspace + 1,
-    countCurrentOverall: state.countCurrentOverall + 1,
+    currentEntityGroup: payload,
   }))
-  .handleAction(
-    appActions.updateCountCurrentInWorkspace,
-    (state, { payload }) => ({
-      ...state,
-      countCurrentInWorkspace: payload,
-    }),
-  )
+  .handleAction(appActions.updateCurrentWorkspaceId, (state, { payload }) => ({
+    ...state,
+    currentWorkspaceId: payload,
+  }))
+  .handleAction(appActions.incrementCountCurrentInGroup, state => ({
+    ...state,
+    countCurrentInGroup: state.countCurrentInGroup + 1,
+  }))
+  .handleAction(appActions.resetCountCurrentInGroup, state => ({
+    ...state,
+    countCurrentInGroup: 0,
+  }))
+  .handleAction(appActions.updateCountTotalInGroup, (state, { payload }) => ({
+    ...state,
+    countTotalInGroup: payload,
+  }))
+  .handleAction(appActions.incrementCountCurrentInWorkspace, state => ({
+    ...state,
+    countCurrentInWorkspace: state.countCurrentInWorkspace + 1,
+  }))
+  .handleAction(appActions.resetCountCurrentInWorkspace, state => ({
+    ...state,
+    countCurrentInWorkspace: 0,
+  }))
   .handleAction(
     appActions.updateCountTotalInWorkspace,
     (state, { payload }) => ({
@@ -73,9 +96,13 @@ export const appReducer = createReducer<AppState, AppAction>(initialState)
       countTotalInWorkspace: payload,
     }),
   )
-  .handleAction(appActions.updateCountCurrentOverall, (state, { payload }) => ({
+  .handleAction(appActions.incrementCountCurrentOverall, state => ({
     ...state,
-    countCurrentOverall: payload,
+    countCurrentOverall: state.countCurrentOverall + 1,
+  }))
+  .handleAction(appActions.resetCountCurrentOverall, state => ({
+    ...state,
+    countCurrentOverall: 0,
   }))
   .handleAction(appActions.updateCountTotalOverall, (state, { payload }) => ({
     ...state,

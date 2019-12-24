@@ -1,33 +1,10 @@
-import { BaseCompoundEntityModel } from "~/common/commonTypes";
+import { BaseEntityModel } from "~/common/commonTypes";
 
-export interface ClockifyTaskRequestModel {
-  assigneeId: string;
-  estimate: string;
-  id: string;
-  name: string;
-  status: "ACTIVE" | "DONE";
-}
-
-export interface ClockifyTaskModel extends ClockifyTaskRequestModel {
-  projectId: string;
-}
-
-export interface TogglTaskModel {
-  name: string;
-  id: number;
-  wid: number;
-  pid: number;
-  uid?: number;
-  active: boolean;
-  at: string;
-  estimated_seconds: number;
-}
-
-export interface CompoundTaskModel extends BaseCompoundEntityModel {
+export interface TaskModel extends BaseEntityModel {
   id: string;
   name: string;
   estimate: string;
   projectId: string;
-  assigneeId: string | null;
+  assigneeIds: string[] | null;
   isActive: boolean;
 }

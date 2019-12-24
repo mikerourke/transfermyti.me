@@ -1,34 +1,41 @@
 import React from "react";
 import { connect } from "react-redux";
 import { push } from "connected-react-router";
+import { isEmpty } from "lodash";
 import { ControlLabel, Form, FormControl, FormGroup } from "rsuite";
+import { PayloadActionCreator } from "typesafe-actions";
 import { Path } from "history";
+import { selectToolHelpDetailsByMapping } from "~/app/appSelectors";
 import {
-  storeAllCredentials,
+  storeCredentials,
   updateCredentials,
   validateCredentials,
 } from "~/credentials/credentialsActions";
 import {
   selectCredentials,
   selectIsValidating,
+  selectValidationErrorsByTool,
 } from "~/credentials/credentialsSelectors";
 import { HelpMessage, NavigationButtonsRow } from "~/components";
+import { useDeepCompareEffect } from "~/components/hooks";
 import ToolHelpBlock from "./ToolHelpBlock";
-import { ToolName } from "~/common/commonTypes";
-import { RoutePath } from "~/app/appTypes";
+import { RoutePath, ToolHelpDetailsModel } from "~/app/appTypes";
+import { Mapping } from "~/common/commonTypes";
 import { CredentialsModel } from "~/credentials/credentialsTypes";
 import { ReduxState } from "~/redux/reduxTypes";
 
 interface ConnectStateProps {
   credentials: CredentialsModel;
   isValidating: boolean;
+  toolHelpDetailsByMapping: Record<Mapping, ToolHelpDetailsModel>;
+  validationErrorsByTool: Record<string, string>;
 }
 
 interface ConnectDispatchProps {
   onPush: (path: Path) => void;
-  onStoreAllCredentials: VoidFunction;
+  onStoreCredentials: PayloadActionCreator<string, void>;
   onUpdateCredentials: (credentials: Partial<CredentialsModel>) => void;
-  onValidateCredentials: VoidPromise;
+  onValidateCredentials: PayloadActionCreator<string, void>;
 }
 
 type Props = ConnectStateProps & ConnectDispatchProps;
@@ -50,16 +57,22 @@ const EnterCredentialsStepComponent: React.FC<Props> = props => {
   React.useEffect(() => {
     // Do nothing.
     return () => {
-      props.onStoreAllCredentials();
+      props.onStoreCredentials();
     };
   }, []);
+
+  useDeepCompareEffect(() => {
+    if (!isEmpty(props.validationErrorsByTool)) {
+      setInputErrors({ ...defaultErrors, ...props.validationErrorsByTool });
+    }
+  }, [props.isValidating, props.validationErrorsByTool]);
 
   const clearError = (event: React.FocusEvent<HTMLInputElement>): void => {
     const fieldName = event.target.name as keyof InputFields;
     setInputErrors({ ...inputErrors, [fieldName]: null });
   };
 
-  const validateForm = async (): Promise<boolean> => {
+  const validateForm = (): void => {
     let isValid = true;
     const newInputErrors: InputFields = { ...defaultErrors };
 
@@ -75,20 +88,13 @@ const EnterCredentialsStepComponent: React.FC<Props> = props => {
     // invalid:
     if (!isValid) {
       setInputErrors(newInputErrors);
-      return isValid;
+      return;
     }
 
-    try {
-      await props.onValidateCredentials();
-    } catch (err) {
-      isValid = false;
-      setInputErrors({ ...defaultErrors, ...err });
-    }
-
-    return isValid;
+    props.onValidateCredentials();
   };
 
-  const handleFormChange = (value: Partial<InputFields>): void => {
+  const handleFormChange = (value: Record<string, string>): void => {
     setInputValues({ ...inputValues, ...value });
   };
 
@@ -102,12 +108,8 @@ const EnterCredentialsStepComponent: React.FC<Props> = props => {
     props.onPush(RoutePath.TransferType);
   };
 
-  const handleNextClick = async (): Promise<void> => {
-    if (!(await validateForm())) {
-      return;
-    }
-    props.onStoreAllCredentials();
-    props.onPush(RoutePath.Workspaces);
+  const handleNextClick = (): void => {
+    validateForm();
   };
 
   return (
@@ -123,18 +125,20 @@ const EnterCredentialsStepComponent: React.FC<Props> = props => {
         onChange={handleFormChange}
         formValue={inputValues}
       >
-        {Object.entries(ToolName).map(([displayName, toolName]) => (
-          <FormGroup key={toolName}>
-            <ControlLabel>{displayName} API Key</ControlLabel>
-            <FormControl
-              name={toolName}
-              onBlur={handleInputBlur}
-              onFocus={clearError}
-              errorMessage={inputErrors[toolName]}
-            />
-            <ToolHelpBlock displayName={displayName} toolName={toolName} />
-          </FormGroup>
-        ))}
+        {Object.entries(props.toolHelpDetailsByMapping).map(
+          ([mapping, { toolName, displayName, toolLink }]) => (
+            <FormGroup key={mapping}>
+              <ControlLabel>{displayName} API Key</ControlLabel>
+              <FormControl
+                name={toolName}
+                onBlur={handleInputBlur}
+                onFocus={clearError}
+                errorMessage={inputErrors[toolName]}
+              />
+              <ToolHelpBlock displayName={displayName} toolLink={toolLink} />
+            </FormGroup>
+          ),
+        )}
       </Form>
       <NavigationButtonsRow
         onBackClick={handleBackClick}
@@ -148,13 +152,15 @@ const EnterCredentialsStepComponent: React.FC<Props> = props => {
 const mapStateToProps = (state: ReduxState): ConnectStateProps => ({
   credentials: selectCredentials(state),
   isValidating: selectIsValidating(state),
+  toolHelpDetailsByMapping: selectToolHelpDetailsByMapping(state),
+  validationErrorsByTool: selectValidationErrorsByTool(state),
 });
 
 const mapDispatchToProps: ConnectDispatchProps = {
   onPush: push,
-  onStoreAllCredentials: storeAllCredentials,
+  onStoreCredentials: storeCredentials.request,
   onUpdateCredentials: updateCredentials,
-  onValidateCredentials: validateCredentials as VoidPromise,
+  onValidateCredentials: validateCredentials.request,
 };
 
 export default connect(

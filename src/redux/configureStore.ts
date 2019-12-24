@@ -1,4 +1,5 @@
 import { createStore, applyMiddleware, compose, AnyAction } from "redux";
+import createSagaMiddleware from "redux-saga";
 import thunkMiddleware from "redux-thunk";
 import storage from "store";
 import { connectRouter, routerMiddleware } from "connected-react-router";
@@ -7,6 +8,9 @@ import { STORAGE_KEY } from "~/constants";
 import { getIfDev } from "~/utils";
 import { validateCredentials } from "~/credentials/credentialsActions";
 import { initialState as initialCredentialsState } from "~/credentials/credentialsReducer";
+import { clientsSaga } from "~/clients/sagas/main";
+import { credentialsSaga } from "~/credentials/sagas/main";
+import { projectsSaga } from "~/projects/sagas/main";
 import { createRootReducer, RouterReducer } from "./rootReducer";
 import { ReduxStore } from "~/redux/reduxTypes";
 
@@ -26,8 +30,13 @@ export function configureStore(history: History): ReduxStore {
 
   const routerReducer = connectRouter(history) as RouterReducer;
   const rootReducer = createRootReducer(routerReducer);
+  const sagaMiddleware = createSagaMiddleware();
 
-  const middleware = [routerMiddleware(history), thunkMiddleware];
+  const middleware = [
+    sagaMiddleware,
+    routerMiddleware(history),
+    thunkMiddleware,
+  ];
 
   const store = createStore(
     rootReducer,
@@ -35,8 +44,12 @@ export function configureStore(history: History): ReduxStore {
     composeEnhancers(applyMiddleware(...middleware)),
   );
 
+  sagaMiddleware.run(clientsSaga);
+  sagaMiddleware.run(credentialsSaga);
+  sagaMiddleware.run(projectsSaga);
+
   if (process.env.USE_LOCAL_API === "true") {
-    store.dispatch(validateCredentials() as AnyAction);
+    store.dispatch(validateCredentials.request() as AnyAction);
   }
 
   return store;

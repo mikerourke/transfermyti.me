@@ -9,6 +9,7 @@ import {
 import { ToolName } from "~/common/commonTypes";
 import { CredentialsModel } from "~/credentials/credentialsTypes";
 
+/** @deprecate */
 enum Context {
   Api = "api",
   Reports = "reports",
@@ -40,7 +41,14 @@ export function initInterceptor(store: Store): VoidFunction {
         config.headers = baseHeaders;
       }
 
-      const fullUrl = getApiUrl(toolName, context).concat("/", endpoint);
+      // TODO: Eventually we'll get rid of the extrapolation code:
+      let fullUrl = getApiUrl(toolName, context).concat("/", endpoint);
+
+      if (
+        [CLOCKIFY_API_URL, TOGGL_API_URL, TOGGL_REPORTS_URL].includes(endpoint)
+      ) {
+        fullUrl = endpoint;
+      }
 
       return [fullUrl, config];
     },

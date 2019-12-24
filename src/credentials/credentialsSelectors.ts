@@ -10,5 +10,7 @@ export const selectCredentials = createSelector(
 export const selectIsValidating = (state: ReduxState): boolean =>
   state.credentials.isValidating;
 
-export const selectIsValid = (state: ReduxState): boolean =>
-  state.credentials.isValid;
+export const selectValidationErrorsByTool = createSelector(
+  (state: ReduxState) => state.credentials.validationErrorsByTool,
+  validationErrorsByTool => validationErrorsByTool,
+);

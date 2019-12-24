@@ -1,10 +1,17 @@
 import { createSelector } from "reselect";
+import { capitalize } from "lodash";
+import {
+  EntityGroup,
+  Mapping,
+  ToolName,
+  TransferMappingModel,
+} from "~/common/commonTypes";
 import { ReduxState } from "~/redux/reduxTypes";
 import {
   AggregateTransferCountsModel,
   NotificationModel,
-  TransferType,
   RoutePath,
+  ToolHelpDetailsModel,
 } from "./appTypes";
 
 export const selectCurrentPath = (state: ReduxState): string =>
@@ -21,13 +28,39 @@ export const selectNotifications = createSelector(
   (notifications): NotificationModel[] => notifications,
 );
 
-export const selectCurrentTransferType = (state: ReduxState): TransferType =>
-  state.app.currentTransferType;
+export const selectTransferMapping = (
+  state: ReduxState,
+): TransferMappingModel => state.app.transferMapping;
 
-export const selectInTransferDetails = createSelector(
-  (state: ReduxState) => state.app.inTransferDetails,
-  inTransferDetails => inTransferDetails,
+export const selectToolMapping = createSelector(
+  selectTransferMapping,
+  (_: unknown, toolName: ToolName) => toolName,
+  (transferMapping, toolName) => {
+    const matchedIndex = Object.values(transferMapping).indexOf(toolName);
+    if (matchedIndex === 0) {
+      return Mapping.Source;
+    }
+
+    if (matchedIndex === 1) {
+      return Mapping.Target;
+    }
+
+    return null;
+  },
 );
+
+export const selectCurrentEntityGroup = (
+  state: ReduxState,
+): EntityGroup | null => state.app.currentEntityGroup;
+
+export const selectCurrentWorkspaceId = (state: ReduxState): string | null =>
+  state.app.currentWorkspaceId;
+
+export const selectCountCurrentInGroup = (state: ReduxState): number =>
+  state.app.countCurrentInGroup;
+
+export const selectCountTotalInGroup = (state: ReduxState): number =>
+  state.app.countTotalInGroup;
 
 export const selectCountCurrentInWorkspace = (state: ReduxState): number =>
   state.app.countCurrentInWorkspace;
@@ -57,4 +90,27 @@ export const selectAggregateTransferCounts = createSelector(
     countCurrentOverall,
     countTotalOverall,
   }),
+);
+
+export const selectToolHelpDetailsByMapping = createSelector(
+  selectTransferMapping,
+  (transferMapping): Record<Mapping, ToolHelpDetailsModel> => {
+    const findToolLink = (toolName: ToolName): string =>
+      ({
+        [ToolName.Clockify]: "https://clockify.me/user/settings",
+        [ToolName.Toggl]: "https://toggl.com/app/profile",
+      }[toolName]);
+
+    return Object.entries(transferMapping).reduce(
+      (acc, [mapping, toolName]) => ({
+        ...acc,
+        [mapping]: {
+          toolName,
+          displayName: capitalize(toolName),
+          toolLink: findToolLink(toolName),
+        },
+      }),
+      {} as Record<Mapping, ToolHelpDetailsModel>,
+    );
+  },
 );

@@ -1,57 +1,20 @@
-import { createSelector, Selector } from "reselect";
-import { get, isNil } from "lodash";
-import { findTogglInclusions, groupByWorkspace } from "~/utils";
-import { selectTogglClientMatchingId } from "~/clients/clientsSelectors";
+import { createSelector } from "reselect";
 import { ReduxState } from "~/redux/reduxTypes";
-import { ClockifyTaskModel, CompoundTaskModel } from "~/tasks/tasksTypes";
-import { EntityGroupsByKey } from "~/common/commonTypes";
+import { TaskModel } from "~/tasks/tasksTypes";
 
-export const selectTogglTasks = createSelector(
-  (state: ReduxState) => Object.values(state.tasks.toggl.byId),
-  (tasks): CompoundTaskModel[] => tasks,
+export const selectTargetTasks = createSelector(
+  (state: ReduxState) => state.tasks.target,
+  (tasksById): TaskModel[] => Object.values(tasksById),
 );
 
-export const selectToggleTasksByWorkspaceFactory = (
-  inclusionsOnly: boolean,
-): Selector<ReduxState, EntityGroupsByKey<CompoundTaskModel>> =>
-  createSelector(
-    selectTogglTasks,
-    (tasks): Record<string, CompoundTaskModel[]> => {
-      const tasksToUse = inclusionsOnly ? findTogglInclusions(tasks) : tasks;
+const selectTargetTasksInWorkspace = createSelector(
+  selectTargetTasks,
+  (_: unknown, workspaceId: string) => workspaceId,
+  (targetTasks, workspaceId): TaskModel[] =>
+    targetTasks.filter(task => task.workspaceId === workspaceId),
+);
 
-      return groupByWorkspace(tasksToUse);
-    },
-  );
-
-export const selectTasksTransferPayloadForWorkspace = createSelector(
-  selectToggleTasksByWorkspaceFactory(true),
-  selectTogglClientMatchingId,
-  (inclusionsByWorkspace, getClientMatchingId) => (
-    workspaceIdToGet: string,
-  ): ClockifyTaskModel[] => {
-    const inclusions = get(
-      inclusionsByWorkspace,
-      workspaceIdToGet,
-      [],
-    ) as CompoundTaskModel[];
-    if (inclusions.length === 0) {
-      return [];
-    }
-
-    return inclusions.reduce(
-      (acc, { projectId, name, estimate, assigneeId }) => {
-        const clientAssigneeId = getClientMatchingId(assigneeId).linkedId;
-        return [
-          ...acc,
-          {
-            name,
-            projectId,
-            estimate,
-            assigneeId: isNil(clientAssigneeId) ? undefined : clientAssigneeId,
-          },
-        ];
-      },
-      [],
-    );
-  },
+export const selectTargetTasksForTransfer = createSelector(
+  selectTargetTasksInWorkspace,
+  targetTasks => targetTasks.filter(task => task.isIncluded),
 );

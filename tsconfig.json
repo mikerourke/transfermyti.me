@@ -25,8 +25,8 @@
     "noImplicitThis": true,
     "noImplicitAny": true,
     "noUnusedLocals": true,
+    "strict": true,
     "suppressImplicitAnyIndexErrors": true,
-    "strictNullChecks": false,
     "paths": {
       "~/*": ["./src/*"]
     },

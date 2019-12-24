@@ -6,4 +6,4 @@ export enum CredentialsField {
   ClockifyApiKey = "clockifyApiKey",
 }
 
-export type CredentialsModel = Partial<Record<CredentialsField, string>>;
+export type CredentialsModel = Record<CredentialsField, string>;

@@ -1,40 +1,20 @@
-import { createSelector, Selector } from "reselect";
-import { get } from "lodash";
-import { findTogglInclusions, groupByWorkspace } from "~/utils";
-import { EntityGroupsByKey, EntityWithName } from "~/common/commonTypes";
+import { createSelector } from "reselect";
 import { ReduxState } from "~/redux/reduxTypes";
-import { CompoundTagModel } from "./tagsTypes";
+import { TagModel } from "./tagsTypes";
 
-export const selectTogglTags = createSelector(
-  (state: ReduxState) => Object.values(state.tags.toggl.byId),
-  (tags): CompoundTagModel[] => tags,
+export const selectTargetTags = createSelector(
+  (state: ReduxState) => state.tags.target,
+  (tagsById): TagModel[] => Object.values(tagsById),
 );
 
-export const selectTogglTagsByWorkspaceFactory = (
-  inclusionsOnly: boolean,
-): Selector<ReduxState, EntityGroupsByKey<CompoundTagModel>> =>
-  createSelector(selectTogglTags, tags => {
-    const tagsToUse = inclusionsOnly ? findTogglInclusions(tags) : tags;
-    return groupByWorkspace(tagsToUse);
-  });
+const selectTargetTagsInWorkspace = createSelector(
+  selectTargetTags,
+  (_: unknown, workspaceId: string) => workspaceId,
+  (targetTags, workspaceId): TagModel[] =>
+    targetTags.filter(tag => tag.workspaceId === workspaceId),
+);
 
-export const selectTagsTransferPayloadForWorkspace = createSelector(
-  selectTogglTagsByWorkspaceFactory(true),
-  inclusionsByWorkspace => (workspaceIdToGet: string): EntityWithName[] => {
-    const inclusions = get(
-      inclusionsByWorkspace,
-      workspaceIdToGet,
-      [],
-    ) as CompoundTagModel[];
-    if (inclusions.length === 0) {
-      return [];
-    }
-
-    return inclusions.reduce((acc, { workspaceId, name }) => {
-      if (workspaceIdToGet !== workspaceId) {
-        return acc;
-      }
-      return [...acc, { name }];
-    }, []);
-  },
+export const selectTargetTagsForTransfer = createSelector(
+  selectTargetTagsInWorkspace,
+  targetTags => targetTags.filter(tag => tag.isIncluded),
 );

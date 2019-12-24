@@ -5,8 +5,8 @@ import { CredentialsModel } from "./credentialsTypes";
 type CredentialsAction = ActionType<typeof credentialsActions>;
 
 export interface CredentialsState extends CredentialsModel {
-  readonly isValid: boolean;
   readonly isValidating: boolean;
+  readonly validationErrorsByTool: Record<string, string>;
 }
 
 export const initialState: CredentialsState = {
@@ -15,8 +15,8 @@ export const initialState: CredentialsState = {
   togglUserId: "",
   clockifyUserId: "",
   clockifyApiKey: "",
-  isValid: false,
   isValidating: false,
+  validationErrorsByTool: {},
 };
 
 export const credentialsReducer = createReducer<
@@ -24,37 +24,34 @@ export const credentialsReducer = createReducer<
   CredentialsAction
 >(initialState)
   .handleAction(
-    credentialsActions.allCredentialsStored,
+    credentialsActions.storeCredentials.success,
     (state, { payload }) => ({
       ...state,
       ...payload,
     }),
   )
-  .handleAction(
-    credentialsActions.credentialsValidation.success,
-    (state, { payload }) => ({
-      ...state,
-      ...payload,
-      isValid: true,
-      isValidating: false,
-    }),
-  )
-  .handleAction(credentialsActions.credentialsValidation.failure, state => ({
-    ...state,
-    isValid: false,
-    isValidating: false,
-  }))
-  .handleAction(
-    credentialsActions.updateAreCredentialsValid,
-    (state, { payload }) => ({
-      ...state,
-      isValid: payload,
-    }),
-  )
-  .handleAction(credentialsActions.credentialsValidation.request, state => ({
+  .handleAction(credentialsActions.validateCredentials.request, state => ({
     ...state,
     isValidating: true,
+    validationErrorsByTool: {},
   }))
+  .handleAction(
+    credentialsActions.validateCredentials.failure,
+    (state, { payload }) => ({
+      ...state,
+      isValidating: false,
+      validationErrorsByTool: payload,
+    }),
+  )
+  .handleAction(
+    credentialsActions.validateCredentials.success,
+    (state, { payload }) => ({
+      ...state,
+      ...payload,
+      isValidating: false,
+      validationErrorsByTool: {},
+    }),
+  )
   .handleAction(credentialsActions.updateCredentials, (state, { payload }) => ({
     ...state,
     ...payload,

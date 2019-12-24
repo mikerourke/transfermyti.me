@@ -1,47 +1,49 @@
 import React from "react";
 import { connect } from "react-redux";
 import { push } from "connected-react-router";
+import { Else, If, Then } from "react-if";
 import { FlexboxGrid } from "rsuite";
 import { Path } from "history";
 import { dismissAllNotifications, showNotification } from "~/app/appActions";
-import { updateAreCredentialsValid } from "~/credentials/credentialsActions";
 import {
-  fetchTogglWorkspaces,
+  fetchWorkspaces,
   flipIsWorkspaceIncluded,
 } from "~/workspaces/workspacesActions";
 import {
   selectIfWorkspacesFetching,
-  selectTogglIncludedWorkspacesCount,
-  selectTogglWorkspaces,
+  selectSourceIncludedWorkspacesCount,
+  selectSourceWorkspaces,
 } from "~/workspaces/workspacesSelectors";
 import { HelpMessage, Loader, NavigationButtonsRow } from "~/components";
 import SourceWorkspaceCard from "./SourceWorkspaceCard";
 import { RoutePath, NotificationModel } from "~/app/appTypes";
 import { ReduxState } from "~/redux/reduxTypes";
-import { CompoundWorkspaceModel } from "~/workspaces/workspacesTypes";
-import { Else, If, Then } from "react-if";
+import { Mapping } from "~/common/commonTypes";
+import { WorkspaceModel } from "~/workspaces/workspacesTypes";
 
 interface ConnectStateProps {
   areWorkspacesFetching: boolean;
   countOfWorkspacesIncluded: number;
-  workspaces: CompoundWorkspaceModel[];
+  workspaces: WorkspaceModel[];
 }
 
 interface ConnectDispatchProps {
   onDismissAllNotifications: VoidFunction;
-  onFetchTogglWorkspaces: VoidFunction;
+  onFetchWorkspaces: (mapping: Mapping) => void;
   onFlipIsWorkspaceIncluded: (workspaceId: string) => void;
   onPush: (path: Path) => void;
   onShowNotification: (notification: Partial<NotificationModel>) => void;
-  onUpdateAreCredentialsValid: (areValid: boolean) => void;
 }
 
 type Props = ConnectStateProps & ConnectDispatchProps;
 
 export const SelectSourceWorkspacesStepComponent: React.FC<Props> = props => {
+  const fetchSourceWorkspaces = (): void =>
+    props.onFetchWorkspaces(Mapping.Source);
+
   React.useEffect(() => {
     if (props.workspaces.length === 0) {
-      props.onFetchTogglWorkspaces();
+      fetchSourceWorkspaces();
     }
   }, []);
 
@@ -82,7 +84,7 @@ export const SelectSourceWorkspacesStepComponent: React.FC<Props> = props => {
         css={{ marginTop: "1rem" }}
         onBackClick={handleBackClick}
         onNextClick={handleNextClick}
-        onRefreshClick={props.onFetchTogglWorkspaces}
+        onRefreshClick={fetchSourceWorkspaces}
       />
     </div>
   );
@@ -90,17 +92,16 @@ export const SelectSourceWorkspacesStepComponent: React.FC<Props> = props => {
 
 const mapStateToProps = (state: ReduxState): ConnectStateProps => ({
   areWorkspacesFetching: selectIfWorkspacesFetching(state),
-  countOfWorkspacesIncluded: selectTogglIncludedWorkspacesCount(state),
-  workspaces: selectTogglWorkspaces(state),
+  countOfWorkspacesIncluded: selectSourceIncludedWorkspacesCount(state),
+  workspaces: selectSourceWorkspaces(state),
 });
 
 const mapDispatchToProps: ConnectDispatchProps = {
   onDismissAllNotifications: dismissAllNotifications,
-  onFetchTogglWorkspaces: fetchTogglWorkspaces,
+  onFetchWorkspaces: fetchWorkspaces,
   onFlipIsWorkspaceIncluded: flipIsWorkspaceIncluded,
   onPush: push,
   onShowNotification: showNotification,
-  onUpdateAreCredentialsValid: updateAreCredentialsValid,
 };
 
 export default connect(

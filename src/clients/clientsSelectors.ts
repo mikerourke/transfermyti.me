@@ -1,58 +1,26 @@
-import { createSelector, Selector } from "reselect";
-import { get, isNil } from "lodash";
-import { findTogglInclusions, groupByWorkspace } from "~/utils";
-import { EntityGroupsByKey, EntityWithName } from "~/common/commonTypes";
+import { createSelector } from "reselect";
 import { ReduxState } from "~/redux/reduxTypes";
-import { CompoundClientModel } from "./clientsTypes";
+import { ClientModel } from "./clientsTypes";
 
-const selectTogglClientsById = createSelector(
-  (state: ReduxState) => state.clients.toggl.byId,
-  (clientsById): Record<string, CompoundClientModel> => clientsById,
+const selectTargetClientsById = createSelector(
+  (state: ReduxState) => state.clients.target,
+  (clientsById): Record<string, ClientModel> => clientsById,
 );
 
-export const selectTogglClients = createSelector(
-  selectTogglClientsById,
-  (clientsById): CompoundClientModel[] => Object.values(clientsById),
+export const selectTargetClients = createSelector(
+  selectTargetClientsById,
+  (clientsById): ClientModel[] => Object.values(clientsById),
 );
 
-export const selectTogglClientsByWorkspaceFactory = (
-  inclusionsOnly: boolean,
-): Selector<ReduxState, EntityGroupsByKey<CompoundClientModel>> =>
-  createSelector(
-    selectTogglClients,
-    (clients): EntityGroupsByKey<CompoundClientModel> => {
-      const clientsToUse = inclusionsOnly
-        ? findTogglInclusions(clients)
-        : clients;
-      return groupByWorkspace(clientsToUse);
-    },
-  );
-
-export const selectClientsTransferPayloadForWorkspace = createSelector(
-  selectTogglClientsByWorkspaceFactory(true),
-  inclusionsByWorkspace => (workspaceIdToGet: string): EntityWithName[] => {
-    const inclusions = get(
-      inclusionsByWorkspace,
-      workspaceIdToGet,
-      [],
-    ) as CompoundClientModel[];
-    if (inclusions.length === 0) {
-      return [];
-    }
-
-    return inclusions.reduce((acc, { name }) => [...acc, { name }], []);
-  },
+export const selectTargetClientsInWorkspace = createSelector(
+  selectTargetClients,
+  (_: unknown, workspaceId: string) => workspaceId,
+  (targetClients, workspaceId): ClientModel[] =>
+    targetClients.filter(client => client.workspaceId === workspaceId),
 );
 
-export const selectTogglClientMatchingId = createSelector(
-  selectTogglClientsById,
-  clientsById => (idToMatch: string): Partial<CompoundClientModel> => {
-    const matchingClient = get(clientsById, idToMatch, null);
-
-    if (isNil(matchingClient)) {
-      return { linkedId: null, isIncluded: false };
-    }
-
-    return matchingClient;
-  },
+export const selectTargetClientsForTransfer = createSelector(
+  selectTargetClientsInWorkspace,
+  (targetClients): ClientModel[] =>
+    targetClients.filter(client => client.isIncluded),
 );

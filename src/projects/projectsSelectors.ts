@@ -1,74 +1,35 @@
-import { createSelector, Selector } from "reselect";
-import { get } from "lodash";
-import { findTogglInclusions, groupByWorkspace } from "~/utils";
-import { selectTogglClientMatchingId } from "~/clients/clientsSelectors";
+import { createSelector } from "reselect";
 import { ReduxState } from "~/redux/reduxTypes";
-import {
-  ClockifyProjectRequestModel,
-  CompoundProjectModel,
-} from "./projectsTypes";
+import { ProjectModel } from "~/projects/projectsTypes";
 
-export const selectClockifyProjectIds = createSelector(
-  (state: ReduxState) => state.projects.clockify.idValues,
-  (projectIds): string[] => projectIds,
+export const selectSourceProjectsById = createSelector(
+  (state: ReduxState) => state.projects.source,
+  sourceProjectsById => sourceProjectsById,
 );
 
-export const selectTogglProjectsById = createSelector(
-  (state: ReduxState) => state.projects.toggl.byId,
-  projectsById => projectsById,
+export const selectSourceProjectIds = createSelector(
+  selectSourceProjectsById,
+  (projectsById): string[] => Object.keys(projectsById),
 );
 
-export const selectTogglProjectsByWorkspaceFactory = (
-  inclusionsOnly: boolean,
-): Selector<ReduxState, Record<string, CompoundProjectModel[]>> =>
-  createSelector(
-    selectTogglProjectsById,
-    (projectsById): Record<string, CompoundProjectModel[]> => {
-      const projects = Object.values(projectsById);
+export const selectTargetProjectsById = createSelector(
+  (state: ReduxState) => state.projects.target,
+  targetProjectsById => targetProjectsById,
+);
 
-      const projectsToUse = inclusionsOnly
-        ? findTogglInclusions(projects)
-        : projects;
+const selectTargetProjects = createSelector(
+  selectTargetProjectsById,
+  targetProjectsById => Object.values(targetProjectsById),
+);
 
-      return groupByWorkspace(projectsToUse);
-    },
-  );
+const selectTargetProjectsInWorkspace = createSelector(
+  selectTargetProjects,
+  (_: unknown, workspaceId: string) => workspaceId,
+  (targetProjects, workspaceId): ProjectModel[] =>
+    targetProjects.filter(project => project.workspaceId === workspaceId),
+);
 
-export const selectProjectsTransferPayloadForWorkspace = createSelector(
-  selectTogglProjectsByWorkspaceFactory(true),
-  selectTogglClientMatchingId,
-  (inclusionsByWorkspace, getClientMatchingId) => (
-    workspaceIdToGet: string,
-  ): ClockifyProjectRequestModel[] => {
-    const inclusions = get(
-      inclusionsByWorkspace,
-      workspaceIdToGet,
-      [],
-    ) as CompoundProjectModel[];
-    if (inclusions.length === 0) {
-      return [];
-    }
-
-    return inclusions.reduce((acc, project) => {
-      const matchingClient = getClientMatchingId(project.clientId);
-      const clientId = matchingClient.isIncluded
-        ? matchingClient.linkedId
-        : null;
-
-      return [
-        ...acc,
-        {
-          name: project.name,
-          clientId,
-          isPublic: project.isPublic,
-          estimate: {
-            estimate: 0,
-            type: "AUTO",
-          },
-          color: project.color,
-          billable: project.isBillable,
-        },
-      ];
-    }, []);
-  },
+export const selectTargetProjectsForTransfer = createSelector(
+  selectTargetProjectsInWorkspace,
+  targetProjects => targetProjects.filter(project => project.isIncluded),
 );

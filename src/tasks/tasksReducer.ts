@@ -1,103 +1,43 @@
 import { createReducer, ActionType } from "typesafe-actions";
-import * as utils from "~/utils";
-import { togglTimeEntriesFetch } from "~/timeEntries/timeEntriesActions";
+import { mod, toggle } from "shades";
 import * as tasksActions from "./tasksActions";
-import { EntityGroup, EntityType, ToolName } from "~/common/commonTypes";
-import { ReduxStateEntryForTool } from "~/redux/reduxTypes";
-import {
-  ClockifyTaskModel,
-  CompoundTaskModel,
-  TogglTaskModel,
-} from "./tasksTypes";
+import { TaskModel } from "./tasksTypes";
 
-type TasksAction = ActionType<
-  typeof tasksActions & typeof togglTimeEntriesFetch
->;
+type TasksAction = ActionType<typeof tasksActions>;
 
 export interface TasksState {
-  readonly clockify: ReduxStateEntryForTool<CompoundTaskModel>;
-  readonly toggl: ReduxStateEntryForTool<CompoundTaskModel>;
+  readonly source: Record<string, TaskModel>;
+  readonly target: Record<string, TaskModel>;
   readonly isFetching: boolean;
 }
 
 export const initialState: TasksState = {
-  clockify: {
-    byId: {},
-    idValues: [],
-  },
-  toggl: {
-    byId: {},
-    idValues: [],
-  },
+  source: {},
+  target: {},
   isFetching: false,
 };
-
-const convertSecondsToClockifyEstimate = (seconds: number): string => {
-  const minutes = seconds / 60;
-  if (minutes < 60) {
-    return `PT${minutes}M`;
-  }
-
-  const hours = minutes / 60;
-  return `PT${hours}H`;
-};
-
-const getSchemaProcessStrategy = (workspaceId: string) => (
-  value: ClockifyTaskModel | TogglTaskModel,
-): CompoundTaskModel => ({
-  id: value.id.toString(),
-  name: value.name,
-  estimate:
-    "estimated_seconds" in value
-      ? convertSecondsToClockifyEstimate(value.estimated_seconds)
-      : value.estimate,
-  workspaceId,
-  projectId: utils.findIdFieldValue(value, EntityType.Project),
-  assigneeId: utils.findIdFieldValue(value, EntityType.User),
-  isActive: "active" in value ? value.active : value.status === "ACTIVE",
-  entryCount: 0,
-  linkedId: null,
-  isIncluded: true,
-  memberOf: EntityGroup.Tasks,
-});
 
 export const tasksReducer = createReducer<TasksState, TasksAction>(initialState)
   .handleAction(
     [
-      tasksActions.clockifyTasksFetch.success,
-      tasksActions.clockifyTasksTransfer.success,
+      tasksActions.fetchClockifyTasks.success,
+      tasksActions.fetchTogglTasks.success,
     ],
-    (state, { payload }) => {
-      const normalizedState = utils.normalizeState({
-        toolName: ToolName.Clockify,
-        entityGroup: EntityGroup.Tasks,
-        entityState: state,
-        payload: payload.entityRecords,
-        schemaProcessStrategy: getSchemaProcessStrategy(payload.workspaceId),
-      });
-
-      const linkedState = utils.linkEntitiesInStateByName(
-        EntityGroup.Tasks,
-        normalizedState,
-      );
-      return { ...linkedState, isFetching: false };
-    },
+    (state, { payload }) => ({
+      ...state,
+      [payload.mapping]: {
+        ...state[payload.mapping],
+        ...payload.recordsById,
+      },
+      isFetching: false,
+    }),
   )
-  .handleAction(tasksActions.togglTasksFetch.success, (state, { payload }) => {
-    const normalizedState = utils.normalizeState({
-      toolName: ToolName.Toggl,
-      entityGroup: EntityGroup.Tasks,
-      entityState: state,
-      payload: payload.entityRecords,
-      schemaProcessStrategy: getSchemaProcessStrategy(payload.workspaceId),
-    });
-    return { ...normalizedState, isFetching: false };
-  })
   .handleAction(
     [
-      tasksActions.clockifyTasksFetch.request,
-      tasksActions.clockifyTasksTransfer.request,
-      tasksActions.togglTasksFetch.request,
+      tasksActions.createClockifyTasks.request,
+      tasksActions.createTogglTasks.request,
+      tasksActions.fetchClockifyTasks.request,
+      tasksActions.fetchTogglTasks.request,
     ],
     state => ({
       ...state,
@@ -106,9 +46,12 @@ export const tasksReducer = createReducer<TasksState, TasksAction>(initialState)
   )
   .handleAction(
     [
-      tasksActions.clockifyTasksFetch.failure,
-      tasksActions.clockifyTasksTransfer.failure,
-      tasksActions.togglTasksFetch.failure,
+      tasksActions.createClockifyTasks.success,
+      tasksActions.createTogglTasks.success,
+      tasksActions.createClockifyTasks.failure,
+      tasksActions.createTogglTasks.failure,
+      tasksActions.fetchClockifyTasks.failure,
+      tasksActions.fetchTogglTasks.failure,
     ],
     state => ({
       ...state,
@@ -116,13 +59,5 @@ export const tasksReducer = createReducer<TasksState, TasksAction>(initialState)
     }),
   )
   .handleAction(tasksActions.flipIsTaskIncluded, (state, { payload }) =>
-    utils.flipEntityInclusion(state, payload),
-  )
-  .handleAction(togglTimeEntriesFetch.success, (state, { payload }) =>
-    utils.appendEntryCountToState({
-      entityType: EntityType.Task,
-      toolName: ToolName.Toggl,
-      entityState: state,
-      timeEntries: payload,
-    }),
+    mod("source", payload, "isIncluded")(toggle)(state),
   );

@@ -1,91 +1,45 @@
 import { createReducer, ActionType } from "typesafe-actions";
-import * as utils from "~/utils";
-import { togglTimeEntriesFetch } from "~/timeEntries/timeEntriesActions";
+import { mod, toggle } from "shades";
 import * as clientsActions from "./clientsActions";
-import { EntityGroup, EntityType, ToolName } from "~/common/commonTypes";
-import { ReduxStateEntryForTool } from "~/redux/reduxTypes";
-import {
-  ClockifyClientModel,
-  CompoundClientModel,
-  TogglClientModel,
-} from "./clientsTypes";
+import { ClientModel } from "./clientsTypes";
 
-type ClientsAction = ActionType<
-  typeof clientsActions & typeof togglTimeEntriesFetch
->;
+type ClientsAction = ActionType<typeof clientsActions>;
 
 export interface ClientsState {
-  readonly clockify: ReduxStateEntryForTool<CompoundClientModel>;
-  readonly toggl: ReduxStateEntryForTool<CompoundClientModel>;
+  readonly source: Record<string, ClientModel>;
+  readonly target: Record<string, ClientModel>;
   readonly isFetching: boolean;
 }
 
 export const initialState: ClientsState = {
-  clockify: {
-    byId: {},
-    idValues: [],
-  },
-  toggl: {
-    byId: {},
-    idValues: [],
-  },
+  source: {},
+  target: {},
   isFetching: false,
 };
-
-const getSchemaProcessStrategy = (workspaceId: string) => (
-  value: ClockifyClientModel | TogglClientModel,
-): CompoundClientModel => ({
-  id: value.id.toString(),
-  name: value.name,
-  workspaceId,
-  linkedId: null,
-  isIncluded: true,
-  entryCount: 0,
-  memberOf: EntityGroup.Clients,
-});
 
 export const clientsReducer = createReducer<ClientsState, ClientsAction>(
   initialState,
 )
   .handleAction(
     [
-      clientsActions.clockifyClientsFetch.success,
-      clientsActions.clockifyClientsTransfer.success,
+      clientsActions.fetchClockifyClients.success,
+      clientsActions.fetchTogglClients.success,
     ],
-    (state, { payload }) => {
-      const normalizedState = utils.normalizeState({
-        toolName: ToolName.Clockify,
-        entityGroup: EntityGroup.Clients,
-        entityState: state,
-        payload: payload.entityRecords,
-        schemaProcessStrategy: getSchemaProcessStrategy(payload.workspaceId),
-      });
-
-      const linkedState = utils.linkEntitiesInStateByName(
-        EntityGroup.Clients,
-        normalizedState,
-      );
-      return { ...linkedState, isFetching: false };
-    },
-  )
-  .handleAction(
-    clientsActions.togglClientsFetch.success,
-    (state, { payload }) => {
-      const normalizedState = utils.normalizeState({
-        toolName: ToolName.Toggl,
-        entityGroup: EntityGroup.Clients,
-        entityState: state,
-        payload: payload.entityRecords,
-        schemaProcessStrategy: getSchemaProcessStrategy(payload.workspaceId),
-      });
-      return { ...normalizedState, isFetching: false };
-    },
+    (state, { payload }) => ({
+      ...state,
+      [payload.mapping]: {
+        ...state[payload.mapping],
+        ...payload.recordsById,
+      },
+      isFetching: true,
+    }),
   )
   .handleAction(
     [
-      clientsActions.clockifyClientsFetch.request,
-      clientsActions.clockifyClientsTransfer.request,
-      clientsActions.togglClientsFetch.request,
+      clientsActions.createClockifyClients.request,
+      clientsActions.createTogglClients.request,
+      clientsActions.fetchClockifyClients.request,
+      clientsActions.fetchTogglClients.request,
     ],
     state => ({
       ...state,
@@ -94,9 +48,12 @@ export const clientsReducer = createReducer<ClientsState, ClientsAction>(
   )
   .handleAction(
     [
-      clientsActions.clockifyClientsFetch.failure,
-      clientsActions.clockifyClientsTransfer.failure,
-      clientsActions.togglClientsFetch.failure,
+      clientsActions.createClockifyClients.success,
+      clientsActions.createTogglClients.success,
+      clientsActions.createClockifyClients.failure,
+      clientsActions.createTogglClients.failure,
+      clientsActions.fetchClockifyClients.failure,
+      clientsActions.fetchTogglClients.failure,
     ],
     state => ({
       ...state,
@@ -104,13 +61,5 @@ export const clientsReducer = createReducer<ClientsState, ClientsAction>(
     }),
   )
   .handleAction(clientsActions.flipIsClientIncluded, (state, { payload }) =>
-    utils.flipEntityInclusion(state, payload),
-  )
-  .handleAction(togglTimeEntriesFetch.success, (state, { payload }) =>
-    utils.appendEntryCountToState({
-      entityType: EntityType.Client,
-      toolName: ToolName.Toggl,
-      entityState: state,
-      timeEntries: payload,
-    }),
+    mod("source", payload, "isIncluded")(toggle)(state),
   );

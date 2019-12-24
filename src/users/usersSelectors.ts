@@ -1,98 +1,20 @@
-import { createSelector, Selector } from "reselect";
-import { get } from "lodash";
-import { findTogglInclusions } from "~/utils";
-import { selectCredentials } from "~/credentials/credentialsSelectors";
-import { selectTogglTimeEntriesById } from "~/timeEntries/timeEntriesSelectors";
+import { createSelector } from "reselect";
 import { ReduxState } from "~/redux/reduxTypes";
-import { CompoundUserModel } from "~/users/usersTypes";
-import { EntityGroupsByKey } from "~/common/commonTypes";
+import { UserModel } from "~/users/usersTypes";
 
-export const selectClockifyUsersById = createSelector(
-  (state: ReduxState) => state.users.clockify.byId,
-  usersById => usersById,
+export const selectTargetUsers = createSelector(
+  (state: ReduxState) => state.users.target,
+  (usersById): UserModel[] => Object.values(usersById),
 );
 
-export const selectClockifyUsersByWorkspace = createSelector(
-  selectClockifyUsersById,
-  (state: ReduxState) => Object.values(state.workspaces.clockify.byId),
-  (usersById, workspaces): EntityGroupsByKey<CompoundUserModel> =>
-    workspaces.reduce(
-      (acc, workspace) => ({
-        ...acc,
-        [workspace.id]: workspace.userIds.map(userId => get(usersById, userId)),
-      }),
-      {},
-    ),
+const selectTargetUsersInWorkspace = createSelector(
+  selectTargetUsers,
+  (_: unknown, workspaceId: string) => workspaceId,
+  (targetUsers, workspaceId): UserModel[] =>
+    targetUsers.filter(user => user.workspaceId === workspaceId),
 );
 
-export const selectTogglUsersById = createSelector(
-  (state: ReduxState) => state.users.toggl.byId,
-  (usersById): Record<string, CompoundUserModel> => usersById,
+export const selectTargetUsersForTransfer = createSelector(
+  selectTargetUsersInWorkspace,
+  (targetUsers): UserModel[] => targetUsers.filter(user => user.isIncluded),
 );
-
-export const selectTogglUsersByWorkspaceFactory = (
-  inclusionsOnly: boolean,
-): Selector<ReduxState, EntityGroupsByKey<CompoundUserModel>> =>
-  createSelector(
-    selectCredentials,
-    selectTogglUsersById,
-    selectTogglTimeEntriesById,
-    (state: ReduxState) => state.workspaces.toggl.byId,
-    (
-      { togglUserId },
-      usersById,
-      timeEntriesById,
-      workspacesById,
-    ): EntityGroupsByKey<CompoundUserModel> => {
-      return Object.values(workspacesById).reduce((acc, { id, userIds }) => {
-        const validUsers = getValidUsers(usersById, userIds, togglUserId);
-        const usersToUse = inclusionsOnly
-          ? findTogglInclusions(validUsers)
-          : validUsers;
-
-        return {
-          ...acc,
-          [id]: usersToUse,
-        };
-      }, {});
-    },
-  );
-
-export const selectUsersInvitePayloadForWorkspace = createSelector(
-  selectTogglUsersByWorkspaceFactory(true),
-  selectCredentials,
-  (inclusionsByWorkspace, { togglEmail }) => (
-    workspaceIdToGet: string,
-  ): string[] => {
-    const inclusions = get(
-      inclusionsByWorkspace,
-      workspaceIdToGet,
-      [],
-    ) as CompoundUserModel[];
-    if (inclusions.length === 0) {
-      return [];
-    }
-
-    return inclusions.reduce((acc, { email }) => {
-      if (email === togglEmail) {
-        return acc;
-      }
-      return [...acc, email];
-    }, []);
-  },
-);
-
-function getValidUsers(
-  usersById: Record<string, CompoundUserModel>,
-  userIds: string[],
-  meUserId: string,
-): CompoundUserModel[] {
-  return userIds.reduce((acc, userId) => {
-    const userRecord = get(usersById, userId, { linkedId: null });
-    if (userId === meUserId) {
-      return acc;
-    }
-
-    return [...acc, userRecord];
-  }, []);
-}

@@ -39,9 +39,7 @@ export interface State {
   workspaces: WorkspacesState;
 }
 
-export const createRootReducer = (
-  router: RouterReducer | null = null,
-): Reducer<State> =>
+export const createRootReducer = (router: RouterReducer): Reducer<State> =>
   combineReducers({
     app: appReducer,
     clients: clientsReducer,

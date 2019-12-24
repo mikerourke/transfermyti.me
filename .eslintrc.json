@@ -55,6 +55,19 @@
     ],
     "@typescript-eslint/no-var-requires": "off",
     "import/no-default-export": "error",
+    "import/order": [
+      "error",
+      {
+        "groups": ["builtin", "external", ["internal", "parent", "sibling"]],
+        "pathGroups": [
+          {
+            "pattern": "~/**",
+            "group": "internal"
+          }
+        ],
+        "newlines-between": "never"
+      }
+    ],
     "react/jsx-curly-spacing": [
       "error",
       {
