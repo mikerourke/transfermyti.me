@@ -1,13 +1,14 @@
 import { createReducer, ActionType } from "typesafe-actions";
-import R from "ramda";
+import * as R from "ramda";
 import * as workspacesActions from "./workspacesActions";
-import { WorkspaceModel } from "./workspacesTypes";
+import { WorkspacesByIdModel } from "./workspacesTypes";
 
 type WorkspacesAction = ActionType<typeof workspacesActions>;
 
 export interface WorkspacesState {
-  readonly source: Record<string, WorkspaceModel>;
-  readonly target: Record<string, WorkspaceModel>;
+  readonly source: WorkspacesByIdModel;
+  readonly target: WorkspacesByIdModel;
+  readonly activeWorkspaceId: string;
   readonly workspaceNameBeingFetched: string | null;
   readonly isFetching: boolean;
 }
@@ -15,6 +16,7 @@ export interface WorkspacesState {
 export const initialState: WorkspacesState = {
   source: {},
   target: {},
+  activeWorkspaceId: "",
   workspaceNameBeingFetched: null,
   isFetching: false,
 };
@@ -25,23 +27,19 @@ export const workspacesReducer = createReducer<
 >(initialState)
   .handleAction(
     [
-      workspacesActions.fetchClockifyWorkspaces.success,
-      workspacesActions.fetchTogglWorkspaces.success,
+      workspacesActions.createWorkspaces.success,
+      workspacesActions.fetchWorkspaces.success,
     ],
     (state, { payload }) => ({
       ...state,
-      [payload.mapping]: {
-        ...state[payload.mapping],
-        ...payload.recordsById,
-      },
+      ...payload,
       isFetching: false,
     }),
   )
   .handleAction(
     [
-      workspacesActions.createClockifyWorkspaces.request,
-      workspacesActions.fetchClockifyWorkspaces.request,
-      workspacesActions.fetchTogglWorkspaces.request,
+      workspacesActions.createWorkspaces.request,
+      workspacesActions.fetchWorkspaces.request,
     ],
     state => ({
       ...state,
@@ -50,14 +48,19 @@ export const workspacesReducer = createReducer<
   )
   .handleAction(
     [
-      workspacesActions.createClockifyWorkspaces.success,
-      workspacesActions.createClockifyWorkspaces.failure,
-      workspacesActions.fetchClockifyWorkspaces.failure,
-      workspacesActions.fetchTogglWorkspaces.failure,
+      workspacesActions.createWorkspaces.failure,
+      workspacesActions.fetchWorkspaces.failure,
     ],
     state => ({
       ...state,
       isFetching: false,
+    }),
+  )
+  .handleAction(
+    workspacesActions.updateActiveWorkspaceId,
+    (state, { payload }) => ({
+      ...state,
+      activeWorkspaceId: payload,
     }),
   )
   .handleAction(
@@ -87,8 +90,21 @@ export const workspacesReducer = createReducer<
   )
   .handleAction(
     workspacesActions.flipIsWorkspaceIncluded,
-    (state, { payload }) =>
-      R.over(R.lensPath(["source", payload, "isIncluded"]), R.not, state),
+    (state, { payload }) => {
+      const updatedState = R.over(
+        R.lensPath(["source", payload.id, "isIncluded"]),
+        R.not,
+        state,
+      );
+      if (payload.linkedId) {
+        return R.over(
+          R.lensPath(["target", payload.linkedId, "isIncluded"]),
+          R.not,
+          updatedState,
+        );
+      }
+      return updatedState;
+    },
   )
   .handleAction(
     workspacesActions.updateIsWorkspaceYearIncluded,

@@ -2,19 +2,19 @@ import { createSelector } from "reselect";
 import { ReduxState } from "~/redux/reduxTypes";
 import { UserModel } from "~/users/usersTypes";
 
-export const selectTargetUsers = createSelector(
-  (state: ReduxState) => state.users.target,
+export const selectSourceUsers = createSelector(
+  (state: ReduxState) => state.users.source,
   (usersById): UserModel[] => Object.values(usersById),
 );
 
-const selectTargetUsersInWorkspace = createSelector(
-  selectTargetUsers,
+const selectSourceUsersInWorkspace = createSelector(
+  selectSourceUsers,
   (_: unknown, workspaceId: string) => workspaceId,
-  (targetUsers, workspaceId): UserModel[] =>
-    targetUsers.filter(user => user.workspaceId === workspaceId),
+  (sourceUsers, workspaceId): UserModel[] =>
+    sourceUsers.filter(user => user.workspaceId === workspaceId),
 );
 
-export const selectTargetUsersForTransfer = createSelector(
-  selectTargetUsersInWorkspace,
-  (targetUsers): UserModel[] => targetUsers.filter(user => user.isIncluded),
+export const selectSourceUsersForTransfer = createSelector(
+  selectSourceUsersInWorkspace,
+  (sourceUsers): UserModel[] => sourceUsers.filter(user => user.isIncluded),
 );

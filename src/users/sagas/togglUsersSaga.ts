@@ -6,7 +6,7 @@ import { fetchArray, fetchObject } from "~/utils";
 import { showFetchErrorNotification } from "~/app/appActions";
 import { selectToolMapping } from "~/app/appSelectors";
 import { createTogglUsers, fetchTogglUsers } from "~/users/usersActions";
-import { selectTargetUsersForTransfer } from "~/users/usersSelectors";
+import { selectSourceUsersForTransfer } from "~/users/usersSelectors";
 import {
   EntityGroup,
   HttpMethod,
@@ -52,7 +52,7 @@ export function* createTogglUsersSaga(
 
   try {
     const users: UserModel[] = yield select(
-      selectTargetUsersForTransfer,
+      selectSourceUsersForTransfer,
       workspaceId,
     );
     yield call(startGroupTransfer, EntityGroup.Users, users.length);

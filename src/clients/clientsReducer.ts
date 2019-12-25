@@ -1,13 +1,13 @@
 import { createReducer, ActionType } from "typesafe-actions";
-import R from "ramda";
+import * as R from "ramda";
 import * as clientsActions from "./clientsActions";
-import { ClientModel } from "./clientsTypes";
+import { ClientsByIdModel } from "./clientsTypes";
 
 type ClientsAction = ActionType<typeof clientsActions>;
 
 export interface ClientsState {
-  readonly source: Record<string, ClientModel>;
-  readonly target: Record<string, ClientModel>;
+  readonly source: ClientsByIdModel;
+  readonly target: ClientsByIdModel;
   readonly isFetching: boolean;
 }
 
@@ -22,24 +22,19 @@ export const clientsReducer = createReducer<ClientsState, ClientsAction>(
 )
   .handleAction(
     [
-      clientsActions.fetchClockifyClients.success,
-      clientsActions.fetchTogglClients.success,
+      clientsActions.createClients.success,
+      clientsActions.fetchClients.success,
     ],
     (state, { payload }) => ({
       ...state,
-      [payload.mapping]: {
-        ...state[payload.mapping],
-        ...payload.recordsById,
-      },
+      ...payload,
       isFetching: false,
     }),
   )
   .handleAction(
     [
-      clientsActions.createClockifyClients.request,
-      clientsActions.createTogglClients.request,
-      clientsActions.fetchClockifyClients.request,
-      clientsActions.fetchTogglClients.request,
+      clientsActions.createClients.request,
+      clientsActions.fetchClients.request,
     ],
     state => ({
       ...state,
@@ -48,18 +43,18 @@ export const clientsReducer = createReducer<ClientsState, ClientsAction>(
   )
   .handleAction(
     [
-      clientsActions.createClockifyClients.success,
-      clientsActions.createTogglClients.success,
-      clientsActions.createClockifyClients.failure,
-      clientsActions.createTogglClients.failure,
-      clientsActions.fetchClockifyClients.failure,
-      clientsActions.fetchTogglClients.failure,
+      clientsActions.createClients.failure,
+      clientsActions.fetchClients.failure,
     ],
     state => ({
       ...state,
       isFetching: false,
     }),
   )
+  .handleAction(clientsActions.pushUpdatesToClients, (state, { payload }) => ({
+    ...state,
+    ...payload,
+  }))
   .handleAction(clientsActions.flipIsClientIncluded, (state, { payload }) =>
     R.over(R.lensPath(["source", payload, "isIncluded"]), R.not, state),
   );

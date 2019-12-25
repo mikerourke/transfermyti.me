@@ -1,25 +1,15 @@
 import { ActionType, createReducer } from "typesafe-actions";
 import * as appActions from "./appActions";
+import { ToolName, TransferMappingModel } from "~/common/commonTypes";
 import { NotificationModel } from "./appTypes";
-import {
-  EntityGroup,
-  ToolName,
-  TransferMappingModel,
-} from "~/common/commonTypes";
 
 type AppAction = ActionType<typeof appActions>;
 
 export interface AppState {
   readonly notifications: NotificationModel[];
   readonly transferMapping: TransferMappingModel;
-  readonly currentEntityGroup: EntityGroup | null;
-  readonly currentWorkspaceId: string | null;
-  readonly countCurrentInGroup: number;
-  readonly countTotalInGroup: number;
-  readonly countCurrentInWorkspace: number;
-  readonly countTotalInWorkspace: number;
-  readonly countCurrentOverall: number;
-  readonly countTotalOverall: number;
+  readonly currentTransferCount: number;
+  readonly totalTransferCount: number;
 }
 
 export const initialState: AppState = {
@@ -28,14 +18,8 @@ export const initialState: AppState = {
     source: ToolName.None,
     target: ToolName.None,
   },
-  currentEntityGroup: null,
-  currentWorkspaceId: null,
-  countCurrentInGroup: 0,
-  countTotalInGroup: 0,
-  countCurrentInWorkspace: 0,
-  countTotalInWorkspace: 0,
-  countCurrentOverall: 0,
-  countTotalOverall: 0,
+  currentTransferCount: 0,
+  totalTransferCount: 0,
 };
 
 export const appReducer = createReducer<AppState, AppAction>(initialState)
@@ -61,50 +45,15 @@ export const appReducer = createReducer<AppState, AppAction>(initialState)
       ...payload,
     },
   }))
-  .handleAction(appActions.updateCurrentEntityGroup, (state, { payload }) => ({
+  .handleAction(appActions.incrementCurrentTransferCount, state => ({
     ...state,
-    currentEntityGroup: payload,
+    currentTransferCount: state.currentTransferCount + 1,
   }))
-  .handleAction(appActions.updateCurrentWorkspaceId, (state, { payload }) => ({
+  .handleAction(appActions.resetCurrentTransferCount, state => ({
     ...state,
-    currentWorkspaceId: payload,
+    currentTransferCount: 0,
   }))
-  .handleAction(appActions.incrementCountCurrentInGroup, state => ({
+  .handleAction(appActions.updateTotalTransferCount, (state, { payload }) => ({
     ...state,
-    countCurrentInGroup: state.countCurrentInGroup + 1,
-  }))
-  .handleAction(appActions.resetCountCurrentInGroup, state => ({
-    ...state,
-    countCurrentInGroup: 0,
-  }))
-  .handleAction(appActions.updateCountTotalInGroup, (state, { payload }) => ({
-    ...state,
-    countTotalInGroup: payload,
-  }))
-  .handleAction(appActions.incrementCountCurrentInWorkspace, state => ({
-    ...state,
-    countCurrentInWorkspace: state.countCurrentInWorkspace + 1,
-  }))
-  .handleAction(appActions.resetCountCurrentInWorkspace, state => ({
-    ...state,
-    countCurrentInWorkspace: 0,
-  }))
-  .handleAction(
-    appActions.updateCountTotalInWorkspace,
-    (state, { payload }) => ({
-      ...state,
-      countTotalInWorkspace: payload,
-    }),
-  )
-  .handleAction(appActions.incrementCountCurrentOverall, state => ({
-    ...state,
-    countCurrentOverall: state.countCurrentOverall + 1,
-  }))
-  .handleAction(appActions.resetCountCurrentOverall, state => ({
-    ...state,
-    countCurrentOverall: 0,
-  }))
-  .handleAction(appActions.updateCountTotalOverall, (state, { payload }) => ({
-    ...state,
-    countTotalOverall: payload,
+    totalTransferCount: payload,
   }));

@@ -8,6 +8,8 @@ export interface WorkspaceModel extends BaseEntityModel {
   isAdmin: boolean | null;
 }
 
+export type WorkspacesByIdModel = Record<string, WorkspaceModel>;
+
 export interface UpdateIncludedWorkspaceYearModel {
   mapping: Mapping;
   workspaceId: string;

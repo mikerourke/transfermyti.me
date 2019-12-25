@@ -1,7 +1,7 @@
 import React from "react";
 import { connect } from "react-redux";
 import { push } from "connected-react-router";
-import R from "ramda";
+import * as R from "ramda";
 import { ControlLabel, Form, FormControl, FormGroup } from "rsuite";
 import { PayloadActionCreator } from "typesafe-actions";
 import { Path } from "history";

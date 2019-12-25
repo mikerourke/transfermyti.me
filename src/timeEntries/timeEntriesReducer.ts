@@ -1,5 +1,5 @@
 import { createReducer, ActionType } from "typesafe-actions";
-import R from "ramda";
+import * as R from "ramda";
 import * as timeEntriesActions from "./timeEntriesActions";
 import { TimeEntryModel } from "./timeEntriesTypes";
 

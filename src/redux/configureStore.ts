@@ -8,15 +8,15 @@ import { STORAGE_KEY } from "~/constants";
 import { getIfDev } from "~/utils";
 import { validateCredentials } from "~/credentials/credentialsActions";
 import { initialState as initialCredentialsState } from "~/credentials/credentialsReducer";
-import { clientsSaga } from "~/clients/sagas/main";
+import { clientsSaga } from "~/clients/sagas/clientsSaga";
 import { credentialsSaga } from "~/credentials/sagas/main";
-import { projectsSaga } from "~/projects/sagas/main";
+import { projectsSaga } from "~/projects/sagas/projectsSaga";
 import { tagsSaga } from "~/tags/sagas/main";
 import { tasksSaga } from "~/tasks/sagas/main";
 import { timeEntriesSaga } from "~/timeEntries/sagas/main";
 import { userGroupsSaga } from "~/userGroups/sagas/main";
 import { usersSaga } from "~/users/sagas/main";
-import { workspacesSaga } from "~/workspaces/sagas/main";
+import { workspacesSaga } from "~/workspaces/sagas/workspacesSaga";
 import { createRootReducer, RouterReducer } from "./rootReducer";
 import { ReduxStore } from "~/redux/reduxTypes";
 

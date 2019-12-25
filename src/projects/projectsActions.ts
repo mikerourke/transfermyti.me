@@ -1,30 +1,18 @@
 import { createAsyncAction, createAction } from "typesafe-actions";
-import { MappedEntityRecordsModel } from "~/common/commonTypes";
-import { ProjectModel } from "./projectsTypes";
+import { Mapping } from "~/common/commonTypes";
+import { ProjectsByIdModel } from "./projectsTypes";
 
-export const createClockifyProjects = createAsyncAction(
+export const createProjects = createAsyncAction(
   "@projects/CREATE_CLOCKIFY_PROJECTS_REQUEST",
   "@projects/CREATE_CLOCKIFY_PROJECTS_SUCCESS",
   "@projects/CREATE_CLOCKIFY_PROJECTS_FAILURE",
-)<string, void, void>();
+)<string, Record<Mapping, ProjectsByIdModel>, void>();
 
-export const createTogglProjects = createAsyncAction(
-  "@projects/CREATE_TOGGL_PROJECTS_REQUEST",
-  "@projects/CREATE_TOGGL_PROJECTS_SUCCESS",
-  "@projects/CREATE_TOGGL_PROJECTS_FAILURE",
-)<string, void, void>();
-
-export const fetchClockifyProjects = createAsyncAction(
+export const fetchProjects = createAsyncAction(
   "@projects/FETCH_CLOCKIFY_PROJECTS_REQUEST",
   "@projects/FETCH_CLOCKIFY_PROJECTS_SUCCESS",
   "@projects/FETCH_CLOCKIFY_PROJECTS_FAILURE",
-)<string, MappedEntityRecordsModel<ProjectModel>, void>();
-
-export const fetchTogglProjects = createAsyncAction(
-  "@projects/FETCH_TOGGL_PROJECTS_REQUEST",
-  "@projects/FETCH_TOGGL_PROJECTS_SUCCESS",
-  "@projects/FETCH_TOGGL_PROJECTS_FAILURE",
-)<string, MappedEntityRecordsModel<ProjectModel>, void>();
+)<string, Record<Mapping, ProjectsByIdModel>, void>();
 
 export const flipIsProjectIncluded = createAction("@projects/FLIP_IS_INCLUDED")<
   string

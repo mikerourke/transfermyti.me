@@ -4,7 +4,7 @@ import { WorkspaceModel } from "~/workspaces/workspacesTypes";
 
 interface Props {
   workspace: WorkspaceModel;
-  onToggleIncluded: (workspaceId: string) => void;
+  onToggleIncluded: (workspace: WorkspaceModel) => void;
 }
 
 const SourceWorkspaceCard: React.FC<Props> = props => (
@@ -19,7 +19,7 @@ const SourceWorkspaceCard: React.FC<Props> = props => (
         checkedChildren="Yes"
         unCheckedChildren="No"
         checked={props.workspace.isIncluded}
-        onChange={() => props.onToggleIncluded(props.workspace.id)}
+        onChange={() => props.onToggleIncluded(props.workspace)}
       />
     </Panel>
   </FlexboxGrid.Item>

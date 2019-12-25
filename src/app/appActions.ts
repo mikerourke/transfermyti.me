@@ -1,12 +1,8 @@
 import { createAction } from "typesafe-actions";
 import cuid from "cuid";
 import { capitalize, getIfDev } from "~/utils";
-import {
-  EntityGroup,
-  ToolName,
-  TransferMappingModel,
-} from "~/common/commonTypes";
-import { NotificationModel, NotificationType } from "./appTypes";
+import { ToolName, TransferMappingModel } from "~/common/commonTypes";
+import { NotificationModel } from "./appTypes";
 
 export const showNotification = createAction(
   "@app/SHOW_NOTIFICATION",
@@ -17,18 +13,18 @@ export const showNotification = createAction(
 
 export const showFetchErrorNotification = createAction(
   "@app/SHOW_FETCH_ERROR_NOTIFICATION",
-  (error: Error & { toolName: ToolName }) => {
+  (err: Error & { toolName: ToolName }) => {
     if (getIfDev()) {
-      console.error(error);
+      console.error(err);
     }
 
-    const name = capitalize(error.toolName);
+    const name = capitalize(err.toolName);
     const message = `An error occurred when making a request to the ${name} API`;
 
     return {
       id: cuid(),
       message,
-      type: NotificationType.Error,
+      type: "error",
     };
   },
 )<NotificationModel>();
@@ -45,46 +41,14 @@ export const updateTransferMapping = createAction(
   "@app/UPDATE_TRANSFER_MAPPING",
 )<TransferMappingModel>();
 
-export const updateCurrentEntityGroup = createAction(
-  "@app/UPDATE_CURRENT_ENTITY_GROUP",
-)<EntityGroup | null>();
-
-export const updateCurrentWorkspaceId = createAction(
-  "@app/UPDATE_CURRENT_WORKSPACE_ID",
-)<string | null>();
-
-export const incrementCountCurrentInGroup = createAction(
-  "@app/INCREMENT_COUNT_CURRENT_IN_GROUP",
+export const incrementCurrentTransferCount = createAction(
+  "@app/INCREMENT_CURRENT_TRANSFER_COUNT",
 )<void>();
 
-export const resetCountCurrentInGroup = createAction(
-  "@app/RESET_COUNT_CURRENT_IN_GROUP",
+export const resetCurrentTransferCount = createAction(
+  "@app/RESET_CURRENT_TRANSFER_COUNT",
 )<void>();
 
-export const updateCountTotalInGroup = createAction(
-  "@app/UPDATE_COUNT_TOTAL_IN_GROUP",
-)<number>();
-
-export const incrementCountCurrentInWorkspace = createAction(
-  "@app/INCREMENT_COUNT_CURRENT_IN_WORKSPACE",
-)<void>();
-
-export const resetCountCurrentInWorkspace = createAction(
-  "@app/RESET_COUNT_CURRENT_IN_WORKSPACE",
-)<void>();
-
-export const updateCountTotalInWorkspace = createAction(
-  "@app/UPDATE_COUNT_TOTAL_IN_WORKSPACE",
-)<number>();
-
-export const incrementCountCurrentOverall = createAction(
-  "@app/INCREMENT_COUNT_CURRENT_OVERALL",
-)<void>();
-
-export const resetCountCurrentOverall = createAction(
-  "@app/RESET_COUNT_CURRENT_OVERALL",
-)<void>();
-
-export const updateCountTotalOverall = createAction(
-  "@app/UPDATE_COUNT_TOTAL_OVERALL",
+export const updateTotalTransferCount = createAction(
+  "@app/UPDATE_TOTAL_TRANSFER_COUNT",
 )<number>();

@@ -1,4 +1,4 @@
-import R from "ramda";
+import * as R from "ramda";
 
 /**
  * Ensures a valid array is returned from a fetch call.

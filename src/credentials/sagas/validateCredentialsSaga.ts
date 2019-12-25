@@ -1,9 +1,9 @@
 import { call, put } from "redux-saga/effects";
 import { push } from "connected-react-router";
-import R from "ramda";
+import * as R from "ramda";
 import { SagaIterator } from "@redux-saga/types";
 import { fetchObject } from "~/utils";
-import { TogglWorkspaceResponseModel } from "~/workspaces/sagas/togglWorkspacesSaga";
+import { TogglWorkspaceResponseModel } from "~/workspaces/sagas/togglWorkspacesSagas";
 import { validateCredentials } from "~/credentials/credentialsActions";
 import { RoutePath } from "~/app/appTypes";
 import { CredentialsModel } from "~/credentials/credentialsTypes";

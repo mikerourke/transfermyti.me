@@ -1,35 +1,31 @@
 import { createSelector } from "reselect";
+import { selectActiveWorkspaceId } from "~/workspaces/workspacesSelectors";
 import { ReduxState } from "~/redux/reduxTypes";
 import { ProjectModel } from "~/projects/projectsTypes";
 
-export const selectSourceProjectsById = createSelector(
+export const selectIfProjectsFetching = (state: ReduxState): boolean =>
+  state.projects.isFetching;
+
+export const selectSourceProjects = createSelector(
   (state: ReduxState) => state.projects.source,
-  sourceProjectsById => sourceProjectsById,
+  (projectsById): ProjectModel[] => Object.values(projectsById),
 );
 
-export const selectSourceProjectIds = createSelector(
-  selectSourceProjectsById,
-  (projectsById): string[] => Object.keys(projectsById),
+const filterProjectsByWorkspaceId = (
+  projects: ProjectModel[],
+  workspaceId: string,
+): ProjectModel[] =>
+  projects.filter(project => project.workspaceId === workspaceId);
+
+export const selectSourceProjectsForTransfer = createSelector(
+  selectSourceProjects,
+  (sourceProjects): ProjectModel[] =>
+    sourceProjects.filter(project => project.isIncluded),
 );
 
-export const selectTargetProjectsById = createSelector(
-  (state: ReduxState) => state.projects.target,
-  targetProjectsById => targetProjectsById,
-);
-
-const selectTargetProjects = createSelector(
-  selectTargetProjectsById,
-  targetProjectsById => Object.values(targetProjectsById),
-);
-
-const selectTargetProjectsInWorkspace = createSelector(
-  selectTargetProjects,
-  (_: unknown, workspaceId: string) => workspaceId,
-  (targetProjects, workspaceId): ProjectModel[] =>
-    targetProjects.filter(project => project.workspaceId === workspaceId),
-);
-
-export const selectTargetProjectsForTransfer = createSelector(
-  selectTargetProjectsInWorkspace,
-  targetProjects => targetProjects.filter(project => project.isIncluded),
+export const selectSourceProjectsInActiveWorkspace = createSelector(
+  selectSourceProjects,
+  selectActiveWorkspaceId,
+  (sourceProjects, activeWorkspaceId) =>
+    filterProjectsByWorkspaceId(sourceProjects, activeWorkspaceId),
 );

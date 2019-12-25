@@ -1,35 +1,25 @@
 import { createAsyncAction, createAction } from "typesafe-actions";
-import { MappedEntityRecordsModel, Mapping } from "~/common/commonTypes";
+import { Mapping } from "~/common/commonTypes";
 import {
   UpdateIncludedWorkspaceYearModel,
-  WorkspaceModel,
+  WorkspacesByIdModel, WorkspaceModel,
 } from "./workspacesTypes";
 
-export const fetchWorkspaces = createAction("@workspaces/FETCH_WORKSPACES")<
-  Mapping
->();
+export const createWorkspaces = createAsyncAction(
+  "@workspaces/CREATE_WORKSPACES_REQUEST",
+  "@workspaces/CREATE_WORKSPACES_SUCCESS",
+  "@workspaces/CREATE_WORKSPACES_FAILURE",
+)<void, Record<Mapping, WorkspacesByIdModel>, void>();
 
-export const createWorkspaces = createAction("@workspaces/CREATE_WORKSPACES")<
-  void
->();
+export const fetchWorkspaces = createAsyncAction(
+  "@workspaces/FETCH_WORKSPACES_REQUEST",
+  "@workspaces/FETCH_WORKSPACES_SUCCESS",
+  "@workspaces/FETCH_WORKSPACES_FAILURE",
+)<void, Record<Mapping, WorkspacesByIdModel>, void>();
 
-export const createClockifyWorkspaces = createAsyncAction(
-  "@workspaces/CREATE_CLOCKIFY_WORKSPACES_REQUEST",
-  "@workspaces/CREATE_CLOCKIFY_WORKSPACES_SUCCESS",
-  "@workspaces/CREATE_CLOCKIFY_WORKSPACES_FAILURE",
-)<void, void, void>();
-
-export const fetchClockifyWorkspaces = createAsyncAction(
-  "@workspaces/FETCH_CLOCKIFY_WORKSPACES_REQUEST",
-  "@workspaces/FETCH_CLOCKIFY_WORKSPACES_SUCCESS",
-  "@workspaces/FETCH_CLOCKIFY_WORKSPACES_FAILURE",
-)<void, MappedEntityRecordsModel<WorkspaceModel>, void>();
-
-export const fetchTogglWorkspaces = createAsyncAction(
-  "@workspaces/FETCH_TOGGL_WORKSPACES_REQUEST",
-  "@workspaces/FETCH_TOGGL_WORKSPACES_SUCCESS",
-  "@workspaces/FETCH_TOGGL_WORKSPACES_FAILURE",
-)<void, MappedEntityRecordsModel<WorkspaceModel>, void>();
+export const updateActiveWorkspaceId = createAction(
+  "@workspaces/UPDATE_ACTIVE_WORKSPACE_ID",
+)<string>();
 
 export const appendUserIdsToWorkspace = createAction(
   "@workspaces/APPEND_USER_IDS",
@@ -37,7 +27,7 @@ export const appendUserIdsToWorkspace = createAction(
 
 export const flipIsWorkspaceIncluded = createAction(
   "@workspaces/FLIP_IS_INCLUDED",
-)<string>();
+)<WorkspaceModel>();
 
 export const updateIsWorkspaceYearIncluded = createAction(
   "@workspaces/UPDATE_IS_WORKSPACE_YEAR_INCLUDED",

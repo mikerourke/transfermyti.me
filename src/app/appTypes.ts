@@ -1,10 +1,6 @@
 import { ToolName } from "~/common/commonTypes";
 
-export enum NotificationType {
-  Error = "error",
-  Info = "info",
-  Success = "success",
-}
+type NotificationType = "error" | "info" | "success";
 
 export interface NotificationModel {
   id: string;

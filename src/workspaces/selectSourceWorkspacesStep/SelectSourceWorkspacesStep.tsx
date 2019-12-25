@@ -4,6 +4,7 @@ import { push } from "connected-react-router";
 import { Else, If, Then } from "react-if";
 import { FlexboxGrid } from "rsuite";
 import { Path } from "history";
+import { PayloadActionCreator } from "typesafe-actions";
 import { dismissAllNotifications, showNotification } from "~/app/appActions";
 import {
   fetchWorkspaces,
@@ -18,7 +19,6 @@ import { HelpMessage, Loader, NavigationButtonsRow } from "~/components";
 import SourceWorkspaceCard from "./SourceWorkspaceCard";
 import { RoutePath, NotificationModel } from "~/app/appTypes";
 import { ReduxState } from "~/redux/reduxTypes";
-import { Mapping } from "~/common/commonTypes";
 import { WorkspaceModel } from "~/workspaces/workspacesTypes";
 
 interface ConnectStateProps {
@@ -29,8 +29,8 @@ interface ConnectStateProps {
 
 interface ConnectDispatchProps {
   onDismissAllNotifications: VoidFunction;
-  onFetchWorkspaces: (mapping: Mapping) => void;
-  onFlipIsWorkspaceIncluded: (workspaceId: string) => void;
+  onFetchWorkspaces: PayloadActionCreator<string, void>;
+  onFlipIsWorkspaceIncluded: (workspace: WorkspaceModel) => void;
   onPush: (path: Path) => void;
   onShowNotification: (notification: Partial<NotificationModel>) => void;
 }
@@ -38,12 +38,9 @@ interface ConnectDispatchProps {
 type Props = ConnectStateProps & ConnectDispatchProps;
 
 export const SelectSourceWorkspacesStepComponent: React.FC<Props> = props => {
-  const fetchSourceWorkspaces = (): void =>
-    props.onFetchWorkspaces(Mapping.Source);
-
   React.useEffect(() => {
     if (props.workspaces.length === 0) {
-      fetchSourceWorkspaces();
+      props.onFetchWorkspaces();
     }
   }, []);
 
@@ -84,7 +81,7 @@ export const SelectSourceWorkspacesStepComponent: React.FC<Props> = props => {
         css={{ marginTop: "1rem" }}
         onBackClick={handleBackClick}
         onNextClick={handleNextClick}
-        onRefreshClick={fetchSourceWorkspaces}
+        onRefreshClick={() => props.onFetchWorkspaces()}
       />
     </div>
   );
@@ -98,7 +95,7 @@ const mapStateToProps = (state: ReduxState): ConnectStateProps => ({
 
 const mapDispatchToProps: ConnectDispatchProps = {
   onDismissAllNotifications: dismissAllNotifications,
-  onFetchWorkspaces: fetchWorkspaces,
+  onFetchWorkspaces: fetchWorkspaces.request,
   onFlipIsWorkspaceIncluded: flipIsWorkspaceIncluded,
   onPush: push,
   onShowNotification: showNotification,

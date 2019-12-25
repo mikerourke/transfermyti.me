@@ -53,6 +53,10 @@ interface TogglProjectUserResponseModel {
   rate: number;
 }
 
+/**
+ * Creates a Toggl project and returns the response as { data: [New Project] }.
+ * @see https://github.com/toggl/toggl_api_docs/blob/master/chapters/projects.md#create-project
+ */
 export function* createTogglProjectsSaga(
   action: ActionType<typeof createTogglProjects.request>,
 ): SagaIterator {

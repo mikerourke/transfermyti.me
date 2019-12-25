@@ -1,26 +1,31 @@
 import { createSelector } from "reselect";
+import { selectActiveWorkspaceId } from "~/workspaces/workspacesSelectors";
 import { ReduxState } from "~/redux/reduxTypes";
 import { ClientModel } from "./clientsTypes";
 
-const selectTargetClientsById = createSelector(
-  (state: ReduxState) => state.clients.target,
-  (clientsById): Record<string, ClientModel> => clientsById,
-);
+export const selectIfClientsFetching = (state: ReduxState): boolean =>
+  state.clients.isFetching;
 
-export const selectTargetClients = createSelector(
-  selectTargetClientsById,
+export const selectSourceClients = createSelector(
+  (state: ReduxState) => state.clients.source,
   (clientsById): ClientModel[] => Object.values(clientsById),
 );
 
-export const selectTargetClientsInWorkspace = createSelector(
-  selectTargetClients,
-  (_: unknown, workspaceId: string) => workspaceId,
-  (targetClients, workspaceId): ClientModel[] =>
-    targetClients.filter(client => client.workspaceId === workspaceId),
+const filterClientsByWorkspaceId = (
+  clients: ClientModel[],
+  workspaceId: string,
+): ClientModel[] =>
+  clients.filter(client => client.workspaceId === workspaceId);
+
+export const selectSourceClientsForTransfer = createSelector(
+  selectSourceClients,
+  (sourceClients): ClientModel[] =>
+    sourceClients.filter(client => client.isIncluded),
 );
 
-export const selectTargetClientsForTransfer = createSelector(
-  selectTargetClientsInWorkspace,
-  (targetClients): ClientModel[] =>
-    targetClients.filter(client => client.isIncluded),
+export const selectSourceClientsInActiveWorkspace = createSelector(
+  selectSourceClients,
+  selectActiveWorkspaceId,
+  (sourceClients, activeWorkspaceId) =>
+    filterClientsByWorkspaceId(sourceClients, activeWorkspaceId),
 );

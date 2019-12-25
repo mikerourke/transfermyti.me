@@ -1,4 +1,4 @@
-import R from "ramda";
+import * as R from "ramda";
 import { call, put, select, delay } from "redux-saga/effects";
 import { ActionType } from "typesafe-actions";
 import { SagaIterator } from "@redux-saga/types";
@@ -15,7 +15,7 @@ import {
   fetchClockifyTimeEntries,
 } from "~/timeEntries/timeEntriesActions";
 import { selectTargetTimeEntriesForTransfer } from "~/timeEntries/timeEntriesSelectors";
-import { ClockifyProjectResponseModel } from "~/projects/sagas/clockifyProjectsSaga";
+import { ClockifyProjectResponseModel } from "~/projects/sagas/clockifyProjectsSagas";
 import { ClockifyTagResponseModel } from "~/tags/sagas/clockifyTagsSaga";
 import { ClockifyTaskResponseModel } from "~/tasks/sagas/clockifyTasksSaga";
 import { ClockifyUserResponseModel } from "~/users/sagas/clockifyUsersSaga";

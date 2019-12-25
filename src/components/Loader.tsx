@@ -1,6 +1,6 @@
 import React from "react";
 import { Unless } from "react-if";
-import R from "ramda";
+import * as R from "ramda";
 import { keyframes } from "@emotion/core";
 import styled from "@emotion/styled";
 import Flex from "~/components/Flex";

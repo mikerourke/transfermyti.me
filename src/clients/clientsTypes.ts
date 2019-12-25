@@ -5,3 +5,5 @@ export interface ClientModel extends BaseEntityModel {
   name: string;
   workspaceId: string;
 }
+
+export type ClientsByIdModel = Record<string, ClientModel>;

@@ -1,6 +1,6 @@
 import React from "react";
 import { Unless } from "react-if";
-import R from "ramda";
+import * as R from "ramda";
 import { Button } from "rsuite";
 import styled from "@emotion/styled";
 
@@ -24,7 +24,7 @@ const NavigationButtonsRow: React.FC<Props> = ({
   isLoading = false,
   onBackClick,
   onNextClick,
-  onRefreshClick,
+  onRefreshClick = () => null,
   ...props
 }) => (
   <Root {...props}>

@@ -1,5 +1,5 @@
 import { createReducer, ActionType } from "typesafe-actions";
-import R from "ramda";
+import * as R from "ramda";
 import * as projectsActions from "./projectsActions";
 import { ProjectModel } from "./projectsTypes";
 
@@ -22,24 +22,19 @@ export const projectsReducer = createReducer<ProjectsState, ProjectsAction>(
 )
   .handleAction(
     [
-      projectsActions.fetchClockifyProjects.success,
-      projectsActions.fetchTogglProjects.success,
+      projectsActions.createProjects.success,
+      projectsActions.fetchProjects.success,
     ],
     (state, { payload }) => ({
       ...state,
-      [payload.mapping]: {
-        ...state[payload.mapping],
-        ...payload.recordsById,
-      },
+      ...payload,
       isFetching: false,
     }),
   )
   .handleAction(
     [
-      projectsActions.createClockifyProjects.request,
-      projectsActions.createTogglProjects.request,
-      projectsActions.fetchClockifyProjects.request,
-      projectsActions.fetchTogglProjects.request,
+      projectsActions.createProjects.request,
+      projectsActions.fetchProjects.request,
     ],
     state => ({
       ...state,
@@ -48,12 +43,8 @@ export const projectsReducer = createReducer<ProjectsState, ProjectsAction>(
   )
   .handleAction(
     [
-      projectsActions.createClockifyProjects.success,
-      projectsActions.createTogglProjects.success,
-      projectsActions.createClockifyProjects.failure,
-      projectsActions.createTogglProjects.failure,
-      projectsActions.fetchClockifyProjects.failure,
-      projectsActions.fetchTogglProjects.failure,
+      projectsActions.createProjects.failure,
+      projectsActions.fetchProjects.failure,
     ],
     state => ({
       ...state,

@@ -1,30 +1,15 @@
-import { call, delay, put, select } from "redux-saga/effects";
-import { ActionType } from "typesafe-actions";
+import { call, delay } from "redux-saga/effects";
 import { SagaIterator } from "@redux-saga/types";
-import {
-  incrementTransferCounts,
-  paginatedClockifyFetch,
-  startGroupTransfer,
-} from "~/redux/sagaUtils";
+import { CLOCKIFY_API_DELAY } from "~/constants";
 import { fetchArray, fetchObject } from "~/utils";
-import { showFetchErrorNotification } from "~/app/appActions";
-import { selectToolMapping } from "~/app/appSelectors";
-import {
-  createClockifyProjects,
-  fetchClockifyProjects,
-} from "~/projects/projectsActions";
-import { selectTargetProjectsForTransfer } from "~/projects/projectsSelectors";
+import { paginatedClockifyFetch } from "~/redux/sagaUtils";
+import { incrementCurrentTransferCount } from "~/app/appActions";
 import {
   ClockifyHourlyRateResponseModel,
   ClockifyMembershipResponseModel,
   ClockifyUserResponseModel,
 } from "~/users/sagas/clockifyUsersSaga";
-import {
-  EntityGroup,
-  HttpMethod,
-  Mapping,
-  ToolName,
-} from "~/common/commonTypes";
+import { EntityGroup, HttpMethod } from "~/common/commonTypes";
 import { ProjectModel } from "~/projects/projectsTypes";
 
 interface ClockifyEstimateModel {
@@ -57,48 +42,53 @@ interface ClockifyProjectRequestModel {
   billable: boolean;
 }
 
+/**
+ * Creates new Clockify projects in all target workspaces and returns an
+ * array of transformed projects.
+ * @see https://clockify.me/developers-api#operation--v1-workspaces--workspaceId--projects-post
+ */
 export function* createClockifyProjectsSaga(
-  action: ActionType<typeof createClockifyProjects.request>,
-): SagaIterator {
-  const workspaceId = action.payload;
+  sourceProjects: ProjectModel[],
+): SagaIterator<ProjectModel[]> {
+  const targetProjects: ProjectModel[] = [];
 
-  try {
-    const newProjects: ProjectModel[] = yield select(
-      selectTargetProjectsForTransfer,
-      workspaceId,
+  for (const sourceProject of sourceProjects) {
+    yield call(incrementCurrentTransferCount);
+
+    const projectRequest = transformToRequest(sourceProject);
+    const targetProject = yield call(
+      fetchObject,
+      `/clockify/api/v1/workspaces/${sourceProject.workspaceId}/projects`,
+      { method: HttpMethod.Post, body: projectRequest },
     );
-    yield call(startGroupTransfer, EntityGroup.Projects, newProjects.length);
+    targetProjects.push(
+      transformFromResponse(targetProject, sourceProject.workspaceId, []),
+    );
 
-    for (const newProject of newProjects) {
-      yield call(incrementTransferCounts);
-      yield call(createClockifyProject, workspaceId, newProject);
-      yield delay(500);
-    }
-
-    yield put(createClockifyProjects.success());
-  } catch (err) {
-    yield put(showFetchErrorNotification(err));
-    yield put(createClockifyProjects.failure());
+    yield delay(CLOCKIFY_API_DELAY);
   }
+
+  return targetProjects;
 }
 
 /**
- * Fetches all projects in Clockify workspace, adds associated user IDs, and
- * updates state with result.
+ * Fetches all projects in Clockify workspaces, adds associated user IDs, and
+ * returns results.
  * @see https://clockify.me/developers-api#operation--v1-workspaces--workspaceId--projects-get
  */
 export function* fetchClockifyProjectsSaga(
-  action: ActionType<typeof fetchClockifyProjects.request>,
-): SagaIterator {
-  const workspaceId = action.payload;
+  workspaceIds: string[],
+): SagaIterator<ProjectModel[]> {
+  const allClockifyProjects: ProjectModel[] = [];
+  if (workspaceIds.length === 0) {
+    return [];
+  }
 
-  try {
+  for (const workspaceId of workspaceIds) {
     const clockifyProjects: ClockifyProjectResponseModel[] = yield call(
       paginatedClockifyFetch,
       `/clockify/api/v1/workspaces/${workspaceId}/projects`,
     );
-
-    const recordsById: Record<string, ProjectModel> = {};
 
     for (const clockifyProject of clockifyProjects) {
       const projectId = clockifyProject.id;
@@ -107,36 +97,15 @@ export function* fetchClockifyProjectsSaga(
         workspaceId,
         projectId,
       );
-      recordsById[projectId] = transformFromResponse(
-        clockifyProject,
-        workspaceId,
-        userIds,
+      allClockifyProjects.push(
+        transformFromResponse(clockifyProject, workspaceId, userIds),
       );
-      yield delay(500);
+
+      yield delay(CLOCKIFY_API_DELAY);
     }
-    const mapping: Mapping = yield select(selectToolMapping, ToolName.Clockify);
-
-    yield put(fetchClockifyProjects.success({ mapping, recordsById }));
-  } catch (err) {
-    yield put(showFetchErrorNotification(err));
-    yield put(fetchClockifyProjects.failure());
   }
-}
 
-/**
- * Creates a Clockify project and returns the response as { [New Project] }.
- * @see https://clockify.me/developers-api#operation--v1-workspaces--workspaceId--projects-post
- */
-function* createClockifyProject(
-  workspaceId: string,
-  project: ProjectModel,
-): SagaIterator {
-  const projectRequest = transformToRequest(project);
-  yield call(
-    fetchObject,
-    `/clockify/api/v1/workspaces/${workspaceId}/projects`,
-    { method: HttpMethod.Post, body: projectRequest },
-  );
+  return allClockifyProjects;
 }
 
 /**

@@ -1,5 +1,5 @@
 /* eslint-disable @typescript-eslint/camelcase */
-import R from "ramda";
+import * as R from "ramda";
 import { call, put, select, delay } from "redux-saga/effects";
 import qs from "qs";
 import format from "date-fns/format";

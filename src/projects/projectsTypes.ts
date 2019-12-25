@@ -10,3 +10,5 @@ export interface ProjectModel extends BaseEntityModel {
   color: string;
   userIds: string[];
 }
+
+export type ProjectsByIdModel = Record<string, ProjectModel>;
