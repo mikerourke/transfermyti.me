@@ -1,13 +1,13 @@
 import { createReducer, ActionType } from "typesafe-actions";
 import * as R from "ramda";
 import * as tasksActions from "./tasksActions";
-import { TaskModel } from "./tasksTypes";
+import { TasksByIdModel } from "./tasksTypes";
 
 type TasksAction = ActionType<typeof tasksActions>;
 
 export interface TasksState {
-  readonly source: Record<string, TaskModel>;
-  readonly target: Record<string, TaskModel>;
+  readonly source: TasksByIdModel;
+  readonly target: TasksByIdModel;
   readonly isFetching: boolean;
 }
 
@@ -19,40 +19,22 @@ export const initialState: TasksState = {
 
 export const tasksReducer = createReducer<TasksState, TasksAction>(initialState)
   .handleAction(
-    [
-      tasksActions.fetchClockifyTasks.success,
-      tasksActions.fetchTogglTasks.success,
-    ],
+    [tasksActions.createTasks.success, tasksActions.fetchTasks.success],
     (state, { payload }) => ({
       ...state,
-      [payload.mapping]: {
-        ...state[payload.mapping],
-        ...payload.recordsById,
-      },
+      ...payload,
       isFetching: false,
     }),
   )
   .handleAction(
-    [
-      tasksActions.createClockifyTasks.request,
-      tasksActions.createTogglTasks.request,
-      tasksActions.fetchClockifyTasks.request,
-      tasksActions.fetchTogglTasks.request,
-    ],
+    [tasksActions.createTasks.request, tasksActions.fetchTasks.request],
     state => ({
       ...state,
       isFetching: true,
     }),
   )
   .handleAction(
-    [
-      tasksActions.createClockifyTasks.success,
-      tasksActions.createTogglTasks.success,
-      tasksActions.createClockifyTasks.failure,
-      tasksActions.createTogglTasks.failure,
-      tasksActions.fetchClockifyTasks.failure,
-      tasksActions.fetchTogglTasks.failure,
-    ],
+    [tasksActions.createTasks.failure, tasksActions.fetchTasks.failure],
     state => ({
       ...state,
       isFetching: false,

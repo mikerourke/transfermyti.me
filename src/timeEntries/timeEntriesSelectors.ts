@@ -2,22 +2,22 @@ import { createSelector } from "reselect";
 import { ReduxState } from "~/redux/reduxTypes";
 import { TimeEntryModel } from "~/timeEntries/timeEntriesTypes";
 
-export const selectTargetTimeEntries = createSelector(
-  (state: ReduxState) => state.timeEntries.target,
+export const selectSourceTimeEntries = createSelector(
+  (state: ReduxState) => state.timeEntries.source,
   (timeEntriesById): TimeEntryModel[] => Object.values(timeEntriesById),
 );
 
 const selectTargetTimeEntriesInWorkspace = createSelector(
-  selectTargetTimeEntries,
-  (_: unknown, workspaceId: string) => workspaceId,
-  (targetTimeEntries, workspaceId): TimeEntryModel[] =>
-    targetTimeEntries.filter(
+  selectSourceTimeEntries,
+  (_: ReduxState, workspaceId: string) => workspaceId,
+  (sourceTimeEntries, workspaceId): TimeEntryModel[] =>
+    sourceTimeEntries.filter(
       timeEntry => timeEntry.workspaceId === workspaceId,
     ),
 );
 
 export const selectTargetTimeEntriesForTransfer = createSelector(
   selectTargetTimeEntriesInWorkspace,
-  targetTimeEntries =>
-    targetTimeEntries.filter(timeEntry => timeEntry.isIncluded),
+  sourceTimeEntries =>
+    sourceTimeEntries.filter(timeEntry => timeEntry.isIncluded),
 );

@@ -1,22 +1,13 @@
-import { call, delay, put, select } from "redux-saga/effects";
-import { ActionType } from "typesafe-actions";
+import { call, delay, put } from "redux-saga/effects";
 import { SagaIterator } from "@redux-saga/types";
-import {
-  incrementTransferCounts,
-  paginatedClockifyFetch,
-  startGroupTransfer,
-} from "~/redux/sagaUtils";
+import { CLOCKIFY_API_DELAY } from "~/constants";
 import { fetchObject } from "~/utils";
-import { showFetchErrorNotification } from "~/app/appActions";
-import { selectToolMapping } from "~/app/appSelectors";
-import { createClockifyUsers, fetchClockifyUsers } from "~/users/usersActions";
-import { selectSourceUsersForTransfer } from "~/users/usersSelectors";
 import {
-  EntityGroup,
-  HttpMethod,
-  Mapping,
-  ToolName,
-} from "~/common/commonTypes";
+  fetchEntitiesForTool,
+  paginatedClockifyFetch,
+} from "~/redux/sagaUtils";
+import { incrementCurrentTransferCount } from "~/app/appActions";
+import { EntityGroup, HttpMethod, ToolName } from "~/common/commonTypes";
 import { UserModel } from "~/users/usersTypes";
 
 export interface ClockifyHourlyRateResponseModel {
@@ -77,79 +68,53 @@ interface ClockifyUsersRequestModel {
 }
 
 export function* createClockifyUsersSaga(
-  action: ActionType<typeof createClockifyUsers.request>,
+  emailsByWorkspaceId: Record<string, string[]>,
 ): SagaIterator {
-  const workspaceId = action.payload;
-
-  try {
-    const users: UserModel[] = yield select(
-      selectSourceUsersForTransfer,
-      workspaceId,
-    );
-    yield call(startGroupTransfer, EntityGroup.Users, users.length);
-    yield call(incrementTransferCounts);
-
-    const emails: string[] = [];
-    for (const user of users) {
-      emails.push(user.email);
-    }
-    yield call(inviteClockifyUsers, workspaceId, emails);
-    yield delay(500);
-
-    yield put(createClockifyUsers.success());
-  } catch (err) {
-    yield put(showFetchErrorNotification(err));
-    yield put(createClockifyUsers.failure());
+  for (const [workspaceId, emails] of Object.entries(emailsByWorkspaceId)) {
+    yield put(incrementCurrentTransferCount());
+    yield call(inviteClockifyUsers, emails, workspaceId);
+    yield delay(CLOCKIFY_API_DELAY);
   }
 }
 
 /**
- * Fetches all users in Clockify workspace and updates state with result.
+ * Fetches all users in Clockify workspaces and returns result.
  * @see https://clockify.me/developers-api#operation--v1-workspaces--workspaceId--users-get
  */
-export function* fetchClockifyUsersSaga(
-  action: ActionType<typeof fetchClockifyUsers.request>,
-): SagaIterator {
-  const workspaceId = action.payload;
-
-  try {
-    const clockifyUsers: ClockifyUserResponseModel[] = yield call(
-      paginatedClockifyFetch,
-      `/clockify/api/v1/workspaces/${workspaceId}/users`,
-    );
-
-    const recordsById: Record<string, UserModel> = {};
-
-    for (const clockifyUser of clockifyUsers) {
-      recordsById[clockifyUser.id] = transformFromResponse(
-        clockifyUser,
-        workspaceId,
-      );
-    }
-    const mapping: Mapping = yield select(selectToolMapping, ToolName.Clockify);
-
-    yield put(fetchClockifyUsers.success({ mapping, recordsById }));
-  } catch (err) {
-    yield put(showFetchErrorNotification(err));
-    yield put(fetchClockifyUsers.failure());
-  }
+export function* fetchClockifyUsersSaga(): SagaIterator<UserModel[]> {
+  return yield call(fetchEntitiesForTool, {
+    toolName: ToolName.Clockify,
+    fetchFunc: fetchClockifyUsersInWorkspace,
+  });
 }
 
 /**
- * Invites Clockify users to workspace and returns the response as a
- * ClockifyWorkspaceResponseModel.
+ * Invites Clockify users to workspace.
  * @see https://clockify.github.io/clockify_api_docs/#operation--workspaces--workspaceId--users-post
  * @deprecated Currently in the unstable API version.
  */
 function* inviteClockifyUsers(
+  sourceEmails: string[],
   workspaceId: string,
-  emails: string[],
 ): SagaIterator {
-  const usersRequest = transformToRequest(emails);
+  const usersRequest = transformToRequest(sourceEmails);
   yield call(fetchObject, `/clockify/api/workspaces/${workspaceId}/users`, {
     method: HttpMethod.Post,
     body: usersRequest,
   });
+}
+
+function* fetchClockifyUsersInWorkspace(
+  workspaceId: string,
+): SagaIterator<UserModel[]> {
+  const clockifyUsers: ClockifyUserResponseModel[] = yield call(
+    paginatedClockifyFetch,
+    `/clockify/api/v1/workspaces/${workspaceId}/users`,
+  );
+
+  return clockifyUsers.map(clockifyUser =>
+    transformFromResponse(clockifyUser, workspaceId),
+  );
 }
 
 function transformToRequest(emails: string[]): ClockifyUsersRequestModel {

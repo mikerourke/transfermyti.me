@@ -1,22 +1,26 @@
 import { createSelector } from "reselect";
+import * as R from "ramda";
+import { selectActiveWorkspaceId } from "~/workspaces/workspacesSelectors";
 import { ReduxState } from "~/redux/reduxTypes";
 import { UserGroupModel } from "./userGroupsTypes";
 
-export const selectTargetUserGroups = createSelector(
-  (state: ReduxState) => state.userGroups.target,
+export const selectSourceUserGroups = createSelector(
+  (state: ReduxState) => state.userGroups.source,
   (userGroupsById): UserGroupModel[] =>
     Object.values(userGroupsById).filter(({ name }) => !/Admin/gi.test(name)),
 );
 
-const selectTargetUserGroupsInWorkspace = createSelector(
-  selectTargetUserGroups,
-  (_: unknown, workspaceId: string) => workspaceId,
-  (targetUserGroups, workspaceId): UserGroupModel[] =>
-    targetUserGroups.filter(userGroup => userGroup.workspaceId === workspaceId),
+export const selectSourceUserGroupsForTransfer = createSelector(
+  selectSourceUserGroups,
+  (sourceUserGroups): UserGroupModel[] =>
+    sourceUserGroups.filter(sourceUserGroup =>
+      R.and(sourceUserGroup.isIncluded, R.isNil(sourceUserGroup.linkedId)),
+    ),
 );
 
-export const selectTargetUserGroupsForTransfer = createSelector(
-  selectTargetUserGroupsInWorkspace,
-  (targetUserGroups): UserGroupModel[] =>
-    targetUserGroups.filter(userGroup => userGroup.isIncluded),
+export const selectSourceUserGroupsInActiveWorkspace = createSelector(
+  selectSourceUserGroups,
+  selectActiveWorkspaceId,
+  (sourceUserGroups, workspaceId): UserGroupModel[] =>
+    sourceUserGroups.filter(userGroup => userGroup.workspaceId === workspaceId),
 );

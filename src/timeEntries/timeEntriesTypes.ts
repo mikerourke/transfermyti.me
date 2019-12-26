@@ -16,3 +16,5 @@ export interface TimeEntryModel extends BaseEntityModel {
   userId: string;
   userGroupIds: string[];
 }
+
+export type TimeEntriesByIdModel = Record<string, TimeEntryModel>;

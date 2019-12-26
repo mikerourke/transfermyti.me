@@ -25,7 +25,6 @@ export enum RoutePath {
   Credentials = "/credentials",
   Workspaces = "/workspaces",
   ReviewSource = "/review-source",
-  ReviewTarget = "/review-target",
   PerformTransfer = "/perform-transfer",
 }
 

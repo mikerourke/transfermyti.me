@@ -5,7 +5,6 @@ import { showFetchErrorNotification } from "~/app/appActions";
 import { selectTransferMapping } from "~/app/appSelectors";
 import { createClients, fetchClients } from "~/clients/clientsActions";
 import { selectSourceClientsForTransfer } from "~/clients/clientsSelectors";
-import { selectInlcudedWorkspaceIdsByMapping } from "~/workspaces/workspacesSelectors";
 import {
   createClockifyClientsSaga,
   fetchClockifyClientsSaga,
@@ -55,18 +54,8 @@ function* fetchClientsSaga(): SagaIterator {
       [ToolName.Clockify]: fetchClockifyClientsSaga,
       [ToolName.Toggl]: fetchTogglClientsSaga,
     };
-    const workspaceIdsByMapping = yield select(
-      selectInlcudedWorkspaceIdsByMapping,
-    );
-
-    const sourceClients = yield call(
-      fetchSagaByToolName[source],
-      workspaceIdsByMapping.source,
-    );
-    const targetClients = yield call(
-      fetchSagaByToolName[target],
-      workspaceIdsByMapping.target,
-    );
+    const sourceClients = yield call(fetchSagaByToolName[source]);
+    const targetClients = yield call(fetchSagaByToolName[target]);
 
     const clientsByIdByMapping = linkEntitiesByIdByMapping<ClientModel>(
       sourceClients,

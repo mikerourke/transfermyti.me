@@ -1,4 +1,5 @@
 import { createSelector } from "reselect";
+import * as R from "ramda";
 import { capitalize } from "~/utils";
 import { Mapping, ToolName, TransferMappingModel } from "~/common/commonTypes";
 import { ReduxState } from "~/redux/reduxTypes";
@@ -7,10 +8,17 @@ import { NotificationModel, RoutePath, ToolHelpDetailsModel } from "./appTypes";
 export const selectCurrentPath = (state: ReduxState): string =>
   state.router.location.pathname;
 
+const routePathValues = Object.values(RoutePath);
+
 export const selectCurrentTransferStep = createSelector(
   selectCurrentPath,
-  (currentPath): number =>
-    Object.values(RoutePath).indexOf(currentPath as RoutePath),
+  (currentPath): number => routePathValues.indexOf(currentPath as RoutePath),
+);
+
+export const selectIfPastValidationStep = createSelector(
+  selectCurrentTransferStep,
+  currentTransferStep =>
+    currentTransferStep > routePathValues.indexOf(RoutePath.Credentials),
 );
 
 export const selectNotifications = createSelector(
@@ -24,18 +32,12 @@ export const selectTransferMapping = (
 
 export const selectToolMapping = createSelector(
   selectTransferMapping,
-  (_: unknown, toolName: ToolName) => toolName,
+  (_: ReduxState, toolName: ToolName) => toolName,
   (transferMapping, toolName) => {
-    const matchedIndex = Object.values(transferMapping).indexOf(toolName);
-    if (matchedIndex === 0) {
-      return Mapping.Source;
-    }
-
-    if (matchedIndex === 1) {
-      return Mapping.Target;
-    }
-
-    return null;
+    const mappingByTool = R.invertObj(
+      (transferMapping as unknown) as { [tool: string]: string },
+    );
+    return mappingByTool[toolName] ?? null;
   },
 );
 

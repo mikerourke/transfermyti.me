@@ -1,9 +1,8 @@
-import { call, delay, select } from "redux-saga/effects";
+import { call, delay, put } from "redux-saga/effects";
 import { SagaIterator } from "@redux-saga/types";
 import { TOGGL_API_DELAY } from "~/constants";
 import { fetchArray, fetchObject } from "~/utils";
-import { incrementTransferCounts, startGroupTransfer } from "~/redux/sagaUtils";
-import { selectTargetWorkspacesForTransfer } from "~/workspaces/workspacesSelectors";
+import { incrementCurrentTransferCount } from "~/app/appActions";
 import { EntityGroup, HttpMethod } from "~/common/commonTypes";
 import { WorkspaceModel } from "~/workspaces/workspacesTypes";
 
@@ -18,31 +17,29 @@ interface TogglWorkspaceRequestModel {
   name: string;
 }
 
-export function* createTogglWorkspacesSaga(): SagaIterator<WorkspaceModel[]> {
-  const workspaces: WorkspaceModel[] = yield select(
-    selectTargetWorkspacesForTransfer,
-  );
-  yield call(startGroupTransfer, EntityGroup.Workspaces, workspaces.length);
+export function* createTogglWorkspacesSaga(
+  sourceWorkspaces: WorkspaceModel[],
+): SagaIterator<WorkspaceModel[]> {
+  const targetWorkspaces: WorkspaceModel[] = [];
 
-  const togglWorkspaces: TogglWorkspaceResponseModel[] = [];
-  for (const workspace of workspaces) {
-    yield call(incrementTransferCounts);
+  for (const sourceWorkspace of sourceWorkspaces) {
+    yield put(incrementCurrentTransferCount());
 
-    const workspaceRequest = transformToRequest(workspace);
-    const togglWorkspace = yield call(fetchObject, `/workspaces`, {
+    const workspaceRequest = transformToRequest(sourceWorkspace);
+    const targetWorkspace = yield call(fetchObject, `/workspaces`, {
       method: HttpMethod.Post,
       body: workspaceRequest,
     });
-    togglWorkspaces.push(togglWorkspace);
+    targetWorkspaces.push(transformFromResponse(targetWorkspace));
 
     yield delay(TOGGL_API_DELAY);
   }
 
-  return togglWorkspaces.map(transformFromResponse);
+  return targetWorkspaces;
 }
 
 /**
- * Fetches all workspaces in Toggl workspace and updates state with result.
+ * Fetches all workspaces from Toggl and returns transformed result.
  * @see https://github.com/toggl/toggl_api_docs/blob/master/chapters/workspaces.md#get-workspace-workspaces
  */
 export function* fetchTogglWorkspacesSaga(): SagaIterator {

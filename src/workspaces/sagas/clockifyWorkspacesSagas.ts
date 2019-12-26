@@ -1,10 +1,9 @@
-import { call, select, delay } from "redux-saga/effects";
+import { call, delay, put } from "redux-saga/effects";
 import { SagaIterator } from "@redux-saga/types";
 import { CLOCKIFY_API_DELAY } from "~/constants";
 import { fetchArray, fetchObject } from "~/utils";
-import { incrementTransferCounts, startGroupTransfer } from "~/redux/sagaUtils";
-import { ClockifyMembershipResponseModel } from "~/users/sagas/clockifyUsersSaga";
-import { selectTargetWorkspacesForTransfer } from "~/workspaces/workspacesSelectors";
+import { incrementCurrentTransferCount } from "~/app/appActions";
+import { ClockifyMembershipResponseModel } from "~/users/sagas/clockifyUsersSagas";
 import { EntityGroup, HttpMethod } from "~/common/commonTypes";
 import { WorkspaceModel } from "~/workspaces/workspacesTypes";
 
@@ -52,20 +51,16 @@ interface ClockifyWorkspaceRequestModel {
  * Creates Clockify workspaces for transfer and returns results.
  * @see https://clockify.me/developers-api#operation--v1-workspaces-post
  */
-export function* createClockifyWorkspacesSaga(): SagaIterator<
-  WorkspaceModel[]
-> {
-  const workspaces: WorkspaceModel[] = yield select(
-    selectTargetWorkspacesForTransfer,
-  );
-  yield call(startGroupTransfer, EntityGroup.Workspaces, workspaces.length);
+export function* createClockifyWorkspacesSaga(
+  sourceWorkspaces: WorkspaceModel[],
+): SagaIterator<WorkspaceModel[]> {
+  const targetWorkspaces: WorkspaceModel[] = [];
 
-  const clockifyWorkspaces: ClockifyWorkspaceResponseModel[] = [];
-  for (const workspace of workspaces) {
-    yield call(incrementTransferCounts);
+  for (const sourceWorkspace of sourceWorkspaces) {
+    yield put(incrementCurrentTransferCount());
 
-    const workspaceRequest = transformToRequest(workspace);
-    const clockifyWorkspace = yield call(
+    const workspaceRequest = transformToRequest(sourceWorkspace);
+    const targetWorkspace = yield call(
       fetchObject,
       "/clockify/api/v1/workspaces",
       {
@@ -73,16 +68,16 @@ export function* createClockifyWorkspacesSaga(): SagaIterator<
         body: workspaceRequest,
       },
     );
-    clockifyWorkspaces.push(clockifyWorkspace);
+    targetWorkspaces.push(transformFromResponse(targetWorkspace));
 
     yield delay(CLOCKIFY_API_DELAY);
   }
 
-  return clockifyWorkspaces.map(transformFromResponse);
+  return targetWorkspaces;
 }
 
 /**
- * Fetches all workspaces in Clockify workspace and returns transformed result.
+ * Fetches all workspaces from Clockify and returns transformed result.
  * @see https://clockify.me/developers-api#operation--v1-workspaces-get
  */
 export function* fetchClockifyWorkspacesSaga(): SagaIterator<WorkspaceModel[]> {

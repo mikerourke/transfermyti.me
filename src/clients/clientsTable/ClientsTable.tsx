@@ -1,22 +1,41 @@
 import React from "react";
 import { connect } from "react-redux";
-import { Table, Checkbox } from "rsuite";
 import { PayloadActionCreator } from "typesafe-actions";
-import { fetchClients } from "~/clients/clientsActions";
-import {
-  selectSourceClientsInActiveWorkspace,
-  selectIfClientsFetching,
-} from "~/clients/clientsSelectors";
+import styled from "@emotion/styled";
+import { fetchClients, flipIsClientIncluded } from "~/clients/clientsActions";
+import { selectSourceClientsInActiveWorkspace } from "~/clients/clientsSelectors";
 import { ClientModel } from "~/clients/clientsTypes";
 import { ReduxState } from "~/redux/reduxTypes";
 
+const Table = styled.table({
+  marginTop: -10,
+  width: "100%",
+
+  td: {
+    padding: "0.5rem 0.25rem",
+  },
+
+  "thead td:first-of-type, tr td:first-of-type": {
+    textAlign: "center",
+    width: "5rem",
+  },
+
+  "thead td": {
+    fontWeight: "bold",
+  },
+
+  "tbody td": {
+    borderTop: "1px solid rgb(229, 229, 234);",
+  },
+});
+
 interface ConnectStateProps {
   clients: ClientModel[];
-  isFetching: boolean;
 }
 
 interface ConnectDispatchProps {
   onFetchClients: PayloadActionCreator<string, void>;
+  onFlipIsIncluded: PayloadActionCreator<string, string>;
 }
 
 type Props = ConnectStateProps & ConnectDispatchProps;
@@ -28,37 +47,39 @@ export const ClientsTableComponent: React.FC<Props> = props => {
     }
   }, []);
 
-  if (props.isFetching) {
-    return null;
-  }
-
   return (
-    <div>
-      <Table height={420} data={props.clients} autoHeight>
-        <Table.Column width={100} align="center">
-          <Table.HeaderCell>Include</Table.HeaderCell>
-          <Table.Cell dataKey="id">
-            {(rowData: ClientModel) => (
-              <Checkbox inline checked={rowData.isIncluded} />
-            )}
-          </Table.Cell>
-        </Table.Column>
-        <Table.Column width={100} resizable>
-          <Table.HeaderCell>Name</Table.HeaderCell>
-          <Table.Cell dataKey="name" />
-        </Table.Column>
-      </Table>
-    </div>
+    <Table>
+      <thead>
+        <tr>
+          <td>Include?</td>
+          <td>Name</td>
+        </tr>
+      </thead>
+      <tbody>
+        {props.clients.map(client => (
+          <tr key={client.id}>
+            <td>
+              <input
+                type="checkbox"
+                checked={client.isIncluded}
+                onChange={() => props.onFlipIsIncluded(client.id)}
+              />
+            </td>
+            <td>{client.name}</td>
+          </tr>
+        ))}
+      </tbody>
+    </Table>
   );
 };
 
 const mapStateToProps = (state: ReduxState): ConnectStateProps => ({
   clients: selectSourceClientsInActiveWorkspace(state),
-  isFetching: selectIfClientsFetching(state),
 });
 
 const mapDispatchToProps: ConnectDispatchProps = {
   onFetchClients: fetchClients.request,
+  onFlipIsIncluded: flipIsClientIncluded,
 };
 
 export default connect(

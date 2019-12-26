@@ -8,7 +8,7 @@ import {
   fetchWorkspaces,
   updateActiveWorkspaceId,
 } from "~/workspaces/workspacesActions";
-import { selectSourceWorkspaces } from "~/workspaces/workspacesSelectors";
+import { selectSourceWorkspacesForTransfer } from "~/workspaces/workspacesSelectors";
 import {
   createClockifyWorkspacesSaga,
   fetchClockifyWorkspacesSaga,
@@ -34,15 +34,15 @@ export function* workspacesSaga(): SagaIterator {
 
 function* createWorkspacesSaga(): SagaIterator {
   try {
-    const sourceWorkspaces = yield select(selectSourceWorkspaces);
+    const sourceWorkspaces = yield select(selectSourceWorkspacesForTransfer);
     const transferMapping = yield select(selectTransferMapping);
 
-    const transferSagaByToolName = {
+    const createSagaByToolName = {
       [ToolName.Clockify]: createClockifyWorkspacesSaga,
       [ToolName.Toggl]: createTogglWorkspacesSaga,
     }[transferMapping.target];
 
-    const targetWorkspaces = yield call(transferSagaByToolName);
+    const targetWorkspaces = yield call(createSagaByToolName, sourceWorkspaces);
     const workspaceByIdByMapping = linkEntitiesByIdByMapping<WorkspaceModel>(
       sourceWorkspaces,
       targetWorkspaces,
@@ -62,14 +62,16 @@ function* fetchWorkspacesSaga(): SagaIterator {
       [ToolName.Clockify]: fetchClockifyWorkspacesSaga,
       [ToolName.Toggl]: fetchTogglWorkspacesSaga,
     };
-    const [firstWorkspace, ...sourceWorkspaces] = yield call(
-      fetchSagaByToolName[source],
-    );
+    const sourceWorkspaces = yield call(fetchSagaByToolName[source]);
     const targetWorkspaces = yield call(fetchSagaByToolName[target]);
-    yield put(updateActiveWorkspaceId(firstWorkspace.id));
+
+    if (sourceWorkspaces.length !== 0) {
+      const [firstWorkspace] = sourceWorkspaces;
+      yield put(updateActiveWorkspaceId(firstWorkspace.id));
+    }
 
     const workspaceByIdByMapping = linkEntitiesByIdByMapping<WorkspaceModel>(
-      [firstWorkspace, ...sourceWorkspaces],
+      sourceWorkspaces,
       targetWorkspaces,
     );
     yield put(fetchWorkspaces.success(workspaceByIdByMapping));

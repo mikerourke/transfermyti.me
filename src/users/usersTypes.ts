@@ -8,3 +8,5 @@ export interface UserModel extends BaseEntityModel {
   isActive: boolean;
   userGroupIds: string[] | null;
 }
+
+export type UsersByIdModel = Record<string, UserModel>;

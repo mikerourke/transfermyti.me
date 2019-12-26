@@ -16,9 +16,9 @@ import {
 } from "~/timeEntries/timeEntriesActions";
 import { selectTargetTimeEntriesForTransfer } from "~/timeEntries/timeEntriesSelectors";
 import { ClockifyProjectResponseModel } from "~/projects/sagas/clockifyProjectsSagas";
-import { ClockifyTagResponseModel } from "~/tags/sagas/clockifyTagsSaga";
-import { ClockifyTaskResponseModel } from "~/tasks/sagas/clockifyTasksSaga";
-import { ClockifyUserResponseModel } from "~/users/sagas/clockifyUsersSaga";
+import { ClockifyTagResponseModel } from "~/tags/sagas/clockifyTagsSagas";
+import { ClockifyTaskResponseModel } from "~/tasks/sagas/clockifyTasksSagas";
+import { ClockifyUserResponseModel } from "~/users/sagas/clockifyUsersSagas";
 import {
   EntityGroup,
   HttpMethod,

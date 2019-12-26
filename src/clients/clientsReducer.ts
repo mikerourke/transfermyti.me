@@ -21,10 +21,7 @@ export const clientsReducer = createReducer<ClientsState, ClientsAction>(
   initialState,
 )
   .handleAction(
-    [
-      clientsActions.createClients.success,
-      clientsActions.fetchClients.success,
-    ],
+    [clientsActions.createClients.success, clientsActions.fetchClients.success],
     (state, { payload }) => ({
       ...state,
       ...payload,
@@ -32,20 +29,14 @@ export const clientsReducer = createReducer<ClientsState, ClientsAction>(
     }),
   )
   .handleAction(
-    [
-      clientsActions.createClients.request,
-      clientsActions.fetchClients.request,
-    ],
+    [clientsActions.createClients.request, clientsActions.fetchClients.request],
     state => ({
       ...state,
       isFetching: true,
     }),
   )
   .handleAction(
-    [
-      clientsActions.createClients.failure,
-      clientsActions.fetchClients.failure,
-    ],
+    [clientsActions.createClients.failure, clientsActions.fetchClients.failure],
     state => ({
       ...state,
       isFetching: false,

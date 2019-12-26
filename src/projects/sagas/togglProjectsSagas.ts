@@ -1,22 +1,10 @@
 /* eslint-disable @typescript-eslint/camelcase */
-import { call, delay, put, select } from "redux-saga/effects";
-import { ActionType } from "typesafe-actions";
+import { call, delay } from "redux-saga/effects";
 import { SagaIterator } from "@redux-saga/types";
-import { incrementTransferCounts, startGroupTransfer } from "~/redux/sagaUtils";
+import { TOGGL_API_DELAY } from "~/constants";
 import { fetchArray, fetchObject } from "~/utils";
-import { showFetchErrorNotification } from "~/app/appActions";
-import { selectToolMapping } from "~/app/appSelectors";
-import {
-  createTogglProjects,
-  fetchTogglProjects,
-} from "~/projects/projectsActions";
-import { selectTargetProjectsForTransfer } from "~/projects/projectsSelectors";
-import {
-  EntityGroup,
-  HttpMethod,
-  Mapping,
-  ToolName,
-} from "~/common/commonTypes";
+import { createEntitiesForTool, fetchEntitiesForTool } from "~/redux/sagaUtils";
+import { EntityGroup, HttpMethod, ToolName } from "~/common/commonTypes";
 import { ProjectModel } from "~/projects/projectsTypes";
 
 interface TogglProjectResponseModel {
@@ -54,84 +42,64 @@ interface TogglProjectUserResponseModel {
 }
 
 /**
- * Creates a Toggl project and returns the response as { data: [New Project] }.
+ * Creates new Toggl projects that correspond to source and returns an array of
+ * transformed projects.
  * @see https://github.com/toggl/toggl_api_docs/blob/master/chapters/projects.md#create-project
  */
 export function* createTogglProjectsSaga(
-  action: ActionType<typeof createTogglProjects.request>,
-): SagaIterator {
-  const workspaceId = action.payload;
-
-  try {
-    const newProjects: ProjectModel[] = yield select(
-      selectTargetProjectsForTransfer,
-      workspaceId,
-    );
-    yield call(startGroupTransfer, EntityGroup.Projects, newProjects.length);
-
-    for (const newProject of newProjects) {
-      yield call(incrementTransferCounts);
-      yield call(createTogglProject, workspaceId, newProject);
-      yield delay(500);
-    }
-
-    yield put(createTogglProjects.success());
-  } catch (err) {
-    yield put(showFetchErrorNotification(err));
-    yield put(createTogglProjects.failure());
-  }
+  sourceProjects: ProjectModel[],
+): SagaIterator<ProjectModel[]> {
+  return yield call(createEntitiesForTool, {
+    toolName: ToolName.Toggl,
+    sourceRecords: sourceProjects,
+    creatorFunc: createTogglProject,
+  });
 }
 
 /**
- * Fetches all projects in Toggl workspace, adds associated user IDs, and
- * updates state with result.
+ * Fetches all projects in Toggl workspaces, adds associated user IDs, and
+ * returns result.
  * @see https://github.com/toggl/toggl_api_docs/blob/master/chapters/workspaces.md#get-workspace-projects
  */
-export function* fetchTogglProjectsSaga(
-  action: ActionType<typeof fetchTogglProjects.request>,
-): SagaIterator {
-  const workspaceId = action.payload;
-
-  try {
-    const togglProjects: TogglProjectResponseModel[] = yield call(
-      fetchArray,
-      `/toggl/api/workspaces/${workspaceId}/projects?active=both`,
-    );
-
-    const recordsById: Record<string, ProjectModel> = {};
-
-    for (const togglProject of togglProjects) {
-      const projectId = togglProject.id.toString();
-      const userIds: string[] = yield call(fetchUserIdsInProject, projectId);
-      recordsById[projectId] = transformFromResponse(
-        togglProject,
-        workspaceId,
-        userIds,
-      );
-      yield delay(500);
-    }
-    const mapping: Mapping = yield select(selectToolMapping, ToolName.Toggl);
-
-    yield put(fetchTogglProjects.success({ mapping, recordsById }));
-  } catch (err) {
-    yield put(showFetchErrorNotification(err));
-    yield put(fetchTogglProjects.failure());
-  }
+export function* fetchTogglProjectsSaga(): SagaIterator<ProjectModel[]> {
+  return yield call(fetchEntitiesForTool, {
+    toolName: ToolName.Toggl,
+    fetchFunc: fetchTogglProjectsInWorkspace,
+  });
 }
 
-/**
- * Creates a Toggl project and returns the response as { data: [New Project] }.
- * @see https://github.com/toggl/toggl_api_docs/blob/master/chapters/projects.md#create-project
- */
 function* createTogglProject(
+  sourceProject: ProjectModel,
   workspaceId: string,
-  project: ProjectModel,
-): SagaIterator {
-  const projectRequest = transformToRequest(project);
-  yield call(fetchObject, "/toggl/api/projects", {
+): SagaIterator<ProjectModel | null> {
+  const projectRequest = transformToRequest(sourceProject, workspaceId);
+  const { data } = yield call(fetchObject, `/toggl/api/projects`, {
     method: HttpMethod.Post,
     body: projectRequest,
   });
+
+  return transformFromResponse(data, []);
+}
+
+function* fetchTogglProjectsInWorkspace(
+  workspaceId: string,
+): SagaIterator<ProjectModel[]> {
+  const allTogglProjects: ProjectModel[] = [];
+
+  const togglProjects: TogglProjectResponseModel[] = yield call(
+    fetchArray,
+    `/toggl/api/workspaces/${workspaceId}/projects?active=both`,
+  );
+
+  for (const togglProject of togglProjects) {
+    const projectId = togglProject.id.toString();
+    const userIds: string[] = yield call(fetchUserIdsInProject, projectId);
+    allTogglProjects.push(transformFromResponse(togglProject, userIds));
+
+    yield delay(TOGGL_API_DELAY);
+  }
+
+  return allTogglProjects;
 }
 
 /**
@@ -148,10 +116,13 @@ function* fetchUserIdsInProject(projectId: string): SagaIterator<string[]> {
   return projectUsers.map(({ uid }) => uid.toString());
 }
 
-function transformToRequest(project: ProjectModel): TogglProjectRequestModel {
+function transformToRequest(
+  project: ProjectModel,
+  workspaceId: string,
+): TogglProjectRequestModel {
   return {
     name: project.name,
-    wid: +project.workspaceId,
+    wid: +workspaceId,
     template_id: 10237,
     is_private: !project.isPublic,
     cid: +project.clientId,
@@ -160,13 +131,12 @@ function transformToRequest(project: ProjectModel): TogglProjectRequestModel {
 
 function transformFromResponse(
   project: TogglProjectResponseModel,
-  workspaceId: string,
   userIds: string[],
 ): ProjectModel {
   return {
     id: project.id.toString(),
     name: project.name,
-    workspaceId,
+    workspaceId: project.wid.toString(),
     clientId: project.cid.toString(),
     isBillable: project.billable,
     isPublic: !project.is_private,

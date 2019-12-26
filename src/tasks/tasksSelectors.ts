@@ -1,20 +1,25 @@
 import { createSelector } from "reselect";
+import * as R from "ramda";
+import { selectActiveWorkspaceId } from "~/workspaces/workspacesSelectors";
 import { ReduxState } from "~/redux/reduxTypes";
 import { TaskModel } from "~/tasks/tasksTypes";
 
-export const selectTargetTasks = createSelector(
-  (state: ReduxState) => state.tasks.target,
+export const selectSourceTasks = createSelector(
+  (state: ReduxState) => state.tasks.source,
   (tasksById): TaskModel[] => Object.values(tasksById),
 );
 
-const selectTargetTasksInWorkspace = createSelector(
-  selectTargetTasks,
-  (_: unknown, workspaceId: string) => workspaceId,
-  (targetTasks, workspaceId): TaskModel[] =>
-    targetTasks.filter(task => task.workspaceId === workspaceId),
+export const selectSourceTasksForTransfer = createSelector(
+  selectSourceTasks,
+  sourceTasks =>
+    sourceTasks.filter(sourceTask =>
+      R.and(sourceTask.isIncluded, R.isNil(sourceTask.linkedId)),
+    ),
 );
 
-export const selectTargetTasksForTransfer = createSelector(
-  selectTargetTasksInWorkspace,
-  targetTasks => targetTasks.filter(task => task.isIncluded),
+export const selectSourceTasksInActiveWorkspace = createSelector(
+  selectSourceTasks,
+  selectActiveWorkspaceId,
+  (sourceTasks, workspaceId): TaskModel[] =>
+    sourceTasks.filter(task => task.workspaceId === workspaceId),
 );

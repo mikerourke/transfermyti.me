@@ -2,14 +2,17 @@ import { call, delay } from "redux-saga/effects";
 import { SagaIterator } from "@redux-saga/types";
 import { CLOCKIFY_API_DELAY } from "~/constants";
 import { fetchArray, fetchObject } from "~/utils";
-import { paginatedClockifyFetch } from "~/redux/sagaUtils";
-import { incrementCurrentTransferCount } from "~/app/appActions";
+import {
+  paginatedClockifyFetch,
+  createEntitiesForTool,
+  fetchEntitiesForTool,
+} from "~/redux/sagaUtils";
 import {
   ClockifyHourlyRateResponseModel,
   ClockifyMembershipResponseModel,
   ClockifyUserResponseModel,
-} from "~/users/sagas/clockifyUsersSaga";
-import { EntityGroup, HttpMethod } from "~/common/commonTypes";
+} from "~/users/sagas/clockifyUsersSagas";
+import { EntityGroup, HttpMethod, ToolName } from "~/common/commonTypes";
 import { ProjectModel } from "~/projects/projectsTypes";
 
 interface ClockifyEstimateModel {
@@ -50,25 +53,11 @@ interface ClockifyProjectRequestModel {
 export function* createClockifyProjectsSaga(
   sourceProjects: ProjectModel[],
 ): SagaIterator<ProjectModel[]> {
-  const targetProjects: ProjectModel[] = [];
-
-  for (const sourceProject of sourceProjects) {
-    yield call(incrementCurrentTransferCount);
-
-    const projectRequest = transformToRequest(sourceProject);
-    const targetProject = yield call(
-      fetchObject,
-      `/clockify/api/v1/workspaces/${sourceProject.workspaceId}/projects`,
-      { method: HttpMethod.Post, body: projectRequest },
-    );
-    targetProjects.push(
-      transformFromResponse(targetProject, sourceProject.workspaceId, []),
-    );
-
-    yield delay(CLOCKIFY_API_DELAY);
-  }
-
-  return targetProjects;
+  return yield call(createEntitiesForTool, {
+    toolName: ToolName.Clockify,
+    sourceRecords: sourceProjects,
+    creatorFunc: createClockifyProject,
+  });
 }
 
 /**
@@ -76,33 +65,48 @@ export function* createClockifyProjectsSaga(
  * returns results.
  * @see https://clockify.me/developers-api#operation--v1-workspaces--workspaceId--projects-get
  */
-export function* fetchClockifyProjectsSaga(
-  workspaceIds: string[],
+export function* fetchClockifyProjectsSaga(): SagaIterator<ProjectModel[]> {
+  return yield call(fetchEntitiesForTool, {
+    toolName: ToolName.Clockify,
+    fetchFunc: fetchClockifyProjectsInWorkspace,
+  });
+}
+
+function* createClockifyProject(
+  sourceProject: ProjectModel,
+  workspaceId: string,
+): SagaIterator<ProjectModel | null> {
+  const projectRequest = transformToRequest(sourceProject);
+  const targetProject = yield call(
+    fetchObject,
+    `/clockify/api/v1/workspaces/${workspaceId}/projects`,
+    { method: HttpMethod.Post, body: projectRequest },
+  );
+
+  return transformFromResponse(targetProject, workspaceId, []);
+}
+
+function* fetchClockifyProjectsInWorkspace(
+  workspaceId: string,
 ): SagaIterator<ProjectModel[]> {
   const allClockifyProjects: ProjectModel[] = [];
-  if (workspaceIds.length === 0) {
-    return [];
-  }
 
-  for (const workspaceId of workspaceIds) {
-    const clockifyProjects: ClockifyProjectResponseModel[] = yield call(
-      paginatedClockifyFetch,
-      `/clockify/api/v1/workspaces/${workspaceId}/projects`,
+  const clockifyProjects: ClockifyProjectResponseModel[] = yield call(
+    paginatedClockifyFetch,
+    `/clockify/api/v1/workspaces/${workspaceId}/projects`,
+  );
+  for (const clockifyProject of clockifyProjects) {
+    const projectId = clockifyProject.id;
+    const userIds: string[] = yield call(
+      fetchUserIdsInProject,
+      workspaceId,
+      projectId,
+    );
+    allClockifyProjects.push(
+      transformFromResponse(clockifyProject, workspaceId, userIds),
     );
 
-    for (const clockifyProject of clockifyProjects) {
-      const projectId = clockifyProject.id;
-      const userIds: string[] = yield call(
-        fetchUserIdsInProject,
-        workspaceId,
-        projectId,
-      );
-      allClockifyProjects.push(
-        transformFromResponse(clockifyProject, workspaceId, userIds),
-      );
-
-      yield delay(CLOCKIFY_API_DELAY);
-    }
+    yield delay(CLOCKIFY_API_DELAY);
   }
 
   return allClockifyProjects;

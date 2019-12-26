@@ -2,7 +2,8 @@ import { createAsyncAction, createAction } from "typesafe-actions";
 import { Mapping } from "~/common/commonTypes";
 import {
   UpdateIncludedWorkspaceYearModel,
-  WorkspacesByIdModel, WorkspaceModel,
+  WorkspacesByIdModel,
+  WorkspaceModel,
 } from "./workspacesTypes";
 
 export const createWorkspaces = createAsyncAction(
@@ -33,7 +34,7 @@ export const updateIsWorkspaceYearIncluded = createAction(
   "@workspaces/UPDATE_IS_WORKSPACE_YEAR_INCLUDED",
 )<UpdateIncludedWorkspaceYearModel>();
 
-export const updateWorkspaceNameBeingFetched = createAction(
+export const updateWorkspaceIdBeingFetched = createAction(
   "@workspaces/UPDATE_WORKSPACE_NAME_BEING_FETCHED",
 )<string | null>();
 

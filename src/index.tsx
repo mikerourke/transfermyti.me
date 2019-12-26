@@ -1,6 +1,4 @@
 import "whatwg-fetch";
-import "react-virtualized/styles.css";
-import "react-sweet-progress/lib/style.css";
 import "rsuite/dist/styles/rsuite-default.min.css";
 import "./styles.css";
 import React from "react";

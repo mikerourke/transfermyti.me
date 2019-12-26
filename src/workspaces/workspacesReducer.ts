@@ -9,7 +9,8 @@ export interface WorkspacesState {
   readonly source: WorkspacesByIdModel;
   readonly target: WorkspacesByIdModel;
   readonly activeWorkspaceId: string;
-  readonly workspaceNameBeingFetched: string | null;
+  readonly workspaceIdMapping: Record<string, string>;
+  readonly workspaceIdBeingFetched: string | null;
   readonly isFetching: boolean;
 }
 
@@ -17,7 +18,8 @@ export const initialState: WorkspacesState = {
   source: {},
   target: {},
   activeWorkspaceId: "",
-  workspaceNameBeingFetched: null,
+  workspaceIdMapping: {},
+  workspaceIdBeingFetched: null,
   isFetching: false,
 };
 
@@ -30,11 +32,22 @@ export const workspacesReducer = createReducer<
       workspacesActions.createWorkspaces.success,
       workspacesActions.fetchWorkspaces.success,
     ],
-    (state, { payload }) => ({
-      ...state,
-      ...payload,
-      isFetching: false,
-    }),
+    (state, { payload }) => {
+      const workspaceIdMapping = {};
+      for (const workspace of Object.values(payload.source)) {
+        workspaceIdMapping[workspace.id] = workspace.linkedId;
+        if (!R.isNil(workspace.linkedId)) {
+          workspaceIdMapping[workspace.linkedId] = workspace.id;
+        }
+      }
+
+      return {
+        ...state,
+        ...payload,
+        workspaceIdMapping,
+        isFetching: false,
+      };
+    },
   )
   .handleAction(
     [
@@ -64,10 +77,10 @@ export const workspacesReducer = createReducer<
     }),
   )
   .handleAction(
-    workspacesActions.updateWorkspaceNameBeingFetched,
+    workspacesActions.updateWorkspaceIdBeingFetched,
     (state, { payload }) => ({
       ...state,
-      workspaceNameBeingFetched: payload,
+      workspaceIdBeingFetched: payload,
     }),
   )
   .handleAction(

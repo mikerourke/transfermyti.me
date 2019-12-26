@@ -1,30 +1,18 @@
 import { createAsyncAction, createAction } from "typesafe-actions";
-import { MappedEntityRecordsModel } from "~/common/commonTypes";
-import { UserModel } from "./usersTypes";
+import { Mapping } from "~/common/commonTypes";
+import { UsersByIdModel } from "./usersTypes";
 
-export const createClockifyUsers = createAsyncAction(
-  "@users/CREATE_CLOCKIFY_USERS_REQUEST",
-  "@users/CREATE_CLOCKIFY_USERS_SUCCESS",
-  "@users/CREATE_CLOCKIFY_USERS_FAILURE",
-)<string, void, void>();
+export const createUsers = createAsyncAction(
+  "@users/CREATE_USERS_REQUEST",
+  "@users/CREATE_USERS_SUCCESS",
+  "@users/CREATE_USERS_FAILURE",
+)<void, void, void>();
 
-export const createTogglUsers = createAsyncAction(
-  "@users/CREATE_TOGGL_USERS_REQUEST",
-  "@users/CREATE_TOGGL_USERS_SUCCESS",
-  "@users/CREATE_TOGGL_USERS_FAILURE",
-)<string, void, void>();
-
-export const fetchClockifyUsers = createAsyncAction(
-  "@users/FETCH_CLOCKIFY_USERS_REQUEST",
-  "@users/FETCH_CLOCKIFY_USERS_SUCCESS",
-  "@users/FETCH_CLOCKIFY_USERS_FAILURE",
-)<string, MappedEntityRecordsModel<UserModel>, void>();
-
-export const fetchTogglUsers = createAsyncAction(
-  "@users/FETCH_TOGGL_USERS_REQUEST",
-  "@users/FETCH_TOGGL_USERS_SUCCESS",
-  "@users/FETCH_TOGGL_USERS_FAILURE",
-)<string, MappedEntityRecordsModel<UserModel>, void>();
+export const fetchUsers = createAsyncAction(
+  "@users/FETCH_USERS_REQUEST",
+  "@users/FETCH_USERS_SUCCESS",
+  "@users/FETCH_USERS_FAILURE",
+)<void, Record<Mapping, UsersByIdModel>, void>();
 
 export const flipIsUserIncluded = createAction("@users/FLIP_IS_INCLUDED")<
   string

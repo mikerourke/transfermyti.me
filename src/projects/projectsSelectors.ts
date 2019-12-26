@@ -1,21 +1,17 @@
 import { createSelector } from "reselect";
 import { selectActiveWorkspaceId } from "~/workspaces/workspacesSelectors";
 import { ReduxState } from "~/redux/reduxTypes";
-import { ProjectModel } from "~/projects/projectsTypes";
+import { ProjectModel, ProjectsByIdModel } from "~/projects/projectsTypes";
 
-export const selectIfProjectsFetching = (state: ReduxState): boolean =>
-  state.projects.isFetching;
-
-export const selectSourceProjects = createSelector(
+export const selectSourceProjectsById = createSelector(
   (state: ReduxState) => state.projects.source,
-  (projectsById): ProjectModel[] => Object.values(projectsById),
+  (projectsById): ProjectsByIdModel => projectsById,
 );
 
-const filterProjectsByWorkspaceId = (
-  projects: ProjectModel[],
-  workspaceId: string,
-): ProjectModel[] =>
-  projects.filter(project => project.workspaceId === workspaceId);
+export const selectSourceProjects = createSelector(
+  selectSourceProjectsById,
+  (projectsById): ProjectModel[] => Object.values(projectsById),
+);
 
 export const selectSourceProjectsForTransfer = createSelector(
   selectSourceProjects,
@@ -27,5 +23,7 @@ export const selectSourceProjectsInActiveWorkspace = createSelector(
   selectSourceProjects,
   selectActiveWorkspaceId,
   (sourceProjects, activeWorkspaceId) =>
-    filterProjectsByWorkspaceId(sourceProjects, activeWorkspaceId),
+    sourceProjects.filter(
+      sourceProject => sourceProject.workspaceId === activeWorkspaceId,
+    ),
 );

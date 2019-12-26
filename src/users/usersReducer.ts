@@ -1,13 +1,13 @@
 import { createReducer, ActionType } from "typesafe-actions";
 import * as R from "ramda";
 import * as usersActions from "./usersActions";
-import { UserModel } from "./usersTypes";
+import { UsersByIdModel } from "./usersTypes";
 
 type UsersAction = ActionType<typeof usersActions>;
 
 export interface UsersState {
-  readonly source: Record<string, UserModel>;
-  readonly target: Record<string, UserModel>;
+  readonly source: UsersByIdModel;
+  readonly target: UsersByIdModel;
   readonly isFetching: boolean;
 }
 
@@ -18,27 +18,13 @@ export const initialState: UsersState = {
 };
 
 export const usersReducer = createReducer<UsersState, UsersAction>(initialState)
+  .handleAction([usersActions.fetchUsers.success], (state, { payload }) => ({
+    ...state,
+    ...payload,
+    isFetching: false,
+  }))
   .handleAction(
-    [
-      usersActions.fetchClockifyUsers.success,
-      usersActions.fetchTogglUsers.success,
-    ],
-    (state, { payload }) => ({
-      ...state,
-      [payload.mapping]: {
-        ...state[payload.mapping],
-        ...payload.recordsById,
-      },
-      isFetching: false,
-    }),
-  )
-  .handleAction(
-    [
-      usersActions.createClockifyUsers.request,
-      usersActions.createTogglUsers.request,
-      usersActions.fetchClockifyUsers.request,
-      usersActions.fetchTogglUsers.request,
-    ],
+    [usersActions.createUsers.request, usersActions.fetchUsers.request],
     state => ({
       ...state,
       isFetching: true,
@@ -46,12 +32,9 @@ export const usersReducer = createReducer<UsersState, UsersAction>(initialState)
   )
   .handleAction(
     [
-      usersActions.createClockifyUsers.success,
-      usersActions.createTogglUsers.success,
-      usersActions.createClockifyUsers.failure,
-      usersActions.createTogglUsers.failure,
-      usersActions.fetchClockifyUsers.failure,
-      usersActions.fetchTogglUsers.failure,
+      usersActions.createUsers.success,
+      usersActions.createUsers.failure,
+      usersActions.fetchUsers.failure,
     ],
     state => ({
       ...state,

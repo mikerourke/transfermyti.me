@@ -4,4 +4,3 @@ export { default as HelpMessage } from "./HelpMessage";
 export { default as Icon, IconName } from "./Icon";
 export { default as Loader } from "./Loader";
 export { default as NavigationButtonsRow } from "./NavigationButtonsRow";
-export { default as Tooltip } from "./Tooltip";

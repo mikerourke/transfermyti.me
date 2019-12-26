@@ -5,3 +5,5 @@ export interface TagModel extends BaseEntityModel {
   name: string;
   workspaceId: string;
 }
+
+export type TagsByIdModel = Record<string, TagModel>;

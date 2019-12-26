@@ -1,7 +1,9 @@
-import { call, put } from "redux-saga/effects";
+import { call, put, select } from "redux-saga/effects";
 import { push } from "connected-react-router";
 import * as R from "ramda";
 import { SagaIterator } from "@redux-saga/types";
+import { selectCurrentPath } from "~/app/appSelectors";
+import { selectIfCredentialsValid } from "~/credentials/credentialsSelectors";
 import { fetchObject } from "~/utils";
 import { TogglWorkspaceResponseModel } from "~/workspaces/sagas/togglWorkspacesSagas";
 import { validateCredentials } from "~/credentials/credentialsActions";
@@ -49,7 +51,15 @@ export function* validateCredentialsSaga(): SagaIterator {
     validationErrorByTool[err.toolName] = "Invalid API key";
   }
 
-  if (R.isEmpty(validationErrorByTool)) {
+  const areCredentialsValid = yield select(selectIfCredentialsValid);
+  const currentPath = yield select(selectCurrentPath);
+  if (
+    [
+      R.isEmpty(validationErrorByTool),
+      areCredentialsValid,
+      R.equals(currentPath, RoutePath.Credentials),
+    ].every(Boolean)
+  ) {
     yield put(push(RoutePath.Workspaces));
     yield put(validateCredentials.success(credentials));
   } else {

@@ -1,18 +1,99 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import qs from "qs";
 import * as R from "ramda";
-import { call, delay } from "redux-saga/effects";
+import { call, delay, put, select } from "redux-saga/effects";
 import { SagaIterator } from "@redux-saga/types";
-import { API_PAGE_SIZE, CLOCKIFY_API_DELAY } from "~/constants";
+import {
+  API_PAGE_SIZE,
+  CLOCKIFY_API_DELAY,
+  TOGGL_API_DELAY,
+} from "~/constants";
 import { fetchArray } from "~/utils";
-import { EntityGroup, Mapping } from "~/common/commonTypes";
+import { incrementCurrentTransferCount } from "~/app/appActions";
+import { selectToolMapping } from "~/app/appSelectors";
+import {
+  selectInlcudedWorkspaceIdsByMapping,
+  selectTargetWorkspaceId,
+} from "~/workspaces/workspacesSelectors";
+import { Mapping, ToolName } from "~/common/commonTypes";
 
-export function* startGroupTransfer(
-  entityGroup: EntityGroup,
-  countTotalInGroup: number,
-): SagaIterator {}
+export function* createEntitiesForTool<TEntity>({
+  toolName,
+  sourceRecords,
+  creatorFunc,
+}: {
+  toolName: ToolName;
+  sourceRecords: TEntity[];
+  creatorFunc: (sourceRecord: any, workspaceId: string) => SagaIterator<any>;
+}): SagaIterator<TEntity[]> {
+  const targetRecords: TEntity[] = [];
+  const apiDelay = apiDelayForTool(toolName);
 
-export function* incrementTransferCounts(): SagaIterator {}
+  for (const sourceRecord of sourceRecords) {
+    const targetWorkspaceId = yield select(
+      selectTargetWorkspaceId,
+      sourceRecord,
+    );
+    if (R.isNil(targetWorkspaceId)) {
+      continue;
+    }
+
+    yield put(incrementCurrentTransferCount());
+
+    const targetRecord = yield call(
+      creatorFunc,
+      sourceRecord,
+      targetWorkspaceId,
+    );
+    if (!R.isNil(targetRecord)) {
+      targetRecords.push(targetRecord);
+    }
+
+    yield delay(apiDelay);
+  }
+
+  return targetRecords;
+}
+
+export function* fetchEntitiesForTool<TEntity>({
+  toolName,
+  fetchFunc,
+}: {
+  toolName: ToolName;
+  fetchFunc: (workspaceId: string) => SagaIterator<TEntity[]>;
+}): SagaIterator<TEntity[]> {
+  const workspaceIdsByMapping = yield select(
+    selectInlcudedWorkspaceIdsByMapping,
+  );
+  const toolMapping = yield select(selectToolMapping, toolName);
+  const workspaceIds = R.propOr(
+    [],
+    toolMapping,
+  )(workspaceIdsByMapping) as string[];
+
+  if (workspaceIds.length === 0) {
+    return [];
+  }
+
+  const allRecords: TEntity[] = [];
+  const apiDelay = apiDelayForTool(toolName);
+
+  for (const workspaceId of workspaceIds) {
+    const workspaceRecords: TEntity[] = yield call(fetchFunc, workspaceId);
+    allRecords.push(...workspaceRecords);
+
+    yield delay(apiDelay);
+  }
+
+  return allRecords;
+}
+
+function apiDelayForTool(toolName: ToolName): number {
+  return {
+    [ToolName.Clockify]: CLOCKIFY_API_DELAY,
+    [ToolName.Toggl]: TOGGL_API_DELAY,
+  }[toolName];
+}
 
 export function* paginatedClockifyFetch<TEntity>(apiUrl: string): SagaIterator {
   let keepFetching = true;

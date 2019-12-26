@@ -1,30 +1,18 @@
 import { createAsyncAction, createAction } from "typesafe-actions";
-import { MappedEntityRecordsModel, Mapping } from "~/common/commonTypes";
-import { UserGroupModel } from "./userGroupsTypes";
+import { Mapping } from "~/common/commonTypes";
+import { UserGroupsByIdModel } from "./userGroupsTypes";
 
-export const createClockifyUserGroups = createAsyncAction(
-  "@userGroups/CREATE_CLOCKIFY_USER_GROUPS_REQUEST",
-  "@userGroups/CREATE_CLOCKIFY_USER_GROUPS_SUCCESS",
-  "@userGroups/CREATE_CLOCKIFY_USER_GROUPS_FAILURE",
-)<string, void, void>();
+export const createUserGroups = createAsyncAction(
+  "@userGroups/CREATE_USER_GROUPS_REQUEST",
+  "@userGroups/CREATE_USER_GROUPS_SUCCESS",
+  "@userGroups/CREATE_USER_GROUPS_FAILURE",
+)<void, Record<Mapping, UserGroupsByIdModel>, void>();
 
-export const createTogglUserGroups = createAsyncAction(
-  "@userGroups/CREATE_TOGGL_USER_GROUPS_REQUEST",
-  "@userGroups/CREATE_TOGGL_USER_GROUPS_SUCCESS",
-  "@userGroups/CREATE_TOGGL_USER_GROUPS_FAILURE",
-)<string, void, void>();
-
-export const fetchClockifyUserGroups = createAsyncAction(
-  "@userGroups/FETCH_CLOCKIFY_USER_GROUPS_REQUEST",
-  "@userGroups/FETCH_CLOCKIFY_USER_GROUPS_SUCCESS",
-  "@userGroups/FETCH_CLOCKIFY_USER_GROUPS_FAILURE",
-)<string, MappedEntityRecordsModel<UserGroupModel>, void>();
-
-export const fetchTogglUserGroups = createAsyncAction(
-  "@userGroups/FETCH_TOGGL_USER_GROUPS_REQUEST",
-  "@userGroups/FETCH_TOGGL_USER_GROUPS_SUCCESS",
-  "@userGroups/FETCH_TOGGL_USER_GROUPS_FAILURE",
-)<string, MappedEntityRecordsModel<UserGroupModel>, void>();
+export const fetchUserGroups = createAsyncAction(
+  "@userGroups/FETCH_USER_GROUPS_REQUEST",
+  "@userGroups/FETCH_USER_GROUPS_SUCCESS",
+  "@userGroups/FETCH_USER_GROUPS_FAILURE",
+)<void, Record<Mapping, UserGroupsByIdModel>, void>();
 
 export const flipIsUserGroupIncluded = createAction(
   "@userGroups/FLIP_IS_INCLUDED",

@@ -25,15 +25,13 @@ export const SelectSourceInclusionsComponent: React.FC<Props> = props => {
   };
 
   const handleNextClick = (): void => {
-    props.onPush(RoutePath.ReviewTarget);
+    props.onPush(RoutePath.PerformTransfer);
   };
 
   return (
     <div>
       <PanelGroup accordion bordered>
-        <Panel header="Projects" defaultExpanded>
-          Projects
-        </Panel>
+        <Panel header="Projects">Projects</Panel>
         <Panel header="Clients">
           <ClientsTable />
         </Panel>

@@ -5,7 +5,6 @@ import { showFetchErrorNotification } from "~/app/appActions";
 import { selectTransferMapping } from "~/app/appSelectors";
 import { createProjects, fetchProjects } from "~/projects/projectsActions";
 import { selectSourceProjectsForTransfer } from "~/projects/projectsSelectors";
-import { selectInlcudedWorkspaceIdsByMapping } from "~/workspaces/workspacesSelectors";
 import {
   createClockifyProjectsSaga,
   fetchClockifyProjectsSaga,
@@ -55,18 +54,8 @@ function* fetchProjectsSaga(): SagaIterator {
       [ToolName.Clockify]: fetchClockifyProjectsSaga,
       [ToolName.Toggl]: fetchTogglProjectsSaga,
     };
-    const workspaceIdsByMapping = yield select(
-      selectInlcudedWorkspaceIdsByMapping,
-    );
-
-    const sourceProjects = yield call(
-      fetchSagaByToolName[source],
-      workspaceIdsByMapping.source,
-    );
-    const targetProjects = yield call(
-      fetchSagaByToolName[target],
-      workspaceIdsByMapping.target,
-    );
+    const sourceProjects = yield call(fetchSagaByToolName[source]);
+    const targetProjects = yield call(fetchSagaByToolName[target]);
 
     const projectsByIdByMapping = linkEntitiesByIdByMapping<ProjectModel>(
       sourceProjects,

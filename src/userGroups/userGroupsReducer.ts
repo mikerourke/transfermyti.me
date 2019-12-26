@@ -1,13 +1,13 @@
 import { createReducer, ActionType } from "typesafe-actions";
 import * as R from "ramda";
 import * as userGroupsActions from "./userGroupsActions";
-import { UserGroupModel } from "./userGroupsTypes";
+import { UserGroupsByIdModel } from "./userGroupsTypes";
 
 type UserGroupsAction = ActionType<typeof userGroupsActions>;
 
 export interface UserGroupsState {
-  readonly source: Record<string, UserGroupModel>;
-  readonly target: Record<string, UserGroupModel>;
+  readonly source: UserGroupsByIdModel;
+  readonly target: UserGroupsByIdModel;
   readonly isFetching: boolean;
 }
 
@@ -23,24 +23,19 @@ export const userGroupsReducer = createReducer<
 >(initialState)
   .handleAction(
     [
-      userGroupsActions.fetchClockifyUserGroups.success,
-      userGroupsActions.fetchTogglUserGroups.success,
+      userGroupsActions.createUserGroups.success,
+      userGroupsActions.fetchUserGroups.success,
     ],
     (state, { payload }) => ({
       ...state,
-      [payload.mapping]: {
-        ...state[payload.mapping],
-        ...payload.recordsById,
-      },
+      ...payload,
       isFetching: false,
     }),
   )
   .handleAction(
     [
-      userGroupsActions.createClockifyUserGroups.request,
-      userGroupsActions.createTogglUserGroups.request,
-      userGroupsActions.fetchClockifyUserGroups.request,
-      userGroupsActions.fetchTogglUserGroups.request,
+      userGroupsActions.createUserGroups.request,
+      userGroupsActions.fetchUserGroups.request,
     ],
     state => ({
       ...state,
@@ -49,12 +44,8 @@ export const userGroupsReducer = createReducer<
   )
   .handleAction(
     [
-      userGroupsActions.createClockifyUserGroups.success,
-      userGroupsActions.createTogglUserGroups.success,
-      userGroupsActions.createClockifyUserGroups.failure,
-      userGroupsActions.createTogglUserGroups.failure,
-      userGroupsActions.fetchClockifyUserGroups.failure,
-      userGroupsActions.fetchTogglUserGroups.failure,
+      userGroupsActions.createUserGroups.failure,
+      userGroupsActions.fetchUserGroups.failure,
     ],
     state => ({
       ...state,

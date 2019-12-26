@@ -11,11 +11,11 @@ import { initialState as initialCredentialsState } from "~/credentials/credentia
 import { clientsSaga } from "~/clients/sagas/clientsSaga";
 import { credentialsSaga } from "~/credentials/sagas/main";
 import { projectsSaga } from "~/projects/sagas/projectsSaga";
-import { tagsSaga } from "~/tags/sagas/main";
-import { tasksSaga } from "~/tasks/sagas/main";
+import { tagsSaga } from "~/tags/sagas/tagsSaga";
+import { tasksSaga } from "~/tasks/sagas/tasksSaga";
 import { timeEntriesSaga } from "~/timeEntries/sagas/main";
-import { userGroupsSaga } from "~/userGroups/sagas/main";
-import { usersSaga } from "~/users/sagas/main";
+import { userGroupsSaga } from "~/userGroups/sagas/userGroupsSaga";
+import { usersSaga } from "~/users/sagas/usersSaga";
 import { workspacesSaga } from "~/workspaces/sagas/workspacesSaga";
 import { createRootReducer, RouterReducer } from "./rootReducer";
 import { ReduxStore } from "~/redux/reduxTypes";

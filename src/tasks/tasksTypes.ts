@@ -8,3 +8,5 @@ export interface TaskModel extends BaseEntityModel {
   assigneeIds: string[] | null;
   isActive: boolean;
 }
+
+export type TasksByIdModel = Record<string, TaskModel>;

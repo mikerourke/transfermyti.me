@@ -1,31 +1,18 @@
 import { createAsyncAction, createAction } from "typesafe-actions";
-import { TimeEntriesState } from "./timeEntriesReducer";
-import { MappedEntityRecordsModel } from "~/common/commonTypes";
-import { TimeEntryModel } from "./timeEntriesTypes";
+import { Mapping } from "~/common/commonTypes";
+import { TimeEntriesByIdModel } from "./timeEntriesTypes";
 
-export const createClockifyTimeEntries = createAsyncAction(
-  "@timeEntries/CREATE_CLOCKIFY_TIME_ENTRIES_REQUEST",
-  "@timeEntries/CREATE_CLOCKIFY_TIME_ENTRIES_SUCCESS",
-  "@timeEntries/CREATE_CLOCKIFY_TIME_ENTRIES_FAILURE",
-)<string, void, void>();
+export const createTimeEntries = createAsyncAction(
+  "@timeEntries/CREATE_TIME_ENTRIES_REQUEST",
+  "@timeEntries/CREATE_TIME_ENTRIES_SUCCESS",
+  "@timeEntries/CREATE_TIME_ENTRIES_FAILURE",
+)<void, Record<Mapping, TimeEntriesByIdModel>, void>();
 
-export const createTogglTimeEntries = createAsyncAction(
-  "@timeEntries/CREATE_TOGGL_TIME_ENTRIES_REQUEST",
-  "@timeEntries/CREATE_TOGGL_TIME_ENTRIES_SUCCESS",
-  "@timeEntries/CREATE_TOGGL_TIME_ENTRIES_FAILURE",
-)<string, void, void>();
-
-export const fetchClockifyTimeEntries = createAsyncAction(
-  "@timeEntries/FETCH_CLOCKIFY_TIME_ENTRIES_REQUEST",
-  "@timeEntries/FETCH_CLOCKIFY_TIME_ENTRIES_SUCCESS",
-  "@timeEntries/FETCH_CLOCKIFY_TIME_ENTRIES_FAILURE",
-)<string, MappedEntityRecordsModel<TimeEntryModel>, void>();
-
-export const fetchTogglTimeEntries = createAsyncAction(
-  "@timeEntries/FETCH_TOGGL_TIME_ENTRIES_REQUEST",
-  "@timeEntries/FETCH_TOGGL_TIME_ENTRIES_SUCCESS",
-  "@timeEntries/FETCH_TOGGL_TIME_ENTRIES_FAILURE",
-)<string, MappedEntityRecordsModel<TimeEntryModel>, void>();
+export const fetchTimeEntries = createAsyncAction(
+  "@timeEntries/FETCH_TIME_ENTRIES_REQUEST",
+  "@timeEntries/FETCH_TIME_ENTRIES_SUCCESS",
+  "@timeEntries/FETCH_TIME_ENTRIES_FAILURE",
+)<void, Record<Mapping, TimeEntriesByIdModel>, void>();
 
 export const flipIsTimeEntryIncluded = createAction(
   "@timeEntries/FLIP_IS_INCLUDED",
@@ -33,4 +20,4 @@ export const flipIsTimeEntryIncluded = createAction(
 
 export const addLinksToTimeEntries = createAction(
   "@timeEntries/ADD_LINKS_TO_TIME_ENTRIES",
-)<TimeEntriesState>();
+)<Record<Mapping, TimeEntriesByIdModel>>();

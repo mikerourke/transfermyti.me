@@ -1,13 +1,13 @@
 import { createReducer, ActionType } from "typesafe-actions";
 import * as R from "ramda";
 import * as timeEntriesActions from "./timeEntriesActions";
-import { TimeEntryModel } from "./timeEntriesTypes";
+import { TimeEntriesByIdModel } from "./timeEntriesTypes";
 
 type TimeEntriesAction = ActionType<typeof timeEntriesActions>;
 
 export interface TimeEntriesState {
-  readonly source: Record<string, TimeEntryModel>;
-  readonly target: Record<string, TimeEntryModel>;
+  readonly source: TimeEntriesByIdModel;
+  readonly target: TimeEntriesByIdModel;
   readonly isFetching: boolean;
 }
 
@@ -23,24 +23,19 @@ export const timeEntriesReducer = createReducer<
 >(initialState)
   .handleAction(
     [
-      timeEntriesActions.fetchClockifyTimeEntries.success,
-      timeEntriesActions.fetchTogglTimeEntries.success,
+      timeEntriesActions.createTimeEntries.success,
+      timeEntriesActions.fetchTimeEntries.success,
     ],
     (state, { payload }) => ({
       ...state,
-      [payload.mapping]: {
-        ...state[payload.mapping],
-        ...payload.recordsById,
-      },
+      ...payload,
       isFetching: false,
     }),
   )
   .handleAction(
     [
-      timeEntriesActions.createClockifyTimeEntries.request,
-      timeEntriesActions.createTogglTimeEntries.request,
-      timeEntriesActions.fetchClockifyTimeEntries.request,
-      timeEntriesActions.fetchTogglTimeEntries.request,
+      timeEntriesActions.createTimeEntries.request,
+      timeEntriesActions.fetchTimeEntries.request,
     ],
     state => ({
       ...state,
@@ -49,10 +44,8 @@ export const timeEntriesReducer = createReducer<
   )
   .handleAction(
     [
-      timeEntriesActions.createClockifyTimeEntries.failure,
-      timeEntriesActions.createTogglTimeEntries.failure,
-      timeEntriesActions.fetchClockifyTimeEntries.failure,
-      timeEntriesActions.fetchTogglTimeEntries.failure,
+      timeEntriesActions.createTimeEntries.failure,
+      timeEntriesActions.fetchTimeEntries.failure,
     ],
     state => ({
       ...state,

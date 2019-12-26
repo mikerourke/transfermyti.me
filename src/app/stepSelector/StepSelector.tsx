@@ -13,8 +13,7 @@ export const StepSelectorComponent: React.FC<ConnectStateProps> = props => (
     <Steps.Item title="Select Type" />
     <Steps.Item title="Enter Credentials" />
     <Steps.Item title="Pick Workspaces" />
-    <Steps.Item title="Review Source" />
-    <Steps.Item title="Select for Target" />
+    <Steps.Item title="Select Data to Transfer" />
     <Steps.Item title="Perform Transfer" />
   </Steps>
 );

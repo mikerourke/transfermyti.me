@@ -35,7 +35,7 @@ export const AppRootComponent: React.FC<Props> = props => {
         Notification[type]({
           key: id,
           title: capitalize(type),
-          duration: 20_000,
+          duration: 5_000,
           description: message,
           onClose: () => props.onDismissNotification(id),
         });

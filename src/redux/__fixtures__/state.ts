@@ -1083,7 +1083,7 @@ export default {
         memberOf: "workspaces",
       },
     },
-    workspaceNameBeingFetched: null,
+    workspaceIdBeingFetched: null,
     isFetching: false,
   },
 } as any;
