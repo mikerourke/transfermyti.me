@@ -1,8 +1,12 @@
 import { call } from "redux-saga/effects";
 import { SagaIterator } from "@redux-saga/types";
-import { fetchEntitiesForTool, createEntitiesForTool } from "~/redux/sagaUtils";
-import { fetchArray, fetchObject } from "~/utils";
-import { EntityGroup, HttpMethod, ToolName } from "~/common/commonTypes";
+import {
+  createEntitiesForTool,
+  fetchArray,
+  fetchEntitiesForTool,
+  fetchObject,
+} from "~/redux/sagaUtils";
+import { EntityGroup, ToolName } from "~/common/commonTypes";
 import { TagModel } from "~/tags/tagsTypes";
 
 interface TogglTagResponseModel {
@@ -12,13 +16,8 @@ interface TogglTagResponseModel {
   at: string;
 }
 
-interface TogglTagRequestModel {
-  name: string;
-  wid: number;
-}
-
 /**
- * Creates new Toggl tags that correspond to source and returns an array of
+ * Creates new Toggl tags that correspond to source and returns array of
  * transformed tags.
  * @see https://github.com/toggl/toggl_api_docs/blob/master/chapters/tags.md#create-a-tag
  */
@@ -28,28 +27,31 @@ export function* createTogglTagsSaga(
   return yield call(createEntitiesForTool, {
     toolName: ToolName.Toggl,
     sourceRecords: sourceTags,
-    creatorFunc: createTogglTag,
+    apiCreateFunc: createTogglTag,
   });
 }
 
 /**
- * Fetches all tags in Toggl workspaces and returns the result.
+ * Fetches all tags in Toggl workspaces and returns array of transformed tags.
  * @see https://github.com/toggl/toggl_api_docs/blob/master/chapters/workspaces.md#get-workspace-tags
  */
 export function* fetchTogglTagsSaga(): SagaIterator<TagModel[]> {
   return yield call(fetchEntitiesForTool, {
     toolName: ToolName.Toggl,
-    fetchFunc: fetchTogglTagsInWorkspace,
+    apiFetchFunc: fetchTogglTagsInWorkspace,
   });
 }
 
 function* createTogglTag(
   sourceTag: TagModel,
-  workspaceId: string,
-): SagaIterator<TagModel | null> {
-  const tagRequest = transformToRequest(sourceTag, workspaceId);
-  const { data } = yield call(fetchObject, `/toggl/api/tags`, {
-    method: HttpMethod.Post,
+  targetWorkspaceId: string,
+): SagaIterator<TagModel> {
+  const tagRequest = {
+    name: sourceTag.name,
+    wid: +targetWorkspaceId,
+  };
+  const { data } = yield call(fetchObject, "/toggl/api/tags", {
+    method: "POST",
     body: tagRequest,
   });
 
@@ -65,16 +67,6 @@ function* fetchTogglTagsInWorkspace(
   );
 
   return togglTags.map(transformFromResponse);
-}
-
-function transformToRequest(
-  tag: TagModel,
-  workspaceId: string,
-): TogglTagRequestModel {
-  return {
-    name: tag.name,
-    wid: +workspaceId,
-  };
 }
 
 function transformFromResponse(tag: TogglTagResponseModel): TagModel {

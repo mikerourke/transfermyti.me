@@ -1,20 +1,20 @@
 import { ActionType, createReducer } from "typesafe-actions";
 import * as appActions from "./appActions";
-import { ToolName, TransferMappingModel } from "~/common/commonTypes";
-import { NotificationModel } from "./appTypes";
+import { ToolName} from "~/common/commonTypes";
+import { NotificationModel, ToolNameByMappingModel } from "./appTypes";
 
 type AppAction = ActionType<typeof appActions>;
 
 export interface AppState {
   readonly notifications: NotificationModel[];
-  readonly transferMapping: TransferMappingModel;
+  readonly toolNameByMapping: ToolNameByMappingModel;
   readonly currentTransferCount: number;
   readonly totalTransferCount: number;
 }
 
 export const initialState: AppState = {
   notifications: [],
-  transferMapping: {
+  toolNameByMapping: {
     source: ToolName.None,
     target: ToolName.None,
   },
@@ -38,10 +38,10 @@ export const appReducer = createReducer<AppState, AppAction>(initialState)
     ...state,
     notifications: [],
   }))
-  .handleAction(appActions.updateTransferMapping, (state, { payload }) => ({
+  .handleAction(appActions.updateToolNameByMapping, (state, { payload }) => ({
     ...state,
-    transferMapping: {
-      ...state.transferMapping,
+    toolNameByMapping: {
+      ...state.toolNameByMapping,
       ...payload,
     },
   }))

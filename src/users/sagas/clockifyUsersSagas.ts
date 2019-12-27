@@ -1,13 +1,13 @@
 import { call, delay, put } from "redux-saga/effects";
 import { SagaIterator } from "@redux-saga/types";
 import { CLOCKIFY_API_DELAY } from "~/constants";
-import { fetchObject } from "~/utils";
 import {
   fetchEntitiesForTool,
+  fetchObject,
   paginatedClockifyFetch,
 } from "~/redux/sagaUtils";
 import { incrementCurrentTransferCount } from "~/app/appActions";
-import { EntityGroup, HttpMethod, ToolName } from "~/common/commonTypes";
+import { EntityGroup, ToolName } from "~/common/commonTypes";
 import { UserModel } from "~/users/usersTypes";
 
 export interface ClockifyHourlyRateResponseModel {
@@ -63,10 +63,6 @@ export interface ClockifyUserResponseModel {
   status: "ACTIVE" | "PENDING_EMAIL_VERIFICATION" | "DELETED";
 }
 
-interface ClockifyUsersRequestModel {
-  emails: string[];
-}
-
 export function* createClockifyUsersSaga(
   emailsByWorkspaceId: Record<string, string[]>,
 ): SagaIterator {
@@ -78,13 +74,14 @@ export function* createClockifyUsersSaga(
 }
 
 /**
- * Fetches all users in Clockify workspaces and returns result.
+ * Fetches all users in Clockify workspaces and returns array of transformed
+ * users.
  * @see https://clockify.me/developers-api#operation--v1-workspaces--workspaceId--users-get
  */
 export function* fetchClockifyUsersSaga(): SagaIterator<UserModel[]> {
   return yield call(fetchEntitiesForTool, {
     toolName: ToolName.Clockify,
-    fetchFunc: fetchClockifyUsersInWorkspace,
+    apiFetchFunc: fetchClockifyUsersInWorkspace,
   });
 }
 
@@ -95,13 +92,17 @@ export function* fetchClockifyUsersSaga(): SagaIterator<UserModel[]> {
  */
 function* inviteClockifyUsers(
   sourceEmails: string[],
-  workspaceId: string,
+  targetWorkspaceId: string,
 ): SagaIterator {
-  const usersRequest = transformToRequest(sourceEmails);
-  yield call(fetchObject, `/clockify/api/workspaces/${workspaceId}/users`, {
-    method: HttpMethod.Post,
-    body: usersRequest,
-  });
+  const usersRequest = { emails: sourceEmails };
+  yield call(
+    fetchObject,
+    `/clockify/api/workspaces/${targetWorkspaceId}/users`,
+    {
+      method: "POST",
+      body: usersRequest,
+    },
+  );
 }
 
 function* fetchClockifyUsersInWorkspace(
@@ -115,12 +116,6 @@ function* fetchClockifyUsersInWorkspace(
   return clockifyUsers.map(clockifyUser =>
     transformFromResponse(clockifyUser, workspaceId),
   );
-}
-
-function transformToRequest(emails: string[]): ClockifyUsersRequestModel {
-  return {
-    emails,
-  };
 }
 
 function transformFromResponse(

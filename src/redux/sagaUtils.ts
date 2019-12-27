@@ -8,31 +8,31 @@ import {
   CLOCKIFY_API_DELAY,
   TOGGL_API_DELAY,
 } from "~/constants";
-import { fetchArray } from "~/utils";
 import { incrementCurrentTransferCount } from "~/app/appActions";
-import { selectToolMapping } from "~/app/appSelectors";
+import { selectMappingForTool } from "~/app/appSelectors";
 import {
   selectInlcudedWorkspaceIdsByMapping,
   selectTargetWorkspaceId,
 } from "~/workspaces/workspacesSelectors";
-import { Mapping, ToolName } from "~/common/commonTypes";
+import { BaseEntityModel, Mapping, ToolName } from "~/common/commonTypes";
 
 export function* createEntitiesForTool<TEntity>({
   toolName,
   sourceRecords,
-  creatorFunc,
+  apiCreateFunc,
 }: {
   toolName: ToolName;
   sourceRecords: TEntity[];
-  creatorFunc: (sourceRecord: any, workspaceId: string) => SagaIterator<any>;
+  apiCreateFunc: (sourceRecord: any, workspaceId: string) => SagaIterator<any>;
 }): SagaIterator<TEntity[]> {
+  type ValidEntity = TEntity & BaseEntityModel;
   const targetRecords: TEntity[] = [];
   const apiDelay = apiDelayForTool(toolName);
 
-  for (const sourceRecord of sourceRecords) {
+  for (const sourceRecord of sourceRecords as ValidEntity[]) {
     const targetWorkspaceId = yield select(
       selectTargetWorkspaceId,
-      sourceRecord,
+      sourceRecord.workspaceId,
     );
     if (R.isNil(targetWorkspaceId)) {
       continue;
@@ -41,7 +41,7 @@ export function* createEntitiesForTool<TEntity>({
     yield put(incrementCurrentTransferCount());
 
     const targetRecord = yield call(
-      creatorFunc,
+      apiCreateFunc,
       sourceRecord,
       targetWorkspaceId,
     );
@@ -57,19 +57,20 @@ export function* createEntitiesForTool<TEntity>({
 
 export function* fetchEntitiesForTool<TEntity>({
   toolName,
-  fetchFunc,
+  apiFetchFunc,
 }: {
   toolName: ToolName;
-  fetchFunc: (workspaceId: string) => SagaIterator<TEntity[]>;
+  apiFetchFunc: (workspaceId: string) => SagaIterator<TEntity[]>;
 }): SagaIterator<TEntity[]> {
   const workspaceIdsByMapping = yield select(
     selectInlcudedWorkspaceIdsByMapping,
   );
-  const toolMapping = yield select(selectToolMapping, toolName);
-  const workspaceIds = R.propOr(
+  const toolMapping = yield select(selectMappingForTool, toolName);
+  const workspaceIds = R.propOr<string[], Record<string, string>, string[]>(
     [],
     toolMapping,
-  )(workspaceIdsByMapping) as string[];
+    workspaceIdsByMapping,
+  );
 
   if (workspaceIds.length === 0) {
     return [];
@@ -79,7 +80,7 @@ export function* fetchEntitiesForTool<TEntity>({
   const apiDelay = apiDelayForTool(toolName);
 
   for (const workspaceId of workspaceIds) {
-    const workspaceRecords: TEntity[] = yield call(fetchFunc, workspaceId);
+    const workspaceRecords: TEntity[] = yield call(apiFetchFunc, workspaceId);
     allRecords.push(...workspaceRecords);
 
     yield delay(apiDelay);
@@ -95,7 +96,9 @@ function apiDelayForTool(toolName: ToolName): number {
   }[toolName];
 }
 
-export function* paginatedClockifyFetch<TEntity>(apiUrl: string): SagaIterator {
+export function* paginatedClockifyFetch<TEntity>(
+  apiUrl: string,
+): SagaIterator<TEntity[]> {
   let keepFetching = true;
   let currentPage = 1;
 
@@ -116,7 +119,51 @@ export function* paginatedClockifyFetch<TEntity>(apiUrl: string): SagaIterator {
     currentPage += 1;
   }
 
-  return R.flatten(allEntities);
+  return allEntities;
+}
+
+/**
+ * Ensures a valid array is returned from a fetch call.
+ */
+export function* fetchArray<TResponse>(
+  endpoint: string,
+  fetchOptions: unknown = {},
+): SagaIterator<TResponse> {
+  const response = yield call(fetchWithRetries, endpoint, fetchOptions);
+  return R.isNil(response) ? [] : response;
+}
+
+/**
+ * Ensures a valid object is returned from a fetch call.
+ */
+export function* fetchObject<TResponse>(
+  endpoint: string,
+  fetchOptions: unknown = {},
+): SagaIterator<TResponse> {
+  const response = yield call(fetchWithRetries, endpoint, fetchOptions);
+  return R.isNil(response) ? {} : response;
+}
+
+function* fetchWithRetries<TResponse>(
+  endpoint: string,
+  fetchOptions: unknown = {},
+): SagaIterator<TResponse> {
+  let fetchResponse;
+
+  for (let attempt = 0; attempt < 5; attempt += 1) {
+    try {
+      fetchResponse = yield call(fetch, endpoint, fetchOptions as RequestInit);
+      break;
+    } catch (err) {
+      if (err.code === 429) {
+        yield delay(500);
+      } else {
+        throw new Error(err);
+      }
+    }
+  }
+
+  return fetchResponse;
 }
 
 export function linkEntitiesByIdByMapping<TEntity>(
@@ -142,13 +189,10 @@ function linkForMappingByName<TEntity>(
 ): Record<string, TEntity> {
   type LinkableRecord = TEntity & { name: string; id: string };
 
-  const linkFromEntitiesByName = (linkFromRecords as LinkableRecord[]).reduce(
-    (acc, record) => ({
-      ...acc,
-      [record.name]: record,
-    }),
-    {},
-  );
+  const linkFromEntitiesByName = {};
+  for (const linkFromRecord of linkFromRecords as LinkableRecord[]) {
+    linkFromEntitiesByName[linkFromRecord.name] = linkFromRecord;
+  }
 
   const linkedRecordsById = {};
   for (const recordToUpdate of recordsToUpdate as LinkableRecord[]) {
@@ -158,11 +202,7 @@ function linkForMappingByName<TEntity>(
       linkFromEntitiesByName,
     );
 
-    linkedRecordsById[recordToUpdate.id] = {
-      ...recordToUpdate,
-      linkedId,
-      isIncluded: R.isNil(linkedId),
-    };
+    linkedRecordsById[recordToUpdate.id] = { ...recordToUpdate, linkedId };
   }
 
   return linkedRecordsById;

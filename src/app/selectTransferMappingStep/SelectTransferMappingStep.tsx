@@ -1,22 +1,26 @@
 import React from "react";
-import { connect } from "react-redux";
 import { push } from "connected-react-router";
-import { FlexboxGrid } from "rsuite";
 import { Path } from "history";
-import { updateTransferMapping } from "~/app/appActions";
+import { connect } from "react-redux";
+import { FlexboxGrid } from "rsuite";
+import { updateToolNameByMapping } from "~/app/appActions";
 import { HelpMessage } from "~/components";
-import TransferTypeCard from "./TransferTypeCard";
-import { RoutePath } from "~/app/appTypes";
-import { ToolName, TransferMappingModel } from "~/common/commonTypes";
+import TransferMappingCard from "./TransferMappingCard";
+import { RoutePath, ToolNameByMappingModel } from "~/app/appTypes";
+import { ToolName} from "~/common/commonTypes";
 
 interface ConnectDispatchProps {
   onPush: (path: Path) => void;
-  onUpdateTransferMapping: (transferMapping: TransferMappingModel) => void;
+  onUpdateToolNameByMapping: (
+    toolNameByMapping: ToolNameByMappingModel,
+  ) => void;
 }
 
-export const SelectTransferTypeStepComponent: React.FC<ConnectDispatchProps> = props => {
+type Props = ConnectDispatchProps;
+
+export const SelectTransferMappingStepComponent: React.FC<Props> = props => {
   const handleTogglToClockifyClick = (): void => {
-    props.onUpdateTransferMapping({
+    props.onUpdateToolNameByMapping({
       source: ToolName.Toggl,
       target: ToolName.Clockify,
     });
@@ -24,7 +28,7 @@ export const SelectTransferTypeStepComponent: React.FC<ConnectDispatchProps> = p
   };
 
   const handleClockifyToTogglClick = (): void => {
-    props.onUpdateTransferMapping({
+    props.onUpdateToolNameByMapping({
       source: ToolName.Clockify,
       target: ToolName.Toggl,
     });
@@ -38,18 +42,18 @@ export const SelectTransferTypeStepComponent: React.FC<ConnectDispatchProps> = p
         to perform.
       </HelpMessage>
       <FlexboxGrid css={{ marginTop: "1rem" }}>
-        <TransferTypeCard
+        <TransferMappingCard
           header="From Toggl to Clockify"
           onTransferClick={handleTogglToClockifyClick}
         >
           Transfer your entries from Toggl to Clockify.me.
-        </TransferTypeCard>
-        <TransferTypeCard
+        </TransferMappingCard>
+        <TransferMappingCard
           header="From Clockify to Toggl"
           onTransferClick={handleClockifyToTogglClick}
         >
           Transfer your entries from Clockify.me to Toggl.
-        </TransferTypeCard>
+        </TransferMappingCard>
       </FlexboxGrid>
     </div>
   );
@@ -57,10 +61,10 @@ export const SelectTransferTypeStepComponent: React.FC<ConnectDispatchProps> = p
 
 const mapDispatchToProps: ConnectDispatchProps = {
   onPush: push,
-  onUpdateTransferMapping: updateTransferMapping,
+  onUpdateToolNameByMapping: updateToolNameByMapping,
 };
 
 export default connect(
   null,
   mapDispatchToProps,
-)(SelectTransferTypeStepComponent);
+)(SelectTransferMappingStepComponent);

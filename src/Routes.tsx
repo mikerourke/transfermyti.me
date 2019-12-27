@@ -1,13 +1,13 @@
 import React from "react";
-import { Redirect, Route, Switch } from "react-router";
 import { ConnectedRouter } from "connected-react-router";
 import { History } from "history";
+import { Redirect, Route, Switch } from "react-router";
 import AppRoot from "~/app/appRoot/AppRoot";
-import { RoutePath } from "~/app/appTypes";
-import SelectTransferTypeStep from "~/app/selectTransferTypeStep/SelectTransferTypeStep";
+import SelectTransferMappingStep from "~/app/selectTransferMappingStep/SelectTransferMappingStep";
 import EnterCredentialsStep from "~/credentials/enterCredentialsStep/EnterCredentialsStep";
 import SelectSourceWorkspacesStep from "~/workspaces/selectSourceWorkspacesStep/SelectSourceWorkspacesStep";
 import SelectSourceInclusions from "~/common/selectSourceInclusions/SelectSourceInclusions";
+import { RoutePath } from "~/app/appTypes";
 
 interface Props {
   history: History;
@@ -17,10 +17,10 @@ const Routes: React.FC<Props> = ({ history }) => (
   <ConnectedRouter history={history}>
     <AppRoot>
       <Switch>
-        <Redirect exact from="/" to={RoutePath.TransferType} />
+        <Redirect exact from="/" to={RoutePath.TransferMapping} />
         <Route
-          path={RoutePath.TransferType}
-          component={SelectTransferTypeStep}
+          path={RoutePath.TransferMapping}
+          component={SelectTransferMappingStep}
         />
         <Route path={RoutePath.Credentials} component={EnterCredentialsStep} />
         <Route

@@ -56,14 +56,13 @@ export const selectTargetWorkspaces = createSelector(
 
 export const selectTargetWorkspaceId = createSelector(
   selectWorkspaceIdMapping,
-  <TEntity>(_: ReduxState, sourceRecord: TEntity) => sourceRecord,
-  (workspaceIdMapping, sourceRecord): string | null => {
-    return R.propOr<null, Record<string, string>, string>(
+  (_: ReduxState, sourceWorkspaceId: string) => sourceWorkspaceId,
+  (workspaceIdMapping, sourceWorkspaceId): string | null =>
+    R.propOr<null, Record<string, string>, string>(
       null,
-      R.propOr("", "workspaceId", sourceRecord) as string,
+      sourceWorkspaceId,
       workspaceIdMapping,
-    );
-  },
+    ),
 );
 
 const limitIdsToIncluded = (workspaces: WorkspaceModel[]): string[] =>

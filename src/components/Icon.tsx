@@ -77,32 +77,16 @@ export const iconAttributes = {
 interface Props extends React.SVGAttributes<SVGElement> {
   name: IconName;
   color: string;
-  classes?: {
-    svg?: string;
-    path?: string;
-  };
 }
 
-const Icon: React.FC<Props> = ({ name, color, classes, ...svgProps }) => (
-  <svg
-    className={classes.svg}
-    viewBox={iconAttributes[name].viewBox}
-    {...svgProps}
-  >
+const Icon: React.FC<Props> = ({ name, color, ...props }) => (
+  <svg viewBox={iconAttributes[name].viewBox} {...props}>
     <path
       data-testid="svg-icon-path"
-      className={classes.path}
       d={iconAttributes[name].path}
       fill={color}
     />
   </svg>
 );
-
-Icon.defaultProps = {
-  classes: {
-    svg: "",
-    path: "",
-  },
-};
 
 export default Icon;

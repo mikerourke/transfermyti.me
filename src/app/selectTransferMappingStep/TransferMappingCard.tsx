@@ -6,7 +6,7 @@ interface Props {
   onTransferClick: VoidFunction;
 }
 
-const TransferTypeCard: React.FC<Props> = props => (
+const TransferMappingCard: React.FC<Props> = props => (
   <FlexboxGrid.Item css={{ margin: "0 1rem 2rem", flex: "0 0 16rem" }}>
     <Panel bordered header={props.header} css={{ width: 240 }}>
       <p css={{ marginBottom: "2rem" }}>{props.children}</p>
@@ -17,4 +17,4 @@ const TransferTypeCard: React.FC<Props> = props => (
   </FlexboxGrid.Item>
 );
 
-export default TransferTypeCard;
+export default TransferMappingCard;

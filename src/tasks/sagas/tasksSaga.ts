@@ -2,7 +2,7 @@ import { all, call, put, select, takeEvery } from "redux-saga/effects";
 import { SagaIterator } from "@redux-saga/types";
 import { linkEntitiesByIdByMapping } from "~/redux/sagaUtils";
 import { showFetchErrorNotification } from "~/app/appActions";
-import { selectTransferMapping } from "~/app/appSelectors";
+import { selectToolNameByMapping } from "~/app/appSelectors";
 import { createTasks, fetchTasks } from "~/tasks/tasksActions";
 import { selectSourceTasksForTransfer } from "~/tasks/tasksSelectors";
 import {
@@ -22,14 +22,13 @@ export function* tasksSaga(): SagaIterator {
 
 function* createTasksSaga(): SagaIterator {
   try {
-    const sourceTasks = yield select(selectSourceTasksForTransfer);
-    const transferMapping = yield select(selectTransferMapping);
-
+    const toolNameByMapping = yield select(selectToolNameByMapping);
     const createSagaByToolName = {
       [ToolName.Clockify]: createClockifyTasksSaga,
       [ToolName.Toggl]: createTogglTasksSaga,
-    }[transferMapping.target];
+    }[toolNameByMapping.target];
 
+    const sourceTasks = yield select(selectSourceTasksForTransfer);
     const targetTasks = yield call(createSagaByToolName, sourceTasks);
     const tasksByIdByMapping = linkEntitiesByIdByMapping<TaskModel>(
       sourceTasks,
@@ -45,12 +44,11 @@ function* createTasksSaga(): SagaIterator {
 
 function* fetchTasksSaga(): SagaIterator {
   try {
-    const { source, target } = yield select(selectTransferMapping);
-
     const fetchSagaByToolName = {
       [ToolName.Clockify]: fetchClockifyTasksSaga,
       [ToolName.Toggl]: fetchTogglTasksSaga,
     };
+    const { source, target } = yield select(selectToolNameByMapping);
     const sourceTasks = yield call(fetchSagaByToolName[source]);
     const targetTasks = yield call(fetchSagaByToolName[target]);
 
@@ -58,6 +56,7 @@ function* fetchTasksSaga(): SagaIterator {
       sourceTasks,
       targetTasks,
     );
+
     yield put(fetchTasks.success(tasksByIdByMapping));
   } catch (err) {
     yield put(showFetchErrorNotification(err));

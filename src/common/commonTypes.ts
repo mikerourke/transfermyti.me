@@ -9,11 +9,6 @@ export enum Mapping {
   Target = "target",
 }
 
-export interface TransferMappingModel {
-  [Mapping.Source]: ToolName;
-  [Mapping.Target]: ToolName;
-}
-
 export enum EntityGroup {
   Workspaces = "workspaces",
   Projects = "projects",
@@ -31,14 +26,4 @@ export interface BaseEntityModel {
   isIncluded: boolean;
   entryCount?: number;
   memberOf?: EntityGroup;
-}
-
-export enum HttpMethod {
-  Post = "POST",
-  Delete = "DELETE",
-}
-
-export interface MappedEntityRecordsModel<TEntity> {
-  mapping: Mapping;
-  recordsById: Record<string, TEntity>;
 }

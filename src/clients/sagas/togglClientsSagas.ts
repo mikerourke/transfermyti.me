@@ -1,9 +1,13 @@
 import { call } from "redux-saga/effects";
 import { SagaIterator } from "@redux-saga/types";
-import { createEntitiesForTool, fetchEntitiesForTool } from "~/redux/sagaUtils";
-import { fetchArray, fetchObject } from "~/utils";
+import {
+  createEntitiesForTool,
+  fetchArray,
+  fetchEntitiesForTool,
+  fetchObject,
+} from "~/redux/sagaUtils";
 import { ClientModel } from "~/clients/clientsTypes";
-import { EntityGroup, HttpMethod, ToolName } from "~/common/commonTypes";
+import { EntityGroup, ToolName } from "~/common/commonTypes";
 
 interface TogglClientResponseModel {
   id: number;
@@ -12,13 +16,8 @@ interface TogglClientResponseModel {
   at: string;
 }
 
-interface TogglClientRequestModel {
-  name: string;
-  wid: number;
-}
-
 /**
- * Creates new Toggl clients that correspond to source and returns an array of
+ * Creates new Toggl clients that correspond to source and returns array of
  * transformed clients.
  * @see https://github.com/toggl/toggl_api_docs/blob/master/chapters/clients.md#create-a-client
  */
@@ -28,28 +27,33 @@ export function* createTogglClientsSaga(
   return yield call(createEntitiesForTool, {
     toolName: ToolName.Toggl,
     sourceRecords: sourceClients,
-    creatorFunc: createTogglClient,
+    apiCreateFunc: createTogglClient,
   });
 }
 
 /**
- * Fetches all clients in Toggl workspaces and returns result.
+ * Fetches all clients in Toggl workspaces and returns returns array of
+ * transformed clients.
  * @see https://github.com/toggl/toggl_api_docs/blob/master/chapters/workspaces.md#get-workspace-clients
  */
 export function* fetchTogglClientsSaga(): SagaIterator<ClientModel[]> {
   return yield call(fetchEntitiesForTool, {
     toolName: ToolName.Toggl,
-    fetchFunc: fetchTogglClientsInWorkspace,
+    apiFetchFunc: fetchTogglClientsInWorkspace,
   });
 }
 
 function* createTogglClient(
   sourceClient: ClientModel,
-  workspaceId: string,
-): SagaIterator<ClientModel | null> {
-  const clientRequest = transformToRequest(sourceClient, workspaceId);
-  const { data } = yield call(fetchObject, `/toggl/api/clients`, {
-    method: HttpMethod.Post,
+  targetWorkspaceId: string,
+): SagaIterator<ClientModel> {
+  const clientRequest = {
+    name: sourceClient.name,
+    wid: +targetWorkspaceId,
+  };
+
+  const { data } = yield call(fetchObject, "/toggl/api/clients", {
+    method: "POST",
     body: clientRequest,
   });
 
@@ -65,16 +69,6 @@ function* fetchTogglClientsInWorkspace(
   );
 
   return togglClients.map(transformFromResponse);
-}
-
-function transformToRequest(
-  client: ClientModel,
-  workspaceId: string,
-): TogglClientRequestModel {
-  return {
-    name: client.name,
-    wid: +workspaceId,
-  };
 }
 
 function transformFromResponse(client: TogglClientResponseModel): ClientModel {

@@ -2,7 +2,7 @@ import { all, call, put, select, takeEvery } from "redux-saga/effects";
 import { SagaIterator } from "@redux-saga/types";
 import { linkEntitiesByIdByMapping } from "~/redux/sagaUtils";
 import { showFetchErrorNotification } from "~/app/appActions";
-import { selectTransferMapping } from "~/app/appSelectors";
+import { selectToolNameByMapping } from "~/app/appSelectors";
 import { createClients, fetchClients } from "~/clients/clientsActions";
 import { selectSourceClientsForTransfer } from "~/clients/clientsSelectors";
 import {
@@ -25,14 +25,13 @@ export function* clientsSaga(): SagaIterator {
 
 function* createClientsSaga(): SagaIterator {
   try {
-    const sourceClients = yield select(selectSourceClientsForTransfer);
-    const transferMapping = yield select(selectTransferMapping);
-
+    const toolNameByMapping = yield select(selectToolNameByMapping);
     const createSagaByToolName = {
       [ToolName.Clockify]: createClockifyClientsSaga,
       [ToolName.Toggl]: createTogglClientsSaga,
-    }[transferMapping.target];
+    }[toolNameByMapping.target];
 
+    const sourceClients = yield select(selectSourceClientsForTransfer);
     const targetClients = yield call(createSagaByToolName, sourceClients);
     const clientsByIdByMapping = linkEntitiesByIdByMapping<ClientModel>(
       sourceClients,
@@ -48,12 +47,11 @@ function* createClientsSaga(): SagaIterator {
 
 function* fetchClientsSaga(): SagaIterator {
   try {
-    const { source, target } = yield select(selectTransferMapping);
-
     const fetchSagaByToolName = {
       [ToolName.Clockify]: fetchClockifyClientsSaga,
       [ToolName.Toggl]: fetchTogglClientsSaga,
     };
+    const { source, target } = yield select(selectToolNameByMapping);
     const sourceClients = yield call(fetchSagaByToolName[source]);
     const targetClients = yield call(fetchSagaByToolName[target]);
 
@@ -61,6 +59,7 @@ function* fetchClientsSaga(): SagaIterator {
       sourceClients,
       targetClients,
     );
+
     yield put(fetchClients.success(clientsByIdByMapping));
   } catch (err) {
     yield put(showFetchErrorNotification(err));

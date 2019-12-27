@@ -1,12 +1,12 @@
 import { call } from "redux-saga/effects";
 import { SagaIterator } from "@redux-saga/types";
-import { fetchObject } from "~/utils";
 import {
   createEntitiesForTool,
   fetchEntitiesForTool,
+  fetchObject,
   paginatedClockifyFetch,
 } from "~/redux/sagaUtils";
-import { EntityGroup, HttpMethod, ToolName } from "~/common/commonTypes";
+import { EntityGroup, ToolName } from "~/common/commonTypes";
 import { TagModel } from "~/tags/tagsTypes";
 
 export interface ClockifyTagResponseModel {
@@ -15,12 +15,8 @@ export interface ClockifyTagResponseModel {
   workspaceId: string;
 }
 
-interface ClockifyTagRequestModel {
-  name: string;
-}
-
 /**
- * Creates new Clockify tags in all target workspaces and returns an array of
+ * Creates new Clockify tags in all target workspaces and returns array of
  * transformed tags.
  * @see https://clockify.me/developers-api#operation--v1-workspaces--workspaceId--tags-post
  */
@@ -28,33 +24,34 @@ export function* createClockifyTagsSaga(sourceTags: TagModel[]): SagaIterator {
   return yield call(createEntitiesForTool, {
     toolName: ToolName.Clockify,
     sourceRecords: sourceTags,
-    creatorFunc: createClockifyTag,
+    apiCreateFunc: createClockifyTag,
   });
 }
 
 /**
- * Fetches all tags in Clockify workspaces and returns result.
+ * Fetches all tags in Clockify workspaces and returns array of transformed
+ * tags.
  * @see https://clockify.me/developers-api#operation--v1-workspaces--workspaceId--tags-get
  */
 export function* fetchClockifyTagsSaga(): SagaIterator<TagModel[]> {
   return yield call(fetchEntitiesForTool, {
     toolName: ToolName.Clockify,
-    fetchFunc: fetchClockifyTagsInWorkspace,
+    apiFetchFunc: fetchClockifyTagsInWorkspace,
   });
 }
 
 function* createClockifyTag(
   sourceTag: TagModel,
-  workspaceId: string,
-): SagaIterator<TagModel | null> {
-  const tagRequest = transformToRequest(sourceTag);
-  const targetTag = yield call(
+  targetWorkspaceId: string,
+): SagaIterator<TagModel> {
+  const tagRequest = { name: sourceTag.name };
+  const clockifyTag = yield call(
     fetchObject,
-    `/clockify/api/v1/workspaces/${workspaceId}/tags`,
-    { method: HttpMethod.Post, body: tagRequest },
+    `/clockify/api/v1/workspaces/${targetWorkspaceId}/tags`,
+    { method: "POST", body: tagRequest },
   );
 
-  return transformFromResponse(targetTag);
+  return transformFromResponse(clockifyTag);
 }
 
 function* fetchClockifyTagsInWorkspace(
@@ -66,12 +63,6 @@ function* fetchClockifyTagsInWorkspace(
   );
 
   return clockifyTags.map(transformFromResponse);
-}
-
-function transformToRequest(tag: TagModel): ClockifyTagRequestModel {
-  return {
-    name: tag.name,
-  };
 }
 
 function transformFromResponse(tag: ClockifyTagResponseModel): TagModel {

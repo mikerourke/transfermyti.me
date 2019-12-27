@@ -13,7 +13,7 @@ import { credentialsSaga } from "~/credentials/sagas/main";
 import { projectsSaga } from "~/projects/sagas/projectsSaga";
 import { tagsSaga } from "~/tags/sagas/tagsSaga";
 import { tasksSaga } from "~/tasks/sagas/tasksSaga";
-import { timeEntriesSaga } from "~/timeEntries/sagas/main";
+import { timeEntriesSaga } from "~/timeEntries/sagas/timeEntriesSaga";
 import { userGroupsSaga } from "~/userGroups/sagas/userGroupsSaga";
 import { usersSaga } from "~/users/sagas/usersSaga";
 import { workspacesSaga } from "~/workspaces/sagas/workspacesSaga";

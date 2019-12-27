@@ -1,10 +1,13 @@
 import { call, delay, put } from "redux-saga/effects";
 import { SagaIterator } from "@redux-saga/types";
 import { TOGGL_API_DELAY } from "~/constants";
-import { fetchEntitiesForTool } from "~/redux/sagaUtils";
-import { fetchArray, fetchObject } from "~/utils";
+import {
+  fetchArray,
+  fetchEntitiesForTool,
+  fetchObject,
+} from "~/redux/sagaUtils";
 import { incrementCurrentTransferCount } from "~/app/appActions";
-import { EntityGroup, HttpMethod, ToolName } from "~/common/commonTypes";
+import { EntityGroup, ToolName } from "~/common/commonTypes";
 import { UserModel } from "~/users/usersTypes";
 
 interface TogglUserResponseModel {
@@ -33,10 +36,6 @@ interface TogglUserResponseModel {
   userGroupIds?: string[];
 }
 
-interface TogglUserRequestModel {
-  emails: string[];
-}
-
 export function* createTogglUsersSaga(
   emailsByWorkspaceId: Record<string, string[]>,
 ): SagaIterator {
@@ -48,13 +47,13 @@ export function* createTogglUsersSaga(
 }
 
 /**
- * Fetches all users in Toggl workspaces and returns result.
+ * Fetches all users in Toggl workspaces and returns array of transformed users.
  * @see https://github.com/toggl/toggl_api_docs/blob/master/chapters/workspaces.md#get-workspace-users
  */
 export function* fetchTogglUsersSaga(): SagaIterator<UserModel[]> {
   return yield call(fetchEntitiesForTool, {
-    toolName: ToolName.Clockify,
-    fetchFunc: fetchTogglUsersInWorkspace,
+    toolName: ToolName.Toggl,
+    apiFetchFunc: fetchTogglUsersInWorkspace,
   });
 }
 
@@ -66,9 +65,9 @@ function* inviteTogglUsers(
   sourceEmails: string[],
   workspaceId: string,
 ): SagaIterator {
-  const userRequest = transformToRequest(sourceEmails);
+  const userRequest = { emails: sourceEmails };
   yield call(fetchObject, `/toggl/api/workspaces/${workspaceId}/invite`, {
-    method: HttpMethod.Post,
+    method: "POST",
     body: userRequest,
   });
 }
@@ -84,12 +83,6 @@ function* fetchTogglUsersInWorkspace(
   return togglUsers.map(togglUser =>
     transformFromResponse(togglUser, workspaceId),
   );
-}
-
-function transformToRequest(emails: string[]): TogglUserRequestModel {
-  return {
-    emails,
-  };
 }
 
 function transformFromResponse(

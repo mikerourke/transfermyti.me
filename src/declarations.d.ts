@@ -1,10 +1,5 @@
 declare function fetch(input: RequestInfo, init?: RequestInit): any;
 
-declare module "promise-throttle";
-declare module "react-sweet-progress";
-
-declare type VoidPromise = () => Promise<void>;
-
 declare interface Window {
   __REDUX_DEVTOOLS_EXTENSION_COMPOSE__: any;
 }

@@ -1,9 +1,9 @@
 import { call, delay, put } from "redux-saga/effects";
 import { SagaIterator } from "@redux-saga/types";
 import { TOGGL_API_DELAY } from "~/constants";
-import { fetchArray, fetchObject } from "~/utils";
+import { fetchArray, fetchObject } from "~/redux/sagaUtils";
 import { incrementCurrentTransferCount } from "~/app/appActions";
-import { EntityGroup, HttpMethod } from "~/common/commonTypes";
+import { EntityGroup } from "~/common/commonTypes";
 import { WorkspaceModel } from "~/workspaces/workspacesTypes";
 
 export interface TogglWorkspaceResponseModel {
@@ -13,10 +13,11 @@ export interface TogglWorkspaceResponseModel {
   at: string;
 }
 
-interface TogglWorkspaceRequestModel {
-  name: string;
-}
-
+/**
+ * Creates Toggl workspaces for transfer and returns array of transformed
+ * workspaces.
+ * @todo Validate endpoint (creating a Toggl workspace is not documented).
+ */
 export function* createTogglWorkspacesSaga(
   sourceWorkspaces: WorkspaceModel[],
 ): SagaIterator<WorkspaceModel[]> {
@@ -25,9 +26,9 @@ export function* createTogglWorkspacesSaga(
   for (const sourceWorkspace of sourceWorkspaces) {
     yield put(incrementCurrentTransferCount());
 
-    const workspaceRequest = transformToRequest(sourceWorkspace);
-    const targetWorkspace = yield call(fetchObject, `/workspaces`, {
-      method: HttpMethod.Post,
+    const workspaceRequest = { name: sourceWorkspace.name };
+    const targetWorkspace = yield call(fetchObject, "/workspaces", {
+      method: "POST",
       body: workspaceRequest,
     });
     targetWorkspaces.push(transformFromResponse(targetWorkspace));
@@ -39,7 +40,8 @@ export function* createTogglWorkspacesSaga(
 }
 
 /**
- * Fetches all workspaces from Toggl and returns transformed result.
+ * Fetches all workspaces from Toggl and returns transformed array of transformed
+ * workspaces.
  * @see https://github.com/toggl/toggl_api_docs/blob/master/chapters/workspaces.md#get-workspace-workspaces
  */
 export function* fetchTogglWorkspacesSaga(): SagaIterator {
@@ -49,14 +51,6 @@ export function* fetchTogglWorkspacesSaga(): SagaIterator {
   );
 
   return togglWorkspaces.map(transformFromResponse);
-}
-
-function transformToRequest(
-  workspace: WorkspaceModel,
-): TogglWorkspaceRequestModel {
-  return {
-    name: workspace.name,
-  };
 }
 
 function transformFromResponse(

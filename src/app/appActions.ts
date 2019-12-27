@@ -1,8 +1,8 @@
 import { createAction } from "typesafe-actions";
 import cuid from "cuid";
 import { capitalize, getIfDev } from "~/utils";
-import { ToolName, TransferMappingModel } from "~/common/commonTypes";
-import { NotificationModel } from "./appTypes";
+import { ToolName} from "~/common/commonTypes";
+import { NotificationModel, ToolNameByMappingModel } from "./appTypes";
 
 export const showNotification = createAction(
   "@app/SHOW_NOTIFICATION",
@@ -37,9 +37,9 @@ export const dismissAllNotifications = createAction(
   "@app/DISMISS_ALL_NOTIFICATIONS",
 )<undefined>();
 
-export const updateTransferMapping = createAction(
-  "@app/UPDATE_TRANSFER_MAPPING",
-)<TransferMappingModel>();
+export const updateToolNameByMapping = createAction(
+  "@app/UPDATE_TOOL_NAME_BY_MAPPING",
+)<ToolNameByMappingModel>();
 
 export const incrementCurrentTransferCount = createAction(
   "@app/INCREMENT_CURRENT_TRANSFER_COUNT",

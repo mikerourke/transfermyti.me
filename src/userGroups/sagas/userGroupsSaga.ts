@@ -2,7 +2,7 @@ import { all, call, put, select, takeEvery } from "redux-saga/effects";
 import { SagaIterator } from "@redux-saga/types";
 import { linkEntitiesByIdByMapping } from "~/redux/sagaUtils";
 import { showFetchErrorNotification } from "~/app/appActions";
-import { selectTransferMapping } from "~/app/appSelectors";
+import { selectToolNameByMapping } from "~/app/appSelectors";
 import {
   createUserGroups,
   fetchUserGroups,
@@ -28,14 +28,13 @@ export function* userGroupsSaga(): SagaIterator {
 
 function* createUserGroupsSaga(): SagaIterator {
   try {
-    const sourceUserGroups = yield select(selectSourceUserGroupsForTransfer);
-    const transferMapping = yield select(selectTransferMapping);
-
+    const toolNameByMapping = yield select(selectToolNameByMapping);
     const createSagaByToolName = {
       [ToolName.Clockify]: createClockifyUserGroupsSaga,
       [ToolName.Toggl]: createTogglUserGroupsSaga,
-    }[transferMapping.target];
+    }[toolNameByMapping.target];
 
+    const sourceUserGroups = yield select(selectSourceUserGroupsForTransfer);
     const targetUserGroups = yield call(createSagaByToolName, sourceUserGroups);
     const userGroupsByIdByMapping = linkEntitiesByIdByMapping<UserGroupModel>(
       sourceUserGroups,
@@ -51,12 +50,11 @@ function* createUserGroupsSaga(): SagaIterator {
 
 function* fetchUserGroupsSaga(): SagaIterator {
   try {
-    const { source, target } = yield select(selectTransferMapping);
-
     const fetchSagaByToolName = {
       [ToolName.Clockify]: fetchClockifyUserGroupsSaga,
       [ToolName.Toggl]: fetchTogglUserGroupsSaga,
     };
+    const { source, target } = yield select(selectToolNameByMapping);
     const sourceUserGroups = yield call(fetchSagaByToolName[source]);
     const targetUserGroups = yield call(fetchSagaByToolName[target]);
 
@@ -64,6 +62,7 @@ function* fetchUserGroupsSaga(): SagaIterator {
       sourceUserGroups,
       targetUserGroups,
     );
+
     yield put(fetchUserGroups.success(userGroupsByIdByMapping));
   } catch (err) {
     yield put(showFetchErrorNotification(err));

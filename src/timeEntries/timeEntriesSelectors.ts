@@ -1,4 +1,6 @@
 import { createSelector } from "reselect";
+import * as R from "ramda";
+import { selectActiveWorkspaceId } from "~/workspaces/workspacesSelectors";
 import { ReduxState } from "~/redux/reduxTypes";
 import { TimeEntryModel } from "~/timeEntries/timeEntriesTypes";
 
@@ -7,17 +9,19 @@ export const selectSourceTimeEntries = createSelector(
   (timeEntriesById): TimeEntryModel[] => Object.values(timeEntriesById),
 );
 
-const selectTargetTimeEntriesInWorkspace = createSelector(
+export const selectSourceTimeEntriesForTransfer = createSelector(
   selectSourceTimeEntries,
-  (_: ReduxState, workspaceId: string) => workspaceId,
-  (sourceTimeEntries, workspaceId): TimeEntryModel[] =>
-    sourceTimeEntries.filter(
-      timeEntry => timeEntry.workspaceId === workspaceId,
+  sourceTimeEntries =>
+    sourceTimeEntries.filter(sourceTimeEntry =>
+      R.and(sourceTimeEntry.isIncluded, R.isNil(sourceTimeEntry.linkedId)),
     ),
 );
 
-export const selectTargetTimeEntriesForTransfer = createSelector(
-  selectTargetTimeEntriesInWorkspace,
-  sourceTimeEntries =>
-    sourceTimeEntries.filter(timeEntry => timeEntry.isIncluded),
+export const selectSourceTimeEntriesInActiveWorkspace = createSelector(
+  selectSourceTimeEntries,
+  selectActiveWorkspaceId,
+  (sourceTimeEntries, activeWorkspaceId) =>
+    sourceTimeEntries.filter(
+      sourceTimeEntry => sourceTimeEntry.workspaceId === activeWorkspaceId,
+    ),
 );

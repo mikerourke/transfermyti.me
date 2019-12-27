@@ -1,10 +1,16 @@
 /* eslint-disable @typescript-eslint/camelcase */
-import { call, delay } from "redux-saga/effects";
+import * as R from "ramda";
+import { call, delay, select } from "redux-saga/effects";
 import { SagaIterator } from "@redux-saga/types";
 import { TOGGL_API_DELAY } from "~/constants";
-import { fetchArray, fetchObject } from "~/utils";
-import { createEntitiesForTool, fetchEntitiesForTool } from "~/redux/sagaUtils";
-import { EntityGroup, HttpMethod, ToolName } from "~/common/commonTypes";
+import {
+  createEntitiesForTool,
+  fetchArray,
+  fetchEntitiesForTool,
+  fetchObject,
+} from "~/redux/sagaUtils";
+import { selectTargetClientId } from "~/clients/clientsSelectors";
+import { EntityGroup, ToolName } from "~/common/commonTypes";
 import { ProjectModel } from "~/projects/projectsTypes";
 
 interface TogglProjectResponseModel {
@@ -22,14 +28,6 @@ interface TogglProjectResponseModel {
   auto_estimates: boolean;
   actual_hours: number;
   hex_color: string;
-}
-
-interface TogglProjectRequestModel {
-  name: string;
-  wid: number;
-  template_id: number;
-  is_private: boolean;
-  cid: number;
 }
 
 interface TogglProjectUserResponseModel {
@@ -52,29 +50,41 @@ export function* createTogglProjectsSaga(
   return yield call(createEntitiesForTool, {
     toolName: ToolName.Toggl,
     sourceRecords: sourceProjects,
-    creatorFunc: createTogglProject,
+    apiCreateFunc: createTogglProject,
   });
 }
 
 /**
  * Fetches all projects in Toggl workspaces, adds associated user IDs, and
- * returns result.
+ * returns array of transformed projects.
  * @see https://github.com/toggl/toggl_api_docs/blob/master/chapters/workspaces.md#get-workspace-projects
  */
 export function* fetchTogglProjectsSaga(): SagaIterator<ProjectModel[]> {
   return yield call(fetchEntitiesForTool, {
     toolName: ToolName.Toggl,
-    fetchFunc: fetchTogglProjectsInWorkspace,
+    apiFetchFunc: fetchTogglProjectsInWorkspace,
   });
 }
 
 function* createTogglProject(
   sourceProject: ProjectModel,
-  workspaceId: string,
-): SagaIterator<ProjectModel | null> {
-  const projectRequest = transformToRequest(sourceProject, workspaceId);
-  const { data } = yield call(fetchObject, `/toggl/api/projects`, {
-    method: HttpMethod.Post,
+  targetWorkspaceId: string,
+): SagaIterator<ProjectModel> {
+  const targetClientId = yield select(
+    selectTargetClientId,
+    sourceProject.clientId,
+  );
+  const projectRequest = {
+    name: sourceProject.name,
+    wid: +targetWorkspaceId,
+    // TODO: Find out if this template_id value is valid?
+    template_id: 10237,
+    is_private: !sourceProject.isPublic,
+    cid: R.isNil(targetClientId) ? undefined : +targetClientId,
+  };
+
+  const { data } = yield call(fetchObject, "/toggl/api/projects", {
+    method: "POST",
     body: projectRequest,
   });
 
@@ -114,19 +124,6 @@ function* fetchUserIdsInProject(projectId: string): SagaIterator<string[]> {
     `/toggl/api/projects/${projectId}/project_users`,
   );
   return projectUsers.map(({ uid }) => uid.toString());
-}
-
-function transformToRequest(
-  project: ProjectModel,
-  workspaceId: string,
-): TogglProjectRequestModel {
-  return {
-    name: project.name,
-    wid: +workspaceId,
-    template_id: 10237,
-    is_private: !project.isPublic,
-    cid: +project.clientId,
-  };
 }
 
 function transformFromResponse(

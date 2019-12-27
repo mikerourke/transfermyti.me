@@ -1,8 +1,12 @@
 import { call } from "redux-saga/effects";
 import { SagaIterator } from "@redux-saga/types";
-import { fetchArray, fetchObject } from "~/utils";
-import { createEntitiesForTool, fetchEntitiesForTool } from "~/redux/sagaUtils";
-import { EntityGroup, HttpMethod, ToolName } from "~/common/commonTypes";
+import {
+  createEntitiesForTool,
+  fetchArray,
+  fetchEntitiesForTool,
+  fetchObject,
+} from "~/redux/sagaUtils";
+import { EntityGroup, ToolName } from "~/common/commonTypes";
 import { UserGroupModel } from "~/userGroups/userGroupsTypes";
 
 interface TogglUserGroupResponseModel {
@@ -10,11 +14,6 @@ interface TogglUserGroupResponseModel {
   wid: number;
   name: string;
   at: string;
-}
-
-interface TogglUserGroupRequestModel {
-  name: string;
-  wid: number;
 }
 
 /**
@@ -28,7 +27,7 @@ export function* createTogglUserGroupsSaga(
   return yield call(createEntitiesForTool, {
     toolName: ToolName.Toggl,
     sourceRecords: sourceUserGroups,
-    creatorFunc: createTogglUserGroup,
+    apiCreateFunc: createTogglUserGroup,
   });
 }
 
@@ -39,17 +38,20 @@ export function* createTogglUserGroupsSaga(
 export function* fetchTogglUserGroupsSaga(): SagaIterator {
   return yield call(fetchEntitiesForTool, {
     toolName: ToolName.Toggl,
-    fetchFunc: fetchTogglUserGroupsInWorkspace,
+    apiFetchFunc: fetchTogglUserGroupsInWorkspace,
   });
 }
 
 function* createTogglUserGroup(
   sourceUserGroup: UserGroupModel,
-  workspaceId: string,
+  targetWorkspaceId: string,
 ): SagaIterator<UserGroupModel> {
-  const userGroupRequest = transformToRequest(sourceUserGroup, workspaceId);
-  const { data } = yield call(fetchObject, `/toggl/api/groups`, {
-    method: HttpMethod.Post,
+  const userGroupRequest = {
+    name: sourceUserGroup.name,
+    wid: +targetWorkspaceId,
+  };
+  const { data } = yield call(fetchObject, "/toggl/api/groups", {
+    method: "POST",
     body: userGroupRequest,
   });
 
@@ -65,16 +67,6 @@ function* fetchTogglUserGroupsInWorkspace(
   );
 
   return togglUserGroups.map(transformFromResponse);
-}
-
-function transformToRequest(
-  userGroup: UserGroupModel,
-  workspaceId: string,
-): TogglUserGroupRequestModel {
-  return {
-    name: userGroup.name,
-    wid: +workspaceId,
-  };
 }
 
 function transformFromResponse(

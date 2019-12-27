@@ -1,10 +1,13 @@
 import { call, select } from "redux-saga/effects";
 import { SagaIterator } from "@redux-saga/types";
-import * as R from "ramda";
-import { selectSourceProjectsById } from "~/projects/projectsSelectors";
-import { fetchArray, fetchObject } from "~/utils";
-import { fetchEntitiesForTool } from "~/redux/sagaUtils";
-import { EntityGroup, HttpMethod, ToolName } from "~/common/commonTypes";
+import {
+  createEntitiesForTool,
+  fetchArray,
+  fetchEntitiesForTool,
+  fetchObject,
+} from "~/redux/sagaUtils";
+import { selectTargetProjectId } from "~/projects/projectsSelectors";
+import { EntityGroup, ToolName } from "~/common/commonTypes";
 import { TaskModel } from "~/tasks/tasksTypes";
 
 interface TogglTaskResponseModel {
@@ -18,35 +21,17 @@ interface TogglTaskResponseModel {
   estimated_seconds: number;
 }
 
-interface TogglTaskRequestModel {
-  name: string;
-  pid: number;
-}
-
 /**
- * Creates new Toggl tasks that correspond to source and returns an array of
+ * Creates new Toggl tasks that correspond to source and returns array of
  * transformed tasks.
  * @see https://github.com/toggl/toggl_api_docs/blob/master/chapters/tasks.md#create-a-task
  */
 export function* createTogglTasksSaga(sourceTasks: TaskModel[]): SagaIterator {
-  const sourceProjectsById = yield select(selectSourceProjectsById);
-  const targetTasks: TaskModel[] = [];
-
-  for (const sourceTask of sourceTasks) {
-    const targetProjectId = R.path([
-      R.prop("projectId")(sourceTask),
-      "linkedId",
-    ])(sourceProjectsById) as string;
-
-    if (R.isNil(targetProjectId)) {
-      continue;
-    }
-
-    const targetTask = yield call(createTogglTask, sourceTask, targetProjectId);
-    targetTasks.push(targetTask);
-  }
-
-  return targetTasks;
+  return yield call(createEntitiesForTool, {
+    toolName: ToolName.Toggl,
+    sourceRecords: sourceTasks,
+    apiCreateFunc: createTogglTask,
+  });
 }
 
 /**
@@ -56,17 +41,22 @@ export function* createTogglTasksSaga(sourceTasks: TaskModel[]): SagaIterator {
 export function* fetchTogglTasksSaga(): SagaIterator<TaskModel[]> {
   return yield call(fetchEntitiesForTool, {
     toolName: ToolName.Toggl,
-    fetchFunc: fetchTogglTasksInWorkspace,
+    apiFetchFunc: fetchTogglTasksInWorkspace,
   });
 }
 
-function* createTogglTask(
-  sourceTask: TaskModel,
-  projectId: string,
-): SagaIterator<TaskModel> {
-  const taskRequest = transformToRequest(sourceTask, projectId);
-  const { data } = yield call(fetchObject, `/toggl/api/tasks`, {
-    method: HttpMethod.Post,
+function* createTogglTask(sourceTask: TaskModel): SagaIterator<TaskModel> {
+  const targetProjectId = yield select(
+    selectTargetProjectId,
+    sourceTask.projectId,
+  );
+  const taskRequest = {
+    name: sourceTask.name,
+    pid: +targetProjectId,
+  };
+
+  const { data } = yield call(fetchObject, "/toggl/api/tasks", {
+    method: "POST",
     body: taskRequest,
   });
 
@@ -82,16 +72,6 @@ function* fetchTogglTasksInWorkspace(
   );
 
   return togglTasks.map(transformFromResponse);
-}
-
-function transformToRequest(
-  task: TaskModel,
-  projectId: string,
-): TogglTaskRequestModel {
-  return {
-    name: task.name,
-    pid: +projectId,
-  };
 }
 
 function transformFromResponse(task: TogglTaskResponseModel): TaskModel {

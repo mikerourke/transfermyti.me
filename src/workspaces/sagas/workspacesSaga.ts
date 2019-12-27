@@ -2,7 +2,7 @@ import { all, call, put, select, takeEvery } from "redux-saga/effects";
 import { SagaIterator } from "@redux-saga/types";
 import { linkEntitiesByIdByMapping } from "~/redux/sagaUtils";
 import { showFetchErrorNotification } from "~/app/appActions";
-import { selectTransferMapping } from "~/app/appSelectors";
+import { selectToolNameByMapping } from "~/app/appSelectors";
 import {
   createWorkspaces,
   fetchWorkspaces,
@@ -20,11 +20,6 @@ import {
 import { ToolName } from "~/common/commonTypes";
 import { WorkspaceModel } from "~/workspaces/workspacesTypes";
 
-/**
- * There is no `createTogglWorkspacesSaga` because you're not allowed to create
- * a new workspace through the Toggl API.
- */
-
 export function* workspacesSaga(): SagaIterator {
   yield all([
     takeEvery(createWorkspaces.request, createWorkspacesSaga),
@@ -34,19 +29,19 @@ export function* workspacesSaga(): SagaIterator {
 
 function* createWorkspacesSaga(): SagaIterator {
   try {
-    const sourceWorkspaces = yield select(selectSourceWorkspacesForTransfer);
-    const transferMapping = yield select(selectTransferMapping);
-
+    const toolNameByMapping = yield select(selectToolNameByMapping);
     const createSagaByToolName = {
       [ToolName.Clockify]: createClockifyWorkspacesSaga,
       [ToolName.Toggl]: createTogglWorkspacesSaga,
-    }[transferMapping.target];
+    }[toolNameByMapping.target];
 
+    const sourceWorkspaces = yield select(selectSourceWorkspacesForTransfer);
     const targetWorkspaces = yield call(createSagaByToolName, sourceWorkspaces);
     const workspaceByIdByMapping = linkEntitiesByIdByMapping<WorkspaceModel>(
       sourceWorkspaces,
       targetWorkspaces,
     );
+
     yield put(createWorkspaces.success(workspaceByIdByMapping));
   } catch (err) {
     yield put(showFetchErrorNotification(err));
@@ -56,12 +51,11 @@ function* createWorkspacesSaga(): SagaIterator {
 
 function* fetchWorkspacesSaga(): SagaIterator {
   try {
-    const { source, target } = yield select(selectTransferMapping);
-
     const fetchSagaByToolName = {
       [ToolName.Clockify]: fetchClockifyWorkspacesSaga,
       [ToolName.Toggl]: fetchTogglWorkspacesSaga,
     };
+    const { source, target } = yield select(selectToolNameByMapping);
     const sourceWorkspaces = yield call(fetchSagaByToolName[source]);
     const targetWorkspaces = yield call(fetchSagaByToolName[target]);
 
@@ -74,6 +68,7 @@ function* fetchWorkspacesSaga(): SagaIterator {
       sourceWorkspaces,
       targetWorkspaces,
     );
+
     yield put(fetchWorkspaces.success(workspaceByIdByMapping));
   } catch (err) {
     yield put(showFetchErrorNotification(err));

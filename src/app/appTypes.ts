@@ -1,4 +1,4 @@
-import { ToolName } from "~/common/commonTypes";
+import { Mapping, ToolName } from "~/common/commonTypes";
 
 type NotificationType = "error" | "info" | "success";
 
@@ -8,20 +8,8 @@ export interface NotificationModel {
   type: NotificationType;
 }
 
-export enum TransferType {
-  MultipleUsers = "MULTIPLE",
-  SingleUser = "SINGLE",
-}
-
-export interface AggregateTransferCountsModel {
-  countCurrentInWorkspace: number;
-  countTotalInWorkspace: number;
-  countCurrentOverall: number;
-  countTotalOverall: number;
-}
-
 export enum RoutePath {
-  TransferType = "/transfer-type",
+  TransferMapping = "/transfer-mapping",
   Credentials = "/credentials",
   Workspaces = "/workspaces",
   ReviewSource = "/review-source",
@@ -32,4 +20,9 @@ export interface ToolHelpDetailsModel {
   toolName: ToolName;
   displayName: string;
   toolLink: string;
+}
+
+export interface ToolNameByMappingModel {
+  [Mapping.Source]: ToolName;
+  [Mapping.Target]: ToolName;
 }

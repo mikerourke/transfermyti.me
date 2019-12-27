@@ -1,18 +1,21 @@
-import { call, delay } from "redux-saga/effects";
+import * as R from "ramda";
+import { call, delay, select } from "redux-saga/effects";
 import { SagaIterator } from "@redux-saga/types";
 import { CLOCKIFY_API_DELAY } from "~/constants";
-import { fetchArray, fetchObject } from "~/utils";
 import {
-  paginatedClockifyFetch,
   createEntitiesForTool,
+  fetchArray,
   fetchEntitiesForTool,
+  fetchObject,
+  paginatedClockifyFetch,
 } from "~/redux/sagaUtils";
+import { selectTargetClientId } from "~/clients/clientsSelectors";
 import {
   ClockifyHourlyRateResponseModel,
   ClockifyMembershipResponseModel,
   ClockifyUserResponseModel,
 } from "~/users/sagas/clockifyUsersSagas";
-import { EntityGroup, HttpMethod, ToolName } from "~/common/commonTypes";
+import { EntityGroup, ToolName } from "~/common/commonTypes";
 import { ProjectModel } from "~/projects/projectsTypes";
 
 interface ClockifyEstimateModel {
@@ -36,18 +39,9 @@ export interface ClockifyProjectResponseModel {
   workspaceId: string;
 }
 
-interface ClockifyProjectRequestModel {
-  name: string;
-  clientId: string;
-  isPublic: boolean;
-  estimate: ClockifyEstimateModel;
-  color: string;
-  billable: boolean;
-}
-
 /**
- * Creates new Clockify projects in all target workspaces and returns an
- * array of transformed projects.
+ * Creates new Clockify projects in all target workspaces and returns array of
+ * transformed projects.
  * @see https://clockify.me/developers-api#operation--v1-workspaces--workspaceId--projects-post
  */
 export function* createClockifyProjectsSaga(
@@ -56,34 +50,50 @@ export function* createClockifyProjectsSaga(
   return yield call(createEntitiesForTool, {
     toolName: ToolName.Clockify,
     sourceRecords: sourceProjects,
-    creatorFunc: createClockifyProject,
+    apiCreateFunc: createClockifyProject,
   });
 }
 
 /**
  * Fetches all projects in Clockify workspaces, adds associated user IDs, and
- * returns results.
+ * returns array of transformed projects.
  * @see https://clockify.me/developers-api#operation--v1-workspaces--workspaceId--projects-get
  */
 export function* fetchClockifyProjectsSaga(): SagaIterator<ProjectModel[]> {
   return yield call(fetchEntitiesForTool, {
     toolName: ToolName.Clockify,
-    fetchFunc: fetchClockifyProjectsInWorkspace,
+    apiFetchFunc: fetchClockifyProjectsInWorkspace,
   });
 }
 
 function* createClockifyProject(
   sourceProject: ProjectModel,
-  workspaceId: string,
-): SagaIterator<ProjectModel | null> {
-  const projectRequest = transformToRequest(sourceProject);
-  const targetProject = yield call(
+  targetWorkspaceId: string,
+): SagaIterator<ProjectModel> {
+  const targetClientId = yield select(
+    selectTargetClientId,
+    sourceProject.clientId,
+  );
+  const projectRequest = {
+    name: sourceProject.name,
+    clientId: R.isNil(targetClientId) ? undefined : targetClientId,
+    isPublic: sourceProject.isPublic,
+    // TODO: Add project estimate from source (if applicable).
+    estimate: {
+      estimate: 0,
+      type: "AUTO",
+    },
+    color: sourceProject.color,
+    billable: sourceProject.isBillable,
+  };
+
+  const clockifyProject = yield call(
     fetchObject,
-    `/clockify/api/v1/workspaces/${workspaceId}/projects`,
-    { method: HttpMethod.Post, body: projectRequest },
+    `/clockify/api/v1/workspaces/${targetWorkspaceId}/projects`,
+    { method: "POST", body: projectRequest },
   );
 
-  return transformFromResponse(targetProject, workspaceId, []);
+  return transformFromResponse(clockifyProject, []);
 }
 
 function* fetchClockifyProjectsInWorkspace(
@@ -102,9 +112,7 @@ function* fetchClockifyProjectsInWorkspace(
       workspaceId,
       projectId,
     );
-    allClockifyProjects.push(
-      transformFromResponse(clockifyProject, workspaceId, userIds),
-    );
+    allClockifyProjects.push(transformFromResponse(clockifyProject, userIds));
 
     yield delay(CLOCKIFY_API_DELAY);
   }
@@ -114,7 +122,7 @@ function* fetchClockifyProjectsInWorkspace(
 
 /**
  * Fetches the users associated with a specific project and returns an array
- * of strings that represents the user ID.
+ * of strings that represents the user IDs.
  * @see https://clockify.github.io/clockify_api_docs/#operation--workspaces--workspaceId--projects--projectId--users-get
  * @deprecated This is in the "Working API" and will be moved to V1.
  */
@@ -129,31 +137,14 @@ function* fetchUserIdsInProject(
   return projectUsers.map(({ id }) => id);
 }
 
-function transformToRequest(
-  project: ProjectModel,
-): ClockifyProjectRequestModel {
-  return {
-    name: project.name,
-    clientId: project.clientId,
-    isPublic: project.isPublic,
-    estimate: {
-      estimate: 0,
-      type: "AUTO",
-    },
-    color: project.color,
-    billable: project.isBillable,
-  };
-}
-
 function transformFromResponse(
   project: ClockifyProjectResponseModel,
-  workspaceId: string,
   userIds: string[],
 ): ProjectModel {
   return {
     id: project.id,
     name: project.name,
-    workspaceId,
+    workspaceId: project.workspaceId,
     clientId: project.clientId,
     isBillable: project.billable,
     isPublic: project.public,

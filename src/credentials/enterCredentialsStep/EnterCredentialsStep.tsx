@@ -108,7 +108,7 @@ const EnterCredentialsStepComponent: React.FC<Props> = props => {
   };
 
   const handleBackClick = (): void => {
-    props.onPush(RoutePath.TransferType);
+    props.onPush(RoutePath.TransferMapping);
   };
 
   const handleNextClick = (): void => {

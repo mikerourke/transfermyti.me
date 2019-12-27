@@ -1,12 +1,12 @@
 import { call } from "redux-saga/effects";
 import { SagaIterator } from "@redux-saga/types";
-import { fetchObject } from "~/utils";
 import {
-  paginatedClockifyFetch,
   createEntitiesForTool,
   fetchEntitiesForTool,
+  fetchObject,
+  paginatedClockifyFetch,
 } from "~/redux/sagaUtils";
-import { EntityGroup, HttpMethod, ToolName } from "~/common/commonTypes";
+import { EntityGroup, ToolName } from "~/common/commonTypes";
 import { UserGroupModel } from "~/userGroups/userGroupsTypes";
 
 interface ClockifyUserGroupResponseModel {
@@ -15,12 +15,8 @@ interface ClockifyUserGroupResponseModel {
   userIds: string[];
 }
 
-interface ClockifyUserGroupRequestModel {
-  name: string;
-}
-
 /**
- * Creates new Clockify user groups in all target workspaces and returns an array of
+ * Creates new Clockify user groups in all target workspaces and returns array of
  * transformed user groups.
  * @see https://clockify.github.io/clockify_api_docs/#operation--workspaces--workspaceId--userGroups--post
  */
@@ -30,36 +26,34 @@ export function* createClockifyUserGroupsSaga(
   return yield call(createEntitiesForTool, {
     toolName: ToolName.Clockify,
     sourceRecords: sourceUserGroups,
-    creatorFunc: createClockifyUserGroup,
+    apiCreateFunc: createClockifyUserGroup,
   });
 }
 
 /**
- * Fetches all user groups in Clockify workspaces and returns result.
+ * Fetches all user groups in Clockify workspaces and returns array of
+ * transformed user groups.
  * @see https://clockify.github.io/clockify_api_docs/#operation--workspaces--workspaceId--userGroups-get
  */
 export function* fetchClockifyUserGroupsSaga(): SagaIterator<UserGroupModel[]> {
   return yield call(fetchEntitiesForTool, {
     toolName: ToolName.Clockify,
-    fetchFunc: fetchClockifyUserGroupsInWorkspace,
+    apiFetchFunc: fetchClockifyUserGroupsInWorkspace,
   });
 }
 
 function* createClockifyUserGroup(
   sourceUserGroup: UserGroupModel,
-  workspaceId: string,
+  targetWorkspaceId: string,
 ): SagaIterator {
-  const userGroupRequest = transformToRequest(sourceUserGroup);
-  const targetUserGroup = yield call(
+  const userGroupRequest = { name: sourceUserGroup.name };
+  const clockifyUserGroup = yield call(
     fetchObject,
-    `/clockify/api/workspaces/${workspaceId}/userGroups`,
-    {
-      method: HttpMethod.Post,
-      body: userGroupRequest,
-    },
+    `/clockify/api/workspaces/${targetWorkspaceId}/userGroups`,
+    { method: "POST", body: userGroupRequest },
   );
 
-  return transformFromResponse(targetUserGroup, workspaceId);
+  return transformFromResponse(clockifyUserGroup, targetWorkspaceId);
 }
 
 function* fetchClockifyUserGroupsInWorkspace(
@@ -73,14 +67,6 @@ function* fetchClockifyUserGroupsInWorkspace(
   return clockifyUserGroups.map(clockifyUserGroup =>
     transformFromResponse(clockifyUserGroup, workspaceId),
   );
-}
-
-function transformToRequest(
-  userGroup: UserGroupModel,
-): ClockifyUserGroupRequestModel {
-  return {
-    name: userGroup.name,
-  };
 }
 
 function transformFromResponse(

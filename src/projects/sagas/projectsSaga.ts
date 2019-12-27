@@ -2,7 +2,7 @@ import { all, call, put, select, takeEvery } from "redux-saga/effects";
 import { SagaIterator } from "@redux-saga/types";
 import { linkEntitiesByIdByMapping } from "~/redux/sagaUtils";
 import { showFetchErrorNotification } from "~/app/appActions";
-import { selectTransferMapping } from "~/app/appSelectors";
+import { selectToolNameByMapping } from "~/app/appSelectors";
 import { createProjects, fetchProjects } from "~/projects/projectsActions";
 import { selectSourceProjectsForTransfer } from "~/projects/projectsSelectors";
 import {
@@ -25,14 +25,13 @@ export function* projectsSaga(): SagaIterator {
 
 function* createProjectsSaga(): SagaIterator {
   try {
-    const sourceProjects = yield select(selectSourceProjectsForTransfer);
-    const transferMapping = yield select(selectTransferMapping);
-
+    const toolNameByMapping = yield select(selectToolNameByMapping);
     const createSagaByToolName = {
       [ToolName.Clockify]: createClockifyProjectsSaga,
       [ToolName.Toggl]: createTogglProjectsSaga,
-    }[transferMapping.target];
+    }[toolNameByMapping.target];
 
+    const sourceProjects = yield select(selectSourceProjectsForTransfer);
     const targetProjects = yield call(createSagaByToolName, sourceProjects);
     const projectsByIdByMapping = linkEntitiesByIdByMapping<ProjectModel>(
       sourceProjects,
@@ -48,12 +47,11 @@ function* createProjectsSaga(): SagaIterator {
 
 function* fetchProjectsSaga(): SagaIterator {
   try {
-    const { source, target } = yield select(selectTransferMapping);
-
     const fetchSagaByToolName = {
       [ToolName.Clockify]: fetchClockifyProjectsSaga,
       [ToolName.Toggl]: fetchTogglProjectsSaga,
     };
+    const { source, target } = yield select(selectToolNameByMapping);
     const sourceProjects = yield call(fetchSagaByToolName[source]);
     const targetProjects = yield call(fetchSagaByToolName[target]);
 
@@ -61,6 +59,7 @@ function* fetchProjectsSaga(): SagaIterator {
       sourceProjects,
       targetProjects,
     );
+
     yield put(fetchProjects.success(projectsByIdByMapping));
   } catch (err) {
     yield put(showFetchErrorNotification(err));

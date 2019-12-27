@@ -1,12 +1,13 @@
-import { call } from "redux-saga/effects";
+import { call, select } from "redux-saga/effects";
 import { SagaIterator } from "@redux-saga/types";
-import { fetchObject } from "~/utils";
 import {
-  paginatedClockifyFetch,
-  fetchEntitiesForTool,
   createEntitiesForTool,
+  fetchEntitiesForTool,
+  fetchObject,
+  paginatedClockifyFetch,
 } from "~/redux/sagaUtils";
-import { EntityGroup, HttpMethod, ToolName } from "~/common/commonTypes";
+import { selectTargetProjectId } from "~/projects/projectsSelectors";
+import { EntityGroup, ToolName } from "~/common/commonTypes";
 import { TaskModel } from "~/tasks/tasksTypes";
 
 type ClockifyTaskStatus = "ACTIVE" | "DONE";
@@ -20,54 +21,55 @@ export interface ClockifyTaskResponseModel {
   status: ClockifyTaskStatus;
 }
 
-interface ClockifyTaskRequestModel {
-  name: string;
-  projectId: string;
-  assigneeIds?: string[];
-  estimate?: string;
-  status?: ClockifyTaskStatus;
-}
-
+/**
+ * Creates new Clockify tasks in all target workspaces and returns array of
+ * transformed tasks.
+ * @see https://clockify.me/developers-api#operation--v1-workspaces--workspaceId--tasks-post
+ */
 export function* createClockifyTasksSaga(
   sourceTasks: TaskModel[],
 ): SagaIterator {
   return yield call(createEntitiesForTool, {
     toolName: ToolName.Clockify,
     sourceRecords: sourceTasks,
-    creatorFunc: createClockifyTask,
+    apiCreateFunc: createClockifyTask,
   });
 }
 
 /**
- * Fetches all tasks in Clockify workspace and returns result.
+ * Fetches all tasks in Clockify workspaces and returns array of transformed
+ * tasks.
  * @see https://clockify.me/developers-api#operation--v1-workspaces--workspaceId--tasks-get
  */
 export function* fetchClockifyTasksSaga(): SagaIterator {
   return yield call(fetchEntitiesForTool, {
     toolName: ToolName.Clockify,
-    fetchFunc: fetchClockifyTasksInWorkspace,
+    apiFetchFunc: fetchClockifyTasksInWorkspace,
   });
 }
 
-/**
- * Creates a Clockify task and returns the response as { [New Task] }.
- * @see https://clockify.me/developers-api#operation--v1-workspaces--workspaceId--tasks-post
- */
 function* createClockifyTask(
   sourceTask: TaskModel,
-  workspaceId: string,
+  targetWorkspaceId: string,
 ): SagaIterator {
-  const taskRequest = transformToRequest(sourceTask);
-  const targetTask = yield call(
+  const projectId = yield select(selectTargetProjectId, sourceTask.projectId);
+  // TODO: Add assigneeIds selector.
+  const assigneeIds: string[] = [];
+  const taskRequest = {
+    name: sourceTask.name,
+    projectId,
+    assigneeIds,
+    estimate: sourceTask.estimate,
+    status: sourceTask.isActive ? "ACTIVE" : "DONE",
+  };
+
+  const clockifyTask = yield call(
     fetchObject,
-    `/clockify/api/v1/workspaces/${workspaceId}/tasks`,
-    {
-      method: HttpMethod.Post,
-      body: taskRequest,
-    },
+    `/clockify/api/v1/workspaces/${targetWorkspaceId}/tasks`,
+    { method: "POST", body: taskRequest },
   );
 
-  return transformFromResponse(targetTask, workspaceId);
+  return transformFromResponse(clockifyTask, targetWorkspaceId);
 }
 
 function* fetchClockifyTasksInWorkspace(
@@ -81,16 +83,6 @@ function* fetchClockifyTasksInWorkspace(
   return clockifyTasks.map(clockifyTask =>
     transformFromResponse(clockifyTask, workspaceId),
   );
-}
-
-function transformToRequest(task: TaskModel): ClockifyTaskRequestModel {
-  return {
-    name: task.name,
-    projectId: task.projectId,
-    assigneeIds: task.assigneeIds || undefined,
-    estimate: task.estimate,
-    status: task.isActive ? "ACTIVE" : "DONE",
-  };
 }
 
 function transformFromResponse(
