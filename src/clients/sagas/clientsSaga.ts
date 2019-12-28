@@ -14,7 +14,7 @@ import {
   fetchTogglClientsSaga,
 } from "./togglClientsSagas";
 import { ClientModel } from "~/clients/clientsTypes";
-import { ToolName } from "~/common/commonTypes";
+import { ToolName } from "~/entities/entitiesTypes";
 
 export function* clientsSaga(): SagaIterator {
   yield all([

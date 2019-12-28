@@ -1,5 +1,5 @@
 import React from "react";
-import { FlexboxGrid, Panel, Toggle } from "rsuite";
+import { Card, Toggle } from "~/components";
 import { WorkspaceModel } from "~/workspaces/workspacesTypes";
 
 interface Props {
@@ -7,22 +7,21 @@ interface Props {
   onToggleIncluded: (workspace: WorkspaceModel) => void;
 }
 
-const SourceWorkspaceCard: React.FC<Props> = props => (
-  <FlexboxGrid.Item css={{ margin: "0 1rem 1rem", flex: "0 0 16rem" }}>
-    <Panel bordered>
-      <h3 css={{ marginBottom: "1rem" }}>{props.workspace.name}</h3>
-      <div css={{ fontWeight: "bold", marginBottom: "0.375rem" }}>
-        Transfer this workspace?
-      </div>
-      <Toggle
-        size="md"
-        checkedChildren="Yes"
-        unCheckedChildren="No"
-        checked={props.workspace.isIncluded}
-        onChange={() => props.onToggleIncluded(props.workspace)}
-      />
-    </Panel>
-  </FlexboxGrid.Item>
+const SourceWorkspaceCard: React.FC<Props> = ({
+  workspace,
+  onToggleIncluded,
+  ...props
+}) => (
+  <Card title={workspace.name} {...props}>
+    <span id={`${workspace.id}-transfer`}>Transfer this workspace?</span>
+    <Toggle
+      aria-label="Include workspace in transfer"
+      aria-labelledby={`${workspace.id}-transfer`}
+      css={{ marginTop: "0.375rem" }}
+      isToggled={workspace.isIncluded}
+      onToggle={() => onToggleIncluded(workspace)}
+    />
+  </Card>
 );
 
 export default SourceWorkspaceCard;

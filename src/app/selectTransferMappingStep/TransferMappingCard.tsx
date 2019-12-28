@@ -1,5 +1,5 @@
 import React from "react";
-import { FlexboxGrid, Panel, Button } from "rsuite";
+import { Button, Card } from "~/components";
 
 interface Props {
   header: React.ReactNode;
@@ -7,14 +7,12 @@ interface Props {
 }
 
 const TransferMappingCard: React.FC<Props> = props => (
-  <FlexboxGrid.Item css={{ margin: "0 1rem 2rem", flex: "0 0 16rem" }}>
-    <Panel bordered header={props.header} css={{ width: 240 }}>
-      <p css={{ marginBottom: "2rem" }}>{props.children}</p>
-      <Button appearance="primary" onClick={props.onTransferClick}>
-        Select
-      </Button>
-    </Panel>
-  </FlexboxGrid.Item>
+  <Card title={props.header}>
+    <p css={{ marginBottom: "2rem" }}>{props.children}</p>
+    <Button color="cornflower" onClick={props.onTransferClick}>
+      Select
+    </Button>
+  </Card>
 );
 
 export default TransferMappingCard;

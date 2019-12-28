@@ -1,10 +1,10 @@
 import React from "react";
 import { connect } from "react-redux";
-import { Notification } from "rsuite";
-import styled from "@emotion/styled";
-import { capitalize } from "~/utils";
+import { ThemeProvider } from "emotion-theming";
 import { dismissNotification } from "~/app/appActions";
 import { selectNotifications } from "~/app/appSelectors";
+import { Global } from "@emotion/core";
+import { theme, styled } from "~/components/emotion";
 import Footer from "./Footer";
 import Header from "./Header";
 import { NotificationModel } from "~/app/appTypes";
@@ -30,25 +30,57 @@ type Props = ConnectStateProps & ConnectDispatchProps;
 
 export const AppRootComponent: React.FC<Props> = props => {
   React.useEffect(() => {
-    if (props.notifications.length !== 0) {
-      for (const { id, type, message } of props.notifications) {
-        Notification[type]({
-          key: id,
-          title: capitalize(type),
-          duration: 5_000,
-          description: message,
-          onClose: () => props.onDismissNotification(id),
-        });
-      }
-    }
+    // TODO: Add notification functionality back in.
   }, [props.notifications]);
 
   return (
-    <>
+    <ThemeProvider theme={theme}>
+      <Global
+        styles={{
+          "*": {
+            fontFamily: theme.fonts.body,
+            boxSizing: "inherit",
+
+            "&:before, &:after": {
+              boxSizing: "inherit",
+            },
+          },
+
+          html: {
+            boxSizing: "border-box",
+            height: "100%",
+          },
+
+          body: {
+            color: theme.colors.black,
+            backgroundColor: theme.colors.alabaster,
+            lineHeight: theme.lineHeights.body,
+            position: "relative",
+            margin: 0,
+          },
+
+          "#root": {
+            margin: "0 auto",
+            minHeight: "100vh",
+          },
+
+          a: {
+            color: theme.colors.cornflower,
+          },
+
+          h1: {
+            fontWeight: 400,
+          },
+
+          "h1,h2,h3,h4,h5,h6,p": {
+            margin: "1rem 0",
+          },
+        }}
+      />
       <Header />
-      <Main>{props.children}</Main>
+      <Main role="main">{props.children}</Main>
       <Footer />
-    </>
+    </ThemeProvider>
   );
 };
 

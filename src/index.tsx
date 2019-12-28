@@ -1,6 +1,4 @@
 import "whatwg-fetch";
-import "rsuite/dist/styles/rsuite-default.min.css";
-import "./styles.css";
 import React from "react";
 import { render } from "react-dom";
 import { Provider } from "react-redux";

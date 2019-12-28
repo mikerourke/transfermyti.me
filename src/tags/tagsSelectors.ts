@@ -14,12 +14,16 @@ export const selectSourceTags = createSelector(
   (sourceTagsById): TagModel[] => Object.values(sourceTagsById),
 );
 
-export const selectSourceTagsForTransfer = createSelector(
+export const selectIncludedSourceTags = createSelector(
   selectSourceTags,
   (sourceTags): TagModel[] =>
-    sourceTags.filter(sourceTag =>
-      R.and(sourceTag.isIncluded, R.isNil(sourceTag.linkedId)),
-    ),
+    sourceTags.filter(sourceTag => sourceTag.isIncluded),
+);
+
+export const selectSourceTagsForTransfer = createSelector(
+  selectIncludedSourceTags,
+  (sourceTags): TagModel[] =>
+    sourceTags.filter(sourceTag => R.isNil(sourceTag.linkedId)),
 );
 
 export const selectSourceTagsInActiveWorkspace = createSelector(

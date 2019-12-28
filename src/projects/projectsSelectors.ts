@@ -6,18 +6,29 @@ import { ProjectModel, ProjectsByIdModel } from "~/projects/projectsTypes";
 
 export const selectSourceProjectsById = createSelector(
   (state: ReduxState) => state.projects.source,
-  (projectsById): ProjectsByIdModel => projectsById,
+  (sourceProjectsById): ProjectsByIdModel => sourceProjectsById,
 );
 
 export const selectSourceProjects = createSelector(
   selectSourceProjectsById,
-  (projectsById): ProjectModel[] => Object.values(projectsById),
+  (sourceProjectsById): ProjectModel[] => Object.values(sourceProjectsById),
+);
+
+export const selectTargetProjects = createSelector(
+  (state: ReduxState) => state.projects.target,
+  (targetProjectsById): ProjectModel[] => Object.values(targetProjectsById),
+);
+
+export const selectIncludedSourceProjects = createSelector(
+  selectSourceProjects,
+  (sourceProjects): ProjectModel[] =>
+    sourceProjects.filter(sourceProject => sourceProject.isIncluded),
 );
 
 export const selectSourceProjectsForTransfer = createSelector(
-  selectSourceProjects,
+  selectIncludedSourceProjects,
   (sourceProjects): ProjectModel[] =>
-    sourceProjects.filter(project => project.isIncluded),
+    sourceProjects.filter(sourceProject => R.isNil(sourceProject.linkedId)),
 );
 
 export const selectSourceProjectsInActiveWorkspace = createSelector(

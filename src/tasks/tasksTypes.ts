@@ -1,4 +1,4 @@
-import { BaseEntityModel } from "~/common/commonTypes";
+import { BaseEntityModel } from "~/entities/entitiesTypes";
 
 export interface TaskModel extends BaseEntityModel {
   id: string;

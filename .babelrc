@@ -6,8 +6,7 @@
           "node": "current"
         }
       }],
-    "@babel/preset-typescript",
-    "rsuite"
+    "@babel/preset-typescript"
   ],
   "plugins": [
     [

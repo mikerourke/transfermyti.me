@@ -1,5 +1,5 @@
 import { createAsyncAction, createAction } from "typesafe-actions";
-import { Mapping } from "~/common/commonTypes";
+import { Mapping } from "~/entities/entitiesTypes";
 import {
   UpdateIncludedWorkspaceYearModel,
   WorkspacesByIdModel,
@@ -33,10 +33,6 @@ export const flipIsWorkspaceIncluded = createAction(
 export const updateIsWorkspaceYearIncluded = createAction(
   "@workspaces/UPDATE_IS_WORKSPACE_YEAR_INCLUDED",
 )<UpdateIncludedWorkspaceYearModel>();
-
-export const updateWorkspaceIdBeingFetched = createAction(
-  "@workspaces/UPDATE_WORKSPACE_NAME_BEING_FETCHED",
-)<string | null>();
 
 export const resetContentsForMapping = createAction(
   "@workspaces/RESET_CONTENTS_FOR_MAPPING",

@@ -7,7 +7,7 @@ import {
   paginatedClockifyFetch,
 } from "~/redux/sagaUtils";
 import { incrementCurrentTransferCount } from "~/app/appActions";
-import { EntityGroup, ToolName } from "~/common/commonTypes";
+import { EntityGroup, ToolName } from "~/entities/entitiesTypes";
 import { UserModel } from "~/users/usersTypes";
 
 export interface ClockifyHourlyRateResponseModel {

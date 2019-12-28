@@ -1,6 +1,6 @@
 import { createSelector } from "reselect";
 import * as R from "ramda";
-import { Mapping } from "~/common/commonTypes";
+import { Mapping } from "~/entities/entitiesTypes";
 import { ReduxState } from "~/redux/reduxTypes";
 import {
   WorkspaceModel,
@@ -13,11 +13,6 @@ export const selectIfWorkspacesFetching = (state: ReduxState): boolean =>
 export const selectActiveWorkspaceId = (state: ReduxState): string =>
   state.workspaces.activeWorkspaceId;
 
-export const selectWorkspaceIdMapping = createSelector(
-  (state: ReduxState) => state.workspaces.workspaceIdMapping,
-  workspaceIdMapping => workspaceIdMapping,
-);
-
 export const selectSourceWorkspacesById = createSelector(
   (state: ReduxState): WorkspacesByIdModel => state.workspaces.source,
   workspacesById => workspacesById,
@@ -28,19 +23,19 @@ export const selectTargetWorkspacesById = createSelector(
   workspacesById => workspacesById,
 );
 
-export const selectWorkspaceNameBeingFetched = createSelector(
+export const selectWorkspaceIdMapping = createSelector(
   selectSourceWorkspacesById,
-  (state: ReduxState) => state.workspaces.workspaceIdBeingFetched,
-  (sourceWorkspacesById, workspaceIdBeingFetched): string => {
-    if (R.isNil(workspaceIdBeingFetched)) {
-      return "Unknown";
+  sourceWorkspacesById => {
+    const workspaceIdMapping: Record<string, string> = {};
+
+    for (const [id, workspace] of Object.entries(sourceWorkspacesById)) {
+      if (!R.isNil(workspace.linkedId)) {
+        workspaceIdMapping[id] = workspace.linkedId;
+        workspaceIdMapping[workspace.linkedId] = workspace.id;
+      }
     }
 
-    return R.pathOr(
-      "Unknown",
-      [workspaceIdBeingFetched, "name"],
-      sourceWorkspacesById,
-    );
+    return workspaceIdMapping;
   },
 );
 

@@ -14,12 +14,15 @@ export const selectSourceTasks = createSelector(
   (sourceTasksById): TaskModel[] => Object.values(sourceTasksById),
 );
 
-export const selectSourceTasksForTransfer = createSelector(
+export const selectIncludedSourceTasks = createSelector(
   selectSourceTasks,
-  sourceTasks =>
-    sourceTasks.filter(sourceTask =>
-      R.and(sourceTask.isIncluded, R.isNil(sourceTask.linkedId)),
-    ),
+  (sourceTasks): TaskModel[] =>
+    sourceTasks.filter(sourceTask => sourceTask.isIncluded),
+);
+
+export const selectSourceTasksForTransfer = createSelector(
+  selectIncludedSourceTasks,
+  sourceTasks => sourceTasks.filter(sourceTask => R.isNil(sourceTask.linkedId)),
 );
 
 export const selectSourceTasksInActiveWorkspace = createSelector(

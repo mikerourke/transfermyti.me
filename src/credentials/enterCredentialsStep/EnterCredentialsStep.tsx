@@ -1,11 +1,12 @@
+import { push } from "connected-react-router";
+import { Path } from "history";
+import * as R from "ramda";
 import React from "react";
 import { connect } from "react-redux";
-import { push } from "connected-react-router";
-import * as R from "ramda";
-import { ControlLabel, Form, FormControl, FormGroup } from "rsuite";
 import { PayloadActionCreator } from "typesafe-actions";
-import { Path } from "history";
 import { selectToolHelpDetailsByMapping } from "~/app/appSelectors";
+import { styled, HelpDetails, NavigationButtonsRow } from "~/components";
+import { useDeepCompareEffect } from "~/components/hooks";
 import {
   resetIsValidating,
   storeCredentials,
@@ -17,13 +18,21 @@ import {
   selectIsValidating,
   selectValidationErrorsByTool,
 } from "~/credentials/credentialsSelectors";
-import { HelpMessage, NavigationButtonsRow } from "~/components";
-import { useDeepCompareEffect } from "~/components/hooks";
-import ToolHelpBlock from "./ToolHelpBlock";
+import ApiKeyInputField from "./ApiKeyInputField";
 import { RoutePath, ToolHelpDetailsModel } from "~/app/appTypes";
-import { Mapping } from "~/common/commonTypes";
 import { CredentialsModel } from "~/credentials/credentialsTypes";
+import { Mapping } from "~/entities/entitiesTypes";
 import { ReduxState } from "~/redux/reduxTypes";
+
+const Form = styled.form({
+  margin: "0 1rem",
+
+  input: {
+    fontFamily: "monospace",
+    fontSize: "1.25rem",
+    marginBottom: "1rem",
+  },
+});
 
 interface ConnectStateProps {
   credentials: CredentialsModel;
@@ -97,8 +106,11 @@ const EnterCredentialsStepComponent: React.FC<Props> = props => {
     props.onValidateCredentials();
   };
 
-  const handleFormChange = (value: Record<string, string>): void => {
-    setInputValues({ ...inputValues, ...value });
+  const handleInputChange = (
+    event: React.ChangeEvent<HTMLInputElement>,
+  ): void => {
+    const toolName = event.target.name as keyof InputFields;
+    setInputValues({ ...inputValues, [toolName]: event.target.value });
   };
 
   const handleInputBlur = (event: React.FocusEvent<HTMLInputElement>): void => {
@@ -115,40 +127,41 @@ const EnterCredentialsStepComponent: React.FC<Props> = props => {
     validateForm();
   };
 
+  const { source, target } = props.toolHelpDetailsByMapping;
+
   return (
-    <div>
-      <HelpMessage title="Tool Credentials">
+    <section>
+      <h1>Step 2: Enter Credentials</h1>
+      <HelpDetails>
         Enter your Clockify and Toggl API keys. Press the
         <strong> Next</strong> button to validate your keys and move on to the
         Workspace selection step.
-      </HelpMessage>
-      <Form
-        fluid
-        css={{ margin: "1rem 1rem 0", input: { fontFamily: "monospace" } }}
-        onChange={handleFormChange}
-        formValue={inputValues}
-      >
-        {Object.entries(props.toolHelpDetailsByMapping).map(
-          ([mapping, { toolName, displayName, toolLink }]) => (
-            <FormGroup key={mapping}>
-              <ControlLabel>{displayName} API Key</ControlLabel>
-              <FormControl
-                name={toolName}
-                onBlur={handleInputBlur}
-                onFocus={clearError}
-                errorMessage={inputErrors[toolName]}
-              />
-              <ToolHelpBlock displayName={displayName} toolLink={toolLink} />
-            </FormGroup>
-          ),
-        )}
+      </HelpDetails>
+      <Form autoComplete="hidden">
+        <ApiKeyInputField
+          mapping="source"
+          toolHelpDetails={source}
+          onBlur={handleInputBlur}
+          onChange={handleInputChange}
+          onFocus={clearError}
+          value={inputValues[source.toolName] as string}
+          errorMessage={inputErrors[source.toolName]}
+        />
+        <ApiKeyInputField
+          mapping="target"
+          toolHelpDetails={target}
+          onBlur={handleInputBlur}
+          onChange={handleInputChange}
+          onFocus={clearError}
+          value={inputValues[target.toolName] as string}
+          errorMessage={inputErrors[target.toolName]}
+        />
       </Form>
       <NavigationButtonsRow
         onBackClick={handleBackClick}
         onNextClick={handleNextClick}
-        isLoading={props.isValidating}
       />
-    </div>
+    </section>
   );
 };
 

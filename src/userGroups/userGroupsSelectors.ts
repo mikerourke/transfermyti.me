@@ -10,11 +10,17 @@ export const selectSourceUserGroups = createSelector(
     Object.values(userGroupsById).filter(({ name }) => !/Admin/gi.test(name)),
 );
 
+export const selectIncludedSourceUserGroups = createSelector(
+  selectSourceUserGroups,
+  (sourceUserGroups): UserGroupModel[] =>
+    sourceUserGroups.filter(sourceUserGroup => sourceUserGroup.isIncluded),
+);
+
 export const selectSourceUserGroupsForTransfer = createSelector(
   selectSourceUserGroups,
   (sourceUserGroups): UserGroupModel[] =>
     sourceUserGroups.filter(sourceUserGroup =>
-      R.and(sourceUserGroup.isIncluded, R.isNil(sourceUserGroup.linkedId)),
+      R.isNil(sourceUserGroup.linkedId),
     ),
 );
 

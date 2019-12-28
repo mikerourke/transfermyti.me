@@ -6,7 +6,7 @@ import {
   fetchEntitiesForTool,
   fetchObject,
 } from "~/redux/sagaUtils";
-import { EntityGroup, ToolName } from "~/common/commonTypes";
+import { EntityGroup, ToolName } from "~/entities/entitiesTypes";
 import { TagModel } from "~/tags/tagsTypes";
 
 interface TogglTagResponseModel {

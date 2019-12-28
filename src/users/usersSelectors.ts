@@ -9,15 +9,19 @@ import { UserModel } from "./usersTypes";
 
 export const selectSourceUsers = createSelector(
   (state: ReduxState) => state.users.source,
-  (usersById): UserModel[] => Object.values(usersById),
+  (sourceUsersById): UserModel[] => Object.values(sourceUsersById),
+);
+
+export const selectIncludedSourceUsers = createSelector(
+  selectSourceUsers,
+  (sourceUsers): UserModel[] =>
+    sourceUsers.filter(sourceUser => sourceUser.isIncluded),
 );
 
 export const selectSourceUsersForTransfer = createSelector(
-  selectSourceUsers,
+  selectIncludedSourceUsers,
   (sourceUsers): UserModel[] =>
-    sourceUsers.filter(sourceUser =>
-      R.and(sourceUser.isIncluded, R.isNil(sourceUser.linkedId)),
-    ),
+    sourceUsers.filter(sourceUser => R.isNil(sourceUser.linkedId)),
 );
 
 export const selectSourceUserEmailsByWorkspaceId = createSelector(

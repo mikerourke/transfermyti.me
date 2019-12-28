@@ -13,8 +13,8 @@ import {
   createTogglProjectsSaga,
   fetchTogglProjectsSaga,
 } from "./togglProjectsSagas";
+import { ToolName } from "~/entities/entitiesTypes";
 import { ProjectModel } from "~/projects/projectsTypes";
-import { ToolName } from "~/common/commonTypes";
 
 export function* projectsSaga(): SagaIterator {
   yield all([

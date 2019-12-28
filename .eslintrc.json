@@ -94,7 +94,7 @@
   },
   "overrides": [
     {
-      "files": ["scripts/*"],
+      "files": ["scripts/*", "server/**/*.js"],
       "rules": {
         "no-console": "off",
         "@typescript-eslint/explicit-function-return-type": "off"

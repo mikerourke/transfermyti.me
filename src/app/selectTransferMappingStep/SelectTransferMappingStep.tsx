@@ -2,12 +2,11 @@ import React from "react";
 import { push } from "connected-react-router";
 import { Path } from "history";
 import { connect } from "react-redux";
-import { FlexboxGrid } from "rsuite";
 import { updateToolNameByMapping } from "~/app/appActions";
-import { HelpMessage } from "~/components";
+import { Flex, HelpDetails } from "~/components";
 import TransferMappingCard from "./TransferMappingCard";
 import { RoutePath, ToolNameByMappingModel } from "~/app/appTypes";
-import { ToolName} from "~/common/commonTypes";
+import { ToolName } from "~/entities/entitiesTypes";
 
 interface ConnectDispatchProps {
   onPush: (path: Path) => void;
@@ -36,12 +35,13 @@ export const SelectTransferMappingStepComponent: React.FC<Props> = props => {
   };
 
   return (
-    <div>
-      <HelpMessage title="Transfer Type">
+    <section>
+      <h1>Step 1: Select Transfer Mapping</h1>
+      <HelpDetails>
         Press the <strong>Select</strong> button for the transfer type you wish
         to perform.
-      </HelpMessage>
-      <FlexboxGrid css={{ marginTop: "1rem" }}>
+      </HelpDetails>
+      <Flex as="ul" css={{ listStyle: "none", padding: 0 }}>
         <TransferMappingCard
           header="From Toggl to Clockify"
           onTransferClick={handleTogglToClockifyClick}
@@ -54,8 +54,8 @@ export const SelectTransferMappingStepComponent: React.FC<Props> = props => {
         >
           Transfer your entries from Clockify.me to Toggl.
         </TransferMappingCard>
-      </FlexboxGrid>
-    </div>
+      </Flex>
+    </section>
   );
 };
 

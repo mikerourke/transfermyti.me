@@ -14,7 +14,7 @@ import { ClockifyProjectResponseModel } from "~/projects/sagas/clockifyProjectsS
 import { ClockifyTagResponseModel } from "~/tags/sagas/clockifyTagsSagas";
 import { ClockifyTaskResponseModel } from "~/tasks/sagas/clockifyTasksSagas";
 import { ClockifyUserResponseModel } from "~/users/sagas/clockifyUsersSagas";
-import { EntityGroup, ToolName } from "~/common/commonTypes";
+import { EntityGroup, ToolName } from "~/entities/entitiesTypes";
 import { TimeEntryModel } from "~/timeEntries/timeEntriesTypes";
 
 interface ClockifyTimeIntervalModel {

@@ -10,7 +10,7 @@ import {
   fetchClockifyTagsSaga,
 } from "./clockifyTagsSagas";
 import { createTogglTagsSaga, fetchTogglTagsSaga } from "./togglTagsSagas";
-import { ToolName } from "~/common/commonTypes";
+import { ToolName } from "~/entities/entitiesTypes";
 import { TagModel } from "~/tags/tagsTypes";
 
 export function* tagsSaga(): SagaIterator {

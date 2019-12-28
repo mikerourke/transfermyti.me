@@ -1,9 +1,8 @@
 import React from "react";
-import { Unless } from "react-if";
 import * as R from "ramda";
 import { keyframes } from "@emotion/core";
-import styled from "@emotion/styled";
-import Flex from "~/components/Flex";
+import { styled } from "./emotion";
+import Flex from "./Flex";
 
 const cubeFoldingAnimation = keyframes`
     0%, 10% {
@@ -45,14 +44,14 @@ const Cube = styled.div<{ rotation: number; delay: number }>(
       width: "100%",
       height: "100%",
       animation: `${cubeFoldingAnimation} 2.4s infinite linear both`,
-      backgroundColor: "gray",
       transformOrigin: "100% 100%",
     },
   },
-  ({ rotation, delay }) => ({
+  ({ rotation, delay, theme }) => ({
     transform: `scale(1.1) rotateZ(${rotation}deg)`,
 
     "&:before": {
+      backgroundColor: theme.colors.navy,
       animationDelay: `${delay}s`,
     },
   }),
@@ -74,6 +73,7 @@ interface Props {
 
 const Loader: React.FC<Props> = ({ size = "small", children, ...props }) => (
   <Flex
+    css={{ margin: "3rem 1rem" }}
     alignItems="center"
     justifyContent="center"
     direction="column"
@@ -85,11 +85,9 @@ const Loader: React.FC<Props> = ({ size = "small", children, ...props }) => (
       <Cube rotation={270} delay={0.9} />
       <Cube rotation={180} delay={0.6} />
     </CubesContainer>
-    <Unless condition={R.isNil(children)}>
-      <LoadingMessage data-testid="loader-message" size={size}>
-        {children}
-      </LoadingMessage>
-    </Unless>
+    {!R.isNil(children) && (
+      <LoadingMessage size={size}>{children}</LoadingMessage>
+    )}
   </Flex>
 );
 

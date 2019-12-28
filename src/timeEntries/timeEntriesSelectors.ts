@@ -9,11 +9,17 @@ export const selectSourceTimeEntries = createSelector(
   (timeEntriesById): TimeEntryModel[] => Object.values(timeEntriesById),
 );
 
-export const selectSourceTimeEntriesForTransfer = createSelector(
+export const selectIncludedSourceTimeEntries = createSelector(
   selectSourceTimeEntries,
+  (sourceTimeEntries): TimeEntryModel[] =>
+    sourceTimeEntries.filter(sourceTimeEntry => sourceTimeEntry.isIncluded),
+);
+
+export const selectSourceTimeEntriesForTransfer = createSelector(
+  selectIncludedSourceTimeEntries,
   sourceTimeEntries =>
     sourceTimeEntries.filter(sourceTimeEntry =>
-      R.and(sourceTimeEntry.isIncluded, R.isNil(sourceTimeEntry.linkedId)),
+      R.isNil(sourceTimeEntry.linkedId),
     ),
 );
 

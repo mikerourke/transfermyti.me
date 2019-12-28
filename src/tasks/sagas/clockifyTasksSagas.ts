@@ -6,8 +6,8 @@ import {
   fetchObject,
   paginatedClockifyFetch,
 } from "~/redux/sagaUtils";
+import { EntityGroup, ToolName } from "~/entities/entitiesTypes";
 import { selectTargetProjectId } from "~/projects/projectsSelectors";
-import { EntityGroup, ToolName } from "~/common/commonTypes";
 import { TaskModel } from "~/tasks/tasksTypes";
 
 type ClockifyTaskStatus = "ACTIVE" | "DONE";
@@ -52,12 +52,16 @@ function* createClockifyTask(
   sourceTask: TaskModel,
   targetWorkspaceId: string,
 ): SagaIterator {
-  const projectId = yield select(selectTargetProjectId, sourceTask.projectId);
+  // TODO: Add loop for tasks by project ID!
+  const targetProjectId = yield select(
+    selectTargetProjectId,
+    sourceTask.projectId,
+  );
   // TODO: Add assigneeIds selector.
   const assigneeIds: string[] = [];
   const taskRequest = {
     name: sourceTask.name,
-    projectId,
+    projectId: targetProjectId,
     assigneeIds,
     estimate: sourceTask.estimate,
     status: sourceTask.isActive ? "ACTIVE" : "DONE",
@@ -65,7 +69,7 @@ function* createClockifyTask(
 
   const clockifyTask = yield call(
     fetchObject,
-    `/clockify/api/v1/workspaces/${targetWorkspaceId}/tasks`,
+    `/clockify/api/v1/workspaces/${targetWorkspaceId}/projects/${targetProjectId}/tasks`,
     { method: "POST", body: taskRequest },
   );
 
@@ -75,9 +79,11 @@ function* createClockifyTask(
 function* fetchClockifyTasksInWorkspace(
   workspaceId: string,
 ): SagaIterator<TaskModel[]> {
+  // TODO: Add loop with project IDs in workspace.
+  const projectId = "";
   const clockifyTasks: ClockifyTaskResponseModel[] = yield call(
     paginatedClockifyFetch,
-    `/clockify/api/v1/workspaces/${workspaceId}/tasks`,
+    `/clockify/api/v1/workspaces/${workspaceId}/projects/${projectId}/tasks`,
   );
 
   return clockifyTasks.map(clockifyTask =>

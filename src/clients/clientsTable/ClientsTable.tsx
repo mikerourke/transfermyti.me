@@ -1,14 +1,13 @@
 import React from "react";
 import { connect } from "react-redux";
 import { PayloadActionCreator } from "typesafe-actions";
-import styled from "@emotion/styled";
-import { fetchClients, flipIsClientIncluded } from "~/clients/clientsActions";
+import { flipIsClientIncluded } from "~/clients/clientsActions";
 import { selectSourceClientsInActiveWorkspace } from "~/clients/clientsSelectors";
+import { styled } from "~/components";
 import { ClientModel } from "~/clients/clientsTypes";
 import { ReduxState } from "~/redux/reduxTypes";
 
 const Table = styled.table({
-  marginTop: -10,
   width: "100%",
 
   td: {
@@ -34,19 +33,12 @@ interface ConnectStateProps {
 }
 
 interface ConnectDispatchProps {
-  onFetchClients: PayloadActionCreator<string, void>;
   onFlipIsIncluded: PayloadActionCreator<string, string>;
 }
 
 type Props = ConnectStateProps & ConnectDispatchProps;
 
 export const ClientsTableComponent: React.FC<Props> = props => {
-  React.useEffect(() => {
-    if (props.clients.length === 0) {
-      props.onFetchClients();
-    }
-  }, []);
-
   return (
     <Table>
       <thead>
@@ -78,7 +70,6 @@ const mapStateToProps = (state: ReduxState): ConnectStateProps => ({
 });
 
 const mapDispatchToProps: ConnectDispatchProps = {
-  onFetchClients: fetchClients.request,
   onFlipIsIncluded: flipIsClientIncluded,
 };
 

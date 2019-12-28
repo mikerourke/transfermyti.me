@@ -16,7 +16,7 @@ import {
   createTogglUserGroupsSaga,
   fetchTogglUserGroupsSaga,
 } from "./togglUserGroupsSagas";
-import { ToolName } from "~/common/commonTypes";
+import { ToolName } from "~/entities/entitiesTypes";
 import { UserGroupModel } from "~/userGroups/userGroupsTypes";
 
 export function* userGroupsSaga(): SagaIterator {

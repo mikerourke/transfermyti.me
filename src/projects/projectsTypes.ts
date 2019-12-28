@@ -1,9 +1,9 @@
-import { BaseEntityModel } from "~/common/commonTypes";
+import { BaseEntityModel } from "~/entities/entitiesTypes";
 
 export interface ProjectModel extends BaseEntityModel {
   id: string;
   name: string;
-  clientId: string;
+  clientId: string | null;
   isBillable: boolean;
   isPublic: boolean;
   isActive: boolean;

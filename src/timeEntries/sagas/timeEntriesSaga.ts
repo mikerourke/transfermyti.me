@@ -17,7 +17,7 @@ import {
   createTogglTimeEntriesSaga,
   fetchTogglTimeEntriesSaga,
 } from "./togglTimeEntriesSagas";
-import { ToolName, Mapping } from "~/common/commonTypes";
+import { ToolName, Mapping } from "~/entities/entitiesTypes";
 import {
   TimeEntryModel,
   TimeEntriesByIdModel,

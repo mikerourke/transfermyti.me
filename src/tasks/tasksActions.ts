@@ -1,18 +1,18 @@
 import { createAsyncAction, createAction } from "typesafe-actions";
-import { Mapping } from "~/common/commonTypes";
+import { Mapping } from "~/entities/entitiesTypes";
 import { TasksByIdModel } from "~/tasks/tasksTypes";
 
 export const createTasks = createAsyncAction(
   "@tasks/CREATE_TASKS_REQUEST",
   "@tasks/CREATE_TASKS_SUCCESS",
   "@tasks/CREATE_TASKS_FAILURE",
-)<string, Record<Mapping, TasksByIdModel>, void>();
+)<void, Record<Mapping, TasksByIdModel>, void>();
 
 export const fetchTasks = createAsyncAction(
   "@tasks/FETCH_TASKS_REQUEST",
   "@tasks/FETCH_TASKS_SUCCESS",
   "@tasks/FETCH_TASKS_FAILURE",
-)<string, Record<Mapping, TasksByIdModel>, void>();
+)<void, Record<Mapping, TasksByIdModel>, void>();
 
 export const flipIsTaskIncluded = createAction("@tasks/FLIP_IS_INCLUDED")<
   string

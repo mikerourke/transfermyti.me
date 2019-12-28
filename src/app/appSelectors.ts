@@ -1,11 +1,7 @@
 import * as R from "ramda";
 import { createSelector } from "reselect";
 import { capitalize } from "~/utils";
-import {
-  Mapping,
-  ToolName,
-
-} from "~/common/commonTypes";
+import { Mapping, ToolName } from "~/entities/entitiesTypes";
 import { ReduxState } from "~/redux/reduxTypes";
 import {
   NotificationModel,

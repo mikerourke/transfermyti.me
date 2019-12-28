@@ -31,7 +31,7 @@ export interface FlexProps {
   justifyContent?: CommonPositionalOption | SpacePositionalOption;
   justifySelf?: CommonPositionalOption | SelfPositionalOption;
   direction?: "column" | "column-reverse" | "row" | "row-reverse";
-  flex?: number;
+  flex?: string | number;
   grow?: number;
   shrink?: number;
   wrap?: GlobalOption | "nowrap" | "wrap" | "wrap-reverse";

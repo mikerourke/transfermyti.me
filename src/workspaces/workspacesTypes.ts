@@ -1,4 +1,4 @@
-import { BaseEntityModel, Mapping } from "~/common/commonTypes";
+import { BaseEntityModel, Mapping } from "~/entities/entitiesTypes";
 
 export interface WorkspaceModel extends BaseEntityModel {
   id: string;

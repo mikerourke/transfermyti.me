@@ -10,7 +10,7 @@ import {
   fetchObject,
 } from "~/redux/sagaUtils";
 import { selectTargetClientId } from "~/clients/clientsSelectors";
-import { EntityGroup, ToolName } from "~/common/commonTypes";
+import { EntityGroup, ToolName } from "~/entities/entitiesTypes";
 import { ProjectModel } from "~/projects/projectsTypes";
 
 interface TogglProjectResponseModel {
@@ -134,7 +134,7 @@ function transformFromResponse(
     id: project.id.toString(),
     name: project.name,
     workspaceId: project.wid.toString(),
-    clientId: project.cid.toString(),
+    clientId: project.cid ? project.cid.toString() : null,
     isBillable: project.billable,
     isPublic: !project.is_private,
     isActive: project.active,

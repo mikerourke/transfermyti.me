@@ -1,8 +1,8 @@
 import { createSelector } from "reselect";
 import * as R from "ramda";
 import { selectMappingByToolName } from "~/app/appSelectors";
-import { ToolName, Mapping } from "~/common/commonTypes";
 import { selectActiveWorkspaceId } from "~/workspaces/workspacesSelectors";
+import { ToolName, Mapping } from "~/entities/entitiesTypes";
 import { ReduxState } from "~/redux/reduxTypes";
 import { ClientModel, ClientsByIdModel } from "./clientsTypes";
 
@@ -21,6 +21,12 @@ export const selectSourceClients = createSelector(
   (sourceClients): ClientModel[] => Object.values(sourceClients),
 );
 
+export const selectIncludedSourceClients = createSelector(
+  selectSourceClients,
+  (sourceClients): ClientModel[] =>
+    sourceClients.filter(sourceClient => sourceClient.isIncluded),
+);
+
 export const selectTargetClients = createSelector(
   selectTargetClientsById,
   (targetClientsById): ClientModel[] => Object.values(targetClientsById),
@@ -36,11 +42,9 @@ export const selectClientsByMapping = createSelector(
 );
 
 export const selectSourceClientsForTransfer = createSelector(
-  selectSourceClients,
+  selectIncludedSourceClients,
   (sourceClients): ClientModel[] =>
-    sourceClients.filter(sourceClient =>
-      R.and(sourceClient.isIncluded, R.isNil(sourceClient.linkedId)),
-    ),
+    sourceClients.filter(sourceClient => R.isNil(sourceClient.linkedId)),
 );
 
 export const selectSourceClientsInActiveWorkspace = createSelector(
@@ -54,9 +58,13 @@ export const selectSourceClientsInActiveWorkspace = createSelector(
 
 export const selectTargetClientId = createSelector(
   selectSourceClientsById,
-  (_: ReduxState, sourceClientId: string) => sourceClientId,
-  (sourceClientsById, sourceClientId): string | null =>
-    R.pathOr(null, [sourceClientId, "linkedId"], sourceClientsById),
+  (_: ReduxState, sourceClientId: string | null) => sourceClientId,
+  (sourceClientsById, sourceClientId): string | null => {
+    if (R.isNil(sourceClientId)) {
+      return null;
+    }
+    return R.pathOr(null, [sourceClientId, "linkedId"], sourceClientsById);
+  },
 );
 
 export const selectClientIdsByNameForTool = createSelector(

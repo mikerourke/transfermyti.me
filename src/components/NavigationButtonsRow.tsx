@@ -1,44 +1,44 @@
 import React from "react";
-import { Unless } from "react-if";
 import * as R from "ramda";
-import { Button } from "rsuite";
-import styled from "@emotion/styled";
+import Button from "./Button";
+import { styled } from "./emotion";
 
 const Root = styled.div({
-  marginTop: "2rem",
+  marginTop: "1rem",
 
   button: {
     width: "5rem",
-    ":not(:last-of-type)": { marginRight: "0.75rem" },
+
+    ":not(:last-of-type)": {
+      marginRight: "0.75rem",
+    },
   },
 });
 
 interface Props {
-  isLoading?: boolean;
   onBackClick: VoidFunction;
   onNextClick: VoidFunction;
   onRefreshClick?: VoidFunction;
 }
 
 const NavigationButtonsRow: React.FC<Props> = ({
-  isLoading = false,
   onBackClick,
   onNextClick,
-  onRefreshClick = () => null,
+  onRefreshClick,
   ...props
 }) => (
   <Root {...props}>
-    <Button appearance="default" onClick={onBackClick}>
+    <Button color="manatee" onClick={onBackClick}>
       Back
     </Button>
-    <Button appearance="primary" onClick={onNextClick} loading={isLoading}>
+    <Button color="cornflower" onClick={onNextClick}>
       Next
     </Button>
-    <Unless condition={R.isNil(onRefreshClick)}>
-      <Button color="violet" onClick={onRefreshClick}>
+    {!R.isNil(onRefreshClick) && (
+      <Button color="eggplant" onClick={onRefreshClick}>
         Refresh
       </Button>
-    </Unless>
+    )}
   </Root>
 );
 

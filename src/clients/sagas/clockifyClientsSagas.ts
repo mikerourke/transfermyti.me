@@ -7,7 +7,7 @@ import {
   paginatedClockifyFetch,
 } from "~/redux/sagaUtils";
 import { ClientModel } from "~/clients/clientsTypes";
-import { EntityGroup, ToolName } from "~/common/commonTypes";
+import { EntityGroup, ToolName } from "~/entities/entitiesTypes";
 
 interface ClockifyClientResponseModel {
   id: string;

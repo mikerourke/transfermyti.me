@@ -6,7 +6,7 @@ import AppRoot from "~/app/appRoot/AppRoot";
 import SelectTransferMappingStep from "~/app/selectTransferMappingStep/SelectTransferMappingStep";
 import EnterCredentialsStep from "~/credentials/enterCredentialsStep/EnterCredentialsStep";
 import SelectSourceWorkspacesStep from "~/workspaces/selectSourceWorkspacesStep/SelectSourceWorkspacesStep";
-import SelectSourceInclusions from "~/common/selectSourceInclusions/SelectSourceInclusions";
+import SelectSourceInclusions from "~/entities/selectSourceInclusions/SelectSourceInclusions";
 import { RoutePath } from "~/app/appTypes";
 
 interface Props {
