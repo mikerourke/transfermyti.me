@@ -4,9 +4,8 @@ const fetch = require("node-fetch");
 const { cyan, green, magenta, yellow } = require("chalk");
 const fs = require("fs-extra");
 const _ = require("lodash");
-const jsonFile = require("jsonfile");
-const yargs = require("yargs");
 const PromiseThrottle = require("promise-throttle");
+const yargs = require("yargs");
 const httpEnv = require("../http-client.private.env.json");
 
 /**
@@ -91,7 +90,7 @@ async function writeEntitiesToOutputFile() {
     await addEntityGroupToWorkspaceData(id, name, "time-entries");
   }
 
-  await jsonFile.writeFile(outputPath, dataByWorkspaceName, { spaces: 2 });
+  await fs.writeJSON(outputPath, dataByWorkspaceName, { spaces: 2 });
   console.log(green("Clockify entities written to file!"));
 }
 
