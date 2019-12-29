@@ -9,10 +9,10 @@ import {
   TOGGL_API_DELAY,
 } from "~/constants";
 import { incrementCurrentTransferCount } from "~/app/appActions";
-import { selectMappingForTool } from "~/app/appSelectors";
+import { mappingForToolSelector } from "~/app/appSelectors";
 import {
-  selectInlcudedWorkspaceIdsByMapping,
-  selectTargetWorkspaceId,
+  includedWorkspaceIdsByMappingSelector,
+  targetWorkspaceIdSelector,
 } from "~/workspaces/workspacesSelectors";
 import { BaseEntityModel, Mapping, ToolName } from "~/entities/entitiesTypes";
 
@@ -31,7 +31,7 @@ export function* createEntitiesForTool<TEntity>({
 
   for (const sourceRecord of sourceRecords as ValidEntity[]) {
     const targetWorkspaceId = yield select(
-      selectTargetWorkspaceId,
+      targetWorkspaceIdSelector,
       sourceRecord.workspaceId,
     );
     if (R.isNil(targetWorkspaceId)) {
@@ -63,9 +63,9 @@ export function* fetchEntitiesForTool<TEntity>({
   apiFetchFunc: (workspaceId: string) => SagaIterator<TEntity[]>;
 }): SagaIterator<TEntity[]> {
   const workspaceIdsByMapping = yield select(
-    selectInlcudedWorkspaceIdsByMapping,
+    includedWorkspaceIdsByMappingSelector,
   );
-  const toolMapping = yield select(selectMappingForTool, toolName);
+  const toolMapping = yield select(mappingForToolSelector, toolName);
   const workspaceIds = R.propOr<string[], Record<string, string>, string[]>(
     [],
     toolMapping,

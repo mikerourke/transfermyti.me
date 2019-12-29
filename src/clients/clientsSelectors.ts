@@ -1,63 +1,63 @@
 import { createSelector } from "reselect";
 import * as R from "ramda";
-import { selectMappingByToolName } from "~/app/appSelectors";
-import { selectActiveWorkspaceId } from "~/workspaces/workspacesSelectors";
+import { mappingByToolNameSelector } from "~/app/appSelectors";
+import { activeWorkspaceIdSelector } from "~/workspaces/workspacesSelectors";
 import { ToolName, Mapping } from "~/entities/entitiesTypes";
 import { ReduxState } from "~/redux/reduxTypes";
 import { ClientModel, ClientsByIdModel } from "./clientsTypes";
 
-const selectSourceClientsById = createSelector(
+const sourceClientsByIdSelector = createSelector(
   (state: ReduxState) => state.clients.source,
   (sourceClientsById): ClientsByIdModel => sourceClientsById,
 );
 
-const selectTargetClientsById = createSelector(
+const targetClientsByIdSelector = createSelector(
   (state: ReduxState) => state.clients.target,
   (targetClientsById): ClientsByIdModel => targetClientsById,
 );
 
-export const selectSourceClients = createSelector(
-  selectSourceClientsById,
+export const sourceClientsSelector = createSelector(
+  sourceClientsByIdSelector,
   (sourceClients): ClientModel[] => Object.values(sourceClients),
 );
 
-export const selectIncludedSourceClients = createSelector(
-  selectSourceClients,
+export const includedSourceClientsSelector = createSelector(
+  sourceClientsSelector,
   (sourceClients): ClientModel[] =>
     sourceClients.filter(sourceClient => sourceClient.isIncluded),
 );
 
-export const selectTargetClients = createSelector(
-  selectTargetClientsById,
+export const targetClientsSelector = createSelector(
+  targetClientsByIdSelector,
   (targetClientsById): ClientModel[] => Object.values(targetClientsById),
 );
 
-export const selectClientsByMapping = createSelector(
-  selectSourceClients,
-  selectTargetClients,
+export const clientsByMappingSelector = createSelector(
+  sourceClientsSelector,
+  targetClientsSelector,
   (sourceClients, targetClients): Record<Mapping, ClientModel[]> => ({
     source: sourceClients,
     target: targetClients,
   }),
 );
 
-export const selectSourceClientsForTransfer = createSelector(
-  selectIncludedSourceClients,
+export const sourceClientsForTransferSelector = createSelector(
+  includedSourceClientsSelector,
   (sourceClients): ClientModel[] =>
     sourceClients.filter(sourceClient => R.isNil(sourceClient.linkedId)),
 );
 
-export const selectSourceClientsInActiveWorkspace = createSelector(
-  selectSourceClients,
-  selectActiveWorkspaceId,
+export const sourceClientsInActiveWorkspaceSelector = createSelector(
+  sourceClientsSelector,
+  activeWorkspaceIdSelector,
   (sourceClients, activeWorkspaceId) =>
     sourceClients.filter(
       sourceClient => sourceClient.workspaceId === activeWorkspaceId,
     ),
 );
 
-export const selectTargetClientId = createSelector(
-  selectSourceClientsById,
+export const targetClientIdSelector = createSelector(
+  sourceClientsByIdSelector,
   (_: ReduxState, sourceClientId: string | null) => sourceClientId,
   (sourceClientsById, sourceClientId): string | null => {
     if (R.isNil(sourceClientId)) {
@@ -67,9 +67,9 @@ export const selectTargetClientId = createSelector(
   },
 );
 
-export const selectClientIdsByNameForTool = createSelector(
-  selectMappingByToolName,
-  selectClientsByMapping,
+export const clientIdsByNameForToolSelector = createSelector(
+  mappingByToolNameSelector,
+  clientsByMappingSelector,
   (_: ReduxState, toolName: ToolName) => toolName,
   (mappingByToolName, clientsByMapping, toolName) => {
     const toolMapping = mappingByToolName[toolName];

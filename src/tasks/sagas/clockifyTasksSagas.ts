@@ -7,7 +7,7 @@ import {
   paginatedClockifyFetch,
 } from "~/redux/sagaUtils";
 import { EntityGroup, ToolName } from "~/entities/entitiesTypes";
-import { selectTargetProjectId } from "~/projects/projectsSelectors";
+import { targetProjectIdSelector } from "~/projects/projectsSelectors";
 import { TaskModel } from "~/tasks/tasksTypes";
 
 type ClockifyTaskStatus = "ACTIVE" | "DONE";
@@ -54,7 +54,7 @@ function* createClockifyTask(
 ): SagaIterator {
   // TODO: Add loop for tasks by project ID!
   const targetProjectId = yield select(
-    selectTargetProjectId,
+    targetProjectIdSelector,
     sourceTask.projectId,
   );
   // TODO: Add assigneeIds selector.

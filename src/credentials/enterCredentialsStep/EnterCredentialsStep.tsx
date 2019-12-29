@@ -4,7 +4,7 @@ import * as R from "ramda";
 import React from "react";
 import { connect } from "react-redux";
 import { PayloadActionCreator } from "typesafe-actions";
-import { selectToolHelpDetailsByMapping } from "~/app/appSelectors";
+import { toolHelpDetailsByMappingSelector } from "~/app/appSelectors";
 import { styled, HelpDetails, NavigationButtonsRow } from "~/components";
 import { useDeepCompareEffect } from "~/components/hooks";
 import {
@@ -14,9 +14,9 @@ import {
   validateCredentials,
 } from "~/credentials/credentialsActions";
 import {
-  selectCredentials,
-  selectIsValidating,
-  selectValidationErrorsByTool,
+  credentialsSelector,
+  isValidatingSelector,
+  validationErrorsByToolSelector,
 } from "~/credentials/credentialsSelectors";
 import ApiKeyInputField from "./ApiKeyInputField";
 import { RoutePath, ToolHelpDetailsModel } from "~/app/appTypes";
@@ -166,10 +166,10 @@ const EnterCredentialsStepComponent: React.FC<Props> = props => {
 };
 
 const mapStateToProps = (state: ReduxState): ConnectStateProps => ({
-  credentials: selectCredentials(state),
-  isValidating: selectIsValidating(state),
-  toolHelpDetailsByMapping: selectToolHelpDetailsByMapping(state),
-  validationErrorsByTool: selectValidationErrorsByTool(state),
+  credentials: credentialsSelector(state),
+  isValidating: isValidatingSelector(state),
+  toolHelpDetailsByMapping: toolHelpDetailsByMappingSelector(state),
+  validationErrorsByTool: validationErrorsByToolSelector(state),
 });
 
 const mapDispatchToProps: ConnectDispatchProps = {

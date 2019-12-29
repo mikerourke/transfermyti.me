@@ -2,7 +2,7 @@ import React from "react";
 import { connect } from "react-redux";
 import { PayloadActionCreator } from "typesafe-actions";
 import { flipIsClientIncluded } from "~/clients/clientsActions";
-import { selectSourceClientsInActiveWorkspace } from "~/clients/clientsSelectors";
+import { sourceClientsInActiveWorkspaceSelector } from "~/clients/clientsSelectors";
 import { styled } from "~/components";
 import { ClientModel } from "~/clients/clientsTypes";
 import { ReduxState } from "~/redux/reduxTypes";
@@ -66,7 +66,7 @@ export const ClientsTableComponent: React.FC<Props> = props => {
 };
 
 const mapStateToProps = (state: ReduxState): ConnectStateProps => ({
-  clients: selectSourceClientsInActiveWorkspace(state),
+  clients: sourceClientsInActiveWorkspaceSelector(state),
 });
 
 const mapDispatchToProps: ConnectDispatchProps = {

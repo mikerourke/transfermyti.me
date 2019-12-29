@@ -6,7 +6,7 @@ import {
   fetchEntitiesForTool,
   fetchObject,
 } from "~/redux/sagaUtils";
-import { selectTargetProjectId } from "~/projects/projectsSelectors";
+import { targetProjectIdSelector } from "~/projects/projectsSelectors";
 import { EntityGroup, ToolName } from "~/entities/entitiesTypes";
 import { TaskModel } from "~/tasks/tasksTypes";
 
@@ -47,7 +47,7 @@ export function* fetchTogglTasksSaga(): SagaIterator<TaskModel[]> {
 
 function* createTogglTask(sourceTask: TaskModel): SagaIterator<TaskModel> {
   const targetProjectId = yield select(
-    selectTargetProjectId,
+    targetProjectIdSelector,
     sourceTask.projectId,
   );
   const taskRequest = {

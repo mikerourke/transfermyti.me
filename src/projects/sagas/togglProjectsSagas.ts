@@ -9,7 +9,7 @@ import {
   fetchEntitiesForTool,
   fetchObject,
 } from "~/redux/sagaUtils";
-import { selectTargetClientId } from "~/clients/clientsSelectors";
+import { targetClientIdSelector } from "~/clients/clientsSelectors";
 import { EntityGroup, ToolName } from "~/entities/entitiesTypes";
 import { ProjectModel } from "~/projects/projectsTypes";
 
@@ -71,7 +71,7 @@ function* createTogglProject(
   targetWorkspaceId: string,
 ): SagaIterator<ProjectModel> {
   const targetClientId = yield select(
-    selectTargetClientId,
+    targetClientIdSelector,
     sourceProject.clientId,
   );
   const projectRequest = {

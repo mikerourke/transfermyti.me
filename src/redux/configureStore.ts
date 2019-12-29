@@ -18,7 +18,7 @@ import { userGroupsSaga } from "~/userGroups/sagas/userGroupsSaga";
 import { usersSaga } from "~/users/sagas/usersSaga";
 import { workspacesSaga } from "~/workspaces/sagas/workspacesSaga";
 import { createRootReducer, RouterReducer } from "./rootReducer";
-import { ReduxStore } from "~/redux/reduxTypes";
+import { ReduxStore, ReduxState } from "~/redux/reduxTypes";
 
 const devTools = window.__REDUX_DEVTOOLS_EXTENSION_COMPOSE__;
 const composeEnhancers: Function = devTools || compose;
@@ -30,7 +30,10 @@ export function configureStore(history: History): ReduxStore {
   if (getIfDev()) {
     const storedCredentials = storage.get(STORAGE_KEY);
     if (storedCredentials) {
-      credentials = storedCredentials;
+      credentials = {
+        ...initialCredentialsState,
+        ...storedCredentials,
+      };
     }
   }
 
@@ -46,7 +49,7 @@ export function configureStore(history: History): ReduxStore {
 
   const store = createStore(
     rootReducer,
-    { credentials },
+    { credentials } as ReduxState,
     composeEnhancers(applyMiddleware(...middleware)),
   );
 

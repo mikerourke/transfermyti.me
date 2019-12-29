@@ -2,9 +2,9 @@ import { all, call, put, select, takeEvery } from "redux-saga/effects";
 import { SagaIterator } from "@redux-saga/types";
 import { linkEntitiesByIdByMapping } from "~/redux/sagaUtils";
 import { showFetchErrorNotification } from "~/app/appActions";
-import { selectToolNameByMapping } from "~/app/appSelectors";
+import { toolNameByMappingSelector } from "~/app/appSelectors";
 import { createUsers, fetchUsers } from "~/users/usersActions";
-import { selectSourceUserEmailsByWorkspaceId } from "~/users/usersSelectors";
+import { sourceUserEmailsByWorkspaceIdSelector } from "~/users/usersSelectors";
 import {
   createClockifyUsersSaga,
   fetchClockifyUsersSaga,
@@ -22,13 +22,13 @@ export function* usersSaga(): SagaIterator {
 
 function* createUsersSaga(): SagaIterator {
   try {
-    const toolNameByMapping = yield select(selectToolNameByMapping);
+    const toolNameByMapping = yield select(toolNameByMappingSelector);
     const createSagaByToolName = {
       [ToolName.Clockify]: createClockifyUsersSaga,
       [ToolName.Toggl]: createTogglUsersSaga,
     }[toolNameByMapping.target];
 
-    const emailsByUserId = yield select(selectSourceUserEmailsByWorkspaceId);
+    const emailsByUserId = yield select(sourceUserEmailsByWorkspaceIdSelector);
     yield call(createSagaByToolName, emailsByUserId);
 
     yield put(createUsers.success());
@@ -48,7 +48,7 @@ function* fetchUsersSaga(): SagaIterator {
       [ToolName.Clockify]: fetchClockifyUsersSaga,
       [ToolName.Toggl]: fetchTogglUsersSaga,
     };
-    const { source, target } = yield select(selectToolNameByMapping);
+    const { source, target } = yield select(toolNameByMappingSelector);
     const sourceUsers = yield call(fetchSagaByToolName[source]);
     const targetUsers = yield call(fetchSagaByToolName[target]);
 

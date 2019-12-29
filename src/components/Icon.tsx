@@ -77,6 +77,7 @@ const Icon: React.FC<Props> = ({ name, color, size = 24, ...props }) => {
       <title id={`${svgId}-title`}>{iconAttributes[name].title}</title>
       <desc id={`${svgId}-desc`}>{iconAttributes[name].desc}</desc>
       <path
+        data-testid="svg-icon-path"
         d={iconAttributes[name].path}
         css={theme => ({ fill: theme.colors[color] })}
       />

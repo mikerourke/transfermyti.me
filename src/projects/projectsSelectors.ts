@@ -1,47 +1,47 @@
 import { createSelector } from "reselect";
 import * as R from "ramda";
-import { selectActiveWorkspaceId } from "~/workspaces/workspacesSelectors";
+import { activeWorkspaceIdSelector } from "~/workspaces/workspacesSelectors";
 import { ReduxState } from "~/redux/reduxTypes";
 import { ProjectModel, ProjectsByIdModel } from "~/projects/projectsTypes";
 
-export const selectSourceProjectsById = createSelector(
+export const sourceProjectsByIdSelector = createSelector(
   (state: ReduxState) => state.projects.source,
   (sourceProjectsById): ProjectsByIdModel => sourceProjectsById,
 );
 
-export const selectSourceProjects = createSelector(
-  selectSourceProjectsById,
+export const sourceProjectsSelector = createSelector(
+  sourceProjectsByIdSelector,
   (sourceProjectsById): ProjectModel[] => Object.values(sourceProjectsById),
 );
 
-export const selectTargetProjects = createSelector(
+export const targetProjectsSelector = createSelector(
   (state: ReduxState) => state.projects.target,
   (targetProjectsById): ProjectModel[] => Object.values(targetProjectsById),
 );
 
-export const selectIncludedSourceProjects = createSelector(
-  selectSourceProjects,
+export const includedSourceProjectsSelector = createSelector(
+  sourceProjectsSelector,
   (sourceProjects): ProjectModel[] =>
     sourceProjects.filter(sourceProject => sourceProject.isIncluded),
 );
 
-export const selectSourceProjectsForTransfer = createSelector(
-  selectIncludedSourceProjects,
+export const sourceProjectsForTransferSelector = createSelector(
+  includedSourceProjectsSelector,
   (sourceProjects): ProjectModel[] =>
     sourceProjects.filter(sourceProject => R.isNil(sourceProject.linkedId)),
 );
 
-export const selectSourceProjectsInActiveWorkspace = createSelector(
-  selectSourceProjects,
-  selectActiveWorkspaceId,
+export const sourceProjectsInActiveWorkspaceSelector = createSelector(
+  sourceProjectsSelector,
+  activeWorkspaceIdSelector,
   (sourceProjects, activeWorkspaceId) =>
     sourceProjects.filter(
       sourceProject => sourceProject.workspaceId === activeWorkspaceId,
     ),
 );
 
-export const selectTargetProjectId = createSelector(
-  selectSourceProjectsById,
+export const targetProjectIdSelector = createSelector(
+  sourceProjectsByIdSelector,
   (_: ReduxState, sourceProjectId: string) => sourceProjectId,
   (sourceProjectsById, sourceProjectId): string | null =>
     R.pathOr<null>(null, [sourceProjectId, "linkedId"], sourceProjectsById),

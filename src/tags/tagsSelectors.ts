@@ -1,40 +1,40 @@
 import { createSelector } from "reselect";
 import * as R from "ramda";
-import { selectActiveWorkspaceId } from "~/workspaces/workspacesSelectors";
+import { activeWorkspaceIdSelector } from "~/workspaces/workspacesSelectors";
 import { ReduxState } from "~/redux/reduxTypes";
 import { TagModel, TagsByIdModel } from "./tagsTypes";
 
-const selectSourceTagsById = createSelector(
+const sourceTagsByIdSelector = createSelector(
   (state: ReduxState) => state.tags.source,
   (sourceTagsById): TagsByIdModel => sourceTagsById,
 );
 
-export const selectSourceTags = createSelector(
-  selectSourceTagsById,
+export const sourceTagsSelector = createSelector(
+  sourceTagsByIdSelector,
   (sourceTagsById): TagModel[] => Object.values(sourceTagsById),
 );
 
-export const selectIncludedSourceTags = createSelector(
-  selectSourceTags,
+export const includedSourceTagsSelector = createSelector(
+  sourceTagsSelector,
   (sourceTags): TagModel[] =>
     sourceTags.filter(sourceTag => sourceTag.isIncluded),
 );
 
-export const selectSourceTagsForTransfer = createSelector(
-  selectIncludedSourceTags,
+export const sourceTagsForTransferSelector = createSelector(
+  includedSourceTagsSelector,
   (sourceTags): TagModel[] =>
     sourceTags.filter(sourceTag => R.isNil(sourceTag.linkedId)),
 );
 
-export const selectSourceTagsInActiveWorkspace = createSelector(
-  selectSourceTags,
-  selectActiveWorkspaceId,
+export const sourceTagsInActiveWorkspaceSelector = createSelector(
+  sourceTagsSelector,
+  activeWorkspaceIdSelector,
   (sourceTags, workspaceId): TagModel[] =>
     sourceTags.filter(tag => tag.workspaceId === workspaceId),
 );
 
-export const selectTargetTagIds = createSelector(
-  selectSourceTagsById,
+export const targetTagIdsSelector = createSelector(
+  sourceTagsByIdSelector,
   (_: ReduxState, sourceTagIds: string[]) => sourceTagIds,
   (sourceTagsById, sourceTagIds): string[] => {
     const targetTagIds: string[] = [];

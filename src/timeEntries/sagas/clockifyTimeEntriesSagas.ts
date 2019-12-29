@@ -7,9 +7,9 @@ import {
   fetchObject,
   paginatedClockifyFetch,
 } from "~/redux/sagaUtils";
-import { selectTargetProjectId } from "~/projects/projectsSelectors";
-import { selectTargetTagIds } from "~/tags/tagsSelectors";
-import { selectTargetTaskId } from "~/tasks/tasksSelectors";
+import { targetProjectIdSelector } from "~/projects/projectsSelectors";
+import { targetTagIdsSelector } from "~/tags/tagsSelectors";
+import { targetTaskIdSelector } from "~/tasks/tasksSelectors";
 import { ClockifyProjectResponseModel } from "~/projects/sagas/clockifyProjectsSagas";
 import { ClockifyTagResponseModel } from "~/tags/sagas/clockifyTagsSagas";
 import { ClockifyTaskResponseModel } from "~/tasks/sagas/clockifyTasksSagas";
@@ -73,11 +73,17 @@ function* createClockifyTimeEntry(
   targetWorkspaceId: string,
 ): SagaIterator<TimeEntryModel> {
   const targetProjectId = yield select(
-    selectTargetProjectId,
+    targetProjectIdSelector,
     sourceTimeEntry.projectId,
   );
-  const targetTaskId = yield select(selectTargetTaskId, sourceTimeEntry.taskId);
-  const targetTagIds = yield select(selectTargetTagIds, sourceTimeEntry.tagIds);
+  const targetTaskId = yield select(
+    targetTaskIdSelector,
+    sourceTimeEntry.taskId,
+  );
+  const targetTagIds = yield select(
+    targetTagIdsSelector,
+    sourceTimeEntry.tagIds,
+  );
   const timeEntryRequest = {
     start: sourceTimeEntry.start,
     billable: sourceTimeEntry.isBillable,

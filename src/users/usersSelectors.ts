@@ -1,32 +1,32 @@
 import { createSelector } from "reselect";
 import * as R from "ramda";
 import {
-  selectActiveWorkspaceId,
-  selectWorkspaceIdMapping,
+  activeWorkspaceIdSelector,
+  workspaceIdMappingSelector,
 } from "~/workspaces/workspacesSelectors";
 import { ReduxState } from "~/redux/reduxTypes";
 import { UserModel } from "./usersTypes";
 
-export const selectSourceUsers = createSelector(
+export const sourceUsersSelector = createSelector(
   (state: ReduxState) => state.users.source,
   (sourceUsersById): UserModel[] => Object.values(sourceUsersById),
 );
 
-export const selectIncludedSourceUsers = createSelector(
-  selectSourceUsers,
+export const includedSourceUsersSelector = createSelector(
+  sourceUsersSelector,
   (sourceUsers): UserModel[] =>
     sourceUsers.filter(sourceUser => sourceUser.isIncluded),
 );
 
-export const selectSourceUsersForTransfer = createSelector(
-  selectIncludedSourceUsers,
+export const sourceUsersForTransferSelector = createSelector(
+  includedSourceUsersSelector,
   (sourceUsers): UserModel[] =>
     sourceUsers.filter(sourceUser => R.isNil(sourceUser.linkedId)),
 );
 
-export const selectSourceUserEmailsByWorkspaceId = createSelector(
-  selectSourceUsers,
-  selectWorkspaceIdMapping,
+export const sourceUserEmailsByWorkspaceIdSelector = createSelector(
+  sourceUsersSelector,
+  workspaceIdMappingSelector,
   (sourceUsers, workspaceIdMapping) => {
     const emailsByWorkspaceId: Record<string, string[]> = {};
 
@@ -50,9 +50,9 @@ export const selectSourceUserEmailsByWorkspaceId = createSelector(
   },
 );
 
-export const selectSourceUsersInActiveWorkspace = createSelector(
-  selectSourceUsers,
-  selectActiveWorkspaceId,
+export const sourceUsersInActiveWorkspaceSelector = createSelector(
+  sourceUsersSelector,
+  activeWorkspaceIdSelector,
   (sourceUsers, workspaceId): UserModel[] =>
     sourceUsers.filter(user => user.workspaceId === workspaceId),
 );

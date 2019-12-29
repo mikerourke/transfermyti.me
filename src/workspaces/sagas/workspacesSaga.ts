@@ -2,13 +2,13 @@ import { all, call, put, select, takeEvery } from "redux-saga/effects";
 import { SagaIterator } from "@redux-saga/types";
 import { linkEntitiesByIdByMapping } from "~/redux/sagaUtils";
 import { showFetchErrorNotification } from "~/app/appActions";
-import { selectToolNameByMapping } from "~/app/appSelectors";
+import { toolNameByMappingSelector } from "~/app/appSelectors";
 import {
   createWorkspaces,
   fetchWorkspaces,
   updateActiveWorkspaceId,
 } from "~/workspaces/workspacesActions";
-import { selectSourceWorkspacesForTransfer } from "~/workspaces/workspacesSelectors";
+import { sourceWorkspacesForTransferSelector } from "~/workspaces/workspacesSelectors";
 import {
   createClockifyWorkspacesSaga,
   fetchClockifyWorkspacesSaga,
@@ -29,13 +29,13 @@ export function* workspacesSaga(): SagaIterator {
 
 function* createWorkspacesSaga(): SagaIterator {
   try {
-    const toolNameByMapping = yield select(selectToolNameByMapping);
+    const toolNameByMapping = yield select(toolNameByMappingSelector);
     const createSagaByToolName = {
       [ToolName.Clockify]: createClockifyWorkspacesSaga,
       [ToolName.Toggl]: createTogglWorkspacesSaga,
     }[toolNameByMapping.target];
 
-    const sourceWorkspaces = yield select(selectSourceWorkspacesForTransfer);
+    const sourceWorkspaces = yield select(sourceWorkspacesForTransferSelector);
     const targetWorkspaces = yield call(createSagaByToolName, sourceWorkspaces);
     const workspaceByIdByMapping = linkEntitiesByIdByMapping<WorkspaceModel>(
       sourceWorkspaces,
@@ -55,7 +55,7 @@ function* fetchWorkspacesSaga(): SagaIterator {
       [ToolName.Clockify]: fetchClockifyWorkspacesSaga,
       [ToolName.Toggl]: fetchTogglWorkspacesSaga,
     };
-    const { source, target } = yield select(selectToolNameByMapping);
+    const { source, target } = yield select(toolNameByMappingSelector);
     const sourceWorkspaces = yield call(fetchSagaByToolName[source]);
     const targetWorkspaces = yield call(fetchSagaByToolName[target]);
 

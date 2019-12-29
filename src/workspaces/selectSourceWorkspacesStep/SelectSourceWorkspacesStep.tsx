@@ -9,9 +9,9 @@ import {
   flipIsWorkspaceIncluded,
 } from "~/workspaces/workspacesActions";
 import {
-  selectIfWorkspacesFetching,
-  selectSourceIncludedWorkspacesCount,
-  selectSourceWorkspaces,
+  areWorkspacesFetchingSelector,
+  sourceIncludedWorkspacesCountSelector,
+  sourceWorkspacesSelector,
 } from "~/workspaces/workspacesSelectors";
 import { Flex, HelpDetails, Loader, NavigationButtonsRow } from "~/components";
 import SourceWorkspaceCard from "./SourceWorkspaceCard";
@@ -81,9 +81,9 @@ export const SelectSourceWorkspacesStepComponent: React.FC<Props> = props => {
 };
 
 const mapStateToProps = (state: ReduxState): ConnectStateProps => ({
-  areWorkspacesFetching: selectIfWorkspacesFetching(state),
-  countOfWorkspacesIncluded: selectSourceIncludedWorkspacesCount(state),
-  workspaces: selectSourceWorkspaces(state),
+  areWorkspacesFetching: areWorkspacesFetchingSelector(state),
+  countOfWorkspacesIncluded: sourceIncludedWorkspacesCountSelector(state),
+  workspaces: sourceWorkspacesSelector(state),
 });
 
 const mapDispatchToProps: ConnectDispatchProps = {

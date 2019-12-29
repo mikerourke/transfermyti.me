@@ -9,7 +9,7 @@ import {
   fetchObject,
   paginatedClockifyFetch,
 } from "~/redux/sagaUtils";
-import { selectTargetClientId } from "~/clients/clientsSelectors";
+import { targetClientIdSelector } from "~/clients/clientsSelectors";
 import {
   ClockifyHourlyRateResponseModel,
   ClockifyMembershipResponseModel,
@@ -71,7 +71,7 @@ function* createClockifyProject(
   targetWorkspaceId: string,
 ): SagaIterator<ProjectModel> {
   const targetClientId = yield select(
-    selectTargetClientId,
+    targetClientIdSelector,
     sourceProject.clientId,
   );
   const projectRequest = {

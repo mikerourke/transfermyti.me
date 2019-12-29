@@ -3,12 +3,12 @@ import { SagaIterator } from "@redux-saga/types";
 import differenceInMinutes from "date-fns/differenceInMinutes";
 import * as R from "ramda";
 import { showFetchErrorNotification } from "~/app/appActions";
-import { selectToolNameByMapping } from "~/app/appSelectors";
+import { toolNameByMappingSelector } from "~/app/appSelectors";
 import {
   createTimeEntries,
   fetchTimeEntries,
 } from "~/timeEntries/timeEntriesActions";
-import { selectSourceTimeEntriesForTransfer } from "~/timeEntries/timeEntriesSelectors";
+import { sourceTimeEntriesForTransferSelector } from "~/timeEntries/timeEntriesSelectors";
 import {
   createClockifyTimeEntriesSaga,
   fetchClockifyTimeEntriesSaga,
@@ -32,13 +32,15 @@ export function* timeEntriesSaga(): Generator {
 
 function* createTimeEntriesSaga(): SagaIterator {
   try {
-    const toolNameByMapping = yield select(selectToolNameByMapping);
+    const toolNameByMapping = yield select(toolNameByMappingSelector);
     const createSagaByToolName = {
       [ToolName.Clockify]: createClockifyTimeEntriesSaga,
       [ToolName.Toggl]: createTogglTimeEntriesSaga,
     }[toolNameByMapping.target];
 
-    const sourceTimeEntries = yield select(selectSourceTimeEntriesForTransfer);
+    const sourceTimeEntries = yield select(
+      sourceTimeEntriesForTransferSelector,
+    );
     const targetTimeEntries = yield call(
       createSagaByToolName,
       sourceTimeEntries,
@@ -62,7 +64,7 @@ function* fetchTimeEntriesSaga(): SagaIterator {
       [ToolName.Clockify]: fetchClockifyTimeEntriesSaga,
       [ToolName.Toggl]: fetchTogglTimeEntriesSaga,
     };
-    const { source, target } = yield select(selectToolNameByMapping);
+    const { source, target } = yield select(toolNameByMappingSelector);
     const sourceTimeEntries = yield call(fetchSagaByToolName[source]);
     const targetTimeEntries = yield call(fetchSagaByToolName[target]);
 

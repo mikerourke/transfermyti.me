@@ -10,47 +10,47 @@ import {
   ToolNameByMappingModel,
 } from "./appTypes";
 
-export const selectCurrentPath = (state: ReduxState): string =>
+export const currentPathSelector = (state: ReduxState): string =>
   state.router.location.pathname;
 
 const routePathValues = Object.values(RoutePath);
 
-export const selectCurrentTransferStep = createSelector(
-  selectCurrentPath,
+export const currentTransferStepSelector = createSelector(
+  currentPathSelector,
   (currentPath): number => routePathValues.indexOf(currentPath as RoutePath),
 );
 
-export const selectNotifications = createSelector(
+export const notificationsSelector = createSelector(
   (state: ReduxState) => state.app.notifications,
   (notifications): NotificationModel[] => notifications,
 );
 
-export const selectToolNameByMapping = (
+export const toolNameByMappingSelector = (
   state: ReduxState,
 ): ToolNameByMappingModel => state.app.toolNameByMapping;
 
-export const selectMappingByToolName = createSelector(
-  selectToolNameByMapping,
+export const mappingByToolNameSelector = createSelector(
+  toolNameByMappingSelector,
   (toolNameByMapping): Record<ToolName, Mapping> =>
     R.invertObj(
       (toolNameByMapping as unknown) as { [mapping: string]: string },
     ) as Record<ToolName, Mapping>,
 );
 
-export const selectMappingForTool = createSelector(
-  selectMappingByToolName,
+export const mappingForToolSelector = createSelector(
+  mappingByToolNameSelector,
   (_: ReduxState, toolName: ToolName) => toolName,
   (mappingByToolName, toolName) => mappingByToolName[toolName] ?? null,
 );
 
-export const selectCurrentTransferCount = (state: ReduxState): number =>
+export const currentTransferCountSelector = (state: ReduxState): number =>
   state.app.currentTransferCount;
 
-export const selectTotalTransferCount = (state: ReduxState): number =>
+export const totalTransferCountSelector = (state: ReduxState): number =>
   state.app.totalTransferCount;
 
-export const selectToolHelpDetailsByMapping = createSelector(
-  selectToolNameByMapping,
+export const toolHelpDetailsByMappingSelector = createSelector(
+  toolNameByMappingSelector,
   (toolNameByMapping): Record<Mapping, ToolHelpDetailsModel> => {
     const findToolLink = (toolName: ToolName): string =>
       ({

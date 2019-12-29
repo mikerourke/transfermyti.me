@@ -1,15 +1,15 @@
 import { createSelector } from "reselect";
-import { selectIncludedSourceClients } from "~/clients/clientsSelectors";
-import { selectIncludedSourceProjects } from "~/projects/projectsSelectors";
-import { selectIncludedSourceTags } from "~/tags/tagsSelectors";
-import { selectIncludedSourceTasks } from "~/tasks/tasksSelectors";
-import { selectIncludedSourceTimeEntries } from "~/timeEntries/timeEntriesSelectors";
-import { selectIncludedSourceUserGroups } from "~/userGroups/userGroupsSelectors";
-import { selectIncludedSourceUsers } from "~/users/usersSelectors";
+import { includedSourceClientsSelector } from "~/clients/clientsSelectors";
+import { includedSourceProjectsSelector } from "~/projects/projectsSelectors";
+import { includedSourceTagsSelector } from "~/tags/tagsSelectors";
+import { includedSourceTasksSelector } from "~/tasks/tasksSelectors";
+import { includedSourceTimeEntriesSelector } from "~/timeEntries/timeEntriesSelectors";
+import { includedSourceUserGroupsSelector } from "~/userGroups/userGroupsSelectors";
+import { includedSourceUsersSelector } from "~/users/usersSelectors";
 import { ReduxState } from "~/redux/reduxTypes";
 import { EntityGroup, BaseEntityModel } from "./entitiesTypes";
 
-export const selectIfEntitiesFetching = createSelector(
+export const areEntitiesFetchingSelector = createSelector(
   (state: ReduxState) => state.clients.isFetching,
   (state: ReduxState) => state.projects.isFetching,
   (state: ReduxState) => state.tags.isFetching,
@@ -19,14 +19,14 @@ export const selectIfEntitiesFetching = createSelector(
   (...args: boolean[]) => [...args].some(Boolean),
 );
 
-export const selectSourceRecordsByEntityGroup = createSelector(
-  selectIncludedSourceClients,
-  selectIncludedSourceProjects,
-  selectIncludedSourceTags,
-  selectIncludedSourceTasks,
-  selectIncludedSourceTimeEntries,
-  selectIncludedSourceUserGroups,
-  selectIncludedSourceUsers,
+export const sourceRecordsByEntityGroupSelector = createSelector(
+  includedSourceClientsSelector,
+  includedSourceProjectsSelector,
+  includedSourceTagsSelector,
+  includedSourceTasksSelector,
+  includedSourceTimeEntriesSelector,
+  includedSourceUserGroupsSelector,
+  includedSourceUsersSelector,
   (
     sourceClients,
     sourceProjects,

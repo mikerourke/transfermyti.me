@@ -2,9 +2,9 @@ import { all, call, put, select, takeEvery } from "redux-saga/effects";
 import { SagaIterator } from "@redux-saga/types";
 import { linkEntitiesByIdByMapping } from "~/redux/sagaUtils";
 import { showFetchErrorNotification } from "~/app/appActions";
-import { selectToolNameByMapping } from "~/app/appSelectors";
+import { toolNameByMappingSelector } from "~/app/appSelectors";
 import { createTasks, fetchTasks } from "~/tasks/tasksActions";
-import { selectSourceTasksForTransfer } from "~/tasks/tasksSelectors";
+import { sourceTasksForTransferSelector } from "~/tasks/tasksSelectors";
 import {
   createClockifyTasksSaga,
   fetchClockifyTasksSaga,
@@ -22,13 +22,13 @@ export function* tasksSaga(): SagaIterator {
 
 function* createTasksSaga(): SagaIterator {
   try {
-    const toolNameByMapping = yield select(selectToolNameByMapping);
+    const toolNameByMapping = yield select(toolNameByMappingSelector);
     const createSagaByToolName = {
       [ToolName.Clockify]: createClockifyTasksSaga,
       [ToolName.Toggl]: createTogglTasksSaga,
     }[toolNameByMapping.target];
 
-    const sourceTasks = yield select(selectSourceTasksForTransfer);
+    const sourceTasks = yield select(sourceTasksForTransferSelector);
     const targetTasks = yield call(createSagaByToolName, sourceTasks);
     const tasksByIdByMapping = linkEntitiesByIdByMapping<TaskModel>(
       sourceTasks,
@@ -48,7 +48,7 @@ function* fetchTasksSaga(): SagaIterator {
       [ToolName.Clockify]: fetchClockifyTasksSaga,
       [ToolName.Toggl]: fetchTogglTasksSaga,
     };
-    const { source, target } = yield select(selectToolNameByMapping);
+    const { source, target } = yield select(toolNameByMappingSelector);
     const sourceTasks = yield call(fetchSagaByToolName[source]);
     const targetTasks = yield call(fetchSagaByToolName[target]);
 

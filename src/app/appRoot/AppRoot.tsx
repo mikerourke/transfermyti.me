@@ -1,9 +1,9 @@
 import React from "react";
 import { connect } from "react-redux";
 import { ThemeProvider } from "emotion-theming";
-import { dismissNotification } from "~/app/appActions";
-import { selectNotifications } from "~/app/appSelectors";
 import { Global } from "@emotion/core";
+import { dismissNotification } from "~/app/appActions";
+import { notificationsSelector } from "~/app/appSelectors";
 import { theme, styled } from "~/components/emotion";
 import Footer from "./Footer";
 import Header from "./Header";
@@ -85,7 +85,7 @@ export const AppRootComponent: React.FC<Props> = props => {
 };
 
 const mapStateToProps = (state: ReduxState): ConnectStateProps => ({
-  notifications: selectNotifications(state),
+  notifications: notificationsSelector(state),
 });
 
 const mapDispatchToProps: ConnectDispatchProps = {

@@ -5,8 +5,8 @@ import { connect } from "react-redux";
 import { PayloadActionCreator } from "typesafe-actions";
 import { fetchClients } from "~/clients/clientsActions";
 import {
-  selectIfEntitiesFetching,
-  selectSourceRecordsByEntityGroup,
+  areEntitiesFetchingSelector,
+  sourceRecordsByEntityGroupSelector,
 } from "~/entities/entitiesSelectors";
 import { fetchProjects } from "~/projects/projectsActions";
 import { fetchTags } from "~/tags/tagsActions";
@@ -14,7 +14,7 @@ import { fetchTasks } from "~/tasks/tasksActions";
 import { fetchTimeEntries } from "~/timeEntries/timeEntriesActions";
 import { fetchUserGroups } from "~/userGroups/userGroupsActions";
 import { fetchUsers } from "~/users/usersActions";
-import { selectActiveWorkspaceId } from "~/workspaces/workspacesSelectors";
+import { activeWorkspaceIdSelector } from "~/workspaces/workspacesSelectors";
 import {
   Accordion,
   AccordionPanel,
@@ -111,9 +111,9 @@ export const SelectSourceInclusionsComponent: React.FC<Props> = props => {
 };
 
 const mapStateToProps = (state: ReduxState): ConnectStateProps => ({
-  activeWorkspaceId: selectActiveWorkspaceId(state),
-  areEntitiesFetching: selectIfEntitiesFetching(state),
-  sourceRecordsByEntityGroup: selectSourceRecordsByEntityGroup(state),
+  activeWorkspaceId: activeWorkspaceIdSelector(state),
+  areEntitiesFetching: areEntitiesFetchingSelector(state),
+  sourceRecordsByEntityGroup: sourceRecordsByEntityGroupSelector(state),
 });
 
 const mapDispatchToProps: ConnectDispatchProps = {

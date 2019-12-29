@@ -29,6 +29,7 @@
     "date-fns": "^2.8.1",
     "emotion-theming": "^10.0.27",
     "fetch-intercept": "^2.3.1",
+    "history": "^4.10.1",
     "qs": "^6.9.1",
     "ramda": "^0.26.1",
     "react": "^16.12.0",

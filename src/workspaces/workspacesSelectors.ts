@@ -7,24 +7,24 @@ import {
   WorkspacesByIdModel,
 } from "~/workspaces/workspacesTypes";
 
-export const selectIfWorkspacesFetching = (state: ReduxState): boolean =>
+export const areWorkspacesFetchingSelector = (state: ReduxState): boolean =>
   state.workspaces.isFetching;
 
-export const selectActiveWorkspaceId = (state: ReduxState): string =>
+export const activeWorkspaceIdSelector = (state: ReduxState): string =>
   state.workspaces.activeWorkspaceId;
 
-export const selectSourceWorkspacesById = createSelector(
+export const sourceWorkspacesByIdSelector = createSelector(
   (state: ReduxState): WorkspacesByIdModel => state.workspaces.source,
   workspacesById => workspacesById,
 );
 
-export const selectTargetWorkspacesById = createSelector(
+export const targetWorkspacesByIdSelector = createSelector(
   (state: ReduxState): WorkspacesByIdModel => state.workspaces.target,
   workspacesById => workspacesById,
 );
 
-export const selectWorkspaceIdMapping = createSelector(
-  selectSourceWorkspacesById,
+export const workspaceIdMappingSelector = createSelector(
+  sourceWorkspacesByIdSelector,
   sourceWorkspacesById => {
     const workspaceIdMapping: Record<string, string> = {};
 
@@ -39,18 +39,18 @@ export const selectWorkspaceIdMapping = createSelector(
   },
 );
 
-export const selectSourceWorkspaces = createSelector(
-  selectSourceWorkspacesById,
+export const sourceWorkspacesSelector = createSelector(
+  sourceWorkspacesByIdSelector,
   (workspacesById): WorkspaceModel[] => Object.values(workspacesById),
 );
 
-export const selectTargetWorkspaces = createSelector(
-  selectTargetWorkspacesById,
+export const targetWorkspacesSelector = createSelector(
+  targetWorkspacesByIdSelector,
   (workspacesById): WorkspaceModel[] => Object.values(workspacesById),
 );
 
-export const selectTargetWorkspaceId = createSelector(
-  selectWorkspaceIdMapping,
+export const targetWorkspaceIdSelector = createSelector(
+  workspaceIdMappingSelector,
   (_: ReduxState, sourceWorkspaceId: string) => sourceWorkspaceId,
   (workspaceIdMapping, sourceWorkspaceId): string | null =>
     R.propOr<null, Record<string, string>, string>(
@@ -68,23 +68,23 @@ const limitIdsToIncluded = (workspaces: WorkspaceModel[]): string[] =>
     return [...acc, workspace.id];
   }, [] as string[]);
 
-export const selectInlcudedWorkspaceIdsByMapping = createSelector(
-  selectSourceWorkspaces,
-  selectTargetWorkspaces,
+export const includedWorkspaceIdsByMappingSelector = createSelector(
+  sourceWorkspacesSelector,
+  targetWorkspacesSelector,
   (sourceWorkspaces, targetWorkspaces): Record<Mapping, string[]> => ({
     source: limitIdsToIncluded(sourceWorkspaces),
     target: limitIdsToIncluded(targetWorkspaces),
   }),
 );
 
-export const selectSourceIncludedWorkspacesCount = createSelector(
-  selectSourceWorkspaces,
+export const sourceIncludedWorkspacesCountSelector = createSelector(
+  sourceWorkspacesSelector,
   (workspaces): number =>
     workspaces.filter(workspace => workspace.isIncluded).length,
 );
 
-export const selectSourceWorkspacesForTransfer = createSelector(
-  selectSourceWorkspaces,
+export const sourceWorkspacesForTransferSelector = createSelector(
+  sourceWorkspacesSelector,
   sourceWorkspaces =>
     sourceWorkspaces.filter(workspace => workspace.isIncluded),
 );

@@ -13,10 +13,10 @@ import {
   fetchEntitiesForTool,
   fetchObject,
 } from "~/redux/sagaUtils";
-import { selectClientIdsByNameForTool } from "~/clients/clientsSelectors";
-import { selectCredentials } from "~/credentials/credentialsSelectors";
-import { selectTargetProjectId } from "~/projects/projectsSelectors";
-import { selectTargetTaskId } from "~/tasks/tasksSelectors";
+import { clientIdsByNameForToolSelector } from "~/clients/clientsSelectors";
+import { credentialsSelector } from "~/credentials/credentialsSelectors";
+import { targetProjectIdSelector } from "~/projects/projectsSelectors";
+import { targetTaskIdSelector } from "~/tasks/tasksSelectors";
 import { EntityGroup, ToolName } from "~/entities/entitiesTypes";
 import { TimeEntryModel } from "~/timeEntries/timeEntriesTypes";
 
@@ -89,10 +89,13 @@ function* createTogglTimeEntry(
   targetWorkspaceId: string,
 ): SagaIterator {
   const targetProjectId = yield select(
-    selectTargetProjectId,
+    targetProjectIdSelector,
     sourceTimeEntry.projectId,
   );
-  const targetTaskId = yield select(selectTargetTaskId, sourceTimeEntry.taskId);
+  const targetTaskId = yield select(
+    targetTaskIdSelector,
+    sourceTimeEntry.taskId,
+  );
   const timeEntryRequest = {
     time_entry: {
       description: sourceTimeEntry.description,
@@ -118,9 +121,9 @@ function* fetchTogglTimeEntriesInWorkspace(
 ): SagaIterator<TimeEntryModel[]> {
   const togglTimeEntries: TogglTimeEntryResponseModel[] = [];
   const currentYear = new Date().getFullYear();
-  const { togglEmail } = yield select(selectCredentials);
+  const { togglEmail } = yield select(credentialsSelector);
   const clientIdsByName = yield select(
-    selectClientIdsByNameForTool,
+    clientIdsByNameForToolSelector,
     ToolName.Toggl,
   );
 
