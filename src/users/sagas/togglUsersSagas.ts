@@ -7,7 +7,7 @@ import {
   fetchObject,
 } from "~/redux/sagaUtils";
 import { incrementCurrentTransferCount } from "~/app/appActions";
-import { EntityGroup, ToolName } from "~/entities/entitiesTypes";
+import { EntityGroup, ToolName } from "~/allEntities/allEntitiesTypes";
 import { UserModel } from "~/users/usersTypes";
 
 interface TogglUserResponseModel {

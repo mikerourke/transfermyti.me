@@ -7,7 +7,7 @@ import {
   fetchObject,
 } from "~/redux/sagaUtils";
 import { targetProjectIdSelector } from "~/projects/projectsSelectors";
-import { EntityGroup, ToolName } from "~/entities/entitiesTypes";
+import { EntityGroup, ToolName } from "~/allEntities/allEntitiesTypes";
 import { TaskModel } from "~/tasks/tasksTypes";
 
 interface TogglTaskResponseModel {

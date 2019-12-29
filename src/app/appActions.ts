@@ -1,7 +1,7 @@
 import { createAction } from "typesafe-actions";
 import cuid from "cuid";
 import { capitalize, getIfDev } from "~/utils";
-import { ToolName } from "~/entities/entitiesTypes";
+import { ToolName } from "~/allEntities/allEntitiesTypes";
 import { NotificationModel, ToolNameByMappingModel } from "./appTypes";
 
 export const showNotification = createAction(

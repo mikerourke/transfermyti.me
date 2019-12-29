@@ -1,6 +1,6 @@
 import { ActionType, createReducer } from "typesafe-actions";
 import * as appActions from "./appActions";
-import { ToolName } from "~/entities/entitiesTypes";
+import { ToolName } from "~/allEntities/allEntitiesTypes";
 import { NotificationModel, ToolNameByMappingModel } from "./appTypes";
 
 type AppAction = ActionType<typeof appActions>;

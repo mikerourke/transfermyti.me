@@ -1,5 +1,5 @@
 import { createAsyncAction, createAction } from "typesafe-actions";
-import { Mapping } from "~/entities/entitiesTypes";
+import { Mapping } from "~/allEntities/allEntitiesTypes";
 import { UserGroupsByIdModel } from "./userGroupsTypes";
 
 export const createUserGroups = createAsyncAction(

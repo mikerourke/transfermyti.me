@@ -14,7 +14,7 @@ import {
   includedWorkspaceIdsByMappingSelector,
   targetWorkspaceIdSelector,
 } from "~/workspaces/workspacesSelectors";
-import { BaseEntityModel, Mapping, ToolName } from "~/entities/entitiesTypes";
+import { BaseEntityModel, Mapping, ToolName } from "~/allEntities/allEntitiesTypes";
 
 export function* createEntitiesForTool<TEntity>({
   toolName,

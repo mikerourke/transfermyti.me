@@ -10,7 +10,7 @@ import {
   fetchClockifyUsersSaga,
 } from "./clockifyUsersSagas";
 import { createTogglUsersSaga, fetchTogglUsersSaga } from "./togglUsersSagas";
-import { ToolName } from "~/entities/entitiesTypes";
+import { ToolName } from "~/allEntities/allEntitiesTypes";
 import { UserModel } from "~/users/usersTypes";
 
 export function* usersSaga(): SagaIterator {

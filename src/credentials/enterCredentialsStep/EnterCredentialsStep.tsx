@@ -21,7 +21,7 @@ import {
 import ApiKeyInputField from "./ApiKeyInputField";
 import { RoutePath, ToolHelpDetailsModel } from "~/app/appTypes";
 import { CredentialsModel } from "~/credentials/credentialsTypes";
-import { Mapping } from "~/entities/entitiesTypes";
+import { Mapping } from "~/allEntities/allEntitiesTypes";
 import { ReduxState } from "~/redux/reduxTypes";
 
 const Form = styled.form({

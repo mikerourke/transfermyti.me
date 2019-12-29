@@ -17,7 +17,7 @@ import {
   createTogglWorkspacesSaga,
   fetchTogglWorkspacesSaga,
 } from "./togglWorkspacesSagas";
-import { ToolName } from "~/entities/entitiesTypes";
+import { ToolName } from "~/allEntities/allEntitiesTypes";
 import { WorkspaceModel } from "~/workspaces/workspacesTypes";
 
 export function* workspacesSaga(): SagaIterator {

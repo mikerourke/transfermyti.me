@@ -15,7 +15,7 @@ import {
   ClockifyMembershipResponseModel,
   ClockifyUserResponseModel,
 } from "~/users/sagas/clockifyUsersSagas";
-import { EntityGroup, ToolName } from "~/entities/entitiesTypes";
+import { EntityGroup, ToolName } from "~/allEntities/allEntitiesTypes";
 import { ProjectModel } from "~/projects/projectsTypes";
 
 interface ClockifyEstimateModel {

@@ -1,4 +1,4 @@
-import { BaseEntityModel } from "~/entities/entitiesTypes";
+import { BaseEntityModel } from "~/allEntities/allEntitiesTypes";
 
 export interface ClientModel extends BaseEntityModel {
   id: string;

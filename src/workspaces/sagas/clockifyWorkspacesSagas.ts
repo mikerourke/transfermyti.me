@@ -4,7 +4,7 @@ import { CLOCKIFY_API_DELAY } from "~/constants";
 import { fetchArray, fetchObject } from "~/redux/sagaUtils";
 import { incrementCurrentTransferCount } from "~/app/appActions";
 import { ClockifyMembershipResponseModel } from "~/users/sagas/clockifyUsersSagas";
-import { EntityGroup } from "~/entities/entitiesTypes";
+import { EntityGroup } from "~/allEntities/allEntitiesTypes";
 import { WorkspaceModel } from "~/workspaces/workspacesTypes";
 
 interface ClockifyWorkspaceSettingsResponseModel {

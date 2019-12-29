@@ -7,7 +7,7 @@ import {
   fetchObject,
 } from "~/redux/sagaUtils";
 import { ClientModel } from "~/clients/clientsTypes";
-import { EntityGroup, ToolName } from "~/entities/entitiesTypes";
+import { EntityGroup, ToolName } from "~/allEntities/allEntitiesTypes";
 
 interface TogglClientResponseModel {
   id: number;

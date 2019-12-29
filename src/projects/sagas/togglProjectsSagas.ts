@@ -10,7 +10,7 @@ import {
   fetchObject,
 } from "~/redux/sagaUtils";
 import { targetClientIdSelector } from "~/clients/clientsSelectors";
-import { EntityGroup, ToolName } from "~/entities/entitiesTypes";
+import { EntityGroup, ToolName } from "~/allEntities/allEntitiesTypes";
 import { ProjectModel } from "~/projects/projectsTypes";
 
 interface TogglProjectResponseModel {

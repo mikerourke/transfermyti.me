@@ -13,7 +13,7 @@ import {
   createTogglProjectsSaga,
   fetchTogglProjectsSaga,
 } from "./togglProjectsSagas";
-import { ToolName } from "~/entities/entitiesTypes";
+import { ToolName } from "~/allEntities/allEntitiesTypes";
 import { ProjectModel } from "~/projects/projectsTypes";
 
 export function* projectsSaga(): SagaIterator {

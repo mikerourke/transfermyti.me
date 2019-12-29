@@ -3,7 +3,7 @@ import { SagaIterator } from "@redux-saga/types";
 import { TOGGL_API_DELAY } from "~/constants";
 import { fetchArray, fetchObject } from "~/redux/sagaUtils";
 import { incrementCurrentTransferCount } from "~/app/appActions";
-import { EntityGroup } from "~/entities/entitiesTypes";
+import { EntityGroup } from "~/allEntities/allEntitiesTypes";
 import { WorkspaceModel } from "~/workspaces/workspacesTypes";
 
 export interface TogglWorkspaceResponseModel {

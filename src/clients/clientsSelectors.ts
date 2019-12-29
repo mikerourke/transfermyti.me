@@ -2,7 +2,7 @@ import { createSelector } from "reselect";
 import * as R from "ramda";
 import { mappingByToolNameSelector } from "~/app/appSelectors";
 import { activeWorkspaceIdSelector } from "~/workspaces/workspacesSelectors";
-import { ToolName, Mapping } from "~/entities/entitiesTypes";
+import { ToolName, Mapping } from "~/allEntities/allEntitiesTypes";
 import { ReduxState } from "~/redux/reduxTypes";
 import { ClientModel, ClientsByIdModel } from "./clientsTypes";
 

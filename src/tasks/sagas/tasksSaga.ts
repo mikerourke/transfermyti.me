@@ -10,7 +10,7 @@ import {
   fetchClockifyTasksSaga,
 } from "./clockifyTasksSagas";
 import { createTogglTasksSaga, fetchTogglTasksSaga } from "./togglTasksSagas";
-import { ToolName } from "~/entities/entitiesTypes";
+import { ToolName } from "~/allEntities/allEntitiesTypes";
 import { TaskModel } from "~/tasks/tasksTypes";
 
 export function* tasksSaga(): SagaIterator {

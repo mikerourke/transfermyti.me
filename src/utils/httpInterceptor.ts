@@ -7,7 +7,7 @@ import {
   TOGGL_REPORTS_URL,
 } from "~/constants";
 import { CredentialsModel } from "~/credentials/credentialsTypes";
-import { ToolName } from "~/entities/entitiesTypes";
+import { ToolName } from "~/allEntities/allEntitiesTypes";
 
 /** @deprecate */
 enum Context {

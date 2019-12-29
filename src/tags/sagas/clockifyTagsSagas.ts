@@ -6,7 +6,7 @@ import {
   fetchObject,
   paginatedClockifyFetch,
 } from "~/redux/sagaUtils";
-import { EntityGroup, ToolName } from "~/entities/entitiesTypes";
+import { EntityGroup, ToolName } from "~/allEntities/allEntitiesTypes";
 import { TagModel } from "~/tags/tagsTypes";
 
 export interface ClockifyTagResponseModel {

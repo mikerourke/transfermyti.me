@@ -7,7 +7,7 @@ import { fetchClients } from "~/clients/clientsActions";
 import {
   areEntitiesFetchingSelector,
   sourceRecordsByEntityGroupSelector,
-} from "~/entities/entitiesSelectors";
+} from "~/allEntities/allEntitiesSelectors";
 import { fetchProjects } from "~/projects/projectsActions";
 import { fetchTags } from "~/tags/tagsActions";
 import { fetchTasks } from "~/tasks/tasksActions";
@@ -23,7 +23,7 @@ import {
 } from "~/components";
 import ClientsTable from "~/clients/clientsTable/ClientsTable";
 import { RoutePath } from "~/app/appTypes";
-import { EntityGroup, BaseEntityModel } from "~/entities/entitiesTypes";
+import { EntityGroup, BaseEntityModel } from "~/allEntities/allEntitiesTypes";
 import { ReduxState } from "~/redux/reduxTypes";
 
 interface ConnectStateProps {

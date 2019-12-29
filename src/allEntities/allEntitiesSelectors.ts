@@ -7,7 +7,7 @@ import { includedSourceTimeEntriesSelector } from "~/timeEntries/timeEntriesSele
 import { includedSourceUserGroupsSelector } from "~/userGroups/userGroupsSelectors";
 import { includedSourceUsersSelector } from "~/users/usersSelectors";
 import { ReduxState } from "~/redux/reduxTypes";
-import { EntityGroup, BaseEntityModel } from "./entitiesTypes";
+import { EntityGroup, BaseEntityModel } from "./allEntitiesTypes";
 
 export const areEntitiesFetchingSelector = createSelector(
   (state: ReduxState) => state.clients.isFetching,

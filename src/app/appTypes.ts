@@ -1,4 +1,4 @@
-import { Mapping, ToolName } from "~/entities/entitiesTypes";
+import { Mapping, ToolName } from "~/allEntities/allEntitiesTypes";
 
 type NotificationType = "error" | "info" | "success";
 

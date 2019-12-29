@@ -6,7 +6,7 @@ import { updateToolNameByMapping } from "~/app/appActions";
 import { Flex, HelpDetails } from "~/components";
 import TransferMappingCard from "./TransferMappingCard";
 import { RoutePath, ToolNameByMappingModel } from "~/app/appTypes";
-import { ToolName } from "~/entities/entitiesTypes";
+import { ToolName } from "~/allEntities/allEntitiesTypes";
 
 interface ConnectDispatchProps {
   onPush: (path: Path) => void;
