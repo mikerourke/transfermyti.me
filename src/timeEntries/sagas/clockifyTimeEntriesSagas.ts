@@ -5,11 +5,13 @@ import {
   createEntitiesForTool,
   fetchEntitiesForTool,
   fetchObject,
+  findTargetEntityId,
   paginatedClockifyFetch,
 } from "~/redux/sagaUtils";
-import { targetProjectIdSelector } from "~/projects/projectsSelectors";
-import { targetTagIdsSelector } from "~/tags/tagsSelectors";
-import { targetTaskIdSelector } from "~/tasks/tasksSelectors";
+import { credentialsSelector } from "~/credentials/credentialsSelectors";
+import { sourceProjectsByIdSelector } from "~/projects/projectsSelectors";
+import { targetTagIdsSelectorFactory } from "~/tags/tagsSelectors";
+import { sourceTasksByIdSelector } from "~/tasks/tasksSelectors";
 import { ClockifyProjectResponseModel } from "~/projects/sagas/clockifyProjectsSagas";
 import { ClockifyTagResponseModel } from "~/tags/sagas/clockifyTagsSagas";
 import { ClockifyTaskResponseModel } from "~/tasks/sagas/clockifyTasksSagas";
@@ -72,24 +74,25 @@ function* createClockifyTimeEntry(
   sourceTimeEntry: TimeEntryModel,
   targetWorkspaceId: string,
 ): SagaIterator<TimeEntryModel> {
-  const targetProjectId = yield select(
-    targetProjectIdSelector,
+  const targetProjectId = yield call(
+    findTargetEntityId,
     sourceTimeEntry.projectId,
-  );
-  const targetTaskId = yield select(
-    targetTaskIdSelector,
-    sourceTimeEntry.taskId,
+    sourceProjectsByIdSelector,
   );
   const targetTagIds = yield select(
-    targetTagIdsSelector,
-    sourceTimeEntry.tagIds,
+    targetTagIdsSelectorFactory(sourceTimeEntry.tagIds),
+  );
+  const targetTaskId = yield call(
+    findTargetEntityId,
+    sourceTimeEntry.taskId,
+    sourceTasksByIdSelector,
   );
   const timeEntryRequest = {
     start: sourceTimeEntry.start,
     billable: sourceTimeEntry.isBillable,
     description: sourceTimeEntry.description,
-    projectId: R.isNil(targetProjectId) ? undefined : targetProjectId,
-    taskId: R.isNil(targetTaskId) ? undefined : targetTaskId,
+    projectId: targetProjectId ?? undefined,
+    taskId: targetTaskId ?? undefined,
     end: sourceTimeEntry.end,
     tagIds: targetTagIds.length !== 0 ? targetTagIds : undefined,
   };
@@ -109,9 +112,10 @@ function* createClockifyTimeEntry(
 function* fetchClockifyTimeEntriesInWorkspace(
   workspaceId: string,
 ): SagaIterator<TimeEntryModel[]> {
+  const { clockifyUserId } = yield select(credentialsSelector);
   const clockifyTimeEntries: ClockifyTimeEntryResponseModel[] = yield call(
     paginatedClockifyFetch,
-    `/clockify/api/v1/workspaces/${workspaceId}/time-entries`,
+    `/clockify/api/v1/workspaces/${workspaceId}/user/${clockifyUserId}/time-entries`,
   );
 
   return clockifyTimeEntries.map(transformFromResponse);
@@ -135,8 +139,8 @@ function transformFromResponse(
     projectId: timeEntry.project.id,
     tagIds: tags.map(({ id }: ClockifyTagResponseModel) => id),
     tagNames: tags.map(({ name }: ClockifyTagResponseModel) => name),
-    taskId: timeEntry.task.id,
-    userId: timeEntry.user.id,
+    taskId: timeEntry?.task?.id ?? null,
+    userId: timeEntry?.user?.id ?? null,
     userGroupIds: [],
     workspaceId: timeEntry.workspaceId,
     entryCount: 0,

@@ -3,6 +3,7 @@ import * as R from "ramda";
 import { keyframes } from "@emotion/core";
 import { styled } from "./emotion";
 import Flex from "./Flex";
+import LoadingMessage from "./LoadingMessage";
 
 const cubeFoldingAnimation = keyframes`
     0%, 10% {
@@ -54,16 +55,6 @@ const Cube = styled.div<{ rotation: number; delay: number }>(
       backgroundColor: theme.colors.navy,
       animationDelay: `${delay}s`,
     },
-  }),
-);
-
-const LoadingMessage = styled.div<{ size: "small" | "large" }>(
-  {
-    textAlign: "center",
-    fontWeight: "bold",
-  },
-  ({ size }) => ({
-    fontSize: size === "large" ? 32 : 16,
   }),
 );
 

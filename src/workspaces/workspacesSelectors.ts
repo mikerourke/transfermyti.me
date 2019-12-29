@@ -1,5 +1,5 @@
-import { createSelector } from "reselect";
 import * as R from "ramda";
+import { createSelector, createStructuredSelector } from "reselect";
 import { Mapping } from "~/allEntities/allEntitiesTypes";
 import { ReduxState } from "~/redux/reduxTypes";
 import {
@@ -23,7 +23,7 @@ export const targetWorkspacesByIdSelector = createSelector(
   workspacesById => workspacesById,
 );
 
-export const workspaceIdMappingSelector = createSelector(
+export const workspaceIdToLinkedIdSelector = createSelector(
   sourceWorkspacesByIdSelector,
   sourceWorkspacesById => {
     const workspaceIdMapping: Record<string, string> = {};
@@ -49,17 +49,6 @@ export const targetWorkspacesSelector = createSelector(
   (workspacesById): WorkspaceModel[] => Object.values(workspacesById),
 );
 
-export const targetWorkspaceIdSelector = createSelector(
-  workspaceIdMappingSelector,
-  (_: ReduxState, sourceWorkspaceId: string) => sourceWorkspaceId,
-  (workspaceIdMapping, sourceWorkspaceId): string | null =>
-    R.propOr<null, Record<string, string>, string>(
-      null,
-      sourceWorkspaceId,
-      workspaceIdMapping,
-    ),
-);
-
 const limitIdsToIncluded = (workspaces: WorkspaceModel[]): string[] =>
   workspaces.reduce((acc, workspace) => {
     if (!workspace.isIncluded) {
@@ -68,14 +57,23 @@ const limitIdsToIncluded = (workspaces: WorkspaceModel[]): string[] =>
     return [...acc, workspace.id];
   }, [] as string[]);
 
-export const includedWorkspaceIdsByMappingSelector = createSelector(
+const includedSourceWorkspaceIdsSelector = createSelector(
   sourceWorkspacesSelector,
-  targetWorkspacesSelector,
-  (sourceWorkspaces, targetWorkspaces): Record<Mapping, string[]> => ({
-    source: limitIdsToIncluded(sourceWorkspaces),
-    target: limitIdsToIncluded(targetWorkspaces),
-  }),
+  limitIdsToIncluded,
 );
+
+const includedTargetWorkspaceIdsSelector = createSelector(
+  sourceWorkspacesSelector,
+  limitIdsToIncluded,
+);
+
+export const includedWorkspaceIdsByMappingSelector = createStructuredSelector<
+  ReduxState,
+  Record<Mapping, string[]>
+>({
+  source: includedSourceWorkspaceIdsSelector,
+  target: includedTargetWorkspaceIdsSelector,
+});
 
 export const sourceIncludedWorkspacesCountSelector = createSelector(
   sourceWorkspacesSelector,

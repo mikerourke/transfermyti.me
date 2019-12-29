@@ -1,12 +1,13 @@
-import { call, select } from "redux-saga/effects";
+import { call } from "redux-saga/effects";
 import { SagaIterator } from "@redux-saga/types";
 import {
   createEntitiesForTool,
   fetchArray,
   fetchEntitiesForTool,
   fetchObject,
+  findTargetEntityId,
 } from "~/redux/sagaUtils";
-import { targetProjectIdSelector } from "~/projects/projectsSelectors";
+import { sourceProjectsByIdSelector } from "~/projects/projectsSelectors";
 import { EntityGroup, ToolName } from "~/allEntities/allEntitiesTypes";
 import { TaskModel } from "~/tasks/tasksTypes";
 
@@ -46,9 +47,10 @@ export function* fetchTogglTasksSaga(): SagaIterator<TaskModel[]> {
 }
 
 function* createTogglTask(sourceTask: TaskModel): SagaIterator<TaskModel> {
-  const targetProjectId = yield select(
-    targetProjectIdSelector,
+  const targetProjectId = yield call(
+    findTargetEntityId,
     sourceTask.projectId,
+    sourceProjectsByIdSelector,
   );
   const taskRequest = {
     name: sourceTask.name,

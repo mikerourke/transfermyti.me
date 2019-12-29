@@ -1,4 +1,4 @@
-import { all, call, put, select, takeEvery } from "redux-saga/effects";
+import { call, put, select } from "redux-saga/effects";
 import { SagaIterator } from "@redux-saga/types";
 import differenceInMinutes from "date-fns/differenceInMinutes";
 import * as R from "ramda";
@@ -17,20 +17,15 @@ import {
   createTogglTimeEntriesSaga,
   fetchTogglTimeEntriesSaga,
 } from "./togglTimeEntriesSagas";
-import { ToolName, Mapping } from "~/allEntities/allEntitiesTypes";
+import { Mapping, ToolName } from "~/allEntities/allEntitiesTypes";
 import {
   TimeEntryModel,
   TimeEntriesByIdModel,
 } from "~/timeEntries/timeEntriesTypes";
 
-export function* timeEntriesSaga(): Generator {
-  yield all([
-    takeEvery(createTimeEntries.request, createTimeEntriesSaga),
-    takeEvery(fetchTimeEntries.request, fetchTimeEntriesSaga),
-  ]);
-}
+export function* createTimeEntriesSaga(): SagaIterator {
+  yield put(createTimeEntries.request());
 
-function* createTimeEntriesSaga(): SagaIterator {
   try {
     const toolNameByMapping = yield select(toolNameByMappingSelector);
     const createSagaByToolName = {
@@ -58,7 +53,9 @@ function* createTimeEntriesSaga(): SagaIterator {
   }
 }
 
-function* fetchTimeEntriesSaga(): SagaIterator {
+export function* fetchTimeEntriesSaga(): SagaIterator {
+  yield put(fetchTimeEntries.request());
+
   try {
     const fetchSagaByToolName = {
       [ToolName.Clockify]: fetchClockifyTimeEntriesSaga,

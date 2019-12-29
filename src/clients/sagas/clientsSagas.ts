@@ -1,4 +1,4 @@
-import { all, call, put, select, takeEvery } from "redux-saga/effects";
+import { call, put, select } from "redux-saga/effects";
 import { SagaIterator } from "@redux-saga/types";
 import { linkEntitiesByIdByMapping } from "~/redux/sagaUtils";
 import { showFetchErrorNotification } from "~/app/appActions";
@@ -16,14 +16,9 @@ import {
 import { ClientModel } from "~/clients/clientsTypes";
 import { ToolName } from "~/allEntities/allEntitiesTypes";
 
-export function* clientsSaga(): SagaIterator {
-  yield all([
-    takeEvery(createClients.request, createClientsSaga),
-    takeEvery(fetchClients.request, fetchClientsSaga),
-  ]);
-}
+export function* createClientsSaga(): SagaIterator {
+  yield put(createClients.request());
 
-function* createClientsSaga(): SagaIterator {
   try {
     const toolNameByMapping = yield select(toolNameByMappingSelector);
     const createSagaByToolName = {
@@ -45,7 +40,9 @@ function* createClientsSaga(): SagaIterator {
   }
 }
 
-function* fetchClientsSaga(): SagaIterator {
+export function* fetchClientsSaga(): SagaIterator {
+  yield put(fetchClients.request());
+
   try {
     const fetchSagaByToolName = {
       [ToolName.Clockify]: fetchClockifyClientsSaga,

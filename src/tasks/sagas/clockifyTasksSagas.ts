@@ -1,13 +1,14 @@
-import { call, select } from "redux-saga/effects";
+import { call } from "redux-saga/effects";
 import { SagaIterator } from "@redux-saga/types";
 import {
   createEntitiesForTool,
   fetchEntitiesForTool,
   fetchObject,
+  findTargetEntityId,
   paginatedClockifyFetch,
 } from "~/redux/sagaUtils";
 import { EntityGroup, ToolName } from "~/allEntities/allEntitiesTypes";
-import { targetProjectIdSelector } from "~/projects/projectsSelectors";
+import { sourceProjectsByIdSelector } from "~/projects/projectsSelectors";
 import { TaskModel } from "~/tasks/tasksTypes";
 
 type ClockifyTaskStatus = "ACTIVE" | "DONE";
@@ -53,9 +54,10 @@ function* createClockifyTask(
   targetWorkspaceId: string,
 ): SagaIterator {
   // TODO: Add loop for tasks by project ID!
-  const targetProjectId = yield select(
-    targetProjectIdSelector,
+  const targetProjectId = yield call(
+    findTargetEntityId,
     sourceTask.projectId,
+    sourceProjectsByIdSelector,
   );
   // TODO: Add assigneeIds selector.
   const assigneeIds: string[] = [];

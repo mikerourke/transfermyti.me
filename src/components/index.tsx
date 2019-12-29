@@ -7,5 +7,6 @@ export { default as Flex } from "./Flex";
 export { default as HelpDetails } from "./HelpDetails";
 export { default as Icon } from "./Icon";
 export { default as Loader } from "./Loader";
+export { default as LoadingMessage } from "./LoadingMessage";
 export { default as NavigationButtonsRow } from "./NavigationButtonsRow";
 export { default as Toggle } from "./Toggle";

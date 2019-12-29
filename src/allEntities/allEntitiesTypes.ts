@@ -10,14 +10,14 @@ export enum Mapping {
 }
 
 export enum EntityGroup {
-  Workspaces = "workspaces",
-  Projects = "projects",
   Clients = "clients",
+  Projects = "projects",
   Tags = "tags",
   Tasks = "tasks",
   TimeEntries = "timeEntries",
   UserGroups = "userGroups",
   Users = "users",
+  Workspaces = "workspaces",
 }
 
 export interface BaseEntityModel {

@@ -3,18 +3,36 @@ import qs from "qs";
 import * as R from "ramda";
 import { call, delay, put, select } from "redux-saga/effects";
 import { SagaIterator } from "@redux-saga/types";
+import { Selector } from "reselect";
 import {
-  API_PAGE_SIZE,
   CLOCKIFY_API_DELAY,
+  CLOCKIFY_API_PAGE_SIZE,
   TOGGL_API_DELAY,
 } from "~/constants";
 import { incrementCurrentTransferCount } from "~/app/appActions";
 import { mappingForToolSelector } from "~/app/appSelectors";
 import {
   includedWorkspaceIdsByMappingSelector,
-  targetWorkspaceIdSelector,
+  workspaceIdToLinkedIdSelector,
 } from "~/workspaces/workspacesSelectors";
-import { BaseEntityModel, Mapping, ToolName } from "~/allEntities/allEntitiesTypes";
+import {
+  BaseEntityModel,
+  Mapping,
+  ToolName,
+} from "~/allEntities/allEntitiesTypes";
+import { ReduxState } from "~/redux/reduxTypes";
+
+export function* findTargetEntityId<TEntity>(
+  sourceEntityId: string | null,
+  sourceRecordsByIdSelector: Selector<ReduxState, Record<string, TEntity>>,
+): SagaIterator<string | null> {
+  if (R.isNil(sourceEntityId)) {
+    return null;
+  }
+
+  const sourceRecordsById = yield select(sourceRecordsByIdSelector);
+  return R.pathOr(null, [sourceEntityId, "linkedId"], sourceRecordsById);
+}
 
 export function* createEntitiesForTool<TEntity>({
   toolName,
@@ -30,10 +48,13 @@ export function* createEntitiesForTool<TEntity>({
   const apiDelay = apiDelayForTool(toolName);
 
   for (const sourceRecord of sourceRecords as ValidEntity[]) {
-    const targetWorkspaceId = yield select(
-      targetWorkspaceIdSelector,
+    const workspaceIdToLinkedId = yield select(workspaceIdToLinkedIdSelector);
+    const targetWorkspaceId = R.propOr<null, Record<string, string>, string>(
+      null,
       sourceRecord.workspaceId,
+      workspaceIdToLinkedId,
     );
+
     if (R.isNil(targetWorkspaceId)) {
       continue;
     }
@@ -80,8 +101,8 @@ export function* fetchEntitiesForTool<TEntity>({
   const apiDelay = apiDelayForTool(toolName);
 
   for (const workspaceId of workspaceIds) {
-    const workspaceRecords: TEntity[] = yield call(apiFetchFunc, workspaceId);
-    allRecords.push(...workspaceRecords);
+    const recordsInWorkspace: TEntity[] = yield call(apiFetchFunc, workspaceId);
+    allRecords.push(...recordsInWorkspace);
 
     yield delay(apiDelay);
   }
@@ -107,12 +128,12 @@ export function* paginatedClockifyFetch<TEntity>(
   while (keepFetching) {
     const query = qs.stringify({
       page: currentPage,
-      "page-size": API_PAGE_SIZE,
+      "page-size": CLOCKIFY_API_PAGE_SIZE,
     });
     const endpoint = `${apiUrl}?${query}`;
 
     const entities: TEntity[] = yield call(fetchArray, endpoint);
-    keepFetching = entities.length === API_PAGE_SIZE;
+    keepFetching = entities.length === CLOCKIFY_API_PAGE_SIZE;
 
     allEntities.push(...entities);
     yield delay(CLOCKIFY_API_DELAY);

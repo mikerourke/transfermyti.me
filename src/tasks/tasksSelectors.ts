@@ -4,7 +4,7 @@ import { activeWorkspaceIdSelector } from "~/workspaces/workspacesSelectors";
 import { ReduxState } from "~/redux/reduxTypes";
 import { TaskModel, TasksByIdModel } from "~/tasks/tasksTypes";
 
-const sourceTasksByIdSelector = createSelector(
+export const sourceTasksByIdSelector = createSelector(
   (state: ReduxState) => state.tasks.source,
   (sourceTasksById): TasksByIdModel => sourceTasksById,
 );
@@ -30,16 +30,4 @@ export const sourceTasksInActiveWorkspaceSelector = createSelector(
   activeWorkspaceIdSelector,
   (sourceTasks, workspaceId): TaskModel[] =>
     sourceTasks.filter(task => task.workspaceId === workspaceId),
-);
-
-export const targetTaskIdSelector = createSelector(
-  sourceTasksByIdSelector,
-  (_: ReduxState, sourceTaskId: string | null) => sourceTaskId,
-  (sourceTasksById, sourceTaskId): string | null => {
-    if (sourceTaskId === null) {
-      return null;
-    }
-
-    return R.pathOr<null>(null, [sourceTaskId, "linkedId"], sourceTasksById);
-  },
 );

@@ -1,4 +1,4 @@
-import { all, call, put, select, takeEvery } from "redux-saga/effects";
+import { call, put, select } from "redux-saga/effects";
 import { SagaIterator } from "@redux-saga/types";
 import { linkEntitiesByIdByMapping } from "~/redux/sagaUtils";
 import { showFetchErrorNotification } from "~/app/appActions";
@@ -13,14 +13,9 @@ import { createTogglTagsSaga, fetchTogglTagsSaga } from "./togglTagsSagas";
 import { ToolName } from "~/allEntities/allEntitiesTypes";
 import { TagModel } from "~/tags/tagsTypes";
 
-export function* tagsSaga(): SagaIterator {
-  yield all([
-    takeEvery(createTags.request, createTagsSaga),
-    takeEvery(fetchTags.request, fetchTagsSaga),
-  ]);
-}
+export function* createTagsSaga(): SagaIterator {
+  yield put(createTags.request());
 
-function* createTagsSaga(): SagaIterator {
   try {
     const toolNameByMapping = yield select(toolNameByMappingSelector);
     const createSagaByToolName = {
@@ -42,7 +37,9 @@ function* createTagsSaga(): SagaIterator {
   }
 }
 
-function* fetchTagsSaga(): SagaIterator {
+export function* fetchTagsSaga(): SagaIterator {
+  yield put(fetchTags.request());
+
   try {
     const fetchSagaByToolName = {
       [ToolName.Clockify]: fetchClockifyTagsSaga,

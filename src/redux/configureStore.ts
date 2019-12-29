@@ -6,16 +6,10 @@ import { connectRouter, routerMiddleware } from "connected-react-router";
 import { History } from "history";
 import { STORAGE_KEY } from "~/constants";
 import { getIfDev } from "~/utils";
+import { allEntitiesSaga } from "~/allEntities/allEntitiesSaga";
 import { validateCredentials } from "~/credentials/credentialsActions";
 import { initialState as initialCredentialsState } from "~/credentials/credentialsReducer";
-import { clientsSaga } from "~/clients/sagas/clientsSaga";
-import { credentialsSaga } from "~/credentials/sagas/main";
-import { projectsSaga } from "~/projects/sagas/projectsSaga";
-import { tagsSaga } from "~/tags/sagas/tagsSaga";
-import { tasksSaga } from "~/tasks/sagas/tasksSaga";
-import { timeEntriesSaga } from "~/timeEntries/sagas/timeEntriesSaga";
-import { userGroupsSaga } from "~/userGroups/sagas/userGroupsSaga";
-import { usersSaga } from "~/users/sagas/usersSaga";
+import { credentialsSaga } from "~/credentials/sagas/credentialsSaga";
 import { workspacesSaga } from "~/workspaces/sagas/workspacesSaga";
 import { createRootReducer, RouterReducer } from "./rootReducer";
 import { ReduxStore, ReduxState } from "~/redux/reduxTypes";
@@ -53,14 +47,8 @@ export function configureStore(history: History): ReduxStore {
     composeEnhancers(applyMiddleware(...middleware)),
   );
 
-  sagaMiddleware.run(clientsSaga);
+  sagaMiddleware.run(allEntitiesSaga);
   sagaMiddleware.run(credentialsSaga);
-  sagaMiddleware.run(projectsSaga);
-  sagaMiddleware.run(tagsSaga);
-  sagaMiddleware.run(tasksSaga);
-  sagaMiddleware.run(timeEntriesSaga);
-  sagaMiddleware.run(userGroupsSaga);
-  sagaMiddleware.run(usersSaga);
   sagaMiddleware.run(workspacesSaga);
 
   // @ts-ignore

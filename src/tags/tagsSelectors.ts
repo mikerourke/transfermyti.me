@@ -1,4 +1,4 @@
-import { createSelector } from "reselect";
+import { createSelector, Selector } from "reselect";
 import * as R from "ramda";
 import { activeWorkspaceIdSelector } from "~/workspaces/workspacesSelectors";
 import { ReduxState } from "~/redux/reduxTypes";
@@ -9,7 +9,7 @@ const sourceTagsByIdSelector = createSelector(
   (sourceTagsById): TagsByIdModel => sourceTagsById,
 );
 
-export const sourceTagsSelector = createSelector(
+const sourceTagsSelector = createSelector(
   sourceTagsByIdSelector,
   (sourceTagsById): TagModel[] => Object.values(sourceTagsById),
 );
@@ -33,10 +33,10 @@ export const sourceTagsInActiveWorkspaceSelector = createSelector(
     sourceTags.filter(tag => tag.workspaceId === workspaceId),
 );
 
-export const targetTagIdsSelector = createSelector(
-  sourceTagsByIdSelector,
-  (_: ReduxState, sourceTagIds: string[]) => sourceTagIds,
-  (sourceTagsById, sourceTagIds): string[] => {
+export const targetTagIdsSelectorFactory = (
+  sourceTagIds: string[],
+): Selector<ReduxState, string[]> =>
+  createSelector(sourceTagsByIdSelector, (sourceTagsById): string[] => {
     const targetTagIds: string[] = [];
 
     for (const sourceTagId of sourceTagIds) {
@@ -47,5 +47,4 @@ export const targetTagIdsSelector = createSelector(
     }
 
     return targetTagIds;
-  },
-);
+  });

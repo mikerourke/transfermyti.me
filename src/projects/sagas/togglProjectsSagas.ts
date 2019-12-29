@@ -1,15 +1,16 @@
 /* eslint-disable @typescript-eslint/camelcase */
 import * as R from "ramda";
-import { call, delay, select } from "redux-saga/effects";
+import { call, delay } from "redux-saga/effects";
 import { SagaIterator } from "@redux-saga/types";
-import { TOGGL_API_DELAY } from "~/constants";
+import { TOGGL_API_DELAY, TOGGL_TEMPLATE_ID } from "~/constants";
 import {
   createEntitiesForTool,
   fetchArray,
   fetchEntitiesForTool,
   fetchObject,
+  findTargetEntityId,
 } from "~/redux/sagaUtils";
-import { targetClientIdSelector } from "~/clients/clientsSelectors";
+import { sourceClientsByIdSelector } from "~/clients/clientsSelectors";
 import { EntityGroup, ToolName } from "~/allEntities/allEntitiesTypes";
 import { ProjectModel } from "~/projects/projectsTypes";
 
@@ -70,15 +71,15 @@ function* createTogglProject(
   sourceProject: ProjectModel,
   targetWorkspaceId: string,
 ): SagaIterator<ProjectModel> {
-  const targetClientId = yield select(
-    targetClientIdSelector,
+  const targetClientId = yield call(
+    findTargetEntityId,
     sourceProject.clientId,
+    sourceClientsByIdSelector,
   );
   const projectRequest = {
     name: sourceProject.name,
     wid: +targetWorkspaceId,
-    // TODO: Find out if this template_id value is valid?
-    template_id: 10237,
+    template_id: TOGGL_TEMPLATE_ID,
     is_private: !sourceProject.isPublic,
     cid: R.isNil(targetClientId) ? undefined : +targetClientId,
   };

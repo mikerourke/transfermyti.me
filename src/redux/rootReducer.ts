@@ -1,4 +1,8 @@
 import { combineReducers, Reducer } from "redux";
+import {
+  allEntitiesReducer,
+  AllEntitiesState,
+} from "~/allEntities/allEntitiesReducer";
 import { appReducer, AppState } from "~/app/appReducer";
 import { clientsReducer, ClientsState } from "~/clients/clientsReducer";
 import {
@@ -26,6 +30,7 @@ import { RouterState } from "~/redux/reduxTypes";
 export type RouterReducer = Reducer<RouterState>;
 
 export interface State {
+  allEntities: AllEntitiesState;
   app: AppState;
   clients: ClientsState;
   credentials: CredentialsState;
@@ -41,6 +46,7 @@ export interface State {
 
 export const createRootReducer = (router: RouterReducer): Reducer<State> =>
   combineReducers({
+    allEntities: allEntitiesReducer,
     app: appReducer,
     clients: clientsReducer,
     credentials: credentialsReducer,

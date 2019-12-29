@@ -1,5 +1,5 @@
 import * as R from "ramda";
-import { call, delay, select } from "redux-saga/effects";
+import { call, delay } from "redux-saga/effects";
 import { SagaIterator } from "@redux-saga/types";
 import { CLOCKIFY_API_DELAY } from "~/constants";
 import {
@@ -7,9 +7,10 @@ import {
   fetchArray,
   fetchEntitiesForTool,
   fetchObject,
+  findTargetEntityId,
   paginatedClockifyFetch,
 } from "~/redux/sagaUtils";
-import { targetClientIdSelector } from "~/clients/clientsSelectors";
+import { sourceClientsByIdSelector } from "~/clients/clientsSelectors";
 import {
   ClockifyHourlyRateResponseModel,
   ClockifyMembershipResponseModel,
@@ -70,9 +71,10 @@ function* createClockifyProject(
   sourceProject: ProjectModel,
   targetWorkspaceId: string,
 ): SagaIterator<ProjectModel> {
-  const targetClientId = yield select(
-    targetClientIdSelector,
+  const targetClientId = yield call(
+    findTargetEntityId,
     sourceProject.clientId,
+    sourceClientsByIdSelector,
   );
   const projectRequest = {
     name: sourceProject.name,

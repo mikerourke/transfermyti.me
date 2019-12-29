@@ -9,14 +9,9 @@ export const sourceProjectsByIdSelector = createSelector(
   (sourceProjectsById): ProjectsByIdModel => sourceProjectsById,
 );
 
-export const sourceProjectsSelector = createSelector(
+const sourceProjectsSelector = createSelector(
   sourceProjectsByIdSelector,
   (sourceProjectsById): ProjectModel[] => Object.values(sourceProjectsById),
-);
-
-export const targetProjectsSelector = createSelector(
-  (state: ReduxState) => state.projects.target,
-  (targetProjectsById): ProjectModel[] => Object.values(targetProjectsById),
 );
 
 export const includedSourceProjectsSelector = createSelector(
@@ -38,11 +33,4 @@ export const sourceProjectsInActiveWorkspaceSelector = createSelector(
     sourceProjects.filter(
       sourceProject => sourceProject.workspaceId === activeWorkspaceId,
     ),
-);
-
-export const targetProjectIdSelector = createSelector(
-  sourceProjectsByIdSelector,
-  (_: ReduxState, sourceProjectId: string) => sourceProjectId,
-  (sourceProjectsById, sourceProjectId): string | null =>
-    R.pathOr<null>(null, [sourceProjectId, "linkedId"], sourceProjectsById),
 );
