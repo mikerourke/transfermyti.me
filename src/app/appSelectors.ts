@@ -1,5 +1,5 @@
-import * as R from "ramda";
 import { createSelector } from "reselect";
+import * as R from "ramda";
 import { capitalize } from "~/utils";
 import { Mapping, ToolName } from "~/allEntities/allEntitiesTypes";
 import { ReduxState } from "~/redux/reduxTypes";

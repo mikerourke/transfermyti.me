@@ -1,5 +1,5 @@
-import { select } from "redux-saga/effects";
 import { SagaIterator } from "@redux-saga/types";
+import { select } from "redux-saga/effects";
 import storage from "store";
 import { STORAGE_KEY } from "~/constants";
 import { getIfDev } from "~/utils";

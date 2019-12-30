@@ -1,5 +1,5 @@
-import { all, call, put, select, takeEvery } from "redux-saga/effects";
 import { SagaIterator } from "@redux-saga/types";
+import { all, call, put, select, takeEvery } from "redux-saga/effects";
 import { linkEntitiesByIdByMapping } from "~/redux/sagaUtils";
 import { showFetchErrorNotification } from "~/app/appActions";
 import { toolNameByMappingSelector } from "~/app/appSelectors";

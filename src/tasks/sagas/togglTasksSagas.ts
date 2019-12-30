@@ -1,5 +1,5 @@
-import { call } from "redux-saga/effects";
 import { SagaIterator } from "@redux-saga/types";
+import { call } from "redux-saga/effects";
 import {
   createEntitiesForTool,
   fetchArray,

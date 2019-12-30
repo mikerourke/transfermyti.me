@@ -1,6 +1,6 @@
+import { SagaIterator } from "@redux-saga/types";
 import * as R from "ramda";
 import { call, delay } from "redux-saga/effects";
-import { SagaIterator } from "@redux-saga/types";
 import { CLOCKIFY_API_DELAY } from "~/constants";
 import {
   createEntitiesForTool,

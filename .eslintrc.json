@@ -2,13 +2,22 @@
   "parser": "@typescript-eslint/parser",
   "extends": [
     "plugin:react/recommended",
-    "plugin:@typescript-eslint/recommended"
+    "plugin:@typescript-eslint/recommended",
+    "plugin:import/errors",
+    "plugin:import/warnings",
+    "plugin:import/typescript"
   ],
   "plugins": ["@typescript-eslint", "react", "unicorn", "import"],
   "settings": {
     "react": {
       "version": "detect"
-    }
+    },
+    "import/resolver": {
+      "node": {
+        "extensions": [".js", ".jsx", ".ts", ".tsx"]
+      }
+    },
+    "import/core-modules": ["@redux-saga/types", "reselect"]
   },
   "env": {
     "es6": true,
@@ -55,9 +64,11 @@
     ],
     "@typescript-eslint/no-var-requires": "off",
     "import/no-default-export": "error",
+    "import/no-unresolved": ["error", { "ignore": ["~/.*"] }],
     "import/order": [
       "error",
       {
+        "alphabetize": { "order": "ignore" },
         "groups": ["builtin", "external", ["internal", "parent", "sibling"]],
         "pathGroups": [
           {

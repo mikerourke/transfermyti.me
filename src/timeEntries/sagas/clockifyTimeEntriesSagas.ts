@@ -1,6 +1,6 @@
+import { SagaIterator } from "@redux-saga/types";
 import * as R from "ramda";
 import { call, select } from "redux-saga/effects";
-import { SagaIterator } from "@redux-saga/types";
 import {
   createEntitiesForTool,
   fetchEntitiesForTool,

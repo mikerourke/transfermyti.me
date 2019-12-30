@@ -1,5 +1,5 @@
-import * as R from "ramda";
 import { createSelector } from "reselect";
+import * as R from "ramda";
 import { Mapping } from "~/allEntities/allEntitiesTypes";
 import { toolNameByMappingSelector } from "~/app/appSelectors";
 import { ProjectModel, ProjectsByIdModel } from "~/projects/projectsTypes";

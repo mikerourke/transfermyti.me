@@ -1,4 +1,5 @@
 /* eslint-disable @typescript-eslint/camelcase */
+import { SagaIterator } from "@redux-saga/types";
 import differenceInSeconds from "date-fns/differenceInSeconds";
 import endOfYear from "date-fns/endOfYear";
 import format from "date-fns/format";
@@ -6,7 +7,6 @@ import startOfYear from "date-fns/startOfYear";
 import qs from "qs";
 import * as R from "ramda";
 import { call, select, delay } from "redux-saga/effects";
-import { SagaIterator } from "@redux-saga/types";
 import { TOGGL_API_DELAY } from "~/constants";
 import {
   createEntitiesForTool,

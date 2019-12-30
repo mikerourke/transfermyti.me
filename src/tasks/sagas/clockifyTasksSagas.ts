@@ -1,5 +1,5 @@
-import { call, delay, select } from "redux-saga/effects";
 import { SagaIterator } from "@redux-saga/types";
+import { call, delay, select } from "redux-saga/effects";
 import { CLOCKIFY_API_DELAY } from "~/constants";
 import {
   createEntitiesForTool,

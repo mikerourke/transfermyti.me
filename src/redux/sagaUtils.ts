@@ -1,9 +1,9 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
+import { SagaIterator } from "@redux-saga/types";
+import { Selector } from "reselect";
 import qs from "qs";
 import * as R from "ramda";
 import { call, delay, put, select } from "redux-saga/effects";
-import { SagaIterator } from "@redux-saga/types";
-import { Selector } from "reselect";
 import {
   CLOCKIFY_API_DELAY,
   CLOCKIFY_API_PAGE_SIZE,

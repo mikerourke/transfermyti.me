@@ -1,7 +1,7 @@
+import { SagaIterator } from "@redux-saga/types";
 import { push } from "connected-react-router";
 import * as R from "ramda";
 import { call, put, select } from "redux-saga/effects";
-import { SagaIterator } from "@redux-saga/types";
 import { fetchObject } from "~/redux/sagaUtils";
 import {
   currentPathSelector,

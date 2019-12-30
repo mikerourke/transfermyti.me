@@ -1,7 +1,7 @@
 /* eslint-disable @typescript-eslint/camelcase */
+import { SagaIterator } from "@redux-saga/types";
 import * as R from "ramda";
 import { call, delay } from "redux-saga/effects";
-import { SagaIterator } from "@redux-saga/types";
 import { TOGGL_API_DELAY, TOGGL_TEMPLATE_ID } from "~/constants";
 import {
   createEntitiesForTool,

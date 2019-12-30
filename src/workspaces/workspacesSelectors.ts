@@ -1,5 +1,5 @@
-import * as R from "ramda";
 import { createSelector, createStructuredSelector } from "reselect";
+import * as R from "ramda";
 import { Mapping } from "~/allEntities/allEntitiesTypes";
 import { ReduxState } from "~/redux/reduxTypes";
 import {
