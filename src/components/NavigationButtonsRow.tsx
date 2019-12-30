@@ -16,26 +16,28 @@ const Root = styled.div({
 });
 
 interface Props {
+  disabled?: boolean;
   onBackClick: VoidFunction;
   onNextClick: VoidFunction;
   onRefreshClick?: VoidFunction;
 }
 
 const NavigationButtonsRow: React.FC<Props> = ({
+  disabled = false,
   onBackClick,
   onNextClick,
   onRefreshClick,
   ...props
 }) => (
   <Root {...props}>
-    <Button color="manatee" onClick={onBackClick}>
+    <Button color="manatee" disabled={disabled} onClick={onBackClick}>
       Back
     </Button>
-    <Button color="cornflower" onClick={onNextClick}>
+    <Button color="cornflower" disabled={disabled} onClick={onNextClick}>
       Next
     </Button>
     {!R.isNil(onRefreshClick) && (
-      <Button color="eggplant" onClick={onRefreshClick}>
+      <Button color="eggplant" disabled={disabled} onClick={onRefreshClick}>
         Refresh
       </Button>
     )}

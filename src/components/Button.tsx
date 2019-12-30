@@ -4,12 +4,13 @@ import { styled, useTheme, ThemeColors } from "./emotion";
 export interface ButtonProps
   extends React.ButtonHTMLAttributes<HTMLButtonElement> {
   color?: keyof ThemeColors;
+  disabled?: boolean;
+  onClick: VoidFunction;
 }
 
-const ButtonBase = styled.button({
+const Base = styled.button({
   border: "none",
   borderRadius: "0.25rem",
-  cursor: "pointer",
   fontSize: 14,
   fontWeight: 400,
   outline: "none",
@@ -22,7 +23,12 @@ const ButtonBase = styled.button({
   },
 });
 
-const Button: React.FC<ButtonProps> = ({ color = "midnight", ...props }) => {
+const Button: React.FC<ButtonProps> = ({
+  color = "midnight",
+  disabled = false,
+  onClick,
+  ...props
+}) => {
   const theme = useTheme();
   const textColor = [
     "seaglass",
@@ -36,8 +42,15 @@ const Button: React.FC<ButtonProps> = ({ color = "midnight", ...props }) => {
     : theme.colors.white;
 
   return (
-    <ButtonBase
-      css={{ color: textColor, background: theme.colors[color] }}
+    <Base
+      aria-disabled={disabled}
+      css={{
+        background: theme.colors[color],
+        color: textColor,
+        cursor: disabled ? "default" : "pointer",
+        opacity: disabled ? 0.75 : 1,
+      }}
+      onClick={disabled ? undefined : onClick}
       {...props}
     />
   );
