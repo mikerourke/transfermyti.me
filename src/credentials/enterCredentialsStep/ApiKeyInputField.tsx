@@ -3,14 +3,14 @@ import * as R from "ramda";
 import { styled, ExternalLink } from "~/components";
 import { ToolHelpDetailsModel } from "~/app/appTypes";
 
-const ErrorMessage = styled.span(
+const ErrorMessage = styled.div(
   {
-    fontSize: "0.75rem",
-    fontWeight: 400,
+    fontSize: "0.875rem",
+    fontWeight: "bold",
+    marginTop: "-0.75rem",
   },
   ({ theme }) => ({
     color: theme.colors.error,
-    marginTop: "0.5rem",
   }),
 );
 
@@ -58,6 +58,7 @@ const ApiKeyInputField: React.FC<Props> = ({
       </Label>
       <Input
         id={mapping}
+        name={mapping}
         type="text"
         autoComplete="hidden"
         aria-describedby={errorId}

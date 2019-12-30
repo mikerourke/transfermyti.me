@@ -6,10 +6,9 @@ import {
   TOGGL_API_URL,
   TOGGL_REPORTS_URL,
 } from "~/constants";
-import { CredentialsModel } from "~/credentials/credentialsTypes";
+import { credentialsByToolNameSelector } from "~/credentials/credentialsSelectors";
 import { ToolName } from "~/allEntities/allEntitiesTypes";
 
-/** @deprecate */
 enum Context {
   Api = "api",
   Reports = "reports",
@@ -25,13 +24,16 @@ export function initInterceptor(store: Store): VoidFunction {
     request(url, config: RequestConfig = {}) {
       const { toolName, context, endpoint } = extrapolateFromUrl(url);
 
-      const { credentials } = store.getState();
+      const credentialsByToolName = credentialsByToolNameSelector(
+        store.getState(),
+      );
+      const apiKey = credentialsByToolName[toolName]?.apiKey ?? "";
 
       if (config.body) {
         config.body = JSON.stringify(config.body);
       }
 
-      const baseHeaders = getHeaders(toolName, credentials);
+      const baseHeaders = getHeaders(toolName, apiKey);
       if (config.headers) {
         config.headers = {
           ...config.headers,
@@ -41,34 +43,32 @@ export function initInterceptor(store: Store): VoidFunction {
         config.headers = baseHeaders;
       }
 
-      // TODO: Eventually we'll get rid of the extrapolation code:
-      let fullUrl = getApiUrl(toolName, context).concat("/", endpoint);
-
-      if (
-        [CLOCKIFY_API_URL, TOGGL_API_URL, TOGGL_REPORTS_URL].includes(endpoint)
-      ) {
-        fullUrl = endpoint;
-      }
-
+      const fullUrl = getApiUrl(toolName, context).concat("/", endpoint);
       return [fullUrl, config];
     },
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
     response(response): any {
+      const toolName = response.url.includes("clockify")
+        ? ToolName.Clockify
+        : ToolName.Toggl;
+      const { url, status, statusText } = response;
+
       if (!response.ok) {
-        const toolName = response.url.includes("clockify")
-          ? ToolName.Clockify
-          : ToolName.Toggl;
-
-        const { url, status, statusText } = response;
-
-        return response
-          .json()
-          .then((result: object) => Promise.reject({ ...result, toolName }))
-          .catch(() => Promise.reject({ url, status, statusText, toolName }));
+        const error = new Error(statusText);
+        Object.assign(error, { url, status, toolName });
+        throw error;
       }
+
       const type = response.headers.get("content-type") || "json";
       if (type.includes("json")) {
-        return response.json();
+        return response
+          .json()
+          .then(result => result)
+          .catch(err => {
+            const error = new Error(err.message);
+            Object.assign(error, { url, toolName });
+            return Promise.reject(error);
+          });
       }
       return response.text();
     },
@@ -77,16 +77,16 @@ export function initInterceptor(store: Store): VoidFunction {
 
 function getHeaders(
   toolName: ToolName,
-  credentials: CredentialsModel,
+  apiKey: string,
 ): Record<string, string> {
   if (toolName === ToolName.Clockify) {
     return {
       "Content-Type": "application/json",
-      "X-Api-Key": credentials.clockifyApiKey,
+      "X-Api-Key": apiKey,
     };
   }
 
-  const authString = `${credentials.togglApiKey}:api_token`;
+  const authString = `${apiKey}:api_token`;
   const encodedAuth = window.btoa(authString);
   return {
     "Content-Type": "application/json",

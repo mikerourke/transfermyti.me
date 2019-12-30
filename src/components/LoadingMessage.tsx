@@ -7,9 +7,10 @@ interface Props {
 const LoadingMessage: React.FC<Props> = ({ size = "small", ...props }) => (
   <div
     css={{
-      textAlign: "center",
       fontWeight: "bold",
       fontSize: size === "large" ? 32 : 16,
+      margin: "1rem 0 3rem 0",
+      textAlign: "center",
     }}
     {...props}
   />

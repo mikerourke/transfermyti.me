@@ -1,46 +1,49 @@
 import { createReducer, ActionType } from "typesafe-actions";
 import * as credentialsActions from "./credentialsActions";
-import { CredentialsModel } from "./credentialsTypes";
+import {
+  CredentialsModel,
+  ValidationErrorsByMappingModel,
+} from "./credentialsTypes";
 
 type CredentialsAction = ActionType<typeof credentialsActions>;
 
-export interface CredentialsState extends CredentialsModel {
+export interface CredentialsState {
+  readonly source: CredentialsModel;
+  readonly target: CredentialsModel;
   readonly isValidating: boolean;
-  readonly validationErrorsByTool: Record<string, string>;
+  readonly validationErrorsByMapping: ValidationErrorsByMappingModel;
 }
 
 export const initialState: CredentialsState = {
-  togglEmail: "",
-  togglApiKey: "",
-  togglUserId: "",
-  clockifyUserId: "",
-  clockifyApiKey: "",
+  source: {
+    apiKey: null,
+    email: null,
+    userId: null,
+  },
+  target: {
+    apiKey: null,
+    email: null,
+    userId: null,
+  },
   isValidating: false,
-  validationErrorsByTool: {},
+  validationErrorsByMapping: { source: null, target: null },
 };
 
 export const credentialsReducer = createReducer<
   CredentialsState,
   CredentialsAction
 >(initialState)
-  .handleAction(
-    credentialsActions.storeCredentials.success,
-    (state, { payload }) => ({
-      ...state,
-      ...payload,
-    }),
-  )
   .handleAction(credentialsActions.validateCredentials.request, state => ({
     ...state,
     isValidating: true,
-    validationErrorsByTool: {},
+    validationErrorsByMapping: { source: null, target: null },
   }))
   .handleAction(
     credentialsActions.validateCredentials.failure,
     (state, { payload }) => ({
       ...state,
       isValidating: false,
-      validationErrorsByTool: payload,
+      validationErrorsByMapping: payload,
     }),
   )
   .handleAction(
@@ -49,14 +52,20 @@ export const credentialsReducer = createReducer<
       ...state,
       ...payload,
       isValidating: false,
-      validationErrorsByTool: {},
+      validationErrorsByMapping: { source: null, target: null },
     }),
   )
   .handleAction(credentialsActions.resetIsValidating, state => ({
     ...state,
     isValidating: false,
   }))
-  .handleAction(credentialsActions.updateCredentials, (state, { payload }) => ({
-    ...state,
-    ...payload,
-  }));
+  .handleAction(credentialsActions.updateCredentials, (state, { payload }) => {
+    const { mapping, ...credentials } = payload;
+    return {
+      ...state,
+      [mapping]: {
+        ...state[mapping],
+        ...credentials,
+      },
+    };
+  });

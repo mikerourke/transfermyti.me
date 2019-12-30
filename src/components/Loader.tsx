@@ -64,7 +64,7 @@ interface Props {
 
 const Loader: React.FC<Props> = ({ size = "small", children, ...props }) => (
   <Flex
-    css={{ margin: "3rem 1rem" }}
+    css={{ margin: "3rem 1rem 0 1rem" }}
     alignItems="center"
     justifyContent="center"
     direction="column"

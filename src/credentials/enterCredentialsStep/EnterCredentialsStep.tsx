@@ -1,12 +1,9 @@
 import { push } from "connected-react-router";
 import { Path } from "history";
-import * as R from "ramda";
 import React from "react";
 import { connect } from "react-redux";
 import { PayloadActionCreator } from "typesafe-actions";
 import { toolHelpDetailsByMappingSelector } from "~/app/appSelectors";
-import { styled, HelpDetails, NavigationButtonsRow } from "~/components";
-import { useDeepCompareEffect } from "~/components/hooks";
 import {
   resetIsValidating,
   storeCredentials,
@@ -14,14 +11,21 @@ import {
   validateCredentials,
 } from "~/credentials/credentialsActions";
 import {
-  credentialsSelector,
+  credentialsByMappingSelector,
+  hasValidationErrorsSelector,
   isValidatingSelector,
-  validationErrorsByToolSelector,
+  validationErrorsByMappingSelector,
 } from "~/credentials/credentialsSelectors";
+import { styled, HelpDetails, NavigationButtonsRow } from "~/components";
+import { useDeepCompareEffect } from "~/components/hooks";
 import ApiKeyInputField from "./ApiKeyInputField";
-import { RoutePath, ToolHelpDetailsModel } from "~/app/appTypes";
-import { CredentialsModel } from "~/credentials/credentialsTypes";
 import { Mapping } from "~/allEntities/allEntitiesTypes";
+import { RoutePath, ToolHelpDetailsModel } from "~/app/appTypes";
+import {
+  CredentialsModel,
+  PartialCredentialsUpdateModel,
+  ValidationErrorsByMappingModel,
+} from "~/credentials/credentialsTypes";
 import { ReduxState } from "~/redux/reduxTypes";
 
 const Form = styled.form({
@@ -35,17 +39,18 @@ const Form = styled.form({
 });
 
 interface ConnectStateProps {
-  credentials: CredentialsModel;
+  credentialsByMapping: Record<Mapping, CredentialsModel>;
+  hasValidationErrors: boolean;
   isValidating: boolean;
   toolHelpDetailsByMapping: Record<Mapping, ToolHelpDetailsModel>;
-  validationErrorsByTool: Record<string, string>;
+  validationErrorsByMapping: ValidationErrorsByMappingModel;
 }
 
 interface ConnectDispatchProps {
   onPush: (path: Path) => void;
   onResetIfValidating: PayloadActionCreator<string, void>;
   onStoreCredentials: PayloadActionCreator<string, void>;
-  onUpdateCredentials: (credentials: Partial<CredentialsModel>) => void;
+  onUpdateCredentials: (credentials: PartialCredentialsUpdateModel) => void;
   onValidateCredentials: PayloadActionCreator<string, void>;
 }
 
@@ -54,11 +59,14 @@ type Props = ConnectStateProps & ConnectDispatchProps;
 const EnterCredentialsStepComponent: React.FC<Props> = props => {
   type InputFields = Record<string, string | null>;
 
-  const defaultErrors: InputFields = { clockify: null, toggl: null };
+  const defaultErrors: InputFields = {
+    [Mapping.Source]: null,
+    [Mapping.Target]: null,
+  };
 
   const [inputValues, setInputValues] = React.useState<InputFields>({
-    clockify: props.credentials.clockifyApiKey,
-    toggl: props.credentials.togglApiKey,
+    [Mapping.Source]: props.credentialsByMapping.source.apiKey ?? "",
+    [Mapping.Target]: props.credentialsByMapping.target.apiKey ?? "",
   });
 
   const [inputErrors, setInputErrors] = React.useState<InputFields>({
@@ -74,24 +82,28 @@ const EnterCredentialsStepComponent: React.FC<Props> = props => {
   }, []);
 
   useDeepCompareEffect(() => {
-    if (!R.isEmpty(props.validationErrorsByTool)) {
-      setInputErrors({ ...defaultErrors, ...props.validationErrorsByTool });
+    if (props.hasValidationErrors) {
+      setInputErrors({ ...defaultErrors, ...props.validationErrorsByMapping });
     }
-  }, [props.isValidating, props.validationErrorsByTool]);
+  }, [
+    props.hasValidationErrors,
+    props.isValidating,
+    props.validationErrorsByMapping,
+  ]);
 
   const clearError = (event: React.FocusEvent<HTMLInputElement>): void => {
-    const fieldName = event.target.name as keyof InputFields;
-    setInputErrors({ ...inputErrors, [fieldName]: null });
+    const mapping = event.target.name as Mapping;
+    setInputErrors({ ...inputErrors, [mapping]: null });
   };
 
   const validateForm = (): void => {
     let isValid = true;
     const newInputErrors: InputFields = { ...defaultErrors };
 
-    for (const [toolName, value] of Object.entries(inputValues)) {
+    for (const [mapping, value] of Object.entries(inputValues)) {
       if (value === "") {
         isValid = false;
-        newInputErrors[toolName] = "This field is required";
+        newInputErrors[mapping] = "This field is required";
       }
     }
 
@@ -109,14 +121,13 @@ const EnterCredentialsStepComponent: React.FC<Props> = props => {
   const handleInputChange = (
     event: React.ChangeEvent<HTMLInputElement>,
   ): void => {
-    const toolName = event.target.name as keyof InputFields;
-    setInputValues({ ...inputValues, [toolName]: event.target.value });
+    const mapping = event.target.name as Mapping;
+    setInputValues({ ...inputValues, [mapping]: event.target.value });
   };
 
   const handleInputBlur = (event: React.FocusEvent<HTMLInputElement>): void => {
-    const toolName = event.target.name as keyof InputFields;
-    const fieldName = toolName.concat("ApiKey");
-    props.onUpdateCredentials({ [fieldName]: inputValues[toolName] });
+    const mapping = event.target.name as Mapping;
+    props.onUpdateCredentials({ mapping, apiKey: event.target.value });
   };
 
   const handleBackClick = (): void => {
@@ -139,22 +150,22 @@ const EnterCredentialsStepComponent: React.FC<Props> = props => {
       </HelpDetails>
       <Form autoComplete="hidden">
         <ApiKeyInputField
-          mapping="source"
+          mapping={Mapping.Source}
           toolHelpDetails={source}
           onBlur={handleInputBlur}
           onChange={handleInputChange}
           onFocus={clearError}
-          value={inputValues[source.toolName] as string}
-          errorMessage={inputErrors[source.toolName]}
+          value={inputValues.source ?? ""}
+          errorMessage={inputErrors.source}
         />
         <ApiKeyInputField
-          mapping="target"
+          mapping={Mapping.Target}
           toolHelpDetails={target}
           onBlur={handleInputBlur}
           onChange={handleInputChange}
           onFocus={clearError}
-          value={inputValues[target.toolName] as string}
-          errorMessage={inputErrors[target.toolName]}
+          value={inputValues.target ?? ""}
+          errorMessage={inputErrors.target}
         />
       </Form>
       <NavigationButtonsRow
@@ -166,16 +177,17 @@ const EnterCredentialsStepComponent: React.FC<Props> = props => {
 };
 
 const mapStateToProps = (state: ReduxState): ConnectStateProps => ({
-  credentials: credentialsSelector(state),
+  credentialsByMapping: credentialsByMappingSelector(state),
+  hasValidationErrors: hasValidationErrorsSelector(state),
   isValidating: isValidatingSelector(state),
   toolHelpDetailsByMapping: toolHelpDetailsByMappingSelector(state),
-  validationErrorsByTool: validationErrorsByToolSelector(state),
+  validationErrorsByMapping: validationErrorsByMappingSelector(state),
 });
 
 const mapDispatchToProps: ConnectDispatchProps = {
   onPush: push,
   onResetIfValidating: resetIsValidating,
-  onStoreCredentials: storeCredentials.request,
+  onStoreCredentials: storeCredentials,
   onUpdateCredentials: updateCredentials,
   onValidateCredentials: validateCredentials.request,
 };

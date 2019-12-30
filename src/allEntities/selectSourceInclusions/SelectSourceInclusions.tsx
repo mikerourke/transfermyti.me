@@ -34,10 +34,6 @@ interface ConnectDispatchProps {
 type Props = ConnectStateProps & ConnectDispatchProps;
 
 export const SelectSourceInclusionsComponent: React.FC<Props> = props => {
-  React.useEffect(() => {
-    props.onFetchAllEntities();
-  }, []);
-
   const handleBackClick = (): void => {
     props.onPush(RoutePath.Workspaces);
   };
@@ -76,8 +72,10 @@ export const SelectSourceInclusionsComponent: React.FC<Props> = props => {
         </Accordion>
       )}
       <NavigationButtonsRow
+        disabled={props.areEntitiesFetching}
         onBackClick={handleBackClick}
         onNextClick={handleNextClick}
+        onRefreshClick={() => props.onFetchAllEntities()}
       />
     </section>
   );

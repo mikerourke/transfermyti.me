@@ -3,6 +3,7 @@ import { push } from "connected-react-router";
 import { Path } from "history";
 import { connect } from "react-redux";
 import { PayloadActionCreator } from "typesafe-actions";
+import { fetchAllEntities } from "~/allEntities/allEntitiesActions";
 import { dismissAllNotifications, showNotification } from "~/app/appActions";
 import {
   fetchWorkspaces,
@@ -27,6 +28,7 @@ interface ConnectStateProps {
 
 interface ConnectDispatchProps {
   onDismissAllNotifications: VoidFunction;
+  onFetchAllEntities: PayloadActionCreator<string, void>;
   onFetchWorkspaces: PayloadActionCreator<string, void>;
   onFlipIsWorkspaceIncluded: (workspace: WorkspaceModel) => void;
   onPush: (path: Path) => void;
@@ -47,6 +49,7 @@ export const SelectSourceWorkspacesStepComponent: React.FC<Props> = props => {
   };
 
   const handleNextClick = (): void => {
+    props.onFetchAllEntities();
     props.onPush(RoutePath.ReviewSource);
   };
 
@@ -72,6 +75,7 @@ export const SelectSourceWorkspacesStepComponent: React.FC<Props> = props => {
         </Flex>
       )}
       <NavigationButtonsRow
+        disabled={props.areWorkspacesFetching}
         onBackClick={handleBackClick}
         onNextClick={handleNextClick}
         onRefreshClick={() => props.onFetchWorkspaces()}
@@ -88,6 +92,7 @@ const mapStateToProps = (state: ReduxState): ConnectStateProps => ({
 
 const mapDispatchToProps: ConnectDispatchProps = {
   onDismissAllNotifications: dismissAllNotifications,
+  onFetchAllEntities: fetchAllEntities.request,
   onFetchWorkspaces: fetchWorkspaces.request,
   onFlipIsWorkspaceIncluded: flipIsWorkspaceIncluded,
   onPush: push,

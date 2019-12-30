@@ -15,7 +15,7 @@ import {
   findTargetEntityId,
 } from "~/redux/sagaUtils";
 import { clientIdsByNameSelectorFactory } from "~/clients/clientsSelectors";
-import { credentialsSelector } from "~/credentials/credentialsSelectors";
+import { credentialsByToolNameSelector } from "~/credentials/credentialsSelectors";
 import { sourceProjectsByIdSelector } from "~/projects/projectsSelectors";
 import { sourceTasksByIdSelector } from "~/tasks/tasksSelectors";
 import { EntityGroup, ToolName } from "~/allEntities/allEntitiesTypes";
@@ -124,7 +124,12 @@ function* fetchTogglTimeEntriesInWorkspace(
 ): SagaIterator<TimeEntryModel[]> {
   const togglTimeEntries: TogglTimeEntryResponseModel[] = [];
   const currentYear = new Date().getFullYear();
-  const { togglEmail } = yield select(credentialsSelector);
+  const credentialsByToolName = yield select(credentialsByToolNameSelector);
+  const togglEmail = credentialsByToolName?.toggl?.email;
+  if (!togglEmail) {
+    throw new Error("Invalid or missing Toggl email");
+  }
+
   const clientIdsByName = yield select(
     clientIdsByNameSelectorFactory(ToolName.Toggl),
   );

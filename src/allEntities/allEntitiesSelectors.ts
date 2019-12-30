@@ -1,6 +1,5 @@
 import { createSelector } from "reselect";
 import { ReduxState } from "~/redux/reduxTypes";
-import { capitalize } from "~/utils";
 import { EntityGroup } from "./allEntitiesTypes";
 
 export const areEntitiesFetchingSelector = (state: ReduxState): boolean =>
@@ -18,13 +17,13 @@ export const entityGroupInProcessDisplaySelector = createSelector(
 
     switch (entityGroupInProcess) {
       case EntityGroup.TimeEntries:
-        return "Time Entries";
+        return "time entries";
 
       case EntityGroup.UserGroups:
-        return "User Groups";
+        return "user groups";
 
       default:
-        return capitalize(entityGroupInProcess as string);
+        return entityGroupInProcess as string;
     }
   },
 );

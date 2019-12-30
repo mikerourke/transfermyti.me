@@ -10,7 +10,7 @@ import {
   TOGGL_API_DELAY,
 } from "~/constants";
 import { incrementCurrentTransferCount } from "~/app/appActions";
-import { mappingForToolSelector } from "~/app/appSelectors";
+import { mappingByToolNameSelector } from "~/app/appSelectors";
 import {
   includedWorkspaceIdsByMappingSelector,
   workspaceIdToLinkedIdSelector,
@@ -86,7 +86,8 @@ export function* fetchEntitiesForTool<TEntity>({
   const workspaceIdsByMapping = yield select(
     includedWorkspaceIdsByMappingSelector,
   );
-  const toolMapping = yield select(mappingForToolSelector, toolName);
+  const mappingByToolName = yield select(mappingByToolNameSelector);
+  const toolMapping = mappingByToolName[toolName];
   const workspaceIds = R.propOr<string[], Record<string, string>, string[]>(
     [],
     toolMapping,
@@ -119,6 +120,7 @@ function apiDelayForTool(toolName: ToolName): number {
 
 export function* paginatedClockifyFetch<TEntity>(
   apiUrl: string,
+  queryParams: object = {},
 ): SagaIterator<TEntity[]> {
   let keepFetching = true;
   let currentPage = 1;
@@ -129,6 +131,7 @@ export function* paginatedClockifyFetch<TEntity>(
     const query = qs.stringify({
       page: currentPage,
       "page-size": CLOCKIFY_API_PAGE_SIZE,
+      ...queryParams,
     });
     const endpoint = `${apiUrl}?${query}`;
 
@@ -179,7 +182,7 @@ function* fetchWithRetries<TResponse>(
       if (err.code === 429) {
         yield delay(500);
       } else {
-        throw new Error(err);
+        throw err;
       }
     }
   }

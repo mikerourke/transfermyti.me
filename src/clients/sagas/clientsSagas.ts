@@ -13,8 +13,8 @@ import {
   createTogglClientsSaga,
   fetchTogglClientsSaga,
 } from "./togglClientsSagas";
-import { ClientModel } from "~/clients/clientsTypes";
 import { ToolName } from "~/allEntities/allEntitiesTypes";
+import { ClientModel } from "~/clients/clientsTypes";
 
 export function* createClientsSaga(): SagaIterator {
   yield put(createClients.request());

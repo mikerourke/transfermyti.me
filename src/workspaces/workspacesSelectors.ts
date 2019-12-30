@@ -26,16 +26,16 @@ export const targetWorkspacesByIdSelector = createSelector(
 export const workspaceIdToLinkedIdSelector = createSelector(
   sourceWorkspacesByIdSelector,
   sourceWorkspacesById => {
-    const workspaceIdMapping: Record<string, string> = {};
+    const workspaceIdToLinkedId: Record<string, string> = {};
 
     for (const [id, workspace] of Object.entries(sourceWorkspacesById)) {
       if (!R.isNil(workspace.linkedId)) {
-        workspaceIdMapping[id] = workspace.linkedId;
-        workspaceIdMapping[workspace.linkedId] = workspace.id;
+        workspaceIdToLinkedId[id] = workspace.linkedId;
+        workspaceIdToLinkedId[workspace.linkedId] = workspace.id;
       }
     }
 
-    return workspaceIdMapping;
+    return workspaceIdToLinkedId;
   },
 );
 
@@ -63,7 +63,7 @@ const includedSourceWorkspaceIdsSelector = createSelector(
 );
 
 const includedTargetWorkspaceIdsSelector = createSelector(
-  sourceWorkspacesSelector,
+  targetWorkspacesSelector,
   limitIdsToIncluded,
 );
 

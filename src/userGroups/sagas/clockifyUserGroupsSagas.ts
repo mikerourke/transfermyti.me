@@ -49,7 +49,7 @@ function* createClockifyUserGroup(
   const userGroupRequest = { name: sourceUserGroup.name };
   const clockifyUserGroup = yield call(
     fetchObject,
-    `/clockify/api/workspaces/${targetWorkspaceId}/userGroups`,
+    `/clockify/api/workspaces/${targetWorkspaceId}/userGroups/`,
     { method: "POST", body: userGroupRequest },
   );
 

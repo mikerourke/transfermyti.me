@@ -1,14 +1,17 @@
-import { call } from "redux-saga/effects";
+import { call, delay, select } from "redux-saga/effects";
 import { SagaIterator } from "@redux-saga/types";
+import { CLOCKIFY_API_DELAY } from "~/constants";
 import {
   createEntitiesForTool,
   fetchEntitiesForTool,
   fetchObject,
-  findTargetEntityId,
   paginatedClockifyFetch,
 } from "~/redux/sagaUtils";
+import {
+  projectIdToLinkedIdSelector,
+  projectsByToolNameSelector,
+} from "~/projects/projectsSelectors";
 import { EntityGroup, ToolName } from "~/allEntities/allEntitiesTypes";
-import { sourceProjectsByIdSelector } from "~/projects/projectsSelectors";
 import { TaskModel } from "~/tasks/tasksTypes";
 
 type ClockifyTaskStatus = "ACTIVE" | "DONE";
@@ -29,7 +32,7 @@ export interface ClockifyTaskResponseModel {
  */
 export function* createClockifyTasksSaga(
   sourceTasks: TaskModel[],
-): SagaIterator {
+): SagaIterator<TaskModel[]> {
   return yield call(createEntitiesForTool, {
     toolName: ToolName.Clockify,
     sourceRecords: sourceTasks,
@@ -52,13 +55,10 @@ export function* fetchClockifyTasksSaga(): SagaIterator {
 function* createClockifyTask(
   sourceTask: TaskModel,
   targetWorkspaceId: string,
-): SagaIterator {
-  // TODO: Add loop for tasks by project ID!
-  const targetProjectId = yield call(
-    findTargetEntityId,
-    sourceTask.projectId,
-    sourceProjectsByIdSelector,
-  );
+): SagaIterator<TaskModel> {
+  const projectIdToLinkedId = yield select(projectIdToLinkedIdSelector);
+  const targetProjectId = projectIdToLinkedId[sourceTask.projectId];
+
   // TODO: Add assigneeIds selector.
   const assigneeIds: string[] = [];
   const taskRequest = {
@@ -81,14 +81,22 @@ function* createClockifyTask(
 function* fetchClockifyTasksInWorkspace(
   workspaceId: string,
 ): SagaIterator<TaskModel[]> {
-  // TODO: Add loop with project IDs in workspace.
-  const projectId = "";
-  const clockifyTasks: ClockifyTaskResponseModel[] = yield call(
-    paginatedClockifyFetch,
-    `/clockify/api/v1/workspaces/${workspaceId}/projects/${projectId}/tasks`,
-  );
+  const projectsByToolName = yield select(projectsByToolNameSelector);
+  const clockifyProjects = projectsByToolName[ToolName.Clockify];
+  const allClockifyTasks: ClockifyTaskResponseModel[] = [];
 
-  return clockifyTasks.map(clockifyTask =>
+  for (const clockifyProject of clockifyProjects) {
+    const { id: projectId } = clockifyProject;
+    const clockifyTasks: ClockifyTaskResponseModel[] = yield call(
+      paginatedClockifyFetch,
+      `/clockify/api/v1/workspaces/${workspaceId}/projects/${projectId}/tasks`,
+    );
+
+    allClockifyTasks.push(...clockifyTasks);
+    yield delay(CLOCKIFY_API_DELAY);
+  }
+
+  return allClockifyTasks.map(clockifyTask =>
     transformFromResponse(clockifyTask, workspaceId),
   );
 }

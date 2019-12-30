@@ -1,4 +1,5 @@
 import { all, takeEvery } from "redux-saga/effects";
+import { SagaIterator } from "@redux-saga/types";
 import {
   storeCredentials,
   validateCredentials,
@@ -6,9 +7,9 @@ import {
 import { storeCredentialsSaga } from "./storeCredentialsSaga";
 import { validateCredentialsSaga } from "./validateCredentialsSaga";
 
-export function* credentialsSaga(): Generator {
+export function* credentialsSaga(): SagaIterator {
   yield all([
-    takeEvery(storeCredentials.request, storeCredentialsSaga),
+    takeEvery(storeCredentials, storeCredentialsSaga),
     takeEvery(validateCredentials.request, validateCredentialsSaga),
   ]);
 }

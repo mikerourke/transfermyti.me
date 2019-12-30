@@ -1,21 +1,18 @@
-import { put, select } from "redux-saga/effects";
+import { select } from "redux-saga/effects";
+import { SagaIterator } from "@redux-saga/types";
 import storage from "store";
 import { STORAGE_KEY } from "~/constants";
 import { getIfDev } from "~/utils";
-import { storeCredentials } from "~/credentials/credentialsActions";
-import { credentialsSelector } from "~/credentials/credentialsSelectors";
-import { CredentialsModel } from "~/credentials/credentialsTypes";
+import { credentialsByMappingSelector } from "~/credentials/credentialsSelectors";
 
-export function* storeCredentialsSaga(): Generator {
-  const credentials = yield select(credentialsSelector);
+export function* storeCredentialsSaga(): SagaIterator {
+  const credentialsByMapping = yield select(credentialsByMappingSelector);
 
   if (getIfDev()) {
     const storedCredentials = storage.get(STORAGE_KEY) || {};
     storage.set(STORAGE_KEY, {
       ...storedCredentials,
-      ...(credentials as CredentialsModel),
+      ...credentialsByMapping,
     });
   }
-
-  yield put(storeCredentials.success(credentials as CredentialsModel));
 }

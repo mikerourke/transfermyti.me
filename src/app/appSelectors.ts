@@ -37,12 +37,6 @@ export const mappingByToolNameSelector = createSelector(
     ) as Record<ToolName, Mapping>,
 );
 
-export const mappingForToolSelector = createSelector(
-  mappingByToolNameSelector,
-  (_: ReduxState, toolName: ToolName) => toolName,
-  (mappingByToolName, toolName) => mappingByToolName[toolName] ?? null,
-);
-
 export const currentTransferCountSelector = (state: ReduxState): number =>
   state.app.currentTransferCount;
 

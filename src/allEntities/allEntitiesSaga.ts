@@ -27,6 +27,12 @@ import {
 import { lastFetchTimeSelector } from "./allEntitiesSelectors";
 import { EntityGroup } from "./allEntitiesTypes";
 
+/**
+ * Creates or fetches all entities when the `request` action is dispatched.
+ * The fetch order is important! For example, tasks _must_ be associated with
+ * a project, so if the projects haven't been fetched yet, the tasks cannot
+ * be fetched.
+ */
 export function* allEntitiesSaga(): SagaIterator {
   yield all([
     takeEvery(createAllEntities.request, createAllEntitiesSaga),
@@ -39,11 +45,11 @@ function* createAllEntitiesSaga(): SagaIterator {
     yield put(updateEntityGroupInProcess(EntityGroup.Clients));
     yield call(createClientsSaga);
 
-    yield put(updateEntityGroupInProcess(EntityGroup.Projects));
-    yield call(createProjectsSaga);
-
     yield put(updateEntityGroupInProcess(EntityGroup.Tags));
     yield call(createTagsSaga);
+
+    yield put(updateEntityGroupInProcess(EntityGroup.Projects));
+    yield call(createProjectsSaga);
 
     yield put(updateEntityGroupInProcess(EntityGroup.Tasks));
     yield call(createTasksSaga);
@@ -73,11 +79,11 @@ function* fetchAllEntitiesSaga(): SagaIterator {
     yield put(updateEntityGroupInProcess(EntityGroup.Clients));
     yield call(fetchClientsSaga);
 
-    yield put(updateEntityGroupInProcess(EntityGroup.Projects));
-    yield call(fetchProjectsSaga);
-
     yield put(updateEntityGroupInProcess(EntityGroup.Tags));
     yield call(fetchTagsSaga);
+
+    yield put(updateEntityGroupInProcess(EntityGroup.Projects));
+    yield call(fetchProjectsSaga);
 
     yield put(updateEntityGroupInProcess(EntityGroup.Tasks));
     yield call(fetchTasksSaga);

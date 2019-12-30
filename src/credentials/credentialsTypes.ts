@@ -1,9 +1,18 @@
-export enum CredentialsField {
-  TogglEmail = "togglEmail",
-  TogglUserId = "togglUserId",
-  TogglApiKey = "togglApiKey",
-  ClockifyUserId = "clockifyUserId",
-  ClockifyApiKey = "clockifyApiKey",
+import { Mapping } from "~/allEntities/allEntitiesTypes";
+
+export interface CredentialsModel {
+  apiKey: string | null;
+  email: string | null;
+  userId: string | null;
 }
 
-export type CredentialsModel = Record<CredentialsField, string>;
+export type CredentialsByMappingModel = Record<Mapping, CredentialsModel>;
+
+export type ValidationErrorsByMappingModel = Record<Mapping, string | null>;
+
+export interface PartialCredentialsUpdateModel {
+  mapping: Mapping;
+  apiKey?: string | null;
+  email?: string | null;
+  userId?: string | null;
+}

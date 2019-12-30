@@ -8,14 +8,13 @@ import {
   findTargetEntityId,
   paginatedClockifyFetch,
 } from "~/redux/sagaUtils";
-import { credentialsSelector } from "~/credentials/credentialsSelectors";
+import { credentialsByToolNameSelector } from "~/credentials/credentialsSelectors";
 import { sourceProjectsByIdSelector } from "~/projects/projectsSelectors";
-import { targetTagIdsSelectorFactory } from "~/tags/tagsSelectors";
-import { sourceTasksByIdSelector } from "~/tasks/tasksSelectors";
 import { ClockifyProjectResponseModel } from "~/projects/sagas/clockifyProjectsSagas";
 import { ClockifyTagResponseModel } from "~/tags/sagas/clockifyTagsSagas";
+import { targetTagIdsSelectorFactory } from "~/tags/tagsSelectors";
 import { ClockifyTaskResponseModel } from "~/tasks/sagas/clockifyTasksSagas";
-import { ClockifyUserResponseModel } from "~/users/sagas/clockifyUsersSagas";
+import { sourceTasksByIdSelector } from "~/tasks/tasksSelectors";
 import { EntityGroup, ToolName } from "~/allEntities/allEntitiesTypes";
 import { TimeEntryModel } from "~/timeEntries/timeEntriesTypes";
 
@@ -28,16 +27,14 @@ interface ClockifyTimeIntervalModel {
 interface ClockifyTimeEntryResponseModel {
   billable: boolean;
   description: string;
-  hourlyRate: { amount: number; currency: string };
   id: string;
   isLocked: boolean;
   project: ClockifyProjectResponseModel;
-  projectId: string;
   tags: ClockifyTagResponseModel[];
-  task: ClockifyTaskResponseModel;
+  task: ClockifyTaskResponseModel | null;
   timeInterval: ClockifyTimeIntervalModel;
   totalBillable: number | null;
-  user: ClockifyUserResponseModel;
+  userId: string;
   workspaceId: string;
 }
 
@@ -112,10 +109,16 @@ function* createClockifyTimeEntry(
 function* fetchClockifyTimeEntriesInWorkspace(
   workspaceId: string,
 ): SagaIterator<TimeEntryModel[]> {
-  const { clockifyUserId } = yield select(credentialsSelector);
+  const credentialsByToolName = yield select(credentialsByToolNameSelector);
+  const clockifyUserId = credentialsByToolName?.clockify?.userId;
+  if (!clockifyUserId) {
+    throw new Error("Invalid or missing Clockify user ID");
+  }
+
   const clockifyTimeEntries: ClockifyTimeEntryResponseModel[] = yield call(
     paginatedClockifyFetch,
     `/clockify/api/v1/workspaces/${workspaceId}/user/${clockifyUserId}/time-entries`,
+    { hydrated: true },
   );
 
   return clockifyTimeEntries.map(transformFromResponse);
@@ -125,8 +128,6 @@ function transformFromResponse(
   timeEntry: ClockifyTimeEntryResponseModel,
 ): TimeEntryModel {
   const startTime = getTime(timeEntry, "start");
-  const tags = R.pathOr([], ["tags"], timeEntry);
-
   return {
     id: timeEntry.id,
     description: timeEntry.description,
@@ -135,12 +136,12 @@ function transformFromResponse(
     end: getTime(timeEntry, "end"),
     year: startTime.getFullYear(),
     isActive: false,
-    clientId: "",
-    projectId: timeEntry.project.id,
-    tagIds: tags.map(({ id }: ClockifyTagResponseModel) => id),
-    tagNames: tags.map(({ name }: ClockifyTagResponseModel) => name),
-    taskId: timeEntry?.task?.id ?? null,
-    userId: timeEntry?.user?.id ?? null,
+    clientId: timeEntry.project?.clientId,
+    projectId: timeEntry.project?.id,
+    tagIds: timeEntry.tags.map(({ id }) => id),
+    tagNames: timeEntry.tags.map(({ name }) => name),
+    taskId: timeEntry.task?.id ?? null,
+    userId: timeEntry.userId ?? null,
     userGroupIds: [],
     workspaceId: timeEntry.workspaceId,
     entryCount: 0,
