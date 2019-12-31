@@ -128,6 +128,12 @@ function transformFromResponse(
   timeEntry: ClockifyTimeEntryResponseModel,
 ): TimeEntryModel {
   const startTime = getTime(timeEntry, "start");
+  const clockifyTags = R.propOr<
+    ClockifyTagResponseModel[],
+    ClockifyTimeEntryResponseModel,
+    ClockifyTagResponseModel[]
+  >([], "tags", timeEntry);
+
   return {
     id: timeEntry.id,
     description: timeEntry.description,
@@ -138,8 +144,8 @@ function transformFromResponse(
     isActive: false,
     clientId: timeEntry.project?.clientId,
     projectId: timeEntry.project?.id,
-    tagIds: timeEntry.tags.map(({ id }) => id),
-    tagNames: timeEntry.tags.map(({ name }) => name),
+    tagIds: clockifyTags.map(({ id }) => id),
+    tagNames: clockifyTags.map(({ name }) => name),
     taskId: timeEntry.task?.id ?? null,
     userId: timeEntry.userId ?? null,
     userGroupIds: [],

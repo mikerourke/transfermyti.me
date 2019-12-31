@@ -1,8 +1,13 @@
 import { createSelector, createStructuredSelector, Selector } from "reselect";
 import * as R from "ramda";
 import { mappingByToolNameSelector } from "~/app/appSelectors";
+import { sourceTimeEntryCountByIdFieldSelectorFactory } from "~/timeEntries/timeEntriesSelectors";
 import { activeWorkspaceIdSelector } from "~/workspaces/workspacesSelectors";
-import { ToolName, Mapping } from "~/allEntities/allEntitiesTypes";
+import {
+  ToolName,
+  Mapping,
+  TableViewModel,
+} from "~/allEntities/allEntitiesTypes";
 import { ReduxState } from "~/redux/reduxTypes";
 import { ClientModel, ClientsByIdModel } from "./clientsTypes";
 
@@ -53,6 +58,28 @@ export const sourceClientsInActiveWorkspaceSelector = createSelector(
     sourceClients.filter(
       sourceClient => sourceClient.workspaceId === activeWorkspaceId,
     ),
+);
+
+export const clientsForTableViewSelector = createSelector(
+  sourceClientsInActiveWorkspaceSelector,
+  sourceTimeEntryCountByIdFieldSelectorFactory("clientId"),
+  (sourceClients, timeEntryCountByClientId): TableViewModel<ClientModel>[] =>
+    sourceClients.map(sourceClient => {
+      const existsInTarget = sourceClient.linkedId !== null;
+      const entryCount = R.propOr<number, Record<string, number>, number>(
+        0,
+        sourceClient.id,
+        timeEntryCountByClientId,
+      );
+
+      return {
+        ...sourceClient,
+        entryCount,
+        existsInTarget,
+        isActiveInSource: true,
+        isActiveInTarget: existsInTarget,
+      };
+    }),
 );
 
 export const clientIdsByNameSelectorFactory = (

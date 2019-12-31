@@ -8,7 +8,7 @@ export interface ButtonProps
   onClick: VoidFunction;
 }
 
-const Base = styled.button({
+const Root = styled.button({
   border: "none",
   borderRadius: "0.25rem",
   fontSize: 14,
@@ -42,7 +42,7 @@ const Button: React.FC<ButtonProps> = ({
     : theme.colors.white;
 
   return (
-    <Base
+    <Root
       aria-disabled={disabled}
       css={{
         background: theme.colors[color],

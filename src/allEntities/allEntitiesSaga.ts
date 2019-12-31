@@ -1,5 +1,5 @@
 import { SagaIterator } from "@redux-saga/types";
-import { all, call, put, select, takeEvery } from "redux-saga/effects";
+import { all, call, put, takeEvery } from "redux-saga/effects";
 import {
   createClientsSaga,
   fetchClientsSaga,
@@ -24,7 +24,6 @@ import {
   fetchAllEntities,
   updateEntityGroupInProcess,
 } from "./allEntitiesActions";
-import { lastFetchTimeSelector } from "./allEntitiesSelectors";
 import { EntityGroup } from "./allEntitiesTypes";
 
 /**
@@ -70,11 +69,6 @@ function* createAllEntitiesSaga(): SagaIterator {
 }
 
 function* fetchAllEntitiesSaga(): SagaIterator {
-  const lastFetchTime = yield select(lastFetchTimeSelector);
-  if (lastFetchTime !== null) {
-    return;
-  }
-
   try {
     yield put(updateEntityGroupInProcess(EntityGroup.Clients));
     yield call(fetchClientsSaga);

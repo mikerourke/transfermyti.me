@@ -62,8 +62,11 @@ export function* fetchTimeEntriesSaga(): SagaIterator {
       [ToolName.Toggl]: fetchTogglTimeEntriesSaga,
     };
     const { source, target } = yield select(toolNameByMappingSelector);
-    const sourceTimeEntries = yield call(fetchSagaByToolName[source]);
-    const targetTimeEntries = yield call(fetchSagaByToolName[target]);
+    let sourceTimeEntries = yield call(fetchSagaByToolName[source]);
+    let targetTimeEntries = yield call(fetchSagaByToolName[target]);
+
+    sourceTimeEntries = sortTimeEntries(sourceTimeEntries);
+    targetTimeEntries = sortTimeEntries(targetTimeEntries);
 
     const timeEntriesByIdByMapping = linkTimeEntriesByIdByMapping(
       sourceTimeEntries,
@@ -75,6 +78,10 @@ export function* fetchTimeEntriesSaga(): SagaIterator {
     yield put(showFetchErrorNotification(err));
     yield put(fetchTimeEntries.failure());
   }
+}
+
+function sortTimeEntries(timeEntries: TimeEntryModel[]): TimeEntryModel[] {
+  return timeEntries.sort((a, b) => b.start.getTime() - a.start.getTime());
 }
 
 function linkTimeEntriesByIdByMapping(

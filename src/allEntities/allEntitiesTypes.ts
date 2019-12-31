@@ -21,9 +21,16 @@ export enum EntityGroup {
 }
 
 export interface BaseEntityModel {
+  id: string;
   workspaceId: string;
   linkedId: string | null;
   isIncluded: boolean;
   entryCount?: number;
   memberOf?: EntityGroup;
 }
+
+export type TableViewModel<TEntity> = TEntity & {
+  existsInTarget: boolean;
+  isActiveInSource: boolean;
+  isActiveInTarget: boolean;
+};

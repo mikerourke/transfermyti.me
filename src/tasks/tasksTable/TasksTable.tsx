@@ -1,15 +1,15 @@
 import React from "react";
 import { connect } from "react-redux";
 import { PayloadActionCreator } from "typesafe-actions";
-import { flipIsClientIncluded } from "~/clients/clientsActions";
-import { clientsForTableViewSelector } from "~/clients/clientsSelectors";
+import { flipIsTaskIncluded } from "~/tasks/tasksActions";
+import { tasksForTableViewSelector } from "~/tasks/tasksSelectors";
 import { AccordionPanel, EntitiesTable } from "~/components";
 import { TableViewModel } from "~/allEntities/allEntitiesTypes";
-import { ClientModel } from "~/clients/clientsTypes";
+import { TaskModel } from "~/tasks/tasksTypes";
 import { ReduxState } from "~/redux/reduxTypes";
 
 interface ConnectStateProps {
-  clients: TableViewModel<ClientModel>[];
+  tasks: TableViewModel<TaskModel & { projectName: string }>[];
 }
 
 interface ConnectDispatchProps {
@@ -18,31 +18,34 @@ interface ConnectDispatchProps {
 
 type Props = ConnectStateProps & ConnectDispatchProps;
 
-export const ClientsTableComponent: React.FC<Props> = props => (
+export const TasksTableComponent: React.FC<Props> = props => (
   <AccordionPanel
-    rowNumber={2}
-    title={<span>Clients | Count: {props.clients.length}</span>}
+    rowNumber={4}
+    title={<span>Tasks | Count: {props.tasks.length}</span>}
   >
     <EntitiesTable
       tableFields={[
         { label: "Name", field: "name" },
+        { label: "Project", field: "projectName" },
         { label: "Time Entry Count", field: "entryCount" },
+        { label: "Active In Source?", field: "isActiveInSource" },
+        { label: "Active In Target?", field: "isActiveInTarget" },
       ]}
-      tableData={props.clients}
+      tableData={props.tasks}
       onFlipIsIncluded={props.onFlipIsIncluded}
     />
   </AccordionPanel>
 );
 
 const mapStateToProps = (state: ReduxState): ConnectStateProps => ({
-  clients: clientsForTableViewSelector(state),
+  tasks: tasksForTableViewSelector(state),
 });
 
 const mapDispatchToProps: ConnectDispatchProps = {
-  onFlipIsIncluded: flipIsClientIncluded,
+  onFlipIsIncluded: flipIsTaskIncluded,
 };
 
 export default connect(
   mapStateToProps,
   mapDispatchToProps,
-)(ClientsTableComponent);
+)(TasksTableComponent);

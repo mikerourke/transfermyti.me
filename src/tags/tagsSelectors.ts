@@ -1,6 +1,13 @@
-import { createSelector, Selector } from "reselect";
+import { createSelector, createStructuredSelector, Selector } from "reselect";
 import * as R from "ramda";
+import { mappingByToolNameSelector } from "~/app/appSelectors";
+import { sourceTimeEntryCountByTagIdSelector } from "~/timeEntries/timeEntriesSelectors";
 import { activeWorkspaceIdSelector } from "~/workspaces/workspacesSelectors";
+import {
+  Mapping,
+  TableViewModel,
+  ToolName,
+} from "~/allEntities/allEntitiesTypes";
 import { ReduxState } from "~/redux/reduxTypes";
 import { TagModel, TagsByIdModel } from "./tagsTypes";
 
@@ -8,13 +15,30 @@ const sourceTagsByIdSelector = createSelector(
   (state: ReduxState) => state.tags.source,
   (sourceTagsById): TagsByIdModel => sourceTagsById,
 );
-
 const sourceTagsSelector = createSelector(
   sourceTagsByIdSelector,
   (sourceTagsById): TagModel[] => Object.values(sourceTagsById),
 );
 
-export const includedSourceTagsSelector = createSelector(
+const targetTagsByIdSelector = createSelector(
+  (state: ReduxState) => state.tags.target,
+  (targetTagsById): TagsByIdModel => targetTagsById,
+);
+
+const targetTagsSelector = createSelector(
+  targetTagsByIdSelector,
+  (targetTagsById): TagModel[] => Object.values(targetTagsById),
+);
+
+const tagsByMappingSelector = createStructuredSelector<
+  ReduxState,
+  Record<Mapping, TagModel[]>
+>({
+  source: sourceTagsSelector,
+  target: targetTagsSelector,
+});
+
+const includedSourceTagsSelector = createSelector(
   sourceTagsSelector,
   (sourceTags): TagModel[] =>
     sourceTags.filter(sourceTag => sourceTag.isIncluded),
@@ -26,12 +50,54 @@ export const sourceTagsForTransferSelector = createSelector(
     sourceTags.filter(sourceTag => R.isNil(sourceTag.linkedId)),
 );
 
-export const sourceTagsInActiveWorkspaceSelector = createSelector(
+const sourceTagsInActiveWorkspaceSelector = createSelector(
   sourceTagsSelector,
   activeWorkspaceIdSelector,
   (sourceTags, workspaceId): TagModel[] =>
     sourceTags.filter(tag => tag.workspaceId === workspaceId),
 );
+
+export const tagsForTableViewSelector = createSelector(
+  sourceTagsInActiveWorkspaceSelector,
+  sourceTimeEntryCountByTagIdSelector,
+  (sourceTags, timeEntryCountByTagId): TableViewModel<TagModel>[] =>
+    sourceTags.map(sourceTag => {
+      const existsInTarget = sourceTag.linkedId !== null;
+
+      const entryCount = R.propOr<number, Record<string, number>, number>(
+        0,
+        sourceTag.id,
+        timeEntryCountByTagId,
+      );
+
+      return {
+        ...sourceTag,
+        entryCount,
+        existsInTarget,
+        isActiveInSource: true,
+        isActiveInTarget: existsInTarget,
+      };
+    }),
+);
+
+export const tagIdsByNameBySelectorFactory = (
+  toolName: ToolName,
+): Selector<ReduxState, Record<string, string>> =>
+  createSelector(
+    mappingByToolNameSelector,
+    tagsByMappingSelector,
+    (mappingByToolName, tagsByMapping): Record<string, string> => {
+      const toolMapping = mappingByToolName[toolName];
+      const tags = tagsByMapping[toolMapping];
+
+      const tagIdsByName: Record<string, string> = {};
+      for (const tag of tags) {
+        tagIdsByName[tag.name] = tag.id;
+      }
+
+      return tagIdsByName;
+    },
+  );
 
 export const targetTagIdsSelectorFactory = (
   sourceTagIds: string[],

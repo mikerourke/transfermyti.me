@@ -1,15 +1,15 @@
 import React from "react";
 import { connect } from "react-redux";
 import { PayloadActionCreator } from "typesafe-actions";
-import { flipIsClientIncluded } from "~/clients/clientsActions";
-import { clientsForTableViewSelector } from "~/clients/clientsSelectors";
+import { flipIsTagIncluded } from "~/tags/tagsActions";
+import { tagsForTableViewSelector } from "~/tags/tagsSelectors";
 import { AccordionPanel, EntitiesTable } from "~/components";
 import { TableViewModel } from "~/allEntities/allEntitiesTypes";
-import { ClientModel } from "~/clients/clientsTypes";
+import { TagModel } from "~/tags/tagsTypes";
 import { ReduxState } from "~/redux/reduxTypes";
 
 interface ConnectStateProps {
-  clients: TableViewModel<ClientModel>[];
+  tags: TableViewModel<TagModel>[];
 }
 
 interface ConnectDispatchProps {
@@ -18,31 +18,28 @@ interface ConnectDispatchProps {
 
 type Props = ConnectStateProps & ConnectDispatchProps;
 
-export const ClientsTableComponent: React.FC<Props> = props => (
+export const TagsTableComponent: React.FC<Props> = props => (
   <AccordionPanel
-    rowNumber={2}
-    title={<span>Clients | Count: {props.clients.length}</span>}
+    rowNumber={3}
+    title={<span>Tags | Count: {props.tags.length}</span>}
   >
     <EntitiesTable
       tableFields={[
         { label: "Name", field: "name" },
         { label: "Time Entry Count", field: "entryCount" },
       ]}
-      tableData={props.clients}
+      tableData={props.tags}
       onFlipIsIncluded={props.onFlipIsIncluded}
     />
   </AccordionPanel>
 );
 
 const mapStateToProps = (state: ReduxState): ConnectStateProps => ({
-  clients: clientsForTableViewSelector(state),
+  tags: tagsForTableViewSelector(state),
 });
 
 const mapDispatchToProps: ConnectDispatchProps = {
-  onFlipIsIncluded: flipIsClientIncluded,
+  onFlipIsIncluded: flipIsTagIncluded,
 };
 
-export default connect(
-  mapStateToProps,
-  mapDispatchToProps,
-)(ClientsTableComponent);
+export default connect(mapStateToProps, mapDispatchToProps)(TagsTableComponent);

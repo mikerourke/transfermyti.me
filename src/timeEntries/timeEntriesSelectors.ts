@@ -1,6 +1,7 @@
-import { createSelector } from "reselect";
+import { createSelector, Selector } from "reselect";
 import * as R from "ramda";
 import { activeWorkspaceIdSelector } from "~/workspaces/workspacesSelectors";
+import { TableViewModel } from "~/allEntities/allEntitiesTypes";
 import { ReduxState } from "~/redux/reduxTypes";
 import { TimeEntryModel } from "~/timeEntries/timeEntriesTypes";
 
@@ -30,4 +31,60 @@ export const sourceTimeEntriesInActiveWorkspaceSelector = createSelector(
     sourceTimeEntries.filter(
       sourceTimeEntry => sourceTimeEntry.workspaceId === activeWorkspaceId,
     ),
+);
+
+export const timeEntriesForTableViewSelector = createSelector(
+  sourceTimeEntriesInActiveWorkspaceSelector,
+  (sourceTimeEntries): TableViewModel<TimeEntryModel>[] =>
+    sourceTimeEntries.map(sourceClient => {
+      const existsInTarget = sourceClient.linkedId !== null;
+
+      return {
+        ...sourceClient,
+        existsInTarget,
+        isActiveInSource: true,
+        isActiveInTarget: existsInTarget,
+      };
+    }),
+);
+
+export const sourceTimeEntryCountByIdFieldSelectorFactory = (
+  idField: string,
+): Selector<ReduxState, Record<string, number>> =>
+  createSelector(sourceTimeEntriesSelector, sourceTimeEntries => {
+    const timeEntryCountByIdField: Record<string, number> = {};
+
+    for (const timeEntry of sourceTimeEntries) {
+      const parentId = timeEntry[idField];
+      if (parentId) {
+        const currentCountForId = R.propOr<
+          number,
+          Record<string, number>,
+          number
+        >(0, parentId, timeEntryCountByIdField);
+        timeEntryCountByIdField[parentId] = currentCountForId + 1;
+      }
+    }
+
+    return timeEntryCountByIdField;
+  });
+
+export const sourceTimeEntryCountByTagIdSelector = createSelector(
+  sourceTimeEntriesSelector,
+  sourceTimeEntries => {
+    const timeEntryCountByTagIdField: Record<string, number> = {};
+
+    for (const timeEntry of sourceTimeEntries) {
+      for (const tagId of timeEntry.tagIds) {
+        const currentValue = R.propOr<number, Record<string, number>, number>(
+          0,
+          tagId,
+          timeEntryCountByTagIdField,
+        );
+        timeEntryCountByTagIdField[tagId] = currentValue + 1;
+      }
+    }
+
+    return timeEntryCountByTagIdField;
+  },
 );

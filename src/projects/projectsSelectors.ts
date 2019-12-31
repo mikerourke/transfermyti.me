@@ -1,10 +1,11 @@
 import { createSelector } from "reselect";
 import * as R from "ramda";
-import { Mapping } from "~/allEntities/allEntitiesTypes";
 import { toolNameByMappingSelector } from "~/app/appSelectors";
-import { ProjectModel, ProjectsByIdModel } from "~/projects/projectsTypes";
-import { ReduxState } from "~/redux/reduxTypes";
+import { sourceTimeEntryCountByIdFieldSelectorFactory } from "~/timeEntries/timeEntriesSelectors";
 import { activeWorkspaceIdSelector } from "~/workspaces/workspacesSelectors";
+import { Mapping, TableViewModel } from "~/allEntities/allEntitiesTypes";
+import { ReduxState } from "~/redux/reduxTypes";
+import { ProjectModel, ProjectsByIdModel } from "./projectsTypes";
 
 export const sourceProjectsByIdSelector = createSelector(
   (state: ReduxState) => state.projects.source,
@@ -61,6 +62,39 @@ export const projectIdToLinkedIdSelector = createSelector(
 
     return projectIdToLinkedId;
   },
+);
+
+export const projectsForTableViewSelector = createSelector(
+  sourceProjectsInActiveWorkspaceSelector,
+  targetProjectsByIdSelector,
+  sourceTimeEntryCountByIdFieldSelectorFactory("projectId"),
+  (
+    sourceProjects,
+    targetProjectsById,
+    timeEntryCountByProjectId,
+  ): TableViewModel<ProjectModel>[] =>
+    sourceProjects.map(sourceProject => {
+      const existsInTarget = sourceProject.linkedId !== null;
+      let isActiveInTarget = false;
+      if (existsInTarget) {
+        const targetId = sourceProject.linkedId as string;
+        isActiveInTarget = targetProjectsById[targetId].isActive;
+      }
+
+      const entryCount = R.propOr<number, Record<string, number>, number>(
+        0,
+        sourceProject.id,
+        timeEntryCountByProjectId,
+      );
+
+      return {
+        ...sourceProject,
+        entryCount,
+        existsInTarget,
+        isActiveInSource: sourceProject.isActive,
+        isActiveInTarget,
+      };
+    }),
 );
 
 export const projectsByToolNameSelector = createSelector(

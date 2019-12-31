@@ -2,6 +2,7 @@ export { styled, useTheme } from "./emotion";
 export { Accordion, AccordionPanel } from "./Accordion";
 export { default as Button } from "./Button";
 export { default as Card } from "./Card";
+export { default as EntitiesTable } from "./EntitiesTable";
 export { default as ExternalLink } from "./ExternalLink";
 export { default as Flex } from "./Flex";
 export { default as HelpDetails } from "./HelpDetails";

@@ -7,18 +7,19 @@ import startOfYear from "date-fns/startOfYear";
 import qs from "qs";
 import * as R from "ramda";
 import { call, select, delay } from "redux-saga/effects";
+import { EntityGroup, ToolName } from "~/allEntities/allEntitiesTypes";
+import { clientIdsByNameSelectorFactory } from "~/clients/clientsSelectors";
 import { TOGGL_API_DELAY } from "~/constants";
+import { credentialsByToolNameSelector } from "~/credentials/credentialsSelectors";
+import { sourceProjectsByIdSelector } from "~/projects/projectsSelectors";
 import {
   createEntitiesForTool,
   fetchEntitiesForTool,
   fetchObject,
   findTargetEntityId,
 } from "~/redux/sagaUtils";
-import { clientIdsByNameSelectorFactory } from "~/clients/clientsSelectors";
-import { credentialsByToolNameSelector } from "~/credentials/credentialsSelectors";
-import { sourceProjectsByIdSelector } from "~/projects/projectsSelectors";
+import { tagIdsByNameBySelectorFactory } from "~/tags/tagsSelectors";
 import { sourceTasksByIdSelector } from "~/tasks/tasksSelectors";
-import { EntityGroup, ToolName } from "~/allEntities/allEntitiesTypes";
 import { TimeEntryModel } from "~/timeEntries/timeEntriesTypes";
 
 interface TogglTotalCurrencyModel {
@@ -122,16 +123,20 @@ function* createTogglTimeEntry(
 function* fetchTogglTimeEntriesInWorkspace(
   workspaceId: string,
 ): SagaIterator<TimeEntryModel[]> {
-  const togglTimeEntries: TogglTimeEntryResponseModel[] = [];
-  const currentYear = new Date().getFullYear();
   const credentialsByToolName = yield select(credentialsByToolNameSelector);
   const togglEmail = credentialsByToolName?.toggl?.email;
   if (!togglEmail) {
     throw new Error("Invalid or missing Toggl email");
   }
 
+  const togglTimeEntries: TogglTimeEntryResponseModel[] = [];
+  const currentYear = new Date().getFullYear();
   const clientIdsByName = yield select(
     clientIdsByNameSelectorFactory(ToolName.Toggl),
+  );
+
+  const tagIdsByName = yield select(
+    tagIdsByNameBySelectorFactory(ToolName.Toggl),
   );
 
   for (let year = 2007; year <= currentYear; year += 1) {
@@ -155,7 +160,13 @@ function* fetchTogglTimeEntriesInWorkspace(
       togglTimeEntry.client,
       clientIdsByName,
     );
-    return transformFromResponse(togglTimeEntry, workspaceId, clientId);
+
+    return transformFromResponse(
+      togglTimeEntry,
+      workspaceId,
+      clientId,
+      tagIdsByName,
+    );
   });
 }
 
@@ -230,8 +241,11 @@ function transformFromResponse(
   timeEntry: TogglTimeEntryResponseModel,
   workspaceId: string,
   clientId: string | null,
+  tagIdsByName: Record<string, string>,
 ): TimeEntryModel {
   const startTime = getTime(timeEntry, "start");
+  const tagNames = timeEntry.tags ?? [];
+  const tagIds = tagNames.map(tagName => tagIdsByName[tagName]);
   return {
     id: timeEntry.id.toString(),
     description: timeEntry.description,
@@ -242,8 +256,8 @@ function transformFromResponse(
     isActive: false,
     clientId,
     projectId: timeEntry.pid.toString(),
-    tagIds: [],
-    tagNames: timeEntry.tags,
+    tagIds,
+    tagNames,
     taskId: R.isNil(timeEntry.tid) ? null : timeEntry.tid.toString(),
     userId: timeEntry.uid.toString(),
     userGroupIds: [],
@@ -259,6 +273,10 @@ function getTime(
   timeEntry: TogglTimeEntryResponseModel,
   field: "start" | "end",
 ): Date {
-  const value = R.pathOr(null, [field], null);
+  const value = R.propOr<null, TogglTimeEntryResponseModel, string>(
+    null,
+    field,
+    timeEntry,
+  );
   return R.isNil(value) ? new Date() : new Date(value);
 }

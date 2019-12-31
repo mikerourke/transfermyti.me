@@ -11,12 +11,16 @@ import {
 import { activeWorkspaceIdSelector } from "~/workspaces/workspacesSelectors";
 import {
   Accordion,
-  AccordionPanel,
+  HelpDetails,
   Loader,
   LoadingMessage,
   NavigationButtonsRow,
 } from "~/components";
 import ClientsTable from "~/clients/clientsTable/ClientsTable";
+import ProjectsTable from "~/projects/projectsTable/ProjectsTable";
+import TagsTable from "~/tags/tagsTable/TagsTable";
+import TasksTable from "~/tasks/tasksTable/TasksTable";
+import TimeEntriesTable from "~/timeEntries/timeEntriesTable/TimeEntriesTable";
 import { RoutePath } from "~/app/appTypes";
 import { ReduxState } from "~/redux/reduxTypes";
 
@@ -45,6 +49,12 @@ export const SelectSourceInclusionsComponent: React.FC<Props> = props => {
   return (
     <section>
       <h1>Step 4: Select Data to Transfer</h1>
+      <HelpDetails>
+        Review the records you&apos;d like to include in the transfer. If the
+        record already exists on the target tool, the option to include it is
+        disabled. Press the <strong>Next</strong> button when you&apos;re ready
+        to begin the transfer.
+      </HelpDetails>
       {props.areEntitiesFetching ? (
         <>
           <Loader />
@@ -54,21 +64,11 @@ export const SelectSourceInclusionsComponent: React.FC<Props> = props => {
         </>
       ) : (
         <Accordion css={{ marginBottom: "2rem" }}>
-          <AccordionPanel rowNumber={1} title="Projects">
-            Projects
-          </AccordionPanel>
-          <AccordionPanel rowNumber={2} title="Clients">
-            <ClientsTable />
-          </AccordionPanel>
-          <AccordionPanel rowNumber={3} title="Tags">
-            Tags
-          </AccordionPanel>
-          <AccordionPanel rowNumber={4} title="Tasks">
-            Tasks
-          </AccordionPanel>
-          <AccordionPanel rowNumber={5} title="Time Entries">
-            Time Entries
-          </AccordionPanel>
+          <ProjectsTable />
+          <ClientsTable />
+          <TagsTable />
+          <TasksTable />
+          <TimeEntriesTable />
         </Accordion>
       )}
       <NavigationButtonsRow

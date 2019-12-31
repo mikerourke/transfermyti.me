@@ -39,7 +39,7 @@ export const Accordion: React.FC = ({ children, ...props }) => (
 
 export const AccordionPanel: React.FC<{
   rowNumber: number;
-  title: string;
+  title: React.ReactNode;
 }> = ({ rowNumber, title, children, ...props }) => {
   const [isExpanded, setIsExpanded] = React.useState<boolean>(false);
 

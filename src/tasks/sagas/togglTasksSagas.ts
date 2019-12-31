@@ -36,7 +36,7 @@ export function* createTogglTasksSaga(sourceTasks: TaskModel[]): SagaIterator {
 }
 
 /**
- * Fetches all tasks in Toggl workspace and returns the result.
+ * Fetches all tasks in Toggl workspaces and returns the result.
  * @see https://github.com/toggl/toggl_api_docs/blob/master/chapters/workspaces.md#get-workspace-tasks
  */
 export function* fetchTogglTasksSaga(): SagaIterator<TaskModel[]> {

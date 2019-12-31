@@ -91,8 +91,8 @@ function* fetchClockifyTasksInWorkspace(
       paginatedClockifyFetch,
       `/clockify/api/v1/workspaces/${workspaceId}/projects/${projectId}/tasks`,
     );
-
     allClockifyTasks.push(...clockifyTasks);
+
     yield delay(CLOCKIFY_API_DELAY);
   }
 
