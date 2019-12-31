@@ -174,34 +174,81 @@
       "at": "2017-04-26T14:49:12+00:00"
     }
   ],
-  "tasks": [],
+  "tasks": [
+    {
+      "name": "Task 1",
+      "id": 7001,
+      "wid": 1001,
+      "pid": 2001,
+      "uid": 123123,
+      "active": true,
+      "at": "2013-03-06T09:15:51+00:00",
+      "estimated_seconds": 7200
+    },
+    {
+      "name": "Task 2",
+      "id": 7002,
+      "wid": 1001,
+      "pid": 2001,
+      "active": true,
+      "at": "2013-03-06T09:15:59+00:00",
+      "estimated_seconds": 0
+    },
+    {
+      "name": "Task 3",
+      "id": 7003,
+      "wid": 1001,
+      "pid": 2002,
+      "active": true,
+      "at": "2013-03-06T09:18:57+00:00",
+      "estimated_seconds": 21600
+    },
+    {
+      "name": "Task 4",
+      "id": 7004,
+      "wid": 1001,
+      "pid": 2003,
+      "active": true,
+      "at": "2013-03-06T09:18:57+00:00",
+      "estimated_seconds": 21600
+    },
+    {
+      "name": "Task 5",
+      "id": 7005,
+      "wid": 1001,
+      "pid": 2004,
+      "active": true,
+      "at": "2013-03-06T09:18:57+00:00",
+      "estimated_seconds": 21600
+    }
+  ],
   "timeEntries": [
     {
       "id": 8001,
       "pid": 2001,
-      "tid": null,
+      "tid": 7001,
       "uid": 6001,
       "description": "This is a test entry (01)",
       "start": "2019-06-25T18:00:00Z",
       "end": "2019-06-25T23:00:00Z",
       "updated": "2019-06-25T23:00:00Z",
       "dur": 18000000,
-      "user":  "John Test",
-      "use_stop":  false,
+      "user": "John Test",
+      "use_stop": false,
       "client": "Test Client A",
-      "project":  "Test Project A",
-      "project_color":  "2",
-      "project_hex_color":  "#ea468d",
+      "project": "Test Project A",
+      "project_color": "2",
+      "project_hex_color": "#ea468d",
       "task": null,
       "billable": null,
       "is_billable": false,
-      "cur":  null,
+      "cur": null,
       "tags": ["tag-a", "tag-b"]
     },
     {
       "id": 8002,
       "pid": 2001,
-      "tid": null,
+      "tid": 7001,
       "uid": 6001,
       "description": "This is a test entry (02)",
       "start": "2019-06-24T14:00:00Z",
@@ -223,7 +270,7 @@
     {
       "id": 8003,
       "pid": 2001,
-      "tid": null,
+      "tid": 7002,
       "uid": 6001,
       "description": "This is a test entry (03)",
       "start": "2019-06-23T14:30:00Z",
@@ -289,7 +336,7 @@
     {
       "id": 8006,
       "pid": 2002,
-      "tid": null,
+      "tid": 7003,
       "uid": 6001,
       "description": "This is a test entry (06)",
       "start": "2019-06-21T20:45:57Z",
@@ -311,7 +358,7 @@
     {
       "id": 8007,
       "pid": 2003,
-      "tid": null,
+      "tid": 7004,
       "uid": 6001,
       "description": "This is a test entry (07)",
       "start": "2019-05-02T10:00:00Z",
@@ -377,7 +424,7 @@
     {
       "id": 8010,
       "pid": 2004,
-      "tid": null,
+      "tid": 7005,
       "uid": 6001,
       "description": "This is a test entry (10)",
       "start": "2018-06-24T14:00:00Z",
@@ -399,7 +446,7 @@
     {
       "id": 8011,
       "pid": 2004,
-      "tid": null,
+      "tid": 7005,
       "uid": 6001,
       "description": "This is a test entry (11)",
       "start": "2018-06-23T14:30:00Z",
@@ -421,7 +468,7 @@
     {
       "id": 8012,
       "pid": 2004,
-      "tid": null,
+      "tid": 7005,
       "uid": 6001,
       "description": "This is a test entry (12)",
       "start": "2018-06-23T14:00:20Z",

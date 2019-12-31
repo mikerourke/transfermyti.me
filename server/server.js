@@ -36,7 +36,7 @@ function assignMiddleware(thisApp) {
       return next();
     }
 
-    let delayInMs = 250;
+    let delayInMs = 100;
 
     // Increase the delay when performing the transfer:
     if (req.method === "POST" && /clockify/g.test(req.url)) {

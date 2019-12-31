@@ -1,7 +1,6 @@
 const path = require("path");
 const fse = require("fs-extra");
-const { isSameYear } = require("date-fns");
-const { find, get, uniqueId } = require("lodash");
+const { find, get, isNil, uniqueId } = require("lodash");
 
 const dbPath = path.resolve(__dirname, "..", "db", "clockify.json");
 const db = fse.readJSONSync(dbPath);
@@ -34,14 +33,30 @@ function assignClockifyRoutes(router) {
     .get(
       "/v1/workspaces/:workspaceId/user/:userId/time-entries",
       (req, res) => {
-        // TODO: Add additional records to use query params.
-        // const page = req.query.page;
-        // const pageSize = req.query["page-size"];
+        const responseEntries = db.timeEntries.reduce((acc, timeEntry) => {
+          const { projectId, tagIds, taskId, ...responseEntry } = timeEntry;
+          if (!isNil(projectId)) {
+            const project = find(db.projects, ["id", projectId]);
+            responseEntry.project = project || null;
+          }
 
-        // TODO: Add accomodations for hydrated = true (changes tag, task, and
-        //       project IDs to the tag, task, and project record).
+          if (tagIds.length !== 0) {
+            responseEntry.tags = tagIds.map(tagId =>
+              db.tags.find(({ id }) => id === tagId),
+            );
+          } else {
+            responseEntry.tags = [];
+          }
 
-        res.status(200).send(db.timeEntries);
+          if (!isNil(taskId)) {
+            const task = find(db.tasks, ["id", taskId]);
+            responseEntry.task = task || null;
+          }
+
+          return [...acc, responseEntry];
+        }, []);
+
+        res.status(200).send(responseEntries);
       },
     )
     .get("/workspaces/:workspaceId/userGroups/", (req, res) =>
