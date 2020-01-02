@@ -69,9 +69,9 @@ export function* validateCredentialsSaga(): SagaIterator {
   if (
     hasNoValidationErrors &&
     areApiKeysPresent &&
-    R.equals(currentPath, RoutePath.Credentials)
+    R.equals(currentPath, RoutePath.EnterCredentials)
   ) {
-    yield put(push(RoutePath.Workspaces));
+    yield put(push(RoutePath.SelectWorkspaces));
     yield put(validateCredentials.success(credentialsByMapping));
   } else {
     yield put(validateCredentials.failure(validationErrorsByMapping));

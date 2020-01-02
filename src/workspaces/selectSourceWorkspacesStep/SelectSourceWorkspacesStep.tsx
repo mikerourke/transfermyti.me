@@ -45,12 +45,12 @@ export const SelectSourceWorkspacesStepComponent: React.FC<Props> = props => {
   }, []);
 
   const handleBackClick = (): void => {
-    props.onPush(RoutePath.Credentials);
+    props.onPush(RoutePath.EnterCredentials);
   };
 
   const handleNextClick = (): void => {
     props.onFetchAllEntities();
-    props.onPush(RoutePath.ReviewSource);
+    props.onPush(RoutePath.SelectTransferData);
   };
 
   return (

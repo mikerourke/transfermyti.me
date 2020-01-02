@@ -9,10 +9,10 @@ export interface NotificationModel {
 }
 
 export enum RoutePath {
-  TransferMapping = "/transfer-mapping",
-  Credentials = "/credentials",
-  Workspaces = "/workspaces",
-  ReviewSource = "/review-source",
+  PickTransferMapping = "/pick-transfer-mapping",
+  EnterCredentials = "/enter-credentials",
+  SelectWorkspaces = "/select-workspaces",
+  SelectTransferData = "/select-transfer-data",
   PerformTransfer = "/perform-transfer",
 }
 

@@ -37,9 +37,9 @@ interface ConnectDispatchProps {
 
 type Props = ConnectStateProps & ConnectDispatchProps;
 
-export const SelectSourceInclusionsComponent: React.FC<Props> = props => {
+export const SelectTransferDataStepComponent: React.FC<Props> = props => {
   const handleBackClick = (): void => {
-    props.onPush(RoutePath.Workspaces);
+    props.onPush(RoutePath.SelectWorkspaces);
   };
 
   const handleNextClick = (): void => {
@@ -50,10 +50,25 @@ export const SelectSourceInclusionsComponent: React.FC<Props> = props => {
     <section>
       <h1>Step 4: Select Data to Transfer</h1>
       <HelpDetails>
-        Review the records you&apos;d like to include in the transfer. If the
-        record already exists on the target tool, the option to include it is
-        disabled. Press the <strong>Next</strong> button when you&apos;re ready
-        to begin the transfer.
+        <p>
+          Review the records you&apos;d like to include in the transfer. If the
+          record already exists on the target tool, the option to include it is
+          disabled.
+        </p>
+        <p>
+          The badge to the left of the group name represents how many records
+          are present. If you uncheck the <strong>Show Existing </strong>
+          checkbox in the table footer, only the records that do not exist on
+          the target tool will be shown.
+        </p>
+        <p>
+          Press the <strong>Next</strong> button when you&apos;re ready to begin
+          the transfer.
+        </p>
+        <p css={{ fontStyle: "italic" }}>
+          Note: The transfer will <strong>not</strong> start until you confirm
+          it on the next page.
+        </p>
       </HelpDetails>
       {props.areEntitiesFetching ? (
         <>
@@ -64,9 +79,9 @@ export const SelectSourceInclusionsComponent: React.FC<Props> = props => {
         </>
       ) : (
         <Accordion css={{ marginBottom: "2rem" }}>
-          <ProjectsTable />
           <ClientsTable />
           <TagsTable />
+          <ProjectsTable />
           <TasksTable />
           <TimeEntriesTable />
         </Accordion>
@@ -95,4 +110,4 @@ const mapDispatchToProps: ConnectDispatchProps = {
 export default connect(
   mapStateToProps,
   mapDispatchToProps,
-)(SelectSourceInclusionsComponent);
+)(SelectTransferDataStepComponent);
