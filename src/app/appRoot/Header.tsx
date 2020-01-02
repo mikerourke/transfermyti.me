@@ -6,8 +6,9 @@ const Root = styled.header(
     display: "flex",
     alignItems: "center",
     justifyContent: "space-between",
+    height: "3rem",
     width: "100%",
-    padding: "1rem",
+    padding: "0 1rem",
   },
   ({ theme }) => ({
     color: theme.colors.alto,

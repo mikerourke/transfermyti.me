@@ -1,9 +1,8 @@
 import { createSelector, Selector } from "reselect";
 import * as R from "ramda";
 import { activeWorkspaceIdSelector } from "~/workspaces/workspacesSelectors";
-import { TableViewModel } from "~/allEntities/allEntitiesTypes";
 import { ReduxState } from "~/redux/reduxTypes";
-import { TimeEntryModel } from "~/timeEntries/timeEntriesTypes";
+import { TimeEntryModel, TimeEntryTableViewModel } from "./timeEntriesTypes";
 
 export const sourceTimeEntriesSelector = createSelector(
   (state: ReduxState) => state.timeEntries.source,
@@ -35,12 +34,34 @@ export const sourceTimeEntriesInActiveWorkspaceSelector = createSelector(
 
 export const timeEntriesForTableViewSelector = createSelector(
   sourceTimeEntriesInActiveWorkspaceSelector,
-  (sourceTimeEntries): TableViewModel<TimeEntryModel>[] =>
-    sourceTimeEntries.map(sourceClient => {
-      const existsInTarget = sourceClient.linkedId !== null;
+  (state: ReduxState) => state.projects.source,
+  (state: ReduxState) => state.tasks.source,
+  (
+    sourceTimeEntries,
+    sourceProjectsById,
+    sourceTasksById,
+  ): TimeEntryTableViewModel[] =>
+    sourceTimeEntries.map(sourceTimeEntry => {
+      const existsInTarget = sourceTimeEntry.linkedId !== null;
+      const projectName = R.pathOr(
+        "Unknown Project",
+        [sourceTimeEntry.projectId, "name"],
+        sourceProjectsById,
+      );
+
+      let taskName = "No Task";
+      if (sourceTimeEntry.taskId !== null) {
+        taskName = R.pathOr(
+          "No Task",
+          [sourceTimeEntry.taskId, "name"],
+          sourceTasksById,
+        );
+      }
 
       return {
-        ...sourceClient,
+        ...sourceTimeEntry,
+        projectName,
+        taskName,
         existsInTarget,
         isActiveInSource: true,
         isActiveInTarget: existsInTarget,

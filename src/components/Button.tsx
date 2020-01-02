@@ -13,7 +13,6 @@ const Root = styled.button({
   borderRadius: "0.25rem",
   fontSize: 14,
   fontWeight: 400,
-  outline: "none",
   padding: "0.5rem 0.75rem",
   textAlign: "center",
   verticalAlign: "middle",

@@ -3,8 +3,8 @@ import { connect } from "react-redux";
 import { PayloadActionCreator } from "typesafe-actions";
 import { flipIsClientIncluded } from "~/clients/clientsActions";
 import { clientsForTableViewSelector } from "~/clients/clientsSelectors";
-import { AccordionPanel, EntitiesTable } from "~/components";
-import { TableViewModel } from "~/allEntities/allEntitiesTypes";
+import { EntityListPanel } from "~/components";
+import { EntityGroup, TableViewModel } from "~/allEntities/allEntitiesTypes";
 import { ClientModel } from "~/clients/clientsTypes";
 import { ReduxState } from "~/redux/reduxTypes";
 
@@ -19,19 +19,16 @@ interface ConnectDispatchProps {
 type Props = ConnectStateProps & ConnectDispatchProps;
 
 export const ClientsTableComponent: React.FC<Props> = props => (
-  <AccordionPanel
+  <EntityListPanel
+    entityGroup={EntityGroup.Clients}
     rowNumber={2}
-    title={<span>Clients | Count: {props.clients.length}</span>}
-  >
-    <EntitiesTable
-      tableFields={[
-        { label: "Name", field: "name" },
-        { label: "Time Entry Count", field: "entryCount" },
-      ]}
-      tableData={props.clients}
-      onFlipIsIncluded={props.onFlipIsIncluded}
-    />
-  </AccordionPanel>
+    tableData={props.clients}
+    tableFields={[
+      { label: "Name", field: "name" },
+      { label: "Time Entries", field: "entryCount" },
+    ]}
+    onFlipIsIncluded={props.onFlipIsIncluded}
+  />
 );
 
 const mapStateToProps = (state: ReduxState): ConnectStateProps => ({

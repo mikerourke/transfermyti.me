@@ -1,54 +1,17 @@
 import React from "react";
 import { connect } from "react-redux";
-import { booleanToYesNo, capitalize, kebabCase } from "~/utils";
+import { kebabCase, booleanToYesNo, capitalize } from "~/utils";
 import { toolNameByMappingSelector } from "~/app/appSelectors";
-import { ToolNameByMappingModel } from "~/app/appTypes";
-import { styled } from "~/components/emotion";
+import { AccordionPanel } from "./Accordion";
+import EntityListPanelTable from "./EntityListPanelTable";
+import EntityListPanelTitle from "./EntityListPanelTitle";
 import {
   BaseEntityModel,
+  EntityGroup,
   TableViewModel,
 } from "~/allEntities/allEntitiesTypes";
+import { ToolNameByMappingModel } from "~/app/appTypes";
 import { ReduxState } from "~/redux/reduxTypes";
-
-const Root = styled.div({
-  overflowY: "auto",
-  position: "relative",
-  width: "100%",
-});
-
-const Table = styled.table({
-  tableLayout: "fixed",
-  width: "100%",
-
-  th: {
-    fontWeight: "bold",
-    textAlign: "left",
-  },
-
-  td: {
-    borderTop: "1px solid rgb(229, 229, 234);",
-    padding: "0.5rem 0.25rem",
-  },
-
-  "tr th, tr td": {
-    fontSize: "0.875rem",
-  },
-
-  "tr th:first-of-type, tr td:first-of-type": {
-    textAlign: "center",
-    width: "5rem",
-  },
-});
-
-const TableBodyRow = styled.tr<{ existsInTarget: boolean }>(
-  {},
-  ({ existsInTarget, theme }) => ({
-    td: {
-      color: existsInTarget ? theme.colors.manatee : theme.colors.black,
-      textDecoration: existsInTarget ? "line-through" : "none",
-    },
-  }),
-);
 
 interface TableField {
   label: string;
@@ -60,6 +23,8 @@ interface ConnectStateProps {
 }
 
 interface OwnProps {
+  entityGroup: EntityGroup;
+  rowNumber: number;
   tableData: TableViewModel<BaseEntityModel>[];
   tableFields: TableField[];
   onFlipIsIncluded: (id: string) => void;
@@ -67,14 +32,14 @@ interface OwnProps {
 
 type Props = ConnectStateProps & OwnProps;
 
-const EntitiesTable: React.FC<Props> = ({
-  children,
-  tableData,
-  tableFields,
-  toolNameByMapping,
-  onFlipIsIncluded,
-  ...props
-}) => {
+export const EntityListPanelComponent: React.FC<Props> = props => {
+  const [showExisting, setShowExisting] = React.useState<boolean>(true);
+
+  const groupName =
+    props.entityGroup === EntityGroup.UserGroups
+      ? "User Groups"
+      : capitalize(props.entityGroup);
+
   const getFieldDisplay = (value: string | boolean): string => {
     if (typeof value === "boolean") {
       return booleanToYesNo(value);
@@ -84,7 +49,7 @@ const EntitiesTable: React.FC<Props> = ({
   };
 
   const getLabelDisplay = (label: string): string => {
-    const { source, target } = toolNameByMapping;
+    const { source, target } = props.toolNameByMapping;
     if (/Source/g.test(label)) {
       return label.replace("Source", capitalize(source));
     }
@@ -96,41 +61,59 @@ const EntitiesTable: React.FC<Props> = ({
     return label;
   };
 
+  const visibleTableData = showExisting
+    ? props.tableData
+    : props.tableData.filter(record => !record.existsInTarget);
+
   return (
-    <Root>
-      <Table {...props}>
+    <AccordionPanel
+      rowNumber={props.rowNumber}
+      title={
+        <EntityListPanelTitle
+          groupName={groupName}
+          entityCount={visibleTableData.length}
+        />
+      }
+    >
+      <EntityListPanelTable>
         <thead>
           <tr>
-            <th>Include?</th>
-            {tableFields.map(({ label }) => (
+            <th className="include-cell">Include in Transfer?</th>
+            {props.tableFields.map(({ label }) => (
               <th key={kebabCase(label)}>{getLabelDisplay(label)}</th>
             ))}
           </tr>
         </thead>
         <tbody>
-          {tableData.map(record => (
-            <TableBodyRow
+          {visibleTableData.map(record => (
+            <EntityListPanelTable.BodyRow
               key={record.id}
               existsInTarget={record.existsInTarget}
             >
-              <td>
+              <td className="include-cell">
                 <input
                   type="checkbox"
                   checked={record.existsInTarget ? false : record.isIncluded}
                   disabled={record.existsInTarget}
-                  onChange={() => onFlipIsIncluded(record.id)}
+                  onChange={() => props.onFlipIsIncluded(record.id)}
                 />
               </td>
-              {tableFields.map(({ field }) => (
+              {props.tableFields.map(({ field }) => (
                 <td key={`${record.id}-${field}`}>
                   {getFieldDisplay(record[field])}
                 </td>
               ))}
-            </TableBodyRow>
+            </EntityListPanelTable.BodyRow>
           ))}
         </tbody>
-      </Table>
-    </Root>
+        <EntityListPanelTable.Footer
+          columnCount={props.tableFields.length + 1}
+          entityGroup={props.entityGroup}
+          isShowExisting={showExisting}
+          onToggle={() => setShowExisting(!showExisting)}
+        />
+      </EntityListPanelTable>
+    </AccordionPanel>
   );
 };
 
@@ -140,4 +123,4 @@ const mapStateToProps = (state: ReduxState): ConnectStateProps => ({
 
 export default connect<ConnectStateProps, {}, OwnProps, ReduxState>(
   mapStateToProps,
-)(EntitiesTable);
+)(EntityListPanelComponent);

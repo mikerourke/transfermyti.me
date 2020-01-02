@@ -11,9 +11,10 @@ import { NotificationModel } from "~/app/appTypes";
 import { ReduxState } from "~/redux/reduxTypes";
 
 const Main = styled.main({
+  height: "calc(100vh - 8rem)",
   margin: "0 auto",
   maxWidth: "56rem",
-  overflowY: "auto",
+  overflowY: "scroll",
   padding: "0 1.5rem 1.5rem",
   position: "relative",
 });
@@ -57,6 +58,7 @@ export const AppRootComponent: React.FC<Props> = props => {
             lineHeight: theme.lineHeights.body,
             position: "relative",
             margin: 0,
+            overflow: "hidden",
           },
 
           "#root": {

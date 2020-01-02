@@ -1,49 +1,20 @@
+import format from "date-fns/format";
 import React from "react";
 import { connect } from "react-redux";
 import { PayloadActionCreator } from "typesafe-actions";
 import { flipIsTimeEntryIncluded } from "~/timeEntries/timeEntriesActions";
 import { timeEntriesForTableViewSelector } from "~/timeEntries/timeEntriesSelectors";
-import { AccordionPanel, styled } from "~/components";
-import { TableViewModel } from "~/allEntities/allEntitiesTypes";
-import { TimeEntryModel } from "~/timeEntries/timeEntriesTypes";
+import {
+  AccordionPanel,
+  EntityListPanelTable,
+  EntityListPanelTitle,
+} from "~/components";
+import { EntityGroup } from "~/allEntities/allEntitiesTypes";
 import { ReduxState } from "~/redux/reduxTypes";
-
-const Table = styled.table({
-  tableLayout: "fixed",
-  width: "100%",
-
-  th: {
-    fontWeight: "bold",
-    textAlign: "left",
-  },
-
-  td: {
-    borderTop: "1px solid rgb(229, 229, 234);",
-    padding: "0.5rem 0.25rem",
-  },
-
-  "tr th, tr td": {
-    fontSize: "0.875rem",
-  },
-
-  "tr th:first-of-type, tr td:first-of-type": {
-    textAlign: "center",
-    width: "5rem",
-  },
-});
-
-const TableBodyRow = styled.tr<{ existsInTarget: boolean }>(
-  {},
-  ({ existsInTarget, theme }) => ({
-    td: {
-      color: existsInTarget ? theme.colors.manatee : theme.colors.black,
-      textDecoration: existsInTarget ? "line-through" : "none",
-    },
-  }),
-);
+import { TimeEntryTableViewModel } from "~/timeEntries/timeEntriesTypes";
 
 interface ConnectStateProps {
-  timeEntries: TableViewModel<TimeEntryModel>[];
+  timeEntries: TimeEntryTableViewModel[];
 }
 
 interface ConnectDispatchProps {
@@ -52,37 +23,73 @@ interface ConnectDispatchProps {
 
 type Props = ConnectStateProps & ConnectDispatchProps;
 
-export const TimeEntriesTableComponent: React.FC<Props> = props => (
-  <AccordionPanel
-    rowNumber={5}
-    title={<span>Time Entries | Count: {props.timeEntries.length}</span>}
-  >
-    <Table>
-      <thead>
-        <tr>
-          <th>Include?</th>
-          <th>Description</th>
-        </tr>
-      </thead>
-      <tbody>
-        {props.timeEntries.map(({ existsInTarget, ...timeEntry }) => (
-          <TableBodyRow key={timeEntry.id} existsInTarget={existsInTarget}>
-            <td rowSpan={2}>
-              <input
-                type="checkbox"
-                checked={existsInTarget ? false : timeEntry.isIncluded}
-                disabled={existsInTarget}
-                onChange={() => props.onFlipIsIncluded(timeEntry.id)}
-              />
-            </td>
-            <td>{timeEntry.description}</td>
-            <td>{timeEntry.start.toISOString()}</td>
-          </TableBodyRow>
-        ))}
-      </tbody>
-    </Table>
-  </AccordionPanel>
-);
+export const TimeEntriesTableComponent: React.FC<Props> = props => {
+  const [showExisting, setShowExisting] = React.useState<boolean>(true);
+
+  const visibleTimeEntries = showExisting
+    ? props.timeEntries
+    : props.timeEntries.filter(timeEntry => !timeEntry.existsInTarget);
+
+  return (
+    <AccordionPanel
+      rowNumber={5}
+      title={
+        <EntityListPanelTitle
+          groupName="Time Entries"
+          entityCount={visibleTimeEntries.length}
+        />
+      }
+    >
+      <EntityListPanelTable>
+        <thead>
+          <tr>
+            <th className="include-cell" rowSpan={2}>
+              Include?
+            </th>
+            <th>Start Time</th>
+            <th>End Time</th>
+            <th>Task</th>
+            <th>Project</th>
+          </tr>
+          <tr>
+            <th colSpan={3}>Description</th>
+            <th>Tags</th>
+          </tr>
+        </thead>
+        <tbody>
+          {visibleTimeEntries.map(({ existsInTarget, ...timeEntry }) => (
+            <React.Fragment key={timeEntry.id}>
+              <EntityListPanelTable.BodyRow existsInTarget={existsInTarget}>
+                <td className="include-cell" rowSpan={2}>
+                  <input
+                    type="checkbox"
+                    checked={existsInTarget ? false : timeEntry.isIncluded}
+                    disabled={existsInTarget}
+                    onChange={() => props.onFlipIsIncluded(timeEntry.id)}
+                  />
+                </td>
+                <td>{format(timeEntry.start, "Pp")}</td>
+                <td>{format(timeEntry.end, "Pp")}</td>
+                <td>{timeEntry.taskName}</td>
+                <td>{timeEntry.projectName}</td>
+              </EntityListPanelTable.BodyRow>
+              <EntityListPanelTable.BodyRow existsInTarget={existsInTarget}>
+                <td colSpan={3}>{timeEntry.description}</td>
+                <td>{timeEntry.tagNames.join(", ")}</td>
+              </EntityListPanelTable.BodyRow>
+            </React.Fragment>
+          ))}
+        </tbody>
+        <EntityListPanelTable.Footer
+          columnCount={5}
+          entityGroup={EntityGroup.TimeEntries}
+          isShowExisting={showExisting}
+          onToggle={() => setShowExisting(!showExisting)}
+        />
+      </EntityListPanelTable>
+    </AccordionPanel>
+  );
+};
 
 const mapStateToProps = (state: ReduxState): ConnectStateProps => ({
   timeEntries: timeEntriesForTableViewSelector(state),

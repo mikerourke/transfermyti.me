@@ -1,15 +1,31 @@
 import React from "react";
 import { styled, ExternalLink, Icon } from "~/components";
 
-const Root = styled.footer({
-  position: "absolute",
-  right: 0,
-  bottom: 0,
-  left: 0,
-  padding: "1rem 2rem",
-  display: "flex",
-  alignItems: "center",
-  justifyContent: "space-between",
+const Root = styled.footer(
+  {
+    position: "fixed",
+    right: 0,
+    bottom: 0,
+    left: 0,
+    padding: "0 2rem",
+    display: "flex",
+    alignItems: "center",
+    justifyContent: "space-between",
+    height: "5rem",
+
+    p: {
+      margin: 0,
+    },
+  },
+  ({ theme }) => ({
+    background: theme.colors.alto,
+  }),
+);
+
+const RightColumn = styled.div({
+  fontSize: 13,
+  fontWeight: 700,
+  textAlign: "right",
 });
 
 const Love = (): JSX.Element => <Icon name="heart" color="ruby" height={12} />;
@@ -27,18 +43,13 @@ const LinkToIssues = (): JSX.Element => (
 const Footer: React.FC = () => (
   <Root>
     <div>
-      <p css={{ marginBottom: "0.5rem" }}>
-        Made with <Love /> by <LinkToMe />
+      <p>
+        Made with
+        <Love />
+        by <LinkToMe />
       </p>
-      <a
-        href="https://twitter.com/codelikeawolf?ref_src=twsrc%5Etfw"
-        className="twitter-follow-button"
-        data-show-count="true"
-      >
-        Follow @codelikeawolf
-      </a>
     </div>
-    <div css={{ fontSize: 13, fontWeight: 700, textAlign: "right" }}>
+    <RightColumn>
       <p>
         The time tracking tool companies (Clockify, Toggl, etc.) are not
         responsible for this tool.
@@ -46,7 +57,7 @@ const Footer: React.FC = () => (
       <p>
         Please file any issues <LinkToIssues />.
       </p>
-    </div>
+    </RightColumn>
   </Root>
 );
 

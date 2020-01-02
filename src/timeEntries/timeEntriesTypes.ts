@@ -1,4 +1,7 @@
-import { BaseEntityModel } from "~/allEntities/allEntitiesTypes";
+import {
+  BaseEntityModel,
+  TableViewModel,
+} from "~/allEntities/allEntitiesTypes";
 
 export interface TimeEntryModel extends BaseEntityModel {
   id: string;
@@ -16,5 +19,10 @@ export interface TimeEntryModel extends BaseEntityModel {
   userId: string;
   userGroupIds: string[];
 }
+
+export type TimeEntryTableViewModel = TableViewModel<TimeEntryModel> & {
+  taskName: string;
+  projectName: string;
+};
 
 export type TimeEntriesByIdModel = Record<string, TimeEntryModel>;

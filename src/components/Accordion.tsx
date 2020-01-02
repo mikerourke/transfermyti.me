@@ -7,7 +7,7 @@ const ToggleButton = styled.button(
     alignItems: "center",
     appearance: "none",
     display: "flex",
-    fontSize: "1rem",
+    fontSize: "1.25rem",
     justifyContent: "space-between",
     marginBottom: "1rem",
     padding: "0.75rem 1rem",
@@ -22,7 +22,6 @@ const ToggleButton = styled.button(
     "&:hover": {
       backgroundColor: theme.colors.cornflower,
       color: theme.colors.white,
-      textDecoration: "underline",
 
       path: {
         fill: theme.colors.white,
@@ -53,10 +52,9 @@ export const AccordionPanel: React.FC<{
           aria-controls={contentId}
           aria-selected={false}
           aria-expanded={isExpanded}
-          tabIndex={rowNumber - 1}
           onClick={() => setIsExpanded(!isExpanded)}
         >
-          <span>{title}</span>
+          {title}
           <Icon
             color="cornflower"
             name={isExpanded ? "circleRemove" : "circleAdd"}
@@ -70,7 +68,6 @@ export const AccordionPanel: React.FC<{
         role="region"
         aria-hidden={!isExpanded}
         aria-labelledby={titleId}
-        tabIndex={-1}
       >
         {children}
       </div>

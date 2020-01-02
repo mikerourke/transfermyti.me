@@ -3,8 +3,8 @@ import { connect } from "react-redux";
 import { PayloadActionCreator } from "typesafe-actions";
 import { flipIsTaskIncluded } from "~/tasks/tasksActions";
 import { tasksForTableViewSelector } from "~/tasks/tasksSelectors";
-import { AccordionPanel, EntitiesTable } from "~/components";
-import { TableViewModel } from "~/allEntities/allEntitiesTypes";
+import { EntityListPanel } from "~/components";
+import { EntityGroup, TableViewModel } from "~/allEntities/allEntitiesTypes";
 import { TaskModel } from "~/tasks/tasksTypes";
 import { ReduxState } from "~/redux/reduxTypes";
 
@@ -19,22 +19,19 @@ interface ConnectDispatchProps {
 type Props = ConnectStateProps & ConnectDispatchProps;
 
 export const TasksTableComponent: React.FC<Props> = props => (
-  <AccordionPanel
+  <EntityListPanel
+    entityGroup={EntityGroup.Tasks}
     rowNumber={4}
-    title={<span>Tasks | Count: {props.tasks.length}</span>}
-  >
-    <EntitiesTable
-      tableFields={[
-        { label: "Name", field: "name" },
-        { label: "Project", field: "projectName" },
-        { label: "Time Entry Count", field: "entryCount" },
-        { label: "Active In Source?", field: "isActiveInSource" },
-        { label: "Active In Target?", field: "isActiveInTarget" },
-      ]}
-      tableData={props.tasks}
-      onFlipIsIncluded={props.onFlipIsIncluded}
-    />
-  </AccordionPanel>
+    tableData={props.tasks}
+    tableFields={[
+      { label: "Name", field: "name" },
+      { label: "Project", field: "projectName" },
+      { label: "Time Entries", field: "entryCount" },
+      { label: "Active In Source?", field: "isActiveInSource" },
+      { label: "Active In Target?", field: "isActiveInTarget" },
+    ]}
+    onFlipIsIncluded={props.onFlipIsIncluded}
+  />
 );
 
 const mapStateToProps = (state: ReduxState): ConnectStateProps => ({
