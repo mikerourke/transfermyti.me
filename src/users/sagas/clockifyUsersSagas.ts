@@ -6,7 +6,7 @@ import {
   fetchObject,
   paginatedClockifyFetch,
 } from "~/redux/sagaUtils";
-import { incrementCurrentTransferCount } from "~/app/appActions";
+import { incrementEntityGroupTransferCountComplete } from "~/allEntities/allEntitiesActions";
 import { EntityGroup, ToolName } from "~/allEntities/allEntitiesTypes";
 import { UserModel } from "~/users/usersTypes";
 
@@ -67,7 +67,7 @@ export function* createClockifyUsersSaga(
   emailsByWorkspaceId: Record<string, string[]>,
 ): SagaIterator {
   for (const [workspaceId, emails] of Object.entries(emailsByWorkspaceId)) {
-    yield put(incrementCurrentTransferCount());
+    yield put(incrementEntityGroupTransferCountComplete(EntityGroup.Users));
     yield call(inviteClockifyUsers, emails, workspaceId);
     yield delay(CLOCKIFY_API_DELAY);
   }

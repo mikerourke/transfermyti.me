@@ -1,4 +1,5 @@
 import { SagaIterator } from "@redux-saga/types";
+import * as R from "ramda";
 import { call, delay, select } from "redux-saga/effects";
 import { CLOCKIFY_API_DELAY } from "~/constants";
 import {
@@ -9,7 +10,7 @@ import {
 } from "~/redux/sagaUtils";
 import {
   projectIdToLinkedIdSelector,
-  projectsByToolNameSelector,
+  projectsByWorkspaceIdByToolNameSelector,
 } from "~/projects/projectsSelectors";
 import { EntityGroup, ToolName } from "~/allEntities/allEntitiesTypes";
 import { TaskModel } from "~/tasks/tasksTypes";
@@ -81,8 +82,14 @@ function* createClockifyTask(
 function* fetchClockifyTasksInWorkspace(
   workspaceId: string,
 ): SagaIterator<TaskModel[]> {
-  const projectsByToolName = yield select(projectsByToolNameSelector);
-  const clockifyProjects = projectsByToolName[ToolName.Clockify];
+  const projectsByWorkspaceIdByToolName = yield select(
+    projectsByWorkspaceIdByToolNameSelector,
+  );
+  const clockifyProjects = R.pathOr(
+    [],
+    [ToolName.Clockify, workspaceId],
+    projectsByWorkspaceIdByToolName,
+  );
   const allClockifyTasks: ClockifyTaskResponseModel[] = [];
 
   for (const clockifyProject of clockifyProjects) {

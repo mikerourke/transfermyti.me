@@ -2,6 +2,7 @@ import fetchIntercept from "fetch-intercept";
 import { Store } from "redux";
 import {
   CLOCKIFY_API_URL,
+  IS_USING_LOCAL_API,
   LOCAL_API_URL,
   TOGGL_API_URL,
   TOGGL_REPORTS_URL,
@@ -48,27 +49,13 @@ export function initInterceptor(store: Store): VoidFunction {
     },
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
     response(response): any {
-      const toolName = response.url.includes("clockify")
-        ? ToolName.Clockify
-        : ToolName.Toggl;
-      const { url, status, statusText } = response;
-
       if (!response.ok) {
-        const error = new Error(statusText);
-        Object.assign(error, { url, status, toolName });
-        throw error;
+        return response;
       }
 
       const type = response.headers.get("content-type") || "json";
       if (type.includes("json")) {
-        return response
-          .json()
-          .then(result => result)
-          .catch(err => {
-            const error = new Error(err.message);
-            Object.assign(error, { url, toolName });
-            return Promise.reject(error);
-          });
+        return response.json();
       }
       return response.text();
     },
@@ -108,8 +95,7 @@ function extrapolateFromUrl(
 }
 
 function getApiUrl(toolName: ToolName, context: Context): string {
-  // @ts-ignore
-  if (process.env.USE_LOCAL_API === "true" || process.env.NODE_ENV === "test") {
+  if (IS_USING_LOCAL_API) {
     return `${LOCAL_API_URL}/${toolName}`;
   }
 

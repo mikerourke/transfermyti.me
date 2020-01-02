@@ -7,9 +7,18 @@ const Details = styled.details(
     marginBottom: "1rem",
     width: "100%",
 
-    "p,summary": {
+    "div,summary": {
       margin: 0,
       padding: "0.5rem 0.25rem",
+    },
+
+    p: {
+      margin: 0,
+      padding: "0.5rem 0 0 0",
+
+      "&:first-of-type": {
+        paddingTop: 0,
+      },
     },
   },
   ({ theme }) => ({
@@ -20,7 +29,7 @@ const Details = styled.details(
 const HelpDetails: React.FC = ({ children, ...props }) => (
   <Details {...props}>
     <summary>Show/Hide Help</summary>
-    <p>{children}</p>
+    <div>{children}</div>
   </Details>
 );
 

@@ -3,7 +3,7 @@ import * as R from "ramda";
 import { toolNameByMappingSelector } from "~/app/appSelectors";
 import { sourceTimeEntryCountByIdFieldSelectorFactory } from "~/timeEntries/timeEntriesSelectors";
 import { activeWorkspaceIdSelector } from "~/workspaces/workspacesSelectors";
-import { Mapping, TableViewModel } from "~/allEntities/allEntitiesTypes";
+import { TableViewModel } from "~/allEntities/allEntitiesTypes";
 import { ReduxState } from "~/redux/reduxTypes";
 import { ProjectModel, ProjectsByIdModel } from "./projectsTypes";
 
@@ -97,12 +97,33 @@ export const projectsForTableViewSelector = createSelector(
     }),
 );
 
-export const projectsByToolNameSelector = createSelector(
+const groupProjectsByWorkspaceId = (
+  projects: ProjectModel[],
+): Record<string, ProjectModel[]> => {
+  const projectsByWorkspaceId: Record<string, ProjectModel[]> = {};
+
+  for (const project of projects) {
+    const workspaceProjects = R.propOr<
+      ProjectModel[],
+      Record<string, ProjectModel[]>,
+      ProjectModel[]
+    >([], project.workspaceId, projectsByWorkspaceId);
+
+    projectsByWorkspaceId[project.workspaceId] = [
+      ...workspaceProjects,
+      project,
+    ];
+  }
+
+  return projectsByWorkspaceId;
+};
+
+export const projectsByWorkspaceIdByToolNameSelector = createSelector(
   toolNameByMappingSelector,
   sourceProjectsSelector,
   targetProjectsSelector,
   (toolNameByMapping, sourceProjects, targetProjects) => ({
-    [toolNameByMapping[Mapping.Source]]: sourceProjects,
-    [toolNameByMapping[Mapping.Target]]: targetProjects,
+    [toolNameByMapping.source]: groupProjectsByWorkspaceId(sourceProjects),
+    [toolNameByMapping.target]: groupProjectsByWorkspaceId(targetProjects),
   }),
 );

@@ -1,3 +1,3 @@
-export { booleanToYesNo, capitalize, kebabCase } from "./textTransforms";
-export { getIfDev } from "./getIfDev";
 export { lookupTable } from "./lookupTable";
+export { getIfDev } from "./getIfDev";
+export { booleanToYesNo, capitalize, kebabCase } from "./textTransforms";

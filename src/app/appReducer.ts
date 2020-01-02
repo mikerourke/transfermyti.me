@@ -8,8 +8,6 @@ type AppAction = ActionType<typeof appActions>;
 export interface AppState {
   readonly notifications: NotificationModel[];
   readonly toolNameByMapping: ToolNameByMappingModel;
-  readonly currentTransferCount: number;
-  readonly totalTransferCount: number;
 }
 
 export const initialState: AppState = {
@@ -18,8 +16,6 @@ export const initialState: AppState = {
     source: ToolName.None,
     target: ToolName.None,
   },
-  currentTransferCount: 0,
-  totalTransferCount: 0,
 };
 
 export const appReducer = createReducer<AppState, AppAction>(initialState)
@@ -44,16 +40,4 @@ export const appReducer = createReducer<AppState, AppAction>(initialState)
       ...state.toolNameByMapping,
       ...payload,
     },
-  }))
-  .handleAction(appActions.incrementCurrentTransferCount, state => ({
-    ...state,
-    currentTransferCount: state.currentTransferCount + 1,
-  }))
-  .handleAction(appActions.resetCurrentTransferCount, state => ({
-    ...state,
-    currentTransferCount: 0,
-  }))
-  .handleAction(appActions.updateTotalTransferCount, (state, { payload }) => ({
-    ...state,
-    totalTransferCount: payload,
   }));

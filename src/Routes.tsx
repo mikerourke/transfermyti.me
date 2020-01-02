@@ -7,6 +7,7 @@ import SelectTransferMappingStep from "~/app/selectTransferMappingStep/SelectTra
 import EnterCredentialsStep from "~/credentials/enterCredentialsStep/EnterCredentialsStep";
 import SelectSourceWorkspacesStep from "~/workspaces/selectSourceWorkspacesStep/SelectSourceWorkspacesStep";
 import SelectTransferDataStep from "~/allEntities/selectTransferDataStep/SelectTransferDataStep";
+import PerformTransferStep from "~/allEntities/performTransferStep/PerformTransferStep";
 import { RoutePath } from "~/app/appTypes";
 
 interface Props {
@@ -34,6 +35,9 @@ const Routes: React.FC<Props> = ({ history }) => (
           path={RoutePath.SelectTransferData}
           component={SelectTransferDataStep}
         />
+        <Route
+          path={RoutePath.PerformTransfer}
+          component={PerformTransferStep}
         />
       </Switch>
     </AppRoot>

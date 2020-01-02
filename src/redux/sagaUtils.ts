@@ -9,7 +9,10 @@ import {
   CLOCKIFY_API_PAGE_SIZE,
   TOGGL_API_DELAY,
 } from "~/constants";
-import { incrementCurrentTransferCount } from "~/app/appActions";
+import {
+  incrementEntityGroupTransferCountComplete,
+  updateEntityGroupTransferCountTotal,
+} from "~/allEntities/allEntitiesActions";
 import { mappingByToolNameSelector } from "~/app/appSelectors";
 import {
   includedWorkspaceIdsByMappingSelector,
@@ -17,6 +20,7 @@ import {
 } from "~/workspaces/workspacesSelectors";
 import {
   BaseEntityModel,
+  EntityGroup,
   Mapping,
   ToolName,
 } from "~/allEntities/allEntitiesTypes";
@@ -45,9 +49,20 @@ export function* createEntitiesForTool<TEntity>({
 }): SagaIterator<TEntity[]> {
   type ValidEntity = TEntity & BaseEntityModel;
   const targetRecords: TEntity[] = [];
+  const validSourceRecords = sourceRecords as ValidEntity[];
   const apiDelay = apiDelayForTool(toolName);
 
-  for (const sourceRecord of sourceRecords as ValidEntity[]) {
+  const [firstRecord] = validSourceRecords;
+  const entityGroup = firstRecord.memberOf as EntityGroup;
+
+  yield put(
+    updateEntityGroupTransferCountTotal({
+      entityGroup,
+      countTotal: validSourceRecords.length,
+    }),
+  );
+
+  for (const sourceRecord of validSourceRecords) {
     const workspaceIdToLinkedId = yield select(workspaceIdToLinkedIdSelector);
     const targetWorkspaceId = R.propOr<null, Record<string, string>, string>(
       null,
@@ -59,8 +74,6 @@ export function* createEntitiesForTool<TEntity>({
       continue;
     }
 
-    yield put(incrementCurrentTransferCount());
-
     const targetRecord = yield call(
       apiCreateFunc,
       sourceRecord,
@@ -69,6 +82,8 @@ export function* createEntitiesForTool<TEntity>({
     if (!R.isNil(targetRecord)) {
       targetRecords.push(targetRecord);
     }
+
+    yield put(incrementEntityGroupTransferCountComplete(entityGroup));
 
     yield delay(apiDelay);
   }
@@ -109,13 +124,6 @@ export function* fetchEntitiesForTool<TEntity>({
   }
 
   return allRecords;
-}
-
-function apiDelayForTool(toolName: ToolName): number {
-  return {
-    [ToolName.Clockify]: CLOCKIFY_API_DELAY,
-    [ToolName.Toggl]: TOGGL_API_DELAY,
-  }[toolName];
 }
 
 export function* paginatedClockifyFetch<TEntity>(
@@ -168,26 +176,30 @@ export function* fetchObject<TResponse>(
   return R.isNil(response) ? {} : response;
 }
 
-function* fetchWithRetries<TResponse>(
+async function fetchWithRetries<TResponse>(
   endpoint: string,
-  fetchOptions: unknown = {},
-): SagaIterator<TResponse> {
-  let fetchResponse;
-
-  for (let attempt = 0; attempt < 5; attempt += 1) {
-    try {
-      fetchResponse = yield call(fetch, endpoint, fetchOptions as RequestInit);
-      break;
-    } catch (err) {
-      if (err.code === 429) {
-        yield delay(500);
-      } else {
-        throw err;
-      }
+  fetchOptions: unknown,
+  attempt: number = 5,
+): Promise<TResponse> {
+  try {
+    return await fetch(endpoint, fetchOptions as RequestInit);
+  } catch (err) {
+    if (err.status === 429) {
+      // This is an arbitrary delay to ensure the API limits aren't reached.
+      // Eventually we can make this tool specific:
+      await delay(750);
+      return await fetchWithRetries(endpoint, fetchOptions, attempt - 1);
+    } else {
+      throw err;
     }
   }
+}
 
-  return fetchResponse;
+function apiDelayForTool(toolName: ToolName): number {
+  return {
+    [ToolName.Clockify]: CLOCKIFY_API_DELAY,
+    [ToolName.Toggl]: TOGGL_API_DELAY,
+  }[toolName];
 }
 
 export function linkEntitiesByIdByMapping<TEntity>(

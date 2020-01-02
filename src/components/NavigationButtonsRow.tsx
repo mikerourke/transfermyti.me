@@ -7,7 +7,7 @@ const Root = styled.div({
   marginTop: "1rem",
 
   button: {
-    width: "5rem",
+    minWidth: "5rem",
 
     ":not(:last-of-type)": {
       marginRight: "0.75rem",
@@ -17,6 +17,7 @@ const Root = styled.div({
 
 interface Props {
   disabled?: boolean;
+  nextLabel?: string;
   onBackClick: VoidFunction;
   onNextClick: VoidFunction;
   onRefreshClick?: VoidFunction;
@@ -24,6 +25,7 @@ interface Props {
 
 const NavigationButtonsRow: React.FC<Props> = ({
   disabled = false,
+  nextLabel = "Next",
   onBackClick,
   onNextClick,
   onRefreshClick,
@@ -34,7 +36,7 @@ const NavigationButtonsRow: React.FC<Props> = ({
       Back
     </Button>
     <Button color="cornflower" disabled={disabled} onClick={onNextClick}>
-      Next
+      {nextLabel}
     </Button>
     {!R.isNil(onRefreshClick) && (
       <Button color="eggplant" disabled={disabled} onClick={onRefreshClick}>

@@ -1,12 +1,15 @@
 import { createSelector } from "reselect";
 import { ReduxState } from "~/redux/reduxTypes";
-import { EntityGroup } from "./allEntitiesTypes";
+import {
+  EntityGroup,
+  TransferCountsByEntityGroupModel,
+} from "./allEntitiesTypes";
+
+export const areEntitiesCreatingSelector = (state: ReduxState): boolean =>
+  state.allEntities.areEntitiesCreating;
 
 export const areEntitiesFetchingSelector = (state: ReduxState): boolean =>
   state.allEntities.areEntitiesFetching;
-
-export const lastFetchTimeSelector = (state: ReduxState): Date | null =>
-  state.allEntities.lastFetchTime;
 
 export const entityGroupInProcessDisplaySelector = createSelector(
   (state: ReduxState) => state.allEntities.entityGroupInProcess,
@@ -26,4 +29,10 @@ export const entityGroupInProcessDisplaySelector = createSelector(
         return entityGroupInProcess as string;
     }
   },
+);
+
+export const transferCountsByEntityGroupSelector = createSelector(
+  (state: ReduxState) => state.allEntities.transferCountsByEntityGroup,
+  (transferCountsByEntityGroup): TransferCountsByEntityGroupModel =>
+    transferCountsByEntityGroup,
 );

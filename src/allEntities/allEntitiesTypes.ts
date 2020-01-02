@@ -34,3 +34,13 @@ export type TableViewModel<TEntity> = TEntity & {
   isActiveInSource: boolean;
   isActiveInTarget: boolean;
 };
+
+export interface TransferCountModel {
+  countComplete: number;
+  countTotal: number;
+}
+
+export type TransferCountsByEntityGroupModel = Record<
+  string,
+  TransferCountModel
+>;

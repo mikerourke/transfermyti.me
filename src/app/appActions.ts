@@ -40,15 +40,3 @@ export const dismissAllNotifications = createAction(
 export const updateToolNameByMapping = createAction(
   "@app/UPDATE_TOOL_NAME_BY_MAPPING",
 )<ToolNameByMappingModel>();
-
-export const incrementCurrentTransferCount = createAction(
-  "@app/INCREMENT_CURRENT_TRANSFER_COUNT",
-)<void>();
-
-export const resetCurrentTransferCount = createAction(
-  "@app/RESET_CURRENT_TRANSFER_COUNT",
-)<void>();
-
-export const updateTotalTransferCount = createAction(
-  "@app/UPDATE_TOTAL_TRANSFER_COUNT",
-)<number>();

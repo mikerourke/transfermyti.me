@@ -2,7 +2,7 @@ import { SagaIterator } from "@redux-saga/types";
 import { call, delay, put } from "redux-saga/effects";
 import { TOGGL_API_DELAY } from "~/constants";
 import { fetchArray, fetchObject } from "~/redux/sagaUtils";
-import { incrementCurrentTransferCount } from "~/app/appActions";
+import { incrementEntityGroupTransferCountComplete } from "~/allEntities/allEntitiesActions";
 import { EntityGroup } from "~/allEntities/allEntitiesTypes";
 import { WorkspaceModel } from "~/workspaces/workspacesTypes";
 
@@ -24,14 +24,16 @@ export function* createTogglWorkspacesSaga(
   const targetWorkspaces: WorkspaceModel[] = [];
 
   for (const sourceWorkspace of sourceWorkspaces) {
-    yield put(incrementCurrentTransferCount());
-
     const workspaceRequest = { name: sourceWorkspace.name };
     const targetWorkspace = yield call(fetchObject, "/workspaces", {
       method: "POST",
       body: workspaceRequest,
     });
     targetWorkspaces.push(transformFromResponse(targetWorkspace));
+
+    yield put(
+      incrementEntityGroupTransferCountComplete(EntityGroup.Workspaces),
+    );
 
     yield delay(TOGGL_API_DELAY);
   }

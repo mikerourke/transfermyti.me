@@ -44,7 +44,7 @@ export const sourceWorkspacesSelector = createSelector(
   (workspacesById): WorkspaceModel[] => Object.values(workspacesById),
 );
 
-export const targetWorkspacesSelector = createSelector(
+const targetWorkspacesSelector = createSelector(
   targetWorkspacesByIdSelector,
   (workspacesById): WorkspaceModel[] => Object.values(workspacesById),
 );
