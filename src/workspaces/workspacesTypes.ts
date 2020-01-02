@@ -3,7 +3,6 @@ import { BaseEntityModel, Mapping } from "~/allEntities/allEntitiesTypes";
 export interface WorkspaceModel extends BaseEntityModel {
   id: string;
   name: string;
-  inclusionsByYear?: Record<string, boolean>;
   userIds?: string[];
   isAdmin: boolean | null;
 }

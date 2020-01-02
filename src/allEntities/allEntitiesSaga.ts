@@ -14,14 +14,14 @@ import {
   createTimeEntriesSaga,
   fetchTimeEntriesSaga,
 } from "~/timeEntries/sagas/timeEntriesSagas";
-import {
-  // createUserGroupsSaga,
-  fetchUserGroupsSaga,
-} from "~/userGroups/sagas/userGroupsSagas";
-import {
-  // createUsersSaga,
-  fetchUsersSaga,
-} from "~/users/sagas/usersSagas";
+// import {
+//   createUserGroupsSaga,
+//   fetchUserGroupsSaga,
+// } from "~/userGroups/sagas/userGroupsSagas";
+// import {
+//   createUsersSaga,
+//   fetchUsersSaga,
+// } from "~/users/sagas/usersSagas";
 import {
   createAllEntities,
   fetchAllEntities,
@@ -86,11 +86,12 @@ function* fetchAllEntitiesSaga(): SagaIterator {
     yield put(updateEntityGroupInProcess(EntityGroup.Tasks));
     yield call(fetchTasksSaga);
 
-    yield put(updateEntityGroupInProcess(EntityGroup.UserGroups));
-    yield call(fetchUserGroupsSaga);
+    // TODO: Add this back in once you hash out multi-user transfers.
+    // yield put(updateEntityGroupInProcess(EntityGroup.UserGroups));
+    // yield call(fetchUserGroupsSaga);
 
-    yield put(updateEntityGroupInProcess(EntityGroup.Users));
-    yield call(fetchUsersSaga);
+    // yield put(updateEntityGroupInProcess(EntityGroup.Users));
+    // yield call(fetchUsersSaga);
 
     yield put(updateEntityGroupInProcess(EntityGroup.TimeEntries));
     yield call(fetchTimeEntriesSaga);

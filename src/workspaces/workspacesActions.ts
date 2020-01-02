@@ -30,10 +30,6 @@ export const flipIsWorkspaceIncluded = createAction(
   "@workspaces/FLIP_IS_INCLUDED",
 )<WorkspaceModel>();
 
-export const updateIsWorkspaceYearIncluded = createAction(
-  "@workspaces/UPDATE_IS_WORKSPACE_YEAR_INCLUDED",
-)<UpdateIncludedWorkspaceYearModel>();
-
 export const resetContentsForMapping = createAction(
   "@workspaces/RESET_CONTENTS_FOR_MAPPING",
 )<Mapping>();

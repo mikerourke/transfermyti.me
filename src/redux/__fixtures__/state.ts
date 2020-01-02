@@ -1,27 +1,57 @@
 /* eslint-disable */
 // @ts-ignore
 export default {
+  allEntities: {
+    areEntitiesCreating: false,
+    areEntitiesFetching: false,
+    entityGroupInProcess: null,
+    lastFetchTime: null,
+    transferCountsByEntityGroup: {
+      clients: {
+        countComplete: 0,
+        countTotal: 0,
+      },
+      tags: {
+        countComplete: 0,
+        countTotal: 0,
+      },
+      projects: {
+        countComplete: 0,
+        countTotal: 0,
+      },
+      tasks: {
+        countComplete: 0,
+        countTotal: 0,
+      },
+      timeEntries: {
+        countComplete: 0,
+        countTotal: 0,
+      },
+    },
+  },
   app: {
     notifications: [],
-    currentTransferType: "SINGLE",
-    inTransferDetails: {
-      countCurrentInGroup: 0,
-      countTotalInGroup: 0,
-      entityGroup: null,
-      workspaceId: null,
+    toolNameByMapping: {
+      source: "toggl",
+      target: "clockify",
     },
-    countCurrentInWorkspace: 0,
-    countTotalInWorkspace: 0,
-    countCurrentOverall: 0,
-    countTotalOverall: 0,
   },
   credentials: {
-    togglEmail: "test-user@test.com",
-    togglApiKey: "TOGGLAPIKEY",
-    togglUserId: "6001",
-    clockifyUserId: "clock-user-01",
-    clockifyApiKey: "CLOCKIFYAPIKEY",
+    source: {
+      apiKey: "TOGGLAPIKEY",
+      email: "test-user@test.com",
+      userId: "6001",
+    },
+    target: {
+      apiKey: "CLOCKIFYAPIKEY",
+      email: "test-user@test.com",
+      userId: "clock-user-01",
+    },
     isValidating: false,
+    validationErrorsByMapping: {
+      source: null,
+      target: null,
+    },
   },
   clients: {
     source: {},
@@ -1056,7 +1086,6 @@ export default {
         id: "clock-workspace-01",
         name: "Test Workspace",
         userIds: [],
-        inclusionsByYear: {},
         isAdmin: null,
         workspaceId: "clock-workspace-01",
         entryCount: 0,
@@ -1070,11 +1099,6 @@ export default {
         id: "1001",
         name: "Test Workspace",
         userIds: ["6001"],
-        inclusionsByYear: {
-          "2017": true,
-          "2018": true,
-          "2019": true,
-        },
         isAdmin: true,
         workspaceId: "1001",
         entryCount: 0,
@@ -1083,7 +1107,7 @@ export default {
         memberOf: "workspaces",
       },
     },
-    workspaceIdBeingFetched: null,
+    activeWorkspaceId: "",
     isFetching: false,
   },
 } as any;

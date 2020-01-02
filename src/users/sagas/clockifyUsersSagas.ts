@@ -2,12 +2,12 @@ import { SagaIterator } from "@redux-saga/types";
 import { call, delay, put } from "redux-saga/effects";
 import { CLOCKIFY_API_DELAY } from "~/constants";
 import {
-  fetchEntitiesForTool,
   fetchObject,
   paginatedClockifyFetch,
 } from "~/redux/sagaUtils";
 import { incrementEntityGroupTransferCountComplete } from "~/allEntities/allEntitiesActions";
 import { EntityGroup, ToolName } from "~/allEntities/allEntitiesTypes";
+import { fetchEntitiesForTool } from "~/redux/sagaUtils/fetchEntitiesForTool";
 import { UserModel } from "~/users/usersTypes";
 
 export interface ClockifyHourlyRateResponseModel {

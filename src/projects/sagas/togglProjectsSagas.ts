@@ -4,15 +4,16 @@ import * as R from "ramda";
 import { call, delay } from "redux-saga/effects";
 import { TOGGL_API_DELAY, TOGGL_TEMPLATE_ID } from "~/constants";
 import {
-  createEntitiesForTool,
   fetchArray,
-  fetchEntitiesForTool,
   fetchObject,
-  findTargetEntityId,
+
 } from "~/redux/sagaUtils";
 import { sourceClientsByIdSelector } from "~/clients/clientsSelectors";
 import { EntityGroup, ToolName } from "~/allEntities/allEntitiesTypes";
 import { ProjectModel } from "~/projects/projectsTypes";
+import { createEntitiesForTool } from "~/redux/sagaUtils/createEntitiesForTool";
+import { fetchEntitiesForTool } from "~/redux/sagaUtils/fetchEntitiesForTool";
+import { findTargetEntityId } from "~/redux/sagaUtils/findTargetEntityId";
 
 interface TogglProjectResponseModel {
   id: number;

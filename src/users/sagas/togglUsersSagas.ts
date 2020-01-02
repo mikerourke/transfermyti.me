@@ -3,11 +3,11 @@ import { call, delay, put } from "redux-saga/effects";
 import { TOGGL_API_DELAY } from "~/constants";
 import {
   fetchArray,
-  fetchEntitiesForTool,
   fetchObject,
 } from "~/redux/sagaUtils";
 import { incrementEntityGroupTransferCountComplete } from "~/allEntities/allEntitiesActions";
 import { EntityGroup, ToolName } from "~/allEntities/allEntitiesTypes";
+import { fetchEntitiesForTool } from "~/redux/sagaUtils/fetchEntitiesForTool";
 import { UserModel } from "~/users/usersTypes";
 
 interface TogglUserResponseModel {

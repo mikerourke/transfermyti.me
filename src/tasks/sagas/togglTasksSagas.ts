@@ -1,14 +1,15 @@
 import { SagaIterator } from "@redux-saga/types";
 import { call } from "redux-saga/effects";
 import {
-  createEntitiesForTool,
   fetchArray,
-  fetchEntitiesForTool,
   fetchObject,
-  findTargetEntityId,
+
 } from "~/redux/sagaUtils";
 import { sourceProjectsByIdSelector } from "~/projects/projectsSelectors";
 import { EntityGroup, ToolName } from "~/allEntities/allEntitiesTypes";
+import { createEntitiesForTool } from "~/redux/sagaUtils/createEntitiesForTool";
+import { fetchEntitiesForTool } from "~/redux/sagaUtils/fetchEntitiesForTool";
+import { findTargetEntityId } from "~/redux/sagaUtils/findTargetEntityId";
 import { TaskModel } from "~/tasks/tasksTypes";
 
 interface TogglTaskResponseModel {

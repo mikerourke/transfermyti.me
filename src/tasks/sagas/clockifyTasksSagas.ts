@@ -3,8 +3,6 @@ import * as R from "ramda";
 import { call, delay, select } from "redux-saga/effects";
 import { CLOCKIFY_API_DELAY } from "~/constants";
 import {
-  createEntitiesForTool,
-  fetchEntitiesForTool,
   fetchObject,
   paginatedClockifyFetch,
 } from "~/redux/sagaUtils";
@@ -13,6 +11,8 @@ import {
   projectsByWorkspaceIdByToolNameSelector,
 } from "~/projects/projectsSelectors";
 import { EntityGroup, ToolName } from "~/allEntities/allEntitiesTypes";
+import { createEntitiesForTool } from "~/redux/sagaUtils/createEntitiesForTool";
+import { fetchEntitiesForTool } from "~/redux/sagaUtils/fetchEntitiesForTool";
 import { TaskModel } from "~/tasks/tasksTypes";
 
 type ClockifyTaskStatus = "ACTIVE" | "DONE";

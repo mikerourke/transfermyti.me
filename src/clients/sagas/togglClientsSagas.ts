@@ -1,13 +1,13 @@
 import { SagaIterator } from "@redux-saga/types";
 import { call } from "redux-saga/effects";
 import {
-  createEntitiesForTool,
   fetchArray,
-  fetchEntitiesForTool,
   fetchObject,
 } from "~/redux/sagaUtils";
 import { ClientModel } from "~/clients/clientsTypes";
 import { EntityGroup, ToolName } from "~/allEntities/allEntitiesTypes";
+import { createEntitiesForTool } from "~/redux/sagaUtils/createEntitiesForTool";
+import { fetchEntitiesForTool } from "~/redux/sagaUtils/fetchEntitiesForTool";
 
 interface TogglClientResponseModel {
   id: number;

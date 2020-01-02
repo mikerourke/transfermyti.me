@@ -96,15 +96,4 @@ export const workspacesReducer = createReducer<
       }
       return updatedState;
     },
-  )
-  .handleAction(
-    workspacesActions.updateIsWorkspaceYearIncluded,
-    (state, { payload }) => {
-      const { mapping, workspaceId, year, isIncluded } = payload;
-      return R.set(
-        R.lensPath([mapping, workspaceId, "inclusionsByYear", year]),
-        isIncluded,
-        state,
-      );
-    },
   );
