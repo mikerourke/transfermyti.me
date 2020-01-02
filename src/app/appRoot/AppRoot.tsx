@@ -1,4 +1,5 @@
 import React from "react";
+import { Helmet } from "react-helmet";
 import { connect } from "react-redux";
 import { ThemeProvider } from "emotion-theming";
 import { Global } from "@emotion/core";
@@ -34,8 +35,28 @@ export const AppRootComponent: React.FC<Props> = props => {
     // TODO: Add notification functionality back in.
   }, [props.notifications]);
 
+  const description = "Transfer your time entries between time tracking tools.";
+  const title = "transfermyti.me";
+
   return (
     <ThemeProvider theme={theme}>
+      <Helmet>
+        <meta charSet="utf-8" />
+        <meta name="viewport" content="width=device-width, initial-scale=1" />
+        <title>{title}</title>
+        <meta name="description" content={description} />
+        <meta property="og:title" content={title} />
+        <meta name="og:description" content={description} />
+        <meta name="og:type" content="website" />
+        <meta name="twitter:card" content="summary" />
+        <meta name="twitter:creator" content="Mike Rourke" />
+        <meta name="twitter:title" content={title} />
+        <meta name="twitter:description" content={description} />
+        <meta
+          name="keywords"
+          content={["toggl", "clockify", "transfer"].join(",")}
+        />
+      </Helmet>
       <Global
         styles={{
           "*": {
