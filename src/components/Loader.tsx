@@ -52,7 +52,7 @@ const Cube = styled.div<{ rotation: number; delay: number }>(
     transform: `scale(1.1) rotateZ(${rotation}deg)`,
 
     "&:before": {
-      backgroundColor: theme.colors.navy,
+      backgroundColor: theme.colors.primary,
       animationDelay: `${delay}s`,
     },
   }),

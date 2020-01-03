@@ -5,6 +5,7 @@ import { connect } from "react-redux";
 import { PayloadActionCreator } from "typesafe-actions";
 import { fetchAllEntities } from "~/allEntities/allEntitiesActions";
 import { dismissAllNotifications, showNotification } from "~/app/appActions";
+import Button from "~/components/Button";
 import {
   fetchWorkspaces,
   flipIsWorkspaceIncluded,
@@ -78,8 +79,15 @@ export const SelectSourceWorkspacesStepComponent: React.FC<Props> = props => {
         disabled={props.areWorkspacesFetching}
         onBackClick={handleBackClick}
         onNextClick={handleNextClick}
-        onRefreshClick={() => props.onFetchWorkspaces()}
-      />
+      >
+        <Button
+          variant="outline"
+          disabled={props.areWorkspacesFetching}
+          onClick={() => () => props.onFetchWorkspaces()}
+        >
+          Refresh
+        </Button>
+      </NavigationButtonsRow>
     </section>
   );
 };

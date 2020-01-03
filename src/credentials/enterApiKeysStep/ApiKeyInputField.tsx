@@ -14,13 +14,18 @@ const ErrorMessage = styled.div(
   }),
 );
 
-const Input = styled.input({
-  borderRadius: "0.25rem",
-  borderStyle: "groove",
-  fontSize: "1rem",
-  padding: "0.5rem",
-  width: "100%",
-});
+const Input = styled.input(
+  {
+    border: "none",
+    borderRadius: "0.25rem",
+    fontSize: "1rem",
+    padding: "0.5rem",
+    width: "100%",
+  },
+  ({ theme }) => ({
+    boxShadow: theme.elevation.dp2,
+  }),
+);
 
 const Label = styled.label(
   {
@@ -44,30 +49,27 @@ const ApiKeyInputField: React.FC<Props> = ({
   toolHelpDetails,
   errorMessage = null,
   ...props
-}) => {
-  const { displayName, toolLink } = toolHelpDetails;
-  const errorId = `${mapping}HelpText`;
-  return (
-    <>
-      <Label htmlFor={mapping}>
-        {displayName} API Key (
-        <ExternalLink href={toolLink}>
-          find it on your {displayName} profile page
-        </ExternalLink>
-        )
-      </Label>
-      <Input
-        id={mapping}
-        name={mapping}
-        type="text"
-        autoComplete="hidden"
-        aria-describedby={errorId}
-        aria-invalid={!R.isNil(errorMessage).toString()}
-        {...props}
-      />
-      {errorMessage && <ErrorMessage id={errorId}>{errorMessage}</ErrorMessage>}
-    </>
-  );
-};
+}) => (
+  <>
+    <Label htmlFor={mapping}>
+      {toolHelpDetails.displayName} API Key (
+      <ExternalLink href={toolHelpDetails.toolLink}>
+        find it on your {toolHelpDetails.displayName} profile page
+      </ExternalLink>
+      )
+    </Label>
+    <Input
+      id={mapping}
+      name={mapping}
+      type="text"
+      autoComplete="hidden"
+      aria-describedby={`${mapping}Error`}
+      aria-required={true}
+      aria-invalid={!R.isNil(errorMessage).toString()}
+      {...props}
+    />
+    <ErrorMessage id={`${mapping}Error`}>{errorMessage}</ErrorMessage>
+  </>
+);
 
 export default ApiKeyInputField;

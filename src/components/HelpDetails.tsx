@@ -22,13 +22,15 @@ const Details = styled.details(
     },
   },
   ({ theme }) => ({
-    color: theme.colors.midnight,
+    color: theme.colors.primary,
   }),
 );
 
 const HelpDetails: React.FC = ({ children, ...props }) => (
   <Details {...props}>
-    <summary>Show/Hide Help</summary>
+    <summary css={theme => ({ fontWeight: theme.fontWeights.bold })}>
+      Show/Hide Help
+    </summary>
     <div>{children}</div>
   </Details>
 );

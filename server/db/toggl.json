@@ -228,7 +228,7 @@
       "pid": 2001,
       "tid": 7001,
       "uid": 6001,
-      "description": "This is a test entry (01)",
+      "description": "This is a super long time entry to test what happens in the table if the time entry text is super super super super super long (01)",
       "start": "2019-06-25T18:00:00Z",
       "end": "2019-06-25T23:00:00Z",
       "updated": "2019-06-25T23:00:00Z",

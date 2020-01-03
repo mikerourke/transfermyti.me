@@ -74,12 +74,11 @@ export const AppRootComponent: React.FC<Props> = props => {
           },
 
           body: {
-            color: theme.colors.black,
-            backgroundColor: theme.colors.alabaster,
+            color: theme.colors.primary,
+            backgroundColor: theme.colors.secondary,
             lineHeight: theme.lineHeights.body,
             position: "relative",
             margin: 0,
-            overflow: "hidden",
           },
 
           "#root": {
@@ -88,16 +87,13 @@ export const AppRootComponent: React.FC<Props> = props => {
           },
 
           a: {
-            color: theme.colors.cornflower,
+            color: theme.colors.primary,
+            cursor: "pointer",
             textDecoration: "none",
 
             "&:hover,&:focus": {
               textDecoration: "underline",
             },
-          },
-
-          h1: {
-            fontWeight: 400,
           },
 
           "h1,h2,h3,h4,h5,h6,p": {

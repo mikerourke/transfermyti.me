@@ -16,7 +16,12 @@ import {
   isValidatingSelector,
   validationErrorsByMappingSelector,
 } from "~/credentials/credentialsSelectors";
-import { HelpDetails, NavigationButtonsRow, styled } from "~/components";
+import {
+  Button,
+  HelpDetails,
+  NavigationButtonsRow,
+  styled,
+} from "~/components";
 import { useDeepCompareEffect } from "~/components/hooks";
 import ApiKeyInputField from "./ApiKeyInputField";
 import { Mapping } from "~/allEntities/allEntitiesTypes";
@@ -138,6 +143,12 @@ const EnterApiKeysStepComponent: React.FC<Props> = props => {
     validateForm();
   };
 
+  const handleResetClick = (): void => {
+    props.onResetIfValidating();
+    setInputValues({ [Mapping.Source]: "", [Mapping.Target]: "" });
+    setInputErrors({ ...defaultErrors });
+  };
+
   const { source, target } = props.toolHelpDetailsByMapping;
 
   return (
@@ -169,9 +180,14 @@ const EnterApiKeysStepComponent: React.FC<Props> = props => {
         />
       </Form>
       <NavigationButtonsRow
+        css={{ marginTop: "2rem" }}
         onBackClick={handleBackClick}
         onNextClick={handleNextClick}
-      />
+      >
+        <Button variant="outline" onClick={handleResetClick}>
+          Reset
+        </Button>
+      </NavigationButtonsRow>
     </section>
   );
 };

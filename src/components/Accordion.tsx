@@ -16,11 +16,12 @@ const ToggleButton = styled.button(
   },
   ({ theme }) => ({
     backgroundColor: theme.colors.white,
-    border: `1px solid ${theme.colors.manatee}`,
     borderRadius: "0.375rem",
+    boxShadow: theme.elevation.dp2,
+    color: theme.colors.primary,
 
     "&:hover": {
-      backgroundColor: theme.colors.cornflower,
+      backgroundColor: theme.colors.primary,
       color: theme.colors.white,
       textDecoration: "underline",
 
@@ -30,6 +31,11 @@ const ToggleButton = styled.button(
     },
   }),
 );
+
+const Content = styled.div({
+  marginBottom: "2rem",
+  padding: "0 1rem",
+});
 
 export const Accordion: React.FC = ({ children, ...props }) => (
   <section {...props}>
@@ -51,27 +57,26 @@ export const AccordionPanel: React.FC<{
         <ToggleButton
           id={titleId}
           aria-controls={contentId}
-          aria-selected={false}
           aria-expanded={isExpanded}
           onClick={() => setIsExpanded(!isExpanded)}
         >
           {title}
           <Icon
-            color="cornflower"
+            color="primary"
             name={isExpanded ? "circleRemove" : "circleAdd"}
             size={32}
           />
         </ToggleButton>
       </h3>
-      <div
+      <Content
         id={contentId}
-        css={{ marginBottom: "1rem", display: isExpanded ? "block" : "none" }}
+        css={{ display: isExpanded ? "block" : "none" }}
         role="region"
         aria-hidden={!isExpanded}
         aria-labelledby={titleId}
       >
         {children}
-      </div>
+      </Content>
     </div>
   );
 };

@@ -13,11 +13,14 @@ const SourceWorkspaceCard: React.FC<Props> = ({
   ...props
 }) => (
   <Card title={workspace.name} {...props}>
-    <span id={`${workspace.id}Transfer`}>Transfer this workspace?</span>
+    <div id={`${workspace.id}Transfer`}>Transfer this workspace?</div>
     <Toggle
       aria-label="Include workspace in transfer"
       aria-labelledby={`${workspace.id}Transfer`}
-      css={{ marginTop: "0.375rem" }}
+      css={theme => ({
+        marginTop: "0.375rem",
+        background: theme.colors.secondary,
+      })}
       isToggled={workspace.isIncluded}
       onToggle={() => onToggleIncluded(workspace)}
     />

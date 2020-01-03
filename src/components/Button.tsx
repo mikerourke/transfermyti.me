@@ -1,54 +1,66 @@
+import Color from "color";
 import React from "react";
-import { styled, ThemeColors, useTheme } from "./emotion";
+import { styled, useTheme } from "./emotion";
+
+type Variant = "primary" | "secondary" | "default" | "outline";
 
 export interface ButtonProps
   extends React.ButtonHTMLAttributes<HTMLButtonElement> {
-  color?: keyof ThemeColors;
   disabled?: boolean;
+  variant?: Variant;
   onClick: VoidFunction;
 }
 
 const Root = styled.button({
-  border: "none",
   borderRadius: "0.25rem",
-  fontSize: 14,
+  fontSize: "1.25rem",
   fontWeight: 400,
-  padding: "0.5rem 0.75rem",
+  padding: "0.5rem 1.75rem",
   textAlign: "center",
   verticalAlign: "middle",
-
-  "&:hover": {
-    opacity: 0.75,
-  },
 });
 
 const Button: React.FC<ButtonProps> = ({
-  color = "midnight",
   disabled = false,
+  variant = "default",
   onClick,
   ...props
 }) => {
-  const theme = useTheme();
-  const textColor = [
-    "seaglass",
-    "silver",
-    "alto",
-    "gallery",
-    "alabaster",
-    "white",
-  ].includes(color)
-    ? theme.colors.black
-    : theme.colors.white;
+  const { colors } = useTheme();
+  const variantColor = {
+    default: colors.midnight,
+    outline: colors.secondary,
+    primary: colors.primary,
+    secondary: colors.secondary,
+  }[variant];
+
+  const mainColor = Color(variantColor);
+  const altColor = mainColor.isDark()
+    ? Color(colors.secondary)
+    : Color(colors.primary);
+
+  const isOutline = variant === "outline";
 
   return (
     <Root
       aria-disabled={disabled}
       css={{
-        background: theme.colors[color],
-        color: textColor,
-        cursor: disabled ? "default" : "pointer",
+        background: mainColor.hex(),
+        borderWidth: 3,
+        borderStyle: "solid",
+        borderColor: isOutline ? altColor.hex() : mainColor.hex(),
+        color: altColor.hex(),
         opacity: disabled ? 0.75 : 1,
+
+        "&:hover": {
+          background: isOutline ? "initial" : mainColor.darken(0.1).hex(),
+          borderColor: isOutline
+            ? altColor.lighten(0.1).hex()
+            : mainColor.darken(0.1).hex(),
+          textDecoration: disabled ? "none" : "underline",
+        },
       }}
+      disabled={disabled}
       onClick={disabled ? undefined : onClick}
       {...props}
     />

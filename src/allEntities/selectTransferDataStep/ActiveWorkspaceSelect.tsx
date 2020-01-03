@@ -19,12 +19,11 @@ const Root = styled.div(
   ({ theme }) => ({
     "&:hover,&:focus": {
       select: {
-        borderColor: theme.colors.cornflower,
-        color: theme.colors.cornflower,
+        color: theme.colors.primary,
       },
 
       span: {
-        borderTopColor: theme.colors.cornflower,
+        borderTopColor: theme.colors.primary,
       },
     },
   }),
@@ -43,19 +42,18 @@ const Select = styled.select(
   {
     appearance: "none",
     borderRadius: "0.375rem",
+    border: "none",
     cursor: "pointer",
     display: "inline-block",
     fontSize: "1rem",
     marginTop: "0.5rem",
     padding: "0.75rem 1rem",
     width: "100%",
-    borderWidth: 1,
-    borderStyle: "solid",
   },
   ({ theme }) => ({
     background: theme.colors.white,
-    borderColor: theme.colors.midnight,
-    color: theme.colors.midnight,
+    boxShadow: theme.elevation.dp2,
+    color: theme.colors.primary,
   }),
 );
 

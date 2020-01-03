@@ -12,7 +12,7 @@ const scale = (value: string, percentage: number): string => {
   return (numericValue * percentage).toFixed(3).concat("rem");
 };
 
-const Button = styled.button<{ isToggled: boolean; size: Size }>(
+const Button = styled.button<{ size: Size }>(
   {
     border: 0,
     display: "inline-block",
@@ -20,17 +20,19 @@ const Button = styled.button<{ isToggled: boolean; size: Size }>(
     position: "relative",
     transition: "background 0.1s ease-in-out",
   },
-  ({ isToggled, size, theme }) => ({
-    background: isToggled ? theme.colors.cornflower : theme.colors.alto,
+  ({ size, theme }) => ({
     borderRadius: height(size),
+    boxShadow: theme.elevation.dp2,
     height: height(size),
     width: width(size),
   }),
 );
 
-const Span = styled.span<{ isToggled: boolean; size: Size }>(
+const Switch = styled.span<{
+  isToggled: boolean;
+  size: Size;
+}>(
   {
-    background: "white",
     borderRadius: "50%",
     display: "inline-block",
     pointerEvents: "none",
@@ -44,7 +46,8 @@ const Span = styled.span<{ isToggled: boolean; size: Size }>(
     },
   },
   ({ isToggled, size, theme }) => ({
-    border: `1px solid ${theme.colors.alto}`,
+    background: isToggled ? theme.colors.primary : theme.colors.silver,
+    boxShadow: theme.elevation.dp2,
     fontSize: scale(height(size), 0.5),
     fontWeight: theme.fontWeights.bold,
     left: isToggled ? scale(width(size), 0.6125) : scale(width(size), 0.05),
@@ -53,13 +56,13 @@ const Span = styled.span<{ isToggled: boolean; size: Size }>(
     width: scale(height(size), 0.8),
 
     "&::before,&::after": {
-      color: isToggled ? theme.colors.white : theme.colors.midnight,
+      color: theme.colors.primary,
       lineHeight: scale(height(size), 0.8),
     },
 
     "&::before": {
       content: isToggled ? `"YES"` : undefined,
-      left: isToggled ? scale(width(size), -0.4825) : undefined,
+      left: isToggled ? scale(width(size), -0.5) : undefined,
     },
 
     "&::after": {
@@ -83,13 +86,12 @@ const Toggle: React.FC<Props> = ({
 }) => (
   <Button
     aria-checked={isToggled}
-    isToggled={isToggled}
     role="switch"
     size={size}
     onClick={onToggle}
     {...props}
   >
-    <Span isToggled={isToggled} size={size} />
+    <Switch isToggled={isToggled} size={size} />
   </Button>
 );
 

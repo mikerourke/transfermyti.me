@@ -16,26 +16,36 @@ const Root = styled.footer(
     p: {
       margin: 0,
     },
+
+    a: {
+      textDecoration: "underline",
+    },
   },
   ({ theme }) => ({
-    background: theme.colors.alto,
+    background: theme.colors.primary,
+    color: theme.colors.secondary,
   }),
 );
 
 const RightColumn = styled.div({
-  fontSize: 13,
-  fontWeight: 700,
+  fontSize: 14,
+  fontWeight: 500,
   textAlign: "right",
 });
 
 const Love: React.FC = () => <Icon name="heart" color="ruby" height={12} />;
 
 const LinkToMe: React.FC = () => (
-  <ExternalLink href="https://github.com/mikerourke">Mike Rourke</ExternalLink>
+  <ExternalLink color="white" href="https://github.com/mikerourke">
+    Mike Rourke
+  </ExternalLink>
 );
 
 const LinkToIssues: React.FC = () => (
-  <ExternalLink href="https://github.com/mikerourke/transfer-my-time/issues">
+  <ExternalLink
+    color="white"
+    href="https://github.com/mikerourke/transfer-my-time/issues"
+  >
     in the GitHub repository
   </ExternalLink>
 );

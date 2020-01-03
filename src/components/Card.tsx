@@ -3,14 +3,15 @@ import { styled } from "./emotion";
 
 const Root = styled.li(
   {
-    flex: "0 0 16rem",
+    flex: "0 0 24rem",
     margin: "0 1rem 1rem",
     padding: "1rem",
     borderRadius: "0.5rem",
   },
   ({ theme }) => ({
-    background: theme.colors.white,
-    border: `1px solid ${theme.colors.manatee}`,
+    background: theme.colors.primary,
+    color: theme.colors.secondary,
+    boxShadow: theme.elevation.dp4,
   }),
 );
 
@@ -20,7 +21,7 @@ interface Props {
 
 const Card: React.FC<Props> = ({ children, title, ...props }) => (
   <Root {...props}>
-    <h3>{title}</h3>
+    <h2>{title}</h2>
     {children}
   </Root>
 );

@@ -12,6 +12,7 @@ import {
   areExistsInTargetShownSelector,
   entityGroupInProcessDisplaySelector,
 } from "~/allEntities/allEntitiesSelectors";
+import Button from "~/components/Button";
 import { activeWorkspaceIdSelector } from "~/workspaces/workspacesSelectors";
 import ClientsTable from "~/clients/clientsTable/ClientsTable";
 import ProjectsTable from "~/projects/projectsTable/ProjectsTable";
@@ -107,8 +108,15 @@ export const SelectTransferDataStepComponent: React.FC<Props> = props => {
         disabled={props.areEntitiesFetching}
         onBackClick={handleBackClick}
         onNextClick={handleNextClick}
-        onRefreshClick={() => props.onFetchAllEntities()}
-      />
+      >
+        <Button
+          variant="outline"
+          disabled={props.areEntitiesFetching}
+          onClick={() => props.onFetchAllEntities()}
+        >
+          Refresh
+        </Button>
+      </NavigationButtonsRow>
     </section>
   );
 };

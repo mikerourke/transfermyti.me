@@ -2,15 +2,13 @@ import emotionStyled, { CreateStyled } from "@emotion/styled";
 import { useTheme as emotionUseTheme } from "emotion-theming";
 
 /**
- * Colors were taken from a11y style guide (except for "black" and "white", I'm
- * using a slight variation for those).
+ * Some of the colors were taken from A11y Style Guide.
  * @see https://a11y-style-guide.com/style-guide/section-general.html#kssref-general-colors
  */
 export interface ThemeColors {
+  primary: string;
+  secondary: string;
   ruby: string;
-  seaglass: string;
-  grass: string;
-  cornflower: string;
   navy: string;
   eggplant: string;
   error: string;
@@ -20,9 +18,10 @@ export interface ThemeColors {
   manatee: string;
   silver: string;
   alto: string;
-  gallery: string;
   alabaster: string;
   white: string;
+  clockifyBlue: string;
+  togglRed: string;
 }
 
 export interface Theme {
@@ -54,22 +53,26 @@ export interface Theme {
 export const theme: Theme = {
   breakpoints: ["40em", "52em", "64em"],
   colors: {
-    ruby: "#a51323",
-    seaglass: "#7fffd4",
-    grass: "#42dc42",
-    cornflower: "#4083ae",
-    navy: "#0a3055",
-    eggplant: "#550055",
-    error: "#e00000",
-    success: "#218003",
+    // primary: "rgb(38, 66, 55)",
+    // secondary: "rgb(205, 233, 172)",
+    // primary: "rgb(64, 57, 53)",
+    // secondary: "rgb(198, 212, 248)",
+    primary: "rgb(30, 120, 161)",
+    secondary: "rgb(239, 253, 232)",
+    ruby: "rgb(165, 19, 35)",
+    navy: "rgb(31, 58, 147)",
+    eggplant: "rgb(85, 0, 85)",
+    error: "rgb(224, 0, 0)",
+    success: "rgb(33, 128, 3)",
     black: "rgb(56, 56, 56)",
-    midnight: "#464646",
-    manatee: "#888b8d",
-    silver: "#bbbbbb",
-    alto: "#dddddd",
-    gallery: "#f4f4f4",
-    alabaster: "#f7f7f7",
-    white: "#fff",
+    midnight: "rgb(72, 72, 72)",
+    silver: "rgb(88, 88, 88)",
+    manatee: "rgb(136, 136, 136)",
+    alto: "rgb(224, 224, 224)",
+    alabaster: "rgb(248, 248, 248)",
+    white: "rgb(255, 255, 255)",
+    clockifyBlue: "rgb(76, 166, 238)",
+    togglRed: "rgb(207, 72, 70)",
   },
   fonts: {
     body: `"Apple-System", Arial, Helvetica, sans-serif`,

@@ -43,13 +43,13 @@ export const SelectTransferMappingStepComponent: React.FC<Props> = props => {
       </HelpDetails>
       <Flex as="ul" css={{ listStyle: "none", padding: 0 }}>
         <TransferMappingCard
-          header="From Toggl to Clockify"
+          header="Transfer from Toggl to Clockify"
           onTransferClick={handleTogglToClockifyClick}
         >
           Transfer your entries from Toggl to Clockify.me.
         </TransferMappingCard>
         <TransferMappingCard
-          header="From Clockify to Toggl"
+          header="Transfer from Clockify to Toggl"
           onTransferClick={handleClockifyToTogglClick}
         >
           Transfer your entries from Clockify.me to Toggl.

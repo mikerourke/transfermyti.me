@@ -11,8 +11,8 @@ const Root = styled.header(
     padding: "0 1rem",
   },
   ({ theme }) => ({
-    background: theme.colors.cornflower,
-    color: theme.colors.white,
+    background: theme.colors.primary,
+    color: theme.colors.secondary,
   }),
 );
 

@@ -25,7 +25,7 @@ type Props = ConnectStateProps & ConnectDispatchProps;
 export const ClientsTableComponent: React.FC<Props> = props => (
   <EntityListPanel
     entityGroup={EntityGroup.Clients}
-    rowNumber={2}
+    rowNumber={1}
     tableData={props.clients}
     tableFields={[
       { label: "Name", field: "name" },

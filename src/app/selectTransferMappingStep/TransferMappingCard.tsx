@@ -9,7 +9,7 @@ interface Props {
 const TransferMappingCard: React.FC<Props> = props => (
   <Card title={props.header}>
     <p css={{ marginBottom: "2rem" }}>{props.children}</p>
-    <Button color="cornflower" onClick={props.onTransferClick}>
+    <Button variant="secondary" onClick={props.onTransferClick}>
       Select
     </Button>
   </Card>
