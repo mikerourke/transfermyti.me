@@ -20,9 +20,9 @@ export interface TimeEntryModel extends BaseEntityModel {
   userGroupIds: string[];
 }
 
+export type TimeEntriesByIdModel = Record<string, TimeEntryModel>;
+
 export type TimeEntryTableViewModel = TableViewModel<TimeEntryModel> & {
   taskName: string;
   projectName: string;
 };
-
-export type TimeEntriesByIdModel = Record<string, TimeEntryModel>;

@@ -1,5 +1,6 @@
 import { createSelector } from "reselect";
 import * as R from "ramda";
+import { areExistsInTargetShownSelector } from "~/allEntities/allEntitiesSelectors";
 import { toolNameByMappingSelector } from "~/app/appSelectors";
 import { sourceTimeEntryCountByIdFieldSelectorFactory } from "~/timeEntries/timeEntriesSelectors";
 import { activeWorkspaceIdSelector } from "~/workspaces/workspacesSelectors";
@@ -65,16 +66,22 @@ export const projectIdToLinkedIdSelector = createSelector(
 );
 
 export const projectsForTableViewSelector = createSelector(
+  areExistsInTargetShownSelector,
   sourceProjectsInActiveWorkspaceSelector,
   targetProjectsByIdSelector,
   sourceTimeEntryCountByIdFieldSelectorFactory("projectId"),
   (
+    areExistsInTargetShown,
     sourceProjects,
     targetProjectsById,
     timeEntryCountByProjectId,
   ): TableViewModel<ProjectModel>[] =>
-    sourceProjects.map(sourceProject => {
+    sourceProjects.reduce((acc, sourceProject) => {
       const existsInTarget = sourceProject.linkedId !== null;
+      if (existsInTarget && !areExistsInTargetShown) {
+        return acc;
+      }
+
       let isActiveInTarget = false;
       if (existsInTarget) {
         const targetId = sourceProject.linkedId as string;
@@ -87,14 +94,46 @@ export const projectsForTableViewSelector = createSelector(
         timeEntryCountByProjectId,
       );
 
-      return {
-        ...sourceProject,
-        entryCount,
-        existsInTarget,
-        isActiveInSource: sourceProject.isActive,
-        isActiveInTarget,
-      };
-    }),
+      return [
+        ...acc,
+        {
+          ...sourceProject,
+          entryCount,
+          existsInTarget,
+          isActiveInSource: sourceProject.isActive,
+          isActiveInTarget,
+        },
+      ];
+    }, [] as TableViewModel<ProjectModel>[]),
+);
+
+export const projectsTotalCountsByTypeSelector = createSelector(
+  projectsForTableViewSelector,
+  projectsForTableView =>
+    projectsForTableView.reduce(
+      (
+        acc,
+        {
+          entryCount,
+          isIncluded,
+          isActiveInSource,
+          isActiveInTarget,
+        }: TableViewModel<ProjectModel>,
+      ) => ({
+        entryCountTotal: acc.entryCountTotal + entryCount,
+        activeInSourceTotal:
+          acc.activeInSourceTotal + (isActiveInSource ? 1 : 0),
+        activeInTargetTotal:
+          acc.activeInSourceTotal + (isActiveInTarget ? 1 : 0),
+        inclusionCountTotal: acc.inclusionCountTotal + (isIncluded ? 1 : 0),
+      }),
+      {
+        entryCountTotal: 0,
+        activeInSourceTotal: 0,
+        activeInTargetTotal: 0,
+        inclusionCountTotal: 0,
+      },
+    ),
 );
 
 const groupProjectsByWorkspaceId = (

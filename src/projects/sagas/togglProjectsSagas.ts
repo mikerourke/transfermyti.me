@@ -3,11 +3,7 @@ import { SagaIterator } from "@redux-saga/types";
 import * as R from "ramda";
 import { call, delay } from "redux-saga/effects";
 import { TOGGL_API_DELAY, TOGGL_TEMPLATE_ID } from "~/constants";
-import {
-  fetchArray,
-  fetchObject,
-
-} from "~/redux/sagaUtils";
+import { fetchArray, fetchObject } from "~/redux/sagaUtils";
 import { sourceClientsByIdSelector } from "~/clients/clientsSelectors";
 import { EntityGroup, ToolName } from "~/allEntities/allEntitiesTypes";
 import { ProjectModel } from "~/projects/projectsTypes";

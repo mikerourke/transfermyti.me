@@ -12,10 +12,7 @@ import { clientIdsByNameSelectorFactory } from "~/clients/clientsSelectors";
 import { TOGGL_API_DELAY } from "~/constants";
 import { credentialsByToolNameSelector } from "~/credentials/credentialsSelectors";
 import { sourceProjectsByIdSelector } from "~/projects/projectsSelectors";
-import {
-  fetchObject,
-
-} from "~/redux/sagaUtils";
+import { fetchObject } from "~/redux/sagaUtils";
 import { createEntitiesForTool } from "~/redux/sagaUtils/createEntitiesForTool";
 import { fetchEntitiesForTool } from "~/redux/sagaUtils/fetchEntitiesForTool";
 import { findTargetEntityId } from "~/redux/sagaUtils/findTargetEntityId";

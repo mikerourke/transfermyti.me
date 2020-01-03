@@ -1,5 +1,6 @@
 import { createSelector, Selector } from "reselect";
 import * as R from "ramda";
+import { areExistsInTargetShownSelector } from "~/allEntities/allEntitiesSelectors";
 import { activeWorkspaceIdSelector } from "~/workspaces/workspacesSelectors";
 import { ReduxState } from "~/redux/reduxTypes";
 import { TimeEntryModel, TimeEntryTableViewModel } from "./timeEntriesTypes";
@@ -33,16 +34,22 @@ export const sourceTimeEntriesInActiveWorkspaceSelector = createSelector(
 );
 
 export const timeEntriesForTableViewSelector = createSelector(
+  areExistsInTargetShownSelector,
   sourceTimeEntriesInActiveWorkspaceSelector,
   (state: ReduxState) => state.projects.source,
   (state: ReduxState) => state.tasks.source,
   (
+    areExistsInTargetShown,
     sourceTimeEntries,
     sourceProjectsById,
     sourceTasksById,
   ): TimeEntryTableViewModel[] =>
-    sourceTimeEntries.map(sourceTimeEntry => {
+    sourceTimeEntries.reduce((acc, sourceTimeEntry) => {
       const existsInTarget = sourceTimeEntry.linkedId !== null;
+      if (existsInTarget && !areExistsInTargetShown) {
+        return acc;
+      }
+
       const projectName = R.pathOr(
         "Unknown Project",
         [sourceTimeEntry.projectId, "name"],
@@ -58,15 +65,27 @@ export const timeEntriesForTableViewSelector = createSelector(
         );
       }
 
-      return {
-        ...sourceTimeEntry,
-        projectName,
-        taskName,
-        existsInTarget,
-        isActiveInSource: true,
-        isActiveInTarget: existsInTarget,
-      };
-    }),
+      return [
+        ...acc,
+        {
+          ...sourceTimeEntry,
+          projectName,
+          taskName,
+          existsInTarget,
+          isActiveInSource: true,
+          isActiveInTarget: existsInTarget,
+        },
+      ];
+    }, [] as TimeEntryTableViewModel[]),
+);
+
+export const includedTimeEntriesTotalCountForTableViewSelector = createSelector(
+  timeEntriesForTableViewSelector,
+  (timeEntriesForTableView): number =>
+    timeEntriesForTableView.reduce(
+      (acc, timeEntry) => acc + (timeEntry.isIncluded ? 1 : 0),
+      0,
+    ),
 );
 
 export const sourceTimeEntryCountByIdFieldSelectorFactory = (

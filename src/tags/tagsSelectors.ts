@@ -1,5 +1,6 @@
 import { createSelector, createStructuredSelector, Selector } from "reselect";
 import * as R from "ramda";
+import { areExistsInTargetShownSelector } from "~/allEntities/allEntitiesSelectors";
 import { mappingByToolNameSelector } from "~/app/appSelectors";
 import { sourceTimeEntryCountByTagIdSelector } from "~/timeEntries/timeEntriesSelectors";
 import { activeWorkspaceIdSelector } from "~/workspaces/workspacesSelectors";
@@ -58,11 +59,19 @@ const sourceTagsInActiveWorkspaceSelector = createSelector(
 );
 
 export const tagsForTableViewSelector = createSelector(
+  areExistsInTargetShownSelector,
   sourceTagsInActiveWorkspaceSelector,
   sourceTimeEntryCountByTagIdSelector,
-  (sourceTags, timeEntryCountByTagId): TableViewModel<TagModel>[] =>
-    sourceTags.map(sourceTag => {
+  (
+    areExistsInTargetShown,
+    sourceTags,
+    timeEntryCountByTagId,
+  ): TableViewModel<TagModel>[] =>
+    sourceTags.reduce((acc, sourceTag) => {
       const existsInTarget = sourceTag.linkedId !== null;
+      if (existsInTarget && !areExistsInTargetShown) {
+        return acc;
+      }
 
       const entryCount = R.propOr<number, Record<string, number>, number>(
         0,
@@ -70,14 +79,32 @@ export const tagsForTableViewSelector = createSelector(
         timeEntryCountByTagId,
       );
 
-      return {
-        ...sourceTag,
-        entryCount,
-        existsInTarget,
-        isActiveInSource: true,
-        isActiveInTarget: existsInTarget,
-      };
-    }),
+      return [
+        ...acc,
+        {
+          ...sourceTag,
+          entryCount,
+          existsInTarget,
+          isActiveInSource: true,
+          isActiveInTarget: existsInTarget,
+        },
+      ];
+    }, [] as TableViewModel<TagModel>[]),
+);
+
+export const tagsTotalCountsByTypeSelector = createSelector(
+  tagsForTableViewSelector,
+  tagsForTableView =>
+    tagsForTableView.reduce(
+      (acc, { entryCount, isIncluded }: TableViewModel<TagModel>) => ({
+        entryCountTotal: acc.entryCountTotal + entryCount,
+        inclusionCountTotal: acc.inclusionCountTotal + (isIncluded ? 1 : 0),
+      }),
+      {
+        entryCountTotal: 0,
+        inclusionCountTotal: 0,
+      },
+    ),
 );
 
 export const tagIdsByNameBySelectorFactory = (

@@ -2,10 +2,7 @@ import { SagaIterator } from "@redux-saga/types";
 import * as R from "ramda";
 import { call, delay, select } from "redux-saga/effects";
 import { CLOCKIFY_API_DELAY } from "~/constants";
-import {
-  fetchObject,
-  paginatedClockifyFetch,
-} from "~/redux/sagaUtils";
+import { fetchObject, paginatedClockifyFetch } from "~/redux/sagaUtils";
 import {
   projectIdToLinkedIdSelector,
   projectsByWorkspaceIdByToolNameSelector,

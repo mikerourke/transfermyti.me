@@ -103,17 +103,20 @@ function linkTimeEntriesByIdByMapping(
   const targetById: TimeEntriesByIdModel = {};
 
   for (const sourceEntry of sortedSourceEntries) {
-    sourceById[sourceEntry.id] = sourceEntry;
+    const updatedSourceEntry = { ...sourceEntry };
 
     for (const targetEntry of sortedTargetEntries) {
       targetById[targetEntry.id] = targetEntry;
 
       // TODO: Make sure this actually works!
       if (doTimeEntriesMatch(sourceEntry, targetEntry)) {
-        sourceById[sourceEntry.id].linkedId = targetEntry.id;
+        updatedSourceEntry.linkedId = targetEntry.id;
         targetById[targetEntry.id].linkedId = sourceEntry.id;
       }
     }
+
+    updatedSourceEntry.isIncluded = R.isNil(updatedSourceEntry.linkedId);
+    sourceById[sourceEntry.id] = updatedSourceEntry;
   }
 
   return {

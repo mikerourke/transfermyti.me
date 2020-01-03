@@ -1,11 +1,12 @@
 import { createSelector } from "reselect";
 import * as R from "ramda";
+import { areExistsInTargetShownSelector } from "~/allEntities/allEntitiesSelectors";
 import { sourceProjectsByIdSelector } from "~/projects/projectsSelectors";
 import { sourceTimeEntryCountByIdFieldSelectorFactory } from "~/timeEntries/timeEntriesSelectors";
 import { activeWorkspaceIdSelector } from "~/workspaces/workspacesSelectors";
 import { TableViewModel } from "~/allEntities/allEntitiesTypes";
 import { ReduxState } from "~/redux/reduxTypes";
-import { TaskModel, TasksByIdModel } from "./tasksTypes";
+import { TaskModel, TasksByIdModel, TaskTableViewModel } from "./tasksTypes";
 
 export const sourceTasksByIdSelector = createSelector(
   (state: ReduxState) => state.tasks.source,
@@ -41,18 +42,24 @@ export const sourceTasksInActiveWorkspaceSelector = createSelector(
 );
 
 export const tasksForTableViewSelector = createSelector(
+  areExistsInTargetShownSelector,
   sourceTasksInActiveWorkspaceSelector,
   targetTasksByIdSelector,
   sourceProjectsByIdSelector,
   sourceTimeEntryCountByIdFieldSelectorFactory("taskId"),
   (
+    areExistsInTargetShown,
     sourceTasks,
     targetTasksById,
     sourceProjectsById,
     timeEntryCountByTaskId,
-  ): TableViewModel<TaskModel & { projectName: string }>[] =>
-    sourceTasks.map(sourceTask => {
+  ): TaskTableViewModel[] =>
+    sourceTasks.reduce((acc, sourceTask) => {
       const existsInTarget = sourceTask.linkedId !== null;
+      if (existsInTarget && !areExistsInTargetShown) {
+        return acc;
+      }
+
       let isActiveInTarget = false;
       if (existsInTarget) {
         const targetId = sourceTask.linkedId as string;
@@ -65,13 +72,45 @@ export const tasksForTableViewSelector = createSelector(
         timeEntryCountByTaskId,
       );
 
-      return {
-        ...sourceTask,
-        entryCount,
-        existsInTarget,
-        isActiveInSource: sourceTask.isActive,
-        isActiveInTarget,
-        projectName: sourceProjectsById[sourceTask.projectId].name,
-      };
-    }),
+      return [
+        ...acc,
+        {
+          ...sourceTask,
+          entryCount,
+          existsInTarget,
+          isActiveInSource: sourceTask.isActive,
+          isActiveInTarget,
+          projectName: sourceProjectsById[sourceTask.projectId].name,
+        },
+      ];
+    }, [] as TaskTableViewModel[]),
+);
+
+export const tasksTotalCountsByTypeSelector = createSelector(
+  tasksForTableViewSelector,
+  tasksForTableView =>
+    tasksForTableView.reduce(
+      (
+        acc,
+        {
+          entryCount,
+          isIncluded,
+          isActiveInSource,
+          isActiveInTarget,
+        }: TableViewModel<TaskModel>,
+      ) => ({
+        entryCountTotal: acc.entryCountTotal + entryCount,
+        activeInSourceTotal:
+          acc.activeInSourceTotal + (isActiveInSource ? 1 : 0),
+        activeInTargetTotal:
+          acc.activeInSourceTotal + (isActiveInTarget ? 1 : 0),
+        inclusionCountTotal: acc.inclusionCountTotal + (isIncluded ? 1 : 0),
+      }),
+      {
+        entryCountTotal: 0,
+        activeInSourceTotal: 0,
+        activeInTargetTotal: 0,
+        inclusionCountTotal: 0,
+      },
+    ),
 );

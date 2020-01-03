@@ -10,15 +10,8 @@ import {
   ToolNameByMappingModel,
 } from "./appTypes";
 
-export const currentPathSelector = (state: ReduxState): string =>
-  state.router.location.pathname;
-
-const routePathValues = Object.values(RoutePath);
-
-export const currentTransferStepSelector = createSelector(
-  currentPathSelector,
-  (currentPath): number => routePathValues.indexOf(currentPath as RoutePath),
-);
+export const currentPathSelector = (state: ReduxState): RoutePath =>
+  state.router.location.pathname as RoutePath;
 
 export const notificationsSelector = createSelector(
   (state: ReduxState) => state.app.notifications,
@@ -35,6 +28,26 @@ export const mappingByToolNameSelector = createSelector(
     R.invertObj(
       (toolNameByMapping as unknown) as { [mapping: string]: string },
     ) as Record<ToolName, Mapping>,
+);
+
+export const replaceMappingWithToolNameSelector = createSelector(
+  toolNameByMappingSelector,
+  toolNameByMapping => (label: string): string => {
+    const { source, target } = toolNameByMapping;
+    if ([source, target].includes(ToolName.None)) {
+      return label;
+    }
+
+    if (/source/gi.test(label)) {
+      return label.replace(/source/gi, capitalize(source));
+    }
+
+    if (/target/gi.test(label)) {
+      return label.replace(/target/gi, capitalize(target));
+    }
+
+    return label;
+  },
 );
 
 export const toolHelpDetailsByMappingSelector = createSelector(

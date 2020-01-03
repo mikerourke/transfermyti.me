@@ -1,4 +1,5 @@
 import * as R from "ramda";
+import { EntityGroup } from "~/allEntities/allEntitiesTypes";
 
 export function booleanToYesNo(value: boolean): string {
   return value ? "Yes" : "No";
@@ -13,6 +14,23 @@ export function capitalize(value: string): string {
     .charAt(0)
     .toUpperCase()
     .concat(value.slice(1));
+}
+
+export function getEntityGroupDisplay(entityGroup: EntityGroup | null): string {
+  if (entityGroup === null) {
+    return "None";
+  }
+
+  switch (entityGroup) {
+    case EntityGroup.TimeEntries:
+      return "Time Entries";
+
+    case EntityGroup.UserGroups:
+      return "User Groups";
+
+    default:
+      return capitalize(entityGroup as string);
+  }
 }
 
 export function kebabCase(value: string): string {

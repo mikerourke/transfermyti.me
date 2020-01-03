@@ -22,6 +22,7 @@ const ToggleButton = styled.button(
     "&:hover": {
       backgroundColor: theme.colors.cornflower,
       color: theme.colors.white,
+      textDecoration: "underline",
 
       path: {
         fill: theme.colors.white,

@@ -1,3 +1,4 @@
+import { RouterState } from "connected-react-router";
 import { combineReducers, Reducer } from "redux";
 import {
   allEntitiesReducer,
@@ -25,7 +26,6 @@ import {
   workspacesReducer,
   WorkspacesState,
 } from "~/workspaces/workspacesReducer";
-import { RouterState } from "~/redux/reduxTypes";
 
 export type RouterReducer = Reducer<RouterState>;
 

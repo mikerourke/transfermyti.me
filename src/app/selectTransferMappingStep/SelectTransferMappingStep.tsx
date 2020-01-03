@@ -5,8 +5,8 @@ import { connect } from "react-redux";
 import { updateToolNameByMapping } from "~/app/appActions";
 import { Flex, HelpDetails } from "~/components";
 import TransferMappingCard from "./TransferMappingCard";
-import { RoutePath, ToolNameByMappingModel } from "~/app/appTypes";
 import { ToolName } from "~/allEntities/allEntitiesTypes";
+import { RoutePath, ToolNameByMappingModel } from "~/app/appTypes";
 
 interface ConnectDispatchProps {
   onPush: (path: Path) => void;
@@ -31,7 +31,7 @@ export const SelectTransferMappingStepComponent: React.FC<Props> = props => {
       source: ToolName.Clockify,
       target: ToolName.Toggl,
     });
-    props.onPush(RoutePath.EnterCredentials);
+    props.onPush(RoutePath.EnterApiKeys);
   };
 
   return (

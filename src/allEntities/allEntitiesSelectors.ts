@@ -1,9 +1,7 @@
 import { createSelector } from "reselect";
+import { getEntityGroupDisplay } from "~/utils";
 import { ReduxState } from "~/redux/reduxTypes";
-import {
-  EntityGroup,
-  TransferCountsByEntityGroupModel,
-} from "./allEntitiesTypes";
+import { TransferCountsByEntityGroupModel } from "./allEntitiesTypes";
 
 export const areEntitiesCreatingSelector = (state: ReduxState): boolean =>
   state.allEntities.areEntitiesCreating;
@@ -11,24 +9,13 @@ export const areEntitiesCreatingSelector = (state: ReduxState): boolean =>
 export const areEntitiesFetchingSelector = (state: ReduxState): boolean =>
   state.allEntities.areEntitiesFetching;
 
+export const areExistsInTargetShownSelector = (state: ReduxState): boolean =>
+  state.allEntities.areExistsInTargetShown;
+
 export const entityGroupInProcessDisplaySelector = createSelector(
   (state: ReduxState) => state.allEntities.entityGroupInProcess,
-  (entityGroupInProcess): string => {
-    if (entityGroupInProcess === null) {
-      return "None";
-    }
-
-    switch (entityGroupInProcess) {
-      case EntityGroup.TimeEntries:
-        return "time entries";
-
-      case EntityGroup.UserGroups:
-        return "user groups";
-
-      default:
-        return entityGroupInProcess as string;
-    }
-  },
+  (entityGroupInProcess): string =>
+    getEntityGroupDisplay(entityGroupInProcess).toLowerCase(),
 );
 
 export const transferCountsByEntityGroupSelector = createSelector(

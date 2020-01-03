@@ -6,13 +6,14 @@ import { connectRouter, routerMiddleware } from "connected-react-router";
 import { History } from "history";
 import { STORAGE_KEY } from "~/constants";
 import { getIfDev } from "~/utils";
-import { allEntitiesSaga } from "~/allEntities/allEntitiesSaga";
 import { validateCredentials } from "~/credentials/credentialsActions";
 import { initialState as initialCredentialsState } from "~/credentials/credentialsReducer";
+import { allEntitiesSaga } from "~/allEntities/allEntitiesSaga";
+import { appSaga } from "~/app/appSaga";
 import { credentialsSaga } from "~/credentials/sagas/credentialsSaga";
 import { workspacesSaga } from "~/workspaces/sagas/workspacesSaga";
 import { createRootReducer, RouterReducer } from "./rootReducer";
-import { ReduxStore, ReduxState } from "~/redux/reduxTypes";
+import { ReduxStore, ReduxState } from "./reduxTypes";
 
 const devTools = window.__REDUX_DEVTOOLS_EXTENSION_COMPOSE__;
 const composeEnhancers: Function = devTools || compose;
@@ -48,6 +49,7 @@ export function configureStore(history: History): ReduxStore {
   );
 
   sagaMiddleware.run(allEntitiesSaga);
+  sagaMiddleware.run(appSaga);
   sagaMiddleware.run(credentialsSaga);
   sagaMiddleware.run(workspacesSaga);
 

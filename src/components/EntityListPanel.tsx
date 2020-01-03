@@ -1,10 +1,12 @@
 import React from "react";
 import { connect } from "react-redux";
-import { kebabCase, booleanToYesNo, capitalize } from "~/utils";
-import { toolNameByMappingSelector } from "~/app/appSelectors";
-import { AccordionPanel } from "./Accordion";
+import { booleanToYesNo, getEntityGroupDisplay, kebabCase } from "~/utils";
+import {
+  toolNameByMappingSelector,
+  replaceMappingWithToolNameSelector,
+} from "~/app/appSelectors";
 import EntityListPanelTable from "./EntityListPanelTable";
-import EntityListPanelTitle from "./EntityListPanelTitle";
+import { AccordionPanel } from "./Accordion";
 import {
   BaseEntityModel,
   EntityGroup,
@@ -19,6 +21,7 @@ interface TableField {
 }
 
 interface ConnectStateProps {
+  replaceMappingWithToolName: (label: string) => string;
   toolNameByMapping: ToolNameByMappingModel;
 }
 
@@ -27,18 +30,14 @@ interface OwnProps {
   rowNumber: number;
   tableData: TableViewModel<BaseEntityModel>[];
   tableFields: TableField[];
+  totalCountsByType: Record<string, number>;
   onFlipIsIncluded: (id: string) => void;
 }
 
 type Props = ConnectStateProps & OwnProps;
 
 export const EntityListPanelComponent: React.FC<Props> = props => {
-  const [showExisting, setShowExisting] = React.useState<boolean>(true);
-
-  const groupName =
-    props.entityGroup === EntityGroup.UserGroups
-      ? "User Groups"
-      : capitalize(props.entityGroup);
+  const groupDisplay = getEntityGroupDisplay(props.entityGroup);
 
   const getFieldDisplay = (value: string | boolean): string => {
     if (typeof value === "boolean") {
@@ -48,48 +47,39 @@ export const EntityListPanelComponent: React.FC<Props> = props => {
     return value;
   };
 
-  const getLabelDisplay = (label: string): string => {
-    const { source, target } = props.toolNameByMapping;
-    if (/Source/g.test(label)) {
-      return label.replace("Source", capitalize(source));
-    }
-
-    if (/Target/g.test(label)) {
-      return label.replace("Target", capitalize(target));
-    }
-
-    return label;
-  };
-
-  const visibleTableData = showExisting
-    ? props.tableData
-    : props.tableData.filter(record => !record.existsInTarget);
+  const totalCountsByTypeEntries = Object.entries(props.totalCountsByType);
+  const totalsColSpan =
+    props.tableFields.length + 1 - totalCountsByTypeEntries.length;
 
   return (
-    <AccordionPanel
-      rowNumber={props.rowNumber}
-      title={
-        <EntityListPanelTitle
-          groupName={groupName}
-          entityCount={visibleTableData.length}
-        />
-      }
-    >
+    <AccordionPanel rowNumber={props.rowNumber} title={groupDisplay}>
       <EntityListPanelTable>
+        <caption>
+          {props.replaceMappingWithToolName(
+            `${groupDisplay} Records in Source`,
+          )}
+        </caption>
         <thead>
           <tr>
-            <th className="include-cell">Include in Transfer?</th>
             {props.tableFields.map(({ label }) => (
-              <th key={kebabCase(label)}>{getLabelDisplay(label)}</th>
+              <th key={kebabCase(label)}>
+                {props.replaceMappingWithToolName(label)}
+              </th>
             ))}
+            <th className="include-cell">Include in Transfer?</th>
           </tr>
         </thead>
         <tbody>
-          {visibleTableData.map(record => (
+          {props.tableData.map(record => (
             <EntityListPanelTable.BodyRow
               key={record.id}
               existsInTarget={record.existsInTarget}
             >
+              {props.tableFields.map(({ field }) => (
+                <td key={`${record.id}-${field}`}>
+                  {getFieldDisplay(record[field])}
+                </td>
+              ))}
               <td className="include-cell">
                 <input
                   type="checkbox"
@@ -98,26 +88,26 @@ export const EntityListPanelComponent: React.FC<Props> = props => {
                   onChange={() => props.onFlipIsIncluded(record.id)}
                 />
               </td>
-              {props.tableFields.map(({ field }) => (
-                <td key={`${record.id}-${field}`}>
-                  {getFieldDisplay(record[field])}
-                </td>
-              ))}
             </EntityListPanelTable.BodyRow>
           ))}
         </tbody>
-        <EntityListPanelTable.Footer
-          columnCount={props.tableFields.length + 1}
-          entityGroup={props.entityGroup}
-          isShowExisting={showExisting}
-          onToggle={() => setShowExisting(!showExisting)}
-        />
+        <tfoot css={{ "td:last-of-type": { textAlign: "center" } }}>
+          <tr>
+            <th css={{ textAlign: "right" }} colSpan={totalsColSpan}>
+              Totals
+            </th>
+            {totalCountsByTypeEntries.map(([type, totalCount]) => (
+              <td key={type}>{totalCount}</td>
+            ))}
+          </tr>
+        </tfoot>
       </EntityListPanelTable>
     </AccordionPanel>
   );
 };
 
 const mapStateToProps = (state: ReduxState): ConnectStateProps => ({
+  replaceMappingWithToolName: replaceMappingWithToolNameSelector(state),
   toolNameByMapping: toolNameByMappingSelector(state),
 });
 

@@ -3,7 +3,7 @@ import * as R from "ramda";
 import Button from "./Button";
 import { styled } from "./emotion";
 
-const Root = styled.div({
+const Root = styled.nav({
   marginTop: "1rem",
 
   button: {

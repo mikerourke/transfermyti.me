@@ -14,7 +14,7 @@ const Details = styled.details(
 
     p: {
       margin: 0,
-      padding: "0.5rem 0 0 0",
+      padding: "1rem 0 0 0",
 
       "&:first-of-type": {
         paddingTop: 0,

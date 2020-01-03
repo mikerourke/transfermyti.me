@@ -11,6 +11,7 @@ type AllEntitiesAction = ActionType<typeof allEntitiesActions>;
 export interface AllEntitiesState {
   readonly areEntitiesCreating: boolean;
   readonly areEntitiesFetching: boolean;
+  readonly areExistsInTargetShown: boolean;
   readonly entityGroupInProcess: EntityGroup | null;
   readonly lastFetchTime: Date | null;
   readonly transferCountsByEntityGroup: TransferCountsByEntityGroupModel;
@@ -42,6 +43,7 @@ const DEFAULT_TRANSFER_COUNTS = {
 export const initialState: AllEntitiesState = {
   areEntitiesCreating: false,
   areEntitiesFetching: false,
+  areExistsInTargetShown: true,
   entityGroupInProcess: null,
   lastFetchTime: null,
   transferCountsByEntityGroup: {
@@ -87,6 +89,10 @@ export const allEntitiesReducer = createReducer<
       lastFetchTime: new Date(),
     }),
   )
+  .handleAction(allEntitiesActions.flipIfExistsInTargetShown, state => ({
+    ...state,
+    areExistsInTargetShown: !state.areExistsInTargetShown,
+  }))
   .handleAction(
     allEntitiesActions.updateEntityGroupInProcess,
     (state, { payload }) => ({

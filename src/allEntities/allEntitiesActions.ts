@@ -13,6 +13,10 @@ export const fetchAllEntities = createAsyncAction(
   "@allEntities/FETCH_ALL_ENTITIES_FAILURE",
 )<void, void, void>();
 
+export const flipIfExistsInTargetShown = createAction(
+  "@allEntities/FLIP_IF_EXISTS_IN_TARGET_SHOWN",
+)<void>();
+
 export const updateEntityGroupInProcess = createAction(
   "@allEntities/UPDATE_ENTITY_GROUP_IN_PROCESS",
 )<EntityGroup | null>();

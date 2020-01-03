@@ -1,5 +1,5 @@
 import * as R from "ramda";
-import { Mapping } from "~/allEntities/allEntitiesTypes";
+import { Mapping, EntityGroup } from "~/allEntities/allEntitiesTypes";
 
 export function linkEntitiesByIdByMapping<TEntity>(
   sourceRecords: TEntity[],
@@ -22,7 +22,11 @@ function linkForMappingByName<TEntity>(
   linkFromRecords: TEntity[],
   recordsToUpdate: TEntity[],
 ): Record<string, TEntity> {
-  type LinkableRecord = TEntity & { name: string; id: string };
+  type LinkableRecord = TEntity & {
+    name: string;
+    id: string;
+    memberOf: EntityGroup;
+  };
 
   const linkFromEntitiesByName = {};
   for (const linkFromRecord of linkFromRecords as LinkableRecord[]) {
@@ -37,7 +41,14 @@ function linkForMappingByName<TEntity>(
       linkFromEntitiesByName,
     );
 
-    linkedRecordsById[recordToUpdate.id] = { ...recordToUpdate, linkedId };
+    linkedRecordsById[recordToUpdate.id] = {
+      ...recordToUpdate,
+      linkedId,
+      isIncluded: R.or(
+        recordToUpdate.memberOf === EntityGroup.Workspaces,
+        R.isNil(linkedId),
+      ),
+    };
   }
 
   return linkedRecordsById;

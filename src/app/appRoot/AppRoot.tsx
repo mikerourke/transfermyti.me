@@ -89,6 +89,11 @@ export const AppRootComponent: React.FC<Props> = props => {
 
           a: {
             color: theme.colors.cornflower,
+            textDecoration: "none",
+
+            "&:hover,&:focus": {
+              textDecoration: "underline",
+            },
           },
 
           h1: {

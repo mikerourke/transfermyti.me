@@ -1,15 +1,16 @@
 import { createSelector, createStructuredSelector, Selector } from "reselect";
 import * as R from "ramda";
+import { areExistsInTargetShownSelector } from "~/allEntities/allEntitiesSelectors";
 import { mappingByToolNameSelector } from "~/app/appSelectors";
 import { sourceTimeEntryCountByIdFieldSelectorFactory } from "~/timeEntries/timeEntriesSelectors";
 import { activeWorkspaceIdSelector } from "~/workspaces/workspacesSelectors";
-import {
-  ToolName,
-  Mapping,
-  TableViewModel,
-} from "~/allEntities/allEntitiesTypes";
+import { ToolName, Mapping } from "~/allEntities/allEntitiesTypes";
 import { ReduxState } from "~/redux/reduxTypes";
-import { ClientModel, ClientsByIdModel } from "./clientsTypes";
+import {
+  ClientModel,
+  ClientsByIdModel,
+  ClientTableViewModel,
+} from "./clientsTypes";
 
 export const sourceClientsByIdSelector = createSelector(
   (state: ReduxState) => state.clients.source,
@@ -60,26 +61,84 @@ export const sourceClientsInActiveWorkspaceSelector = createSelector(
     ),
 );
 
+const projectCountBySourceClientIdSelector = createSelector(
+  sourceClientsSelector,
+  sourceClients => {
+    const projectCountBySourceClientId: Record<string, number> = {};
+
+    for (const sourceClient of sourceClients) {
+      const currentCount = R.propOr<number, Record<string, number>, number>(
+        0,
+        sourceClient.id,
+        projectCountBySourceClientId,
+      );
+      projectCountBySourceClientId[sourceClient.id] = currentCount + 1;
+    }
+
+    return projectCountBySourceClientId;
+  },
+);
+
 export const clientsForTableViewSelector = createSelector(
+  areExistsInTargetShownSelector,
   sourceClientsInActiveWorkspaceSelector,
+  projectCountBySourceClientIdSelector,
   sourceTimeEntryCountByIdFieldSelectorFactory("clientId"),
-  (sourceClients, timeEntryCountByClientId): TableViewModel<ClientModel>[] =>
-    sourceClients.map(sourceClient => {
+  (
+    areExistsInTargetShown,
+    sourceClients,
+    projectCountByClientId,
+    timeEntryCountByClientId,
+  ): ClientTableViewModel[] =>
+    sourceClients.reduce((acc, sourceClient) => {
       const existsInTarget = sourceClient.linkedId !== null;
+      if (existsInTarget && !areExistsInTargetShown) {
+        return acc;
+      }
+
       const entryCount = R.propOr<number, Record<string, number>, number>(
         0,
         sourceClient.id,
         timeEntryCountByClientId,
       );
+      const projectCount = R.propOr<number, Record<string, number>, number>(
+        0,
+        sourceClient.id,
+        projectCountByClientId,
+      );
 
-      return {
-        ...sourceClient,
-        entryCount,
-        existsInTarget,
-        isActiveInSource: true,
-        isActiveInTarget: existsInTarget,
-      };
-    }),
+      return [
+        ...acc,
+        {
+          ...sourceClient,
+          entryCount,
+          projectCount,
+          existsInTarget,
+          isActiveInSource: true,
+          isActiveInTarget: existsInTarget,
+        },
+      ];
+    }, [] as ClientTableViewModel[]),
+);
+
+export const clientsTotalCountsByTypeSelector = createSelector(
+  clientsForTableViewSelector,
+  clientsForTableView =>
+    clientsForTableView.reduce(
+      (
+        acc,
+        { entryCount, projectCount, isIncluded }: ClientTableViewModel,
+      ) => ({
+        entryCountTotal: acc.entryCountTotal + entryCount,
+        projectCountTotal: acc.projectCountTotal + projectCount,
+        inclusionCountTotal: acc.inclusionCountTotal + (isIncluded ? 1 : 0),
+      }),
+      {
+        entryCountTotal: 0,
+        projectCountTotal: 0,
+        inclusionCountTotal: 0,
+      },
+    ),
 );
 
 export const clientIdsByNameSelectorFactory = (

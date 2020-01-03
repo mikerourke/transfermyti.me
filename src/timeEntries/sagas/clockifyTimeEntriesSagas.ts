@@ -1,10 +1,7 @@
 import { SagaIterator } from "@redux-saga/types";
 import * as R from "ramda";
 import { call, select } from "redux-saga/effects";
-import {
-  fetchObject,
-  paginatedClockifyFetch,
-} from "~/redux/sagaUtils";
+import { fetchObject, paginatedClockifyFetch } from "~/redux/sagaUtils";
 import { credentialsByToolNameSelector } from "~/credentials/credentialsSelectors";
 import { sourceProjectsByIdSelector } from "~/projects/projectsSelectors";
 import { ClockifyProjectResponseModel } from "~/projects/sagas/clockifyProjectsSagas";

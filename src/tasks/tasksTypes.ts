@@ -1,4 +1,7 @@
-import { BaseEntityModel } from "~/allEntities/allEntitiesTypes";
+import {
+  BaseEntityModel,
+  TableViewModel,
+} from "~/allEntities/allEntitiesTypes";
 
 export interface TaskModel extends BaseEntityModel {
   id: string;
@@ -10,3 +13,7 @@ export interface TaskModel extends BaseEntityModel {
 }
 
 export type TasksByIdModel = Record<string, TaskModel>;
+
+export type TaskTableViewModel = TableViewModel<TaskModel> & {
+  projectName: string;
+};

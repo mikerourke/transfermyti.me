@@ -1,4 +1,7 @@
-import { BaseEntityModel } from "~/allEntities/allEntitiesTypes";
+import {
+  BaseEntityModel,
+  TableViewModel,
+} from "~/allEntities/allEntitiesTypes";
 
 export interface ClientModel extends BaseEntityModel {
   id: string;
@@ -7,3 +10,7 @@ export interface ClientModel extends BaseEntityModel {
 }
 
 export type ClientsByIdModel = Record<string, ClientModel>;
+
+export type ClientTableViewModel = TableViewModel<ClientModel> & {
+  projectCount: number;
+};

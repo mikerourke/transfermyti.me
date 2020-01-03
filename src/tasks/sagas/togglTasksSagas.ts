@@ -1,10 +1,6 @@
 import { SagaIterator } from "@redux-saga/types";
 import { call } from "redux-saga/effects";
-import {
-  fetchArray,
-  fetchObject,
-
-} from "~/redux/sagaUtils";
+import { fetchArray, fetchObject } from "~/redux/sagaUtils";
 import { sourceProjectsByIdSelector } from "~/projects/projectsSelectors";
 import { EntityGroup, ToolName } from "~/allEntities/allEntitiesTypes";
 import { createEntitiesForTool } from "~/redux/sagaUtils/createEntitiesForTool";

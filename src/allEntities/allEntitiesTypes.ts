@@ -25,7 +25,7 @@ export interface BaseEntityModel {
   workspaceId: string;
   linkedId: string | null;
   isIncluded: boolean;
-  entryCount?: number;
+  entryCount: number;
   memberOf?: EntityGroup;
 }
 

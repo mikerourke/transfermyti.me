@@ -3,11 +3,16 @@ import { push } from "connected-react-router";
 import { Path } from "history";
 import { connect } from "react-redux";
 import { PayloadActionCreator } from "typesafe-actions";
-import { fetchAllEntities } from "~/allEntities/allEntitiesActions";
+import {
+  fetchAllEntities,
+  flipIfExistsInTargetShown,
+} from "~/allEntities/allEntitiesActions";
 import {
   areEntitiesFetchingSelector,
   entityGroupInProcessDisplaySelector,
+  areExistsInTargetShownSelector,
 } from "~/allEntities/allEntitiesSelectors";
+import ShowExistingToggle from "~/allEntities/selectTransferDataStep/ShowExistingToggle";
 import { activeWorkspaceIdSelector } from "~/workspaces/workspacesSelectors";
 import {
   Accordion,
@@ -21,17 +26,20 @@ import ProjectsTable from "~/projects/projectsTable/ProjectsTable";
 import TagsTable from "~/tags/tagsTable/TagsTable";
 import TasksTable from "~/tasks/tasksTable/TasksTable";
 import TimeEntriesTable from "~/timeEntries/timeEntriesTable/TimeEntriesTable";
+import ActiveWorkspaceSelect from "./ActiveWorkspaceSelect";
 import { RoutePath } from "~/app/appTypes";
 import { ReduxState } from "~/redux/reduxTypes";
 
 interface ConnectStateProps {
   activeWorkspaceId: string;
   areEntitiesFetching: boolean;
+  areExistsInTargetShown: boolean;
   entityGroupInProcessDisplay: string;
 }
 
 interface ConnectDispatchProps {
   onFetchAllEntities: PayloadActionCreator<string, void>;
+  onFlipIfExistsInTargetShown: PayloadActionCreator<string, void>;
   onPush: (path: Path) => void;
 }
 
@@ -56,18 +64,19 @@ export const SelectTransferDataStepComponent: React.FC<Props> = props => {
           disabled.
         </p>
         <p>
-          The badge to the left of the group name represents how many records
-          are present. If you uncheck the <strong>Show Existing </strong>
-          checkbox in the table footer, only the records that do not exist on
-          the target tool will be shown.
+          Change the active workspace by selecting it from the
+          <strong> Active Workspace</strong> dropdown. Toggling
+          <strong> Show records that already exist in target </strong>
+          will either show or hide the records that already exist in the target
+          tool. The footer for each table contains the totals associated with
+          the corresponding column.
         </p>
         <p>
           Press the <strong>Next</strong> button when you&apos;re ready to begin
           the transfer.
-        </p>
-        <p css={{ fontStyle: "italic" }}>
-          Note: The transfer will <strong>not</strong> start until you confirm
-          it on the next page.
+          <strong css={{ marginLeft: "0.375rem" }}>
+            The transfer will not start until you confirm it on the next page.
+          </strong>
         </p>
       </HelpDetails>
       {props.areEntitiesFetching ? (
@@ -78,13 +87,21 @@ export const SelectTransferDataStepComponent: React.FC<Props> = props => {
           </LoadingMessage>
         </>
       ) : (
-        <Accordion css={{ marginBottom: "2rem" }}>
-          <ClientsTable />
-          <TagsTable />
-          <ProjectsTable />
-          <TasksTable />
-          <TimeEntriesTable />
-        </Accordion>
+        <div>
+          <ActiveWorkspaceSelect />
+          <ShowExistingToggle
+            isToggled={props.areExistsInTargetShown}
+            onToggle={() => props.onFlipIfExistsInTargetShown()}
+          />
+          <h2>Workspace Records</h2>
+          <Accordion css={{ marginBottom: "2rem" }}>
+            <ClientsTable />
+            <TagsTable />
+            <ProjectsTable />
+            <TasksTable />
+            <TimeEntriesTable />
+          </Accordion>
+        </div>
       )}
       <NavigationButtonsRow
         disabled={props.areEntitiesFetching}
@@ -99,11 +116,13 @@ export const SelectTransferDataStepComponent: React.FC<Props> = props => {
 const mapStateToProps = (state: ReduxState): ConnectStateProps => ({
   activeWorkspaceId: activeWorkspaceIdSelector(state),
   areEntitiesFetching: areEntitiesFetchingSelector(state),
+  areExistsInTargetShown: areExistsInTargetShownSelector(state),
   entityGroupInProcessDisplay: entityGroupInProcessDisplaySelector(state),
 });
 
 const mapDispatchToProps: ConnectDispatchProps = {
   onFetchAllEntities: fetchAllEntities.request,
+  onFlipIfExistsInTargetShown: flipIfExistsInTargetShown,
   onPush: push,
 };
 
