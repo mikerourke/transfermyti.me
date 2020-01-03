@@ -1,10 +1,6 @@
 import { createAsyncAction, createAction } from "typesafe-actions";
 import { Mapping } from "~/allEntities/allEntitiesTypes";
-import {
-  UpdateIncludedWorkspaceYearModel,
-  WorkspacesByIdModel,
-  WorkspaceModel,
-} from "./workspacesTypes";
+import { WorkspaceModel, WorkspacesByIdModel } from "./workspacesTypes";
 
 export const createWorkspaces = createAsyncAction(
   "@workspaces/CREATE_WORKSPACES_REQUEST",

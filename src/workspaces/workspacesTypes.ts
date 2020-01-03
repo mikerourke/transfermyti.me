@@ -8,10 +8,3 @@ export interface WorkspaceModel extends BaseEntityModel {
 }
 
 export type WorkspacesByIdModel = Record<string, WorkspaceModel>;
-
-export interface UpdateIncludedWorkspaceYearModel {
-  mapping: Mapping;
-  workspaceId: string;
-  year: number;
-  isIncluded: boolean;
-}
