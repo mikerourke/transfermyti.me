@@ -30,10 +30,14 @@ const Root = styled.div(
   }),
 );
 
-const Label = styled.label({
-  fontSize: "1rem",
-  fontWeight: "bold",
-});
+const Label = styled.label(
+  {
+    fontSize: "1rem",
+  },
+  ({ theme }) => ({
+    fontWeight: theme.fontWeights.bold,
+  }),
+);
 
 const Select = styled.select(
   {

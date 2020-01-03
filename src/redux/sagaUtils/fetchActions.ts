@@ -3,8 +3,8 @@ import qs from "qs";
 import * as R from "ramda";
 import { call, delay } from "redux-saga/effects";
 import {
-  CLOCKIFY_API_PAGE_SIZE,
   CLOCKIFY_API_DELAY,
+  CLOCKIFY_API_PAGE_SIZE,
   TOGGL_API_DELAY,
 } from "~/constants";
 import { ToolName } from "~/allEntities/allEntitiesTypes";

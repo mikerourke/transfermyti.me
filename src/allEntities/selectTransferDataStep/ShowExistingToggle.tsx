@@ -1,5 +1,14 @@
 import React from "react";
-import { Toggle } from "~/components";
+import { styled, Toggle } from "~/components";
+
+const Label = styled.div(
+  {
+    marginBottom: "0.75rem",
+  },
+  ({ theme }) => ({
+    fontWeight: theme.fontWeights.bold,
+  }),
+);
 
 interface Props {
   isToggled: boolean;
@@ -12,12 +21,9 @@ const ShowExistingToggle: React.FC<Props> = ({
   ...props
 }) => (
   <div css={{ marginBottom: "0.75rem" }} {...props}>
-    <div
-      id="showExistingToggle"
-      css={{ fontWeight: "bold", marginBottom: "0.75rem" }}
-    >
+    <Label id="showExistingToggle">
       Show records that already exist in target?
-    </div>
+    </Label>
     <Toggle
       aria-label="Show records that already exist in target?"
       aria-labelledby="showExistingToggle"

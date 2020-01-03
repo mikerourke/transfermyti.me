@@ -5,9 +5,9 @@ import { ThemeProvider } from "emotion-theming";
 import { Global } from "@emotion/core";
 import { dismissNotification } from "~/app/appActions";
 import { notificationsSelector } from "~/app/appSelectors";
-import { theme, styled } from "~/components/emotion";
-import Footer from "./Footer";
+import { styled, theme } from "~/components/emotion";
 import Header from "./Header";
+import Footer from "./Footer";
 import { NotificationModel } from "~/app/appTypes";
 import { ReduxState } from "~/redux/reduxTypes";
 

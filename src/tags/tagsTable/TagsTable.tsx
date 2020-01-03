@@ -8,8 +8,8 @@ import {
 } from "~/tags/tagsSelectors";
 import { EntityListPanel } from "~/components";
 import { EntityGroup, TableViewModel } from "~/allEntities/allEntitiesTypes";
-import { TagModel } from "~/tags/tagsTypes";
 import { ReduxState } from "~/redux/reduxTypes";
+import { TagModel } from "~/tags/tagsTypes";
 
 interface ConnectStateProps {
   tags: TableViewModel<TagModel>[];

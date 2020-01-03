@@ -1,4 +1,4 @@
-import { createAsyncAction, createAction } from "typesafe-actions";
+import { createAction, createAsyncAction } from "typesafe-actions";
 import { EntityGroup } from "./allEntitiesTypes";
 
 export const createAllEntities = createAsyncAction(

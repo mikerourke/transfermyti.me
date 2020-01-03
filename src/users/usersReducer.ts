@@ -1,5 +1,5 @@
-import { createReducer, ActionType } from "typesafe-actions";
 import * as R from "ramda";
+import { ActionType, createReducer } from "typesafe-actions";
 import * as usersActions from "./usersActions";
 import { UsersByIdModel } from "./usersTypes";
 

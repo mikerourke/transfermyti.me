@@ -1,4 +1,4 @@
-import { createReducer, ActionType } from "typesafe-actions";
+import { ActionType, createReducer } from "typesafe-actions";
 import * as R from "ramda";
 import * as projectsActions from "./projectsActions";
 import { ProjectModel } from "./projectsTypes";

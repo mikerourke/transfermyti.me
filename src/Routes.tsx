@@ -1,6 +1,6 @@
-import React from "react";
 import { ConnectedRouter } from "connected-react-router";
 import { History } from "history";
+import React from "react";
 import { Redirect, Route, Switch } from "react-router";
 import AppRoot from "~/app/appRoot/AppRoot";
 import SelectTransferMappingStep from "~/app/selectTransferMappingStep/SelectTransferMappingStep";

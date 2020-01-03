@@ -1,10 +1,10 @@
-import { createStore, applyMiddleware, compose, AnyAction } from "redux";
+import { connectRouter, routerMiddleware } from "connected-react-router";
+import { History } from "history";
+import { AnyAction, applyMiddleware, compose, createStore } from "redux";
 import createSagaMiddleware from "redux-saga";
 import thunkMiddleware from "redux-thunk";
 import storage from "store";
-import { connectRouter, routerMiddleware } from "connected-react-router";
-import { History } from "history";
-import { STORAGE_KEY } from "~/constants";
+import { IS_USING_LOCAL_API, STORAGE_KEY } from "~/constants";
 import { getIfDev } from "~/utils";
 import { validateCredentials } from "~/credentials/credentialsActions";
 import { initialState as initialCredentialsState } from "~/credentials/credentialsReducer";
@@ -13,7 +13,7 @@ import { appSaga } from "~/app/appSaga";
 import { credentialsSaga } from "~/credentials/sagas/credentialsSaga";
 import { workspacesSaga } from "~/workspaces/sagas/workspacesSaga";
 import { createRootReducer, RouterReducer } from "./rootReducer";
-import { ReduxStore, ReduxState } from "./reduxTypes";
+import { ReduxState, ReduxStore } from "./reduxTypes";
 
 const devTools = window.__REDUX_DEVTOOLS_EXTENSION_COMPOSE__;
 const composeEnhancers: Function = devTools || compose;
@@ -53,8 +53,7 @@ export function configureStore(history: History): ReduxStore {
   sagaMiddleware.run(credentialsSaga);
   sagaMiddleware.run(workspacesSaga);
 
-  // @ts-ignore
-  if (process.env.USE_LOCAL_API === "true") {
+  if (IS_USING_LOCAL_API) {
     store.dispatch(validateCredentials.request() as AnyAction);
   }
 

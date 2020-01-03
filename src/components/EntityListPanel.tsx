@@ -2,11 +2,14 @@ import React from "react";
 import { connect } from "react-redux";
 import { booleanToYesNo, getEntityGroupDisplay, kebabCase } from "~/utils";
 import {
-  toolNameByMappingSelector,
   replaceMappingWithToolNameSelector,
+  toolNameByMappingSelector,
 } from "~/app/appSelectors";
-import EntityListPanelTable from "./EntityListPanelTable";
 import { AccordionPanel } from "./Accordion";
+import {
+  EntityListPanelTable,
+  EntityListPanelTableRow,
+} from "./EntityListPanelTable";
 import {
   BaseEntityModel,
   EntityGroup,
@@ -71,7 +74,7 @@ export const EntityListPanelComponent: React.FC<Props> = props => {
         </thead>
         <tbody>
           {props.tableData.map(record => (
-            <EntityListPanelTable.BodyRow
+            <EntityListPanelTableRow
               key={record.id}
               existsInTarget={record.existsInTarget}
             >
@@ -88,7 +91,7 @@ export const EntityListPanelComponent: React.FC<Props> = props => {
                   onChange={() => props.onFlipIsIncluded(record.id)}
                 />
               </td>
-            </EntityListPanelTable.BodyRow>
+            </EntityListPanelTableRow>
           ))}
         </tbody>
         <tfoot css={{ "td:last-of-type": { textAlign: "center" } }}>

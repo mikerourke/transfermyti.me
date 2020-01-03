@@ -1,5 +1,5 @@
 import React from "react";
-import { styled, useTheme, ThemeColors } from "./emotion";
+import { styled, ThemeColors, useTheme } from "./emotion";
 
 export interface ButtonProps
   extends React.ButtonHTMLAttributes<HTMLButtonElement> {

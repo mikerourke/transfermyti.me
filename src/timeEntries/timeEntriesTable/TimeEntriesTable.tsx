@@ -8,7 +8,11 @@ import {
   includedTimeEntriesTotalCountForTableViewSelector,
   timeEntriesForTableViewSelector,
 } from "~/timeEntries/timeEntriesSelectors";
-import { AccordionPanel, EntityListPanelTable } from "~/components";
+import {
+  AccordionPanel,
+  EntityListPanelTable,
+  EntityListPanelTableRow,
+} from "~/components";
 import { ReduxState } from "~/redux/reduxTypes";
 import { TimeEntryTableViewModel } from "~/timeEntries/timeEntriesTypes";
 
@@ -50,7 +54,7 @@ export const TimeEntriesTableComponent: React.FC<Props> = props => (
       <tbody>
         {props.timeEntries.map(({ existsInTarget, ...timeEntry }) => (
           <React.Fragment key={timeEntry.id}>
-            <EntityListPanelTable.BodyRow existsInTarget={existsInTarget}>
+            <EntityListPanelTableRow existsInTarget={existsInTarget}>
               <td>{format(timeEntry.start, "Pp")}</td>
               <td>{format(timeEntry.end, "Pp")}</td>
               <td>{timeEntry.taskName}</td>
@@ -63,11 +67,11 @@ export const TimeEntriesTableComponent: React.FC<Props> = props => (
                   onChange={() => props.onFlipIsIncluded(timeEntry.id)}
                 />
               </td>
-            </EntityListPanelTable.BodyRow>
-            <EntityListPanelTable.BodyRow existsInTarget={existsInTarget}>
+            </EntityListPanelTableRow>
+            <EntityListPanelTableRow existsInTarget={existsInTarget}>
               <td colSpan={3}>{timeEntry.description}</td>
               <td>{timeEntry.tagNames.join(", ")}</td>
-            </EntityListPanelTable.BodyRow>
+            </EntityListPanelTableRow>
           </React.Fragment>
         ))}
       </tbody>

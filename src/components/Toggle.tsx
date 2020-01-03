@@ -33,7 +33,6 @@ const Span = styled.span<{ isToggled: boolean; size: Size }>(
     background: "white",
     borderRadius: "50%",
     display: "inline-block",
-    fontWeight: "bold",
     pointerEvents: "none",
     position: "absolute",
     textTransform: "uppercase",
@@ -47,6 +46,7 @@ const Span = styled.span<{ isToggled: boolean; size: Size }>(
   ({ isToggled, size, theme }) => ({
     border: `1px solid ${theme.colors.alto}`,
     fontSize: scale(height(size), 0.5),
+    fontWeight: theme.fontWeights.bold,
     left: isToggled ? scale(width(size), 0.6125) : scale(width(size), 0.05),
     top: scale(height(size), 0.1),
     height: scale(height(size), 0.8),

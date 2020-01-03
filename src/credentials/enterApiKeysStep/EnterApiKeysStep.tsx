@@ -16,7 +16,7 @@ import {
   isValidatingSelector,
   validationErrorsByMappingSelector,
 } from "~/credentials/credentialsSelectors";
-import { styled, HelpDetails, NavigationButtonsRow } from "~/components";
+import { HelpDetails, NavigationButtonsRow, styled } from "~/components";
 import { useDeepCompareEffect } from "~/components/hooks";
 import ApiKeyInputField from "./ApiKeyInputField";
 import { Mapping } from "~/allEntities/allEntitiesTypes";

@@ -12,7 +12,6 @@ export interface ThemeColors {
   grass: string;
   cornflower: string;
   navy: string;
-  balletslipper: string;
   eggplant: string;
   error: string;
   success: string;
@@ -60,7 +59,6 @@ export const theme: Theme = {
     grass: "#42dc42",
     cornflower: "#4083ae",
     navy: "#0a3055",
-    balletslipper: "#ffa0e5",
     eggplant: "#550055",
     error: "#e00000",
     success: "#218003",

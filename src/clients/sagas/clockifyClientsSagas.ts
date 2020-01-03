@@ -1,10 +1,13 @@
 import { SagaIterator } from "@redux-saga/types";
 import { call } from "redux-saga/effects";
-import { fetchObject, paginatedClockifyFetch } from "~/redux/sagaUtils";
-import { ClientModel } from "~/clients/clientsTypes";
+import {
+  createEntitiesForTool,
+  fetchEntitiesForTool,
+  fetchObject,
+  paginatedClockifyFetch,
+} from "~/redux/sagaUtils";
 import { EntityGroup, ToolName } from "~/allEntities/allEntitiesTypes";
-import { createEntitiesForTool } from "~/redux/sagaUtils/createEntitiesForTool";
-import { fetchEntitiesForTool } from "~/redux/sagaUtils/fetchEntitiesForTool";
+import { ClientModel } from "~/clients/clientsTypes";
 
 interface ClockifyClientResponseModel {
   id: string;

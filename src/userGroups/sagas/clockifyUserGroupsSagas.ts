@@ -1,9 +1,12 @@
 import { SagaIterator } from "@redux-saga/types";
 import { call } from "redux-saga/effects";
-import { fetchObject, paginatedClockifyFetch } from "~/redux/sagaUtils";
+import {
+  createEntitiesForTool,
+  fetchEntitiesForTool,
+  fetchObject,
+  paginatedClockifyFetch,
+} from "~/redux/sagaUtils";
 import { EntityGroup, ToolName } from "~/allEntities/allEntitiesTypes";
-import { createEntitiesForTool } from "~/redux/sagaUtils/createEntitiesForTool";
-import { fetchEntitiesForTool } from "~/redux/sagaUtils/fetchEntitiesForTool";
 import { UserGroupModel } from "~/userGroups/userGroupsTypes";
 
 interface ClockifyUserGroupResponseModel {

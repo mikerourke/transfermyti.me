@@ -1,4 +1,4 @@
-import { createAsyncAction, createAction } from "typesafe-actions";
+import { createAction, createAsyncAction } from "typesafe-actions";
 import { Mapping } from "~/allEntities/allEntitiesTypes";
 import { UsersByIdModel } from "./usersTypes";
 

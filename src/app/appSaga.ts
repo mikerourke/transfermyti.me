@@ -1,14 +1,14 @@
 import { SagaIterator } from "@redux-saga/types";
+import { push } from "connected-react-router";
 import * as R from "ramda";
 import { put, select, takeEvery } from "redux-saga/effects";
-import { push } from "connected-react-router";
 import {
-  toolNameByMappingSelector,
   currentPathSelector,
+  toolNameByMappingSelector,
 } from "~/app/appSelectors";
 import { credentialsByMappingSelector } from "~/credentials/credentialsSelectors";
 import { sourceWorkspacesSelector } from "~/workspaces/workspacesSelectors";
-import { RoutePath } from "~/app/appTypes";
+import { RoutePath } from "./appTypes";
 
 export function* appSaga(): SagaIterator {
   yield takeEvery("@@router/LOCATION_CHANGE", redirectIfInvalidSaga);

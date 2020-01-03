@@ -1,7 +1,6 @@
-import React from "react";
 import { styled } from "./emotion";
 
-const Table = styled.table(
+export const EntityListPanelTable = styled.table(
   {
     borderSpacing: 0,
     tableLayout: "fixed",
@@ -10,10 +9,6 @@ const Table = styled.table(
     "td, th": {
       fontSize: "0.875rem",
       padding: "0.5rem",
-    },
-
-    "caption, th, tfoot td": {
-      fontWeight: "bold",
     },
 
     "thead th, td": {
@@ -46,10 +41,14 @@ const Table = styled.table(
       borderRight: `1px solid ${theme.colors.alto}`,
       borderTop: `1px solid ${theme.colors.alto}`,
     },
+
+    "caption, th, tfoot td": {
+      fontWeight: theme.fontWeights.bold,
+    },
   }),
 );
 
-const BodyRow = styled.tr<{
+export const EntityListPanelTableRow = styled.tr<{
   existsInTarget: boolean;
 }>({}, ({ existsInTarget, theme }) => ({
   td: {
@@ -57,13 +56,3 @@ const BodyRow = styled.tr<{
     textDecoration: existsInTarget ? "line-through" : "none",
   },
 }));
-
-class EntityListPanelTable extends React.Component {
-  public static BodyRow = BodyRow;
-
-  public render(): JSX.Element {
-    return <Table {...this.props} />;
-  }
-}
-
-export default EntityListPanelTable;

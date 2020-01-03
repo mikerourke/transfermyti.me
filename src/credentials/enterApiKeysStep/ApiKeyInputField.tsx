@@ -1,25 +1,25 @@
 import React from "react";
 import * as R from "ramda";
-import { styled, ExternalLink } from "~/components";
+import { ExternalLink, styled } from "~/components";
 import { ToolHelpDetailsModel } from "~/app/appTypes";
 
 const ErrorMessage = styled.div(
   {
     fontSize: "0.875rem",
-    fontWeight: "bold",
     marginTop: "-0.75rem",
   },
   ({ theme }) => ({
     color: theme.colors.error,
+    fontWeight: theme.fontWeights.bold,
   }),
 );
 
 const Input = styled.input({
-  width: "100%",
-  fontSize: "1rem",
-  padding: "0.5rem",
   borderRadius: "0.25rem",
   borderStyle: "groove",
+  fontSize: "1rem",
+  padding: "0.5rem",
+  width: "100%",
 });
 
 const Label = styled.label(
@@ -46,7 +46,7 @@ const ApiKeyInputField: React.FC<Props> = ({
   ...props
 }) => {
   const { displayName, toolLink } = toolHelpDetails;
-  const errorId = `${mapping}-help-text`;
+  const errorId = `${mapping}HelpText`;
   return (
     <>
       <Label htmlFor={mapping}>

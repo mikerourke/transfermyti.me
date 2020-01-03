@@ -1,7 +1,7 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import { SagaIterator } from "@redux-saga/types";
 import * as R from "ramda";
-import { put, select, call, delay } from "redux-saga/effects";
+import { call, delay, put, select } from "redux-saga/effects";
 import {
   incrementEntityGroupTransferCompletedCount,
   updateEntityGroupTransferTotalCount,

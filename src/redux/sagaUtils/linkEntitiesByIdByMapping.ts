@@ -1,5 +1,5 @@
 import * as R from "ramda";
-import { Mapping, EntityGroup } from "~/allEntities/allEntitiesTypes";
+import { EntityGroup, Mapping } from "~/allEntities/allEntitiesTypes";
 
 export function linkEntitiesByIdByMapping<TEntity>(
   sourceRecords: TEntity[],

@@ -1,8 +1,8 @@
 import "whatwg-fetch";
+import { createBrowserHistory } from "history";
 import React from "react";
 import { render } from "react-dom";
 import { Provider } from "react-redux";
-import { createBrowserHistory } from "history";
 import Routes from "./Routes";
 import { configureStore } from "./redux/configureStore";
 import { initInterceptor } from "./utils/httpInterceptor";

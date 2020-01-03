@@ -7,17 +7,19 @@ import startOfYear from "date-fns/startOfYear";
 import qs from "qs";
 import * as R from "ramda";
 import { call, select, delay } from "redux-saga/effects";
-import { EntityGroup, ToolName } from "~/allEntities/allEntitiesTypes";
-import { clientIdsByNameSelectorFactory } from "~/clients/clientsSelectors";
 import { TOGGL_API_DELAY } from "~/constants";
+import {
+  createEntitiesForTool,
+  fetchEntitiesForTool,
+  fetchObject,
+  findTargetEntityId,
+} from "~/redux/sagaUtils";
+import { clientIdsByNameSelectorFactory } from "~/clients/clientsSelectors";
 import { credentialsByToolNameSelector } from "~/credentials/credentialsSelectors";
 import { sourceProjectsByIdSelector } from "~/projects/projectsSelectors";
-import { fetchObject } from "~/redux/sagaUtils";
-import { createEntitiesForTool } from "~/redux/sagaUtils/createEntitiesForTool";
-import { fetchEntitiesForTool } from "~/redux/sagaUtils/fetchEntitiesForTool";
-import { findTargetEntityId } from "~/redux/sagaUtils/findTargetEntityId";
 import { tagIdsByNameBySelectorFactory } from "~/tags/tagsSelectors";
 import { sourceTasksByIdSelector } from "~/tasks/tasksSelectors";
+import { EntityGroup, ToolName } from "~/allEntities/allEntitiesTypes";
 import { TimeEntryModel } from "~/timeEntries/timeEntriesTypes";
 
 interface TogglTotalCurrencyModel {

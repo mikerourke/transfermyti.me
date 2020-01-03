@@ -9,11 +9,15 @@ import {
 } from "~/allEntities/allEntitiesActions";
 import {
   areEntitiesFetchingSelector,
-  entityGroupInProcessDisplaySelector,
   areExistsInTargetShownSelector,
+  entityGroupInProcessDisplaySelector,
 } from "~/allEntities/allEntitiesSelectors";
-import ShowExistingToggle from "~/allEntities/selectTransferDataStep/ShowExistingToggle";
 import { activeWorkspaceIdSelector } from "~/workspaces/workspacesSelectors";
+import ClientsTable from "~/clients/clientsTable/ClientsTable";
+import ProjectsTable from "~/projects/projectsTable/ProjectsTable";
+import TagsTable from "~/tags/tagsTable/TagsTable";
+import TasksTable from "~/tasks/tasksTable/TasksTable";
+import TimeEntriesTable from "~/timeEntries/timeEntriesTable/TimeEntriesTable";
 import {
   Accordion,
   HelpDetails,
@@ -21,12 +25,8 @@ import {
   LoadingMessage,
   NavigationButtonsRow,
 } from "~/components";
-import ClientsTable from "~/clients/clientsTable/ClientsTable";
-import ProjectsTable from "~/projects/projectsTable/ProjectsTable";
-import TagsTable from "~/tags/tagsTable/TagsTable";
-import TasksTable from "~/tasks/tasksTable/TasksTable";
-import TimeEntriesTable from "~/timeEntries/timeEntriesTable/TimeEntriesTable";
 import ActiveWorkspaceSelect from "./ActiveWorkspaceSelect";
+import ShowExistingToggle from "./ShowExistingToggle";
 import { RoutePath } from "~/app/appTypes";
 import { ReduxState } from "~/redux/reduxTypes";
 

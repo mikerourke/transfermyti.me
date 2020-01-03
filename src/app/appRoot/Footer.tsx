@@ -1,5 +1,5 @@
 import React from "react";
-import { styled, ExternalLink, Icon } from "~/components";
+import { ExternalLink, Icon, styled } from "~/components";
 
 const Root = styled.footer(
   {
@@ -28,13 +28,13 @@ const RightColumn = styled.div({
   textAlign: "right",
 });
 
-const Love = (): JSX.Element => <Icon name="heart" color="ruby" height={12} />;
+const Love: React.FC = () => <Icon name="heart" color="ruby" height={12} />;
 
-const LinkToMe = (): JSX.Element => (
+const LinkToMe: React.FC = () => (
   <ExternalLink href="https://github.com/mikerourke">Mike Rourke</ExternalLink>
 );
 
-const LinkToIssues = (): JSX.Element => (
+const LinkToIssues: React.FC = () => (
   <ExternalLink href="https://github.com/mikerourke/transfer-my-time/issues">
     in the GitHub repository
   </ExternalLink>

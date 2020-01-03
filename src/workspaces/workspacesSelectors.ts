@@ -2,10 +2,7 @@ import { createSelector, createStructuredSelector } from "reselect";
 import * as R from "ramda";
 import { Mapping } from "~/allEntities/allEntitiesTypes";
 import { ReduxState } from "~/redux/reduxTypes";
-import {
-  WorkspaceModel,
-  WorkspacesByIdModel,
-} from "~/workspaces/workspacesTypes";
+import { WorkspaceModel, WorkspacesByIdModel } from "./workspacesTypes";
 
 export const areWorkspacesFetchingSelector = (state: ReduxState): boolean =>
   state.workspaces.isFetching;
