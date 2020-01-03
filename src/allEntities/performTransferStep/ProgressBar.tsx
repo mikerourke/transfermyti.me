@@ -32,18 +32,18 @@ const Filler = styled.div(
 );
 
 interface Props extends React.HTMLProps<HTMLDivElement> {
-  countComplete: number;
-  countTotal: number;
+  completedCount: number;
+  totalCount: number;
   title: string;
 }
 
 const ProgressBar: React.FC<Props> = ({
-  countComplete,
-  countTotal,
+  completedCount,
+  totalCount,
   title,
   ...props
 }) => {
-  let percentage = (countComplete / countTotal) * 100;
+  let percentage = (completedCount / totalCount) * 100;
   if (Number.isNaN(percentage)) {
     percentage = 0;
   }

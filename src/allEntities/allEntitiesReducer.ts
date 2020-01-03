@@ -18,24 +18,24 @@ export interface AllEntitiesState {
 
 const DEFAULT_TRANSFER_COUNTS = {
   [EntityGroup.Clients]: {
-    countComplete: 0,
-    countTotal: 0,
+    completedCount: 0,
+    totalCount: 0,
   },
   [EntityGroup.Tags]: {
-    countComplete: 0,
-    countTotal: 0,
+    completedCount: 0,
+    totalCount: 0,
   },
   [EntityGroup.Projects]: {
-    countComplete: 0,
-    countTotal: 0,
+    completedCount: 0,
+    totalCount: 0,
   },
   [EntityGroup.Tasks]: {
-    countComplete: 0,
-    countTotal: 0,
+    completedCount: 0,
+    totalCount: 0,
   },
   [EntityGroup.TimeEntries]: {
-    countComplete: 0,
-    countTotal: 0,
+    completedCount: 0,
+    totalCount: 0,
   },
 };
 
@@ -102,24 +102,24 @@ export const allEntitiesReducer = createReducer<
     }),
   )
   .handleAction(
-    allEntitiesActions.incrementEntityGroupTransferCountComplete,
+    allEntitiesActions.incrementEntityGroupTransferCompletedCount,
     (state, { payload }) =>
       R.over<AllEntitiesState>(
-        R.lensPath(["transferCountsByEntityGroup", payload, "countComplete"]),
+        R.lensPath(["transferCountsByEntityGroup", payload, "completedCount"]),
         R.inc,
         state,
       ),
   )
   .handleAction(
-    allEntitiesActions.updateEntityGroupTransferCountTotal,
+    allEntitiesActions.updateEntityGroupTransferTotalCount,
     (state, { payload }) =>
       R.set<AllEntitiesState, number>(
         R.lensPath([
           "transferCountsByEntityGroup",
           payload.entityGroup,
-          "countTotal",
+          "totalCount",
         ]),
-        payload.countTotal,
+        payload.totalCount,
         state,
       ),
   );

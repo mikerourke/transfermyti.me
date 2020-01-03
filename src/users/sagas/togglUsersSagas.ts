@@ -5,7 +5,7 @@ import {
   fetchArray,
   fetchObject,
 } from "~/redux/sagaUtils";
-import { incrementEntityGroupTransferCountComplete } from "~/allEntities/allEntitiesActions";
+import { incrementEntityGroupTransferCompletedCount } from "~/allEntities/allEntitiesActions";
 import { EntityGroup, ToolName } from "~/allEntities/allEntitiesTypes";
 import { fetchEntitiesForTool } from "~/redux/sagaUtils/fetchEntitiesForTool";
 import { UserModel } from "~/users/usersTypes";
@@ -40,7 +40,7 @@ export function* createTogglUsersSaga(
   emailsByWorkspaceId: Record<string, string[]>,
 ): SagaIterator {
   for (const [workspaceId, emails] of Object.entries(emailsByWorkspaceId)) {
-    yield put(incrementEntityGroupTransferCountComplete(EntityGroup.Users));
+    yield put(incrementEntityGroupTransferCompletedCount(EntityGroup.Users));
     yield call(inviteTogglUsers, emails, workspaceId);
     yield delay(TOGGL_API_DELAY);
   }

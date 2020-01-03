@@ -21,10 +21,10 @@ export const updateLastFetchTime = createAction(
   "@allEntities/UPDATE_LAST_FETCH_TIME",
 )<Date | null>();
 
-export const updateEntityGroupTransferCountTotal = createAction(
-  "@allEntities/UPDATE_ENTITY_GROUP_TRANSFER_COUNT_TOTAL",
-)<{ entityGroup: EntityGroup; countTotal: number }>();
+export const updateEntityGroupTransferTotalCount = createAction(
+  "@allEntities/UPDATE_ENTITY_GROUP_TRANSFER_TOTAL_COUNT",
+)<{ entityGroup: EntityGroup; totalCount: number }>();
 
-export const incrementEntityGroupTransferCountComplete = createAction(
-  "@allEntities/INCREMENT_ENTITY_GROUP_TRANSFER_COUNT_COMPLETE",
+export const incrementEntityGroupTransferCompletedCount = createAction(
+  "@allEntities/INCREMENT_ENTITY_GROUP_TRANSFER_COMPLETED_COUNT",
 )<EntityGroup>();

@@ -3,8 +3,8 @@ import { SagaIterator } from "@redux-saga/types";
 import * as R from "ramda";
 import { put, select, call, delay } from "redux-saga/effects";
 import {
-  incrementEntityGroupTransferCountComplete,
-  updateEntityGroupTransferCountTotal,
+  incrementEntityGroupTransferCompletedCount,
+  updateEntityGroupTransferTotalCount,
 } from "~/allEntities/allEntitiesActions";
 import { workspaceIdToLinkedIdSelector } from "~/workspaces/workspacesSelectors";
 import { getApiDelayForTool } from "./fetchActions";
@@ -52,7 +52,7 @@ export function* createEntitiesForTool<TEntity>({
       targetRecords.push(targetRecord);
     }
 
-    yield put(incrementEntityGroupTransferCountComplete(entityGroup));
+    yield put(incrementEntityGroupTransferCompletedCount(entityGroup));
 
     yield delay(apiDelay);
   }
@@ -67,9 +67,9 @@ function* updateTransferCountTotalForEntityGroup<TEntity>(
   const entityGroup = firstRecord.memberOf as EntityGroup;
 
   yield put(
-    updateEntityGroupTransferCountTotal({
+    updateEntityGroupTransferTotalCount({
       entityGroup,
-      countTotal: sourceRecords.length,
+      totalCount: sourceRecords.length,
     }),
   );
 

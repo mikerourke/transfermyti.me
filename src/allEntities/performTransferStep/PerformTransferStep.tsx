@@ -49,28 +49,28 @@ export const PerformTransferStepComponent: React.FC<Props> = props => {
         <ProgressBar
           css={{ marginTop: 0 }}
           title="Clients"
-          countComplete={clients.countComplete}
-          countTotal={clients.countTotal}
+          completedCount={clients.completedCount}
+          totalCount={clients.totalCount}
         />
         <ProgressBar
           title="Tags"
-          countComplete={tags.countComplete}
-          countTotal={tags.countTotal}
+          completedCount={tags.completedCount}
+          totalCount={tags.totalCount}
         />
         <ProgressBar
           title="Projects"
-          countComplete={projects.countComplete}
-          countTotal={projects.countTotal}
+          completedCount={projects.completedCount}
+          totalCount={projects.totalCount}
         />
         <ProgressBar
           title="Tasks"
-          countComplete={tasks.countComplete}
-          countTotal={tasks.countTotal}
+          completedCount={tasks.completedCount}
+          totalCount={tasks.totalCount}
         />
         <ProgressBar
           title="Time Entries"
-          countComplete={timeEntries.countComplete}
-          countTotal={timeEntries.countTotal}
+          completedCount={timeEntries.completedCount}
+          totalCount={timeEntries.totalCount}
         />
       </Flex>
       <NavigationButtonsRow

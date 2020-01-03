@@ -36,8 +36,8 @@ export type TableViewModel<TEntity> = TEntity & {
 };
 
 export interface TransferCountModel {
-  countComplete: number;
-  countTotal: number;
+  completedCount: number;
+  totalCount: number;
 }
 
 export type TransferCountsByEntityGroupModel = Record<

@@ -8,24 +8,24 @@ export default {
     lastFetchTime: null,
     transferCountsByEntityGroup: {
       clients: {
-        countComplete: 0,
-        countTotal: 0,
+        completedCount: 0,
+        totalCount: 0,
       },
       tags: {
-        countComplete: 0,
-        countTotal: 0,
+        completedCount: 0,
+        totalCount: 0,
       },
       projects: {
-        countComplete: 0,
-        countTotal: 0,
+        completedCount: 0,
+        totalCount: 0,
       },
       tasks: {
-        countComplete: 0,
-        countTotal: 0,
+        completedCount: 0,
+        totalCount: 0,
       },
       timeEntries: {
-        countComplete: 0,
-        countTotal: 0,
+        completedCount: 0,
+        totalCount: 0,
       },
     },
   },
