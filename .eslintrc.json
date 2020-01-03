@@ -5,9 +5,10 @@
     "plugin:@typescript-eslint/recommended",
     "plugin:import/errors",
     "plugin:import/warnings",
-    "plugin:import/typescript"
+    "plugin:import/typescript",
+    "plugin:jsx-a11y/recommended"
   ],
-  "plugins": ["@typescript-eslint", "react", "unicorn", "import"],
+  "plugins": ["@typescript-eslint", "react", "unicorn", "import", "jsx-a11y"],
   "settings": {
     "react": {
       "version": "detect"
