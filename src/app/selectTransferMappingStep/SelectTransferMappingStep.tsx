@@ -23,7 +23,7 @@ export const SelectTransferMappingStepComponent: React.FC<Props> = props => {
       source: ToolName.Toggl,
       target: ToolName.Clockify,
     });
-    props.onPush(RoutePath.EnterCredentials);
+    props.onPush(RoutePath.EnterApiKeys);
   };
 
   const handleClockifyToTogglClick = (): void => {

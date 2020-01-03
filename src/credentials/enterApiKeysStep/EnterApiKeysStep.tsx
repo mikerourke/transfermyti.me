@@ -56,7 +56,7 @@ interface ConnectDispatchProps {
 
 type Props = ConnectStateProps & ConnectDispatchProps;
 
-const EnterCredentialsStepComponent: React.FC<Props> = props => {
+const EnterApiKeysStepComponent: React.FC<Props> = props => {
   type InputFields = Record<string, string | null>;
 
   const defaultErrors: InputFields = {
@@ -195,4 +195,4 @@ const mapDispatchToProps: ConnectDispatchProps = {
 export default connect(
   mapStateToProps,
   mapDispatchToProps,
-)(EnterCredentialsStepComponent);
+)(EnterApiKeysStepComponent);

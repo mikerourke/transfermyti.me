@@ -4,7 +4,7 @@ import { History } from "history";
 import { Redirect, Route, Switch } from "react-router";
 import AppRoot from "~/app/appRoot/AppRoot";
 import SelectTransferMappingStep from "~/app/selectTransferMappingStep/SelectTransferMappingStep";
-import EnterCredentialsStep from "~/credentials/enterCredentialsStep/EnterCredentialsStep";
+import EnterApiKeysStep from "~/credentials/enterApiKeysStep/EnterApiKeysStep";
 import SelectSourceWorkspacesStep from "~/workspaces/selectSourceWorkspacesStep/SelectSourceWorkspacesStep";
 import SelectTransferDataStep from "~/allEntities/selectTransferDataStep/SelectTransferDataStep";
 import PerformTransferStep from "~/allEntities/performTransferStep/PerformTransferStep";
@@ -23,10 +23,7 @@ const Routes: React.FC<Props> = ({ history }) => (
           path={RoutePath.PickTransferMapping}
           component={SelectTransferMappingStep}
         />
-        <Route
-          path={RoutePath.EnterCredentials}
-          component={EnterCredentialsStep}
-        />
+        <Route path={RoutePath.EnterApiKeys} component={EnterApiKeysStep} />
         <Route
           path={RoutePath.SelectWorkspaces}
           component={SelectSourceWorkspacesStep}

@@ -45,7 +45,7 @@ export const SelectSourceWorkspacesStepComponent: React.FC<Props> = props => {
   }, []);
 
   const handleBackClick = (): void => {
-    props.onPush(RoutePath.EnterCredentials);
+    props.onPush(RoutePath.EnterApiKeys);
   };
 
   const handleNextClick = (): void => {
