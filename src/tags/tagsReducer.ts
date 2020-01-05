@@ -40,6 +40,16 @@ export const tagsReducer = createReducer<TagsState, TagsAction>(initialState)
       isFetching: false,
     }),
   )
+  .handleAction(tagsActions.updateIfAllTagsIncluded, (state, { payload }) => ({
+    ...state,
+    source: Object.entries(state.source).reduce(
+      (acc, [id, tag]) => ({
+        ...acc,
+        [id]: { ...tag, isIncluded: payload },
+      }),
+      {},
+    ),
+  }))
   .handleAction(tagsActions.flipIsTagIncluded, (state, { payload }) =>
     R.over(R.lensPath(["source", payload, "isIncluded"]), R.not, state),
   );

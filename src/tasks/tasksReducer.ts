@@ -40,6 +40,19 @@ export const tasksReducer = createReducer<TasksState, TasksAction>(initialState)
       isFetching: false,
     }),
   )
+  .handleAction(
+    tasksActions.updateIfAllTasksIncluded,
+    (state, { payload }) => ({
+      ...state,
+      source: Object.entries(state.source).reduce(
+        (acc, [id, task]) => ({
+          ...acc,
+          [id]: { ...task, isIncluded: payload },
+        }),
+        {},
+      ),
+    }),
+  )
   .handleAction(tasksActions.flipIsTaskIncluded, (state, { payload }) =>
     R.over(R.lensPath(["source", payload, "isIncluded"]), R.not, state),
   );

@@ -1,7 +1,7 @@
 import React from "react";
 import { connect } from "react-redux";
 import { PayloadActionCreator } from "typesafe-actions";
-import { flipIsTagIncluded } from "~/tags/tagsActions";
+import { flipIsTagIncluded, updateIfAllTagsIncluded } from "~/tags/tagsActions";
 import {
   tagsForTableViewSelector,
   tagsTotalCountsByTypeSelector,
@@ -18,6 +18,7 @@ interface ConnectStateProps {
 
 interface ConnectDispatchProps {
   onFlipIsIncluded: PayloadActionCreator<string, string>;
+  onUpdateIfAllIncluded: PayloadActionCreator<string, boolean>;
 }
 
 type Props = ConnectStateProps & ConnectDispatchProps;
@@ -33,6 +34,7 @@ export const TagsTableComponent: React.FC<Props> = props => (
     ]}
     totalCountsByType={props.totalCountsByType}
     onFlipIsIncluded={props.onFlipIsIncluded}
+    onUpdateIfAllIncluded={props.onUpdateIfAllIncluded}
   />
 );
 
@@ -43,6 +45,7 @@ const mapStateToProps = (state: ReduxState): ConnectStateProps => ({
 
 const mapDispatchToProps: ConnectDispatchProps = {
   onFlipIsIncluded: flipIsTagIncluded,
+  onUpdateIfAllIncluded: updateIfAllTagsIncluded,
 };
 
 export default connect(mapStateToProps, mapDispatchToProps)(TagsTableComponent);

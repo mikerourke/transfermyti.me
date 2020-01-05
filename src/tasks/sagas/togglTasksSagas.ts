@@ -6,7 +6,7 @@ import {
   fetchEntitiesForTool,
   fetchObject,
   findTargetEntityId,
-} from "~/redux/sagaUtils";
+} from "~/redux/reduxUtils";
 import { sourceProjectsByIdSelector } from "~/projects/projectsSelectors";
 import { EntityGroup, ToolName } from "~/allEntities/allEntitiesTypes";
 import { TaskModel } from "~/tasks/tasksTypes";

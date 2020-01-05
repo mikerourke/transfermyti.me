@@ -51,6 +51,19 @@ export const projectsReducer = createReducer<ProjectsState, ProjectsAction>(
       isFetching: false,
     }),
   )
+  .handleAction(
+    projectsActions.updateIfAllProjectsIncluded,
+    (state, { payload }) => ({
+      ...state,
+      source: Object.entries(state.source).reduce(
+        (acc, [id, project]) => ({
+          ...acc,
+          [id]: { ...project, isIncluded: payload },
+        }),
+        {},
+      ),
+    }),
+  )
   .handleAction(projectsActions.flipIsProjectIncluded, (state, { payload }) =>
     R.over(R.lensPath(["source", payload, "isIncluded"]), R.not, state),
   );

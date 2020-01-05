@@ -40,6 +40,7 @@ export const EntityListPanelTable = styled.table(
       background: theme.colors.primary,
       borderRight: `1px solid ${theme.colors.white}`,
       color: theme.colors.white,
+      fontWeight: theme.fontWeights.bold,
     },
 
     "thead th": {
@@ -54,10 +55,6 @@ export const EntityListPanelTable = styled.table(
 
     "tbody tr:last-of-type td": {
       borderBottom: `1px solid ${theme.colors.white}`,
-    },
-
-    "caption, th, tfoot td": {
-      fontWeight: theme.fontWeights.bold,
     },
   }),
 );

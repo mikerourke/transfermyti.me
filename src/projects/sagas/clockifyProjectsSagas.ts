@@ -9,7 +9,7 @@ import {
   fetchObject,
   findTargetEntityId,
   paginatedClockifyFetch,
-} from "~/redux/sagaUtils";
+} from "~/redux/reduxUtils";
 import { sourceClientsByIdSelector } from "~/clients/clientsSelectors";
 import {
   ClockifyHourlyRateResponseModel,

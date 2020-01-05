@@ -53,6 +53,19 @@ export const timeEntriesReducer = createReducer<
     }),
   )
   .handleAction(
+    timeEntriesActions.updateIfAllTimeEntriesIncluded,
+    (state, { payload }) => ({
+      ...state,
+      source: Object.entries(state.source).reduce(
+        (acc, [id, timeEntry]) => ({
+          ...acc,
+          [id]: { ...timeEntry, isIncluded: payload },
+        }),
+        {},
+      ),
+    }),
+  )
+  .handleAction(
     timeEntriesActions.flipIsTimeEntryIncluded,
     (state, { payload }) =>
       R.over(R.lensPath(["source", payload, "isIncluded"]), R.not, state),

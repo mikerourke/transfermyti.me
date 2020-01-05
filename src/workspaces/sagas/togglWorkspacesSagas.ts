@@ -1,7 +1,7 @@
 import { SagaIterator } from "@redux-saga/types";
 import { call, delay, put } from "redux-saga/effects";
 import { TOGGL_API_DELAY } from "~/constants";
-import { fetchArray, fetchObject } from "~/redux/sagaUtils";
+import { fetchArray, fetchObject } from "~/redux/reduxUtils";
 import { incrementEntityGroupTransferCompletedCount } from "~/allEntities/allEntitiesActions";
 import { EntityGroup } from "~/allEntities/allEntitiesTypes";
 import { WorkspaceModel } from "~/workspaces/workspacesTypes";

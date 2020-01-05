@@ -123,7 +123,7 @@ export const SelectTransferDataStepComponent: React.FC<Props> = props => {
           onNextClick={handleNextClick}
         >
           <Button
-            variant="outline"
+            variant="outlinePrimary"
             disabled={props.areEntitiesFetching}
             onClick={() => props.onFetchAllEntities()}
           >

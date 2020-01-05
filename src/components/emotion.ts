@@ -53,10 +53,6 @@ export interface Theme {
 export const theme: Theme = {
   breakpoints: ["40em", "52em", "64em"],
   colors: {
-    // primary: "rgb(38, 66, 55)",
-    // secondary: "rgb(205, 233, 172)",
-    // primary: "rgb(64, 57, 53)",
-    // secondary: "rgb(198, 212, 248)",
     primary: "rgb(30, 120, 161)",
     secondary: "rgb(239, 253, 232)",
     ruby: "rgb(165, 19, 35)",

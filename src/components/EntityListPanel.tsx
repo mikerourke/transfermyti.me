@@ -6,6 +6,7 @@ import {
   toolNameByMappingSelector,
 } from "~/app/appSelectors";
 import { AccordionPanel } from "./Accordion";
+import EntityListPanelHeader from "./EntityListPanelHeader";
 import {
   EntityListPanelTable,
   EntityListPanelTableRow,
@@ -35,6 +36,7 @@ interface OwnProps {
   tableFields: TableField[];
   totalCountsByType: Record<string, number>;
   onFlipIsIncluded: (id: string) => void;
+  onUpdateIfAllIncluded: (areAllIncluded: boolean) => void;
 }
 
 type Props = ConnectStateProps & OwnProps;
@@ -50,18 +52,28 @@ export const EntityListPanelComponent: React.FC<Props> = props => {
     return value;
   };
 
+  const headerTitleId = `${props.entityGroup}Desc`;
+  const headerTitle = props.replaceMappingWithToolName(
+    `${groupDisplay} Records in Source`,
+  );
+
+  const notExistsInTargetRecordCount = props.tableData.filter(
+    record => !record.existsInTarget,
+  ).length;
+
   const totalCountsByTypeEntries = Object.entries(props.totalCountsByType);
   const totalsColSpan =
     props.tableFields.length + 1 - totalCountsByTypeEntries.length;
 
   return (
     <AccordionPanel rowNumber={props.rowNumber} title={groupDisplay}>
-      <EntityListPanelTable>
-        <caption>
-          {props.replaceMappingWithToolName(
-            `${groupDisplay} Records in Source`,
-          )}
-        </caption>
+      <EntityListPanelHeader
+        disabled={notExistsInTargetRecordCount === 0}
+        titleId={headerTitleId}
+        title={headerTitle}
+        onUpdateIfAllIncluded={props.onUpdateIfAllIncluded}
+      />
+      <EntityListPanelTable role="grid" aria-labelledby={headerTitleId}>
         <thead>
           <tr>
             {props.tableFields.map(({ label }) => (
@@ -69,7 +81,7 @@ export const EntityListPanelComponent: React.FC<Props> = props => {
                 {props.replaceMappingWithToolName(label)}
               </th>
             ))}
-            <th className="include-cell">Include in Transfer?</th>
+            <th className="include-cell">Include?</th>
           </tr>
         </thead>
         <tbody>

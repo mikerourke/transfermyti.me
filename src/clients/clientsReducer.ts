@@ -1,5 +1,6 @@
 import * as R from "ramda";
 import { ActionType, createReducer } from "typesafe-actions";
+import { updateIfAllIncluded } from "~/redux/reduxUtils";
 import * as clientsActions from "./clientsActions";
 import { ClientsByIdModel } from "./clientsTypes";
 
@@ -42,10 +43,13 @@ export const clientsReducer = createReducer<ClientsState, ClientsAction>(
       isFetching: false,
     }),
   )
-  .handleAction(clientsActions.pushUpdatesToClients, (state, { payload }) => ({
-    ...state,
-    ...payload,
-  }))
+  .handleAction(
+    clientsActions.updateIfAllClientsIncluded,
+    (state, { payload }) => ({
+      ...state,
+      source: updateIfAllIncluded(state.source, payload),
+    }),
+  )
   .handleAction(clientsActions.flipIsClientIncluded, (state, { payload }) =>
     R.over(R.lensPath(["source", payload, "isIncluded"]), R.not, state),
   );

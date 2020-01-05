@@ -8,3 +8,4 @@ export {
 } from "./fetchActions";
 export { findTargetEntityId } from "./findTargetEntityId";
 export { linkEntitiesByIdByMapping } from "./linkEntitiesByIdByMapping";
+export { updateIfAllIncluded } from "./updateIfAllIncluded";

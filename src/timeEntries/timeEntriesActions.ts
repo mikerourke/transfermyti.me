@@ -14,6 +14,10 @@ export const fetchTimeEntries = createAsyncAction(
   "@timeEntries/FETCH_TIME_ENTRIES_FAILURE",
 )<void, Record<Mapping, TimeEntriesByIdModel>, void>();
 
+export const updateIfAllTimeEntriesIncluded = createAction(
+  "@timeEntries/UPDATE_IF_ALL_INCLUDED",
+)<boolean>();
+
 export const flipIsTimeEntryIncluded = createAction(
   "@timeEntries/FLIP_IS_INCLUDED",
 )<string>();

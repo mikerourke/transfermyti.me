@@ -1,7 +1,10 @@
 import React from "react";
 import { connect } from "react-redux";
 import { PayloadActionCreator } from "typesafe-actions";
-import { flipIsClientIncluded } from "~/clients/clientsActions";
+import {
+  flipIsClientIncluded,
+  updateIfAllClientsIncluded,
+} from "~/clients/clientsActions";
 import {
   clientsForTableViewSelector,
   clientsTotalCountsByTypeSelector,
@@ -15,9 +18,9 @@ interface ConnectStateProps {
   clients: ClientTableViewModel[];
   totalCountsByType: Record<string, number>;
 }
-
 interface ConnectDispatchProps {
   onFlipIsIncluded: PayloadActionCreator<string, string>;
+  onUpdateIfAllIncluded: PayloadActionCreator<string, boolean>;
 }
 
 type Props = ConnectStateProps & ConnectDispatchProps;
@@ -34,6 +37,7 @@ export const ClientsTableComponent: React.FC<Props> = props => (
     ]}
     totalCountsByType={props.totalCountsByType}
     onFlipIsIncluded={props.onFlipIsIncluded}
+    onUpdateIfAllIncluded={props.onUpdateIfAllIncluded}
   />
 );
 
@@ -44,6 +48,7 @@ const mapStateToProps = (state: ReduxState): ConnectStateProps => ({
 
 const mapDispatchToProps: ConnectDispatchProps = {
   onFlipIsIncluded: flipIsClientIncluded,
+  onUpdateIfAllIncluded: updateIfAllClientsIncluded,
 };
 
 export default connect(

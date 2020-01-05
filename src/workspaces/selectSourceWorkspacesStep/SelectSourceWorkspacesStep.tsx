@@ -91,7 +91,7 @@ export const SelectSourceWorkspacesStepComponent: React.FC<Props> = props => {
         onNextClick={handleNextClick}
       >
         <Button
-          variant="outline"
+          variant="outlinePrimary"
           disabled={props.areWorkspacesFetching}
           onClick={() => () => props.onFetchWorkspaces()}
         >

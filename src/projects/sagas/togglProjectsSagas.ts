@@ -9,7 +9,7 @@ import {
   fetchEntitiesForTool,
   fetchObject,
   findTargetEntityId,
-} from "~/redux/sagaUtils";
+} from "~/redux/reduxUtils";
 import { sourceClientsByIdSelector } from "~/clients/clientsSelectors";
 import { EntityGroup, ToolName } from "~/allEntities/allEntitiesTypes";
 import { ProjectModel } from "~/projects/projectsTypes";

@@ -12,7 +12,7 @@ import { ToolName } from "~/allEntities/allEntitiesTypes";
 import { RoutePath } from "./appTypes";
 
 export function* appSaga(): SagaIterator {
-  yield takeEvery("@@router/LOCATION_CHANGE", redirectIfInvalidSaga);
+  // yield takeEvery("@@router/LOCATION_CHANGE", redirectIfInvalidSaga);
 }
 
 /**

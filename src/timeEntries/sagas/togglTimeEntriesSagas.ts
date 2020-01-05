@@ -13,7 +13,7 @@ import {
   fetchEntitiesForTool,
   fetchObject,
   findTargetEntityId,
-} from "~/redux/sagaUtils";
+} from "~/redux/reduxUtils";
 import { clientIdsByNameSelectorFactory } from "~/clients/clientsSelectors";
 import { credentialsByToolNameSelector } from "~/credentials/credentialsSelectors";
 import { sourceProjectsByIdSelector } from "~/projects/projectsSelectors";

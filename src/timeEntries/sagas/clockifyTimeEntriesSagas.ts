@@ -7,7 +7,7 @@ import {
   fetchObject,
   findTargetEntityId,
   paginatedClockifyFetch,
-} from "~/redux/sagaUtils";
+} from "~/redux/reduxUtils";
 import { credentialsByToolNameSelector } from "~/credentials/credentialsSelectors";
 import { sourceProjectsByIdSelector } from "~/projects/projectsSelectors";
 import { targetTagIdsSelectorFactory } from "~/tags/tagsSelectors";

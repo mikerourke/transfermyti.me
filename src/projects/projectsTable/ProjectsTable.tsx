@@ -1,7 +1,10 @@
 import React from "react";
 import { connect } from "react-redux";
 import { PayloadActionCreator } from "typesafe-actions";
-import { flipIsProjectIncluded } from "~/projects/projectsActions";
+import {
+  flipIsProjectIncluded,
+  updateIfAllProjectsIncluded,
+} from "~/projects/projectsActions";
 import {
   projectsForTableViewSelector,
   projectsTotalCountsByTypeSelector,
@@ -18,6 +21,7 @@ interface ConnectStateProps {
 
 interface ConnectDispatchProps {
   onFlipIsIncluded: PayloadActionCreator<string, string>;
+  onUpdateIfAllIncluded: PayloadActionCreator<string, boolean>;
 }
 
 type Props = ConnectStateProps & ConnectDispatchProps;
@@ -35,6 +39,7 @@ export const ProjectsTableComponent: React.FC<Props> = props => (
     ]}
     totalCountsByType={props.totalCountsByType}
     onFlipIsIncluded={props.onFlipIsIncluded}
+    onUpdateIfAllIncluded={props.onUpdateIfAllIncluded}
   />
 );
 
@@ -45,6 +50,7 @@ const mapStateToProps = (state: ReduxState): ConnectStateProps => ({
 
 const mapDispatchToProps: ConnectDispatchProps = {
   onFlipIsIncluded: flipIsProjectIncluded,
+  onUpdateIfAllIncluded: updateIfAllProjectsIncluded,
 };
 
 export default connect(
