@@ -16,15 +16,10 @@ import {
   isValidatingSelector,
   validationErrorsByMappingSelector,
 } from "~/credentials/credentialsSelectors";
-import {
-  Button,
-  HelpDetails,
-  NavigationButtonsRow,
-  styled,
-} from "~/components";
+import { Button, HelpDetails, NavigationButtonsRow } from "~/components";
 import { useDeepCompareEffect } from "~/components/hooks";
 import ApiKeyInputField from "./ApiKeyInputField";
-import { Mapping } from "~/allEntities/allEntitiesTypes";
+import { Mapping, ToolName } from "~/allEntities/allEntitiesTypes";
 import { RoutePath, ToolHelpDetailsModel } from "~/app/appTypes";
 import {
   CredentialsModel,
@@ -32,16 +27,6 @@ import {
   ValidationErrorsByMappingModel,
 } from "~/credentials/credentialsTypes";
 import { ReduxState } from "~/redux/reduxTypes";
-
-const Form = styled.form({
-  margin: "0 1rem",
-
-  input: {
-    fontFamily: "monospace",
-    fontSize: "1.25rem",
-    marginBottom: "1rem",
-  },
-});
 
 interface ConnectStateProps {
   credentialsByMapping: Record<Mapping, CredentialsModel>;
@@ -106,7 +91,8 @@ const EnterApiKeysStepComponent: React.FC<Props> = props => {
     const newInputErrors: InputFields = { ...defaultErrors };
 
     for (const [mapping, value] of Object.entries(inputValues)) {
-      if (value === "") {
+      const { toolName } = props.toolHelpDetailsByMapping[mapping];
+      if (value === "" && toolName !== ToolName.None) {
         isValid = false;
         newInputErrors[mapping] = "This field is required";
       }
@@ -136,7 +122,7 @@ const EnterApiKeysStepComponent: React.FC<Props> = props => {
   };
 
   const handleBackClick = (): void => {
-    props.onPush(RoutePath.PickTransferMapping);
+    props.onPush(RoutePath.PickTransferAction);
   };
 
   const handleNextClick = (): void => {
@@ -155,32 +141,36 @@ const EnterApiKeysStepComponent: React.FC<Props> = props => {
     <section>
       <h1>Step 2: Enter Credentials</h1>
       <HelpDetails>
-        Enter your Clockify and Toggl API keys. Press the
+        Enter your the API key(s) for the tools associated with the transfer.
+        Press the
         <strong> Next</strong> button to validate your keys and move on to the
         Workspace selection step.
       </HelpDetails>
-      <Form autoComplete="hidden">
-        <ApiKeyInputField
-          mapping={Mapping.Source}
-          toolHelpDetails={source}
-          onBlur={handleInputBlur}
-          onChange={handleInputChange}
-          onFocus={clearError}
-          value={inputValues.source ?? ""}
-          errorMessage={inputErrors.source}
-        />
-        <ApiKeyInputField
-          mapping={Mapping.Target}
-          toolHelpDetails={target}
-          onBlur={handleInputBlur}
-          onChange={handleInputChange}
-          onFocus={clearError}
-          value={inputValues.target ?? ""}
-          errorMessage={inputErrors.target}
-        />
-      </Form>
+      <form autoComplete="hidden" css={{ margin: "0 1rem" }}>
+        {source.toolName !== ToolName.None && (
+          <ApiKeyInputField
+            mapping={Mapping.Source}
+            toolHelpDetails={source}
+            onBlur={handleInputBlur}
+            onChange={handleInputChange}
+            onFocus={clearError}
+            value={inputValues.source ?? ""}
+            errorMessage={inputErrors.source}
+          />
+        )}
+        {target.toolName !== ToolName.None && (
+          <ApiKeyInputField
+            mapping={Mapping.Target}
+            toolHelpDetails={target}
+            onBlur={handleInputBlur}
+            onChange={handleInputChange}
+            onFocus={clearError}
+            value={inputValues.target ?? ""}
+            errorMessage={inputErrors.target}
+          />
+        )}
+      </form>
       <NavigationButtonsRow
-        css={{ marginTop: "2rem" }}
         onBackClick={handleBackClick}
         onNextClick={handleNextClick}
       >

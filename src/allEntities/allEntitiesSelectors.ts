@@ -6,10 +6,7 @@ import { includedSourceTasksSelector } from "~/tasks/tasksSelectors";
 import { includedSourceTimeEntriesSelector } from "~/timeEntries/timeEntriesSelectors";
 import { getEntityGroupDisplay } from "~/utils";
 import { ReduxState } from "~/redux/reduxTypes";
-import {
-  EntityGroup,
-  TransferCountsByEntityGroupModel,
-} from "./allEntitiesTypes";
+import { EntityGroup, CountsByEntityGroupModel } from "./allEntitiesTypes";
 
 export const areEntitiesCreatingSelector = (state: ReduxState): boolean =>
   state.allEntities.areEntitiesCreating;
@@ -28,7 +25,7 @@ export const entityGroupInProcessDisplaySelector = createSelector(
 
 export const transferCountsByEntityGroupSelector = createSelector(
   (state: ReduxState) => state.allEntities.transferCountsByEntityGroup,
-  (transferCountsByEntityGroup): TransferCountsByEntityGroupModel =>
+  (transferCountsByEntityGroup): CountsByEntityGroupModel =>
     transferCountsByEntityGroup,
 );
 
@@ -44,7 +41,7 @@ export const includedCountsByEntityGroupSelector = createSelector(
     sourceProjects,
     sourceTasks,
     sourceTimeEntries,
-  ): Record<EntityGroup, number> =>
+  ): CountsByEntityGroupModel =>
     ({
       [EntityGroup.Clients]: sourceClients.length,
       [EntityGroup.Tags]: sourceTags.length,
@@ -53,7 +50,7 @@ export const includedCountsByEntityGroupSelector = createSelector(
       [EntityGroup.TimeEntries]: sourceTimeEntries.length,
       [EntityGroup.UserGroups]: 0,
       [EntityGroup.Users]: 0,
-    } as Record<EntityGroup, number>),
+    } as CountsByEntityGroupModel),
 );
 
 export const totalIncludedRecordsCountSelector = createSelector(

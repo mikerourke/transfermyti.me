@@ -1,13 +1,18 @@
 import { ActionType, createReducer } from "typesafe-actions";
 import * as appActions from "./appActions";
 import { ToolName } from "~/allEntities/allEntitiesTypes";
-import { NotificationModel, ToolNameByMappingModel } from "./appTypes";
+import {
+  NotificationModel,
+  ToolAction,
+  ToolNameByMappingModel,
+} from "./appTypes";
 
 type AppAction = ActionType<typeof appActions>;
 
 export interface AppState {
   readonly notifications: NotificationModel[];
   readonly toolNameByMapping: ToolNameByMappingModel;
+  readonly toolAction: ToolAction;
 }
 
 export const initialState: AppState = {
@@ -16,6 +21,7 @@ export const initialState: AppState = {
     source: ToolName.None,
     target: ToolName.None,
   },
+  toolAction: ToolAction.None,
 };
 
 export const appReducer = createReducer<AppState, AppAction>(initialState)
@@ -40,4 +46,8 @@ export const appReducer = createReducer<AppState, AppAction>(initialState)
       ...state.toolNameByMapping,
       ...payload,
     },
+  }))
+  .handleAction(appActions.updateToolAction, (state, { payload }) => ({
+    ...state,
+    toolAction: payload,
   }));

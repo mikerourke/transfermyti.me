@@ -8,6 +8,7 @@ import {
 } from "~/app/appSelectors";
 import { credentialsByMappingSelector } from "~/credentials/credentialsSelectors";
 import { sourceWorkspacesSelector } from "~/workspaces/workspacesSelectors";
+import { ToolName } from "~/allEntities/allEntitiesTypes";
 import { RoutePath } from "./appTypes";
 
 export function* appSaga(): SagaIterator {
@@ -36,10 +37,10 @@ function* redirectIfInvalidSaga(): SagaIterator {
     // If the user is currently on a step after the transfer mapping selection
     // step and both transfer mappings in state are "none", go back to the
     // transfer mapping selection to ensure the user picks a valid option:
-    case isPathPastStep(RoutePath.PickTransferMapping):
+    case isPathPastStep(RoutePath.PickTransferAction):
       const mapping = yield select(toolNameByMappingSelector);
-      if (Object.values(mapping).some(mapping => mapping === "none")) {
-        yield put(push(RoutePath.PickTransferMapping));
+      if (Object.values(mapping).every(mapping => mapping === ToolName.None)) {
+        yield put(push(RoutePath.PickTransferAction));
       }
       break;
 

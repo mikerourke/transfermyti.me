@@ -2,7 +2,11 @@ import { createAction } from "typesafe-actions";
 import cuid from "cuid";
 import { capitalize, getIfDev } from "~/utils";
 import { ToolName } from "~/allEntities/allEntitiesTypes";
-import { NotificationModel, ToolNameByMappingModel } from "./appTypes";
+import {
+  NotificationModel,
+  ToolNameByMappingModel,
+  ToolAction,
+} from "./appTypes";
 
 export const showNotification = createAction(
   "@app/SHOW_NOTIFICATION",
@@ -40,3 +44,7 @@ export const dismissAllNotifications = createAction(
 export const updateToolNameByMapping = createAction(
   "@app/UPDATE_TOOL_NAME_BY_MAPPING",
 )<ToolNameByMappingModel>();
+
+export const updateToolAction = createAction("@app/UPDATE_TOOL_ACTION")<
+  ToolAction
+>();

@@ -9,11 +9,17 @@ export interface NotificationModel {
 }
 
 export enum RoutePath {
-  PickTransferMapping = "/pick-transfer-mapping",
+  PickTransferAction = "/pick-transfer-action",
   EnterApiKeys = "/enter-api-keys",
   SelectWorkspaces = "/select-workspaces",
   SelectTransferData = "/select-transfer-data",
   PerformTransfer = "/perform-transfer",
+}
+
+export enum ToolAction {
+  None = "none",
+  Delete = "delete",
+  Transfer = "transfer",
 }
 
 export interface ToolHelpDetailsModel {

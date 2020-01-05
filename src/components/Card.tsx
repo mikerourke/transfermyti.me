@@ -3,10 +3,10 @@ import { styled } from "./emotion";
 
 const Root = styled.li(
   {
-    flex: "0 0 24rem",
-    margin: "0 1rem 1rem",
-    padding: "1rem",
     borderRadius: "0.5rem",
+    flex: "0 0 24rem",
+    margin: "0 1rem 2rem",
+    padding: "1rem",
   },
   ({ theme }) => ({
     background: theme.colors.primary,

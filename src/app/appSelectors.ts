@@ -8,6 +8,7 @@ import {
   RoutePath,
   ToolHelpDetailsModel,
   ToolNameByMappingModel,
+  ToolAction,
 } from "./appTypes";
 
 export const currentPathSelector = (state: ReduxState): RoutePath =>
@@ -21,6 +22,9 @@ export const notificationsSelector = createSelector(
 export const toolNameByMappingSelector = (
   state: ReduxState,
 ): ToolNameByMappingModel => state.app.toolNameByMapping;
+
+export const toolActionSelector = (state: ReduxState): ToolAction =>
+  state.app.toolAction;
 
 export const mappingByToolNameSelector = createSelector(
   toolNameByMappingSelector,

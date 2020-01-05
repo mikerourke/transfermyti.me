@@ -1,10 +1,7 @@
 import * as R from "ramda";
 import { ActionType, createReducer } from "typesafe-actions";
 import * as allEntitiesActions from "./allEntitiesActions";
-import {
-  EntityGroup,
-  TransferCountsByEntityGroupModel,
-} from "./allEntitiesTypes";
+import { CountsByEntityGroupModel, EntityGroup } from "./allEntitiesTypes";
 
 type AllEntitiesAction = ActionType<typeof allEntitiesActions>;
 
@@ -14,31 +11,18 @@ export interface AllEntitiesState {
   readonly areExistsInTargetShown: boolean;
   readonly entityGroupInProcess: EntityGroup | null;
   readonly lastFetchTime: Date | null;
-  readonly transferCountsByEntityGroup: TransferCountsByEntityGroupModel;
+  readonly transferCountsByEntityGroup: CountsByEntityGroupModel;
 }
 
 const DEFAULT_TRANSFER_COUNTS = {
-  [EntityGroup.Clients]: {
-    completedCount: 0,
-    totalCount: 0,
-  },
-  [EntityGroup.Tags]: {
-    completedCount: 0,
-    totalCount: 0,
-  },
-  [EntityGroup.Projects]: {
-    completedCount: 0,
-    totalCount: 0,
-  },
-  [EntityGroup.Tasks]: {
-    completedCount: 0,
-    totalCount: 0,
-  },
-  [EntityGroup.TimeEntries]: {
-    completedCount: 0,
-    totalCount: 0,
-  },
-};
+  [EntityGroup.Clients]: 0,
+  [EntityGroup.Tags]: 0,
+  [EntityGroup.Projects]: 0,
+  [EntityGroup.Tasks]: 0,
+  [EntityGroup.TimeEntries]: 0,
+  [EntityGroup.UserGroups]: 0,
+  [EntityGroup.Users]: 0,
+} as CountsByEntityGroupModel;
 
 export const initialState: AllEntitiesState = {
   areEntitiesCreating: false,
@@ -107,6 +91,10 @@ export const allEntitiesReducer = createReducer<
       lastFetchTime: payload,
     }),
   )
+  .handleAction(allEntitiesActions.resetTransferCountsByEntityGroup, state => ({
+    ...state,
+    transferCountsByEntityGroup: { ...DEFAULT_TRANSFER_COUNTS },
+  }))
   .handleAction(
     allEntitiesActions.updateTransferCountsByEntityGroup,
     (state, { payload }) => ({
@@ -118,7 +106,7 @@ export const allEntitiesReducer = createReducer<
     allEntitiesActions.incrementEntityGroupTransferCompletedCount,
     (state, { payload }) =>
       R.over<AllEntitiesState>(
-        R.lensPath(["transferCountsByEntityGroup", payload, "completedCount"]),
+        R.lensPath(["transferCountsByEntityGroup", payload]),
         R.inc,
         state,
       ),

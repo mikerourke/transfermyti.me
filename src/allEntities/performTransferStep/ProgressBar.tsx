@@ -23,13 +23,18 @@ const Filler = styled.div(
   {
     borderRadius: "inherit",
     height: "100%",
-    transition: "width 0.2s ease-in",
+    transition: "width 0.5s ease-in",
   },
   ({ theme }) => ({
     background: theme.colors.success,
     boxShadow: theme.elevation.dp2,
   }),
 );
+
+const CountsLabel = styled.div({
+  fontSize: "1.125rem",
+  margin: "0.5rem 0 0 0.75rem",
+});
 
 interface Props extends React.HTMLProps<HTMLDivElement> {
   completedCount: number;
@@ -43,6 +48,10 @@ const ProgressBar: React.FC<Props> = ({
   title,
   ...props
 }) => {
+  if (totalCount === 0) {
+    return null;
+  }
+
   let percentage = (completedCount / totalCount) * 100;
   if (Number.isNaN(percentage)) {
     percentage = 0;
@@ -53,6 +62,9 @@ const ProgressBar: React.FC<Props> = ({
       <Bar>
         <Filler css={{ width: `${percentage}%` }} />
       </Bar>
+      <CountsLabel>
+        {completedCount} / {totalCount}
+      </CountsLabel>
     </div>
   );
 };

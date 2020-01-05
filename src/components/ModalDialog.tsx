@@ -31,11 +31,11 @@ const Container = styled.div(
     marginTop: "20%",
     maxWidth: "32rem",
     minWidth: "24rem",
-    padding: "1rem",
+    padding: "1.5rem",
     zIndex: 2,
 
     h2: {
-      margin: "1rem 0",
+      margin: "0 0 1.5rem",
     },
   },
   ({ theme }) => ({
@@ -44,12 +44,19 @@ const Container = styled.div(
   }),
 );
 
+const Description = styled.div({
+  p: {
+    margin: "1rem 0",
+  },
+});
+
 const ActionsRow = styled(Flex)({
-  marginTop: "1rem",
+  marginTop: "2rem",
 
   button: {
     fontSize: "1rem",
     padding: "0.25rem 0.75rem",
+    minWidth: "4rem",
 
     "&:not(:last-of-type)": {
       marginRight: "0.75rem",
@@ -60,7 +67,7 @@ const ActionsRow = styled(Flex)({
 interface Props {
   actions?: React.ReactNode;
   children: React.ReactNode;
-  isAlert?: boolean;
+  role?: "dialog" | "alertdialog";
   isOpen: boolean;
   title: string;
   onClose: VoidFunction;
@@ -74,7 +81,7 @@ const ModalPortal: React.FC = ({ children }) => {
 const ModalDialog: React.FC<Props> = ({
   actions,
   children,
-  isAlert,
+  role = "dialog",
   isOpen,
   title,
   onClose,
@@ -91,7 +98,7 @@ const ModalDialog: React.FC<Props> = ({
         css={{ display: isOpen ? "flex" : "none" }}
       >
         <Container
-          role={isAlert ? "alertdialog" : "dialog"}
+          role={role}
           id={modalId}
           aria-describedby={`${modalId}Desc`}
           aria-labelledby={`${modalId}Title`}
@@ -101,7 +108,7 @@ const ModalDialog: React.FC<Props> = ({
         >
           <div role="document">
             <h2 id={`${modalId}Title`}>{title}</h2>
-            <div id={`${modalId}Desc`}>{children}</div>
+            <Description id={`${modalId}Desc`}>{children}</Description>
             <ActionsRow justifyContent="flex-end">
               {actions ?? (
                 <Button variant="primary" onClick={onClose}>

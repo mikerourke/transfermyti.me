@@ -18,7 +18,9 @@ const Input = styled.input(
   {
     border: "none",
     borderRadius: "0.25rem",
-    fontSize: "1rem",
+    fontFamily: "monospace",
+    fontSize: "1.25rem",
+    marginBottom: "2rem",
     padding: "0.5rem",
     width: "100%",
   },

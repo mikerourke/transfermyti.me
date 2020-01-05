@@ -65,46 +65,44 @@ export const SelectSourceWorkspacesStepComponent: React.FC<Props> = props => {
   };
 
   return (
-    <>
-      <section>
-        <h1>Step 3: Select Source Workspaces</h1>
-        <HelpDetails>
-          Select which workspaces you would like to include in the transfer and
-          press the <strong>Next</strong> button to move on to the source data
-          selection step.
-        </HelpDetails>
-        {props.areWorkspacesFetching ? (
-          <Loader>Loading workspaces, please wait...</Loader>
-        ) : (
-          <Flex as="ul" css={{ listStyle: "none", padding: 0 }}>
-            {props.workspaces.map(workspace => (
-              <SourceWorkspaceCard
-                key={workspace.id}
-                workspace={workspace}
-                onToggleIncluded={props.onFlipIsWorkspaceIncluded}
-              />
-            ))}
-          </Flex>
-        )}
-        <NavigationButtonsRow
+    <section>
+      <h1>Step 3: Select Source Workspaces</h1>
+      <HelpDetails>
+        Select which workspaces you would like to include in the transfer and
+        press the <strong>Next</strong> button to move on to the source data
+        selection step.
+      </HelpDetails>
+      {props.areWorkspacesFetching ? (
+        <Loader>Loading workspaces, please wait...</Loader>
+      ) : (
+        <Flex as="ul" css={{ listStyle: "none", padding: 0 }}>
+          {props.workspaces.map(workspace => (
+            <SourceWorkspaceCard
+              key={workspace.id}
+              workspace={workspace}
+              onToggleIncluded={props.onFlipIsWorkspaceIncluded}
+            />
+          ))}
+        </Flex>
+      )}
+      <NavigationButtonsRow
+        disabled={props.areWorkspacesFetching}
+        onBackClick={handleBackClick}
+        onNextClick={handleNextClick}
+      >
+        <Button
+          variant="outline"
           disabled={props.areWorkspacesFetching}
-          onBackClick={handleBackClick}
-          onNextClick={handleNextClick}
+          onClick={() => () => props.onFetchWorkspaces()}
         >
-          <Button
-            variant="outline"
-            disabled={props.areWorkspacesFetching}
-            onClick={() => () => props.onFetchWorkspaces()}
-          >
-            Refresh
-          </Button>
-        </NavigationButtonsRow>
-      </section>
+          Refresh
+        </Button>
+      </NavigationButtonsRow>
       <NoWorkspacesModal
         isOpen={isErrorModalOpen}
         onClose={() => setIsErrorModalOpen(false)}
       />
-    </>
+    </section>
   );
 };
 

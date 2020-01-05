@@ -15,7 +15,7 @@ const Main = styled.main({
   height: "calc(100vh - 8rem)",
   margin: "0 auto",
   maxWidth: "56rem",
-  overflowY: "scroll",
+  overflowY: "auto",
   padding: "0 1.5rem 1.5rem",
   position: "relative",
 });

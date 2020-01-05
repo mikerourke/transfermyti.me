@@ -8,10 +8,7 @@ import {
   mappingByToolNameSelector,
 } from "~/app/appSelectors";
 import { validateCredentials } from "~/credentials/credentialsActions";
-import {
-  areApiKeysPresentSelector,
-  credentialsByMappingSelector,
-} from "~/credentials/credentialsSelectors";
+import { credentialsByMappingSelector } from "~/credentials/credentialsSelectors";
 import { TogglWorkspaceResponseModel } from "~/workspaces/sagas/togglWorkspacesSagas";
 import { ToolName } from "~/allEntities/allEntitiesTypes";
 import { RoutePath } from "~/app/appTypes";
@@ -31,6 +28,8 @@ interface TogglMeResponseModel {
   };
 }
 
+// TODO: Change to allow for deleting entries from tool.
+
 export function* validateCredentialsSaga(): SagaIterator {
   const credentialsByMapping = yield select(credentialsByMappingSelector);
   const mappingByToolName = yield select(mappingByToolNameSelector);
@@ -41,36 +40,35 @@ export function* validateCredentialsSaga(): SagaIterator {
   };
 
   const clockifyMapping = mappingByToolName[ToolName.Clockify];
-  try {
-    const clockifyUser = yield call(fetchObject, "/clockify/api/v1/user");
-    credentialsByMapping[clockifyMapping].email = clockifyUser.email;
-    credentialsByMapping[clockifyMapping].userId = clockifyUser.id;
-  } catch (err) {
-    validationErrorsByMapping[clockifyMapping] = "Invalid API key";
+  if (clockifyMapping) {
+    try {
+      const clockifyUser = yield call(fetchObject, "/clockify/api/v1/user");
+      credentialsByMapping[clockifyMapping].email = clockifyUser.email;
+      credentialsByMapping[clockifyMapping].userId = clockifyUser.id;
+    } catch (err) {
+      validationErrorsByMapping[clockifyMapping] = "Invalid API key";
+    }
   }
 
   const togglMapping = mappingByToolName[ToolName.Toggl];
-  try {
-    const { data }: TogglMeResponseModel = yield call(
-      fetchObject,
-      "/toggl/api/me",
-    );
-    credentialsByMapping[togglMapping].email = data.email;
-    credentialsByMapping[togglMapping].userId = data.id.toString();
-  } catch (err) {
-    validationErrorsByMapping[togglMapping] = "Invalid API key";
+  if (togglMapping) {
+    try {
+      const { data }: TogglMeResponseModel = yield call(
+        fetchObject,
+        "/toggl/api/me",
+      );
+      credentialsByMapping[togglMapping].email = data.email;
+      credentialsByMapping[togglMapping].userId = data.id.toString();
+    } catch (err) {
+      validationErrorsByMapping[togglMapping] = "Invalid API key";
+    }
   }
 
-  const areApiKeysPresent = yield select(areApiKeysPresentSelector);
   const currentPath = yield select(currentPathSelector);
   const hasNoValidationErrors = Object.values(
     validationErrorsByMapping,
   ).every(validationError => R.isNil(validationError));
-  if (
-    hasNoValidationErrors &&
-    areApiKeysPresent &&
-    R.equals(currentPath, RoutePath.EnterApiKeys)
-  ) {
+  if (hasNoValidationErrors && R.equals(currentPath, RoutePath.EnterApiKeys)) {
     yield put(push(RoutePath.SelectWorkspaces));
     yield put(validateCredentials.success(credentialsByMapping));
   } else {
