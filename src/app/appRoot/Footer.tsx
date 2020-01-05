@@ -24,6 +24,10 @@ const Root = styled.footer(
   ({ theme }) => ({
     background: theme.colors.primary,
     color: theme.colors.secondary,
+
+    "a:focus": {
+      outlineColor: theme.colors.secondary,
+    },
   }),
 );
 

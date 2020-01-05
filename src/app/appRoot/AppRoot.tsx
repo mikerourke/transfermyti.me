@@ -81,7 +81,7 @@ export const AppRootComponent: React.FC<Props> = props => {
             margin: 0,
           },
 
-          "#root": {
+          "#app": {
             margin: "0 auto",
             minHeight: "100vh",
           },

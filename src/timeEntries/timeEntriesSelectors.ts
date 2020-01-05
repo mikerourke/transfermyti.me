@@ -1,6 +1,5 @@
 import { createSelector, Selector } from "reselect";
 import * as R from "ramda";
-import { areExistsInTargetShownSelector } from "~/allEntities/allEntitiesSelectors";
 import { activeWorkspaceIdSelector } from "~/workspaces/workspacesSelectors";
 import { ReduxState } from "~/redux/reduxTypes";
 import { TimeEntryModel, TimeEntryTableViewModel } from "./timeEntriesTypes";
@@ -34,7 +33,7 @@ export const sourceTimeEntriesInActiveWorkspaceSelector = createSelector(
 );
 
 export const timeEntriesForTableViewSelector = createSelector(
-  areExistsInTargetShownSelector,
+  (state: ReduxState) => state.allEntities.areExistsInTargetShown,
   sourceTimeEntriesInActiveWorkspaceSelector,
   (state: ReduxState) => state.projects.source,
   (state: ReduxState) => state.tasks.source,

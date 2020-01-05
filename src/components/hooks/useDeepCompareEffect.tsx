@@ -1,5 +1,5 @@
-import React from "react";
 import * as R from "ramda";
+import React from "react";
 
 export function useDeepCompareEffect(
   callback: VoidFunction,

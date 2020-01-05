@@ -61,7 +61,7 @@
     ],
     "@typescript-eslint/no-use-before-define": [
       "error",
-      { "functions": false, "classes": true }
+      { "functions": false, "classes": false }
     ],
     "@typescript-eslint/no-var-requires": "off",
     "import/no-default-export": "error",

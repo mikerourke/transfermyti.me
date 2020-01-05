@@ -6,7 +6,7 @@ const Root = styled.nav({
   marginTop: "1rem",
 
   button: {
-    minWidth: "8rem",
+    minWidth: "6.5rem",
 
     ":not(:last-of-type)": {
       marginRight: "0.75rem",

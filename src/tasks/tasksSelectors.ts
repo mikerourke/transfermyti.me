@@ -1,6 +1,5 @@
 import { createSelector } from "reselect";
 import * as R from "ramda";
-import { areExistsInTargetShownSelector } from "~/allEntities/allEntitiesSelectors";
 import { sourceProjectsByIdSelector } from "~/projects/projectsSelectors";
 import { sourceTimeEntryCountByIdFieldSelectorFactory } from "~/timeEntries/timeEntriesSelectors";
 import { activeWorkspaceIdSelector } from "~/workspaces/workspacesSelectors";
@@ -42,7 +41,7 @@ export const sourceTasksInActiveWorkspaceSelector = createSelector(
 );
 
 export const tasksForTableViewSelector = createSelector(
-  areExistsInTargetShownSelector,
+  (state: ReduxState) => state.allEntities.areExistsInTargetShown,
   sourceTasksInActiveWorkspaceSelector,
   targetTasksByIdSelector,
   sourceProjectsByIdSelector,

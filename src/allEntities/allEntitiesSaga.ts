@@ -1,5 +1,5 @@
 import { SagaIterator } from "@redux-saga/types";
-import { all, call, put, takeEvery } from "redux-saga/effects";
+import { all, call, put, select, takeEvery } from "redux-saga/effects";
 import {
   createClientsSaga,
   fetchClientsSaga,
@@ -23,11 +23,18 @@ import {
 //   fetchUsersSaga,
 // } from "~/users/sagas/usersSagas";
 import {
+  calculateTransferCountsByEntityGroup,
   createAllEntities,
   fetchAllEntities,
   updateEntityGroupInProcess,
+  updateTransferCountsByEntityGroup,
 } from "./allEntitiesActions";
-import { EntityGroup } from "./allEntitiesTypes";
+import { includedCountsByEntityGroupSelector } from "./allEntitiesSelectors";
+import {
+  EntityGroup,
+  TransferCountsByEntityGroupModel,
+  TransferCountModel,
+} from "./allEntitiesTypes";
 
 /**
  * Creates or fetches all entities when the `request` action is dispatched.
@@ -39,7 +46,29 @@ export function* allEntitiesSaga(): SagaIterator {
   yield all([
     takeEvery(createAllEntities.request, createAllEntitiesSaga),
     takeEvery(fetchAllEntities.request, fetchAllEntitiesSaga),
+    takeEvery(
+      calculateTransferCountsByEntityGroup,
+      calculateTransferCountsSaga,
+    ),
   ]);
+}
+
+function* calculateTransferCountsSaga(): SagaIterator {
+  const includedCountsByEntityGroup = yield select(
+    includedCountsByEntityGroupSelector,
+  );
+
+  const transferCountsByEntityGroup: TransferCountsByEntityGroupModel = {};
+  for (const [entityGroup, totalCount] of Object.entries(
+    includedCountsByEntityGroup,
+  )) {
+    transferCountsByEntityGroup[entityGroup] = {
+      completedCount: 0,
+      totalCount,
+    } as TransferCountModel;
+  }
+
+  yield put(updateTransferCountsByEntityGroup(transferCountsByEntityGroup));
 }
 
 function* createAllEntitiesSaga(): SagaIterator {

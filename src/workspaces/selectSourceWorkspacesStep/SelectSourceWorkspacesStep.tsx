@@ -16,14 +16,15 @@ import {
   sourceWorkspacesSelector,
 } from "~/workspaces/workspacesSelectors";
 import { Flex, HelpDetails, Loader, NavigationButtonsRow } from "~/components";
+import NoWorkspacesModal from "./NoWorkspacesModal";
 import SourceWorkspaceCard from "./SourceWorkspaceCard";
-import { RoutePath, NotificationModel } from "~/app/appTypes";
+import { NotificationModel, RoutePath } from "~/app/appTypes";
 import { ReduxState } from "~/redux/reduxTypes";
 import { WorkspaceModel } from "~/workspaces/workspacesTypes";
 
 interface ConnectStateProps {
   areWorkspacesFetching: boolean;
-  countOfWorkspacesIncluded: number;
+  includedWorkspacesCount: number;
   workspaces: WorkspaceModel[];
 }
 
@@ -39,6 +40,10 @@ interface ConnectDispatchProps {
 type Props = ConnectStateProps & ConnectDispatchProps;
 
 export const SelectSourceWorkspacesStepComponent: React.FC<Props> = props => {
+  const [isErrorModalOpen, setIsErrorModalOpen] = React.useState<boolean>(
+    false,
+  );
+
   React.useEffect(() => {
     if (props.workspaces.length === 0) {
       props.onFetchWorkspaces();
@@ -50,51 +55,62 @@ export const SelectSourceWorkspacesStepComponent: React.FC<Props> = props => {
   };
 
   const handleNextClick = (): void => {
+    if (props.includedWorkspacesCount === 0) {
+      setIsErrorModalOpen(true);
+      return;
+    }
+
     props.onFetchAllEntities();
     props.onPush(RoutePath.SelectTransferData);
   };
 
   return (
-    <section>
-      <h1>Step 3: Select Source Workspaces</h1>
-      <HelpDetails>
-        Select which workspaces you would like to include in the transfer and
-        press the <strong>Next</strong> button to move on to the source data
-        selection step.
-      </HelpDetails>
-      {props.areWorkspacesFetching ? (
-        <Loader>Loading workspaces, please wait...</Loader>
-      ) : (
-        <Flex as="ul" css={{ listStyle: "none", padding: 0 }}>
-          {props.workspaces.map(workspace => (
-            <SourceWorkspaceCard
-              key={workspace.id}
-              workspace={workspace}
-              onToggleIncluded={props.onFlipIsWorkspaceIncluded}
-            />
-          ))}
-        </Flex>
-      )}
-      <NavigationButtonsRow
-        disabled={props.areWorkspacesFetching}
-        onBackClick={handleBackClick}
-        onNextClick={handleNextClick}
-      >
-        <Button
-          variant="outline"
+    <>
+      <section>
+        <h1>Step 3: Select Source Workspaces</h1>
+        <HelpDetails>
+          Select which workspaces you would like to include in the transfer and
+          press the <strong>Next</strong> button to move on to the source data
+          selection step.
+        </HelpDetails>
+        {props.areWorkspacesFetching ? (
+          <Loader>Loading workspaces, please wait...</Loader>
+        ) : (
+          <Flex as="ul" css={{ listStyle: "none", padding: 0 }}>
+            {props.workspaces.map(workspace => (
+              <SourceWorkspaceCard
+                key={workspace.id}
+                workspace={workspace}
+                onToggleIncluded={props.onFlipIsWorkspaceIncluded}
+              />
+            ))}
+          </Flex>
+        )}
+        <NavigationButtonsRow
           disabled={props.areWorkspacesFetching}
-          onClick={() => () => props.onFetchWorkspaces()}
+          onBackClick={handleBackClick}
+          onNextClick={handleNextClick}
         >
-          Refresh
-        </Button>
-      </NavigationButtonsRow>
-    </section>
+          <Button
+            variant="outline"
+            disabled={props.areWorkspacesFetching}
+            onClick={() => () => props.onFetchWorkspaces()}
+          >
+            Refresh
+          </Button>
+        </NavigationButtonsRow>
+      </section>
+      <NoWorkspacesModal
+        isOpen={isErrorModalOpen}
+        onClose={() => setIsErrorModalOpen(false)}
+      />
+    </>
   );
 };
 
 const mapStateToProps = (state: ReduxState): ConnectStateProps => ({
   areWorkspacesFetching: areWorkspacesFetchingSelector(state),
-  countOfWorkspacesIncluded: sourceIncludedWorkspacesCountSelector(state),
+  includedWorkspacesCount: sourceIncludedWorkspacesCountSelector(state),
   workspaces: sourceWorkspacesSelector(state),
 });
 

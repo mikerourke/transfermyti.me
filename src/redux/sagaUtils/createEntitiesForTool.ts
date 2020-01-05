@@ -2,10 +2,7 @@
 import { SagaIterator } from "@redux-saga/types";
 import * as R from "ramda";
 import { call, delay, put, select } from "redux-saga/effects";
-import {
-  incrementEntityGroupTransferCompletedCount,
-  updateEntityGroupTransferTotalCount,
-} from "~/allEntities/allEntitiesActions";
+import { incrementEntityGroupTransferCompletedCount } from "~/allEntities/allEntitiesActions";
 import { workspaceIdToLinkedIdSelector } from "~/workspaces/workspacesSelectors";
 import { getApiDelayForTool } from "./fetchActions";
 import {
@@ -28,12 +25,8 @@ export function* createEntitiesForTool<TEntity>({
   const validSourceRecords = sourceRecords as ValidEntity[];
   const apiDelay = getApiDelayForTool(toolName);
 
-  const entityGroup = yield call(
-    updateTransferCountTotalForEntityGroup,
-    validSourceRecords,
-  );
-
   for (const sourceRecord of validSourceRecords) {
+    const entityGroup = sourceRecord.memberOf as EntityGroup;
     const targetWorkspaceId = yield call(
       findTargetWorkspaceId,
       sourceRecord.workspaceId,
@@ -58,22 +51,6 @@ export function* createEntitiesForTool<TEntity>({
   }
 
   return targetRecords;
-}
-
-function* updateTransferCountTotalForEntityGroup<TEntity>(
-  sourceRecords: (TEntity & BaseEntityModel)[],
-): SagaIterator<EntityGroup> {
-  const [firstRecord] = sourceRecords;
-  const entityGroup = firstRecord.memberOf as EntityGroup;
-
-  yield put(
-    updateEntityGroupTransferTotalCount({
-      entityGroup,
-      totalCount: sourceRecords.length,
-    }),
-  );
-
-  return entityGroup;
 }
 
 function* findTargetWorkspaceId(

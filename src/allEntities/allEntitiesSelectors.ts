@@ -1,7 +1,15 @@
 import { createSelector } from "reselect";
+import { includedSourceClientsSelector } from "~/clients/clientsSelectors";
+import { includedSourceProjectsSelector } from "~/projects/projectsSelectors";
+import { includedSourceTagsSelector } from "~/tags/tagsSelectors";
+import { includedSourceTasksSelector } from "~/tasks/tasksSelectors";
+import { includedSourceTimeEntriesSelector } from "~/timeEntries/timeEntriesSelectors";
 import { getEntityGroupDisplay } from "~/utils";
 import { ReduxState } from "~/redux/reduxTypes";
-import { TransferCountsByEntityGroupModel } from "./allEntitiesTypes";
+import {
+  EntityGroup,
+  TransferCountsByEntityGroupModel,
+} from "./allEntitiesTypes";
 
 export const areEntitiesCreatingSelector = (state: ReduxState): boolean =>
   state.allEntities.areEntitiesCreating;
@@ -22,4 +30,37 @@ export const transferCountsByEntityGroupSelector = createSelector(
   (state: ReduxState) => state.allEntities.transferCountsByEntityGroup,
   (transferCountsByEntityGroup): TransferCountsByEntityGroupModel =>
     transferCountsByEntityGroup,
+);
+
+export const includedCountsByEntityGroupSelector = createSelector(
+  includedSourceClientsSelector,
+  includedSourceTagsSelector,
+  includedSourceProjectsSelector,
+  includedSourceTasksSelector,
+  includedSourceTimeEntriesSelector,
+  (
+    sourceClients,
+    sourceTags,
+    sourceProjects,
+    sourceTasks,
+    sourceTimeEntries,
+  ): Record<EntityGroup, number> =>
+    ({
+      [EntityGroup.Clients]: sourceClients.length,
+      [EntityGroup.Tags]: sourceTags.length,
+      [EntityGroup.Projects]: sourceProjects.length,
+      [EntityGroup.Tasks]: sourceTasks.length,
+      [EntityGroup.TimeEntries]: sourceTimeEntries.length,
+      [EntityGroup.UserGroups]: 0,
+      [EntityGroup.Users]: 0,
+    } as Record<EntityGroup, number>),
+);
+
+export const totalIncludedRecordsCountSelector = createSelector(
+  includedCountsByEntityGroupSelector,
+  (includedCountsByEntityGroup): number =>
+    Object.values(includedCountsByEntityGroup).reduce(
+      (acc, recordCount) => acc + recordCount,
+      0,
+    ),
 );

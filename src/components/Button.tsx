@@ -15,7 +15,7 @@ const Root = styled.button({
   borderRadius: "0.25rem",
   fontSize: "1.25rem",
   fontWeight: 400,
-  padding: "0.5rem 1.75rem",
+  padding: "0.5rem 0.75rem",
   textAlign: "center",
   verticalAlign: "middle",
 });
@@ -59,9 +59,15 @@ const Button: React.FC<ButtonProps> = ({
             : mainColor.darken(0.1).hex(),
           textDecoration: disabled ? "none" : "underline",
         },
+
+        "&:focus": {
+          outlineColor:
+            variant === "secondary" ? colors.secondary : colors.primary,
+        },
       }}
       disabled={disabled}
       onClick={disabled ? undefined : onClick}
+      type="button"
       {...props}
     />
   );

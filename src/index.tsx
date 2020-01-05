@@ -16,5 +16,5 @@ render(
   <Provider store={store}>
     <Routes history={history} />
   </Provider>,
-  document.getElementById("root"),
+  document.getElementById("app"),
 );

@@ -108,24 +108,18 @@ export const allEntitiesReducer = createReducer<
     }),
   )
   .handleAction(
+    allEntitiesActions.updateTransferCountsByEntityGroup,
+    (state, { payload }) => ({
+      ...state,
+      transferCountsByEntityGroup: payload,
+    }),
+  )
+  .handleAction(
     allEntitiesActions.incrementEntityGroupTransferCompletedCount,
     (state, { payload }) =>
       R.over<AllEntitiesState>(
         R.lensPath(["transferCountsByEntityGroup", payload, "completedCount"]),
         R.inc,
-        state,
-      ),
-  )
-  .handleAction(
-    allEntitiesActions.updateEntityGroupTransferTotalCount,
-    (state, { payload }) =>
-      R.set<AllEntitiesState, number>(
-        R.lensPath([
-          "transferCountsByEntityGroup",
-          payload.entityGroup,
-          "totalCount",
-        ]),
-        payload.totalCount,
         state,
       ),
   );

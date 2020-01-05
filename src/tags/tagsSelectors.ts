@@ -1,6 +1,5 @@
 import { createSelector, createStructuredSelector, Selector } from "reselect";
 import * as R from "ramda";
-import { areExistsInTargetShownSelector } from "~/allEntities/allEntitiesSelectors";
 import { mappingByToolNameSelector } from "~/app/appSelectors";
 import { sourceTimeEntryCountByTagIdSelector } from "~/timeEntries/timeEntriesSelectors";
 import { activeWorkspaceIdSelector } from "~/workspaces/workspacesSelectors";
@@ -39,7 +38,7 @@ const tagsByMappingSelector = createStructuredSelector<
   target: targetTagsSelector,
 });
 
-const includedSourceTagsSelector = createSelector(
+export const includedSourceTagsSelector = createSelector(
   sourceTagsSelector,
   (sourceTags): TagModel[] =>
     sourceTags.filter(sourceTag => sourceTag.isIncluded),
@@ -59,7 +58,7 @@ const sourceTagsInActiveWorkspaceSelector = createSelector(
 );
 
 export const tagsForTableViewSelector = createSelector(
-  areExistsInTargetShownSelector,
+  (state: ReduxState) => state.allEntities.areExistsInTargetShown,
   sourceTagsInActiveWorkspaceSelector,
   sourceTimeEntryCountByTagIdSelector,
   (

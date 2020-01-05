@@ -1,0 +1,119 @@
+import Color from "color";
+import cuid from "cuid";
+import React from "react";
+import { createPortal } from "react-dom";
+import Button from "./Button";
+import Flex from "./Flex";
+import { styled } from "./emotion";
+import { useModalAccessibility } from "./hooks";
+
+const Backdrop = styled(Flex)(
+  {
+    position: "fixed",
+    top: 0,
+    left: 0,
+    right: 0,
+    bottom: 0,
+    overflowY: "hidden",
+    zIndex: 1,
+  },
+  ({ theme }) => ({
+    background: Color(theme.colors.midnight)
+      .alpha(0.9)
+      .hsl()
+      .string(),
+  }),
+);
+
+const Container = styled.div(
+  {
+    borderRadius: "0.25rem",
+    marginTop: "20%",
+    maxWidth: "32rem",
+    minWidth: "24rem",
+    padding: "1rem",
+    zIndex: 2,
+
+    h2: {
+      margin: "1rem 0",
+    },
+  },
+  ({ theme }) => ({
+    background: theme.colors.secondary,
+    boxShadow: theme.elevation.dp8,
+  }),
+);
+
+const ActionsRow = styled(Flex)({
+  marginTop: "1rem",
+
+  button: {
+    fontSize: "1rem",
+    padding: "0.25rem 0.75rem",
+
+    "&:not(:last-of-type)": {
+      marginRight: "0.75rem",
+    },
+  },
+});
+
+interface Props {
+  actions?: React.ReactNode;
+  children: React.ReactNode;
+  isAlert?: boolean;
+  isOpen: boolean;
+  title: string;
+  onClose: VoidFunction;
+}
+
+const ModalPortal: React.FC = ({ children }) => {
+  const modalsContainer = document.querySelector("#modals") as HTMLDivElement;
+  return createPortal(children, modalsContainer);
+};
+
+const ModalDialog: React.FC<Props> = ({
+  actions,
+  children,
+  isAlert,
+  isOpen,
+  title,
+  onClose,
+  ...props
+}) => {
+  const modalId = cuid.slug();
+  useModalAccessibility(isOpen, onClose);
+
+  return (
+    <ModalPortal>
+      <Backdrop
+        alignItems="flex-start"
+        justifyContent="center"
+        css={{ display: isOpen ? "flex" : "none" }}
+      >
+        <Container
+          role={isAlert ? "alertdialog" : "dialog"}
+          id={modalId}
+          aria-describedby={`${modalId}Desc`}
+          aria-labelledby={`${modalId}Title`}
+          aria-hidden={!isOpen}
+          aria-modal
+          {...props}
+        >
+          <div role="document">
+            <h2 id={`${modalId}Title`}>{title}</h2>
+            <div id={`${modalId}Desc`}>{children}</div>
+            <ActionsRow justifyContent="flex-end">
+              {actions ?? (
+                <Button variant="primary" onClick={onClose}>
+                  OK
+                </Button>
+              )}
+            </ActionsRow>
+          </div>
+        </Container>
+      </Backdrop>
+    </ModalPortal>
+  );
+};
+
+export default ModalDialog;

@@ -1,6 +1,5 @@
 import { createSelector, createStructuredSelector, Selector } from "reselect";
 import * as R from "ramda";
-import { areExistsInTargetShownSelector } from "~/allEntities/allEntitiesSelectors";
 import { mappingByToolNameSelector } from "~/app/appSelectors";
 import { sourceTimeEntryCountByIdFieldSelectorFactory } from "~/timeEntries/timeEntriesSelectors";
 import { activeWorkspaceIdSelector } from "~/workspaces/workspacesSelectors";
@@ -80,7 +79,7 @@ const projectCountBySourceClientIdSelector = createSelector(
 );
 
 export const clientsForTableViewSelector = createSelector(
-  areExistsInTargetShownSelector,
+  (state: ReduxState) => state.allEntities.areExistsInTargetShown,
   sourceClientsInActiveWorkspaceSelector,
   projectCountBySourceClientIdSelector,
   sourceTimeEntryCountByIdFieldSelectorFactory("clientId"),

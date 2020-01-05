@@ -1,5 +1,8 @@
 import { createAction, createAsyncAction } from "typesafe-actions";
-import { EntityGroup } from "./allEntitiesTypes";
+import {
+  EntityGroup,
+  TransferCountsByEntityGroupModel,
+} from "./allEntitiesTypes";
 
 export const createAllEntities = createAsyncAction(
   "@allEntities/CREATE_ALL_ENTITIES_REQUEST",
@@ -25,9 +28,13 @@ export const updateLastFetchTime = createAction(
   "@allEntities/UPDATE_LAST_FETCH_TIME",
 )<Date | null>();
 
-export const updateEntityGroupTransferTotalCount = createAction(
-  "@allEntities/UPDATE_ENTITY_GROUP_TRANSFER_TOTAL_COUNT",
-)<{ entityGroup: EntityGroup; totalCount: number }>();
+export const calculateTransferCountsByEntityGroup = createAction(
+  "@allEntities/CALCULATE_TRANSFER_COUNTS_BY_ENTITY_GROUP",
+)<void>();
+
+export const updateTransferCountsByEntityGroup = createAction(
+  "@allEntities/UPDATE_TRANSFER_COUNTS_BY_ENTITY_GROUP",
+)<TransferCountsByEntityGroupModel>();
 
 export const incrementEntityGroupTransferCompletedCount = createAction(
   "@allEntities/INCREMENT_ENTITY_GROUP_TRANSFER_COMPLETED_COUNT",

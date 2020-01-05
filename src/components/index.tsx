@@ -13,6 +13,6 @@ export { default as HelpDetails } from "./HelpDetails";
 export { default as Icon } from "./Icon";
 export { default as Loader } from "./Loader";
 export { default as LoadingMessage } from "./LoadingMessage";
-export { default as Modal } from "./Modal";
+export { default as ModalDialog } from "./ModalDialog";
 export { default as NavigationButtonsRow } from "./NavigationButtonsRow";
 export { default as Toggle } from "./Toggle";
