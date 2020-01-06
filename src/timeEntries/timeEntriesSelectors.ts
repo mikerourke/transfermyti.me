@@ -32,7 +32,7 @@ export const sourceTimeEntriesInActiveWorkspaceSelector = createSelector(
     ),
 );
 
-export const timeEntriesForTableViewSelector = createSelector(
+export const timeEntriesForInclusionsTableSelector = createSelector(
   (state: ReduxState) => state.allEntities.areExistsInTargetShown,
   sourceTimeEntriesInActiveWorkspaceSelector,
   (state: ReduxState) => state.projects.source,
@@ -78,8 +78,8 @@ export const timeEntriesForTableViewSelector = createSelector(
     }, [] as TimeEntryTableViewModel[]),
 );
 
-export const includedTimeEntriesTotalCountForTableViewSelector = createSelector(
-  timeEntriesForTableViewSelector,
+export const timeEntriesTotalCountForInclusionsTableSelector = createSelector(
+  timeEntriesForInclusionsTableSelector,
   (timeEntriesForTableView): number =>
     timeEntriesForTableView.reduce(
       (acc, timeEntry) => acc + (timeEntry.isIncluded ? 1 : 0),

@@ -1,12 +1,15 @@
 import React from "react";
 import { connect } from "react-redux";
 import { PayloadActionCreator } from "typesafe-actions";
-import { flipIsTagIncluded, updateIfAllTagsIncluded } from "~/tags/tagsActions";
 import {
-  tagsForTableViewSelector,
+  updateAreAllTagsIncluded,
+  flipIsTagIncluded,
+} from "~/tags/tagsActions";
+import {
+  tagsForInclusionTableSelector,
   tagsTotalCountsByTypeSelector,
 } from "~/tags/tagsSelectors";
-import { EntityListPanel } from "~/components";
+import { EntityGroupInclusionsPanel } from "~/components";
 import { EntityGroup, TableViewModel } from "~/allEntities/allEntitiesTypes";
 import { ReduxState } from "~/redux/reduxTypes";
 import { TagModel } from "~/tags/tagsTypes";
@@ -18,13 +21,13 @@ interface ConnectStateProps {
 
 interface ConnectDispatchProps {
   onFlipIsIncluded: PayloadActionCreator<string, string>;
-  onUpdateIfAllIncluded: PayloadActionCreator<string, boolean>;
+  onUpdateAreAllIncluded: PayloadActionCreator<string, boolean>;
 }
 
 type Props = ConnectStateProps & ConnectDispatchProps;
 
-export const TagsTableComponent: React.FC<Props> = props => (
-  <EntityListPanel
+export const TagsInclusionsPanelComponent: React.FC<Props> = props => (
+  <EntityGroupInclusionsPanel
     entityGroup={EntityGroup.Tags}
     rowNumber={2}
     tableData={props.tags}
@@ -34,18 +37,21 @@ export const TagsTableComponent: React.FC<Props> = props => (
     ]}
     totalCountsByType={props.totalCountsByType}
     onFlipIsIncluded={props.onFlipIsIncluded}
-    onUpdateIfAllIncluded={props.onUpdateIfAllIncluded}
+    onUpdateAreAllIncluded={props.onUpdateAreAllIncluded}
   />
 );
 
 const mapStateToProps = (state: ReduxState): ConnectStateProps => ({
-  tags: tagsForTableViewSelector(state),
+  tags: tagsForInclusionTableSelector(state),
   totalCountsByType: tagsTotalCountsByTypeSelector(state),
 });
 
 const mapDispatchToProps: ConnectDispatchProps = {
   onFlipIsIncluded: flipIsTagIncluded,
-  onUpdateIfAllIncluded: updateIfAllTagsIncluded,
+  onUpdateAreAllIncluded: updateAreAllTagsIncluded,
 };
 
-export default connect(mapStateToProps, mapDispatchToProps)(TagsTableComponent);
+export default connect(
+  mapStateToProps,
+  mapDispatchToProps,
+)(TagsInclusionsPanelComponent);

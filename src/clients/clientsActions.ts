@@ -14,10 +14,10 @@ export const fetchClients = createAsyncAction(
   "@clients/FETCH_CLIENTS_FAILURE",
 )<void, Record<Mapping, ClientsByIdModel>, void>();
 
-export const updateIfAllClientsIncluded = createAction(
-  "@clients/UPDATE_IF_ALL_INCLUDED",
-)<boolean>();
-
 export const flipIsClientIncluded = createAction("@clients/FLIP_IS_INCLUDED")<
   string
 >();
+
+export const updateAreAllClientsIncluded = createAction(
+  "@clients/UPDATE_ARE_ALL_INCLUDED",
+)<boolean>();

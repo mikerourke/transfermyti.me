@@ -28,19 +28,24 @@ export const includedSourceTasksSelector = createSelector(
     sourceTasks.filter(sourceTask => sourceTask.isIncluded),
 );
 
+export const includedSourceTasksCountSelector = createSelector(
+  includedSourceTasksSelector,
+  includedSourceTasks => includedSourceTasks.length,
+);
+
 export const sourceTasksForTransferSelector = createSelector(
   includedSourceTasksSelector,
   sourceTasks => sourceTasks.filter(sourceTask => R.isNil(sourceTask.linkedId)),
 );
 
 export const sourceTasksInActiveWorkspaceSelector = createSelector(
-  sourceTasksSelector,
   activeWorkspaceIdSelector,
-  (sourceTasks, workspaceId): TaskModel[] =>
+  sourceTasksSelector,
+  (workspaceId, sourceTasks): TaskModel[] =>
     sourceTasks.filter(task => task.workspaceId === workspaceId),
 );
 
-export const tasksForTableViewSelector = createSelector(
+export const tasksForInclusionsTableSelector = createSelector(
   (state: ReduxState) => state.allEntities.areExistsInTargetShown,
   sourceTasksInActiveWorkspaceSelector,
   targetTasksByIdSelector,
@@ -86,7 +91,7 @@ export const tasksForTableViewSelector = createSelector(
 );
 
 export const tasksTotalCountsByTypeSelector = createSelector(
-  tasksForTableViewSelector,
+  tasksForInclusionsTableSelector,
   tasksForTableView =>
     tasksForTableView.reduce(
       (
@@ -98,18 +103,16 @@ export const tasksTotalCountsByTypeSelector = createSelector(
           isActiveInTarget,
         }: TableViewModel<TaskModel>,
       ) => ({
-        entryCountTotal: acc.entryCountTotal + entryCount,
-        activeInSourceTotal:
-          acc.activeInSourceTotal + (isActiveInSource ? 1 : 0),
-        activeInTargetTotal:
-          acc.activeInSourceTotal + (isActiveInTarget ? 1 : 0),
-        inclusionCountTotal: acc.inclusionCountTotal + (isIncluded ? 1 : 0),
+        entries: acc.entries + entryCount,
+        activeInSource: acc.activeInSource + (isActiveInSource ? 1 : 0),
+        activeInTarget: acc.activeInSource + (isActiveInTarget ? 1 : 0),
+        inclusions: acc.inclusions + (isIncluded ? 1 : 0),
       }),
       {
-        entryCountTotal: 0,
-        activeInSourceTotal: 0,
-        activeInTargetTotal: 0,
-        inclusionCountTotal: 0,
+        entries: 0,
+        activeInSource: 0,
+        activeInTarget: 0,
+        inclusions: 0,
       },
     ),
 );

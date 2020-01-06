@@ -1,24 +1,24 @@
 import React from "react";
 import { ExternalLink, Icon, styled } from "~/components";
 
-const Root = styled.footer(
+const Base = styled.footer(
   {
     position: "fixed",
     right: 0,
     bottom: 0,
     left: 0,
-    padding: "0 2rem",
     display: "flex",
     alignItems: "center",
     justifyContent: "space-between",
     height: "5rem",
-
-    p: {
-      margin: 0,
-    },
+    padding: "0 2rem",
 
     a: {
       textDecoration: "underline",
+    },
+
+    p: {
+      margin: 0,
     },
   },
   ({ theme }) => ({
@@ -55,7 +55,7 @@ const LinkToIssues: React.FC = () => (
 );
 
 const Footer: React.FC = () => (
-  <Root>
+  <Base>
     <div>
       <p>
         Made with
@@ -72,7 +72,7 @@ const Footer: React.FC = () => (
         Please file any issues <LinkToIssues />.
       </p>
     </RightColumn>
-  </Root>
+  </Base>
 );
 
 export default Footer;

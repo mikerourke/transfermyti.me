@@ -3,13 +3,13 @@ import { connect } from "react-redux";
 import { PayloadActionCreator } from "typesafe-actions";
 import {
   flipIsProjectIncluded,
-  updateIfAllProjectsIncluded,
+  updateAreAllProjectsIncluded,
 } from "~/projects/projectsActions";
 import {
-  projectsForTableViewSelector,
+  projectsForInclusionsTableSelector,
   projectsTotalCountsByTypeSelector,
 } from "~/projects/projectsSelectors";
-import { EntityListPanel } from "~/components";
+import { EntityGroupInclusionsPanel } from "~/components";
 import { EntityGroup, TableViewModel } from "~/allEntities/allEntitiesTypes";
 import { ProjectModel } from "~/projects/projectsTypes";
 import { ReduxState } from "~/redux/reduxTypes";
@@ -21,13 +21,13 @@ interface ConnectStateProps {
 
 interface ConnectDispatchProps {
   onFlipIsIncluded: PayloadActionCreator<string, string>;
-  onUpdateIfAllIncluded: PayloadActionCreator<string, boolean>;
+  onUpdateAreAllIncluded: PayloadActionCreator<string, boolean>;
 }
 
 type Props = ConnectStateProps & ConnectDispatchProps;
 
-export const ProjectsTableComponent: React.FC<Props> = props => (
-  <EntityListPanel
+export const ProjectsInclusionsPanelComponent: React.FC<Props> = props => (
+  <EntityGroupInclusionsPanel
     entityGroup={EntityGroup.Projects}
     rowNumber={3}
     tableData={props.projects}
@@ -39,21 +39,21 @@ export const ProjectsTableComponent: React.FC<Props> = props => (
     ]}
     totalCountsByType={props.totalCountsByType}
     onFlipIsIncluded={props.onFlipIsIncluded}
-    onUpdateIfAllIncluded={props.onUpdateIfAllIncluded}
+    onUpdateAreAllIncluded={props.onUpdateAreAllIncluded}
   />
 );
 
 const mapStateToProps = (state: ReduxState): ConnectStateProps => ({
-  projects: projectsForTableViewSelector(state),
+  projects: projectsForInclusionsTableSelector(state),
   totalCountsByType: projectsTotalCountsByTypeSelector(state),
 });
 
 const mapDispatchToProps: ConnectDispatchProps = {
+  onUpdateAreAllIncluded: updateAreAllProjectsIncluded,
   onFlipIsIncluded: flipIsProjectIncluded,
-  onUpdateIfAllIncluded: updateIfAllProjectsIncluded,
 };
 
 export default connect(
   mapStateToProps,
   mapDispatchToProps,
-)(ProjectsTableComponent);
+)(ProjectsInclusionsPanelComponent);

@@ -76,6 +76,7 @@ export const PerformTransferStepComponent: React.FC<Props> = props => {
     props.onCreateAllEntities();
   };
 
+  // TODO: Fix this so it shows if an error has occurred.
   if (wasTransferStarted && !props.areEntitiesCreating) {
     return <TransferSuccess />;
   }
@@ -84,7 +85,11 @@ export const PerformTransferStepComponent: React.FC<Props> = props => {
     <section>
       <h1>Step 5: Perform Transfer</h1>
       <HelpDetails>
-        Press the <strong>Start Transfer</strong> button to start the transfer.
+        <p>
+          Press the <strong>Start Transfer</strong> button to start the
+          transfer.
+        </p>
+        <p>Note: this could take several minutes due to API rate limiting.</p>
       </HelpDetails>
       <Flex direction="column">
         {Object.keys(totalCountsByEntityGroup).map(entityGroup => (

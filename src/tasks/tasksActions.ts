@@ -14,10 +14,15 @@ export const fetchTasks = createAsyncAction(
   "@tasks/FETCH_TASKS_FAILURE",
 )<void, Record<Mapping, TasksByIdModel>, void>();
 
-export const updateIfAllTasksIncluded = createAction(
-  "@tasks/UPDATE_IF_ALL_INCLUDED",
-)<boolean>();
-
 export const flipIsTaskIncluded = createAction("@tasks/FLIP_IS_INCLUDED")<
   string
 >();
+
+export const updateAreAllTasksIncluded = createAction(
+  "@tasks/UPDATE_ARE_ALL_INCLUDED",
+)<boolean>();
+
+export const updateIsTaskIncluded = createAction("@tasks/UPDATE_IS_INCLUDED")<{
+  id: string;
+  isIncluded: boolean;
+}>();

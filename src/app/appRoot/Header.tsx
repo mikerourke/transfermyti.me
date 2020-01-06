@@ -1,14 +1,16 @@
 import React from "react";
+import { Link } from "react-router-dom";
 import { styled } from "~/components";
+import { RoutePath } from "~/app/appTypes";
 
-const Root = styled.header(
+const Base = styled.header(
   {
     display: "flex",
     alignItems: "center",
     justifyContent: "space-between",
     height: "3rem",
-    width: "100%",
     padding: "0 1rem",
+    width: "100%",
   },
   ({ theme }) => ({
     background: theme.colors.primary,
@@ -17,9 +19,14 @@ const Root = styled.header(
 );
 
 const Header: React.FC = () => (
-  <Root>
-    <span css={{ fontSize: "1.5rem" }}>transfermyti.me</span>
-  </Root>
+  <Base>
+    <Link
+      css={theme => ({ color: theme.colors.secondary, fontSize: "1.5rem" })}
+      to={RoutePath.PickTransferAction}
+    >
+      transfermyti.me
+    </Link>
+  </Base>
 );
 
 export default Header;

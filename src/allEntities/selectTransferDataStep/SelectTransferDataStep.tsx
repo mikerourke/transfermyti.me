@@ -13,22 +13,22 @@ import {
   entityGroupInProcessDisplaySelector,
   totalIncludedRecordsCountSelector,
 } from "~/allEntities/allEntitiesSelectors";
-import NoSelectionsModal from "~/allEntities/selectTransferDataStep/NoSelectionsModal";
-import Button from "~/components/Button";
 import { activeWorkspaceIdSelector } from "~/workspaces/workspacesSelectors";
-import ClientsTable from "~/clients/clientsTable/ClientsTable";
-import ProjectsTable from "~/projects/projectsTable/ProjectsTable";
-import TagsTable from "~/tags/tagsTable/TagsTable";
-import TasksTable from "~/tasks/tasksTable/TasksTable";
-import TimeEntriesTable from "~/timeEntries/timeEntriesTable/TimeEntriesTable";
+import ClientsInclusionsPanel from "~/clients/clientsInclusionsPanel/ClientsInclusionsPanel";
+import ProjectsInclusionsPanel from "~/projects/projectsInclusionsPanel/ProjectsInclusionsPanel";
+import TagsInclusionsPanel from "~/tags/tagsInclusionsPanel/TagsInclusionsPanel";
+import TasksInclusionsPanel from "~/tasks/tasksInclusionsPanel/TasksInclusionsPanel";
+import TimeEntriesInclusionsPanel from "~/timeEntries/timeEntriesInclusionsPanel/TimeEntriesInclusionsPanel";
 import {
   Accordion,
+  Button,
   HelpDetails,
   Loader,
   LoadingMessage,
   NavigationButtonsRow,
 } from "~/components";
 import ActiveWorkspaceSelect from "./ActiveWorkspaceSelect";
+import NoSelectionsModal from "./NoSelectionsModal";
 import ShowExistingToggle from "./ShowExistingToggle";
 import { RoutePath } from "~/app/appTypes";
 import { ReduxState } from "~/redux/reduxTypes";
@@ -109,11 +109,11 @@ export const SelectTransferDataStepComponent: React.FC<Props> = props => {
             />
             <h2>Workspace Records</h2>
             <Accordion css={{ marginBottom: "2rem" }}>
-              <ClientsTable />
-              <TagsTable />
-              <ProjectsTable />
-              <TasksTable />
-              <TimeEntriesTable />
+              <ClientsInclusionsPanel />
+              <TagsInclusionsPanel />
+              <ProjectsInclusionsPanel />
+              <TasksInclusionsPanel />
+              <TimeEntriesInclusionsPanel />
             </Accordion>
           </div>
         )}

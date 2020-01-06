@@ -11,6 +11,8 @@ import { initialState as initialCredentialsState } from "~/credentials/credentia
 import { allEntitiesSaga } from "~/allEntities/allEntitiesSaga";
 import { appSaga } from "~/app/appSaga";
 import { credentialsSaga } from "~/credentials/sagas/credentialsSaga";
+import { projectMonitoringSaga } from "~/projects/sagas/projectsSagas";
+import { taskMonitoringSaga } from "~/tasks/sagas/tasksSagas";
 import { workspacesSaga } from "~/workspaces/sagas/workspacesSaga";
 import { createRootReducer, RouterReducer } from "./rootReducer";
 import { ReduxState, ReduxStore } from "./reduxTypes";
@@ -51,6 +53,8 @@ export function configureStore(history: History): ReduxStore {
   sagaMiddleware.run(allEntitiesSaga);
   sagaMiddleware.run(appSaga);
   sagaMiddleware.run(credentialsSaga);
+  sagaMiddleware.run(projectMonitoringSaga);
+  sagaMiddleware.run(taskMonitoringSaga);
   sagaMiddleware.run(workspacesSaga);
 
   if (IS_USING_LOCAL_API) {

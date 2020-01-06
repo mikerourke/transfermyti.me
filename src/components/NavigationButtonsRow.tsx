@@ -2,10 +2,11 @@ import React from "react";
 import Button from "./Button";
 import { styled } from "./emotion";
 
-const Root = styled.nav({
+const Base = styled.nav({
   marginTop: "1rem",
 
   button: {
+    minHeight: "3rem",
     minWidth: "6.5rem",
 
     ":not(:last-of-type)": {
@@ -16,6 +17,7 @@ const Root = styled.nav({
 
 interface Props {
   disabled?: boolean;
+  loading?: boolean;
   nextLabel?: string;
   onBackClick: VoidFunction;
   onNextClick: VoidFunction;
@@ -23,21 +25,27 @@ interface Props {
 
 const NavigationButtonsRow: React.FC<Props> = ({
   disabled = false,
+  loading = false,
   nextLabel = "Next",
   children,
   onBackClick,
   onNextClick,
   ...props
 }) => (
-  <Root {...props}>
+  <Base {...props}>
     <Button variant="default" disabled={disabled} onClick={onBackClick}>
       Back
     </Button>
-    <Button variant="primary" disabled={disabled} onClick={onNextClick}>
+    <Button
+      variant="primary"
+      disabled={disabled}
+      loading={loading}
+      onClick={onNextClick}
+    >
       {nextLabel}
     </Button>
     {children}
-  </Root>
+  </Base>
 );
 
 export default NavigationButtonsRow;

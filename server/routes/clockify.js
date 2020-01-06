@@ -5,7 +5,7 @@ const { find, get, isNil, uniqueId } = require("lodash");
 const dbPath = path.resolve(__dirname, "..", "db", "clockify.json");
 const db = fse.readJSONSync(dbPath);
 
-const isEmpty = process.env.LOCAL_API_CLOCKIFY_EMPTY;
+const isEmpty = Boolean(process.env.LOCAL_API_CLOCKIFY_EMPTY);
 
 function assignClockifyRoutes(router) {
   let entriesCreated = 20;
@@ -33,6 +33,10 @@ function assignClockifyRoutes(router) {
     .get(
       "/v1/workspaces/:workspaceId/user/:userId/time-entries",
       (req, res) => {
+        if (isEmpty === true) {
+          return res.status(200).send([]);
+        }
+
         const responseEntries = db.timeEntries.reduce((acc, timeEntry) => {
           const { projectId, tagIds, taskId, ...responseEntry } = timeEntry;
           if (!isNil(projectId)) {

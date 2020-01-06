@@ -14,14 +14,14 @@ export const fetchTimeEntries = createAsyncAction(
   "@timeEntries/FETCH_TIME_ENTRIES_FAILURE",
 )<void, Record<Mapping, TimeEntriesByIdModel>, void>();
 
-export const updateIfAllTimeEntriesIncluded = createAction(
-  "@timeEntries/UPDATE_IF_ALL_INCLUDED",
-)<boolean>();
+export const addLinksToTimeEntries = createAction(
+  "@timeEntries/ADD_LINKS_TO_TIME_ENTRIES",
+)<Record<Mapping, TimeEntriesByIdModel>>();
 
 export const flipIsTimeEntryIncluded = createAction(
   "@timeEntries/FLIP_IS_INCLUDED",
 )<string>();
 
-export const addLinksToTimeEntries = createAction(
-  "@timeEntries/ADD_LINKS_TO_TIME_ENTRIES",
-)<Record<Mapping, TimeEntriesByIdModel>>();
+export const updateAreAllTimeEntriesIncluded = createAction(
+  "@timeEntries/UPDATE_ARE_ALL_INCLUDED",
+)<boolean>();

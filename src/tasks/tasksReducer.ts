@@ -1,5 +1,6 @@
 import { ActionType, createReducer } from "typesafe-actions";
 import * as R from "ramda";
+import { updateAreAllRecordsIncluded } from "~/redux/reduxUtils";
 import * as tasksActions from "./tasksActions";
 import { TasksByIdModel } from "./tasksTypes";
 
@@ -22,7 +23,14 @@ export const tasksReducer = createReducer<TasksState, TasksAction>(initialState)
     [tasksActions.createTasks.success, tasksActions.fetchTasks.success],
     (state, { payload }) => ({
       ...state,
-      ...payload,
+      source: {
+        ...state.source,
+        ...payload.source,
+      },
+      target: {
+        ...state.target,
+        ...payload.target,
+      },
       isFetching: false,
     }),
   )
@@ -40,19 +48,20 @@ export const tasksReducer = createReducer<TasksState, TasksAction>(initialState)
       isFetching: false,
     }),
   )
-  .handleAction(
-    tasksActions.updateIfAllTasksIncluded,
-    (state, { payload }) => ({
-      ...state,
-      source: Object.entries(state.source).reduce(
-        (acc, [id, task]) => ({
-          ...acc,
-          [id]: { ...task, isIncluded: payload },
-        }),
-        {},
-      ),
-    }),
-  )
   .handleAction(tasksActions.flipIsTaskIncluded, (state, { payload }) =>
     R.over(R.lensPath(["source", payload, "isIncluded"]), R.not, state),
+  )
+  .handleAction(
+    tasksActions.updateAreAllTasksIncluded,
+    (state, { payload }) => ({
+      ...state,
+      source: updateAreAllRecordsIncluded(state.source, payload),
+    }),
+  )
+  .handleAction(tasksActions.updateIsTaskIncluded, (state, { payload }) =>
+    R.set(
+      R.lensPath(["source", payload.id, "isIncluded"]),
+      payload.isIncluded,
+      state,
+    ),
   );

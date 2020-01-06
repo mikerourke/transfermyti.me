@@ -27,7 +27,10 @@ const ConfirmTransferModal: React.FC<Props> = ({
     onClose={onClose}
     {...props}
   >
-    Would you like to start transferring now?
+    <p>Would you like to start transferring now?</p>
+    <p css={theme => ({ fontWeight: theme.fontWeights.bold })}>
+      Note: This will probably take awhile!
+    </p>
   </ModalDialog>
 );
 

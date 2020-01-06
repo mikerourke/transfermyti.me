@@ -4,18 +4,20 @@ import { connect } from "react-redux";
 import { PayloadActionCreator } from "typesafe-actions";
 import { replaceMappingWithToolNameSelector } from "~/app/appSelectors";
 import {
+  updateAreAllTimeEntriesIncluded,
   flipIsTimeEntryIncluded,
-  updateIfAllTimeEntriesIncluded,
 } from "~/timeEntries/timeEntriesActions";
 import {
-  includedTimeEntriesTotalCountForTableViewSelector,
-  timeEntriesForTableViewSelector,
+  timeEntriesTotalCountForInclusionsTableSelector,
+  timeEntriesForInclusionsTableSelector,
 } from "~/timeEntries/timeEntriesSelectors";
 import {
   AccordionPanel,
-  EntityListPanelTable,
-  EntityListPanelTableRow,
-  EntityListPanelHeader,
+  InclusionsTable,
+  InclusionsTableCheckboxCell,
+  InclusionsTableFoot,
+  InclusionsTableRow,
+  InclusionsTableTitle,
 } from "~/components";
 import { ReduxState } from "~/redux/reduxTypes";
 import { TimeEntryTableViewModel } from "~/timeEntries/timeEntriesTypes";
@@ -28,30 +30,34 @@ interface ConnectStateProps {
 
 interface ConnectDispatchProps {
   onFlipIsIncluded: PayloadActionCreator<string, string>;
-  onUpdateIfAllIncluded: PayloadActionCreator<string, boolean>;
+  onUpdateAreAllIncluded: PayloadActionCreator<string, boolean>;
 }
 
 type Props = ConnectStateProps & ConnectDispatchProps;
 
-export const TimeEntriesTableComponent: React.FC<Props> = props => {
-  const headerTitle = props.replaceMappingWithToolName(
-    "Time Entry Records in Source",
-  );
+export const TimeEntriesInclusionsPanelComponent: React.FC<Props> = props => {
+  const areAllToggled = props.includedTotalCount === props.timeEntries.length;
+
+  const handleFlipInclusions = (): void => {
+    props.onUpdateAreAllIncluded(!areAllToggled);
+  };
+
   return (
     <AccordionPanel rowNumber={5} title="Time Entries">
-      <EntityListPanelHeader
-        titleId="timeEntriesDesc"
-        title={headerTitle}
-        onUpdateIfAllIncluded={props.onUpdateIfAllIncluded}
-      />
-      <EntityListPanelTable role="grid" aria-labelledby="timeEntriesDesc">
+      <InclusionsTableTitle
+        id="timeEntriesDesc"
+        onFlipAreAllIncluded={handleFlipInclusions}
+      >
+        {props.replaceMappingWithToolName("Time Entry Records in Source")}
+      </InclusionsTableTitle>
+      <InclusionsTable aria-labelledby="timeEntriesDesc">
         <thead>
           <tr>
             <th scope="col">Start Time</th>
             <th scope="col">End Time</th>
             <th scope="col">Task</th>
             <th scope="col">Project</th>
-            <th scope="col" className="include-cell" rowSpan={2}>
+            <th scope="col" rowSpan={2} data-include={true}>
               Include in Transfer?
             </th>
           </tr>
@@ -63,54 +69,47 @@ export const TimeEntriesTableComponent: React.FC<Props> = props => {
           </tr>
         </thead>
         <tbody>
-          {props.timeEntries.map(({ existsInTarget, ...timeEntry }) => (
+          {props.timeEntries.map(timeEntry => (
             <React.Fragment key={timeEntry.id}>
-              <EntityListPanelTableRow existsInTarget={existsInTarget}>
+              <InclusionsTableRow disabled={timeEntry.existsInTarget}>
                 <td>{format(timeEntry.start, "Pp")}</td>
                 <td>{format(timeEntry.end, "Pp")}</td>
                 <td>{timeEntry.taskName}</td>
                 <td>{timeEntry.projectName}</td>
-                <td className="include-cell" rowSpan={2}>
-                  <input
-                    type="checkbox"
-                    checked={existsInTarget ? false : timeEntry.isIncluded}
-                    disabled={existsInTarget}
-                    onChange={() => props.onFlipIsIncluded(timeEntry.id)}
-                  />
-                </td>
-              </EntityListPanelTableRow>
-              <EntityListPanelTableRow existsInTarget={existsInTarget}>
+                <InclusionsTableCheckboxCell
+                  rowSpan={2}
+                  entityRecord={timeEntry}
+                  onFlipIsIncluded={props.onFlipIsIncluded}
+                />
+              </InclusionsTableRow>
+              <InclusionsTableRow disabled={timeEntry.existsInTarget}>
                 <td colSpan={3}>{timeEntry.description}</td>
                 <td>{timeEntry.tagNames.join(", ")}</td>
-              </EntityListPanelTableRow>
+              </InclusionsTableRow>
             </React.Fragment>
           ))}
         </tbody>
-        <tfoot>
-          <tr>
-            <th colSpan={4} style={{ textAlign: "right" }}>
-              Total
-            </th>
-            <td style={{ textAlign: "center" }}>{props.includedTotalCount}</td>
-          </tr>
-        </tfoot>
-      </EntityListPanelTable>
+        <InclusionsTableFoot
+          fieldCount={4}
+          totalCountsByType={{ entryCount: props.includedTotalCount }}
+        />
+      </InclusionsTable>
     </AccordionPanel>
   );
 };
 
 const mapStateToProps = (state: ReduxState): ConnectStateProps => ({
-  includedTotalCount: includedTimeEntriesTotalCountForTableViewSelector(state),
+  includedTotalCount: timeEntriesTotalCountForInclusionsTableSelector(state),
   replaceMappingWithToolName: replaceMappingWithToolNameSelector(state),
-  timeEntries: timeEntriesForTableViewSelector(state),
+  timeEntries: timeEntriesForInclusionsTableSelector(state),
 });
 
 const mapDispatchToProps: ConnectDispatchProps = {
   onFlipIsIncluded: flipIsTimeEntryIncluded,
-  onUpdateIfAllIncluded: updateIfAllTimeEntriesIncluded,
+  onUpdateAreAllIncluded: updateAreAllTimeEntriesIncluded,
 };
 
 export default connect(
   mapStateToProps,
   mapDispatchToProps,
-)(TimeEntriesTableComponent);
+)(TimeEntriesInclusionsPanelComponent);

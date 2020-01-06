@@ -1,5 +1,6 @@
 import { ActionType, createReducer } from "typesafe-actions";
 import * as R from "ramda";
+import { updateAreAllRecordsIncluded } from "~/redux/reduxUtils";
 import * as projectsActions from "./projectsActions";
 import { ProjectModel } from "./projectsTypes";
 
@@ -27,7 +28,14 @@ export const projectsReducer = createReducer<ProjectsState, ProjectsAction>(
     ],
     (state, { payload }) => ({
       ...state,
-      ...payload,
+      source: {
+        ...state.source,
+        ...payload.source,
+      },
+      target: {
+        ...state.target,
+        ...payload.target,
+      },
       isFetching: false,
     }),
   )
@@ -51,19 +59,20 @@ export const projectsReducer = createReducer<ProjectsState, ProjectsAction>(
       isFetching: false,
     }),
   )
-  .handleAction(
-    projectsActions.updateIfAllProjectsIncluded,
-    (state, { payload }) => ({
-      ...state,
-      source: Object.entries(state.source).reduce(
-        (acc, [id, project]) => ({
-          ...acc,
-          [id]: { ...project, isIncluded: payload },
-        }),
-        {},
-      ),
-    }),
-  )
   .handleAction(projectsActions.flipIsProjectIncluded, (state, { payload }) =>
     R.over(R.lensPath(["source", payload, "isIncluded"]), R.not, state),
+  )
+  .handleAction(
+    projectsActions.updateAreAllProjectsIncluded,
+    (state, { payload }) => ({
+      ...state,
+      source: updateAreAllRecordsIncluded(state.source, payload),
+    }),
+  )
+  .handleAction(projectsActions.updateIsProjectIncluded, (state, { payload }) =>
+    R.set(
+      R.lensPath(["source", payload.id, "isIncluded"]),
+      payload.isIncluded,
+      state,
+    ),
   );

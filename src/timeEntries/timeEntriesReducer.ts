@@ -1,5 +1,6 @@
 import { ActionType, createReducer } from "typesafe-actions";
 import * as R from "ramda";
+import { updateAreAllRecordsIncluded } from "~/redux/reduxUtils";
 import * as timeEntriesActions from "./timeEntriesActions";
 import { TimeEntriesByIdModel } from "./timeEntriesTypes";
 
@@ -28,7 +29,14 @@ export const timeEntriesReducer = createReducer<
     ],
     (state, { payload }) => ({
       ...state,
-      ...payload,
+      source: {
+        ...state.source,
+        ...payload.source,
+      },
+      target: {
+        ...state.target,
+        ...payload.target,
+      },
       isFetching: false,
     }),
   )
@@ -53,16 +61,10 @@ export const timeEntriesReducer = createReducer<
     }),
   )
   .handleAction(
-    timeEntriesActions.updateIfAllTimeEntriesIncluded,
+    timeEntriesActions.addLinksToTimeEntries,
     (state, { payload }) => ({
       ...state,
-      source: Object.entries(state.source).reduce(
-        (acc, [id, timeEntry]) => ({
-          ...acc,
-          [id]: { ...timeEntry, isIncluded: payload },
-        }),
-        {},
-      ),
+      ...payload,
     }),
   )
   .handleAction(
@@ -71,9 +73,9 @@ export const timeEntriesReducer = createReducer<
       R.over(R.lensPath(["source", payload, "isIncluded"]), R.not, state),
   )
   .handleAction(
-    timeEntriesActions.addLinksToTimeEntries,
+    timeEntriesActions.updateAreAllTimeEntriesIncluded,
     (state, { payload }) => ({
       ...state,
-      ...payload,
+      source: updateAreAllRecordsIncluded(state.source, payload),
     }),
   );

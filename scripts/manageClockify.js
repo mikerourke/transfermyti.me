@@ -114,7 +114,7 @@ async function deleteEntityGroupInWorkspace(workspaceId, entityGroup) {
 
   const baseEndpoint = getEntityGroupEndpoint(workspaceId, entityGroup);
   const apiDeleteEntity = entityId =>
-    clockifyFetch(`${baseEndpoint}${entityId}`, { method: "DELETE" });
+    clockifyFetch(`${baseEndpoint}/${entityId}`, { method: "DELETE" });
 
   const { promiseThrottle, throttledFn } = buildThrottler(apiDeleteEntity);
 
@@ -292,7 +292,11 @@ function buildThrottler(fetchFunc) {
  * specified options.
  */
 async function clockifyFetch(endpoint, options) {
-  const fullUrl = `https://api.clockify.me/api/v1${endpoint}`;
+  let rootUrl = "https://api.clockify.me/api";
+  if (!/tags|clients/gi.test(endpoint)) {
+    rootUrl += "/v1";
+  }
+  const fullUrl = `${rootUrl}${endpoint}`;
 
   const requestOptions = {
     headers: {
@@ -310,7 +314,6 @@ async function clockifyFetch(endpoint, options) {
     });
     requestOptions.body = JSON.stringify(requestOptions.body);
   }
-
   const response = await fetch(fullUrl, requestOptions);
 
   try {

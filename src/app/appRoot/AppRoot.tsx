@@ -99,6 +99,10 @@ export const AppRootComponent: React.FC<Props> = props => {
           "h1,h2,h3,h4,h5,h6,p": {
             margin: "1rem 0",
           },
+
+          ul: {
+            margin: 0,
+          },
         }}
       />
       <Header />

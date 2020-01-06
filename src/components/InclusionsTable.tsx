@@ -1,6 +1,7 @@
-import { styled } from "./emotion";
+import React from "react";
+import { styled } from "~/components/emotion";
 
-export const EntityListPanelTable = styled.table(
+const Table = styled.table(
   {
     borderSpacing: 0,
     tableLayout: "fixed",
@@ -19,7 +20,7 @@ export const EntityListPanelTable = styled.table(
     },
 
     // Include header and value cells:
-    ".include-cell": {
+    "[data-include='true']": {
       borderRight: "none",
       textAlign: "center",
       width: "6rem",
@@ -59,11 +60,6 @@ export const EntityListPanelTable = styled.table(
   }),
 );
 
-export const EntityListPanelTableRow = styled.tr<{
-  existsInTarget: boolean;
-}>({}, ({ existsInTarget, theme }) => ({
-  td: {
-    color: existsInTarget ? theme.colors.manatee : theme.colors.midnight,
-    textDecoration: existsInTarget ? "line-through" : "none",
-  },
-}));
+const InclusionsTable: React.FC = props => <Table role="grid" {...props} />;
+
+export default InclusionsTable;

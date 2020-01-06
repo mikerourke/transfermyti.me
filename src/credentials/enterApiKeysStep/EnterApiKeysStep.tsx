@@ -171,6 +171,7 @@ const EnterApiKeysStepComponent: React.FC<Props> = props => {
         )}
       </form>
       <NavigationButtonsRow
+        loading={props.isValidating}
         onBackClick={handleBackClick}
         onNextClick={handleNextClick}
       >

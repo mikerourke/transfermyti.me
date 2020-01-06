@@ -1,8 +1,11 @@
 import * as R from "ramda";
 import { EntityGroup } from "~/allEntities/allEntitiesTypes";
 
-export function booleanToYesNo(value: boolean): string {
-  return value ? "Yes" : "No";
+export function booleanToYesNo(value: boolean | string): string {
+  if (typeof value === "boolean") {
+    return value ? "Yes" : "No";
+  }
+  return value;
 }
 
 export function capitalize(value: string): string {

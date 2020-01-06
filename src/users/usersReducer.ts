@@ -20,7 +20,14 @@ export const initialState: UsersState = {
 export const usersReducer = createReducer<UsersState, UsersAction>(initialState)
   .handleAction([usersActions.fetchUsers.success], (state, { payload }) => ({
     ...state,
-    ...payload,
+    source: {
+      ...state.source,
+      ...payload.source,
+    },
+    target: {
+      ...state.target,
+      ...payload.target,
+    },
     isFetching: false,
   }))
   .handleAction(

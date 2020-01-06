@@ -1,12 +1,15 @@
 import React from "react";
 import { connect } from "react-redux";
 import { PayloadActionCreator } from "typesafe-actions";
-import { flipIsTaskIncluded } from "~/tasks/tasksActions";
 import {
-  tasksForTableViewSelector,
+  updateAreAllTasksIncluded,
+  flipIsTaskIncluded,
+} from "~/tasks/tasksActions";
+import {
+  tasksForInclusionsTableSelector,
   tasksTotalCountsByTypeSelector,
 } from "~/tasks/tasksSelectors";
-import { EntityListPanel } from "~/components";
+import { EntityGroupInclusionsPanel } from "~/components";
 import { EntityGroup, TableViewModel } from "~/allEntities/allEntitiesTypes";
 import { TaskModel } from "~/tasks/tasksTypes";
 import { ReduxState } from "~/redux/reduxTypes";
@@ -18,12 +21,13 @@ interface ConnectStateProps {
 
 interface ConnectDispatchProps {
   onFlipIsIncluded: PayloadActionCreator<string, string>;
+  onUpdateAreAllIncluded: PayloadActionCreator<string, boolean>;
 }
 
 type Props = ConnectStateProps & ConnectDispatchProps;
 
-export const TasksTableComponent: React.FC<Props> = props => (
-  <EntityListPanel
+export const TasksInclusionsPanelComponent: React.FC<Props> = props => (
+  <EntityGroupInclusionsPanel
     entityGroup={EntityGroup.Tasks}
     rowNumber={4}
     tableData={props.tasks}
@@ -36,19 +40,21 @@ export const TasksTableComponent: React.FC<Props> = props => (
     ]}
     totalCountsByType={props.totalCountsByType}
     onFlipIsIncluded={props.onFlipIsIncluded}
+    onUpdateAreAllIncluded={props.onUpdateAreAllIncluded}
   />
 );
 
 const mapStateToProps = (state: ReduxState): ConnectStateProps => ({
-  tasks: tasksForTableViewSelector(state),
+  tasks: tasksForInclusionsTableSelector(state),
   totalCountsByType: tasksTotalCountsByTypeSelector(state),
 });
 
 const mapDispatchToProps: ConnectDispatchProps = {
   onFlipIsIncluded: flipIsTaskIncluded,
+  onUpdateAreAllIncluded: updateAreAllTasksIncluded,
 };
 
 export default connect(
   mapStateToProps,
   mapDispatchToProps,
-)(TasksTableComponent);
+)(TasksInclusionsPanelComponent);

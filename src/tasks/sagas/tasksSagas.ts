@@ -1,20 +1,88 @@
 import { SagaIterator } from "@redux-saga/types";
-import { call, put, select } from "redux-saga/effects";
+import * as R from "ramda";
+import { all, call, put, select, takeEvery } from "redux-saga/effects";
+import { isActionOf } from "typesafe-actions";
 import { linkEntitiesByIdByMapping } from "~/redux/reduxUtils";
 import { showFetchErrorNotification } from "~/app/appActions";
 import { toolNameByMappingSelector } from "~/app/appSelectors";
-import { createTasks, fetchTasks } from "~/tasks/tasksActions";
-import { sourceTasksForTransferSelector } from "~/tasks/tasksSelectors";
+import { updateIsProjectIncluded } from "~/projects/projectsActions";
+import { sourceProjectsSelector } from "~/projects/projectsSelectors";
+import * as tasksActions from "~/tasks/tasksActions";
+import {
+  includedSourceTasksCountSelector,
+  sourceTasksByIdSelector,
+  sourceTasksForTransferSelector,
+} from "~/tasks/tasksSelectors";
 import {
   createClockifyTasksSaga,
   fetchClockifyTasksSaga,
 } from "./clockifyTasksSagas";
 import { createTogglTasksSaga, fetchTogglTasksSaga } from "./togglTasksSagas";
 import { ToolName } from "~/allEntities/allEntitiesTypes";
+import { ProjectModel } from "~/projects/projectsTypes";
+import { ReduxAction } from "~/redux/reduxTypes";
 import { TaskModel } from "~/tasks/tasksTypes";
 
+export function* taskMonitoringSaga(): SagaIterator {
+  yield all([
+    takeEvery(
+      tasksActions.flipIsTaskIncluded,
+      pushTaskInclusionChangesToProject,
+    ),
+    takeEvery(
+      tasksActions.updateAreAllTasksIncluded,
+      pushTaskInclusionChangesToProject,
+    ),
+  ]);
+}
+
+function* pushTaskInclusionChangesToProject(
+  action: ReduxAction<string | boolean>,
+): SagaIterator {
+  const sourceProjects: ProjectModel[] = yield select(sourceProjectsSelector);
+  const includedSourceTasksCount = yield select(
+    includedSourceTasksCountSelector,
+  );
+  const sourceTasksById = yield select(sourceTasksByIdSelector);
+
+  switch (true) {
+    case isActionOf(tasksActions.flipIsTaskIncluded, action):
+      const sourceProjectId = R.pathOr<string>(
+        "",
+        [action.payload as string, "projectId"],
+        sourceTasksById,
+      );
+
+      yield put(
+        updateIsProjectIncluded({
+          id: sourceProjectId,
+          isIncluded: includedSourceTasksCount > 0,
+        }),
+      );
+      break;
+
+    case isActionOf(tasksActions.updateAreAllTasksIncluded, action):
+      if (includedSourceTasksCount === 0) {
+        break;
+      }
+
+      for (const sourceProject of sourceProjects) {
+        yield put(
+          updateIsProjectIncluded({
+            id: sourceProject.id,
+            isIncluded: true,
+          }),
+        );
+      }
+      break;
+
+    default:
+      break;
+  }
+}
+
 export function* createTasksSaga(): SagaIterator {
-  yield put(createTasks.request());
+  yield put(tasksActions.createTasks.request());
 
   try {
     const toolNameByMapping = yield select(toolNameByMappingSelector);
@@ -30,15 +98,15 @@ export function* createTasksSaga(): SagaIterator {
       targetTasks,
     );
 
-    yield put(createTasks.success(tasksByIdByMapping));
+    yield put(tasksActions.createTasks.success(tasksByIdByMapping));
   } catch (err) {
     yield put(showFetchErrorNotification(err));
-    yield put(createTasks.failure());
+    yield put(tasksActions.createTasks.failure());
   }
 }
 
 export function* fetchTasksSaga(): SagaIterator {
-  yield put(fetchTasks.request());
+  yield put(tasksActions.fetchTasks.request());
 
   try {
     const fetchSagaByToolName = {
@@ -54,9 +122,9 @@ export function* fetchTasksSaga(): SagaIterator {
       targetTasks,
     );
 
-    yield put(fetchTasks.success(tasksByIdByMapping));
+    yield put(tasksActions.fetchTasks.success(tasksByIdByMapping));
   } catch (err) {
     yield put(showFetchErrorNotification(err));
-    yield put(fetchTasks.failure());
+    yield put(tasksActions.fetchTasks.failure());
   }
 }

@@ -1,7 +1,7 @@
 import React from "react";
 import { styled } from "./emotion";
 
-const Root = styled.li(
+const Base = styled.li(
   {
     borderRadius: "0.5rem",
     flex: "0 0 24rem",
@@ -10,8 +10,8 @@ const Root = styled.li(
   },
   ({ theme }) => ({
     background: theme.colors.primary,
-    color: theme.colors.secondary,
     boxShadow: theme.elevation.dp4,
+    color: theme.colors.secondary,
   }),
 );
 
@@ -20,10 +20,10 @@ interface Props {
 }
 
 const Card: React.FC<Props> = ({ children, title, ...props }) => (
-  <Root {...props}>
+  <Base {...props}>
     <h2>{title}</h2>
     {children}
-  </Root>
+  </Base>
 );
 
 export default Card;

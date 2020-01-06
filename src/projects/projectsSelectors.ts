@@ -12,9 +12,19 @@ export const sourceProjectsByIdSelector = createSelector(
   (sourceProjectsById): ProjectsByIdModel => sourceProjectsById,
 );
 
-const sourceProjectsSelector = createSelector(
+export const sourceProjectsSelector = createSelector(
   sourceProjectsByIdSelector,
   (sourceProjectsById): ProjectModel[] => Object.values(sourceProjectsById),
+);
+
+export const targetProjectsByIdSelector = createSelector(
+  (state: ReduxState) => state.projects.target,
+  (targetProjectsById): ProjectsByIdModel => targetProjectsById,
+);
+
+const targetProjectsSelector = createSelector(
+  targetProjectsByIdSelector,
+  (targetProjectsById): ProjectModel[] => Object.values(targetProjectsById),
 );
 
 export const includedSourceProjectsSelector = createSelector(
@@ -38,16 +48,6 @@ export const sourceProjectsInActiveWorkspaceSelector = createSelector(
     ),
 );
 
-const targetProjectsByIdSelector = createSelector(
-  (state: ReduxState) => state.projects.target,
-  (targetProjectsById): ProjectsByIdModel => targetProjectsById,
-);
-
-const targetProjectsSelector = createSelector(
-  targetProjectsByIdSelector,
-  (targetProjectsById): ProjectModel[] => Object.values(targetProjectsById),
-);
-
 export const projectIdToLinkedIdSelector = createSelector(
   sourceProjectsByIdSelector,
   sourceProjectsById => {
@@ -64,7 +64,7 @@ export const projectIdToLinkedIdSelector = createSelector(
   },
 );
 
-export const projectsForTableViewSelector = createSelector(
+export const projectsForInclusionsTableSelector = createSelector(
   (state: ReduxState) => state.allEntities.areExistsInTargetShown,
   sourceProjectsInActiveWorkspaceSelector,
   targetProjectsByIdSelector,
@@ -107,7 +107,7 @@ export const projectsForTableViewSelector = createSelector(
 );
 
 export const projectsTotalCountsByTypeSelector = createSelector(
-  projectsForTableViewSelector,
+  projectsForInclusionsTableSelector,
   projectsForTableView =>
     projectsForTableView.reduce(
       (
@@ -119,18 +119,16 @@ export const projectsTotalCountsByTypeSelector = createSelector(
           isActiveInTarget,
         }: TableViewModel<ProjectModel>,
       ) => ({
-        entryCountTotal: acc.entryCountTotal + entryCount,
-        activeInSourceTotal:
-          acc.activeInSourceTotal + (isActiveInSource ? 1 : 0),
-        activeInTargetTotal:
-          acc.activeInSourceTotal + (isActiveInTarget ? 1 : 0),
-        inclusionCountTotal: acc.inclusionCountTotal + (isIncluded ? 1 : 0),
+        entries: acc.entries + entryCount,
+        activeInSource: acc.activeInSource + (isActiveInSource ? 1 : 0),
+        activeInTarget: acc.activeInSource + (isActiveInTarget ? 1 : 0),
+        inclusions: acc.inclusions + (isIncluded ? 1 : 0),
       }),
       {
-        entryCountTotal: 0,
-        activeInSourceTotal: 0,
-        activeInTargetTotal: 0,
-        inclusionCountTotal: 0,
+        entries: 0,
+        activeInSource: 0,
+        activeInTarget: 0,
+        inclusions: 0,
       },
     ),
 );

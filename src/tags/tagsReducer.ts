@@ -1,5 +1,6 @@
 import { ActionType, createReducer } from "typesafe-actions";
 import * as R from "ramda";
+import { updateAreAllRecordsIncluded } from "~/redux/reduxUtils";
 import * as tagsActions from "./tagsActions";
 import { TagsByIdModel } from "./tagsTypes";
 
@@ -22,7 +23,14 @@ export const tagsReducer = createReducer<TagsState, TagsAction>(initialState)
     [tagsActions.createTags.success, tagsActions.fetchTags.success],
     (state, { payload }) => ({
       ...state,
-      ...payload,
+      source: {
+        ...state.source,
+        ...payload.source,
+      },
+      target: {
+        ...state.target,
+        ...payload.target,
+      },
       isFetching: false,
     }),
   )
@@ -40,16 +48,10 @@ export const tagsReducer = createReducer<TagsState, TagsAction>(initialState)
       isFetching: false,
     }),
   )
-  .handleAction(tagsActions.updateIfAllTagsIncluded, (state, { payload }) => ({
-    ...state,
-    source: Object.entries(state.source).reduce(
-      (acc, [id, tag]) => ({
-        ...acc,
-        [id]: { ...tag, isIncluded: payload },
-      }),
-      {},
-    ),
-  }))
   .handleAction(tagsActions.flipIsTagIncluded, (state, { payload }) =>
     R.over(R.lensPath(["source", payload, "isIncluded"]), R.not, state),
-  );
+  )
+  .handleAction(tagsActions.updateAreAllTagsIncluded, (state, { payload }) => ({
+    ...state,
+    source: updateAreAllRecordsIncluded(state.source, payload),
+  }));

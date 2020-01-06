@@ -57,7 +57,7 @@ const sourceTagsInActiveWorkspaceSelector = createSelector(
     sourceTags.filter(tag => tag.workspaceId === workspaceId),
 );
 
-export const tagsForTableViewSelector = createSelector(
+export const tagsForInclusionTableSelector = createSelector(
   (state: ReduxState) => state.allEntities.areExistsInTargetShown,
   sourceTagsInActiveWorkspaceSelector,
   sourceTimeEntryCountByTagIdSelector,
@@ -92,16 +92,16 @@ export const tagsForTableViewSelector = createSelector(
 );
 
 export const tagsTotalCountsByTypeSelector = createSelector(
-  tagsForTableViewSelector,
+  tagsForInclusionTableSelector,
   tagsForTableView =>
     tagsForTableView.reduce(
       (acc, { entryCount, isIncluded }: TableViewModel<TagModel>) => ({
-        entryCountTotal: acc.entryCountTotal + entryCount,
-        inclusionCountTotal: acc.inclusionCountTotal + (isIncluded ? 1 : 0),
+        entries: acc.entries + entryCount,
+        inclusions: acc.inclusions + (isIncluded ? 1 : 0),
       }),
       {
-        entryCountTotal: 0,
-        inclusionCountTotal: 0,
+        entries: 0,
+        inclusions: 0,
       },
     ),
 );

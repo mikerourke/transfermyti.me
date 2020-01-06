@@ -70,7 +70,7 @@ async function fetchWithRetries<TResponse>(
     if (err.status === 429) {
       // This is an arbitrary delay to ensure the API limits aren't reached.
       // Eventually we can make this tool specific:
-      await delay(750);
+      await delay(1_000);
       return await fetchWithRetries(endpoint, fetchOptions, attempt - 1);
     } else {
       throw err;

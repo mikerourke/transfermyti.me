@@ -78,7 +78,7 @@ const projectCountBySourceClientIdSelector = createSelector(
   },
 );
 
-export const clientsForTableViewSelector = createSelector(
+export const clientsForInclusionsTableSelector = createSelector(
   (state: ReduxState) => state.allEntities.areExistsInTargetShown,
   sourceClientsInActiveWorkspaceSelector,
   projectCountBySourceClientIdSelector,
@@ -121,21 +121,21 @@ export const clientsForTableViewSelector = createSelector(
 );
 
 export const clientsTotalCountsByTypeSelector = createSelector(
-  clientsForTableViewSelector,
+  clientsForInclusionsTableSelector,
   clientsForTableView =>
     clientsForTableView.reduce(
       (
         acc,
         { entryCount, projectCount, isIncluded }: ClientTableViewModel,
       ) => ({
-        entryCountTotal: acc.entryCountTotal + entryCount,
-        projectCountTotal: acc.projectCountTotal + projectCount,
-        inclusionCountTotal: acc.inclusionCountTotal + (isIncluded ? 1 : 0),
+        entries: acc.entries + entryCount,
+        inProject: acc.inProject + projectCount,
+        inclusions: acc.inclusions + (isIncluded ? 1 : 0),
       }),
       {
-        entryCountTotal: 0,
-        projectCountTotal: 0,
-        inclusionCountTotal: 0,
+        entries: 0,
+        inProject: 0,
+        inclusions: 0,
       },
     ),
 );

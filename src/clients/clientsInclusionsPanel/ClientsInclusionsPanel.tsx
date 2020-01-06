@@ -2,14 +2,14 @@ import React from "react";
 import { connect } from "react-redux";
 import { PayloadActionCreator } from "typesafe-actions";
 import {
+  updateAreAllClientsIncluded,
   flipIsClientIncluded,
-  updateIfAllClientsIncluded,
 } from "~/clients/clientsActions";
 import {
-  clientsForTableViewSelector,
+  clientsForInclusionsTableSelector,
   clientsTotalCountsByTypeSelector,
 } from "~/clients/clientsSelectors";
-import { EntityListPanel } from "~/components";
+import { EntityGroupInclusionsPanel } from "~/components";
 import { EntityGroup } from "~/allEntities/allEntitiesTypes";
 import { ClientTableViewModel } from "~/clients/clientsTypes";
 import { ReduxState } from "~/redux/reduxTypes";
@@ -20,13 +20,13 @@ interface ConnectStateProps {
 }
 interface ConnectDispatchProps {
   onFlipIsIncluded: PayloadActionCreator<string, string>;
-  onUpdateIfAllIncluded: PayloadActionCreator<string, boolean>;
+  onUpdateAreAllIncluded: PayloadActionCreator<string, boolean>;
 }
 
 type Props = ConnectStateProps & ConnectDispatchProps;
 
-export const ClientsTableComponent: React.FC<Props> = props => (
-  <EntityListPanel
+export const ClientsInclusionsPanelComponent: React.FC<Props> = props => (
+  <EntityGroupInclusionsPanel
     entityGroup={EntityGroup.Clients}
     rowNumber={1}
     tableData={props.clients}
@@ -37,21 +37,21 @@ export const ClientsTableComponent: React.FC<Props> = props => (
     ]}
     totalCountsByType={props.totalCountsByType}
     onFlipIsIncluded={props.onFlipIsIncluded}
-    onUpdateIfAllIncluded={props.onUpdateIfAllIncluded}
+    onUpdateAreAllIncluded={props.onUpdateAreAllIncluded}
   />
 );
 
 const mapStateToProps = (state: ReduxState): ConnectStateProps => ({
-  clients: clientsForTableViewSelector(state),
+  clients: clientsForInclusionsTableSelector(state),
   totalCountsByType: clientsTotalCountsByTypeSelector(state),
 });
 
 const mapDispatchToProps: ConnectDispatchProps = {
   onFlipIsIncluded: flipIsClientIncluded,
-  onUpdateIfAllIncluded: updateIfAllClientsIncluded,
+  onUpdateAreAllIncluded: updateAreAllClientsIncluded,
 };
 
 export default connect(
   mapStateToProps,
   mapDispatchToProps,
-)(ClientsTableComponent);
+)(ClientsInclusionsPanelComponent);

@@ -22,7 +22,8 @@ export interface TimeEntryModel extends BaseEntityModel {
 
 export type TimeEntriesByIdModel = Record<string, TimeEntryModel>;
 
-export type TimeEntryTableViewModel = TableViewModel<TimeEntryModel> & {
+export interface TimeEntryTableViewModel
+  extends TableViewModel<TimeEntryModel> {
   taskName: string;
   projectName: string;
-};
+}

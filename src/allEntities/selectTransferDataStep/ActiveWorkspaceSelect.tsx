@@ -3,13 +3,13 @@ import { connect } from "react-redux";
 import { updateActiveWorkspaceId } from "~/workspaces/workspacesActions";
 import {
   activeWorkspaceIdSelector,
-  sourceWorkspacesSelector,
+  includedSourceWorkspacesSelector,
 } from "~/workspaces/workspacesSelectors";
 import { styled } from "~/components";
 import { ReduxState } from "~/redux/reduxTypes";
 import { WorkspaceModel } from "~/workspaces/workspacesTypes";
 
-const Root = styled.div(
+const Base = styled.div(
   {
     position: "relative",
     display: "inline-block",
@@ -95,7 +95,7 @@ export const ActiveWorkspaceSelectComponent: React.FC<Props> = props => {
   };
 
   return (
-    <Root>
+    <Base>
       <Label htmlFor="activeWorkspaceSelect">Active Workspace</Label>
       <Select
         id="activeWorkspaceSelect"
@@ -114,13 +114,13 @@ export const ActiveWorkspaceSelectComponent: React.FC<Props> = props => {
         ))}
       </Select>
       <Arrow />
-    </Root>
+    </Base>
   );
 };
 
 const mapStateToProps = (state: ReduxState): ConnectStateProps => ({
   activeWorkspaceId: activeWorkspaceIdSelector(state),
-  workspaces: sourceWorkspacesSelector(state),
+  workspaces: includedSourceWorkspacesSelector(state),
 });
 
 const mapDispatchToProps: ConnectDispatchProps = {

@@ -7,5 +7,5 @@ export {
   paginatedClockifyFetch,
 } from "./fetchActions";
 export { findTargetEntityId } from "./findTargetEntityId";
+export { updateAreAllRecordsIncluded } from "./updateAreAllRecordsIncluded";
 export { linkEntitiesByIdByMapping } from "./linkEntitiesByIdByMapping";
-export { updateIfAllIncluded } from "./updateIfAllIncluded";

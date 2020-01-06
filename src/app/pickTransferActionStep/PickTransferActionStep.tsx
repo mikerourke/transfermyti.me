@@ -2,11 +2,11 @@ import { push } from "connected-react-router";
 import { Path } from "history";
 import React from "react";
 import { connect } from "react-redux";
-import { ToolName } from "~/allEntities/allEntitiesTypes";
 import { updateToolAction, updateToolNameByMapping } from "~/app/appActions";
-import { RoutePath, ToolNameByMappingModel, ToolAction } from "~/app/appTypes";
 import { Flex, HelpDetails } from "~/components";
 import TransferActionCard from "./TransferActionCard";
+import { ToolName } from "~/allEntities/allEntitiesTypes";
+import { RoutePath, ToolNameByMappingModel, ToolAction } from "~/app/appTypes";
 
 interface ConnectDispatchProps {
   onPush: (path: Path) => void;

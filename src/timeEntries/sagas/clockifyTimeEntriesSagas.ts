@@ -76,14 +76,17 @@ function* createClockifyTimeEntry(
     sourceTimeEntry.projectId,
     sourceProjectsByIdSelector,
   );
+
   const targetTagIds = yield select(
     targetTagIdsSelectorFactory(sourceTimeEntry.tagIds),
   );
+
   const targetTaskId = yield call(
     findTargetEntityId,
     sourceTimeEntry.taskId,
     sourceTasksByIdSelector,
   );
+
   const timeEntryRequest = {
     start: sourceTimeEntry.start,
     billable: sourceTimeEntry.isBillable,
@@ -142,8 +145,8 @@ function transformFromResponse(
     end: getTime(timeEntry, "end"),
     year: startTime.getFullYear(),
     isActive: false,
-    clientId: timeEntry.project?.clientId,
-    projectId: timeEntry.project?.id,
+    clientId: timeEntry.project?.clientId ?? null,
+    projectId: timeEntry.project?.id ?? null,
     tagIds: clockifyTags.map(({ id }) => id),
     tagNames: clockifyTags.map(({ name }) => name),
     taskId: timeEntry.task?.id ?? null,

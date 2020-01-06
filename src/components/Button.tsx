@@ -1,6 +1,72 @@
 import Color from "color";
+import { keyframes } from "@emotion/core";
 import React from "react";
+import Flex from "./Flex";
 import { styled, useTheme } from "./emotion";
+
+const spinAnimation = keyframes`
+  0% {
+    transform: rotate(0deg);
+  }
+  100% {
+    transform: rotate(360deg);
+  }
+`;
+
+const Base = styled.button({
+  borderRadius: "0.375rem",
+  fontSize: "1.25rem",
+  fontWeight: 400,
+  padding: "0.5rem 0.75rem",
+  textAlign: "center",
+  verticalAlign: "middle",
+});
+
+const Loading = styled.div<{ bgColor: string; fgColor: string }>(
+  {
+    animation: `${spinAnimation} 1.4s infinite linear`,
+    borderRadius: "50%",
+    fontSize: "0.75rem",
+    height: "1.5rem",
+    position: "relative",
+    transform: "translateZ(0)",
+    width: "1.5rem",
+
+    "&:before": {
+      borderRadius: "100% 0 0 0",
+      content: "''",
+      height: "50%",
+      width: "50%",
+      position: "absolute",
+      top: 0,
+      left: 0,
+    },
+
+    "&:after": {
+      borderRadius: "50%",
+      content: "''",
+      height: "75%",
+      width: "75%",
+      margin: "auto",
+      position: "absolute",
+      top: 0,
+      left: 0,
+      bottom: 0,
+      right: 0,
+    },
+  },
+  ({ bgColor, fgColor }) => ({
+    background: `linear-gradient(to right, ${fgColor} 10%, ${bgColor} 40%)`,
+
+    "&:before": {
+      background: fgColor,
+    },
+
+    "&:after": {
+      background: bgColor,
+    },
+  }),
+);
 
 type Variant =
   | "primary"
@@ -12,21 +78,15 @@ type Variant =
 export interface ButtonProps
   extends React.ButtonHTMLAttributes<HTMLButtonElement> {
   disabled?: boolean;
+  loading?: boolean;
   variant?: Variant;
   onClick: VoidFunction;
 }
 
-const Root = styled.button({
-  borderRadius: "0.375rem",
-  fontSize: "1.25rem",
-  fontWeight: 400,
-  padding: "0.5rem 0.75rem",
-  textAlign: "center",
-  verticalAlign: "middle",
-});
-
 const Button: React.FC<ButtonProps> = ({
+  children,
   disabled = false,
+  loading = false,
   variant = "default",
   onClick,
   ...props
@@ -54,7 +114,7 @@ const Button: React.FC<ButtonProps> = ({
   const isOutline = /outline/gi.test(variant);
 
   return (
-    <Root
+    <Base
       aria-disabled={disabled}
       css={{
         background: mainColor.hex(),
@@ -78,10 +138,18 @@ const Button: React.FC<ButtonProps> = ({
         },
       }}
       disabled={disabled}
-      onClick={disabled ? undefined : onClick}
+      onClick={disabled || loading ? undefined : onClick}
       type="button"
       {...props}
-    />
+    >
+      {loading ? (
+        <Flex alignItems="center" justifyContent="center">
+          <Loading bgColor={mainColor.hex()} fgColor={altColor.hex()} />
+        </Flex>
+      ) : (
+        children
+      )}
+    </Base>
   );
 };
 

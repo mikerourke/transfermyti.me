@@ -14,10 +14,10 @@ export const fetchTags = createAsyncAction(
   "@tags/FETCH_TAGS_FAILURE",
 )<void, Record<Mapping, TagsByIdModel>, void>();
 
-export const updateIfAllTagsIncluded = createAction(
-  "@tags/UPDATE_IF_ALL_INCLUDED",
-)<boolean>();
-
 export const flipIsTagIncluded = createAction("@tags/FLIP_IS_INCLUDED")<
   string
 >();
+
+export const updateAreAllTagsIncluded = createAction(
+  "@tags/UPDATE_ARE_ALL_INCLUDED",
+)<boolean>();

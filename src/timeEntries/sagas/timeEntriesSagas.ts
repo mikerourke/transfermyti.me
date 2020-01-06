@@ -81,7 +81,7 @@ export function* fetchTimeEntriesSaga(): SagaIterator {
 }
 
 function sortTimeEntries(timeEntries: TimeEntryModel[]): TimeEntryModel[] {
-  return timeEntries.sort((a, b) => b.start.getTime() - a.start.getTime());
+  return timeEntries.sort((a, b) => a.start.getTime() - b.start.getTime());
 }
 
 function linkTimeEntriesByIdByMapping(
@@ -103,20 +103,21 @@ function linkTimeEntriesByIdByMapping(
   const targetById: TimeEntriesByIdModel = {};
 
   for (const sourceEntry of sortedSourceEntries) {
-    const updatedSourceEntry = { ...sourceEntry };
+    sourceById[sourceEntry.id] = sourceEntry;
 
     for (const targetEntry of sortedTargetEntries) {
       targetById[targetEntry.id] = targetEntry;
 
       // TODO: Make sure this actually works!
       if (doTimeEntriesMatch(sourceEntry, targetEntry)) {
-        updatedSourceEntry.linkedId = targetEntry.id;
+        sourceById[sourceEntry.id].linkedId = targetEntry.id;
         targetById[targetEntry.id].linkedId = sourceEntry.id;
       }
     }
 
-    updatedSourceEntry.isIncluded = R.isNil(updatedSourceEntry.linkedId);
-    sourceById[sourceEntry.id] = updatedSourceEntry;
+    sourceById[sourceEntry.id].isIncluded = R.isNil(
+      sourceById[sourceEntry.id].linkedId,
+    );
   }
 
   return {
