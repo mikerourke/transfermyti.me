@@ -14,7 +14,7 @@ const scale = (value: string, percentage: number): string => {
 
 const Button = styled.button<{ size: Size }>(
   {
-    border: 0,
+    border: "none",
     display: "inline-block",
     overflow: "hidden",
     position: "relative",
@@ -57,7 +57,7 @@ const Switch = styled.span<{
 
     "&::before,&::after": {
       color: theme.colors.primary,
-      lineHeight: scale(height(size), 0.8),
+      lineHeight: scale(height(size), 0.85),
     },
 
     "&::before": {

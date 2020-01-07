@@ -4,7 +4,7 @@ import { styled } from "./emotion";
 const Base = styled.li(
   {
     borderRadius: "0.5rem",
-    flex: "0 0 24rem",
+    flex: "0 0 20rem",
     margin: "0 1rem 2rem",
     padding: "1rem",
   },

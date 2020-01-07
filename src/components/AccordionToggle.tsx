@@ -6,6 +6,7 @@ const ToggleButton = styled.button(
   {
     alignItems: "center",
     appearance: "none",
+    border: "none",
     display: "flex",
     fontSize: "1.25rem",
     justifyContent: "space-between",

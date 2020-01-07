@@ -3,7 +3,6 @@ import { styled } from "./emotion";
 
 const Details = styled.details(
   {
-    borderRadius: "0.25rem",
     marginBottom: "1rem",
     width: "100%",
 
@@ -13,11 +12,12 @@ const Details = styled.details(
     },
 
     p: {
-      margin: 0,
-      padding: "1rem 0 0 0",
+      "&:not(first-of-type)": {
+        marginTop: 0,
+      },
 
-      "&:first-of-type": {
-        paddingTop: 0,
+      "&:last-of-type": {
+        marginBottom: 0,
       },
     },
   },
@@ -26,12 +26,21 @@ const Details = styled.details(
   }),
 );
 
-const HelpDetails: React.FC = ({ children, ...props }) => (
+interface Props extends React.HTMLProps<HTMLDetailsElement> {
+  title?: string;
+}
+
+const HelpDetails: React.FC<Props> = ({
+  children,
+  title = "Show/Hide Help",
+  ...props
+}) => (
   <Details {...props}>
     <summary css={theme => ({ fontWeight: theme.fontWeights.bold })}>
-      Show/Hide Help
+      {title}
     </summary>
     <div>{children}</div>
+    <hr />
   </Details>
 );
 

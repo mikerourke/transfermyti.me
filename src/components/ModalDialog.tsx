@@ -54,8 +54,10 @@ const ActionsRow = styled(Flex)({
   marginTop: "2rem",
 
   button: {
+    border: "none",
+    borderRadius: "0.25rem",
     fontSize: "1rem",
-    padding: "0.25rem 0.75rem",
+    padding: "0.5rem 0.75rem",
     minWidth: "4rem",
 
     "&:not(:last-of-type)": {
