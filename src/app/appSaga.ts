@@ -2,6 +2,7 @@ import { SagaIterator } from "@redux-saga/types";
 import { push } from "connected-react-router";
 import * as R from "ramda";
 import { put, select, takeEvery } from "redux-saga/effects";
+import { getIfDev } from "~/utils";
 import {
   currentPathSelector,
   toolNameByMappingSelector,
@@ -21,6 +22,12 @@ export function* appSaga(): SagaIterator {
  * condition are documented within the saga.
  */
 function* redirectIfInvalidSaga(): SagaIterator {
+  // Disable the redirect for development. I originally had it turned on, but
+  // I found myself disabling it more often than not:
+  if (getIfDev()) {
+    return;
+  }
+
   const currentPath = yield select(currentPathSelector);
 
   /**
