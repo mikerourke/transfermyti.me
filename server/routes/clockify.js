@@ -5,7 +5,7 @@ const { find, get, isNil, uniqueId } = require("lodash");
 const dbPath = path.resolve(__dirname, "..", "db", "clockify.json");
 const db = fse.readJSONSync(dbPath);
 
-const isEmpty = Boolean(process.env.LOCAL_API_CLOCKIFY_EMPTY);
+const isEmpty = process.env.LOCAL_API_CLOCKIFY_EMPTY == "true";
 
 function assignClockifyRoutes(router) {
   let entriesCreated = 20;
