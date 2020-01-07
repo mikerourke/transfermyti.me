@@ -1,5 +1,5 @@
-import React from "react";
 import cuid from "cuid";
+import React from "react";
 import { ThemeColors } from "./emotion";
 
 export type IconName = "circleAdd" | "circleRemove" | "github" | "heart";

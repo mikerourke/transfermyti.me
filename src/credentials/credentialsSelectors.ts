@@ -1,6 +1,6 @@
 import { createSelector } from "reselect";
 import { toolNameByMappingSelector } from "~/app/appSelectors";
-import { Mapping, ToolName } from "~/allEntities/allEntitiesTypes";
+import { FetchStatus, Mapping, ToolName } from "~/allEntities/allEntitiesTypes";
 import { ReduxState } from "~/redux/reduxTypes";
 import {
   CredentialsByMappingModel,
@@ -8,8 +8,8 @@ import {
   ValidationErrorsByMappingModel,
 } from "./credentialsTypes";
 
-export const isValidatingSelector = (state: ReduxState): boolean =>
-  state.credentials.isValidating;
+export const validationFetchStatusSelector = (state: ReduxState): FetchStatus =>
+  state.credentials.validationFetchStatus;
 
 const sourceCredentialsSelector = createSelector(
   (state: ReduxState) => state.credentials.source,

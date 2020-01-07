@@ -5,21 +5,21 @@ import { connect } from "react-redux";
 import { PayloadActionCreator } from "typesafe-actions";
 import { toolHelpDetailsByMappingSelector } from "~/app/appSelectors";
 import {
-  resetIsValidating,
   storeCredentials,
   updateCredentials,
+  updateValidationFetchStatus,
   validateCredentials,
 } from "~/credentials/credentialsActions";
 import {
   credentialsByMappingSelector,
   hasValidationErrorsSelector,
-  isValidatingSelector,
   validationErrorsByMappingSelector,
+  validationFetchStatusSelector,
 } from "~/credentials/credentialsSelectors";
 import { Button, HelpDetails, NavigationButtonsRow } from "~/components";
 import { useDeepCompareEffect } from "~/components/hooks";
 import ApiKeyInputField from "./ApiKeyInputField";
-import { Mapping, ToolName } from "~/allEntities/allEntitiesTypes";
+import { FetchStatus, Mapping, ToolName } from "~/allEntities/allEntitiesTypes";
 import { RoutePath, ToolHelpDetailsModel } from "~/app/appTypes";
 import {
   CredentialsModel,
@@ -31,20 +31,24 @@ import { ReduxState } from "~/redux/reduxTypes";
 interface ConnectStateProps {
   credentialsByMapping: Record<Mapping, CredentialsModel>;
   hasValidationErrors: boolean;
-  isValidating: boolean;
   toolHelpDetailsByMapping: Record<Mapping, ToolHelpDetailsModel>;
   validationErrorsByMapping: ValidationErrorsByMappingModel;
+  validationFetchStatus: FetchStatus;
 }
 
 interface ConnectDispatchProps {
   onPush: (path: Path) => void;
-  onResetIfValidating: PayloadActionCreator<string, void>;
   onStoreCredentials: PayloadActionCreator<string, void>;
   onUpdateCredentials: (credentials: PartialCredentialsUpdateModel) => void;
+  onUpdateValidationFetchStatus: PayloadActionCreator<string, FetchStatus>;
   onValidateCredentials: PayloadActionCreator<string, void>;
 }
 
 type Props = ConnectStateProps & ConnectDispatchProps;
+
+// TODO: Accommodate for only deleting content from a tool. You only need to
+//       validate the API key for one tool, so we need to add that as an if
+//       statement so we don't fail silently.
 
 const EnterApiKeysStepComponent: React.FC<Props> = props => {
   type InputFields = Record<string, string | null>;
@@ -64,22 +68,25 @@ const EnterApiKeysStepComponent: React.FC<Props> = props => {
   });
 
   React.useEffect(() => {
-    props.onResetIfValidating();
+    props.onUpdateValidationFetchStatus(FetchStatus.Pending);
 
     return () => {
+      props.onUpdateValidationFetchStatus(FetchStatus.Pending);
       props.onStoreCredentials();
     };
   }, []);
+
+  React.useEffect(() => {
+    if (props.validationFetchStatus === FetchStatus.Success) {
+      props.onPush(RoutePath.SelectWorkspaces);
+    }
+  }, [props.validationFetchStatus]);
 
   useDeepCompareEffect(() => {
     if (props.hasValidationErrors) {
       setInputErrors({ ...defaultErrors, ...props.validationErrorsByMapping });
     }
-  }, [
-    props.hasValidationErrors,
-    props.isValidating,
-    props.validationErrorsByMapping,
-  ]);
+  }, [props.hasValidationErrors, props.validationErrorsByMapping]);
 
   const clearError = (event: React.FocusEvent<HTMLInputElement>): void => {
     const mapping = event.target.name as Mapping;
@@ -130,7 +137,7 @@ const EnterApiKeysStepComponent: React.FC<Props> = props => {
   };
 
   const handleResetClick = (): void => {
-    props.onResetIfValidating();
+    props.onUpdateValidationFetchStatus(FetchStatus.Pending);
     setInputValues({ [Mapping.Source]: "", [Mapping.Target]: "" });
     setInputErrors({ ...defaultErrors });
   };
@@ -139,7 +146,7 @@ const EnterApiKeysStepComponent: React.FC<Props> = props => {
 
   return (
     <section>
-      <h1>Step 2: Enter Credentials</h1>
+      <h1>Step 2: Enter API Keys</h1>
       <HelpDetails>
         <p>
           Enter your the API key for each tool in the input below. You can get
@@ -179,7 +186,7 @@ const EnterApiKeysStepComponent: React.FC<Props> = props => {
         )}
       </form>
       <NavigationButtonsRow
-        loading={props.isValidating}
+        loading={props.validationFetchStatus === FetchStatus.InProcess}
         onBackClick={handleBackClick}
         onNextClick={handleNextClick}
       >
@@ -194,16 +201,16 @@ const EnterApiKeysStepComponent: React.FC<Props> = props => {
 const mapStateToProps = (state: ReduxState): ConnectStateProps => ({
   credentialsByMapping: credentialsByMappingSelector(state),
   hasValidationErrors: hasValidationErrorsSelector(state),
-  isValidating: isValidatingSelector(state),
   toolHelpDetailsByMapping: toolHelpDetailsByMappingSelector(state),
   validationErrorsByMapping: validationErrorsByMappingSelector(state),
+  validationFetchStatus: validationFetchStatusSelector(state),
 });
 
 const mapDispatchToProps: ConnectDispatchProps = {
   onPush: push,
-  onResetIfValidating: resetIsValidating,
   onStoreCredentials: storeCredentials,
   onUpdateCredentials: updateCredentials,
+  onUpdateValidationFetchStatus: updateValidationFetchStatus,
   onValidateCredentials: validateCredentials.request,
 };
 

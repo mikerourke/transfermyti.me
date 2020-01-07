@@ -16,7 +16,7 @@ export const initialState: WorkspacesState = {
   source: {},
   target: {},
   activeWorkspaceId: "",
-  isFetching: false,
+  isFetching: true,
 };
 
 export const workspacesReducer = createReducer<

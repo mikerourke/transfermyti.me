@@ -1,8 +1,12 @@
 import { SagaIterator } from "@redux-saga/types";
+import * as R from "ramda";
 import { call, put, select } from "redux-saga/effects";
 import { linkEntitiesByIdByMapping } from "~/redux/reduxUtils";
 import { showFetchErrorNotification } from "~/app/appActions";
-import { toolNameByMappingSelector } from "~/app/appSelectors";
+import {
+  toolActionSelector,
+  toolNameByMappingSelector,
+} from "~/app/appSelectors";
 import { createClients, fetchClients } from "~/clients/clientsActions";
 import { sourceClientsForTransferSelector } from "~/clients/clientsSelectors";
 import {
@@ -13,8 +17,9 @@ import {
   createTogglClientsSaga,
   fetchTogglClientsSaga,
 } from "./togglClientsSagas";
-import { ToolName } from "~/allEntities/allEntitiesTypes";
-import { ClientModel } from "~/clients/clientsTypes";
+import { ToolAction } from "~/app/appTypes";
+import { ToolName, Mapping } from "~/allEntities/allEntitiesTypes";
+import { ClientModel, ClientsByIdModel } from "~/clients/clientsTypes";
 
 export function* createClientsSaga(): SagaIterator {
   yield put(createClients.request());
@@ -50,12 +55,23 @@ export function* fetchClientsSaga(): SagaIterator {
     };
     const { source, target } = yield select(toolNameByMappingSelector);
     const sourceClients = yield call(fetchSagaByToolName[source]);
-    const targetClients = yield call(fetchSagaByToolName[target]);
 
-    const clientsByIdByMapping = linkEntitiesByIdByMapping<ClientModel>(
-      sourceClients,
-      targetClients,
-    );
+    const toolAction = yield select(toolActionSelector);
+    let clientsByIdByMapping: Record<Mapping, ClientsByIdModel>;
+
+    if (toolAction === ToolAction.Transfer) {
+      const targetClients = yield call(fetchSagaByToolName[target]);
+
+      clientsByIdByMapping = linkEntitiesByIdByMapping<ClientModel>(
+        sourceClients,
+        targetClients,
+      );
+    } else {
+      clientsByIdByMapping = {
+        source: R.indexBy(R.prop("id"), sourceClients),
+        target: {},
+      };
+    }
 
     yield put(fetchClients.success(clientsByIdByMapping));
   } catch (err) {

@@ -1,17 +1,12 @@
 import { SagaIterator } from "@redux-saga/types";
-import { push } from "connected-react-router";
 import * as R from "ramda";
 import { call, put, select } from "redux-saga/effects";
 import { fetchObject } from "~/redux/reduxUtils";
-import {
-  currentPathSelector,
-  mappingByToolNameSelector,
-} from "~/app/appSelectors";
+import { mappingByToolNameSelector } from "~/app/appSelectors";
 import { validateCredentials } from "~/credentials/credentialsActions";
 import { credentialsByMappingSelector } from "~/credentials/credentialsSelectors";
 import { TogglWorkspaceResponseModel } from "~/workspaces/sagas/togglWorkspacesSagas";
 import { ToolName } from "~/allEntities/allEntitiesTypes";
-import { RoutePath } from "~/app/appTypes";
 import { ValidationErrorsByMappingModel } from "~/credentials/credentialsTypes";
 
 interface TogglMeResponseModel {
@@ -64,12 +59,10 @@ export function* validateCredentialsSaga(): SagaIterator {
     }
   }
 
-  const currentPath = yield select(currentPathSelector);
   const hasNoValidationErrors = Object.values(
     validationErrorsByMapping,
   ).every(validationError => R.isNil(validationError));
-  if (hasNoValidationErrors && R.equals(currentPath, RoutePath.EnterApiKeys)) {
-    yield put(push(RoutePath.SelectWorkspaces));
+  if (hasNoValidationErrors) {
     yield put(validateCredentials.success(credentialsByMapping));
   } else {
     yield put(validateCredentials.failure(validationErrorsByMapping));

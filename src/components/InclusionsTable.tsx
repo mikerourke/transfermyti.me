@@ -1,5 +1,5 @@
 import React from "react";
-import { styled } from "~/components/emotion";
+import { styled } from "./emotion";
 
 const Table = styled.table(
   {

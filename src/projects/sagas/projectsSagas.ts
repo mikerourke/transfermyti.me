@@ -4,7 +4,10 @@ import { all, call, put, select, takeEvery } from "redux-saga/effects";
 import { isActionOf } from "typesafe-actions";
 import { linkEntitiesByIdByMapping } from "~/redux/reduxUtils";
 import { showFetchErrorNotification } from "~/app/appActions";
-import { toolNameByMappingSelector } from "~/app/appSelectors";
+import {
+  toolNameByMappingSelector,
+  toolActionSelector,
+} from "~/app/appSelectors";
 import {
   createProjects,
   fetchProjects,
@@ -25,8 +28,9 @@ import {
   createTogglProjectsSaga,
   fetchTogglProjectsSaga,
 } from "./togglProjectsSagas";
-import { ToolName } from "~/allEntities/allEntitiesTypes";
-import { ProjectModel } from "~/projects/projectsTypes";
+import { ToolAction } from "~/app/appTypes";
+import { ToolName, Mapping } from "~/allEntities/allEntitiesTypes";
+import { ProjectModel, ProjectsByIdModel } from "~/projects/projectsTypes";
 import { ReduxAction } from "~/redux/reduxTypes";
 
 export function* projectMonitoringSaga(): SagaIterator {
@@ -49,7 +53,7 @@ function* pushProjectInclusionChangesToTasks(
       sourceProjectsById,
     );
 
-    if (sourceTask.isIncluded === isProjectIncluded) {
+    if (R.or(sourceTask.isIncluded === isProjectIncluded, isProjectIncluded)) {
       continue;
     }
 
@@ -111,12 +115,23 @@ export function* fetchProjectsSaga(): SagaIterator {
     };
     const { source, target } = yield select(toolNameByMappingSelector);
     const sourceProjects = yield call(fetchSagaByToolName[source]);
-    const targetProjects = yield call(fetchSagaByToolName[target]);
 
-    const projectsByIdByMapping = linkEntitiesByIdByMapping<ProjectModel>(
-      sourceProjects,
-      targetProjects,
-    );
+    const toolAction = yield select(toolActionSelector);
+    let projectsByIdByMapping: Record<Mapping, ProjectsByIdModel>;
+
+    if (toolAction === ToolAction.Transfer) {
+      const targetProjects = yield call(fetchSagaByToolName[target]);
+
+      projectsByIdByMapping = linkEntitiesByIdByMapping<ProjectModel>(
+        sourceProjects,
+        targetProjects,
+      );
+    } else {
+      projectsByIdByMapping = {
+        source: R.indexBy(R.prop("id"), sourceProjects),
+        target: {},
+      };
+    }
 
     yield put(fetchProjects.success(projectsByIdByMapping));
   } catch (err) {

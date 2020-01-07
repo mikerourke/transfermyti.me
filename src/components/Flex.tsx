@@ -1,5 +1,5 @@
-import React from "react";
 import * as R from "ramda";
+import React from "react";
 
 type GlobalOption = "inherit" | "initial" | "unset";
 

@@ -1,11 +1,20 @@
 import React from "react";
-import { HelpDetails } from "~/components";
+import { HelpDetails, styled } from "~/components";
+
+const Details = styled(HelpDetails)({
+  marginBottom: 0,
+
+  ul: {
+    marginTop: "0.75rem",
+  },
+
+  li: {
+    padding: "0.25rem 0",
+  },
+});
 
 const TimeEntryComparisonDisclaimer: React.FC = () => (
-  <HelpDetails
-    css={{ ul: { marginTop: "0.75rem" }, li: { padding: "0.25rem 0" } }}
-    title="Show/Hide Disclaimer"
-  >
+  <Details title="Show/Hide Disclaimer">
     <p>
       The time tracking tools prevent duplicate records from being created by
       comparing the <strong>Name</strong> value (for clients, tags, projects,
@@ -38,7 +47,7 @@ const TimeEntryComparisonDisclaimer: React.FC = () => (
         <strong> end date and time</strong> of the source and target entry?
       </li>
     </ul>
-  </HelpDetails>
+  </Details>
 );
 
 export default TimeEntryComparisonDisclaimer;

@@ -1,5 +1,6 @@
 import { ActionType, createReducer } from "typesafe-actions";
 import * as credentialsActions from "./credentialsActions";
+import { FetchStatus } from "~/allEntities/allEntitiesTypes";
 import {
   CredentialsModel,
   ValidationErrorsByMappingModel,
@@ -10,9 +11,14 @@ type CredentialsAction = ActionType<typeof credentialsActions>;
 export interface CredentialsState {
   readonly source: CredentialsModel;
   readonly target: CredentialsModel;
-  readonly isValidating: boolean;
   readonly validationErrorsByMapping: ValidationErrorsByMappingModel;
+  readonly validationFetchStatus: FetchStatus;
 }
+
+const DEFAULT_VALIDATION_ERRORS = {
+  source: null,
+  target: null,
+};
 
 export const initialState: CredentialsState = {
   source: {
@@ -25,8 +31,8 @@ export const initialState: CredentialsState = {
     email: null,
     userId: null,
   },
-  isValidating: false,
-  validationErrorsByMapping: { source: null, target: null },
+  validationErrorsByMapping: { ...DEFAULT_VALIDATION_ERRORS },
+  validationFetchStatus: FetchStatus.Pending,
 };
 
 export const credentialsReducer = createReducer<
@@ -35,14 +41,14 @@ export const credentialsReducer = createReducer<
 >(initialState)
   .handleAction(credentialsActions.validateCredentials.request, state => ({
     ...state,
-    isValidating: true,
-    validationErrorsByMapping: { source: null, target: null },
+    validationFetchStatus: FetchStatus.InProcess,
+    validationErrorsByMapping: { ...DEFAULT_VALIDATION_ERRORS },
   }))
   .handleAction(
     credentialsActions.validateCredentials.failure,
     (state, { payload }) => ({
       ...state,
-      isValidating: false,
+      validationFetchStatus: FetchStatus.Error,
       validationErrorsByMapping: payload,
     }),
   )
@@ -51,14 +57,25 @@ export const credentialsReducer = createReducer<
     (state, { payload }) => ({
       ...state,
       ...payload,
-      isValidating: false,
-      validationErrorsByMapping: { source: null, target: null },
+      validationFetchStatus: FetchStatus.Success,
+      validationErrorsByMapping: { ...DEFAULT_VALIDATION_ERRORS },
     }),
   )
-  .handleAction(credentialsActions.resetIsValidating, state => ({
-    ...state,
-    isValidating: false,
-  }))
+  .handleAction(
+    credentialsActions.updateValidationFetchStatus,
+    (state, { payload }) => {
+      let newValidationErrors = { ...state.validationErrorsByMapping };
+      if (payload === FetchStatus.Pending) {
+        newValidationErrors = { ...DEFAULT_VALIDATION_ERRORS };
+      }
+
+      return {
+        ...state,
+        validationFetchStatus: payload,
+        validationErrorsByMapping: newValidationErrors,
+      };
+    },
+  )
   .handleAction(credentialsActions.updateCredentials, (state, { payload }) => {
     const { mapping, ...credentials } = payload;
     return {

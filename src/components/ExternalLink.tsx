@@ -1,5 +1,5 @@
 import React from "react";
-import { useTheme } from "~/components";
+import { useTheme } from "./emotion";
 
 interface Props extends Omit<React.HTMLProps<HTMLAnchorElement>, "color"> {
   children: React.ReactNode;

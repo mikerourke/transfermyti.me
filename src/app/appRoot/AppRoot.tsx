@@ -3,6 +3,8 @@ import { Helmet } from "react-helmet";
 import { connect } from "react-redux";
 import { ThemeProvider } from "emotion-theming";
 import { Global } from "@emotion/core";
+import { useLocation } from "react-router";
+import { CSSTransition, TransitionGroup } from "react-transition-group";
 import { dismissNotification } from "~/app/appActions";
 import { notificationsSelector } from "~/app/appSelectors";
 import { styled, theme } from "~/components/emotion";
@@ -31,6 +33,8 @@ export interface ConnectDispatchProps {
 type Props = ConnectStateProps & ConnectDispatchProps;
 
 export const AppRootComponent: React.FC<Props> = props => {
+  const location = useLocation();
+
   React.useEffect(() => {
     // TODO: Add notification functionality back in.
   }, [props.notifications]);
@@ -61,10 +65,10 @@ export const AppRootComponent: React.FC<Props> = props => {
         styles={{
           "*": {
             fontFamily: theme.fonts.body,
-            boxSizing: "inherit",
+            boxSizing: "border-box",
 
             "&:before, &:after": {
-              boxSizing: "inherit",
+              boxSizing: "border-box",
             },
           },
 
@@ -103,10 +107,24 @@ export const AppRootComponent: React.FC<Props> = props => {
           ul: {
             margin: 0,
           },
+
+          ".fade-enter": {
+            opacity: 0,
+            zIndex: 1,
+          },
+
+          ".fade-enter.fade-enter-active": {
+            opacity: 1,
+            transition: "opacity 250ms ease-in",
+          },
         }}
       />
       <Header />
-      <Main role="main">{props.children}</Main>
+      <TransitionGroup>
+        <CSSTransition key={location.key} classNames="fade" timeout={300}>
+          <Main role="main">{props.children}</Main>
+        </CSSTransition>
+      </TransitionGroup>
       <Footer />
     </ThemeProvider>
   );

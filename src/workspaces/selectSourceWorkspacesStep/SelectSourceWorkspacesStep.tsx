@@ -66,7 +66,6 @@ export const SelectSourceWorkspacesStepComponent: React.FC<Props> = props => {
       return;
     }
 
-    props.onFetchAllEntities();
     props.onPush(RoutePath.SelectInclusions);
   };
 
@@ -104,6 +103,7 @@ export const SelectSourceWorkspacesStepComponent: React.FC<Props> = props => {
         </Flex>
       )}
       <NavigationButtonsRow
+        css={{ marginTop: 0 }}
         disabled={props.areWorkspacesFetching}
         onBackClick={handleBackClick}
         onNextClick={handleNextClick}
@@ -111,7 +111,7 @@ export const SelectSourceWorkspacesStepComponent: React.FC<Props> = props => {
         <Button
           variant="outlinePrimary"
           disabled={props.areWorkspacesFetching}
-          onClick={() => () => props.onFetchWorkspaces()}
+          onClick={() => props.onFetchWorkspaces()}
         >
           Refresh
         </Button>

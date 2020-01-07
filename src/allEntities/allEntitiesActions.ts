@@ -1,5 +1,9 @@
-import { createAction, createAsyncAction } from "typesafe-actions";
-import { EntityGroup, CountsByEntityGroupModel } from "./allEntitiesTypes";
+import { createAsyncAction, createAction } from "typesafe-actions";
+import {
+  CountsByEntityGroupModel,
+  EntityGroup,
+  FetchStatus,
+} from "./allEntitiesTypes";
 
 export const createAllEntities = createAsyncAction(
   "@allEntities/CREATE_ALL_ENTITIES_REQUEST",
@@ -16,6 +20,14 @@ export const fetchAllEntities = createAsyncAction(
 export const flipIfExistsInTargetShown = createAction(
   "@allEntities/FLIP_IF_EXISTS_IN_TARGET_SHOWN",
 )<void>();
+
+export const updateCreateAllFetchStatus = createAction(
+  "@allEntities/UPDATE_CREATE_ALL_FETCH_STATUS",
+)<FetchStatus>();
+
+export const updateFetchAllFetchStatus = createAction(
+  "@allEntities/UPDATE_FETCH_ALL_FETCH_STATUS",
+)<FetchStatus>();
 
 export const updateEntityGroupInProcess = createAction(
   "@allEntities/UPDATE_ENTITY_GROUP_IN_PROCESS",

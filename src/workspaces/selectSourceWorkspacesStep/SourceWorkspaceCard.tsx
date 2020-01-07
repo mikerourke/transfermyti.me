@@ -1,6 +1,11 @@
 import React from "react";
-import { Card, Toggle } from "~/components";
+import { Card, styled, Toggle } from "~/components";
 import { WorkspaceModel } from "~/workspaces/workspacesTypes";
+
+const WorkspaceToggle = styled(Toggle)({}, ({ theme }) => ({
+  marginTop: "0.5rem",
+  background: theme.colors.secondary,
+}));
 
 interface Props {
   workspace: WorkspaceModel;
@@ -14,13 +19,9 @@ const SourceWorkspaceCard: React.FC<Props> = ({
 }) => (
   <Card title={workspace.name} {...props}>
     <div id={`${workspace.id}Transfer`}>Transfer this workspace?</div>
-    <Toggle
+    <WorkspaceToggle
       aria-label="Include workspace in transfer"
       aria-labelledby={`${workspace.id}Transfer`}
-      css={theme => ({
-        marginTop: "0.375rem",
-        background: theme.colors.secondary,
-      })}
       isToggled={workspace.isIncluded}
       onToggle={() => onToggleIncluded(workspace)}
     />

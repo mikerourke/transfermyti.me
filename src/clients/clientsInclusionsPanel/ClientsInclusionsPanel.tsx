@@ -32,8 +32,8 @@ export const ClientsInclusionsPanelComponent: React.FC<Props> = props => (
     tableData={props.clients}
     tableFields={[
       { label: "Name", field: "name" },
-      { label: "Project Count", field: "projectCount" },
       { label: "Time Entry Count", field: "entryCount" },
+      { label: "Project Count", field: "projectCount" },
     ]}
     totalCountsByType={props.totalCountsByType}
     onFlipIsIncluded={props.onFlipIsIncluded}

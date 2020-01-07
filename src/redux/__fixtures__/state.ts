@@ -2,31 +2,16 @@
 // @ts-ignore
 export default {
   allEntities: {
-    areEntitiesCreating: false,
-    areEntitiesFetching: false,
+    createAllFetchStatus: "PENDING",
+    fetchAllFetchStatus: "PENDING",
     entityGroupInProcess: null,
     lastFetchTime: null,
     transferCountsByEntityGroup: {
-      clients: {
-        completedCount: 0,
-        totalCount: 0,
-      },
-      tags: {
-        completedCount: 0,
-        totalCount: 0,
-      },
-      projects: {
-        completedCount: 0,
-        totalCount: 0,
-      },
-      tasks: {
-        completedCount: 0,
-        totalCount: 0,
-      },
-      timeEntries: {
-        completedCount: 0,
-        totalCount: 0,
-      },
+      clients: 0,
+      tags: 0,
+      projects: 0,
+      tasks: 0,
+      timeEntries: 0,
     },
   },
   app: {

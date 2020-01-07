@@ -1,5 +1,5 @@
-import React from "react";
 import * as R from "ramda";
+import React from "react";
 import { keyframes } from "@emotion/core";
 import { styled } from "./emotion";
 import Flex from "./Flex";
@@ -64,7 +64,6 @@ interface Props {
 
 const Loader: React.FC<Props> = ({ size = "small", children, ...props }) => (
   <Flex
-    css={{ margin: "3rem 1rem 0 1rem" }}
     alignItems="center"
     justifyContent="center"
     direction="column"

@@ -1,5 +1,4 @@
 import React from "react";
-import * as R from "ramda";
 import { ExternalLink, styled } from "~/components";
 import { ToolHelpDetailsModel } from "~/app/appTypes";
 

@@ -20,6 +20,13 @@ export enum EntityGroup {
   Workspaces = "workspaces",
 }
 
+export enum FetchStatus {
+  Pending = "PENDING",
+  InProcess = "IN_PROCESS",
+  Success = "SUCCESS",
+  Error = "ERROR",
+}
+
 export interface BaseEntityModel {
   id: string;
   workspaceId: string;

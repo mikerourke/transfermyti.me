@@ -1,31 +1,32 @@
-import React from "react";
 import { push } from "connected-react-router";
 import { Path } from "history";
+import React from "react";
 import { connect } from "react-redux";
 import { PayloadActionCreator } from "typesafe-actions";
-import { getEntityGroupDisplay } from "~/utils";
 import {
   createAllEntities,
   resetTransferCountsByEntityGroup,
 } from "~/allEntities/allEntitiesActions";
 import {
-  areEntitiesCreatingSelector,
+  createAllFetchStatusSelector,
   includedCountsByEntityGroupSelector,
   transferCountsByEntityGroupSelector,
 } from "~/allEntities/allEntitiesSelectors";
-import { Flex, HelpDetails, NavigationButtonsRow } from "~/components";
-import ConfirmToolActionModal from "./ConfirmToolActionModal";
-import ProgressBar from "./ProgressBar";
-import ToolActionSuccess from "./ToolActionSuccess";
 import {
   CountsByEntityGroupModel,
   EntityGroup,
+  FetchStatus,
 } from "~/allEntities/allEntitiesTypes";
 import { RoutePath } from "~/app/appTypes";
+import { Flex, HelpDetails, NavigationButtonsRow } from "~/components";
 import { ReduxState } from "~/redux/reduxTypes";
+import { getEntityGroupDisplay } from "~/utils";
+import ConfirmToolActionModal from "./ConfirmToolActionModal";
+import ProgressBar from "./ProgressBar";
+import ToolActionSuccess from "./ToolActionSuccess";
 
 interface ConnectStateProps {
-  areEntitiesCreating: boolean;
+  createAllFetchStatus: FetchStatus;
   includedCountsByEntityGroup: CountsByEntityGroupModel;
   transferCountsByEntityGroup: CountsByEntityGroupModel;
 }
@@ -42,9 +43,6 @@ export const PerformToolActionStepComponent: React.FC<Props> = props => {
   const [isConfirmModalOpen, setIsConfirmModalOpen] = React.useState<boolean>(
     false,
   );
-  const [wasTransferStarted, setWasTransferStarted] = React.useState<boolean>(
-    false,
-  );
   const [
     totalCountsByEntityGroup,
     setTotalCountsByEntityGroup,
@@ -54,11 +52,6 @@ export const PerformToolActionStepComponent: React.FC<Props> = props => {
     props.onResetTransferCountsByEntityGroup();
     setTotalCountsByEntityGroup(props.includedCountsByEntityGroup);
   }, []);
-
-  React.useEffect(() => {
-    if (wasTransferStarted && !props.areEntitiesCreating) {
-    }
-  }, [props.areEntitiesCreating]);
 
   const closeModal = (): void => setIsConfirmModalOpen(false);
 
@@ -72,12 +65,11 @@ export const PerformToolActionStepComponent: React.FC<Props> = props => {
 
   const handleConfirmClick = (): void => {
     setIsConfirmModalOpen(false);
-    setWasTransferStarted(true);
     props.onCreateAllEntities();
   };
 
   // TODO: Fix this so it shows if an error has occurred.
-  if (wasTransferStarted && !props.areEntitiesCreating) {
+  if (props.createAllFetchStatus === FetchStatus.Success) {
     return <ToolActionSuccess />;
   }
 
@@ -107,7 +99,7 @@ export const PerformToolActionStepComponent: React.FC<Props> = props => {
         ))}
       </Flex>
       <NavigationButtonsRow
-        disabled={props.areEntitiesCreating}
+        disabled={props.createAllFetchStatus === FetchStatus.InProcess}
         nextLabel="Start Transfer"
         onBackClick={handleBackClick}
         onNextClick={handleNextClick}
@@ -122,7 +114,7 @@ export const PerformToolActionStepComponent: React.FC<Props> = props => {
 };
 
 const mapStateToProps = (state: ReduxState): ConnectStateProps => ({
-  areEntitiesCreating: areEntitiesCreatingSelector(state),
+  createAllFetchStatus: createAllFetchStatusSelector(state),
   includedCountsByEntityGroup: includedCountsByEntityGroupSelector(state),
   transferCountsByEntityGroup: transferCountsByEntityGroupSelector(state),
 });

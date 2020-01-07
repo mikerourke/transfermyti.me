@@ -1,18 +1,22 @@
 import { createSelector } from "reselect";
+import { getEntityGroupDisplay } from "~/utils";
 import { includedSourceClientsSelector } from "~/clients/clientsSelectors";
 import { includedSourceProjectsSelector } from "~/projects/projectsSelectors";
 import { includedSourceTagsSelector } from "~/tags/tagsSelectors";
 import { includedSourceTasksSelector } from "~/tasks/tasksSelectors";
 import { includedSourceTimeEntriesSelector } from "~/timeEntries/timeEntriesSelectors";
-import { getEntityGroupDisplay } from "~/utils";
 import { ReduxState } from "~/redux/reduxTypes";
-import { EntityGroup, CountsByEntityGroupModel } from "./allEntitiesTypes";
+import {
+  CountsByEntityGroupModel,
+  EntityGroup,
+  FetchStatus,
+} from "./allEntitiesTypes";
 
-export const areEntitiesCreatingSelector = (state: ReduxState): boolean =>
-  state.allEntities.areEntitiesCreating;
+export const createAllFetchStatusSelector = (state: ReduxState): FetchStatus =>
+  state.allEntities.createAllFetchStatus;
 
-export const areEntitiesFetchingSelector = (state: ReduxState): boolean =>
-  state.allEntities.areEntitiesFetching;
+export const fetchAllFetchStatusSelector = (state: ReduxState): FetchStatus =>
+  state.allEntities.fetchAllFetchStatus;
 
 export const areExistsInTargetShownSelector = (state: ReduxState): boolean =>
   state.allEntities.areExistsInTargetShown;
