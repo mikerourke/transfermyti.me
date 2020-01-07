@@ -3,11 +3,11 @@ import { History } from "history";
 import React from "react";
 import { Redirect, Route, Switch } from "react-router";
 import AppRoot from "~/app/appRoot/AppRoot";
-import PickTransferActionStep from "~/app/pickTransferActionStep/PickTransferActionStep";
+import PickToolActionStep from "~/app/pickToolActionStep/PickToolActionStep";
 import EnterApiKeysStep from "~/credentials/enterApiKeysStep/EnterApiKeysStep";
 import SelectSourceWorkspacesStep from "~/workspaces/selectSourceWorkspacesStep/SelectSourceWorkspacesStep";
-import SelectTransferDataStep from "~/allEntities/selectTransferDataStep/SelectTransferDataStep";
-import PerformTransferStep from "~/allEntities/performTransferStep/PerformTransferStep";
+import SelectInclusionsStep from "~/allEntities/selectInclusionsStep/SelectInclusionsStep";
+import PerformToolActionStep from "~/allEntities/performToolActionStep/PerformToolActionStep";
 import { RoutePath } from "~/app/appTypes";
 
 interface Props {
@@ -18,23 +18,20 @@ const Routes: React.FC<Props> = ({ history }) => (
   <ConnectedRouter history={history}>
     <AppRoot>
       <Switch>
-        <Redirect exact from="/" to={RoutePath.PickTransferAction} />
-        <Route
-          path={RoutePath.PickTransferAction}
-          component={PickTransferActionStep}
-        />
+        <Redirect exact from="/" to={RoutePath.PickToolAction} />
+        <Route path={RoutePath.PickToolAction} component={PickToolActionStep} />
         <Route path={RoutePath.EnterApiKeys} component={EnterApiKeysStep} />
         <Route
           path={RoutePath.SelectWorkspaces}
           component={SelectSourceWorkspacesStep}
         />
         <Route
-          path={RoutePath.SelectTransferData}
-          component={SelectTransferDataStep}
+          path={RoutePath.SelectInclusions}
+          component={SelectInclusionsStep}
         />
         <Route
-          path={RoutePath.PerformTransfer}
-          component={PerformTransferStep}
+          path={RoutePath.PerformToolAction}
+          component={PerformToolActionStep}
         />
       </Switch>
     </AppRoot>

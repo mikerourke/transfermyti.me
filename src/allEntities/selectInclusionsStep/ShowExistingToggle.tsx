@@ -27,6 +27,7 @@ const ShowExistingToggle: React.FC<Props> = ({
     <Toggle
       aria-label="Show records that already exist in target?"
       aria-labelledby="showExistingToggle"
+      css={theme => ({ background: theme.colors.white })}
       isToggled={isToggled}
       onToggle={onToggle}
     />

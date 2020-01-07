@@ -7,7 +7,7 @@ interface Props {
   onConfirm: VoidFunction;
 }
 
-const ConfirmTransferModal: React.FC<Props> = ({
+const ConfirmToolActionModal: React.FC<Props> = ({
   isOpen,
   onClose,
   onConfirm,
@@ -34,4 +34,4 @@ const ConfirmTransferModal: React.FC<Props> = ({
   </ModalDialog>
 );
 
-export default ConfirmTransferModal;
+export default ConfirmToolActionModal;

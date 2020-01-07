@@ -9,11 +9,11 @@ export interface NotificationModel {
 }
 
 export enum RoutePath {
-  PickTransferAction = "/pick-transfer-action",
+  PickToolAction = "/pick-tool-action",
   EnterApiKeys = "/enter-api-keys",
   SelectWorkspaces = "/select-workspaces",
-  SelectTransferData = "/select-transfer-data",
-  PerformTransfer = "/perform-transfer",
+  SelectInclusions = "/select-inclusions",
+  PerformToolAction = "/perform-tool-action",
 }
 
 export enum ToolAction {

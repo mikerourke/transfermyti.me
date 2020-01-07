@@ -7,7 +7,7 @@ const Celebrate: React.FC = () => (
   </span>
 );
 
-const TransferSuccess: React.FC = () => (
+const ToolActionSuccess: React.FC = () => (
   <Flex alignItems="center" justifyContent="center" direction="column">
     <h1 css={{ fontSize: "3rem", margin: "2rem 0" }}>
       <Celebrate /> Transfer Complete! <Celebrate />
@@ -25,4 +25,4 @@ const TransferSuccess: React.FC = () => (
   </Flex>
 );
 
-export default TransferSuccess;
+export default ToolActionSuccess;

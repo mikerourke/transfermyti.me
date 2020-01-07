@@ -26,6 +26,7 @@ import {
   Loader,
   LoadingMessage,
   NavigationButtonsRow,
+  Note,
 } from "~/components";
 import ActiveWorkspaceSelect from "./ActiveWorkspaceSelect";
 import NoSelectionsModal from "./NoSelectionsModal";
@@ -49,7 +50,7 @@ interface ConnectDispatchProps {
 
 type Props = ConnectStateProps & ConnectDispatchProps;
 
-export const SelectTransferDataStepComponent: React.FC<Props> = props => {
+export const SelectInclusionsStepComponent: React.FC<Props> = props => {
   const [isErrorModalOpen, setIsErrorModalOpen] = React.useState<boolean>(
     false,
   );
@@ -64,7 +65,7 @@ export const SelectTransferDataStepComponent: React.FC<Props> = props => {
       return;
     }
 
-    props.onPush(RoutePath.PerformTransfer);
+    props.onPush(RoutePath.PerformToolAction);
   };
 
   return (
@@ -80,17 +81,24 @@ export const SelectTransferDataStepComponent: React.FC<Props> = props => {
           <p>
             Change the active workspace by selecting it from the
             <strong> Active Workspace</strong> dropdown. Toggling
-            <strong> Show records that already exist in target </strong>
+            <strong> Show records that already exist in target? </strong>
             will either show or hide the records that already exist in the
-            target tool. The footer for each table contains the totals
-            associated with the corresponding column.
+            target tool. This is useful if you only wish to see the records that
+            <i> can</i> be transferred to the target tool.
+          </p>
+          <p>
+            Pressing the <strong>Include All/None</strong> button in the header
+            above each table will select or deselect all of the corresponding
+            records to be included in the transfer. If all of the records in the
+            group already exist, the button will be disabled. The footer in each
+            table contains the totals associated with the corresponding column.
           </p>
           <p>
             Press the <strong>Next</strong> button when you&apos;re ready to
             begin the transfer.
-            <strong css={{ marginLeft: "0.375rem" }}>
+            <Note as="span" css={{ marginLeft: "0.375rem" }}>
               The transfer will not start until you confirm it on the next page.
-            </strong>
+            </Note>
           </p>
         </HelpDetails>
         {props.areEntitiesFetching ? (
@@ -156,4 +164,4 @@ const mapDispatchToProps: ConnectDispatchProps = {
 export default connect(
   mapStateToProps,
   mapDispatchToProps,
-)(SelectTransferDataStepComponent);
+)(SelectInclusionsStepComponent);

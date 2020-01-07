@@ -37,10 +37,10 @@ function* redirectIfInvalidSaga(): SagaIterator {
     // If the user is currently on a step after the transfer mapping selection
     // step and both transfer mappings in state are "none", go back to the
     // transfer mapping selection to ensure the user picks a valid option:
-    case isPathPastStep(RoutePath.PickTransferAction):
+    case isPathPastStep(RoutePath.PickToolAction):
       const mapping = yield select(toolNameByMappingSelector);
       if (Object.values(mapping).every(mapping => mapping === ToolName.None)) {
-        yield put(push(RoutePath.PickTransferAction));
+        yield put(push(RoutePath.PickToolAction));
       }
       break;
 
@@ -72,7 +72,7 @@ function* redirectIfInvalidSaga(): SagaIterator {
       }
       break;
 
-    case isPathPastStep(RoutePath.SelectTransferData):
+    case isPathPastStep(RoutePath.SelectInclusions):
       // TODO: Add check for transfer counts.
       break;
 

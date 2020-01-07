@@ -4,9 +4,9 @@ import React from "react";
 import { connect } from "react-redux";
 import { updateToolAction, updateToolNameByMapping } from "~/app/appActions";
 import { Flex, HelpDetails } from "~/components";
-import TransferActionCard from "./TransferActionCard";
+import ToolActionCard from "./ToolActionCard";
 import { ToolName } from "~/allEntities/allEntitiesTypes";
-import { RoutePath, ToolNameByMappingModel, ToolAction } from "~/app/appTypes";
+import { RoutePath, ToolAction, ToolNameByMappingModel } from "~/app/appTypes";
 
 interface ConnectDispatchProps {
   onPush: (path: Path) => void;
@@ -18,7 +18,7 @@ interface ConnectDispatchProps {
 
 type Props = ConnectDispatchProps;
 
-export const PickTransferActionStepComponent: React.FC<Props> = props => {
+export const PickToolActionStepComponent: React.FC<Props> = props => {
   const handleSelectClick = (
     action: ToolAction,
     source: ToolName,
@@ -31,13 +31,25 @@ export const PickTransferActionStepComponent: React.FC<Props> = props => {
 
   return (
     <section>
-      <h1>Step 1: Pick a Transfer Action</h1>
-      <HelpDetails>
-        Press the <strong>Select</strong> button for the action you wish to
-        perform.
+      <h1>Step 1: Pick an Action</h1>
+      <HelpDetails open>
+        <p>
+          Welcome to <strong>transfermyti.me</strong>! This tool can be used to
+          transfer your content between time tracking tools like Toggl and
+          Clockify.
+        </p>
+        <p>
+          Each page has a help section that contains additional information
+          about the step associated with that page. You can expand or collapse
+          the help section by clicking on <strong>Show/Hide Help</strong>.
+        </p>
+        <p>
+          Press the <strong>Select</strong> button for the action you wish to
+          perform and you&apos;ll be guided through the appropriate steps.
+        </p>
       </HelpDetails>
       <Flex as="ul" css={{ listStyle: "none", padding: 0 }} wrap="wrap">
-        <TransferActionCard
+        <ToolActionCard
           action={ToolAction.Transfer}
           source={ToolName.Toggl}
           target={ToolName.Clockify}
@@ -45,8 +57,8 @@ export const PickTransferActionStepComponent: React.FC<Props> = props => {
           onSelectClick={handleSelectClick}
         >
           Transfer your entries from Toggl to Clockify.me.
-        </TransferActionCard>
-        <TransferActionCard
+        </ToolActionCard>
+        <ToolActionCard
           action={ToolAction.Transfer}
           source={ToolName.Clockify}
           target={ToolName.Toggl}
@@ -54,8 +66,8 @@ export const PickTransferActionStepComponent: React.FC<Props> = props => {
           onSelectClick={handleSelectClick}
         >
           Transfer your entries from Clockify.me to Toggl.
-        </TransferActionCard>
-        {/*<TransferActionCard*/}
+        </ToolActionCard>
+        {/*<ToolActionCard*/}
         {/*  action={ToolAction.Delete}*/}
         {/*  source={ToolName.Clockify}*/}
         {/*  target={ToolName.None}*/}
@@ -63,8 +75,8 @@ export const PickTransferActionStepComponent: React.FC<Props> = props => {
         {/*  onSelectClick={handleSelectClick}*/}
         {/*>*/}
         {/*  Delete everything from your Clockify.me account.*/}
-        {/*</TransferActionCard>*/}
-        {/*<TransferActionCard*/}
+        {/*</ToolActionCard>*/}
+        {/*<ToolActionCard*/}
         {/*  action={ToolAction.Delete}*/}
         {/*  source={ToolName.Toggl}*/}
         {/*  target={ToolName.None}*/}
@@ -72,7 +84,7 @@ export const PickTransferActionStepComponent: React.FC<Props> = props => {
         {/*  onSelectClick={handleSelectClick}*/}
         {/*>*/}
         {/*  Delete everything from your Toggl account.*/}
-        {/*</TransferActionCard>*/}
+        {/*</ToolActionCard>*/}
       </Flex>
     </section>
   );
@@ -84,7 +96,4 @@ const mapDispatchToProps: ConnectDispatchProps = {
   onUpdateToolNameByMapping: updateToolNameByMapping,
 };
 
-export default connect(
-  null,
-  mapDispatchToProps,
-)(PickTransferActionStepComponent);
+export default connect(null, mapDispatchToProps)(PickToolActionStepComponent);

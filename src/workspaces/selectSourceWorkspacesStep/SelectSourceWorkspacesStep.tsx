@@ -61,7 +61,7 @@ export const SelectSourceWorkspacesStepComponent: React.FC<Props> = props => {
     }
 
     props.onFetchAllEntities();
-    props.onPush(RoutePath.SelectTransferData);
+    props.onPush(RoutePath.SelectInclusions);
   };
 
   return (

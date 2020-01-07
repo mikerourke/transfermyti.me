@@ -14,9 +14,9 @@ import {
   transferCountsByEntityGroupSelector,
 } from "~/allEntities/allEntitiesSelectors";
 import { Flex, HelpDetails, NavigationButtonsRow } from "~/components";
-import ConfirmTransferModal from "./ConfirmTransferModal";
+import ConfirmToolActionModal from "./ConfirmToolActionModal";
 import ProgressBar from "./ProgressBar";
-import TransferSuccess from "./TransferSuccess";
+import ToolActionSuccess from "./ToolActionSuccess";
 import {
   CountsByEntityGroupModel,
   EntityGroup,
@@ -38,7 +38,7 @@ interface ConnectDispatchProps {
 
 type Props = ConnectStateProps & ConnectDispatchProps;
 
-export const PerformTransferStepComponent: React.FC<Props> = props => {
+export const PerformToolActionStepComponent: React.FC<Props> = props => {
   const [isConfirmModalOpen, setIsConfirmModalOpen] = React.useState<boolean>(
     false,
   );
@@ -63,7 +63,7 @@ export const PerformTransferStepComponent: React.FC<Props> = props => {
   const closeModal = (): void => setIsConfirmModalOpen(false);
 
   const handleBackClick = (): void => {
-    props.onPush(RoutePath.SelectTransferData);
+    props.onPush(RoutePath.SelectInclusions);
   };
 
   const handleNextClick = (): void => {
@@ -78,7 +78,7 @@ export const PerformTransferStepComponent: React.FC<Props> = props => {
 
   // TODO: Fix this so it shows if an error has occurred.
   if (wasTransferStarted && !props.areEntitiesCreating) {
-    return <TransferSuccess />;
+    return <ToolActionSuccess />;
   }
 
   return (
@@ -86,10 +86,14 @@ export const PerformTransferStepComponent: React.FC<Props> = props => {
       <h1>Step 5: Perform Transfer</h1>
       <HelpDetails>
         <p>
-          Press the <strong>Start Transfer</strong> button to start the
-          transfer.
+          Press the <strong>Start Transfer</strong> button and confirm the
+          action in the dialog to begin the transfer.
         </p>
-        <p>Note: this could take several minutes due to API rate limiting.</p>
+        <p>
+          <strong>
+            Note: this could take several minutes due to API rate limiting.
+          </strong>
+        </p>
       </HelpDetails>
       <Flex direction="column">
         {Object.keys(totalCountsByEntityGroup).map(entityGroup => (
@@ -108,7 +112,7 @@ export const PerformTransferStepComponent: React.FC<Props> = props => {
         onBackClick={handleBackClick}
         onNextClick={handleNextClick}
       />
-      <ConfirmTransferModal
+      <ConfirmToolActionModal
         isOpen={isConfirmModalOpen}
         onClose={closeModal}
         onConfirm={handleConfirmClick}
@@ -132,4 +136,4 @@ const mapDispatchToProps: ConnectDispatchProps = {
 export default connect(
   mapStateToProps,
   mapDispatchToProps,
-)(PerformTransferStepComponent);
+)(PerformToolActionStepComponent);

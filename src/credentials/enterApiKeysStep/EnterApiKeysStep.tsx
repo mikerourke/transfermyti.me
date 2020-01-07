@@ -122,7 +122,7 @@ const EnterApiKeysStepComponent: React.FC<Props> = props => {
   };
 
   const handleBackClick = (): void => {
-    props.onPush(RoutePath.PickTransferAction);
+    props.onPush(RoutePath.PickToolAction);
   };
 
   const handleNextClick = (): void => {

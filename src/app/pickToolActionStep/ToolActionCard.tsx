@@ -15,7 +15,7 @@ interface Props {
   ) => void;
 }
 
-const TransferActionCard: React.FC<Props> = ({
+const ToolActionCard: React.FC<Props> = ({
   action,
   children,
   header,
@@ -35,4 +35,4 @@ const TransferActionCard: React.FC<Props> = ({
   </Card>
 );
 
-export default TransferActionCard;
+export default ToolActionCard;

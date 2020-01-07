@@ -22,7 +22,7 @@ const Header: React.FC = () => (
   <Base>
     <Link
       css={theme => ({ color: theme.colors.secondary, fontSize: "1.5rem" })}
-      to={RoutePath.PickTransferAction}
+      to={RoutePath.PickToolAction}
     >
       transfermyti.me
     </Link>
