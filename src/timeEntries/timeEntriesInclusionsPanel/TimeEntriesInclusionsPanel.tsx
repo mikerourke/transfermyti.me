@@ -8,7 +8,7 @@ import {
   flipIsTimeEntryIncluded,
 } from "~/timeEntries/timeEntriesActions";
 import {
-  timeEntriesTotalCountForInclusionsTableSelector,
+  timeEntriesTotalCountsByTypeSelector,
   timeEntriesForInclusionsTableSelector,
 } from "~/timeEntries/timeEntriesSelectors";
 import {
@@ -19,13 +19,14 @@ import {
   InclusionsTableRow,
   InclusionsTableTitle,
 } from "~/components";
+import TimeEntryComparisonDisclaimer from "./TimeEntryComparisonDisclaimer";
 import { ReduxState } from "~/redux/reduxTypes";
 import { TimeEntryTableViewModel } from "~/timeEntries/timeEntriesTypes";
 
 interface ConnectStateProps {
-  includedTotalCount: number;
   replaceMappingWithToolName: (label: string) => string;
   timeEntries: TimeEntryTableViewModel[];
+  totalCountsByType: Record<string, number>;
 }
 
 interface ConnectDispatchProps {
@@ -35,17 +36,27 @@ interface ConnectDispatchProps {
 
 type Props = ConnectStateProps & ConnectDispatchProps;
 
-export const TimeEntriesInclusionsPanelComponent: React.FC<Props> = props => {
-  const areAllToggled = props.includedTotalCount === props.timeEntries.length;
+export const TimeEntriesInclusionsPanelComponent: React.FC<Props> = ({
+  timeEntries,
+  ...props
+}) => {
+  const { isIncluded, existsInTarget } = props.totalCountsByType;
+  const areAllToggled = isIncluded + existsInTarget === timeEntries.length;
 
   const handleFlipInclusions = (): void => {
     props.onUpdateAreAllIncluded(!areAllToggled);
   };
 
+  const nonExistingRecords = timeEntries.filter(
+    ({ existsInTarget }) => !existsInTarget,
+  );
+
   return (
     <AccordionPanel rowNumber={5} title="Time Entries">
+      <TimeEntryComparisonDisclaimer />
       <InclusionsTableTitle
         id="timeEntriesDesc"
+        flipDisabled={nonExistingRecords.length === 0}
         onFlipAreAllIncluded={handleFlipInclusions}
       >
         {props.replaceMappingWithToolName("Time Entry Records in Source")}
@@ -69,7 +80,7 @@ export const TimeEntriesInclusionsPanelComponent: React.FC<Props> = props => {
           </tr>
         </thead>
         <tbody>
-          {props.timeEntries.map(timeEntry => (
+          {timeEntries.map(timeEntry => (
             <React.Fragment key={timeEntry.id}>
               <InclusionsTableRow disabled={timeEntry.existsInTarget}>
                 <td>{format(timeEntry.start, "Pp")}</td>
@@ -91,7 +102,7 @@ export const TimeEntriesInclusionsPanelComponent: React.FC<Props> = props => {
         </tbody>
         <InclusionsTableFoot
           fieldCount={4}
-          totalCountsByType={{ entryCount: props.includedTotalCount }}
+          totalCountsByType={props.totalCountsByType}
         />
       </InclusionsTable>
     </AccordionPanel>
@@ -99,9 +110,9 @@ export const TimeEntriesInclusionsPanelComponent: React.FC<Props> = props => {
 };
 
 const mapStateToProps = (state: ReduxState): ConnectStateProps => ({
-  includedTotalCount: timeEntriesTotalCountForInclusionsTableSelector(state),
   replaceMappingWithToolName: replaceMappingWithToolNameSelector(state),
   timeEntries: timeEntriesForInclusionsTableSelector(state),
+  totalCountsByType: timeEntriesTotalCountsByTypeSelector(state),
 });
 
 const mapDispatchToProps: ConnectDispatchProps = {

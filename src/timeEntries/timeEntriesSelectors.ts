@@ -78,12 +78,18 @@ export const timeEntriesForInclusionsTableSelector = createSelector(
     }, [] as TimeEntryTableViewModel[]),
 );
 
-export const timeEntriesTotalCountForInclusionsTableSelector = createSelector(
+export const timeEntriesTotalCountsByTypeSelector = createSelector(
   timeEntriesForInclusionsTableSelector,
-  (timeEntriesForTableView): number =>
-    timeEntriesForTableView.reduce(
-      (acc, timeEntry) => acc + (timeEntry.isIncluded ? 1 : 0),
-      0,
+  timeEntriesForInclusionsTable =>
+    timeEntriesForInclusionsTable.reduce(
+      (acc, { existsInTarget, isIncluded }: TimeEntryTableViewModel) => ({
+        existsInTarget: acc.existsInTarget + (existsInTarget ? 1 : 0),
+        isIncluded: acc.isIncluded + (isIncluded ? 1 : 0),
+      }),
+      {
+        existsInTarget: 0,
+        isIncluded: 0,
+      },
     ),
 );
 

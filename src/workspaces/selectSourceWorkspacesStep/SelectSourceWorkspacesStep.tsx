@@ -5,7 +5,6 @@ import { connect } from "react-redux";
 import { PayloadActionCreator } from "typesafe-actions";
 import { fetchAllEntities } from "~/allEntities/allEntitiesActions";
 import { dismissAllNotifications, showNotification } from "~/app/appActions";
-import Button from "~/components/Button";
 import {
   fetchWorkspaces,
   flipIsWorkspaceIncluded,
@@ -15,7 +14,14 @@ import {
   sourceIncludedWorkspacesCountSelector,
   sourceWorkspacesSelector,
 } from "~/workspaces/workspacesSelectors";
-import { Flex, HelpDetails, Loader, NavigationButtonsRow } from "~/components";
+import {
+  Button,
+  Flex,
+  HelpDetails,
+  Loader,
+  NavigationButtonsRow,
+  Note,
+} from "~/components";
 import NoWorkspacesModal from "./NoWorkspacesModal";
 import SourceWorkspaceCard from "./SourceWorkspaceCard";
 import { NotificationModel, RoutePath } from "~/app/appTypes";
@@ -68,9 +74,21 @@ export const SelectSourceWorkspacesStepComponent: React.FC<Props> = props => {
     <section>
       <h1>Step 3: Select Source Workspaces</h1>
       <HelpDetails>
-        Select which workspaces you would like to include in the transfer and
-        press the <strong>Next</strong> button to move on to the source data
-        selection step.
+        <p>
+          Select which workspaces you would like to include in the transfer and
+          press the <strong>Next</strong> button to move on to the inclusions
+          selection step.
+        </p>
+        <p>
+          If you decide you want to include additional workspaces, you&apos;ll
+          need to come back to this page and select them, otherwise the
+          corresponding data won&apos;t be fetched.
+        </p>
+        <Note>
+          Only select the workspaces containing data you wish to transfer. The
+          fetch process can take several minutes depending on the amount of data
+          in each workspace.
+        </Note>
       </HelpDetails>
       {props.areWorkspacesFetching ? (
         <Loader>Loading workspaces, please wait...</Loader>

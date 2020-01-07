@@ -67,7 +67,7 @@ const ApiKeyInputField: React.FC<Props> = ({
       autoComplete="hidden"
       aria-describedby={`${mapping}Error`}
       aria-required={true}
-      aria-invalid={!R.isNil(errorMessage).toString()}
+      aria-invalid={errorMessage !== null}
       {...props}
     />
     <ErrorMessage id={`${mapping}Error`}>{errorMessage}</ErrorMessage>

@@ -141,23 +141,31 @@ const EnterApiKeysStepComponent: React.FC<Props> = props => {
     <section>
       <h1>Step 2: Enter Credentials</h1>
       <HelpDetails>
-        Enter your the API key(s) for the tools associated with the transfer.
-        Press the
-        <strong> Next</strong> button to validate your keys and move on to the
-        Workspace selection step.
+        <p>
+          Enter your the API key for each tool in the input below. You can get
+          the API key by clicking on the link above each input.
+        </p>
+        <p>
+          These keys are needed to read and write data for the tools involved in
+          the transfer. They are stored in global state while you use the tool.
+          Once the transfer is complete, the values are cleared from state.
+        </p>
+        <p>
+          Press the <strong>Next</strong> button to validate your keys and move
+          on to the workspace selection step. If the key is invalid, an error
+          message will be displayed below the invalid key.
+        </p>
       </HelpDetails>
       <form autoComplete="hidden" css={{ margin: "0 1rem" }}>
-        {source.toolName !== ToolName.None && (
-          <ApiKeyInputField
-            mapping={Mapping.Source}
-            toolHelpDetails={source}
-            onBlur={handleInputBlur}
-            onChange={handleInputChange}
-            onFocus={clearError}
-            value={inputValues.source ?? ""}
-            errorMessage={inputErrors.source}
-          />
-        )}
+        <ApiKeyInputField
+          mapping={Mapping.Source}
+          toolHelpDetails={source}
+          onBlur={handleInputBlur}
+          onChange={handleInputChange}
+          onFocus={clearError}
+          value={inputValues.source ?? ""}
+          errorMessage={inputErrors.source}
+        />
         {target.toolName !== ToolName.None && (
           <ApiKeyInputField
             mapping={Mapping.Target}

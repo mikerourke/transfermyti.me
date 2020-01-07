@@ -64,10 +64,7 @@ const Footer: React.FC = () => (
       </p>
     </div>
     <RightColumn>
-      <p>
-        The time tracking tool companies (Clockify, Toggl, etc.) are not
-        responsible for this tool.
-      </p>
+      <p>The time tracking tool companies are not responsible for this tool.</p>
       <p>
         Please file any issues <LinkToIssues />.
       </p>
