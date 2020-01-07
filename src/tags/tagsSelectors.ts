@@ -93,15 +93,20 @@ export const tagsForInclusionTableSelector = createSelector(
 
 export const tagsTotalCountsByTypeSelector = createSelector(
   tagsForInclusionTableSelector,
-  tagsForTableView =>
-    tagsForTableView.reduce(
-      (acc, { entryCount, isIncluded }: TableViewModel<TagModel>) => ({
-        entries: acc.entries + entryCount,
-        inclusions: acc.inclusions + (isIncluded ? 1 : 0),
+  tagsForInclusionTable =>
+    tagsForInclusionTable.reduce(
+      (
+        acc,
+        { entryCount, existsInTarget, isIncluded }: TableViewModel<TagModel>,
+      ) => ({
+        entryCount: acc.entryCount + entryCount,
+        existsInTarget: acc.existsInTarget + (existsInTarget ? 1 : 0),
+        isIncluded: acc.isIncluded + (isIncluded ? 1 : 0),
       }),
       {
-        entries: 0,
-        inclusions: 0,
+        entryCount: 0,
+        existsInTarget: 0,
+        isIncluded: 0,
       },
     ),
 );

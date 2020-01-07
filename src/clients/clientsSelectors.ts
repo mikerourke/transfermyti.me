@@ -37,14 +37,6 @@ export const includedSourceClientsSelector = createSelector(
     sourceClients.filter(sourceClient => sourceClient.isIncluded),
 );
 
-const clientsByMappingSelector = createStructuredSelector<
-  ReduxState,
-  Record<Mapping, ClientModel[]>
->({
-  source: sourceClientsSelector,
-  target: targetClientsSelector,
-});
-
 export const sourceClientsForTransferSelector = createSelector(
   includedSourceClientsSelector,
   (sourceClients): ClientModel[] =>
@@ -122,23 +114,38 @@ export const clientsForInclusionsTableSelector = createSelector(
 
 export const clientsTotalCountsByTypeSelector = createSelector(
   clientsForInclusionsTableSelector,
-  clientsForTableView =>
-    clientsForTableView.reduce(
+  clientsForInclusionsTable =>
+    clientsForInclusionsTable.reduce(
       (
         acc,
-        { entryCount, projectCount, isIncluded }: ClientTableViewModel,
+        {
+          entryCount,
+          existsInTarget,
+          projectCount,
+          isIncluded,
+        }: ClientTableViewModel,
       ) => ({
-        entries: acc.entries + entryCount,
-        inProject: acc.inProject + projectCount,
-        inclusions: acc.inclusions + (isIncluded ? 1 : 0),
+        entryCount: acc.entryCount + entryCount,
+        existsInTarget: acc.existsInTarget + (existsInTarget ? 1 : 0),
+        projectCount: acc.projectCount + projectCount,
+        isIncluded: acc.isIncluded + (isIncluded ? 1 : 0),
       }),
       {
-        entries: 0,
-        inProject: 0,
-        inclusions: 0,
+        entryCount: 0,
+        existsInTarget: 0,
+        projectCount: 0,
+        isIncluded: 0,
       },
     ),
 );
+
+const clientsByMappingSelector = createStructuredSelector<
+  ReduxState,
+  Record<Mapping, ClientModel[]>
+>({
+  source: sourceClientsSelector,
+  target: targetClientsSelector,
+});
 
 export const clientIdsByNameSelectorFactory = (
   toolName: ToolName,

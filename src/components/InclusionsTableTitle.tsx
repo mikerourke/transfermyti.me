@@ -39,7 +39,7 @@ const InclusionsTableTitle: React.FC<Props> = ({
       variant="outlinePrimary"
       onClick={() => onFlipAreAllIncluded()}
     >
-      Toggle Included
+      Include All/None
     </Button>
   </Base>
 );

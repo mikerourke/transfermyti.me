@@ -1,14 +1,15 @@
 import React from "react";
 import { connect } from "react-redux";
 import { PayloadActionCreator } from "typesafe-actions";
-import { replaceMappingWithToolNameSelector } from "~/app/appSelectors";
 import { getEntityGroupDisplay } from "~/utils";
+import { replaceMappingWithToolNameSelector } from "~/app/appSelectors";
 import AccordionPanel from "./AccordionPanel";
 import InclusionsTable from "./InclusionsTable";
 import InclusionsTableBody from "./InclusionsTableBody";
 import InclusionsTableFoot from "./InclusionsTableFoot";
 import InclusionsTableHead from "./InclusionsTableHead";
 import InclusionsTableTitle from "./InclusionsTableTitle";
+import NoRecordsFound from "./NoRecordsFound";
 import {
   BaseEntityModel,
   EntityGroup,
@@ -32,50 +33,59 @@ interface OwnProps {
 
 type Props = ConnectStateProps & OwnProps;
 
-export const EntityGroupInclusionsPanelComponent: React.FC<Props> = props => {
-  const areAllToggled =
-    props.totalCountsByType.inclusions === props.tableData.length;
-
+export const EntityGroupInclusionsPanelComponent: React.FC<Props> = ({
+  replaceMappingWithToolName,
+  tableData,
+  ...props
+}) => {
   const groupDisplay = getEntityGroupDisplay(props.entityGroup);
   const headerLabels: string[] = [];
   const bodyFieldNames: string[] = [];
+  const recordCount = tableData.length;
 
   const handleFlipInclusions = (): void => {
+    const { isIncluded, existsInTarget } = props.totalCountsByType;
+    const areAllToggled = isIncluded + existsInTarget === recordCount;
     props.onUpdateAreAllIncluded(!areAllToggled);
   };
 
   for (const tableField of props.tableFields) {
-    headerLabels.push(props.replaceMappingWithToolName(tableField.label));
+    headerLabels.push(replaceMappingWithToolName(tableField.label));
     bodyFieldNames.push(tableField.field);
   }
 
   const tableTitleId = `${props.entityGroup}Desc`;
-  const nonExistingRecords = props.tableData.filter(
-    record => !record.existsInTarget,
+  const nonExistingRecords = tableData.filter(
+    ({ existsInTarget }) => !existsInTarget,
   );
-  const flipDisabled = nonExistingRecords.length === 0;
 
   return (
     <AccordionPanel rowNumber={props.rowNumber} title={groupDisplay}>
-      <InclusionsTableTitle
-        id={tableTitleId}
-        flipDisabled={flipDisabled}
-        onFlipAreAllIncluded={handleFlipInclusions}
-      >
-        {props.replaceMappingWithToolName(`${groupDisplay} Records in Source`)}
-      </InclusionsTableTitle>
-      <InclusionsTable aria-labelledby={tableTitleId}>
-        <InclusionsTableHead labels={headerLabels} />
-        <InclusionsTableBody
-          fieldNames={bodyFieldNames}
-          tableData={props.tableData}
-          onFlipIsIncluded={props.onFlipIsIncluded}
-        />
-        <InclusionsTableFoot
-          fieldCount={bodyFieldNames.length}
-          totalCountsByType={props.totalCountsByType}
-        />
-      </InclusionsTable>
+      {recordCount === 0 ? (
+        <NoRecordsFound />
+      ) : (
+        <>
+          <InclusionsTableTitle
+            id={tableTitleId}
+            flipDisabled={nonExistingRecords.length === 0}
+            onFlipAreAllIncluded={handleFlipInclusions}
+          >
+            {replaceMappingWithToolName(`${groupDisplay} Records in Source`)}
+          </InclusionsTableTitle>
+          <InclusionsTable aria-labelledby={tableTitleId}>
+            <InclusionsTableHead labels={headerLabels} />
+            <InclusionsTableBody
+              fieldNames={bodyFieldNames}
+              tableData={tableData}
+              onFlipIsIncluded={props.onFlipIsIncluded}
+            />
+            <InclusionsTableFoot
+              fieldCount={bodyFieldNames.length}
+              totalCountsByType={props.totalCountsByType}
+            />
+          </InclusionsTable>
+        </>
+      )}
     </AccordionPanel>
   );
 };

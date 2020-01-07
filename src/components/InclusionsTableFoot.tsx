@@ -10,7 +10,8 @@ const InclusionsTableFoot: React.FC<Props> = ({
   totalCountsByType,
   ...props
 }) => {
-  const totalsByTypeEntries = Object.entries(totalCountsByType);
+  const { existsInTarget, ...validCountsByType } = totalCountsByType;
+  const totalsByTypeEntries = Object.entries(validCountsByType);
   const totalsColSpan = fieldCount + 1 - totalsByTypeEntries.length;
   const totalLabel = totalsByTypeEntries.length === 1 ? "Total" : "Totals";
 

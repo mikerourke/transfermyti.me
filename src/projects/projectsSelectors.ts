@@ -108,27 +108,30 @@ export const projectsForInclusionsTableSelector = createSelector(
 
 export const projectsTotalCountsByTypeSelector = createSelector(
   projectsForInclusionsTableSelector,
-  projectsForTableView =>
-    projectsForTableView.reduce(
+  projectsForInclusionsTable =>
+    projectsForInclusionsTable.reduce(
       (
         acc,
         {
           entryCount,
+          existsInTarget,
           isIncluded,
           isActiveInSource,
           isActiveInTarget,
         }: TableViewModel<ProjectModel>,
       ) => ({
-        entries: acc.entries + entryCount,
-        activeInSource: acc.activeInSource + (isActiveInSource ? 1 : 0),
-        activeInTarget: acc.activeInSource + (isActiveInTarget ? 1 : 0),
-        inclusions: acc.inclusions + (isIncluded ? 1 : 0),
+        entryCount: acc.entryCount + entryCount,
+        existsInTarget: acc.existsInTarget + (existsInTarget ? 1 : 0),
+        isActiveInSource: acc.isActiveInSource + (isActiveInSource ? 1 : 0),
+        isActiveInTarget: acc.isActiveInTarget + (isActiveInTarget ? 1 : 0),
+        isIncluded: acc.isIncluded + (isIncluded ? 1 : 0),
       }),
       {
-        entries: 0,
-        activeInSource: 0,
-        activeInTarget: 0,
-        inclusions: 0,
+        entryCount: 0,
+        existsInTarget: 0,
+        isActiveInSource: 0,
+        isActiveInTarget: 0,
+        isIncluded: 0,
       },
     ),
 );

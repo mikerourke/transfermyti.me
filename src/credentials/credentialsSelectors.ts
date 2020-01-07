@@ -56,10 +56,3 @@ export const hasValidationErrorsSelector = createSelector(
   (validationErrorsByMapping): boolean =>
     Object.values(validationErrorsByMapping).some(Boolean),
 );
-
-export const areApiKeysPresentSelector = createSelector(
-  sourceCredentialsSelector,
-  targetCredentialsSelector,
-  (sourceCredentials, targetCredentials): boolean =>
-    sourceCredentials.apiKey !== null && targetCredentials.apiKey !== null,
-);
