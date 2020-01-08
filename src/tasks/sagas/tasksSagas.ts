@@ -4,7 +4,10 @@ import { all, call, put, select, takeEvery } from "redux-saga/effects";
 import { isActionOf } from "typesafe-actions";
 import { linkEntitiesByIdByMapping } from "~/redux/reduxUtils";
 import { showFetchErrorNotification } from "~/app/appActions";
-import { toolNameByMappingSelector } from "~/app/appSelectors";
+import {
+  toolActionSelector,
+  toolNameByMappingSelector,
+} from "~/app/appSelectors";
 import { updateIsProjectIncluded } from "~/projects/projectsActions";
 import { sourceProjectsSelector } from "~/projects/projectsSelectors";
 import * as tasksActions from "~/tasks/tasksActions";
@@ -18,10 +21,11 @@ import {
   fetchClockifyTasksSaga,
 } from "./clockifyTasksSagas";
 import { createTogglTasksSaga, fetchTogglTasksSaga } from "./togglTasksSagas";
-import { ToolName } from "~/allEntities/allEntitiesTypes";
+import { Mapping, ToolName } from "~/allEntities/allEntitiesTypes";
+import { ToolAction } from "~/app/appTypes";
 import { ProjectModel } from "~/projects/projectsTypes";
 import { ReduxAction } from "~/redux/reduxTypes";
-import { TaskModel } from "~/tasks/tasksTypes";
+import { TaskModel, TasksByIdModel } from "~/tasks/tasksTypes";
 
 export function* taskMonitoringSaga(): SagaIterator {
   yield all([
@@ -39,6 +43,11 @@ export function* taskMonitoringSaga(): SagaIterator {
 function* pushTaskInclusionChangesToProject(
   action: ReduxAction<string | boolean>,
 ): SagaIterator {
+  const toolAction = yield select(toolActionSelector);
+  if (toolAction === ToolAction.Delete) {
+    return;
+  }
+
   const sourceProjects: ProjectModel[] = yield select(sourceProjectsSelector);
   const includedSourceTasksCount = yield select(
     includedSourceTasksCountSelector,
@@ -115,12 +124,23 @@ export function* fetchTasksSaga(): SagaIterator {
     };
     const { source, target } = yield select(toolNameByMappingSelector);
     const sourceTasks = yield call(fetchSagaByToolName[source]);
-    const targetTasks = yield call(fetchSagaByToolName[target]);
 
-    const tasksByIdByMapping = linkEntitiesByIdByMapping<TaskModel>(
-      sourceTasks,
-      targetTasks,
-    );
+    const toolAction = yield select(toolActionSelector);
+    let tasksByIdByMapping: Record<Mapping, TasksByIdModel>;
+
+    if (toolAction === ToolAction.Transfer) {
+      const targetTasks = yield call(fetchSagaByToolName[target]);
+
+      tasksByIdByMapping = linkEntitiesByIdByMapping<TaskModel>(
+        sourceTasks,
+        targetTasks,
+      );
+    } else {
+      tasksByIdByMapping = {
+        source: R.indexBy(R.prop("id"), sourceTasks),
+        target: {},
+      };
+    }
 
     yield put(tasksActions.fetchTasks.success(tasksByIdByMapping));
   } catch (err) {

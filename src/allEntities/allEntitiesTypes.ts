@@ -43,3 +43,8 @@ export type TableViewModel<TEntity> = TEntity & {
 };
 
 export type CountsByEntityGroupModel = Record<EntityGroup, number>;
+
+export interface ToolNameByMappingModel {
+  [Mapping.Source]: ToolName;
+  [Mapping.Target]: ToolName;
+}

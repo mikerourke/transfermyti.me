@@ -1,9 +1,12 @@
 import * as R from "ramda";
 import { ActionType, createReducer } from "typesafe-actions";
+import { flushAllEntities } from "~/allEntities/allEntitiesActions";
 import * as userGroupsActions from "./userGroupsActions";
 import { UserGroupsByIdModel } from "./userGroupsTypes";
 
-type UserGroupsAction = ActionType<typeof userGroupsActions>;
+type UserGroupsAction = ActionType<
+  typeof userGroupsActions | typeof flushAllEntities
+>;
 
 export interface UserGroupsState {
   readonly source: UserGroupsByIdModel;
@@ -63,4 +66,5 @@ export const userGroupsReducer = createReducer<
     userGroupsActions.flipIsUserGroupIncluded,
     (state, { payload }) =>
       R.over(R.lensPath(["source", payload, "isIncluded"]), R.not, state),
-  );
+  )
+  .handleAction(flushAllEntities, () => ({ ...initialState }));

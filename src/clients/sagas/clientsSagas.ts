@@ -17,8 +17,8 @@ import {
   createTogglClientsSaga,
   fetchTogglClientsSaga,
 } from "./togglClientsSagas";
+import { Mapping, ToolName } from "~/allEntities/allEntitiesTypes";
 import { ToolAction } from "~/app/appTypes";
-import { ToolName, Mapping } from "~/allEntities/allEntitiesTypes";
 import { ClientModel, ClientsByIdModel } from "~/clients/clientsTypes";
 
 export function* createClientsSaga(): SagaIterator {

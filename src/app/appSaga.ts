@@ -3,32 +3,41 @@ import { push } from "connected-react-router";
 import * as R from "ramda";
 import { put, select, takeEvery } from "redux-saga/effects";
 import { getIfDev } from "~/utils";
+import { updateCreateAllFetchStatus } from "~/allEntities/allEntitiesActions";
 import {
   currentPathSelector,
   toolNameByMappingSelector,
 } from "~/app/appSelectors";
+import { updateValidationFetchStatus } from "~/credentials/credentialsActions";
 import { credentialsByMappingSelector } from "~/credentials/credentialsSelectors";
 import { sourceWorkspacesSelector } from "~/workspaces/workspacesSelectors";
-import { ToolName } from "~/allEntities/allEntitiesTypes";
+import { FetchStatus, ToolName } from "~/allEntities/allEntitiesTypes";
 import { RoutePath } from "./appTypes";
 
 export function* appSaga(): SagaIterator {
-  yield takeEvery("@@router/LOCATION_CHANGE", redirectIfInvalidSaga);
+  yield takeEvery("@@router/LOCATION_CHANGE", respondToRouteChangesSaga);
 }
 
 /**
- * This saga listens for routing changes and redirects the user to the
+ * This saga listens for route changes and redirects the user to the
  * appropriate route path if certain conditions aren't met. Details for each
  * condition are documented within the saga.
  */
-function* redirectIfInvalidSaga(): SagaIterator {
+function* respondToRouteChangesSaga(): SagaIterator {
+  const currentPath = yield select(currentPathSelector);
+  if (currentPath !== RoutePath.EnterApiKeys) {
+    yield put(updateValidationFetchStatus(FetchStatus.Pending));
+  }
+
+  if (currentPath !== RoutePath.PerformToolAction) {
+    yield put(updateCreateAllFetchStatus(FetchStatus.Pending));
+  }
+
   // Disable the redirect for development. I originally had it turned on, but
   // I found myself disabling it more often than not:
   if (getIfDev()) {
     return;
   }
-
-  const currentPath = yield select(currentPathSelector);
 
   /**
    * Returns true if the step associated with the _current_ path is after the

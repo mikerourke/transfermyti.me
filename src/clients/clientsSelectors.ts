@@ -82,6 +82,7 @@ export const clientsForInclusionsTableSelector = createSelector(
     timeEntryCountByClientId,
   ): ClientTableViewModel[] =>
     sourceClients.reduce((acc, sourceClient) => {
+      console.log(sourceClient);
       const existsInTarget = sourceClient.linkedId !== null;
       if (existsInTarget && !areExistsInTargetShown) {
         return acc;

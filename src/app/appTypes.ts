@@ -1,4 +1,4 @@
-import { Mapping, ToolName } from "~/allEntities/allEntitiesTypes";
+import { ToolName } from "~/allEntities/allEntitiesTypes";
 
 type NotificationType = "error" | "info" | "success";
 
@@ -14,6 +14,7 @@ export enum RoutePath {
   SelectWorkspaces = "/select-workspaces",
   SelectInclusions = "/select-inclusions",
   PerformToolAction = "/perform-tool-action",
+  ToolActionSuccess = "/tool-action-success",
 }
 
 export enum ToolAction {
@@ -26,9 +27,4 @@ export interface ToolHelpDetailsModel {
   toolName: ToolName;
   displayName: string;
   toolLink: string;
-}
-
-export interface ToolNameByMappingModel {
-  [Mapping.Source]: ToolName;
-  [Mapping.Target]: ToolName;
 }

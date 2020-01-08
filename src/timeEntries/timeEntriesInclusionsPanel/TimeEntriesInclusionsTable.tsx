@@ -24,7 +24,7 @@ const TimeEntriesInclusionsTable: React.FC<Props> = props => (
         <th scope="col">Task</th>
         <th scope="col">Project</th>
         <th scope="col" rowSpan={2} data-include={true}>
-          Include in Transfer?
+          Include?
         </th>
       </tr>
       <tr>

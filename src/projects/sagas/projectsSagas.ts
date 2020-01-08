@@ -5,8 +5,8 @@ import { isActionOf } from "typesafe-actions";
 import { linkEntitiesByIdByMapping } from "~/redux/reduxUtils";
 import { showFetchErrorNotification } from "~/app/appActions";
 import {
-  toolNameByMappingSelector,
   toolActionSelector,
+  toolNameByMappingSelector,
 } from "~/app/appSelectors";
 import {
   createProjects,
@@ -29,7 +29,7 @@ import {
   fetchTogglProjectsSaga,
 } from "./togglProjectsSagas";
 import { ToolAction } from "~/app/appTypes";
-import { ToolName, Mapping } from "~/allEntities/allEntitiesTypes";
+import { Mapping, ToolName } from "~/allEntities/allEntitiesTypes";
 import { ProjectModel, ProjectsByIdModel } from "~/projects/projectsTypes";
 import { ReduxAction } from "~/redux/reduxTypes";
 
@@ -43,6 +43,7 @@ export function* projectMonitoringSaga(): SagaIterator {
 function* pushProjectInclusionChangesToTasks(
   action: ReduxAction<string | boolean>,
 ): SagaIterator {
+  const toolAction = yield select(toolActionSelector);
   const sourceProjectsById = yield select(sourceProjectsByIdSelector);
   const sourceTasks = yield select(sourceTasksSelector);
 
@@ -53,7 +54,16 @@ function* pushProjectInclusionChangesToTasks(
       sourceProjectsById,
     );
 
-    if (R.or(sourceTask.isIncluded === isProjectIncluded, isProjectIncluded)) {
+    if (sourceTask.isIncluded === isProjectIncluded) {
+      continue;
+    }
+
+    // We don't want to automatically select all the tasks associated with a
+    // project if the project is included. The user may not be aware that by
+    // including the project, they're automatically including the tasks.
+    // We _do_ want to include the tasks associated with a project if that
+    // project is included in the deletion process:
+    if (R.and(isProjectIncluded, toolAction === ToolAction.Transfer)) {
       continue;
     }
 

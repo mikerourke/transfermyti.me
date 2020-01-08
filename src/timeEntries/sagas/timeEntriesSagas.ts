@@ -1,8 +1,13 @@
 import { SagaIterator } from "@redux-saga/types";
+import * as R from "ramda";
 import { call, put, select } from "redux-saga/effects";
+import { ToolAction } from "~/app/appTypes";
 import { linkEntitiesByIdByMapping } from "~/redux/reduxUtils";
 import { showFetchErrorNotification } from "~/app/appActions";
-import { toolNameByMappingSelector } from "~/app/appSelectors";
+import {
+  toolNameByMappingSelector,
+  toolActionSelector,
+} from "~/app/appSelectors";
 import {
   createTimeEntries,
   fetchTimeEntries,
@@ -16,8 +21,11 @@ import {
   createTogglTimeEntriesSaga,
   fetchTogglTimeEntriesSaga,
 } from "./togglTimeEntriesSagas";
-import { ToolName } from "~/allEntities/allEntitiesTypes";
-import { TimeEntryModel } from "~/timeEntries/timeEntriesTypes";
+import { ToolName, Mapping } from "~/allEntities/allEntitiesTypes";
+import {
+  TimeEntryModel,
+  TimeEntriesByIdModel,
+} from "~/timeEntries/timeEntriesTypes";
 
 export function* createTimeEntriesSaga(): SagaIterator {
   yield put(createTimeEntries.request());
@@ -59,15 +67,25 @@ export function* fetchTimeEntriesSaga(): SagaIterator {
     };
     const { source, target } = yield select(toolNameByMappingSelector);
     let sourceTimeEntries = yield call(fetchSagaByToolName[source]);
-    let targetTimeEntries = yield call(fetchSagaByToolName[target]);
-
     sourceTimeEntries = sortTimeEntries(sourceTimeEntries);
-    targetTimeEntries = sortTimeEntries(targetTimeEntries);
 
-    const timeEntriesByIdByMapping = linkEntitiesByIdByMapping<TimeEntryModel>(
-      sourceTimeEntries,
-      targetTimeEntries,
-    );
+    const toolAction = yield select(toolActionSelector);
+    let timeEntriesByIdByMapping: Record<Mapping, TimeEntriesByIdModel>;
+
+    if (toolAction === ToolAction.Transfer) {
+      let targetTimeEntries = yield call(fetchSagaByToolName[target]);
+      targetTimeEntries = sortTimeEntries(targetTimeEntries);
+
+      timeEntriesByIdByMapping = linkEntitiesByIdByMapping<TimeEntryModel>(
+        sourceTimeEntries,
+        targetTimeEntries,
+      );
+    } else {
+      timeEntriesByIdByMapping = {
+        source: R.indexBy(R.prop("id"), sourceTimeEntries),
+        target: {},
+      };
+    }
 
     yield put(fetchTimeEntries.success(timeEntriesByIdByMapping));
   } catch (err) {

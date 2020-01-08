@@ -1,9 +1,12 @@
-import React from "react";
 import { push } from "connected-react-router";
 import { Path } from "history";
+import React from "react";
 import { connect } from "react-redux";
 import { PayloadActionCreator } from "typesafe-actions";
-import { fetchAllEntities } from "~/allEntities/allEntitiesActions";
+import {
+  fetchAllEntities,
+  updateFetchAllFetchStatus,
+} from "~/allEntities/allEntitiesActions";
 import { dismissAllNotifications, showNotification } from "~/app/appActions";
 import {
   fetchWorkspaces,
@@ -24,6 +27,7 @@ import {
 } from "~/components";
 import NoWorkspacesModal from "./NoWorkspacesModal";
 import SourceWorkspaceCard from "./SourceWorkspaceCard";
+import { FetchStatus } from "~/allEntities/allEntitiesTypes";
 import { NotificationModel, RoutePath } from "~/app/appTypes";
 import { ReduxState } from "~/redux/reduxTypes";
 import { WorkspaceModel } from "~/workspaces/workspacesTypes";
@@ -41,6 +45,7 @@ interface ConnectDispatchProps {
   onFlipIsWorkspaceIncluded: (workspace: WorkspaceModel) => void;
   onPush: (path: Path) => void;
   onShowNotification: (notification: Partial<NotificationModel>) => void;
+  onUpdateFetchAllFetchStatus: PayloadActionCreator<string, FetchStatus>;
 }
 
 type Props = ConnectStateProps & ConnectDispatchProps;
@@ -66,17 +71,18 @@ export const SelectSourceWorkspacesStepComponent: React.FC<Props> = props => {
       return;
     }
 
+    props.onUpdateFetchAllFetchStatus(FetchStatus.Pending);
     props.onPush(RoutePath.SelectInclusions);
   };
 
   return (
     <section>
-      <h1>Step 3: Select Source Workspaces</h1>
+      <h1>Step 3: Select Workspaces</h1>
       <HelpDetails>
         <p>
-          Select which workspaces you would like to include in the transfer and
-          press the <strong>Next</strong> button to move on to the inclusions
-          selection step.
+          Select which workspaces you would like to include in the
+          deletion/transfer and press the <strong>Next</strong> button to move
+          on to the inclusions selection step.
         </p>
         <p>
           If you decide you want to include additional workspaces, you&apos;ll
@@ -84,7 +90,7 @@ export const SelectSourceWorkspacesStepComponent: React.FC<Props> = props => {
           corresponding data won&apos;t be fetched.
         </p>
         <Note>
-          Only select the workspaces containing data you wish to transfer. The
+          Only select the workspaces containing data you wish to update. The
           fetch process can take several minutes depending on the amount of data
           in each workspace.
         </Note>
@@ -137,6 +143,7 @@ const mapDispatchToProps: ConnectDispatchProps = {
   onFlipIsWorkspaceIncluded: flipIsWorkspaceIncluded,
   onPush: push,
   onShowNotification: showNotification,
+  onUpdateFetchAllFetchStatus: updateFetchAllFetchStatus,
 };
 
 export default connect(

@@ -1,17 +1,11 @@
 import React from "react";
 import { Helmet } from "react-helmet";
-import { connect } from "react-redux";
 import { ThemeProvider } from "emotion-theming";
 import { Global } from "@emotion/core";
-import { useLocation } from "react-router";
-import { CSSTransition, TransitionGroup } from "react-transition-group";
-import { dismissNotification } from "~/app/appActions";
-import { notificationsSelector } from "~/app/appSelectors";
 import { styled, theme } from "~/components/emotion";
+import NotificationsDisplay from "~/app/notificationsDisplay/NotificationsDisplay";
 import Header from "./Header";
 import Footer from "./Footer";
-import { NotificationModel } from "~/app/appTypes";
-import { ReduxState } from "~/redux/reduxTypes";
 
 const Main = styled.main({
   height: "calc(100vh - 8rem)",
@@ -22,23 +16,7 @@ const Main = styled.main({
   position: "relative",
 });
 
-export interface ConnectStateProps {
-  notifications: NotificationModel[];
-}
-
-export interface ConnectDispatchProps {
-  onDismissNotification: (notificationId: string) => void;
-}
-
-type Props = ConnectStateProps & ConnectDispatchProps;
-
-export const AppRootComponent: React.FC<Props> = props => {
-  const location = useLocation();
-
-  React.useEffect(() => {
-    // TODO: Add notification functionality back in.
-  }, [props.notifications]);
-
+const AppRoot: React.FC = props => {
   const description = "Transfer your time entries between time tracking tools.";
   const title = "transfermyti.me";
 
@@ -107,35 +85,14 @@ export const AppRootComponent: React.FC<Props> = props => {
           ul: {
             margin: 0,
           },
-
-          ".fade-enter": {
-            opacity: 0,
-            zIndex: 1,
-          },
-
-          ".fade-enter.fade-enter-active": {
-            opacity: 1,
-            transition: "opacity 250ms ease-in",
-          },
         }}
       />
       <Header />
-      <TransitionGroup>
-        <CSSTransition key={location.key} classNames="fade" timeout={300}>
-          <Main role="main">{props.children}</Main>
-        </CSSTransition>
-      </TransitionGroup>
+      <Main role="main">{props.children}</Main>
+      <NotificationsDisplay />
       <Footer />
     </ThemeProvider>
   );
 };
 
-const mapStateToProps = (state: ReduxState): ConnectStateProps => ({
-  notifications: notificationsSelector(state),
-});
-
-const mapDispatchToProps: ConnectDispatchProps = {
-  onDismissNotification: dismissNotification,
-};
-
-export default connect(mapStateToProps, mapDispatchToProps)(AppRootComponent);
+export default AppRoot;

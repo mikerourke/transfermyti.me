@@ -1,4 +1,4 @@
-import { createAsyncAction, createAction } from "typesafe-actions";
+import { createAction, createAsyncAction } from "typesafe-actions";
 import {
   CountsByEntityGroupModel,
   EntityGroup,
@@ -17,6 +17,10 @@ export const fetchAllEntities = createAsyncAction(
   "@allEntities/FETCH_ALL_ENTITIES_FAILURE",
 )<void, void, void>();
 
+export const flushAllEntities = createAction("@allEntities/FLUSH_ALL_ENTITIES")<
+  void
+>();
+
 export const flipIfExistsInTargetShown = createAction(
   "@allEntities/FLIP_IF_EXISTS_IN_TARGET_SHOWN",
 )<void>();
@@ -32,10 +36,6 @@ export const updateFetchAllFetchStatus = createAction(
 export const updateEntityGroupInProcess = createAction(
   "@allEntities/UPDATE_ENTITY_GROUP_IN_PROCESS",
 )<EntityGroup | null>();
-
-export const updateLastFetchTime = createAction(
-  "@allEntities/UPDATE_LAST_FETCH_TIME",
-)<Date | null>();
 
 export const resetTransferCountsByEntityGroup = createAction(
   "@allEntities/RESET_TRANSFER_COUNTS_BY_ENTITY_GROUP",

@@ -1,5 +1,4 @@
 import { SagaIterator } from "@redux-saga/types";
-import * as R from "ramda";
 import { call, put, select } from "redux-saga/effects";
 import { fetchObject } from "~/redux/reduxUtils";
 import { mappingByToolNameSelector } from "~/app/appSelectors";
@@ -23,16 +22,15 @@ interface TogglMeResponseModel {
   };
 }
 
-// TODO: Change to allow for deleting entries from tool.
-
 export function* validateCredentialsSaga(): SagaIterator {
   const credentialsByMapping = yield select(credentialsByMappingSelector);
   const mappingByToolName = yield select(mappingByToolNameSelector);
-
   const validationErrorsByMapping: ValidationErrorsByMappingModel = {
     source: null,
     target: null,
   };
+
+  let hasValidationErrors = false;
 
   const clockifyMapping = mappingByToolName[ToolName.Clockify];
   if (clockifyMapping) {
@@ -42,6 +40,7 @@ export function* validateCredentialsSaga(): SagaIterator {
       credentialsByMapping[clockifyMapping].userId = clockifyUser.id;
     } catch (err) {
       validationErrorsByMapping[clockifyMapping] = "Invalid API key";
+      hasValidationErrors = true;
     }
   }
 
@@ -56,15 +55,13 @@ export function* validateCredentialsSaga(): SagaIterator {
       credentialsByMapping[togglMapping].userId = data.id.toString();
     } catch (err) {
       validationErrorsByMapping[togglMapping] = "Invalid API key";
+      hasValidationErrors = true;
     }
   }
 
-  const hasNoValidationErrors = Object.values(
-    validationErrorsByMapping,
-  ).every(validationError => R.isNil(validationError));
-  if (hasNoValidationErrors) {
-    yield put(validateCredentials.success(credentialsByMapping));
-  } else {
+  if (hasValidationErrors) {
     yield put(validateCredentials.failure(validationErrorsByMapping));
+  } else {
+    yield put(validateCredentials.success(credentialsByMapping));
   }
 }

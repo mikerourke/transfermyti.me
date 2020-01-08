@@ -61,6 +61,19 @@ export const credentialsReducer = createReducer<
       validationErrorsByMapping: { ...DEFAULT_VALIDATION_ERRORS },
     }),
   )
+  .handleAction(credentialsActions.flushCredentials, () => ({
+    ...initialState,
+  }))
+  .handleAction(credentialsActions.updateCredentials, (state, { payload }) => {
+    const { mapping, ...credentials } = payload;
+    return {
+      ...state,
+      [mapping]: {
+        ...state[mapping],
+        ...credentials,
+      },
+    };
+  })
   .handleAction(
     credentialsActions.updateValidationFetchStatus,
     (state, { payload }) => {
@@ -75,14 +88,4 @@ export const credentialsReducer = createReducer<
         validationErrorsByMapping: newValidationErrors,
       };
     },
-  )
-  .handleAction(credentialsActions.updateCredentials, (state, { payload }) => {
-    const { mapping, ...credentials } = payload;
-    return {
-      ...state,
-      [mapping]: {
-        ...state[mapping],
-        ...credentials,
-      },
-    };
-  });
+  );

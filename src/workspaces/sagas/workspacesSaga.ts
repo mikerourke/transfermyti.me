@@ -1,8 +1,12 @@
 import { SagaIterator } from "@redux-saga/types";
+import * as R from "ramda";
 import { all, call, put, select, takeEvery } from "redux-saga/effects";
 import { linkEntitiesByIdByMapping } from "~/redux/reduxUtils";
 import { showFetchErrorNotification } from "~/app/appActions";
-import { toolNameByMappingSelector } from "~/app/appSelectors";
+import {
+  toolActionSelector,
+  toolNameByMappingSelector,
+} from "~/app/appSelectors";
 import {
   createWorkspaces,
   fetchWorkspaces,
@@ -17,8 +21,12 @@ import {
   createTogglWorkspacesSaga,
   fetchTogglWorkspacesSaga,
 } from "./togglWorkspacesSagas";
-import { ToolName } from "~/allEntities/allEntitiesTypes";
-import { WorkspaceModel } from "~/workspaces/workspacesTypes";
+import { Mapping, ToolName } from "~/allEntities/allEntitiesTypes";
+import { ToolAction } from "~/app/appTypes";
+import {
+  WorkspaceModel,
+  WorkspacesByIdModel,
+} from "~/workspaces/workspacesTypes";
 
 export function* workspacesSaga(): SagaIterator {
   yield all([
@@ -57,17 +65,28 @@ function* fetchWorkspacesSaga(): SagaIterator {
     };
     const { source, target } = yield select(toolNameByMappingSelector);
     const sourceWorkspaces = yield call(fetchSagaByToolName[source]);
-    const targetWorkspaces = yield call(fetchSagaByToolName[target]);
+
+    const toolAction = yield select(toolActionSelector);
+    let workspaceByIdByMapping: Record<Mapping, WorkspacesByIdModel>;
 
     if (sourceWorkspaces.length !== 0) {
       const [firstWorkspace] = sourceWorkspaces;
       yield put(updateActiveWorkspaceId(firstWorkspace.id));
     }
 
-    const workspaceByIdByMapping = linkEntitiesByIdByMapping<WorkspaceModel>(
-      sourceWorkspaces,
-      targetWorkspaces,
-    );
+    if (toolAction === ToolAction.Transfer) {
+      const targetWorkspaces = yield call(fetchSagaByToolName[target]);
+
+      workspaceByIdByMapping = linkEntitiesByIdByMapping<WorkspaceModel>(
+        sourceWorkspaces,
+        targetWorkspaces,
+      );
+    } else {
+      workspaceByIdByMapping = {
+        source: R.indexBy(R.prop("id"), sourceWorkspaces),
+        target: {},
+      };
+    }
 
     yield put(fetchWorkspaces.success(workspaceByIdByMapping));
   } catch (err) {

@@ -1,10 +1,13 @@
 import { ActionType, createReducer } from "typesafe-actions";
 import * as R from "ramda";
 import { updateAreAllRecordsIncluded } from "~/redux/reduxUtils";
+import { flushAllEntities } from "~/allEntities/allEntitiesActions";
 import * as projectsActions from "./projectsActions";
 import { ProjectModel } from "./projectsTypes";
 
-type ProjectsAction = ActionType<typeof projectsActions>;
+type ProjectsAction = ActionType<
+  typeof projectsActions | typeof flushAllEntities
+>;
 
 export interface ProjectsState {
   readonly source: Record<string, ProjectModel>;
@@ -75,4 +78,5 @@ export const projectsReducer = createReducer<ProjectsState, ProjectsAction>(
       payload.isIncluded,
       state,
     ),
-  );
+  )
+  .handleAction(flushAllEntities, () => ({ ...initialState }));

@@ -2,6 +2,7 @@ import Color from "color";
 import cuid from "cuid";
 import React from "react";
 import { createPortal } from "react-dom";
+import { Transition } from "react-transition-group";
 import Button from "./Button";
 import Flex from "./Flex";
 import { styled } from "./emotion";
@@ -15,6 +16,7 @@ const Backdrop = styled(Flex)(
     right: 0,
     bottom: 0,
     overflowY: "hidden",
+    transition: "opacity 100ms ease-in-out",
     zIndex: 1,
   },
   ({ theme }) => ({
@@ -94,33 +96,37 @@ const ModalDialog: React.FC<Props> = ({
 
   return (
     <ModalPortal>
-      <Backdrop
-        alignItems="flex-start"
-        justifyContent="center"
-        css={{ display: isOpen ? "flex" : "none" }}
-      >
-        <Container
-          role={role}
-          id={modalId}
-          aria-describedby={`${modalId}Desc`}
-          aria-labelledby={`${modalId}Title`}
-          aria-hidden={!isOpen}
-          aria-modal
-          {...props}
-        >
-          <div role="document">
-            <h2 id={`${modalId}Title`}>{title}</h2>
-            <Description id={`${modalId}Desc`}>{children}</Description>
-            <ActionsRow justifyContent="flex-end">
-              {actions ?? (
-                <Button variant="primary" onClick={onClose}>
-                  OK
-                </Button>
-              )}
-            </ActionsRow>
-          </div>
-        </Container>
-      </Backdrop>
+      <Transition in={isOpen} timeout={100} unmountOnExit mountOnEnter>
+        {state => (
+          <Backdrop
+            alignItems="flex-start"
+            justifyContent="center"
+            css={{ opacity: state === "entered" ? 1 : 0 }}
+          >
+            <Container
+              role={role}
+              id={modalId}
+              aria-describedby={`${modalId}Desc`}
+              aria-labelledby={`${modalId}Title`}
+              aria-hidden={!isOpen}
+              aria-modal
+              {...props}
+            >
+              <div role="document">
+                <h2 id={`${modalId}Title`}>{title}</h2>
+                <Description id={`${modalId}Desc`}>{children}</Description>
+                <ActionsRow justifyContent="flex-end">
+                  {actions ?? (
+                    <Button variant="primary" onClick={onClose}>
+                      OK
+                    </Button>
+                  )}
+                </ActionsRow>
+              </div>
+            </Container>
+          </Backdrop>
+        )}
+      </Transition>
     </ModalPortal>
   );
 };

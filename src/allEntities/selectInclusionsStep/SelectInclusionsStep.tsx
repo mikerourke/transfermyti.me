@@ -3,10 +3,10 @@ import { Path } from "history";
 import React from "react";
 import { connect } from "react-redux";
 import { PayloadActionCreator } from "typesafe-actions";
+import { capitalize } from "~/utils";
 import {
   fetchAllEntities,
   flipIfExistsInTargetShown,
-  updateFetchAllFetchStatus,
 } from "~/allEntities/allEntitiesActions";
 import {
   areExistsInTargetShownSelector,
@@ -14,27 +14,22 @@ import {
   fetchAllFetchStatusSelector,
   totalIncludedRecordsCountSelector,
 } from "~/allEntities/allEntitiesSelectors";
-import { FetchStatus } from "~/allEntities/allEntitiesTypes";
-import { RoutePath } from "~/app/appTypes";
-import ClientsInclusionsPanel from "~/clients/clientsInclusionsPanel/ClientsInclusionsPanel";
+import { toolActionSelector } from "~/app/appSelectors";
+import { activeWorkspaceIdSelector } from "~/workspaces/workspacesSelectors";
 import {
-  Accordion,
   Button,
-  HelpDetails,
   Loader,
   LoadingMessage,
   NavigationButtonsRow,
-  Note,
 } from "~/components";
-import ProjectsInclusionsPanel from "~/projects/projectsInclusionsPanel/ProjectsInclusionsPanel";
-import { ReduxState } from "~/redux/reduxTypes";
-import TagsInclusionsPanel from "~/tags/tagsInclusionsPanel/TagsInclusionsPanel";
-import TasksInclusionsPanel from "~/tasks/tasksInclusionsPanel/TasksInclusionsPanel";
-import TimeEntriesInclusionsPanel from "~/timeEntries/timeEntriesInclusionsPanel/TimeEntriesInclusionsPanel";
-import { activeWorkspaceIdSelector } from "~/workspaces/workspacesSelectors";
 import ActiveWorkspaceSelect from "./ActiveWorkspaceSelect";
+import InclusionsPanelsAccordion from "./InclusionsPanelsAccordion";
 import NoSelectionsModal from "./NoSelectionsModal";
+import SelectInclusionsHelpByAction from "./SelectInclusionsHelpByAction";
 import ShowExistingToggle from "./ShowExistingToggle";
+import { FetchStatus } from "~/allEntities/allEntitiesTypes";
+import { RoutePath, ToolAction } from "~/app/appTypes";
+import { ReduxState } from "~/redux/reduxTypes";
 
 interface ConnectStateProps {
   activeWorkspaceId: string;
@@ -42,13 +37,13 @@ interface ConnectStateProps {
   entityGroupInProcessDisplay: string;
   fetchAllFetchStatus: FetchStatus;
   totalIncludedRecordsCount: number;
+  toolAction: ToolAction;
 }
 
 interface ConnectDispatchProps {
   onFetchAllEntities: PayloadActionCreator<string, void>;
   onFlipIfExistsInTargetShown: PayloadActionCreator<string, void>;
   onPush: (path: Path) => void;
-  onUpdateFetchAllFetchStatus: PayloadActionCreator<string, FetchStatus>;
 }
 
 type Props = ConnectStateProps & ConnectDispatchProps;
@@ -59,15 +54,13 @@ export const SelectInclusionsStepComponent: React.FC<Props> = props => {
   );
 
   React.useEffect(() => {
-    props.onFetchAllEntities();
+    if (props.fetchAllFetchStatus === FetchStatus.Pending) {
+      props.onFetchAllEntities();
+    }
 
     if (!props.areExistsInTargetShown) {
       props.onFlipIfExistsInTargetShown();
     }
-
-    return () => {
-      props.onUpdateFetchAllFetchStatus(FetchStatus.Pending);
-    };
   }, []);
 
   const handleBackClick = (): void => {
@@ -77,61 +70,37 @@ export const SelectInclusionsStepComponent: React.FC<Props> = props => {
   const handleNextClick = (): void => {
     if (props.totalIncludedRecordsCount === 0) {
       setIsErrorModalOpen(true);
-      return;
+    } else {
+      props.onPush(RoutePath.PerformToolAction);
     }
-
-    props.onPush(RoutePath.PerformToolAction);
   };
 
-  const buttonsDisabled = props.fetchAllFetchStatus === FetchStatus.InProcess;
+  const handleRefreshClick = (): void => {
+    props.onFetchAllEntities();
+  };
+
+  const handleShowExistingToggle = (): void => {
+    props.onFlipIfExistsInTargetShown();
+  };
+
+  const handleCloseModal = (): void => {
+    setIsErrorModalOpen(false);
+  };
 
   return (
     <section>
-      <h1>Step 4: Select Data to Transfer</h1>
-      <HelpDetails>
-        <p>
-          Review the records you&apos;d like to include in the transfer. If the
-          record already exists on the target tool, the option to include it is
-          disabled.
-        </p>
-        <p>
-          Change the active workspace by selecting it from the
-          <strong> Active Workspace</strong> dropdown. Toggling
-          <strong> Show records that already exist in target? </strong>
-          will either show or hide the records that already exist in the target
-          tool. This is useful if you only wish to see the records that
-          <i> can</i> be transferred to the target tool.
-        </p>
-        <p>
-          Pressing the <strong>Include All/None</strong> button in the header
-          above each table will select or deselect all of the corresponding
-          records to be included in the transfer. If all of the records in the
-          group already exist, the button will be disabled. The footer in each
-          table contains the totals associated with the corresponding column.
-        </p>
-        <p>
-          Press the <strong>Next</strong> button when you&apos;re ready to begin
-          the transfer.
-          <Note as="span" css={{ marginLeft: "0.375rem" }}>
-            The transfer will not start until you confirm it on the next page.
-          </Note>
-        </p>
-      </HelpDetails>
+      <h1>Step 4: Select Records to {capitalize(props.toolAction)}</h1>
+      <SelectInclusionsHelpByAction toolAction={props.toolAction} />
       {props.fetchAllFetchStatus === FetchStatus.Success ? (
         <>
           <ActiveWorkspaceSelect />
-          <ShowExistingToggle
-            isToggled={props.areExistsInTargetShown}
-            onToggle={() => props.onFlipIfExistsInTargetShown()}
-          />
-          <h2>Workspace Records</h2>
-          <Accordion css={{ marginBottom: "2rem" }}>
-            <ClientsInclusionsPanel />
-            <TagsInclusionsPanel />
-            <ProjectsInclusionsPanel />
-            <TasksInclusionsPanel />
-            <TimeEntriesInclusionsPanel />
-          </Accordion>
+          {props.toolAction === ToolAction.Transfer && (
+            <ShowExistingToggle
+              isToggled={props.areExistsInTargetShown}
+              onToggle={handleShowExistingToggle}
+            />
+          )}
+          <InclusionsPanelsAccordion />
         </>
       ) : (
         <>
@@ -142,22 +111,19 @@ export const SelectInclusionsStepComponent: React.FC<Props> = props => {
         </>
       )}
       <NavigationButtonsRow
-        disabled={buttonsDisabled}
+        disabled={props.fetchAllFetchStatus === FetchStatus.InProcess}
         onBackClick={handleBackClick}
         onNextClick={handleNextClick}
       >
         <Button
+          disabled={props.fetchAllFetchStatus === FetchStatus.InProcess}
           variant="outlinePrimary"
-          disabled={buttonsDisabled}
-          onClick={() => props.onFetchAllEntities()}
+          onClick={handleRefreshClick}
         >
           Refresh
         </Button>
       </NavigationButtonsRow>
-      <NoSelectionsModal
-        isOpen={isErrorModalOpen}
-        onClose={() => setIsErrorModalOpen(false)}
-      />
+      <NoSelectionsModal isOpen={isErrorModalOpen} onClose={handleCloseModal} />
     </section>
   );
 };
@@ -168,13 +134,13 @@ const mapStateToProps = (state: ReduxState): ConnectStateProps => ({
   entityGroupInProcessDisplay: entityGroupInProcessDisplaySelector(state),
   fetchAllFetchStatus: fetchAllFetchStatusSelector(state),
   totalIncludedRecordsCount: totalIncludedRecordsCountSelector(state),
+  toolAction: toolActionSelector(state),
 });
 
 const mapDispatchToProps: ConnectDispatchProps = {
   onFetchAllEntities: fetchAllEntities.request,
   onFlipIfExistsInTargetShown: flipIfExistsInTargetShown,
   onPush: push,
-  onUpdateFetchAllFetchStatus: updateFetchAllFetchStatus,
 };
 
 export default connect(

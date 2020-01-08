@@ -1,10 +1,11 @@
 import { ActionType, createReducer } from "typesafe-actions";
 import * as R from "ramda";
 import { updateAreAllRecordsIncluded } from "~/redux/reduxUtils";
+import { flushAllEntities } from "~/allEntities/allEntitiesActions";
 import * as tagsActions from "./tagsActions";
 import { TagsByIdModel } from "./tagsTypes";
 
-type TagsAction = ActionType<typeof tagsActions>;
+type TagsAction = ActionType<typeof tagsActions | typeof flushAllEntities>;
 
 export interface TagsState {
   readonly source: TagsByIdModel;
@@ -54,4 +55,5 @@ export const tagsReducer = createReducer<TagsState, TagsAction>(initialState)
   .handleAction(tagsActions.updateAreAllTagsIncluded, (state, { payload }) => ({
     ...state,
     source: updateAreAllRecordsIncluded(state.source, payload),
-  }));
+  }))
+  .handleAction(flushAllEntities, () => ({ ...initialState }));

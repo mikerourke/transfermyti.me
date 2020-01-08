@@ -25,8 +25,9 @@ const ToolActionCard: React.FC<Props> = ({
   ...props
 }) => (
   <Card title={header} {...props}>
-    <p css={{ marginBottom: "2rem" }}>{children}</p>
+    <p css={{ margin: "0 0 2rem 0" }}>{children}</p>
     <Button
+      css={{ marginTop: "auto", width: "fit-content" }}
       variant="secondary"
       onClick={() => onSelectClick(action, source, target)}
     >

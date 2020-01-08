@@ -1,10 +1,11 @@
 import { ActionType, createReducer } from "typesafe-actions";
 import * as R from "ramda";
 import { updateAreAllRecordsIncluded } from "~/redux/reduxUtils";
+import { flushAllEntities } from "~/allEntities/allEntitiesActions";
 import * as tasksActions from "./tasksActions";
 import { TasksByIdModel } from "./tasksTypes";
 
-type TasksAction = ActionType<typeof tasksActions>;
+type TasksAction = ActionType<typeof tasksActions | typeof flushAllEntities>;
 
 export interface TasksState {
   readonly source: TasksByIdModel;
@@ -64,4 +65,5 @@ export const tasksReducer = createReducer<TasksState, TasksAction>(initialState)
       payload.isIncluded,
       state,
     ),
-  );
+  )
+  .handleAction(flushAllEntities, () => ({ ...initialState }));

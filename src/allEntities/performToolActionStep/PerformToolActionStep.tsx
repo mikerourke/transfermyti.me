@@ -3,6 +3,7 @@ import { Path } from "history";
 import React from "react";
 import { connect } from "react-redux";
 import { PayloadActionCreator } from "typesafe-actions";
+import { capitalize, getEntityGroupDisplay } from "~/utils";
 import {
   createAllEntities,
   resetTransferCountsByEntityGroup,
@@ -12,22 +13,22 @@ import {
   includedCountsByEntityGroupSelector,
   transferCountsByEntityGroupSelector,
 } from "~/allEntities/allEntitiesSelectors";
+import { toolActionSelector } from "~/app/appSelectors";
+import { Flex, HelpDetails, NavigationButtonsRow } from "~/components";
+import ConfirmToolActionModal from "./ConfirmToolActionModal";
+import ProgressBar from "./ProgressBar";
 import {
   CountsByEntityGroupModel,
   EntityGroup,
   FetchStatus,
 } from "~/allEntities/allEntitiesTypes";
-import { RoutePath } from "~/app/appTypes";
-import { Flex, HelpDetails, NavigationButtonsRow } from "~/components";
+import { RoutePath, ToolAction } from "~/app/appTypes";
 import { ReduxState } from "~/redux/reduxTypes";
-import { getEntityGroupDisplay } from "~/utils";
-import ConfirmToolActionModal from "./ConfirmToolActionModal";
-import ProgressBar from "./ProgressBar";
-import ToolActionSuccess from "./ToolActionSuccess";
 
 interface ConnectStateProps {
   createAllFetchStatus: FetchStatus;
   includedCountsByEntityGroup: CountsByEntityGroupModel;
+  toolAction: ToolAction;
   transferCountsByEntityGroup: CountsByEntityGroupModel;
 }
 
@@ -53,6 +54,13 @@ export const PerformToolActionStepComponent: React.FC<Props> = props => {
     setTotalCountsByEntityGroup(props.includedCountsByEntityGroup);
   }, []);
 
+  React.useEffect(() => {
+    // TODO: Fix this so it shows if an error has occurred.
+    if (props.createAllFetchStatus === FetchStatus.Success) {
+      props.onPush(RoutePath.ToolActionSuccess);
+    }
+  }, [props.createAllFetchStatus]);
+
   const closeModal = (): void => setIsConfirmModalOpen(false);
 
   const handleBackClick = (): void => {
@@ -68,18 +76,19 @@ export const PerformToolActionStepComponent: React.FC<Props> = props => {
     props.onCreateAllEntities();
   };
 
-  // TODO: Fix this so it shows if an error has occurred.
-  if (props.createAllFetchStatus === FetchStatus.Success) {
-    return <ToolActionSuccess />;
-  }
+  const actionDisplay = capitalize(props.toolAction);
+  const title =
+    props.toolAction === ToolAction.None
+      ? "Perform Action"
+      : `Perform ${capitalize(props.toolAction)} Action`;
 
   return (
     <section>
-      <h1>Step 5: Perform Transfer</h1>
+      <h1>Step 5: {title}</h1>
       <HelpDetails>
         <p>
-          Press the <strong>Start Transfer</strong> button and confirm the
-          action in the dialog to begin the transfer.
+          Press the <strong>Start</strong> button and confirm the action in the
+          dialog.
         </p>
         <p>
           <strong>
@@ -100,12 +109,13 @@ export const PerformToolActionStepComponent: React.FC<Props> = props => {
       </Flex>
       <NavigationButtonsRow
         disabled={props.createAllFetchStatus === FetchStatus.InProcess}
-        nextLabel="Start Transfer"
+        nextLabel="Start"
         onBackClick={handleBackClick}
         onNextClick={handleNextClick}
       />
       <ConfirmToolActionModal
         isOpen={isConfirmModalOpen}
+        toolAction={props.toolAction}
         onClose={closeModal}
         onConfirm={handleConfirmClick}
       />
@@ -116,6 +126,7 @@ export const PerformToolActionStepComponent: React.FC<Props> = props => {
 const mapStateToProps = (state: ReduxState): ConnectStateProps => ({
   createAllFetchStatus: createAllFetchStatusSelector(state),
   includedCountsByEntityGroup: includedCountsByEntityGroupSelector(state),
+  toolAction: toolActionSelector(state),
   transferCountsByEntityGroup: transferCountsByEntityGroupSelector(state),
 });
 

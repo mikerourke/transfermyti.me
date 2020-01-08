@@ -16,10 +16,14 @@ export const validateCredentials = createAsyncAction(
   "@credentials/VALIDATE_CREDENTIALS_FAILURE",
 )<void, CredentialsByMappingModel, ValidationErrorsByMappingModel>();
 
-export const updateValidationFetchStatus = createAction(
-  "@credentials/UPDATE_VALIDATION_FETCH_STATUS",
-)<FetchStatus>();
+export const flushCredentials = createAction("@credentials/FLUSH_CREDENTIALS")<
+  void
+>();
 
 export const updateCredentials = createAction(
   "@credentials/UPDATE_CREDENTIALS",
 )<PartialCredentialsUpdateModel>();
+
+export const updateValidationFetchStatus = createAction(
+  "@credentials/UPDATE_VALIDATION_FETCH_STATUS",
+)<FetchStatus>();

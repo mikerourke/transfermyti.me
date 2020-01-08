@@ -14,7 +14,6 @@ export interface AllEntitiesState {
   readonly createAllFetchStatus: FetchStatus;
   readonly fetchAllFetchStatus: FetchStatus;
   readonly entityGroupInProcess: EntityGroup | null;
-  readonly lastFetchTime: Date | null;
   readonly transferCountsByEntityGroup: CountsByEntityGroupModel;
 }
 
@@ -33,7 +32,6 @@ export const initialState: AllEntitiesState = {
   createAllFetchStatus: FetchStatus.Pending,
   fetchAllFetchStatus: FetchStatus.Pending,
   entityGroupInProcess: null,
-  lastFetchTime: null,
   transferCountsByEntityGroup: {
     ...DEFAULT_TRANSFER_COUNTS,
   },
@@ -61,20 +59,22 @@ export const allEntitiesReducer = createReducer<
   .handleAction(allEntitiesActions.fetchAllEntities.request, state => ({
     ...state,
     fetchAllFetchStatus: FetchStatus.InProcess,
-    lastFetchTime: null,
     entityGroupInProcess: null,
   }))
   .handleAction(allEntitiesActions.fetchAllEntities.success, state => ({
     ...state,
     fetchAllFetchStatus: FetchStatus.Success,
     entityGroupInProcess: null,
-    lastFetchTime: new Date(),
   }))
   .handleAction(allEntitiesActions.fetchAllEntities.failure, state => ({
     ...state,
     fetchAllFetchStatus: FetchStatus.Error,
     entityGroupInProcess: null,
-    lastFetchTime: new Date(),
+  }))
+  .handleAction(allEntitiesActions.flushAllEntities, state => ({
+    ...state,
+    createAllFetchStatus: FetchStatus.Pending,
+    fetchAllFetchStatus: FetchStatus.Pending,
   }))
   .handleAction(allEntitiesActions.flipIfExistsInTargetShown, state => ({
     ...state,
@@ -99,13 +99,6 @@ export const allEntitiesReducer = createReducer<
     (state, { payload }) => ({
       ...state,
       entityGroupInProcess: payload,
-    }),
-  )
-  .handleAction(
-    allEntitiesActions.updateLastFetchTime,
-    (state, { payload }) => ({
-      ...state,
-      lastFetchTime: payload,
     }),
   )
   .handleAction(allEntitiesActions.resetTransferCountsByEntityGroup, state => ({

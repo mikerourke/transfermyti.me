@@ -1,14 +1,17 @@
-import { createSelector } from "reselect";
 import * as R from "ramda";
-import { capitalize } from "~/utils";
-import { Mapping, ToolName } from "~/allEntities/allEntitiesTypes";
+import { createSelector } from "reselect";
+import {
+  Mapping,
+  ToolName,
+  ToolNameByMappingModel,
+} from "~/allEntities/allEntitiesTypes";
 import { ReduxState } from "~/redux/reduxTypes";
+import { capitalize } from "~/utils";
 import {
   NotificationModel,
   RoutePath,
-  ToolHelpDetailsModel,
-  ToolNameByMappingModel,
   ToolAction,
+  ToolHelpDetailsModel,
 } from "./appTypes";
 
 export const currentPathSelector = (state: ReduxState): RoutePath =>
@@ -38,9 +41,6 @@ export const replaceMappingWithToolNameSelector = createSelector(
   toolNameByMappingSelector,
   toolNameByMapping => (label: string): string => {
     const { source, target } = toolNameByMapping;
-    if ([source, target].includes(ToolName.None)) {
-      return label;
-    }
 
     if (/source/gi.test(label)) {
       return label.replace(/source/gi, capitalize(source));
@@ -54,9 +54,21 @@ export const replaceMappingWithToolNameSelector = createSelector(
   },
 );
 
+export const toolDisplayNameByMapping = createSelector(
+  toolNameByMappingSelector,
+  (toolNameByMapping): Record<Mapping, string> => ({
+    source: capitalize(toolNameByMapping.source),
+    target: capitalize(toolNameByMapping.target),
+  }),
+);
+
 export const toolHelpDetailsByMappingSelector = createSelector(
   toolNameByMappingSelector,
-  (toolNameByMapping): Record<Mapping, ToolHelpDetailsModel> => {
+  toolDisplayNameByMapping,
+  (
+    toolNameByMapping,
+    displayNameByMapping,
+  ): Record<Mapping, ToolHelpDetailsModel> => {
     const findToolLink = (toolName: ToolName): string =>
       ({
         [ToolName.Clockify]: "https://clockify.me/user/settings",
@@ -71,7 +83,7 @@ export const toolHelpDetailsByMappingSelector = createSelector(
     for (const [mapping, toolName] of Object.entries(toolNameByMapping)) {
       toolHelpDetailsByMapping[mapping] = {
         toolName,
-        displayName: capitalize(toolName),
+        displayName: displayNameByMapping[mapping],
         toolLink: findToolLink(toolName),
       };
     }

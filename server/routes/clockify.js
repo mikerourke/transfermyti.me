@@ -111,15 +111,22 @@ function assignClockifyRoutes(router) {
 
       res.status(200).send(newTag);
     })
-    .post("/v1/workspaces/:workspaceId/tasks", (req, res) => {
-      const newTask = {
-        id: uniqueId("clock-task-0"),
-        name: req.body.name,
-        workspace: req.params.workspaceId,
-      };
+    .post(
+      "/v1/workspaces/:workspaceId/projects/:projectId/tasks",
+      (req, res) => {
+        const newTask = {
+          id: uniqueId("clock-task-"),
+          name: req.body.name,
+          workspace: req.params.workspaceId,
+          projectId: req.params.projectId,
+          assigneeIds: req.body.assigneeIds || [],
+          estimate: req.body.estimate || "",
+          status: "ACTIVE",
+        };
 
-      res.status(200).send(newTask);
-    })
+        res.status(200).send(newTask);
+      },
+    )
     .post("/v1/workspaces/:workspaceId/time-entries", (req, res) => {
       const [firstUser] = db.users;
       entriesCreated += 1;

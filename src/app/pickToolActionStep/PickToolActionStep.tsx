@@ -5,8 +5,11 @@ import { connect } from "react-redux";
 import { updateToolAction, updateToolNameByMapping } from "~/app/appActions";
 import { Flex, HelpDetails } from "~/components";
 import ToolActionCard from "./ToolActionCard";
-import { ToolName } from "~/allEntities/allEntitiesTypes";
-import { RoutePath, ToolAction, ToolNameByMappingModel } from "~/app/appTypes";
+import {
+  ToolName,
+  ToolNameByMappingModel,
+} from "~/allEntities/allEntitiesTypes";
+import { RoutePath, ToolAction } from "~/app/appTypes";
 
 interface ConnectDispatchProps {
   onPush: (path: Path) => void;
@@ -67,24 +70,24 @@ export const PickToolActionStepComponent: React.FC<Props> = props => {
         >
           Transfer your entries from Clockify.me to Toggl.
         </ToolActionCard>
-        {/*<ToolActionCard*/}
-        {/*  action={ToolAction.Delete}*/}
-        {/*  source={ToolName.Clockify}*/}
-        {/*  target={ToolName.None}*/}
-        {/*  header="Delete All Clockify Content"*/}
-        {/*  onSelectClick={handleSelectClick}*/}
-        {/*>*/}
-        {/*  Delete everything from your Clockify.me account.*/}
-        {/*</ToolActionCard>*/}
-        {/*<ToolActionCard*/}
-        {/*  action={ToolAction.Delete}*/}
-        {/*  source={ToolName.Toggl}*/}
-        {/*  target={ToolName.None}*/}
-        {/*  header="Delete All Toggl Content"*/}
-        {/*  onSelectClick={handleSelectClick}*/}
-        {/*>*/}
-        {/*  Delete everything from your Toggl account.*/}
-        {/*</ToolActionCard>*/}
+        <ToolActionCard
+          action={ToolAction.Delete}
+          source={ToolName.Clockify}
+          target={ToolName.None}
+          header="Delete Clockify Records"
+          onSelectClick={handleSelectClick}
+        >
+          Bulk delete content from your Clockify.me account.
+        </ToolActionCard>
+        <ToolActionCard
+          action={ToolAction.Delete}
+          source={ToolName.Toggl}
+          target={ToolName.None}
+          header="Delete Toggl Records"
+          onSelectClick={handleSelectClick}
+        >
+          Bulk delete content from your Toggl account.
+        </ToolActionCard>
       </Flex>
     </section>
   );

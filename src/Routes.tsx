@@ -8,6 +8,7 @@ import EnterApiKeysStep from "~/credentials/enterApiKeysStep/EnterApiKeysStep";
 import SelectSourceWorkspacesStep from "~/workspaces/selectSourceWorkspacesStep/SelectSourceWorkspacesStep";
 import SelectInclusionsStep from "~/allEntities/selectInclusionsStep/SelectInclusionsStep";
 import PerformToolActionStep from "~/allEntities/performToolActionStep/PerformToolActionStep";
+import ToolActionSuccess from "~/app/toolActionSuccess/ToolActionSuccess";
 import { RoutePath } from "~/app/appTypes";
 
 interface Props {
@@ -32,6 +33,10 @@ const Routes: React.FC<Props> = ({ history }) => (
         <Route
           path={RoutePath.PerformToolAction}
           component={PerformToolActionStep}
+        />
+        <Route
+          path={RoutePath.ToolActionSuccess}
+          component={ToolActionSuccess}
         />
       </Switch>
     </AppRoot>

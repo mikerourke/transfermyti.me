@@ -1,9 +1,12 @@
 import * as R from "ramda";
 import { ActionType, createReducer } from "typesafe-actions";
+import { flushAllEntities } from "~/allEntities/allEntitiesActions";
 import * as workspacesActions from "./workspacesActions";
 import { WorkspacesByIdModel } from "./workspacesTypes";
 
-type WorkspacesAction = ActionType<typeof workspacesActions>;
+type WorkspacesAction = ActionType<
+  typeof workspacesActions | typeof flushAllEntities
+>;
 
 export interface WorkspacesState {
   readonly source: WorkspacesByIdModel;
@@ -103,4 +106,5 @@ export const workspacesReducer = createReducer<
       }
       return updatedState;
     },
-  );
+  )
+  .handleAction(flushAllEntities, () => ({ ...initialState }));

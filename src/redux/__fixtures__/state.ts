@@ -5,13 +5,14 @@ export default {
     createAllFetchStatus: "PENDING",
     fetchAllFetchStatus: "PENDING",
     entityGroupInProcess: null,
-    lastFetchTime: null,
     transferCountsByEntityGroup: {
       clients: 0,
       tags: 0,
       projects: 0,
       tasks: 0,
       timeEntries: 0,
+      users: 0,
+      userGroups: 0,
     },
   },
   app: {
@@ -20,6 +21,7 @@ export default {
       source: "toggl",
       target: "clockify",
     },
+    toolAction: "transfer",
   },
   credentials: {
     source: {

@@ -1,10 +1,13 @@
 import * as R from "ramda";
 import { ActionType, createReducer } from "typesafe-actions";
 import { updateAreAllRecordsIncluded } from "~/redux/reduxUtils";
+import { flushAllEntities } from "~/allEntities/allEntitiesActions";
 import * as clientsActions from "./clientsActions";
 import { ClientsByIdModel } from "./clientsTypes";
 
-type ClientsAction = ActionType<typeof clientsActions>;
+type ClientsAction = ActionType<
+  typeof clientsActions | typeof flushAllEntities
+>;
 
 export interface ClientsState {
   readonly source: ClientsByIdModel;
@@ -59,4 +62,5 @@ export const clientsReducer = createReducer<ClientsState, ClientsAction>(
       ...state,
       source: updateAreAllRecordsIncluded(state.source, payload),
     }),
-  );
+  )
+  .handleAction(flushAllEntities, () => ({ ...initialState }));

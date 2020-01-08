@@ -1,11 +1,11 @@
+import cuid from "cuid";
 import React from "react";
 import { ExternalLink, styled } from "~/components";
 import { ToolHelpDetailsModel } from "~/app/appTypes";
 
 const ErrorMessage = styled.div(
   {
-    fontSize: "0.875rem",
-    marginTop: "-0.75rem",
+    marginTop: "-1.5rem",
   },
   ({ theme }) => ({
     color: theme.colors.error,
@@ -50,27 +50,30 @@ const ApiKeyInputField: React.FC<Props> = ({
   toolHelpDetails,
   errorMessage = null,
   ...props
-}) => (
-  <>
-    <Label htmlFor={mapping}>
-      {toolHelpDetails.displayName} API Key (
-      <ExternalLink href={toolHelpDetails.toolLink}>
-        find it on your {toolHelpDetails.displayName} profile page
-      </ExternalLink>
-      )
-    </Label>
-    <Input
-      id={mapping}
-      name={mapping}
-      type="text"
-      autoComplete="hidden"
-      aria-describedby={`${mapping}Error`}
-      aria-required={true}
-      aria-invalid={errorMessage !== null}
-      {...props}
-    />
-    <ErrorMessage id={`${mapping}Error`}>{errorMessage}</ErrorMessage>
-  </>
-);
+}) => {
+  const inputId = cuid.slug();
+  return (
+    <>
+      <Label htmlFor={inputId}>
+        {toolHelpDetails.displayName} API Key (
+        <ExternalLink href={toolHelpDetails.toolLink}>
+          find it on your {toolHelpDetails.displayName} profile page
+        </ExternalLink>
+        )
+      </Label>
+      <Input
+        id={inputId}
+        name={mapping}
+        type="text"
+        autoComplete="hidden"
+        aria-describedby={`${inputId}Error`}
+        aria-required={true}
+        aria-invalid={errorMessage !== null}
+        {...props}
+      />
+      <ErrorMessage id={`${inputId}Error`}>{errorMessage}</ErrorMessage>
+    </>
+  );
+};
 
 export default ApiKeyInputField;

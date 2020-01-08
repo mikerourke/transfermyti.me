@@ -50,7 +50,7 @@ export function initInterceptor(store: Store): VoidFunction {
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
     response(response): any {
       if (!response.ok) {
-        return response;
+        return Promise.reject(response);
       }
 
       const type = response.headers.get("content-type") || "json";

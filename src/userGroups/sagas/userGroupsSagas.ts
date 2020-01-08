@@ -1,8 +1,12 @@
 import { SagaIterator } from "@redux-saga/types";
+import * as R from "ramda";
 import { call, put, select } from "redux-saga/effects";
 import { linkEntitiesByIdByMapping } from "~/redux/reduxUtils";
 import { showFetchErrorNotification } from "~/app/appActions";
-import { toolNameByMappingSelector } from "~/app/appSelectors";
+import {
+  toolActionSelector,
+  toolNameByMappingSelector,
+} from "~/app/appSelectors";
 import {
   createUserGroups,
   fetchUserGroups,
@@ -16,8 +20,12 @@ import {
   createTogglUserGroupsSaga,
   fetchTogglUserGroupsSaga,
 } from "./togglUserGroupsSagas";
-import { ToolName } from "~/allEntities/allEntitiesTypes";
-import { UserGroupModel } from "~/userGroups/userGroupsTypes";
+import { Mapping, ToolName } from "~/allEntities/allEntitiesTypes";
+import { ToolAction } from "~/app/appTypes";
+import {
+  UserGroupModel,
+  UserGroupsByIdModel,
+} from "~/userGroups/userGroupsTypes";
 
 export function* createUserGroupsSaga(): SagaIterator {
   yield put(createUserGroups.request());
@@ -53,12 +61,23 @@ export function* fetchUserGroupsSaga(): SagaIterator {
     };
     const { source, target } = yield select(toolNameByMappingSelector);
     const sourceUserGroups = yield call(fetchSagaByToolName[source]);
-    const targetUserGroups = yield call(fetchSagaByToolName[target]);
 
-    const userGroupsByIdByMapping = linkEntitiesByIdByMapping<UserGroupModel>(
-      sourceUserGroups,
-      targetUserGroups,
-    );
+    const toolAction = yield select(toolActionSelector);
+    let userGroupsByIdByMapping: Record<Mapping, UserGroupsByIdModel>;
+
+    if (toolAction === ToolAction.Transfer) {
+      const targetUserGroups = yield call(fetchSagaByToolName[target]);
+
+      userGroupsByIdByMapping = linkEntitiesByIdByMapping<UserGroupModel>(
+        sourceUserGroups,
+        targetUserGroups,
+      );
+    } else {
+      userGroupsByIdByMapping = {
+        source: R.indexBy(R.prop("id"), sourceUserGroups),
+        target: {},
+      };
+    }
 
     yield put(fetchUserGroups.success(userGroupsByIdByMapping));
   } catch (err) {

@@ -68,10 +68,7 @@ const EnterApiKeysStepComponent: React.FC<Props> = props => {
   });
 
   React.useEffect(() => {
-    props.onUpdateValidationFetchStatus(FetchStatus.Pending);
-
     return () => {
-      props.onUpdateValidationFetchStatus(FetchStatus.Pending);
       props.onStoreCredentials();
     };
   }, []);
@@ -163,7 +160,11 @@ const EnterApiKeysStepComponent: React.FC<Props> = props => {
           message will be displayed below the invalid key.
         </p>
       </HelpDetails>
-      <form autoComplete="hidden" css={{ margin: "0 1rem" }}>
+      <form
+        autoComplete="hidden"
+        css={{ margin: "0 1rem" }}
+        onSubmit={event => event.preventDefault()}
+      >
         <ApiKeyInputField
           mapping={Mapping.Source}
           toolHelpDetails={source}

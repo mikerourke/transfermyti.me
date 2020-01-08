@@ -1,8 +1,12 @@
 import { SagaIterator } from "@redux-saga/types";
+import * as R from "ramda";
 import { call, put, select } from "redux-saga/effects";
 import { linkEntitiesByIdByMapping } from "~/redux/reduxUtils";
 import { showFetchErrorNotification } from "~/app/appActions";
-import { toolNameByMappingSelector } from "~/app/appSelectors";
+import {
+  toolActionSelector,
+  toolNameByMappingSelector,
+} from "~/app/appSelectors";
 import { createUsers, fetchUsers } from "~/users/usersActions";
 import { sourceUserEmailsByWorkspaceIdSelector } from "~/users/usersSelectors";
 import {
@@ -10,8 +14,9 @@ import {
   fetchClockifyUsersSaga,
 } from "./clockifyUsersSagas";
 import { createTogglUsersSaga, fetchTogglUsersSaga } from "./togglUsersSagas";
-import { ToolName } from "~/allEntities/allEntitiesTypes";
-import { UserModel } from "~/users/usersTypes";
+import { Mapping, ToolName } from "~/allEntities/allEntitiesTypes";
+import { ToolAction } from "~/app/appTypes";
+import { UserModel, UsersByIdModel } from "~/users/usersTypes";
 
 export function* createUsersSaga(): SagaIterator {
   yield put(createUsers.request());
@@ -46,12 +51,23 @@ export function* fetchUsersSaga(): SagaIterator {
     };
     const { source, target } = yield select(toolNameByMappingSelector);
     const sourceUsers = yield call(fetchSagaByToolName[source]);
-    const targetUsers = yield call(fetchSagaByToolName[target]);
 
-    const usersByIdByMapping = linkEntitiesByIdByMapping<UserModel>(
-      sourceUsers,
-      targetUsers,
-    );
+    const toolAction = yield select(toolActionSelector);
+    let usersByIdByMapping: Record<Mapping, UsersByIdModel>;
+
+    if (toolAction === ToolAction.Transfer) {
+      const targetUsers = yield call(fetchSagaByToolName[target]);
+
+      usersByIdByMapping = linkEntitiesByIdByMapping<UserModel>(
+        sourceUsers,
+        targetUsers,
+      );
+    } else {
+      usersByIdByMapping = {
+        source: R.indexBy(R.prop("id"), sourceUsers),
+        target: {},
+      };
+    }
 
     yield put(fetchUsers.success(usersByIdByMapping));
   } catch (err) {

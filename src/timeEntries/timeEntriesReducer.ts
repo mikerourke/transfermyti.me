@@ -1,10 +1,13 @@
-import { ActionType, createReducer } from "typesafe-actions";
 import * as R from "ramda";
+import { ActionType, createReducer } from "typesafe-actions";
 import { updateAreAllRecordsIncluded } from "~/redux/reduxUtils";
+import { flushAllEntities } from "~/allEntities/allEntitiesActions";
 import * as timeEntriesActions from "./timeEntriesActions";
 import { TimeEntriesByIdModel } from "./timeEntriesTypes";
 
-type TimeEntriesAction = ActionType<typeof timeEntriesActions>;
+type TimeEntriesAction = ActionType<
+  typeof timeEntriesActions | typeof flushAllEntities
+>;
 
 export interface TimeEntriesState {
   readonly source: TimeEntriesByIdModel;
@@ -78,4 +81,5 @@ export const timeEntriesReducer = createReducer<
       ...state,
       source: updateAreAllRecordsIncluded(state.source, payload),
     }),
-  );
+  )
+  .handleAction(flushAllEntities, () => ({ ...initialState }));
