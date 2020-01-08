@@ -8,6 +8,12 @@ export const createTimeEntries = createAsyncAction(
   "@timeEntries/CREATE_TIME_ENTRIES_FAILURE",
 )<void, Record<Mapping, TimeEntriesByIdModel>, void>();
 
+export const deleteTimeEntries = createAsyncAction(
+  "@timeEntries/DELETE_TIME_ENTRIES_REQUEST",
+  "@timeEntries/DELETE_TIME_ENTRIES_SUCCESS",
+  "@timeEntries/DELETE_TIME_ENTRIES_FAILURE",
+)<void, void, void>();
+
 export const fetchTimeEntries = createAsyncAction(
   "@timeEntries/FETCH_TIME_ENTRIES_REQUEST",
   "@timeEntries/FETCH_TIME_ENTRIES_SUCCESS",

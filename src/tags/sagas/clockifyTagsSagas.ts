@@ -1,11 +1,6 @@
 import { SagaIterator } from "@redux-saga/types";
 import { call } from "redux-saga/effects";
-import {
-  createEntitiesForTool,
-  fetchEntitiesForTool,
-  fetchObject,
-  paginatedClockifyFetch,
-} from "~/redux/reduxUtils";
+import * as reduxUtils from "~/redux/reduxUtils";
 import { EntityGroup, ToolName } from "~/allEntities/allEntitiesTypes";
 import { TagModel } from "~/tags/tagsTypes";
 
@@ -18,10 +13,9 @@ export interface ClockifyTagResponseModel {
 /**
  * Creates new Clockify tags in all target workspaces and returns array of
  * transformed tags.
- * @see https://clockify.me/developers-api#operation--v1-workspaces--workspaceId--tags-post
  */
 export function* createClockifyTagsSaga(sourceTags: TagModel[]): SagaIterator {
-  return yield call(createEntitiesForTool, {
+  return yield call(reduxUtils.createEntitiesForTool, {
     toolName: ToolName.Clockify,
     sourceRecords: sourceTags,
     apiCreateFunc: createClockifyTag,
@@ -29,24 +23,38 @@ export function* createClockifyTagsSaga(sourceTags: TagModel[]): SagaIterator {
 }
 
 /**
+ * Deletes all specified source tags from Clockify.
+ */
+export function* deleteClockifyTagsSaga(sourceTags: TagModel[]): SagaIterator {
+  yield call(reduxUtils.deleteEntitiesForTool, {
+    toolName: ToolName.Clockify,
+    sourceRecords: sourceTags,
+    apiDeleteFunc: deleteClockifyTag,
+  });
+}
+
+/**
  * Fetches all tags in Clockify workspaces and returns array of transformed
  * tags.
- * @see https://clockify.me/developers-api#operation--v1-workspaces--workspaceId--tags-get
  */
 export function* fetchClockifyTagsSaga(): SagaIterator<TagModel[]> {
-  return yield call(fetchEntitiesForTool, {
+  return yield call(reduxUtils.fetchEntitiesForTool, {
     toolName: ToolName.Clockify,
     apiFetchFunc: fetchClockifyTagsInWorkspace,
   });
 }
 
+/**
+ * Creates a new Clockify tag.
+ * @see https://clockify.me/developers-api#operation--v1-workspaces--workspaceId--tags-post
+ */
 function* createClockifyTag(
   sourceTag: TagModel,
   targetWorkspaceId: string,
 ): SagaIterator<TagModel> {
   const tagRequest = { name: sourceTag.name };
   const clockifyTag = yield call(
-    fetchObject,
+    reduxUtils.fetchObject,
     `/clockify/api/v1/workspaces/${targetWorkspaceId}/tags`,
     { method: "POST", body: tagRequest },
   );
@@ -54,11 +62,30 @@ function* createClockifyTag(
   return transformFromResponse(clockifyTag);
 }
 
+/**
+ * Deletes the specified Clockify tag.
+ * @see https://clockify.github.io/clockify_api_docs/#operation--workspaces--workspaceId--tags--tagId--delete
+ * @deprecated This is part of the old API and will need to be updated as soon
+ *             as the v1 endpoint is available.
+ */
+function* deleteClockifyTag(sourceTag: TagModel): SagaIterator {
+  const { workspaceId, id } = sourceTag;
+  yield call(
+    reduxUtils.fetchObject,
+    `/clockify/api/workspaces/${workspaceId}/tags/${id}`,
+    { method: "DELETE" },
+  );
+}
+
+/**
+ * Fetches Clockify tags in specified workspace.
+ * @see https://clockify.me/developers-api#operation--v1-workspaces--workspaceId--tags-get
+ */
 function* fetchClockifyTagsInWorkspace(
   workspaceId: string,
 ): SagaIterator<TagModel[]> {
   const clockifyTags: ClockifyTagResponseModel[] = yield call(
-    paginatedClockifyFetch,
+    reduxUtils.fetchPaginatedFromClockify,
     `/clockify/api/v1/workspaces/${workspaceId}/tags`,
   );
 

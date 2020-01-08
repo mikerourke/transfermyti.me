@@ -4,7 +4,7 @@ import { CLOCKIFY_API_DELAY } from "~/constants";
 import {
   fetchEntitiesForTool,
   fetchObject,
-  paginatedClockifyFetch,
+  fetchPaginatedFromClockify,
 } from "~/redux/reduxUtils";
 import { incrementEntityGroupTransferCompletedCount } from "~/allEntities/allEntitiesActions";
 import { EntityGroup, ToolName } from "~/allEntities/allEntitiesTypes";
@@ -109,7 +109,7 @@ function* fetchClockifyUsersInWorkspace(
   workspaceId: string,
 ): SagaIterator<UserModel[]> {
   const clockifyUsers: ClockifyUserResponseModel[] = yield call(
-    paginatedClockifyFetch,
+    fetchPaginatedFromClockify,
     `/clockify/api/v1/workspaces/${workspaceId}/users`,
   );
 

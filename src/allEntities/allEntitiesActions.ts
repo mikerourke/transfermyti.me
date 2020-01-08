@@ -11,6 +11,12 @@ export const createAllEntities = createAsyncAction(
   "@allEntities/CREATE_ALL_ENTITIES_FAILURE",
 )<void, void, void>();
 
+export const deleteAllEntities = createAsyncAction(
+  "@allEntities/DELETE_ALL_ENTITIES_REQUEST",
+  "@allEntities/DELETE_ALL_ENTITIES_SUCCESS",
+  "@allEntities/DELETE_ALL_ENTITIES_FAILURE",
+)<void, void, void>();
+
 export const fetchAllEntities = createAsyncAction(
   "@allEntities/FETCH_ALL_ENTITIES_REQUEST",
   "@allEntities/FETCH_ALL_ENTITIES_SUCCESS",
@@ -25,12 +31,12 @@ export const flipIfExistsInTargetShown = createAction(
   "@allEntities/FLIP_IF_EXISTS_IN_TARGET_SHOWN",
 )<void>();
 
-export const updateCreateAllFetchStatus = createAction(
-  "@allEntities/UPDATE_CREATE_ALL_FETCH_STATUS",
-)<FetchStatus>();
-
 export const updateFetchAllFetchStatus = createAction(
   "@allEntities/UPDATE_FETCH_ALL_FETCH_STATUS",
+)<FetchStatus>();
+
+export const updatePushAllChangesFetchStatus = createAction(
+  "@allEntities/UPDATE_PUSH_ALL_CHANGES_FETCH_STATUS",
 )<FetchStatus>();
 
 export const updateEntityGroupInProcess = createAction(

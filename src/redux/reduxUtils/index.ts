@@ -1,10 +1,12 @@
 export { createEntitiesForTool } from "./createEntitiesForTool";
+export { deleteEntitiesForTool } from "./deleteEntitiesForTool";
 export { fetchEntitiesForTool } from "./fetchEntitiesForTool";
 export {
   getApiDelayForTool,
   fetchArray,
+  fetchEmpty,
   fetchObject,
-  paginatedClockifyFetch,
+  fetchPaginatedFromClockify,
 } from "./fetchActions";
 export { findTargetEntityId } from "./findTargetEntityId";
 export { updateAreAllRecordsIncluded } from "./updateAreAllRecordsIncluded";

@@ -2,7 +2,7 @@
 // @ts-ignore
 export default {
   allEntities: {
-    createAllFetchStatus: "PENDING",
+    pushAllChangesFetchStatus: "PENDING",
     fetchAllFetchStatus: "PENDING",
     entityGroupInProcess: null,
     transferCountsByEntityGroup: {

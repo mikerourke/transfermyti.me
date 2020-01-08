@@ -8,6 +8,12 @@ export const createClients = createAsyncAction(
   "@clients/CREATE_CLIENTS_FAILURE",
 )<void, Record<Mapping, ClientsByIdModel>, void>();
 
+export const deleteClients = createAsyncAction(
+  "@clients/DELETE_CLIENTS_REQUEST",
+  "@clients/DELETE_CLIENTS_SUCCESS",
+  "@clients/DELETE_CLIENTS_FAILURE",
+)<void, void, void>();
+
 export const fetchClients = createAsyncAction(
   "@clients/FETCH_CLIENTS_REQUEST",
   "@clients/FETCH_CLIENTS_SUCCESS",

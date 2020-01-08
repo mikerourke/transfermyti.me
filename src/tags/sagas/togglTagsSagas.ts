@@ -1,11 +1,6 @@
 import { SagaIterator } from "@redux-saga/types";
 import { call } from "redux-saga/effects";
-import {
-  createEntitiesForTool,
-  fetchArray,
-  fetchEntitiesForTool,
-  fetchObject,
-} from "~/redux/reduxUtils";
+import * as reduxUtils from "~/redux/reduxUtils";
 import { EntityGroup, ToolName } from "~/allEntities/allEntitiesTypes";
 import { TagModel } from "~/tags/tagsTypes";
 
@@ -19,12 +14,11 @@ interface TogglTagResponseModel {
 /**
  * Creates new Toggl tags that correspond to source and returns array of
  * transformed tags.
- * @see https://github.com/toggl/toggl_api_docs/blob/master/chapters/tags.md#create-a-tag
  */
 export function* createTogglTagsSaga(
   sourceTags: TagModel[],
 ): SagaIterator<TagModel[]> {
-  return yield call(createEntitiesForTool, {
+  return yield call(reduxUtils.createEntitiesForTool, {
     toolName: ToolName.Toggl,
     sourceRecords: sourceTags,
     apiCreateFunc: createTogglTag,
@@ -32,16 +26,30 @@ export function* createTogglTagsSaga(
 }
 
 /**
+ * Deletes all specified source tags from Toggl.
+ */
+export function* deleteTogglTagsSaga(sourceTags: TagModel[]): SagaIterator {
+  yield call(reduxUtils.deleteEntitiesForTool, {
+    toolName: ToolName.Toggl,
+    sourceRecords: sourceTags,
+    apiDeleteFunc: deleteTogglTag,
+  });
+}
+
+/**
  * Fetches all tags in Toggl workspaces and returns array of transformed tags.
- * @see https://github.com/toggl/toggl_api_docs/blob/master/chapters/workspaces.md#get-workspace-tags
  */
 export function* fetchTogglTagsSaga(): SagaIterator<TagModel[]> {
-  return yield call(fetchEntitiesForTool, {
+  return yield call(reduxUtils.fetchEntitiesForTool, {
     toolName: ToolName.Toggl,
     apiFetchFunc: fetchTogglTagsInWorkspace,
   });
 }
 
+/**
+ * Creates a new Toggl tag.
+ * @see https://github.com/toggl/toggl_api_docs/blob/master/chapters/tags.md#create-a-tag
+ */
 function* createTogglTag(
   sourceTag: TagModel,
   targetWorkspaceId: string,
@@ -50,7 +58,7 @@ function* createTogglTag(
     name: sourceTag.name,
     wid: +targetWorkspaceId,
   };
-  const { data } = yield call(fetchObject, "/toggl/api/tags", {
+  const { data } = yield call(reduxUtils.fetchObject, "/toggl/api/tags", {
     method: "POST",
     body: tagRequest,
   });
@@ -58,11 +66,25 @@ function* createTogglTag(
   return transformFromResponse(data);
 }
 
+/**
+ * Deletes the specified Toggl tag.
+ * @see https://github.com/toggl/toggl_api_docs/blob/master/chapters/tags.md#delete-a-tag
+ */
+function* deleteTogglTag(sourceTag: TagModel): SagaIterator {
+  yield call(reduxUtils.fetchObject, `/toggl/api/tags/${sourceTag.id}`, {
+    method: "DELETE",
+  });
+}
+
+/**
+ * Fetches Toggl tags in the specified workspace.
+ * @see https://github.com/toggl/toggl_api_docs/blob/master/chapters/workspaces.md#get-workspace-tags
+ */
 function* fetchTogglTagsInWorkspace(
   workspaceId: string,
 ): SagaIterator<TagModel[]> {
   const togglTags: TogglTagResponseModel[] = yield call(
-    fetchArray,
+    reduxUtils.fetchArray,
     `/toggl/api/workspaces/${workspaceId}/tags`,
   );
 

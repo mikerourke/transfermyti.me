@@ -1,5 +1,5 @@
-import { createAction } from "typesafe-actions";
 import cuid from "cuid";
+import { createAction } from "typesafe-actions";
 import { capitalize, getIfDev } from "~/utils";
 import {
   ToolName,
@@ -14,6 +14,7 @@ export const showNotification = createAction(
   },
 )<NotificationModel>();
 
+// REFACTOR: Change this to `showErrorNotification` and extrapolate error type from the Error object.
 export const showFetchErrorNotification = createAction(
   "@app/SHOW_FETCH_ERROR_NOTIFICATION",
   (err: Error & { toolName: ToolName }) => {

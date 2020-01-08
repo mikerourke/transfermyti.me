@@ -8,26 +8,16 @@ import {
   toolActionSelector,
   toolNameByMappingSelector,
 } from "~/app/appSelectors";
+import * as projectActions from "~/projects/projectsActions";
 import {
-  createProjects,
-  fetchProjects,
-  flipIsProjectIncluded,
-  updateAreAllProjectsIncluded,
-} from "~/projects/projectsActions";
-import {
+  includedSourceProjectsSelector,
   sourceProjectsByIdSelector,
   sourceProjectsForTransferSelector,
 } from "~/projects/projectsSelectors";
 import { updateIsTaskIncluded } from "~/tasks/tasksActions";
 import { sourceTasksSelector } from "~/tasks/tasksSelectors";
-import {
-  createClockifyProjectsSaga,
-  fetchClockifyProjectsSaga,
-} from "./clockifyProjectsSagas";
-import {
-  createTogglProjectsSaga,
-  fetchTogglProjectsSaga,
-} from "./togglProjectsSagas";
+import * as clockifySagas from "./clockifyProjectsSagas";
+import * as togglSagas from "./togglProjectsSagas";
 import { ToolAction } from "~/app/appTypes";
 import { Mapping, ToolName } from "~/allEntities/allEntitiesTypes";
 import { ProjectModel, ProjectsByIdModel } from "~/projects/projectsTypes";
@@ -35,8 +25,14 @@ import { ReduxAction } from "~/redux/reduxTypes";
 
 export function* projectMonitoringSaga(): SagaIterator {
   yield all([
-    takeEvery(flipIsProjectIncluded, pushProjectInclusionChangesToTasks),
-    takeEvery(updateAreAllProjectsIncluded, pushProjectInclusionChangesToTasks),
+    takeEvery(
+      projectActions.flipIsProjectIncluded,
+      pushProjectInclusionChangesToTasks,
+    ),
+    takeEvery(
+      projectActions.updateAreAllProjectsIncluded,
+      pushProjectInclusionChangesToTasks,
+    ),
   ]);
 }
 
@@ -73,11 +69,11 @@ function* pushProjectInclusionChangesToTasks(
     };
 
     switch (true) {
-      case isActionOf(updateAreAllProjectsIncluded, action):
+      case isActionOf(projectActions.updateAreAllProjectsIncluded, action):
         yield put(updateIsTaskIncluded(updatePayload));
         break;
 
-      case isActionOf(flipIsProjectIncluded, action):
+      case isActionOf(projectActions.flipIsProjectIncluded, action):
         if (sourceTask.projectId !== action.payload) {
           break;
         }
@@ -91,14 +87,18 @@ function* pushProjectInclusionChangesToTasks(
   }
 }
 
+/**
+ * Creates projects in the target tool based on the included projects from the
+ * source tool and links them by ID.
+ */
 export function* createProjectsSaga(): SagaIterator {
-  yield put(createProjects.request());
+  yield put(projectActions.createProjects.request());
 
   try {
     const toolNameByMapping = yield select(toolNameByMappingSelector);
     const createSagaByToolName = {
-      [ToolName.Clockify]: createClockifyProjectsSaga,
-      [ToolName.Toggl]: createTogglProjectsSaga,
+      [ToolName.Clockify]: clockifySagas.createClockifyProjectsSaga,
+      [ToolName.Toggl]: togglSagas.createTogglProjectsSaga,
     }[toolNameByMapping.target];
 
     const sourceProjects = yield select(sourceProjectsForTransferSelector);
@@ -108,20 +108,46 @@ export function* createProjectsSaga(): SagaIterator {
       targetProjects,
     );
 
-    yield put(createProjects.success(projectsByIdByMapping));
+    yield put(projectActions.createProjects.success(projectsByIdByMapping));
   } catch (err) {
     yield put(showFetchErrorNotification(err));
-    yield put(createProjects.failure());
+    yield put(projectActions.createProjects.failure());
   }
 }
 
+/**
+ * Deletes included projects from the source tool.
+ */
+export function* deleteProjectsSaga(): SagaIterator {
+  yield put(projectActions.deleteProjects.request());
+
+  try {
+    const toolNameByMapping = yield select(toolNameByMappingSelector);
+    const deleteSagaByToolName = {
+      [ToolName.Clockify]: clockifySagas.deleteClockifyProjectsSaga,
+      [ToolName.Toggl]: togglSagas.deleteTogglProjectsSaga,
+    }[toolNameByMapping.source];
+
+    const sourceProjects = yield select(includedSourceProjectsSelector);
+    yield call(deleteSagaByToolName, sourceProjects);
+
+    yield put(projectActions.deleteProjects.success());
+  } catch (err) {
+    yield put(showFetchErrorNotification(err));
+    yield put(projectActions.deleteProjects.failure());
+  }
+}
+
+/**
+ * Fetches projects from the source and target tools and links them by ID.
+ */
 export function* fetchProjectsSaga(): SagaIterator {
-  yield put(fetchProjects.request());
+  yield put(projectActions.fetchProjects.request());
 
   try {
     const fetchSagaByToolName = {
-      [ToolName.Clockify]: fetchClockifyProjectsSaga,
-      [ToolName.Toggl]: fetchTogglProjectsSaga,
+      [ToolName.Clockify]: clockifySagas.fetchClockifyProjectsSaga,
+      [ToolName.Toggl]: togglSagas.fetchTogglProjectsSaga,
     };
     const { source, target } = yield select(toolNameByMappingSelector);
     const sourceProjects = yield call(fetchSagaByToolName[source]);
@@ -143,9 +169,9 @@ export function* fetchProjectsSaga(): SagaIterator {
       };
     }
 
-    yield put(fetchProjects.success(projectsByIdByMapping));
+    yield put(projectActions.fetchProjects.success(projectsByIdByMapping));
   } catch (err) {
     yield put(showFetchErrorNotification(err));
-    yield put(fetchProjects.failure());
+    yield put(projectActions.fetchProjects.failure());
   }
 }

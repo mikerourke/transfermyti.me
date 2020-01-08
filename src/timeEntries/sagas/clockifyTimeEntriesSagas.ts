@@ -1,13 +1,7 @@
 import { SagaIterator } from "@redux-saga/types";
 import * as R from "ramda";
 import { call, select } from "redux-saga/effects";
-import {
-  createEntitiesForTool,
-  fetchEntitiesForTool,
-  fetchObject,
-  findTargetEntityId,
-  paginatedClockifyFetch,
-} from "~/redux/reduxUtils";
+import * as reduxUtils from "~/redux/reduxUtils";
 import { credentialsByToolNameSelector } from "~/credentials/credentialsSelectors";
 import { sourceProjectsByIdSelector } from "~/projects/projectsSelectors";
 import { targetTagIdsSelectorFactory } from "~/tags/tagsSelectors";
@@ -41,12 +35,11 @@ interface ClockifyTimeEntryResponseModel {
 /**
  * Creates Clockify time entries in all workspaces and returns array of
  * transformed time entries.
- * @see https://clockify.me/developers-api#operation--v1-workspaces--workspaceId--timeEntries-post
  */
 export function* createClockifyTimeEntriesSaga(
   sourceTimeEntries: TimeEntryModel[],
 ): SagaIterator<TimeEntryModel[]> {
-  return yield call(createEntitiesForTool, {
+  return yield call(reduxUtils.createEntitiesForTool, {
     toolName: ToolName.Clockify,
     sourceRecords: sourceTimeEntries,
     apiCreateFunc: createClockifyTimeEntry,
@@ -54,25 +47,41 @@ export function* createClockifyTimeEntriesSaga(
 }
 
 /**
+ * Deletes all specified source time entries from Clockify.
+ */
+export function* deleteClockifyTimeEntriesSaga(
+  sourceTimeEntries: TimeEntryModel[],
+): SagaIterator {
+  yield call(reduxUtils.deleteEntitiesForTool, {
+    toolName: ToolName.Clockify,
+    sourceRecords: sourceTimeEntries,
+    apiDeleteFunc: deleteClockifyTimeEntry,
+  });
+}
+
+/**
  * Fetches all time entries in Clockify workspaces and returns array of
  * transformed time entries.
- * @see https://clockify.me/developers-api#operation--v1-workspaces--workspaceId--timeEntries-get
  */
 export function* fetchClockifyTimeEntriesSaga(): SagaIterator<
   TimeEntryModel[]
 > {
-  return yield call(fetchEntitiesForTool, {
+  return yield call(reduxUtils.fetchEntitiesForTool, {
     toolName: ToolName.Clockify,
     apiFetchFunc: fetchClockifyTimeEntriesInWorkspace,
   });
 }
 
+/**
+ * Creates a new Clockify time entry.
+ * @see https://clockify.me/developers-api#operation--v1-workspaces--workspaceId--timeEntries-post
+ */
 function* createClockifyTimeEntry(
   sourceTimeEntry: TimeEntryModel,
   targetWorkspaceId: string,
 ): SagaIterator<TimeEntryModel> {
   const targetProjectId = yield call(
-    findTargetEntityId,
+    reduxUtils.findTargetEntityId,
     sourceTimeEntry.projectId,
     sourceProjectsByIdSelector,
   );
@@ -82,7 +91,7 @@ function* createClockifyTimeEntry(
   );
 
   const targetTaskId = yield call(
-    findTargetEntityId,
+    reduxUtils.findTargetEntityId,
     sourceTimeEntry.taskId,
     sourceTasksByIdSelector,
   );
@@ -98,7 +107,7 @@ function* createClockifyTimeEntry(
   };
 
   const targetTimeEntry = yield call(
-    fetchObject,
+    reduxUtils.fetchObject,
     `/clockify/api/v1/workspaces/${targetWorkspaceId}/time-entries`,
     {
       method: "POST",
@@ -109,6 +118,25 @@ function* createClockifyTimeEntry(
   return transformFromResponse(targetTimeEntry);
 }
 
+/**
+ * Deletes the specified Clockify time entry.
+ * @see https://clockify.me/developers-api#operation--v1-workspaces--workspaceId--time-entries--id--delete
+ */
+function* deleteClockifyTimeEntry(
+  sourceTimeEntry: TimeEntryModel,
+): SagaIterator {
+  const { workspaceId, id } = sourceTimeEntry;
+  yield call(
+    reduxUtils.fetchObject,
+    `/clockify/api/workspaces/${workspaceId}/time-entries/${id}`,
+    { method: "DELETE" },
+  );
+}
+
+/**
+ * Fetches Clockify time entries in specified workspace.
+ * @see https://clockify.me/developers-api#operation--v1-workspaces--workspaceId--timeEntries-get
+ */
 function* fetchClockifyTimeEntriesInWorkspace(
   workspaceId: string,
 ): SagaIterator<TimeEntryModel[]> {
@@ -119,7 +147,7 @@ function* fetchClockifyTimeEntriesInWorkspace(
   }
 
   const clockifyTimeEntries: ClockifyTimeEntryResponseModel[] = yield call(
-    paginatedClockifyFetch,
+    reduxUtils.fetchPaginatedFromClockify,
     `/clockify/api/v1/workspaces/${workspaceId}/user/${clockifyUserId}/time-entries`,
     { hydrated: true },
   );

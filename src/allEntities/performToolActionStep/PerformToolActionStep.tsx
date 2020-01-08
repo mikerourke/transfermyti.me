@@ -9,7 +9,7 @@ import {
   resetTransferCountsByEntityGroup,
 } from "~/allEntities/allEntitiesActions";
 import {
-  createAllFetchStatusSelector,
+  pushAllChangesFetchStatusSelector,
   includedCountsByEntityGroupSelector,
   transferCountsByEntityGroupSelector,
 } from "~/allEntities/allEntitiesSelectors";
@@ -26,7 +26,7 @@ import { RoutePath, ToolAction } from "~/app/appTypes";
 import { ReduxState } from "~/redux/reduxTypes";
 
 interface ConnectStateProps {
-  createAllFetchStatus: FetchStatus;
+  pushAllChangesFetchStatus: FetchStatus;
   includedCountsByEntityGroup: CountsByEntityGroupModel;
   toolAction: ToolAction;
   transferCountsByEntityGroup: CountsByEntityGroupModel;
@@ -56,10 +56,10 @@ export const PerformToolActionStepComponent: React.FC<Props> = props => {
 
   React.useEffect(() => {
     // TODO: Fix this so it shows if an error has occurred.
-    if (props.createAllFetchStatus === FetchStatus.Success) {
+    if (props.pushAllChangesFetchStatus === FetchStatus.Success) {
       props.onPush(RoutePath.ToolActionSuccess);
     }
-  }, [props.createAllFetchStatus]);
+  }, [props.pushAllChangesFetchStatus]);
 
   const closeModal = (): void => setIsConfirmModalOpen(false);
 
@@ -76,7 +76,6 @@ export const PerformToolActionStepComponent: React.FC<Props> = props => {
     props.onCreateAllEntities();
   };
 
-  const actionDisplay = capitalize(props.toolAction);
   const title =
     props.toolAction === ToolAction.None
       ? "Perform Action"
@@ -108,7 +107,7 @@ export const PerformToolActionStepComponent: React.FC<Props> = props => {
         ))}
       </Flex>
       <NavigationButtonsRow
-        disabled={props.createAllFetchStatus === FetchStatus.InProcess}
+        disabled={props.pushAllChangesFetchStatus === FetchStatus.InProcess}
         nextLabel="Start"
         onBackClick={handleBackClick}
         onNextClick={handleNextClick}
@@ -124,7 +123,7 @@ export const PerformToolActionStepComponent: React.FC<Props> = props => {
 };
 
 const mapStateToProps = (state: ReduxState): ConnectStateProps => ({
-  createAllFetchStatus: createAllFetchStatusSelector(state),
+  pushAllChangesFetchStatus: pushAllChangesFetchStatusSelector(state),
   includedCountsByEntityGroup: includedCountsByEntityGroupSelector(state),
   toolAction: toolActionSelector(state),
   transferCountsByEntityGroup: transferCountsByEntityGroupSelector(state),

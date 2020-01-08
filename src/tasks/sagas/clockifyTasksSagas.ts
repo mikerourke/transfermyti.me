@@ -2,12 +2,7 @@ import { SagaIterator } from "@redux-saga/types";
 import * as R from "ramda";
 import { call, delay, select } from "redux-saga/effects";
 import { CLOCKIFY_API_DELAY } from "~/constants";
-import {
-  createEntitiesForTool,
-  fetchEntitiesForTool,
-  fetchObject,
-  paginatedClockifyFetch,
-} from "~/redux/reduxUtils";
+import * as reduxUtils from "~/redux/reduxUtils";
 import {
   projectIdToLinkedIdSelector,
   projectsByWorkspaceIdByToolNameSelector,
@@ -29,12 +24,11 @@ export interface ClockifyTaskResponseModel {
 /**
  * Creates new Clockify tasks in all target workspaces and returns array of
  * transformed tasks.
- * @see https://clockify.me/developers-api#operation--v1-workspaces--workspaceId--tasks-post
  */
 export function* createClockifyTasksSaga(
   sourceTasks: TaskModel[],
 ): SagaIterator<TaskModel[]> {
-  return yield call(createEntitiesForTool, {
+  return yield call(reduxUtils.createEntitiesForTool, {
     toolName: ToolName.Clockify,
     sourceRecords: sourceTasks,
     apiCreateFunc: createClockifyTask,
@@ -42,17 +36,33 @@ export function* createClockifyTasksSaga(
 }
 
 /**
+ * Deletes all specified source tasks from Clockify.
+ */
+export function* deleteClockifyTasksSaga(
+  sourceTasks: TaskModel[],
+): SagaIterator {
+  yield call(reduxUtils.deleteEntitiesForTool, {
+    toolName: ToolName.Clockify,
+    sourceRecords: sourceTasks,
+    apiDeleteFunc: deleteClockifyTask,
+  });
+}
+
+/**
  * Fetches all tasks in Clockify workspaces and returns array of transformed
  * tasks.
- * @see https://clockify.me/developers-api#operation--v1-workspaces--workspaceId--tasks-get
  */
 export function* fetchClockifyTasksSaga(): SagaIterator {
-  return yield call(fetchEntitiesForTool, {
+  return yield call(reduxUtils.fetchEntitiesForTool, {
     toolName: ToolName.Clockify,
     apiFetchFunc: fetchClockifyTasksInWorkspace,
   });
 }
 
+/**
+ * Creates a new Clockify task.
+ * @see https://clockify.me/developers-api#operation--v1-workspaces--workspaceId--tasks-post
+ */
 function* createClockifyTask(
   sourceTask: TaskModel,
   targetWorkspaceId: string,
@@ -71,7 +81,7 @@ function* createClockifyTask(
   };
 
   const clockifyTask = yield call(
-    fetchObject,
+    reduxUtils.fetchObject,
     `/clockify/api/v1/workspaces/${targetWorkspaceId}/projects/${targetProjectId}/tasks`,
     { method: "POST", body: taskRequest },
   );
@@ -79,23 +89,44 @@ function* createClockifyTask(
   return transformFromResponse(clockifyTask, targetWorkspaceId);
 }
 
+/**
+ * Deletes the specified Clockify task.
+ * @see https://clockify.github.io/clockify_api_docs/#operation--workspaces--workspaceId--projects--projectId--tasks--id--delete
+ * @deprecated This is part of the old API and will need to be updated as soon
+ *             as the v1 endpoint is available.
+ */
+function* deleteClockifyTask(sourceTask: TaskModel): SagaIterator {
+  const { workspaceId, projectId, id } = sourceTask;
+  yield call(
+    reduxUtils.fetchObject,
+    `/clockify/api/workspaces/${workspaceId}/projects/${projectId}/tasks/${id}`,
+    { method: "DELETE" },
+  );
+}
+
+/**
+ * Fetches Clockify tasks in all projects in the specified workspace.
+ * @see https://clockify.me/developers-api#operation--v1-workspaces--workspaceId--tasks-get
+ */
 function* fetchClockifyTasksInWorkspace(
   workspaceId: string,
 ): SagaIterator<TaskModel[]> {
   const projectsByWorkspaceIdByToolName = yield select(
     projectsByWorkspaceIdByToolNameSelector,
   );
+
   const clockifyProjects = R.pathOr(
     [],
     [ToolName.Clockify, workspaceId],
     projectsByWorkspaceIdByToolName,
   );
+
   const allClockifyTasks: ClockifyTaskResponseModel[] = [];
 
   for (const clockifyProject of clockifyProjects) {
     const { id: projectId } = clockifyProject;
     const clockifyTasks: ClockifyTaskResponseModel[] = yield call(
-      paginatedClockifyFetch,
+      reduxUtils.fetchPaginatedFromClockify,
       `/clockify/api/v1/workspaces/${workspaceId}/projects/${projectId}/tasks`,
     );
     allClockifyTasks.push(...clockifyTasks);

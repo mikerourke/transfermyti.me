@@ -15,11 +15,12 @@ import {
 export const areExistsInTargetShownSelector = (state: ReduxState): boolean =>
   state.allEntities.areExistsInTargetShown;
 
-export const createAllFetchStatusSelector = (state: ReduxState): FetchStatus =>
-  state.allEntities.createAllFetchStatus;
-
 export const fetchAllFetchStatusSelector = (state: ReduxState): FetchStatus =>
   state.allEntities.fetchAllFetchStatus;
+
+export const pushAllChangesFetchStatusSelector = (
+  state: ReduxState,
+): FetchStatus => state.allEntities.pushAllChangesFetchStatus;
 
 export const entityGroupInProcessDisplaySelector = createSelector(
   (state: ReduxState) => state.allEntities.entityGroupInProcess,

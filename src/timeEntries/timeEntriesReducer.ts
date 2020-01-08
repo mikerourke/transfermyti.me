@@ -3,6 +3,7 @@ import { ActionType, createReducer } from "typesafe-actions";
 import { updateAreAllRecordsIncluded } from "~/redux/reduxUtils";
 import { flushAllEntities } from "~/allEntities/allEntitiesActions";
 import * as timeEntriesActions from "./timeEntriesActions";
+import { Mapping } from "~/allEntities/allEntitiesTypes";
 import { TimeEntriesByIdModel } from "./timeEntriesTypes";
 
 type TimeEntriesAction = ActionType<
@@ -46,6 +47,7 @@ export const timeEntriesReducer = createReducer<
   .handleAction(
     [
       timeEntriesActions.createTimeEntries.request,
+      timeEntriesActions.deleteTimeEntries.request,
       timeEntriesActions.fetchTimeEntries.request,
     ],
     state => ({
@@ -56,6 +58,7 @@ export const timeEntriesReducer = createReducer<
   .handleAction(
     [
       timeEntriesActions.createTimeEntries.failure,
+      timeEntriesActions.deleteTimeEntries.failure,
       timeEntriesActions.fetchTimeEntries.failure,
     ],
     state => ({
@@ -73,7 +76,7 @@ export const timeEntriesReducer = createReducer<
   .handleAction(
     timeEntriesActions.flipIsTimeEntryIncluded,
     (state, { payload }) =>
-      R.over(R.lensPath(["source", payload, "isIncluded"]), R.not, state),
+      R.over(R.lensPath([Mapping.Source, payload, "isIncluded"]), R.not, state),
   )
   .handleAction(
     timeEntriesActions.updateAreAllTimeEntriesIncluded,
@@ -82,4 +85,7 @@ export const timeEntriesReducer = createReducer<
       source: updateAreAllRecordsIncluded(state.source, payload),
     }),
   )
-  .handleAction(flushAllEntities, () => ({ ...initialState }));
+  .handleAction(
+    [timeEntriesActions.deleteTimeEntries.success, flushAllEntities],
+    () => ({ ...initialState }),
+  );

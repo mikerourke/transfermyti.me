@@ -3,6 +3,7 @@ import * as R from "ramda";
 import { updateAreAllRecordsIncluded } from "~/redux/reduxUtils";
 import { flushAllEntities } from "~/allEntities/allEntitiesActions";
 import * as tasksActions from "./tasksActions";
+import { Mapping } from "~/allEntities/allEntitiesTypes";
 import { TasksByIdModel } from "./tasksTypes";
 
 type TasksAction = ActionType<typeof tasksActions | typeof flushAllEntities>;
@@ -36,21 +37,36 @@ export const tasksReducer = createReducer<TasksState, TasksAction>(initialState)
     }),
   )
   .handleAction(
-    [tasksActions.createTasks.request, tasksActions.fetchTasks.request],
+    [
+      tasksActions.createTasks.request,
+      tasksActions.deleteTasks.request,
+      tasksActions.fetchTasks.request,
+    ],
     state => ({
       ...state,
       isFetching: true,
     }),
   )
   .handleAction(
-    [tasksActions.createTasks.failure, tasksActions.fetchTasks.failure],
+    [
+      tasksActions.createTasks.failure,
+      tasksActions.deleteTasks.failure,
+      tasksActions.fetchTasks.failure,
+    ],
     state => ({
       ...state,
       isFetching: false,
     }),
   )
   .handleAction(tasksActions.flipIsTaskIncluded, (state, { payload }) =>
-    R.over(R.lensPath(["source", payload, "isIncluded"]), R.not, state),
+    R.over(R.lensPath([Mapping.Source, payload, "isIncluded"]), R.not, state),
+  )
+  .handleAction(tasksActions.updateIsTaskIncluded, (state, { payload }) =>
+    R.set(
+      R.lensPath([Mapping.Source, payload.id, "isIncluded"]),
+      payload.isIncluded,
+      state,
+    ),
   )
   .handleAction(
     tasksActions.updateAreAllTasksIncluded,
@@ -59,11 +75,6 @@ export const tasksReducer = createReducer<TasksState, TasksAction>(initialState)
       source: updateAreAllRecordsIncluded(state.source, payload),
     }),
   )
-  .handleAction(tasksActions.updateIsTaskIncluded, (state, { payload }) =>
-    R.set(
-      R.lensPath(["source", payload.id, "isIncluded"]),
-      payload.isIncluded,
-      state,
-    ),
-  )
-  .handleAction(flushAllEntities, () => ({ ...initialState }));
+  .handleAction([tasksActions.deleteTasks.success, flushAllEntities], () => ({
+    ...initialState,
+  }));

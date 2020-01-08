@@ -9,7 +9,7 @@ import {
 } from "~/constants";
 import { ToolName } from "~/allEntities/allEntitiesTypes";
 
-export function* paginatedClockifyFetch<TEntity>(
+export function* fetchPaginatedFromClockify<TEntity>(
   apiUrl: string,
   queryParams: object = {},
 ): SagaIterator<TEntity[]> {
@@ -46,6 +46,16 @@ export function* fetchArray<TResponse>(
 ): SagaIterator<TResponse> {
   const response = yield call(fetchWithRetries, endpoint, fetchOptions);
   return R.isNil(response) ? [] : response;
+}
+
+/**
+ * Performs a fetch call when the expected payload is empty.
+ */
+export function* fetchEmpty(
+  endpoint: string,
+  fetchOptions: unknown = {},
+): SagaIterator {
+  yield call(fetchWithRetries, endpoint, fetchOptions);
 }
 
 /**

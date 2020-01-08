@@ -46,7 +46,7 @@ export const sourceClientsForTransferSelector = createSelector(
 export const sourceClientsInActiveWorkspaceSelector = createSelector(
   sourceClientsSelector,
   activeWorkspaceIdSelector,
-  (sourceClients, activeWorkspaceId) =>
+  (sourceClients, activeWorkspaceId): ClientModel[] =>
     sourceClients.filter(
       sourceClient => sourceClient.workspaceId === activeWorkspaceId,
     ),
@@ -54,7 +54,7 @@ export const sourceClientsInActiveWorkspaceSelector = createSelector(
 
 const projectCountBySourceClientIdSelector = createSelector(
   sourceClientsSelector,
-  sourceClients => {
+  (sourceClients): Record<string, number> => {
     const projectCountBySourceClientId: Record<string, number> = {};
 
     for (const sourceClient of sourceClients) {
@@ -115,7 +115,7 @@ export const clientsForInclusionsTableSelector = createSelector(
 
 export const clientsTotalCountsByTypeSelector = createSelector(
   clientsForInclusionsTableSelector,
-  clientsForInclusionsTable =>
+  (clientsForInclusionsTable): Record<string, number> =>
     clientsForInclusionsTable.reduce(
       (
         acc,

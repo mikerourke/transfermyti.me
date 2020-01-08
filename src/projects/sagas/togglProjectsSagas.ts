@@ -3,13 +3,7 @@ import { SagaIterator } from "@redux-saga/types";
 import * as R from "ramda";
 import { call, delay } from "redux-saga/effects";
 import { TOGGL_API_DELAY, TOGGL_TEMPLATE_ID } from "~/constants";
-import {
-  createEntitiesForTool,
-  fetchArray,
-  fetchEntitiesForTool,
-  fetchObject,
-  findTargetEntityId,
-} from "~/redux/reduxUtils";
+import * as reduxUtils from "~/redux/reduxUtils";
 import { sourceClientsByIdSelector } from "~/clients/clientsSelectors";
 import { EntityGroup, ToolName } from "~/allEntities/allEntitiesTypes";
 import { ProjectModel } from "~/projects/projectsTypes";
@@ -43,12 +37,11 @@ interface TogglProjectUserResponseModel {
 /**
  * Creates new Toggl projects that correspond to source and returns an array of
  * transformed projects.
- * @see https://github.com/toggl/toggl_api_docs/blob/master/chapters/projects.md#create-project
  */
 export function* createTogglProjectsSaga(
   sourceProjects: ProjectModel[],
 ): SagaIterator<ProjectModel[]> {
-  return yield call(createEntitiesForTool, {
+  return yield call(reduxUtils.createEntitiesForTool, {
     toolName: ToolName.Toggl,
     sourceRecords: sourceProjects,
     apiCreateFunc: createTogglProject,
@@ -56,26 +49,43 @@ export function* createTogglProjectsSaga(
 }
 
 /**
+ * Deletes all specified source projects from Toggl.
+ */
+export function* deleteTogglProjectsSaga(
+  sourceProjects: ProjectModel[],
+): SagaIterator {
+  yield call(reduxUtils.deleteEntitiesForTool, {
+    toolName: ToolName.Toggl,
+    sourceRecords: sourceProjects,
+    apiDeleteFunc: deleteTogglProject,
+  });
+}
+
+/**
  * Fetches all projects in Toggl workspaces, adds associated user IDs, and
  * returns array of transformed projects.
- * @see https://github.com/toggl/toggl_api_docs/blob/master/chapters/workspaces.md#get-workspace-projects
  */
 export function* fetchTogglProjectsSaga(): SagaIterator<ProjectModel[]> {
-  return yield call(fetchEntitiesForTool, {
+  return yield call(reduxUtils.fetchEntitiesForTool, {
     toolName: ToolName.Toggl,
     apiFetchFunc: fetchTogglProjectsInWorkspace,
   });
 }
 
+/**
+ * Creates a new Toggl project.
+ * @see https://github.com/toggl/toggl_api_docs/blob/master/chapters/clients.md#create-a-client
+ */
 function* createTogglProject(
   sourceProject: ProjectModel,
   targetWorkspaceId: string,
 ): SagaIterator<ProjectModel> {
   const targetClientId = yield call(
-    findTargetEntityId,
+    reduxUtils.findTargetEntityId,
     sourceProject.clientId,
     sourceClientsByIdSelector,
   );
+
   const projectRequest = {
     name: sourceProject.name,
     wid: +targetWorkspaceId,
@@ -84,7 +94,7 @@ function* createTogglProject(
     cid: R.isNil(targetClientId) ? undefined : +targetClientId,
   };
 
-  const { data } = yield call(fetchObject, "/toggl/api/projects", {
+  const { data } = yield call(reduxUtils.fetchObject, "/toggl/api/projects", {
     method: "POST",
     body: projectRequest,
   });
@@ -92,13 +102,27 @@ function* createTogglProject(
   return transformFromResponse(data, []);
 }
 
+/**
+ * Deletes the specified Toggl project.
+ * @see https://github.com/toggl/toggl_api_docs/blob/master/chapters/projects.md#delete-a-project
+ */
+function* deleteTogglProject(sourceProject: ProjectModel): SagaIterator {
+  yield call(reduxUtils.fetchEmpty, `/toggl/api/projects/${sourceProject.id}`, {
+    method: "DELETE",
+  });
+}
+
+/**
+ * Fetches Toggl projects in the specified workspace.
+ * @see https://github.com/toggl/toggl_api_docs/blob/master/chapters/workspaces.md#get-workspace-projects
+ */
 function* fetchTogglProjectsInWorkspace(
   workspaceId: string,
 ): SagaIterator<ProjectModel[]> {
   const allTogglProjects: ProjectModel[] = [];
 
   const togglProjects: TogglProjectResponseModel[] = yield call(
-    fetchArray,
+    reduxUtils.fetchArray,
     `/toggl/api/workspaces/${workspaceId}/projects?active=both`,
   );
 
@@ -121,7 +145,7 @@ function* fetchTogglProjectsInWorkspace(
  */
 function* fetchUserIdsInProject(projectId: string): SagaIterator<string[]> {
   const projectUsers: TogglProjectUserResponseModel[] = yield call(
-    fetchArray,
+    reduxUtils.fetchArray,
     `/toggl/api/projects/${projectId}/project_users`,
   );
   return projectUsers.map(({ uid }) => uid.toString());

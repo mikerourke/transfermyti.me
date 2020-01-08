@@ -8,12 +8,7 @@ import qs from "qs";
 import * as R from "ramda";
 import { call, select, delay } from "redux-saga/effects";
 import { TOGGL_API_DELAY } from "~/constants";
-import {
-  createEntitiesForTool,
-  fetchEntitiesForTool,
-  fetchObject,
-  findTargetEntityId,
-} from "~/redux/reduxUtils";
+import * as reduxUtils from "~/redux/reduxUtils";
 import { clientIdsByNameSelectorFactory } from "~/clients/clientsSelectors";
 import { credentialsByToolNameSelector } from "~/credentials/credentialsSelectors";
 import { sourceProjectsByIdSelector } from "~/projects/projectsSelectors";
@@ -62,12 +57,11 @@ interface TogglTimeEntriesFetchResponseModel {
 /**
  * Creates Toggl time entries in all workspaces and returns array of transformed
  * time entries.
- * @see https://github.com/toggl/toggl_api_docs/blob/master/chapters/time_entries.md#create-a-time-entry
  */
 export function* createTogglTimeEntriesSaga(
   sourceTimeEntries: TimeEntryModel[],
 ): SagaIterator<TimeEntryModel[]> {
-  return yield call(createEntitiesForTool, {
+  return yield call(reduxUtils.createEntitiesForTool, {
     toolName: ToolName.Toggl,
     sourceRecords: sourceTimeEntries,
     apiCreateFunc: createTogglTimeEntry,
@@ -75,31 +69,49 @@ export function* createTogglTimeEntriesSaga(
 }
 
 /**
+ * Deletes all specified source time entries from Toggl.
+ */
+export function* deleteTogglTimeEntriesSaga(
+  sourceTimeEntries: TimeEntryModel[],
+): SagaIterator {
+  yield call(reduxUtils.deleteEntitiesForTool, {
+    toolName: ToolName.Toggl,
+    sourceRecords: sourceTimeEntries,
+    apiDeleteFunc: deleteTogglTimeEntry,
+  });
+}
+
+/**
  * Fetches all time entries in Toggl workspaces and returns array of
  * transformed time entries.
- * @see https://github.com/toggl/toggl_api_docs/blob/master/reports/detailed.md#detailed-report
  */
 export function* fetchTogglTimeEntriesSaga(): SagaIterator<TimeEntryModel[]> {
-  return yield call(fetchEntitiesForTool, {
+  return yield call(reduxUtils.fetchEntitiesForTool, {
     toolName: ToolName.Toggl,
     apiFetchFunc: fetchTogglTimeEntriesInWorkspace,
   });
 }
 
+/**
+ * Creates a new Toggl time entry.
+ * @see https://github.com/toggl/toggl_api_docs/blob/master/chapters/time_entries.md#create-a-time-entry
+ */
 function* createTogglTimeEntry(
   sourceTimeEntry: TimeEntryModel,
   targetWorkspaceId: string,
 ): SagaIterator {
   const targetProjectId = yield call(
-    findTargetEntityId,
+    reduxUtils.findTargetEntityId,
     sourceTimeEntry.projectId,
     sourceProjectsByIdSelector,
   );
+
   const targetTaskId = yield call(
-    findTargetEntityId,
+    reduxUtils.findTargetEntityId,
     sourceTimeEntry.taskId,
     sourceTasksByIdSelector,
   );
+
   const timeEntryRequest = {
     time_entry: {
       description: sourceTimeEntry.description,
@@ -114,12 +126,30 @@ function* createTogglTimeEntry(
     },
   };
 
-  yield call(fetchObject, "/toggl/api/time_entries", {
+  yield call(reduxUtils.fetchObject, "/toggl/api/time_entries", {
     method: "POST",
     body: timeEntryRequest,
   });
 }
 
+/**
+ * Deletes the specified Toggl time entry.
+ * @see https://github.com/toggl/toggl_api_docs/blob/master/chapters/time_entries.md#delete-a-time-entry
+ */
+function* deleteTogglTimeEntry(sourceTimeEntry: TimeEntryModel): SagaIterator {
+  yield call(
+    reduxUtils.fetchEmpty,
+    `/toggl/api/time_entries/${sourceTimeEntry.id}`,
+    {
+      method: "DELETE",
+    },
+  );
+}
+
+/**
+ * Fetches Toggl time entries in the specified workspace.
+ * @see https://github.com/toggl/toggl_api_docs/blob/master/reports/detailed.md#detailed-report
+ */
 function* fetchTogglTimeEntriesInWorkspace(
   workspaceId: string,
 ): SagaIterator<TimeEntryModel[]> {
@@ -141,7 +171,7 @@ function* fetchTogglTimeEntriesInWorkspace(
 
   for (let year = 2007; year <= currentYear; year += 1) {
     const timeEntriesForYear = yield call(
-      fetchTogglTimeEntriesForYear,
+      fetchAllTogglTimeEntriesForYear,
       togglEmail,
       workspaceId,
       year,
@@ -170,7 +200,7 @@ function* fetchTogglTimeEntriesInWorkspace(
   });
 }
 
-function* fetchTogglTimeEntriesForYear(
+function* fetchAllTogglTimeEntriesForYear(
   email: string,
   workspaceId: string,
   year: number,
@@ -234,7 +264,7 @@ function* fetchTogglTimeEntriesForYearAndPage(
     page: page,
   });
 
-  return yield call(fetchObject, `/toggl/reports/details?${query}`);
+  return yield call(reduxUtils.fetchObject, `/toggl/reports/details?${query}`);
 }
 
 function transformFromResponse(

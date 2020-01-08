@@ -1,40 +1,38 @@
 import { SagaIterator } from "@redux-saga/types";
 import * as R from "ramda";
 import { call, put, select } from "redux-saga/effects";
-import { ToolAction } from "~/app/appTypes";
 import { linkEntitiesByIdByMapping } from "~/redux/reduxUtils";
 import { showFetchErrorNotification } from "~/app/appActions";
 import {
   toolNameByMappingSelector,
   toolActionSelector,
 } from "~/app/appSelectors";
+import * as timeEntriesActions from "~/timeEntries/timeEntriesActions";
 import {
-  createTimeEntries,
-  fetchTimeEntries,
-} from "~/timeEntries/timeEntriesActions";
-import { sourceTimeEntriesForTransferSelector } from "~/timeEntries/timeEntriesSelectors";
-import {
-  createClockifyTimeEntriesSaga,
-  fetchClockifyTimeEntriesSaga,
-} from "./clockifyTimeEntriesSagas";
-import {
-  createTogglTimeEntriesSaga,
-  fetchTogglTimeEntriesSaga,
-} from "./togglTimeEntriesSagas";
+  sourceTimeEntriesForTransferSelector,
+  includedSourceTimeEntriesSelector,
+} from "~/timeEntries/timeEntriesSelectors";
+import * as clockifySagas from "./clockifyTimeEntriesSagas";
+import * as togglSagas from "./togglTimeEntriesSagas";
 import { ToolName, Mapping } from "~/allEntities/allEntitiesTypes";
+import { ToolAction } from "~/app/appTypes";
 import {
   TimeEntryModel,
   TimeEntriesByIdModel,
 } from "~/timeEntries/timeEntriesTypes";
 
+/**
+ * Creates time entries in the target tool based on the included time entries
+ * from the source tool and links them by criteria.
+ */
 export function* createTimeEntriesSaga(): SagaIterator {
-  yield put(createTimeEntries.request());
+  yield put(timeEntriesActions.createTimeEntries.request());
 
   try {
     const toolNameByMapping = yield select(toolNameByMappingSelector);
     const createSagaByToolName = {
-      [ToolName.Clockify]: createClockifyTimeEntriesSaga,
-      [ToolName.Toggl]: createTogglTimeEntriesSaga,
+      [ToolName.Clockify]: clockifySagas.createClockifyTimeEntriesSaga,
+      [ToolName.Toggl]: togglSagas.createTogglTimeEntriesSaga,
     }[toolNameByMapping.target];
 
     const sourceTimeEntries = yield select(
@@ -50,20 +48,49 @@ export function* createTimeEntriesSaga(): SagaIterator {
       targetTimeEntries,
     );
 
-    yield put(createTimeEntries.success(timeEntriesByIdByMapping));
+    yield put(
+      timeEntriesActions.createTimeEntries.success(timeEntriesByIdByMapping),
+    );
   } catch (err) {
     yield put(showFetchErrorNotification(err));
-    yield put(createTimeEntries.failure());
+    yield put(timeEntriesActions.createTimeEntries.failure());
   }
 }
 
+/**
+ * Deletes included time entries from the source tool.
+ */
+export function* deleteTimeEntriesSaga(): SagaIterator {
+  yield put(timeEntriesActions.deleteTimeEntries.request());
+
+  try {
+    const toolNameByMapping = yield select(toolNameByMappingSelector);
+    const deleteSagaByToolName = {
+      [ToolName.Clockify]: clockifySagas.deleteClockifyTimeEntriesSaga,
+      [ToolName.Toggl]: togglSagas.deleteTogglTimeEntriesSaga,
+    }[toolNameByMapping.source];
+
+    const sourceTimeEntries = yield select(includedSourceTimeEntriesSelector);
+    yield call(deleteSagaByToolName, sourceTimeEntries);
+
+    yield put(timeEntriesActions.deleteTimeEntries.success());
+  } catch (err) {
+    yield put(showFetchErrorNotification(err));
+    yield put(timeEntriesActions.deleteTimeEntries.failure());
+  }
+}
+
+/**
+ * Fetches time entries from the source and target tools and links them by
+ * criteria.
+ */
 export function* fetchTimeEntriesSaga(): SagaIterator {
-  yield put(fetchTimeEntries.request());
+  yield put(timeEntriesActions.fetchTimeEntries.request());
 
   try {
     const fetchSagaByToolName = {
-      [ToolName.Clockify]: fetchClockifyTimeEntriesSaga,
-      [ToolName.Toggl]: fetchTogglTimeEntriesSaga,
+      [ToolName.Clockify]: clockifySagas.fetchClockifyTimeEntriesSaga,
+      [ToolName.Toggl]: togglSagas.fetchTogglTimeEntriesSaga,
     };
     const { source, target } = yield select(toolNameByMappingSelector);
     let sourceTimeEntries = yield call(fetchSagaByToolName[source]);
@@ -87,10 +114,12 @@ export function* fetchTimeEntriesSaga(): SagaIterator {
       };
     }
 
-    yield put(fetchTimeEntries.success(timeEntriesByIdByMapping));
+    yield put(
+      timeEntriesActions.fetchTimeEntries.success(timeEntriesByIdByMapping),
+    );
   } catch (err) {
     yield put(showFetchErrorNotification(err));
-    yield put(fetchTimeEntries.failure());
+    yield put(timeEntriesActions.fetchTimeEntries.failure());
   }
 }
 

@@ -3,7 +3,7 @@ import { push } from "connected-react-router";
 import * as R from "ramda";
 import { put, select, takeEvery } from "redux-saga/effects";
 import { getIfDev } from "~/utils";
-import { updateCreateAllFetchStatus } from "~/allEntities/allEntitiesActions";
+import { updatePushAllChangesFetchStatus } from "~/allEntities/allEntitiesActions";
 import {
   currentPathSelector,
   toolNameByMappingSelector,
@@ -30,7 +30,7 @@ function* respondToRouteChangesSaga(): SagaIterator {
   }
 
   if (currentPath !== RoutePath.PerformToolAction) {
-    yield put(updateCreateAllFetchStatus(FetchStatus.Pending));
+    yield put(updatePushAllChangesFetchStatus(FetchStatus.Pending));
   }
 
   // Disable the redirect for development. I originally had it turned on, but

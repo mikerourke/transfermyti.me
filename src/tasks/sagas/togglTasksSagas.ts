@@ -1,12 +1,6 @@
 import { SagaIterator } from "@redux-saga/types";
 import { call } from "redux-saga/effects";
-import {
-  createEntitiesForTool,
-  fetchArray,
-  fetchEntitiesForTool,
-  fetchObject,
-  findTargetEntityId,
-} from "~/redux/reduxUtils";
+import * as reduxUtils from "~/redux/reduxUtils";
 import { sourceProjectsByIdSelector } from "~/projects/projectsSelectors";
 import { EntityGroup, ToolName } from "~/allEntities/allEntitiesTypes";
 import { TaskModel } from "~/tasks/tasksTypes";
@@ -25,10 +19,9 @@ interface TogglTaskResponseModel {
 /**
  * Creates new Toggl tasks that correspond to source and returns array of
  * transformed tasks.
- * @see https://github.com/toggl/toggl_api_docs/blob/master/chapters/tasks.md#create-a-task
  */
 export function* createTogglTasksSaga(sourceTasks: TaskModel[]): SagaIterator {
-  return yield call(createEntitiesForTool, {
+  return yield call(reduxUtils.createEntitiesForTool, {
     toolName: ToolName.Toggl,
     sourceRecords: sourceTasks,
     apiCreateFunc: createTogglTask,
@@ -36,19 +29,33 @@ export function* createTogglTasksSaga(sourceTasks: TaskModel[]): SagaIterator {
 }
 
 /**
+ * Deletes all specified source tasks from Toggl.
+ */
+export function* deleteTogglTasksSaga(sourceTasks: TaskModel[]): SagaIterator {
+  yield call(reduxUtils.deleteEntitiesForTool, {
+    toolName: ToolName.Toggl,
+    sourceRecords: sourceTasks,
+    apiDeleteFunc: deleteTogglTask,
+  });
+}
+
+/**
  * Fetches all tasks in Toggl workspaces and returns the result.
- * @see https://github.com/toggl/toggl_api_docs/blob/master/chapters/workspaces.md#get-workspace-tasks
  */
 export function* fetchTogglTasksSaga(): SagaIterator<TaskModel[]> {
-  return yield call(fetchEntitiesForTool, {
+  return yield call(reduxUtils.fetchEntitiesForTool, {
     toolName: ToolName.Toggl,
     apiFetchFunc: fetchTogglTasksInWorkspace,
   });
 }
 
+/**
+ * Creates a new Toggl task.
+ * @see https://github.com/toggl/toggl_api_docs/blob/master/chapters/tasks.md#create-a-task
+ */
 function* createTogglTask(sourceTask: TaskModel): SagaIterator<TaskModel> {
   const targetProjectId = yield call(
-    findTargetEntityId,
+    reduxUtils.findTargetEntityId,
     sourceTask.projectId,
     sourceProjectsByIdSelector,
   );
@@ -57,7 +64,7 @@ function* createTogglTask(sourceTask: TaskModel): SagaIterator<TaskModel> {
     pid: +targetProjectId,
   };
 
-  const { data } = yield call(fetchObject, "/toggl/api/tasks", {
+  const { data } = yield call(reduxUtils.fetchObject, "/toggl/api/tasks", {
     method: "POST",
     body: taskRequest,
   });
@@ -65,11 +72,25 @@ function* createTogglTask(sourceTask: TaskModel): SagaIterator<TaskModel> {
   return transformFromResponse(data);
 }
 
+/**
+ * Deletes the specified Toggl task.
+ * @see https://github.com/toggl/toggl_api_docs/blob/master/chapters/tasks.md#delete-a-task
+ */
+function* deleteTogglTask(sourceTask: TaskModel): SagaIterator {
+  yield call(reduxUtils.fetchEmpty, `/toggl/api/tasks/${sourceTask.id}`, {
+    method: "DELETE",
+  });
+}
+
+/**
+ * Fetches Toggl tasks in the specified workspace.
+ * @see https://github.com/toggl/toggl_api_docs/blob/master/chapters/workspaces.md#get-workspace-tasks
+ */
 function* fetchTogglTasksInWorkspace(
   workspaceId: string,
 ): SagaIterator<TaskModel[]> {
   const togglTasks: TogglTaskResponseModel[] = yield call(
-    fetchArray,
+    reduxUtils.fetchArray,
     `/toggl/api/workspaces/${workspaceId}/tasks`,
   );
 

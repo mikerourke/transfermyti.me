@@ -2,14 +2,7 @@ import { SagaIterator } from "@redux-saga/types";
 import * as R from "ramda";
 import { call, delay } from "redux-saga/effects";
 import { CLOCKIFY_API_DELAY } from "~/constants";
-import {
-  createEntitiesForTool,
-  fetchArray,
-  fetchEntitiesForTool,
-  fetchObject,
-  findTargetEntityId,
-  paginatedClockifyFetch,
-} from "~/redux/reduxUtils";
+import * as reduxUtils from "~/redux/reduxUtils";
 import { sourceClientsByIdSelector } from "~/clients/clientsSelectors";
 import {
   ClockifyHourlyRateResponseModel,
@@ -43,12 +36,11 @@ export interface ClockifyProjectResponseModel {
 /**
  * Creates new Clockify projects in all target workspaces and returns array of
  * transformed projects.
- * @see https://clockify.me/developers-api#operation--v1-workspaces--workspaceId--projects-post
  */
 export function* createClockifyProjectsSaga(
   sourceProjects: ProjectModel[],
 ): SagaIterator<ProjectModel[]> {
-  return yield call(createEntitiesForTool, {
+  return yield call(reduxUtils.createEntitiesForTool, {
     toolName: ToolName.Clockify,
     sourceRecords: sourceProjects,
     apiCreateFunc: createClockifyProject,
@@ -56,23 +48,39 @@ export function* createClockifyProjectsSaga(
 }
 
 /**
+ * Deletes all specified source projects from Clockify.
+ */
+export function* deleteClockifyProjectsSaga(
+  sourceProjects: ProjectModel[],
+): SagaIterator {
+  yield call(reduxUtils.deleteEntitiesForTool, {
+    toolName: ToolName.Clockify,
+    sourceRecords: sourceProjects,
+    apiDeleteFunc: deleteClockifyProject,
+  });
+}
+
+/**
  * Fetches all projects in Clockify workspaces, adds associated user IDs, and
  * returns array of transformed projects.
- * @see https://clockify.me/developers-api#operation--v1-workspaces--workspaceId--projects-get
  */
 export function* fetchClockifyProjectsSaga(): SagaIterator<ProjectModel[]> {
-  return yield call(fetchEntitiesForTool, {
+  return yield call(reduxUtils.fetchEntitiesForTool, {
     toolName: ToolName.Clockify,
     apiFetchFunc: fetchClockifyProjectsInWorkspace,
   });
 }
 
+/**
+ * Creates a new Clockify project.
+ * @see https://clockify.me/developers-api#operation--v1-workspaces--workspaceId--projects-post
+ */
 function* createClockifyProject(
   sourceProject: ProjectModel,
   targetWorkspaceId: string,
 ): SagaIterator<ProjectModel> {
   const targetClientId = yield call(
-    findTargetEntityId,
+    reduxUtils.findTargetEntityId,
     sourceProject.clientId,
     sourceClientsByIdSelector,
   );
@@ -90,7 +98,7 @@ function* createClockifyProject(
   };
 
   const clockifyProject = yield call(
-    fetchObject,
+    reduxUtils.fetchObject,
     `/clockify/api/v1/workspaces/${targetWorkspaceId}/projects`,
     { method: "POST", body: projectRequest },
   );
@@ -98,13 +106,30 @@ function* createClockifyProject(
   return transformFromResponse(clockifyProject, []);
 }
 
+/**
+ * Deletes the specified Clockify project.
+ * @see https://clockify.me/developers-api#operation--v1-workspaces--workspaceId--projects--id--delete
+ */
+function* deleteClockifyProject(sourceProject: ProjectModel): SagaIterator {
+  const { workspaceId, id } = sourceProject;
+  yield call(
+    reduxUtils.fetchObject,
+    `/clockify/api/v1/workspaces/${workspaceId}/projects/${id}`,
+    { method: "DELETE" },
+  );
+}
+
+/**
+ * Fetches Clockify projects in specified workspace.
+ * @see https://clockify.me/developers-api#operation--v1-workspaces--workspaceId--projects-get
+ */
 function* fetchClockifyProjectsInWorkspace(
   workspaceId: string,
 ): SagaIterator<ProjectModel[]> {
   const allClockifyProjects: ProjectModel[] = [];
 
   const clockifyProjects: ClockifyProjectResponseModel[] = yield call(
-    paginatedClockifyFetch,
+    reduxUtils.fetchPaginatedFromClockify,
     `/clockify/api/v1/workspaces/${workspaceId}/projects`,
   );
   for (const clockifyProject of clockifyProjects) {
@@ -126,14 +151,15 @@ function* fetchClockifyProjectsInWorkspace(
  * Fetches the users associated with a specific project and returns an array
  * of strings that represents the user IDs.
  * @see https://clockify.github.io/clockify_api_docs/#operation--workspaces--workspaceId--projects--projectId--users-get
- * @deprecated This is in the "Working API" and will be moved to V1.
+ * @deprecated This is part of the old API and will need to be updated as soon
+ *             as the v1 endpoint is available.
  */
 function* fetchUserIdsInProject(
   workspaceId: string,
   projectId: string,
 ): SagaIterator<string[]> {
   const projectUsers: ClockifyUserResponseModel[] = yield call(
-    fetchArray,
+    reduxUtils.fetchArray,
     `/clockify/api/workspaces/${workspaceId}/projects/${projectId}/users/`,
   );
   return projectUsers.map(({ id }) => id);

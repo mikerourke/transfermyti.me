@@ -11,8 +11,8 @@ type AllEntitiesAction = ActionType<typeof allEntitiesActions>;
 
 export interface AllEntitiesState {
   readonly areExistsInTargetShown: boolean;
-  readonly createAllFetchStatus: FetchStatus;
   readonly fetchAllFetchStatus: FetchStatus;
+  readonly pushAllChangesFetchStatus: FetchStatus;
   readonly entityGroupInProcess: EntityGroup | null;
   readonly transferCountsByEntityGroup: CountsByEntityGroupModel;
 }
@@ -29,8 +29,8 @@ const DEFAULT_TRANSFER_COUNTS = {
 
 export const initialState: AllEntitiesState = {
   areExistsInTargetShown: true,
-  createAllFetchStatus: FetchStatus.Pending,
   fetchAllFetchStatus: FetchStatus.Pending,
+  pushAllChangesFetchStatus: FetchStatus.Pending,
   entityGroupInProcess: null,
   transferCountsByEntityGroup: {
     ...DEFAULT_TRANSFER_COUNTS,
@@ -41,21 +41,39 @@ export const allEntitiesReducer = createReducer<
   AllEntitiesState,
   AllEntitiesAction
 >(initialState)
-  .handleAction(allEntitiesActions.createAllEntities.request, state => ({
-    ...state,
-    createAllFetchStatus: FetchStatus.InProcess,
-    entityGroupInProcess: null,
-  }))
-  .handleAction(allEntitiesActions.createAllEntities.success, state => ({
-    ...state,
-    createAllFetchStatus: FetchStatus.Success,
-    entityGroupInProcess: null,
-  }))
-  .handleAction(allEntitiesActions.createAllEntities.failure, state => ({
-    ...state,
-    createAllFetchStatus: FetchStatus.Error,
-    entityGroupInProcess: null,
-  }))
+  .handleAction(
+    [
+      allEntitiesActions.createAllEntities.request,
+      allEntitiesActions.deleteAllEntities.request,
+    ],
+    state => ({
+      ...state,
+      pushAllChangesFetchStatus: FetchStatus.InProcess,
+      entityGroupInProcess: null,
+    }),
+  )
+  .handleAction(
+    [
+      allEntitiesActions.createAllEntities.success,
+      allEntitiesActions.deleteAllEntities.success,
+    ],
+    state => ({
+      ...state,
+      pushAllChangesFetchStatus: FetchStatus.Success,
+      entityGroupInProcess: null,
+    }),
+  )
+  .handleAction(
+    [
+      allEntitiesActions.createAllEntities.failure,
+      allEntitiesActions.deleteAllEntities.failure,
+    ],
+    state => ({
+      ...state,
+      pushAllChangesFetchStatus: FetchStatus.Error,
+      entityGroupInProcess: null,
+    }),
+  )
   .handleAction(allEntitiesActions.fetchAllEntities.request, state => ({
     ...state,
     fetchAllFetchStatus: FetchStatus.InProcess,
@@ -73,7 +91,7 @@ export const allEntitiesReducer = createReducer<
   }))
   .handleAction(allEntitiesActions.flushAllEntities, state => ({
     ...state,
-    createAllFetchStatus: FetchStatus.Pending,
+    pushAllChangesFetchStatus: FetchStatus.Pending,
     fetchAllFetchStatus: FetchStatus.Pending,
   }))
   .handleAction(allEntitiesActions.flipIfExistsInTargetShown, state => ({
@@ -81,10 +99,10 @@ export const allEntitiesReducer = createReducer<
     areExistsInTargetShown: !state.areExistsInTargetShown,
   }))
   .handleAction(
-    allEntitiesActions.updateCreateAllFetchStatus,
+    allEntitiesActions.updatePushAllChangesFetchStatus,
     (state, { payload }) => ({
       ...state,
-      createAllFetchStatus: payload,
+      pushAllChangesFetchStatus: payload,
     }),
   )
   .handleAction(

@@ -3,6 +3,7 @@ import * as R from "ramda";
 import { updateAreAllRecordsIncluded } from "~/redux/reduxUtils";
 import { flushAllEntities } from "~/allEntities/allEntitiesActions";
 import * as projectsActions from "./projectsActions";
+import { Mapping } from "~/allEntities/allEntitiesTypes";
 import { ProjectModel } from "./projectsTypes";
 
 type ProjectsAction = ActionType<
@@ -45,6 +46,7 @@ export const projectsReducer = createReducer<ProjectsState, ProjectsAction>(
   .handleAction(
     [
       projectsActions.createProjects.request,
+      projectsActions.deleteProjects.request,
       projectsActions.fetchProjects.request,
     ],
     state => ({
@@ -55,6 +57,7 @@ export const projectsReducer = createReducer<ProjectsState, ProjectsAction>(
   .handleAction(
     [
       projectsActions.createProjects.failure,
+      projectsActions.deleteProjects.failure,
       projectsActions.fetchProjects.failure,
     ],
     state => ({
@@ -63,7 +66,14 @@ export const projectsReducer = createReducer<ProjectsState, ProjectsAction>(
     }),
   )
   .handleAction(projectsActions.flipIsProjectIncluded, (state, { payload }) =>
-    R.over(R.lensPath(["source", payload, "isIncluded"]), R.not, state),
+    R.over(R.lensPath([Mapping.Source, payload, "isIncluded"]), R.not, state),
+  )
+  .handleAction(projectsActions.updateIsProjectIncluded, (state, { payload }) =>
+    R.set(
+      R.lensPath([Mapping.Source, payload.id, "isIncluded"]),
+      payload.isIncluded,
+      state,
+    ),
   )
   .handleAction(
     projectsActions.updateAreAllProjectsIncluded,
@@ -72,11 +82,7 @@ export const projectsReducer = createReducer<ProjectsState, ProjectsAction>(
       source: updateAreAllRecordsIncluded(state.source, payload),
     }),
   )
-  .handleAction(projectsActions.updateIsProjectIncluded, (state, { payload }) =>
-    R.set(
-      R.lensPath(["source", payload.id, "isIncluded"]),
-      payload.isIncluded,
-      state,
-    ),
-  )
-  .handleAction(flushAllEntities, () => ({ ...initialState }));
+  .handleAction(
+    [projectsActions.deleteProjects.success, flushAllEntities],
+    () => ({ ...initialState }),
+  );

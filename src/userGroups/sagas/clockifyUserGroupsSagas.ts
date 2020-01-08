@@ -4,7 +4,7 @@ import {
   createEntitiesForTool,
   fetchEntitiesForTool,
   fetchObject,
-  paginatedClockifyFetch,
+  fetchPaginatedFromClockify,
 } from "~/redux/reduxUtils";
 import { EntityGroup, ToolName } from "~/allEntities/allEntitiesTypes";
 import { UserGroupModel } from "~/userGroups/userGroupsTypes";
@@ -60,7 +60,7 @@ function* fetchClockifyUserGroupsInWorkspace(
   workspaceId: string,
 ): SagaIterator<UserGroupModel[]> {
   const clockifyUserGroups: ClockifyUserGroupResponseModel[] = yield call(
-    paginatedClockifyFetch,
+    fetchPaginatedFromClockify,
     `/clockify/api/workspaces/${workspaceId}/userGroups/`,
   );
 

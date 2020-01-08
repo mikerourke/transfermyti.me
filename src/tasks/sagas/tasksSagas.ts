@@ -13,14 +13,12 @@ import { sourceProjectsSelector } from "~/projects/projectsSelectors";
 import * as tasksActions from "~/tasks/tasksActions";
 import {
   includedSourceTasksCountSelector,
+  includedSourceTasksSelector,
   sourceTasksByIdSelector,
   sourceTasksForTransferSelector,
 } from "~/tasks/tasksSelectors";
-import {
-  createClockifyTasksSaga,
-  fetchClockifyTasksSaga,
-} from "./clockifyTasksSagas";
-import { createTogglTasksSaga, fetchTogglTasksSaga } from "./togglTasksSagas";
+import * as clockifySagas from "./clockifyTasksSagas";
+import * as togglSagas from "./togglTasksSagas";
 import { Mapping, ToolName } from "~/allEntities/allEntitiesTypes";
 import { ToolAction } from "~/app/appTypes";
 import { ProjectModel } from "~/projects/projectsTypes";
@@ -40,10 +38,17 @@ export function* taskMonitoringSaga(): SagaIterator {
   ]);
 }
 
+/**
+ * Pushes task inclusion changes up to the corresponding project. A task cannot
+ * be created in a target project if the target project is not included in a
+ * transfer.
+ */
 function* pushTaskInclusionChangesToProject(
   action: ReduxAction<string | boolean>,
 ): SagaIterator {
   const toolAction = yield select(toolActionSelector);
+  // The user can _delete_ tasks from a project without actually deleting the
+  // project, so we don't want to push the changes up to the parent project:
   if (toolAction === ToolAction.Delete) {
     return;
   }
@@ -90,14 +95,18 @@ function* pushTaskInclusionChangesToProject(
   }
 }
 
+/**
+ * Creates tasks in the target tool based on the included tasks from the
+ * source tool and links them by ID.
+ */
 export function* createTasksSaga(): SagaIterator {
   yield put(tasksActions.createTasks.request());
 
   try {
     const toolNameByMapping = yield select(toolNameByMappingSelector);
     const createSagaByToolName = {
-      [ToolName.Clockify]: createClockifyTasksSaga,
-      [ToolName.Toggl]: createTogglTasksSaga,
+      [ToolName.Clockify]: clockifySagas.createClockifyTasksSaga,
+      [ToolName.Toggl]: togglSagas.createTogglTasksSaga,
     }[toolNameByMapping.target];
 
     const sourceTasks = yield select(sourceTasksForTransferSelector);
@@ -114,13 +123,39 @@ export function* createTasksSaga(): SagaIterator {
   }
 }
 
+/**
+ * Deletes included tasks from the source tool.
+ */
+export function* deleteTasksSaga(): SagaIterator {
+  yield put(tasksActions.deleteTasks.request());
+
+  try {
+    const toolNameByMapping = yield select(toolNameByMappingSelector);
+    const deleteSagaByToolName = {
+      [ToolName.Clockify]: clockifySagas.deleteClockifyTasksSaga,
+      [ToolName.Toggl]: togglSagas.deleteTogglTasksSaga,
+    }[toolNameByMapping.source];
+
+    const sourceTasks = yield select(includedSourceTasksSelector);
+    yield call(deleteSagaByToolName, sourceTasks);
+
+    yield put(tasksActions.deleteTasks.success());
+  } catch (err) {
+    yield put(showFetchErrorNotification(err));
+    yield put(tasksActions.deleteTasks.failure());
+  }
+}
+
+/**
+ * Fetches tasks from the source and target tools and links them by ID.
+ */
 export function* fetchTasksSaga(): SagaIterator {
   yield put(tasksActions.fetchTasks.request());
 
   try {
     const fetchSagaByToolName = {
-      [ToolName.Clockify]: fetchClockifyTasksSaga,
-      [ToolName.Toggl]: fetchTogglTasksSaga,
+      [ToolName.Clockify]: clockifySagas.fetchClockifyTasksSaga,
+      [ToolName.Toggl]: togglSagas.fetchTogglTasksSaga,
     };
     const { source, target } = yield select(toolNameByMappingSelector);
     const sourceTasks = yield call(fetchSagaByToolName[source]);

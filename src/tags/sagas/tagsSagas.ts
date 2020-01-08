@@ -7,25 +7,29 @@ import {
   toolActionSelector,
   toolNameByMappingSelector,
 } from "~/app/appSelectors";
-import { createTags, fetchTags } from "~/tags/tagsActions";
-import { sourceTagsForTransferSelector } from "~/tags/tagsSelectors";
+import * as tagsActions from "~/tags/tagsActions";
 import {
-  createClockifyTagsSaga,
-  fetchClockifyTagsSaga,
-} from "./clockifyTagsSagas";
-import { createTogglTagsSaga, fetchTogglTagsSaga } from "./togglTagsSagas";
+  includedSourceTagsSelector,
+  sourceTagsForTransferSelector,
+} from "~/tags/tagsSelectors";
+import * as clockifySagas from "./clockifyTagsSagas";
+import * as togglSagas from "./togglTagsSagas";
 import { Mapping, ToolName } from "~/allEntities/allEntitiesTypes";
 import { ToolAction } from "~/app/appTypes";
 import { TagModel, TagsByIdModel } from "~/tags/tagsTypes";
 
+/**
+ * Creates tags in the target tool based on the included tags from the
+ * source tool and links them by ID.
+ */
 export function* createTagsSaga(): SagaIterator {
-  yield put(createTags.request());
+  yield put(tagsActions.createTags.request());
 
   try {
     const toolNameByMapping = yield select(toolNameByMappingSelector);
     const createSagaByToolName = {
-      [ToolName.Clockify]: createClockifyTagsSaga,
-      [ToolName.Toggl]: createTogglTagsSaga,
+      [ToolName.Clockify]: clockifySagas.createClockifyTagsSaga,
+      [ToolName.Toggl]: togglSagas.createTogglTagsSaga,
     }[toolNameByMapping.target];
 
     const sourceTags = yield select(sourceTagsForTransferSelector);
@@ -35,20 +39,46 @@ export function* createTagsSaga(): SagaIterator {
       targetTags,
     );
 
-    yield put(createTags.success(tagsByIdByMapping));
+    yield put(tagsActions.createTags.success(tagsByIdByMapping));
   } catch (err) {
     yield put(showFetchErrorNotification(err));
-    yield put(createTags.failure());
+    yield put(tagsActions.createTags.failure());
   }
 }
 
+/**
+ * Deletes included tags from the source tool.
+ */
+export function* deleteTagsSaga(): SagaIterator {
+  yield put(tagsActions.deleteTags.request());
+
+  try {
+    const toolNameByMapping = yield select(toolNameByMappingSelector);
+    const deleteSagaByToolName = {
+      [ToolName.Clockify]: clockifySagas.deleteClockifyTagsSaga,
+      [ToolName.Toggl]: togglSagas.deleteTogglTagsSaga,
+    }[toolNameByMapping.source];
+
+    const sourceTags = yield select(includedSourceTagsSelector);
+    yield call(deleteSagaByToolName, sourceTags);
+
+    yield put(tagsActions.deleteTags.success());
+  } catch (err) {
+    yield put(showFetchErrorNotification(err));
+    yield put(tagsActions.deleteTags.failure());
+  }
+}
+
+/**
+ * Fetches tags from the source and target tools and links them by ID.
+ */
 export function* fetchTagsSaga(): SagaIterator {
-  yield put(fetchTags.request());
+  yield put(tagsActions.fetchTags.request());
 
   try {
     const fetchSagaByToolName = {
-      [ToolName.Clockify]: fetchClockifyTagsSaga,
-      [ToolName.Toggl]: fetchTogglTagsSaga,
+      [ToolName.Clockify]: clockifySagas.fetchClockifyTagsSaga,
+      [ToolName.Toggl]: togglSagas.fetchTogglTagsSaga,
     };
     const { source, target } = yield select(toolNameByMappingSelector);
     const sourceTags = yield call(fetchSagaByToolName[source]);
@@ -70,9 +100,9 @@ export function* fetchTagsSaga(): SagaIterator {
       };
     }
 
-    yield put(fetchTags.success(tagsByIdByMapping));
+    yield put(tagsActions.fetchTags.success(tagsByIdByMapping));
   } catch (err) {
     yield put(showFetchErrorNotification(err));
-    yield put(fetchTags.failure());
+    yield put(tagsActions.fetchTags.failure());
   }
 }

@@ -8,6 +8,12 @@ export const createTags = createAsyncAction(
   "@tags/CREATE_TAGS_FAILURE",
 )<void, Record<Mapping, TagsByIdModel>, void>();
 
+export const deleteTags = createAsyncAction(
+  "@tags/DELETE_TAGS_REQUEST",
+  "@tags/DELETE_TAGS_SUCCESS",
+  "@tags/DELETE_TAGS_FAILURE",
+)<void, void, void>();
+
 export const fetchTags = createAsyncAction(
   "@tags/FETCH_TAGS_REQUEST",
   "@tags/FETCH_TAGS_SUCCESS",
