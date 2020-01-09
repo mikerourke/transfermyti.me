@@ -4,8 +4,8 @@
 
 ## Purpose
 
-This tool is intended to replace the [`toggl-to-clockify`](https://github.com/mikerourke/toggl-to-clockify)
-CLI tool I created for transferring entries from Toggl to Clockify.
+This tool is intended to replace the [`toggl-to-clockify-cli`](https://github.com/mikerourke/toggl-to-clockify-cli)
+tool I created for transferring entries from Toggl to Clockify.
 
 I changed the name to **transfermyti.me** after buying the domain name and completely refactoring
 the application to allow you to transfer from Toggl to Clockify or vice versa.
@@ -40,6 +40,7 @@ Follow the steps on the [website](https://transfermyti.me), it's pretty intuitiv
 
 ## TODO
 
-- [ ] Finish progress page
 - [ ] Verify Clockify -> Toggl transfer works
 - [ ] Add tests (Important!)
+- [ ] Add analytics
+- [ ] Add link to buy me a beverage 🤷🏽‍

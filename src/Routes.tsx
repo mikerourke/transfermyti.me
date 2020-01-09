@@ -9,7 +9,7 @@ import SelectSourceWorkspacesStep from "~/workspaces/selectSourceWorkspacesStep/
 import SelectInclusionsStep from "~/allEntities/selectInclusionsStep/SelectInclusionsStep";
 import PerformToolActionStep from "~/allEntities/performToolActionStep/PerformToolActionStep";
 import ToolActionSuccess from "~/app/toolActionSuccess/ToolActionSuccess";
-import { RoutePath } from "~/app/appTypes";
+import { RoutePath } from "~/./typeDefs";
 
 interface Props {
   history: History;

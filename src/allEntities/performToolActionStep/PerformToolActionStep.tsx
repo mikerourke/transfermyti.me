@@ -3,6 +3,7 @@ import { Path } from "history";
 import React from "react";
 import { connect } from "react-redux";
 import { PayloadActionCreator } from "typesafe-actions";
+import { capitalize, getEntityGroupDisplay } from "~/utils";
 import {
   createAllEntities,
   deleteAllEntities,
@@ -14,7 +15,9 @@ import {
   transferCountsByEntityGroupSelector,
 } from "~/allEntities/allEntitiesSelectors";
 import { toolActionSelector } from "~/app/appSelectors";
-import { Flex, HelpDetails, NavigationButtonsRow } from "~/components";
+import { Flex, HelpDetails, NavigationButtonsRow, Note } from "~/components";
+import ConfirmToolActionModal from "./ConfirmToolActionModal";
+import ProgressBar from "./ProgressBar";
 import {
   CountsByEntityGroupModel,
   EntityGroup,
@@ -23,9 +26,6 @@ import {
   RoutePath,
   ToolAction,
 } from "~/typeDefs";
-import { capitalize, getEntityGroupDisplay } from "~/utils";
-import ConfirmToolActionModal from "./ConfirmToolActionModal";
-import ProgressBar from "./ProgressBar";
 
 interface ConnectStateProps {
   pushAllChangesFetchStatus: FetchStatus;
@@ -116,11 +116,9 @@ export const PerformToolActionStepComponent: React.FC<Props> = props => {
           Press the <strong>Start</strong> button and confirm the action in the
           dialog.
         </p>
-        <p>
-          <strong>
-            Note: this could take several minutes due to API rate limiting.
-          </strong>
-        </p>
+        <Note>
+          Note: This could take several minutes due to API rate limiting.
+        </Note>
       </HelpDetails>
       <Flex direction="column">
         {orderedEntityGroups.map(entityGroup => (

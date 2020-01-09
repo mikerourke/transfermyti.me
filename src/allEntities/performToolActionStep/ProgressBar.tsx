@@ -15,6 +15,7 @@ const Bar = styled.div(
     width: "100%",
   },
   ({ theme }) => ({
+    background: theme.colors.white,
     boxShadow: theme.elevation.dp2,
   }),
 );

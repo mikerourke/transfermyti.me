@@ -53,10 +53,15 @@ export function initInterceptor(store: Store): VoidFunction {
         return Promise.reject(response);
       }
 
-      const type = response.headers.get("content-type") || "json";
+      const type = response.headers.get("content-type") ?? null;
+      if (type === null) {
+        return response;
+      }
+
       if (type.includes("json")) {
         return response.json();
       }
+
       return response.text();
     },
   });

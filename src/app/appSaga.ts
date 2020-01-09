@@ -3,7 +3,10 @@ import { push } from "connected-react-router";
 import * as R from "ramda";
 import { put, select, takeEvery } from "redux-saga/effects";
 import { getIfDev } from "~/utils";
-import { updatePushAllChangesFetchStatus } from "~/allEntities/allEntitiesActions";
+import {
+  flushAllEntities,
+  updatePushAllChangesFetchStatus,
+} from "~/allEntities/allEntitiesActions";
 import {
   currentPathSelector,
   toolNameByMappingSelector,
@@ -24,6 +27,14 @@ export function* appSaga(): SagaIterator {
  */
 function* respondToRouteChangesSaga(): SagaIterator {
   const currentPath = yield select(currentPathSelector);
+  if (
+    [RoutePath.PickToolAction, RoutePath.ToolActionSuccess].includes(
+      currentPath,
+    )
+  ) {
+    yield put(flushAllEntities());
+  }
+
   if (currentPath !== RoutePath.EnterApiKeys) {
     yield put(updateValidationFetchStatus(FetchStatus.Pending));
   }

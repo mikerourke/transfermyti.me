@@ -1,9 +1,11 @@
 import React from "react";
 import { connect } from "react-redux";
 import { PayloadActionCreator } from "typesafe-actions";
-import { flushAllEntities } from "~/allEntities/allEntitiesActions";
 import { flushCredentials } from "~/credentials/credentialsActions";
 import { Flex } from "~/components";
+
+// TODO: Add link to view records on the transfer tool (if tool action was
+//       for transfer). Also, maybe a link to buy me a coffee or something?
 
 const Celebrate: React.FC = () => (
   <span role="img" aria-label="Celebrate">
@@ -12,7 +14,6 @@ const Celebrate: React.FC = () => (
 );
 
 interface ConnectDispatchProps {
-  onFlushAllEntities: PayloadActionCreator<string, void>;
   onFlushCredentials: PayloadActionCreator<string, void>;
 }
 
@@ -21,7 +22,6 @@ type Props = ConnectDispatchProps;
 export const ToolActionSuccessComponent: React.FC<Props> = props => {
   React.useEffect(() => {
     props.onFlushCredentials();
-    props.onFlushAllEntities();
   }, []);
 
   return (
@@ -47,7 +47,6 @@ export const ToolActionSuccessComponent: React.FC<Props> = props => {
 };
 
 const mapDispatchToProps: ConnectDispatchProps = {
-  onFlushAllEntities: flushAllEntities,
   onFlushCredentials: flushCredentials,
 };
 

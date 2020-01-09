@@ -1,5 +1,5 @@
 import React from "react";
-import { Button, ModalDialog } from "~/components";
+import { Button, ModalDialog, Note } from "~/components";
 import { ToolAction } from "~/typeDefs";
 
 interface Props {
@@ -34,9 +34,9 @@ const ConfirmToolActionModal: React.FC<Props> = ({
       Pressing the <strong>Start</strong> button will {toolAction} the records
       you selected. Would you like to continue?
     </p>
-    <p css={theme => ({ fontWeight: theme.fontWeights.bold })}>
+    <Note>
       Note: This action cannot be undone and will probably take awhile.
-    </p>
+    </Note>
   </ModalDialog>
 );
 

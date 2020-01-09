@@ -1,7 +1,10 @@
 import React from "react";
 import { connect } from "react-redux";
 import { PayloadActionCreator } from "typesafe-actions";
-import { replaceMappingWithToolNameSelector } from "~/app/appSelectors";
+import {
+  replaceMappingWithToolNameSelector,
+  toolActionSelector,
+} from "~/app/appSelectors";
 import {
   flipIsTimeEntryIncluded,
   updateAreAllTimeEntriesIncluded,
@@ -17,11 +20,12 @@ import {
 } from "~/components";
 import TimeEntriesInclusionsTable from "./TimeEntriesInclusionsTable";
 import TimeEntryComparisonDisclaimer from "./TimeEntryComparisonDisclaimer";
-import { ReduxState, TimeEntryTableViewModel } from "~/typeDefs";
+import { ReduxState, TimeEntryTableViewModel, ToolAction } from "~/typeDefs";
 
 interface ConnectStateProps {
   replaceMappingWithToolName: (label: string) => string;
   timeEntries: TimeEntryTableViewModel[];
+  toolAction: ToolAction;
   totalCountsByType: Record<string, number>;
 }
 
@@ -54,7 +58,9 @@ export const TimeEntriesInclusionsPanelComponent: React.FC<Props> = ({
         <NoRecordsFound />
       ) : (
         <>
-          <TimeEntryComparisonDisclaimer />
+          {props.toolAction === ToolAction.Transfer && (
+            <TimeEntryComparisonDisclaimer />
+          )}
           <InclusionsTableTitle
             id="timeEntriesDesc"
             flipDisabled={nonExistingRecords.length === 0}
@@ -76,6 +82,7 @@ export const TimeEntriesInclusionsPanelComponent: React.FC<Props> = ({
 const mapStateToProps = (state: ReduxState): ConnectStateProps => ({
   replaceMappingWithToolName: replaceMappingWithToolNameSelector(state),
   timeEntries: timeEntriesForInclusionsTableSelector(state),
+  toolAction: toolActionSelector(state),
   totalCountsByType: timeEntriesTotalCountsByTypeSelector(state),
 });
 

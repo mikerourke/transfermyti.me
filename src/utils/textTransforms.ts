@@ -1,5 +1,5 @@
 import * as R from "ramda";
-import { EntityGroup } from "~/allEntities/allEntitiesTypes";
+import { EntityGroup } from "~/typeDefs";
 
 export function booleanToYesNo(value: boolean | string): string {
   if (typeof value === "boolean") {

@@ -1,6 +1,5 @@
 import { createAction, createAsyncAction } from "typesafe-actions";
-import { Mapping } from "~/allEntities/allEntitiesTypes";
-import { UsersByIdModel } from "./usersTypes";
+import { Mapping, UsersByIdModel } from "~/typeDefs";
 
 export const createUsers = createAsyncAction(
   "@users/CREATE_USERS_REQUEST",
