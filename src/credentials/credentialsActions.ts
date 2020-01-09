@@ -1,10 +1,10 @@
 import { createAction, createAsyncAction } from "typesafe-actions";
-import { FetchStatus } from "~/allEntities/allEntitiesTypes";
 import {
   CredentialsByMappingModel,
+  FetchStatus,
   PartialCredentialsUpdateModel,
   ValidationErrorsByMappingModel,
-} from "./credentialsTypes";
+} from "~/typeDefs";
 
 export const storeCredentials = createAction("@credentials/STORE_CREDENTIALS")<
   void

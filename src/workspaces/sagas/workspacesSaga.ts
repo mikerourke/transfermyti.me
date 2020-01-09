@@ -7,31 +7,22 @@ import {
   toolActionSelector,
   toolNameByMappingSelector,
 } from "~/app/appSelectors";
-import {
-  createWorkspaces,
-  fetchWorkspaces,
-  updateActiveWorkspaceId,
-} from "~/workspaces/workspacesActions";
+import * as workspacesActions from "~/workspaces/workspacesActions";
 import { sourceWorkspacesForTransferSelector } from "~/workspaces/workspacesSelectors";
+import * as clockifySagas from "./clockifyWorkspacesSagas";
+import * as togglSagas from "./togglWorkspacesSagas";
 import {
-  createClockifyWorkspacesSaga,
-  fetchClockifyWorkspacesSaga,
-} from "./clockifyWorkspacesSagas";
-import {
-  createTogglWorkspacesSaga,
-  fetchTogglWorkspacesSaga,
-} from "./togglWorkspacesSagas";
-import { Mapping, ToolName } from "~/allEntities/allEntitiesTypes";
-import { ToolAction } from "~/app/appTypes";
-import {
+  Mapping,
+  ToolAction,
+  ToolName,
   WorkspaceModel,
   WorkspacesByIdModel,
-} from "~/workspaces/workspacesTypes";
+} from "~/typeDefs";
 
 export function* workspacesSaga(): SagaIterator {
   yield all([
-    takeEvery(createWorkspaces.request, createWorkspacesSaga),
-    takeEvery(fetchWorkspaces.request, fetchWorkspacesSaga),
+    takeEvery(workspacesActions.createWorkspaces.request, createWorkspacesSaga),
+    takeEvery(workspacesActions.fetchWorkspaces.request, fetchWorkspacesSaga),
   ]);
 }
 
@@ -39,8 +30,8 @@ function* createWorkspacesSaga(): SagaIterator {
   try {
     const toolNameByMapping = yield select(toolNameByMappingSelector);
     const createSagaByToolName = {
-      [ToolName.Clockify]: createClockifyWorkspacesSaga,
-      [ToolName.Toggl]: createTogglWorkspacesSaga,
+      [ToolName.Clockify]: clockifySagas.createClockifyWorkspacesSaga,
+      [ToolName.Toggl]: togglSagas.createTogglWorkspacesSaga,
     }[toolNameByMapping.target];
 
     const sourceWorkspaces = yield select(sourceWorkspacesForTransferSelector);
@@ -50,18 +41,20 @@ function* createWorkspacesSaga(): SagaIterator {
       targetWorkspaces,
     );
 
-    yield put(createWorkspaces.success(workspaceByIdByMapping));
+    yield put(
+      workspacesActions.createWorkspaces.success(workspaceByIdByMapping),
+    );
   } catch (err) {
     yield put(showFetchErrorNotification(err));
-    yield put(createWorkspaces.failure());
+    yield put(workspacesActions.createWorkspaces.failure());
   }
 }
 
 function* fetchWorkspacesSaga(): SagaIterator {
   try {
     const fetchSagaByToolName = {
-      [ToolName.Clockify]: fetchClockifyWorkspacesSaga,
-      [ToolName.Toggl]: fetchTogglWorkspacesSaga,
+      [ToolName.Clockify]: clockifySagas.fetchClockifyWorkspacesSaga,
+      [ToolName.Toggl]: togglSagas.fetchTogglWorkspacesSaga,
     };
     const { source, target } = yield select(toolNameByMappingSelector);
     const sourceWorkspaces = yield call(fetchSagaByToolName[source]);
@@ -71,7 +64,7 @@ function* fetchWorkspacesSaga(): SagaIterator {
 
     if (sourceWorkspaces.length !== 0) {
       const [firstWorkspace] = sourceWorkspaces;
-      yield put(updateActiveWorkspaceId(firstWorkspace.id));
+      yield put(workspacesActions.updateActiveWorkspaceId(firstWorkspace.id));
     }
 
     if (toolAction === ToolAction.Transfer) {
@@ -88,9 +81,11 @@ function* fetchWorkspacesSaga(): SagaIterator {
       };
     }
 
-    yield put(fetchWorkspaces.success(workspaceByIdByMapping));
+    yield put(
+      workspacesActions.fetchWorkspaces.success(workspaceByIdByMapping),
+    );
   } catch (err) {
     yield put(showFetchErrorNotification(err));
-    yield put(fetchWorkspaces.failure());
+    yield put(workspacesActions.fetchWorkspaces.failure());
   }
 }

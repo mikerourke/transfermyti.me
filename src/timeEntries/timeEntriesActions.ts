@@ -1,6 +1,5 @@
 import { createAction, createAsyncAction } from "typesafe-actions";
-import { Mapping } from "~/allEntities/allEntitiesTypes";
-import { TimeEntriesByIdModel } from "./timeEntriesTypes";
+import { Mapping, TimeEntriesByIdModel } from "~/typeDefs";
 
 export const createTimeEntries = createAsyncAction(
   "@timeEntries/CREATE_TIME_ENTRIES_REQUEST",

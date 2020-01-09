@@ -8,7 +8,7 @@ import * as timeEntriesSagas from "~/timeEntries/sagas/timeEntriesSagas";
 // import * as userGroupsSagas from "~/userGroups/sagas/userGroupsSagas";
 // import * as usersSagas from "~/users/sagas/usersSagas";
 import * as allEntitiesActions from "./allEntitiesActions";
-import { EntityGroup } from "./allEntitiesTypes";
+import { EntityGroup } from "~/typeDefs";
 
 export function* allEntitiesSaga(): SagaIterator {
   yield all([
@@ -105,9 +105,9 @@ function* deleteAllEntitiesSaga(): SagaIterator {
     // yield put(updateEntityGroupInProcess(EntityGroup.Users));
     // yield call(usersSagas.createUsersSaga);
 
-    yield put(allEntitiesActions.createAllEntities.success());
+    yield put(allEntitiesActions.deleteAllEntities.success());
   } catch (err) {
-    yield put(allEntitiesActions.createAllEntities.failure());
+    yield put(allEntitiesActions.deleteAllEntities.failure());
   }
 }
 

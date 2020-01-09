@@ -2,10 +2,7 @@ import * as R from "ramda";
 import React from "react";
 import { connect } from "react-redux";
 import { PayloadActionCreator } from "typesafe-actions";
-import { EntityGroup, TableViewModel } from "~/allEntities/allEntitiesTypes";
 import { toolActionSelector } from "~/app/appSelectors";
-import { ToolAction } from "~/app/appTypes";
-import { EntityGroupInclusionsPanel } from "~/components";
 import {
   flipIsProjectIncluded,
   updateAreAllProjectsIncluded,
@@ -14,8 +11,14 @@ import {
   projectsForInclusionsTableSelector,
   projectsTotalCountsByTypeSelector,
 } from "~/projects/projectsSelectors";
-import { ProjectModel } from "~/projects/projectsTypes";
-import { ReduxState } from "~/redux/reduxTypes";
+import { EntityGroupInclusionsPanel } from "~/components";
+import {
+  EntityGroup,
+  ProjectModel,
+  ReduxState,
+  TableViewModel,
+  ToolAction,
+} from "~/typeDefs";
 
 interface ConnectStateProps {
   projects: TableViewModel<ProjectModel>[];

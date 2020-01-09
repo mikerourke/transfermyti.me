@@ -16,6 +16,7 @@ export { default as InclusionsTableTitle } from "./InclusionsTableTitle";
 export { default as Loader } from "./Loader";
 export { default as LoadingMessage } from "./LoadingMessage";
 export { default as ModalDialog } from "./ModalDialog";
-export { default as Note } from "./Note";
 export { default as NavigationButtonsRow } from "./NavigationButtonsRow";
+export { default as NoRecordsFound } from "./NoRecordsFound";
+export { default as Note } from "./Note";
 export { default as Toggle } from "./Toggle";

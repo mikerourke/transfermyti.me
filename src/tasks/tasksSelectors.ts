@@ -3,9 +3,12 @@ import * as R from "ramda";
 import { sourceProjectsByIdSelector } from "~/projects/projectsSelectors";
 import { sourceTimeEntryCountByIdFieldSelectorFactory } from "~/timeEntries/timeEntriesSelectors";
 import { activeWorkspaceIdSelector } from "~/workspaces/workspacesSelectors";
-import { TableViewModel } from "~/allEntities/allEntitiesTypes";
-import { ReduxState } from "~/redux/reduxTypes";
-import { TaskModel, TasksByIdModel, TaskTableViewModel } from "./tasksTypes";
+import {
+  ReduxState,
+  TaskModel,
+  TasksByIdModel,
+  TaskTableViewModel,
+} from "~/typeDefs";
 
 export const sourceTasksByIdSelector = createSelector(
   (state: ReduxState) => state.tasks.source,
@@ -102,7 +105,7 @@ export const tasksTotalCountsByTypeSelector = createSelector(
           isIncluded,
           isActiveInSource,
           isActiveInTarget,
-        }: TableViewModel<TaskModel>,
+        }: TaskTableViewModel,
       ) => ({
         entryCount: acc.entryCount + entryCount,
         existsInTarget: acc.existsInTarget + (existsInTarget ? 1 : 0),

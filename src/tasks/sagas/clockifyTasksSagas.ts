@@ -7,8 +7,7 @@ import {
   projectIdToLinkedIdSelector,
   projectsByWorkspaceIdByToolNameSelector,
 } from "~/projects/projectsSelectors";
-import { EntityGroup, ToolName } from "~/allEntities/allEntitiesTypes";
-import { TaskModel } from "~/tasks/tasksTypes";
+import { EntityGroup, TaskModel, ToolName } from "~/typeDefs";
 
 type ClockifyTaskStatus = "ACTIVE" | "DONE";
 

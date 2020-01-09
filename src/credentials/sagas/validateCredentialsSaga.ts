@@ -5,8 +5,7 @@ import { mappingByToolNameSelector } from "~/app/appSelectors";
 import { validateCredentials } from "~/credentials/credentialsActions";
 import { credentialsByMappingSelector } from "~/credentials/credentialsSelectors";
 import { TogglWorkspaceResponseModel } from "~/workspaces/sagas/togglWorkspacesSagas";
-import { ToolName } from "~/allEntities/allEntitiesTypes";
-import { ValidationErrorsByMappingModel } from "~/credentials/credentialsTypes";
+import { ToolName, ValidationErrorsByMappingModel } from "~/typeDefs";
 
 interface TogglMeResponseModel {
   since: number;

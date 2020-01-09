@@ -27,10 +27,13 @@ import {
 } from "~/components";
 import NoWorkspacesModal from "./NoWorkspacesModal";
 import SourceWorkspaceCard from "./SourceWorkspaceCard";
-import { FetchStatus } from "~/allEntities/allEntitiesTypes";
-import { NotificationModel, RoutePath } from "~/app/appTypes";
-import { ReduxState } from "~/redux/reduxTypes";
-import { WorkspaceModel } from "~/workspaces/workspacesTypes";
+import {
+  FetchStatus,
+  NotificationModel,
+  ReduxState,
+  RoutePath,
+  WorkspaceModel,
+} from "~/typeDefs";
 
 interface ConnectStateProps {
   areWorkspacesFetching: boolean;

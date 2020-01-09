@@ -4,12 +4,7 @@ import React from "react";
 import { connect } from "react-redux";
 import { PayloadActionCreator } from "typesafe-actions";
 import { toolHelpDetailsByMappingSelector } from "~/app/appSelectors";
-import {
-  storeCredentials,
-  updateCredentials,
-  updateValidationFetchStatus,
-  validateCredentials,
-} from "~/credentials/credentialsActions";
+import * as credentialsActions from "~/credentials/credentialsActions";
 import {
   credentialsByMappingSelector,
   hasValidationErrorsSelector,
@@ -19,14 +14,17 @@ import {
 import { Button, HelpDetails, NavigationButtonsRow } from "~/components";
 import { useDeepCompareEffect } from "~/components/hooks";
 import ApiKeyInputField from "./ApiKeyInputField";
-import { FetchStatus, Mapping, ToolName } from "~/allEntities/allEntitiesTypes";
-import { RoutePath, ToolHelpDetailsModel } from "~/app/appTypes";
 import {
   CredentialsModel,
+  FetchStatus,
+  Mapping,
   PartialCredentialsUpdateModel,
+  ReduxState,
+  RoutePath,
+  ToolHelpDetailsModel,
+  ToolName,
   ValidationErrorsByMappingModel,
-} from "~/credentials/credentialsTypes";
-import { ReduxState } from "~/redux/reduxTypes";
+} from "~/typeDefs";
 
 interface ConnectStateProps {
   credentialsByMapping: Record<Mapping, CredentialsModel>;
@@ -209,10 +207,10 @@ const mapStateToProps = (state: ReduxState): ConnectStateProps => ({
 
 const mapDispatchToProps: ConnectDispatchProps = {
   onPush: push,
-  onStoreCredentials: storeCredentials,
-  onUpdateCredentials: updateCredentials,
-  onUpdateValidationFetchStatus: updateValidationFetchStatus,
-  onValidateCredentials: validateCredentials.request,
+  onStoreCredentials: credentialsActions.storeCredentials,
+  onUpdateCredentials: credentialsActions.updateCredentials,
+  onUpdateValidationFetchStatus: credentialsActions.updateValidationFetchStatus,
+  onValidateCredentials: credentialsActions.validateCredentials.request,
 };
 
 export default connect(

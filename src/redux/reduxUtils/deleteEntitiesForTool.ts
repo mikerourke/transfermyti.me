@@ -3,11 +3,7 @@ import { SagaIterator } from "@redux-saga/types";
 import { call, delay, put } from "redux-saga/effects";
 import { incrementEntityGroupTransferCompletedCount } from "~/allEntities/allEntitiesActions";
 import { getApiDelayForTool } from "./fetchActions";
-import {
-  BaseEntityModel,
-  EntityGroup,
-  ToolName,
-} from "~/allEntities/allEntitiesTypes";
+import { BaseEntityModel, EntityGroup, ToolName } from "~/typeDefs";
 
 export function* deleteEntitiesForTool<TEntity>({
   toolName,

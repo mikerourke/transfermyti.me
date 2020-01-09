@@ -14,9 +14,13 @@ import {
 } from "~/tags/tagsSelectors";
 import * as clockifySagas from "./clockifyTagsSagas";
 import * as togglSagas from "./togglTagsSagas";
-import { Mapping, ToolName } from "~/allEntities/allEntitiesTypes";
-import { ToolAction } from "~/app/appTypes";
-import { TagModel, TagsByIdModel } from "~/tags/tagsTypes";
+import {
+  Mapping,
+  TagModel,
+  TagsByIdModel,
+  ToolAction,
+  ToolName,
+} from "~/typeDefs";
 
 /**
  * Creates tags in the target tool based on the included tags from the

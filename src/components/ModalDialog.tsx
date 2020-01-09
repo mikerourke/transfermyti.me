@@ -4,9 +4,9 @@ import React from "react";
 import { createPortal } from "react-dom";
 import { Transition } from "react-transition-group";
 import Button from "./Button";
-import Flex from "./Flex";
 import { styled } from "./emotion";
 import { useModalAccessibility } from "./hooks";
+import Flex from "./Flex";
 
 const Backdrop = styled(Flex)(
   {

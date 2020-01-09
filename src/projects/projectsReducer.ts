@@ -3,8 +3,7 @@ import * as R from "ramda";
 import { updateAreAllRecordsIncluded } from "~/redux/reduxUtils";
 import { flushAllEntities } from "~/allEntities/allEntitiesActions";
 import * as projectsActions from "./projectsActions";
-import { Mapping } from "~/allEntities/allEntitiesTypes";
-import { ProjectModel } from "./projectsTypes";
+import { Mapping, ProjectModel } from "~/typeDefs";
 
 type ProjectsAction = ActionType<
   typeof projectsActions | typeof flushAllEntities

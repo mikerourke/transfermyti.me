@@ -1,12 +1,17 @@
 import { createAction, createAsyncAction } from "typesafe-actions";
-import { Mapping } from "~/allEntities/allEntitiesTypes";
-import { UserGroupsByIdModel } from "./userGroupsTypes";
+import { Mapping, UserGroupsByIdModel } from "~/typeDefs";
 
 export const createUserGroups = createAsyncAction(
   "@userGroups/CREATE_USER_GROUPS_REQUEST",
   "@userGroups/CREATE_USER_GROUPS_SUCCESS",
   "@userGroups/CREATE_USER_GROUPS_FAILURE",
 )<void, Record<Mapping, UserGroupsByIdModel>, void>();
+
+export const deleteUserGroups = createAsyncAction(
+  "@userGroups/DELETE_USER_GROUPS_REQUEST",
+  "@userGroups/DELETE_USER_GROUPS_SUCCESS",
+  "@userGroups/DELETE_USER_GROUPS_FAILURE",
+)<void, void, void>();
 
 export const fetchUserGroups = createAsyncAction(
   "@userGroups/FETCH_USER_GROUPS_REQUEST",

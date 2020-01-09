@@ -1,17 +1,18 @@
 import Color from "color";
 import { keyframes } from "@emotion/core";
 import React from "react";
-import Flex from "./Flex";
 import { styled, useTheme } from "./emotion";
+import Flex from "./Flex";
 
-const spinAnimation = keyframes`
-  0% {
-    transform: rotate(0deg);
-  }
-  100% {
-    transform: rotate(360deg);
-  }
-`;
+const spinAnimation = keyframes({
+  "0%": {
+    transform: "rotate(0deg)",
+  },
+
+  "100%": {
+    transform: "rotate(360deg)",
+  },
+});
 
 const Base = styled.button({
   borderRadius: "0.375rem",

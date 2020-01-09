@@ -18,10 +18,14 @@ import { updateIsTaskIncluded } from "~/tasks/tasksActions";
 import { sourceTasksSelector } from "~/tasks/tasksSelectors";
 import * as clockifySagas from "./clockifyProjectsSagas";
 import * as togglSagas from "./togglProjectsSagas";
-import { ToolAction } from "~/app/appTypes";
-import { Mapping, ToolName } from "~/allEntities/allEntitiesTypes";
-import { ProjectModel, ProjectsByIdModel } from "~/projects/projectsTypes";
-import { ReduxAction } from "~/redux/reduxTypes";
+import {
+  Mapping,
+  ProjectModel,
+  ProjectsByIdModel,
+  ReduxAction,
+  ToolAction,
+  ToolName,
+} from "~/typeDefs";
 
 export function* projectMonitoringSaga(): SagaIterator {
   yield all([

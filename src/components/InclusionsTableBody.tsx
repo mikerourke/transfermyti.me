@@ -3,10 +3,7 @@ import { PayloadActionCreator } from "typesafe-actions";
 import { booleanToYesNo } from "~/utils";
 import InclusionsTableCheckboxCell from "./InclusionsTableCheckboxCell";
 import InclusionsTableRow from "./InclusionsTableRow";
-import {
-  BaseEntityModel,
-  TableViewModel,
-} from "~/allEntities/allEntitiesTypes";
+import { BaseEntityModel, TableViewModel } from "~/typeDefs";
 
 interface Props {
   fieldNames: string[];

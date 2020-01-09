@@ -2,8 +2,7 @@ import { SagaIterator } from "@redux-saga/types";
 import { call } from "redux-saga/effects";
 import * as reduxUtils from "~/redux/reduxUtils";
 import { sourceProjectsByIdSelector } from "~/projects/projectsSelectors";
-import { EntityGroup, ToolName } from "~/allEntities/allEntitiesTypes";
-import { TaskModel } from "~/tasks/tasksTypes";
+import { EntityGroup, TaskModel, ToolName } from "~/typeDefs";
 
 interface TogglTaskResponseModel {
   name: string;

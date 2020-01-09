@@ -2,7 +2,7 @@ import { SagaIterator } from "@redux-saga/types";
 import { Selector } from "reselect";
 import * as R from "ramda";
 import { select } from "redux-saga/effects";
-import { ReduxState } from "~/redux/reduxTypes";
+import { ReduxState } from "~/typeDefs";
 
 export function* findTargetEntityId<TEntity>(
   sourceEntityId: string | null,

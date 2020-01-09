@@ -2,7 +2,7 @@ import * as R from "ramda";
 import { ActionType, createReducer } from "typesafe-actions";
 import { flushAllEntities } from "~/allEntities/allEntitiesActions";
 import * as userGroupsActions from "./userGroupsActions";
-import { UserGroupsByIdModel } from "./userGroupsTypes";
+import { Mapping, UserGroupsByIdModel } from "~/typeDefs";
 
 type UserGroupsAction = ActionType<
   typeof userGroupsActions | typeof flushAllEntities
@@ -45,6 +45,7 @@ export const userGroupsReducer = createReducer<
   .handleAction(
     [
       userGroupsActions.createUserGroups.request,
+      userGroupsActions.deleteUserGroups.request,
       userGroupsActions.fetchUserGroups.request,
     ],
     state => ({
@@ -55,6 +56,7 @@ export const userGroupsReducer = createReducer<
   .handleAction(
     [
       userGroupsActions.createUserGroups.failure,
+      userGroupsActions.deleteUserGroups.failure,
       userGroupsActions.fetchUserGroups.failure,
     ],
     state => ({
@@ -65,6 +67,9 @@ export const userGroupsReducer = createReducer<
   .handleAction(
     userGroupsActions.flipIsUserGroupIncluded,
     (state, { payload }) =>
-      R.over(R.lensPath(["source", payload, "isIncluded"]), R.not, state),
+      R.over(R.lensPath([Mapping.Source, payload, "isIncluded"]), R.not, state),
   )
-  .handleAction(flushAllEntities, () => ({ ...initialState }));
+  .handleAction(
+    [userGroupsActions.deleteUserGroups.success, flushAllEntities],
+    () => ({ ...initialState }),
+  );

@@ -7,7 +7,7 @@ import {
   InclusionsTableFoot,
   InclusionsTableRow,
 } from "~/components";
-import { TimeEntryTableViewModel } from "~/timeEntries/timeEntriesTypes";
+import { TimeEntryTableViewModel } from "~/typeDefs";
 
 interface Props {
   timeEntries: TimeEntryTableViewModel[];

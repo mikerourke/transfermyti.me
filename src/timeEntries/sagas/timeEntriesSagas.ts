@@ -14,12 +14,13 @@ import {
 } from "~/timeEntries/timeEntriesSelectors";
 import * as clockifySagas from "./clockifyTimeEntriesSagas";
 import * as togglSagas from "./togglTimeEntriesSagas";
-import { ToolName, Mapping } from "~/allEntities/allEntitiesTypes";
-import { ToolAction } from "~/app/appTypes";
 import {
-  TimeEntryModel,
+  Mapping,
   TimeEntriesByIdModel,
-} from "~/timeEntries/timeEntriesTypes";
+  TimeEntryModel,
+  ToolAction,
+  ToolName,
+} from "~/typeDefs";
 
 /**
  * Creates time entries in the target tool based on the included time entries

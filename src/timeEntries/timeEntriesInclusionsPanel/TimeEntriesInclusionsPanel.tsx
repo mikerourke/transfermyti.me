@@ -2,7 +2,6 @@ import React from "react";
 import { connect } from "react-redux";
 import { PayloadActionCreator } from "typesafe-actions";
 import { replaceMappingWithToolNameSelector } from "~/app/appSelectors";
-import NoRecordsFound from "~/components/NoRecordsFound";
 import {
   flipIsTimeEntryIncluded,
   updateAreAllTimeEntriesIncluded,
@@ -11,11 +10,14 @@ import {
   timeEntriesForInclusionsTableSelector,
   timeEntriesTotalCountsByTypeSelector,
 } from "~/timeEntries/timeEntriesSelectors";
-import { AccordionPanel, InclusionsTableTitle } from "~/components";
+import {
+  AccordionPanel,
+  InclusionsTableTitle,
+  NoRecordsFound,
+} from "~/components";
 import TimeEntriesInclusionsTable from "./TimeEntriesInclusionsTable";
 import TimeEntryComparisonDisclaimer from "./TimeEntryComparisonDisclaimer";
-import { ReduxState } from "~/redux/reduxTypes";
-import { TimeEntryTableViewModel } from "~/timeEntries/timeEntriesTypes";
+import { ReduxState, TimeEntryTableViewModel } from "~/typeDefs";
 
 interface ConnectStateProps {
   replaceMappingWithToolName: (label: string) => string;

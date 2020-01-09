@@ -1,7 +1,7 @@
 import React from "react";
 import { Link } from "react-router-dom";
 import { styled } from "~/components";
-import { RoutePath } from "~/app/appTypes";
+import { RoutePath } from "~/typeDefs";
 
 const Base = styled.header(
   {

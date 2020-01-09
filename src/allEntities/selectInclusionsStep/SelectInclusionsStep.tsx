@@ -27,9 +27,7 @@ import InclusionsPanelsAccordion from "./InclusionsPanelsAccordion";
 import NoSelectionsModal from "./NoSelectionsModal";
 import SelectInclusionsHelpByAction from "./SelectInclusionsHelpByAction";
 import ShowExistingToggle from "./ShowExistingToggle";
-import { FetchStatus } from "~/allEntities/allEntitiesTypes";
-import { RoutePath, ToolAction } from "~/app/appTypes";
-import { ReduxState } from "~/redux/reduxTypes";
+import { FetchStatus, ReduxState, RoutePath, ToolAction } from "~/typeDefs";
 
 interface ConnectStateProps {
   activeWorkspaceId: string;

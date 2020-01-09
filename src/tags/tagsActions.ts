@@ -1,6 +1,5 @@
 import { createAction, createAsyncAction } from "typesafe-actions";
-import { Mapping } from "~/allEntities/allEntitiesTypes";
-import { TagsByIdModel } from "./tagsTypes";
+import { Mapping, TagsByIdModel } from "~/typeDefs";
 
 export const createTags = createAsyncAction(
   "@tags/CREATE_TAGS_REQUEST",

@@ -1,12 +1,14 @@
 import { createSelector } from "reselect";
 import { toolNameByMappingSelector } from "~/app/appSelectors";
-import { FetchStatus, Mapping, ToolName } from "~/allEntities/allEntitiesTypes";
-import { ReduxState } from "~/redux/reduxTypes";
 import {
   CredentialsByMappingModel,
   CredentialsModel,
+  FetchStatus,
+  Mapping,
+  ReduxState,
+  ToolName,
   ValidationErrorsByMappingModel,
-} from "./credentialsTypes";
+} from "~/typeDefs";
 
 export const validationFetchStatusSelector = (state: ReduxState): FetchStatus =>
   state.credentials.validationFetchStatus;

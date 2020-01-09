@@ -14,9 +14,13 @@ import {
 } from "~/clients/clientsSelectors";
 import * as clockifySagas from "./clockifyClientsSagas";
 import * as togglSagas from "./togglClientsSagas";
-import { Mapping, ToolName } from "~/allEntities/allEntitiesTypes";
-import { ToolAction } from "~/app/appTypes";
-import { ClientModel, ClientsByIdModel } from "~/clients/clientsTypes";
+import {
+  ClientModel,
+  ClientsByIdModel,
+  Mapping,
+  ToolAction,
+  ToolName,
+} from "~/typeDefs";
 
 /**
  * Creates clients in the target tool based on the included clients from the

@@ -11,8 +11,7 @@ import {
 import { updateValidationFetchStatus } from "~/credentials/credentialsActions";
 import { credentialsByMappingSelector } from "~/credentials/credentialsSelectors";
 import { sourceWorkspacesSelector } from "~/workspaces/workspacesSelectors";
-import { FetchStatus, ToolName } from "~/allEntities/allEntitiesTypes";
-import { RoutePath } from "./appTypes";
+import { FetchStatus, RoutePath, ToolName } from "~/typeDefs";
 
 export function* appSaga(): SagaIterator {
   yield takeEvery("@@router/LOCATION_CHANGE", respondToRouteChangesSaga);

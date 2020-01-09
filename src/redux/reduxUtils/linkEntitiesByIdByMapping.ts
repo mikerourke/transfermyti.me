@@ -4,11 +4,9 @@ import {
   BaseEntityModel,
   EntityGroup,
   Mapping,
-} from "~/allEntities/allEntitiesTypes";
-import {
   TimeEntryModel,
   TimeEntriesByIdModel,
-} from "~/timeEntries/timeEntriesTypes";
+} from "~/typeDefs";
 
 /**
  * Sets the `linkedId` and `isIncluded` field of the source and target records
@@ -51,49 +49,50 @@ export function linkEntitiesByIdByMapping<TEntity>(
     return linkForMappingForTimeEntries(sourceRecords, targetRecords);
   }
 
+  // Users may have the same name, but they should never have the same email:
+  const field = memberOf === EntityGroup.Users ? "email" : "name";
+
   return {
-    source: linkForMappingByName(targetRecords, sourceRecords),
-    target: linkForMappingByName(sourceRecords, targetRecords),
+    source: linkForMappingByField(field, targetRecords, sourceRecords),
+    target: linkForMappingByField(field, sourceRecords, targetRecords),
   };
 }
 
 /**
- * Links the corresponding records by their `name` property. If the `name`
+ * Links the corresponding records by the specified field property. If the field
  * for the source and target records match, set the `linkedId` for the source
  * to the target ID and vice versa. Also, if a match is found, set `isIncluded`
  * to `false` to prevent duplicate records/API errors.
  */
-function linkForMappingByName<TEntity>(
+function linkForMappingByField<TEntity>(
+  field: string,
   linkFromRecords: TEntity[],
   recordsToUpdate: TEntity[],
 ): Record<string, TEntity> {
   type LinkableRecord = TEntity & {
-    name: string;
     id: string;
     memberOf: EntityGroup;
   };
 
-  const linkFromEntitiesByName = R.indexBy<LinkableRecord>(
-    R.prop("name"),
+  const linkFromEntitiesByField = R.indexBy<LinkableRecord>(
+    R.prop(field),
     linkFromRecords as LinkableRecord[],
   );
-
-  // for (const linkFromRecord of linkFromRecords as LinkableRecord[]) {
-  //   linkFromEntitiesByName[linkFromRecord.name] = linkFromRecord;
-  // }
 
   const linkedRecordsById = {};
   for (const recordToUpdate of recordsToUpdate as LinkableRecord[]) {
     const linkedId = R.pathOr(
       null,
-      [recordToUpdate.name, "id"],
-      linkFromEntitiesByName,
+      [recordToUpdate[field], "id"],
+      linkFromEntitiesByField,
     );
 
     linkedRecordsById[recordToUpdate.id] = {
       ...recordToUpdate,
       linkedId,
       isIncluded: R.or(
+        // By default, we want all the workspaces to be included (even if they
+        // already exist on the target):
         recordToUpdate.memberOf === EntityGroup.Workspaces,
         R.isNil(linkedId),
       ),

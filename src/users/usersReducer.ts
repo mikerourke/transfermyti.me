@@ -2,7 +2,7 @@ import * as R from "ramda";
 import { ActionType, createReducer } from "typesafe-actions";
 import { flushAllEntities } from "~/allEntities/allEntitiesActions";
 import * as usersActions from "./usersActions";
-import { UsersByIdModel } from "./usersTypes";
+import { Mapping, UsersByIdModel } from "~/typeDefs";
 
 type UsersAction = ActionType<typeof usersActions | typeof flushAllEntities>;
 
@@ -32,7 +32,11 @@ export const usersReducer = createReducer<UsersState, UsersAction>(initialState)
     isFetching: false,
   }))
   .handleAction(
-    [usersActions.createUsers.request, usersActions.fetchUsers.request],
+    [
+      usersActions.createUsers.request,
+      usersActions.deleteUsers.request,
+      usersActions.fetchUsers.request,
+    ],
     state => ({
       ...state,
       isFetching: true,
@@ -42,6 +46,7 @@ export const usersReducer = createReducer<UsersState, UsersAction>(initialState)
     [
       usersActions.createUsers.success,
       usersActions.createUsers.failure,
+      usersActions.deleteUsers.failure,
       usersActions.fetchUsers.failure,
     ],
     state => ({
@@ -50,6 +55,8 @@ export const usersReducer = createReducer<UsersState, UsersAction>(initialState)
     }),
   )
   .handleAction(usersActions.flipIsUserIncluded, (state, { payload }) =>
-    R.over(R.lensPath(["source", payload, "isIncluded"]), R.not, state),
+    R.over(R.lensPath([Mapping.Source, payload, "isIncluded"]), R.not, state),
   )
-  .handleAction(flushAllEntities, () => ({ ...initialState }));
+  .handleAction([usersActions.deleteUsers.success, flushAllEntities], () => ({
+    ...initialState,
+  }));

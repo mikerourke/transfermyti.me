@@ -6,8 +6,7 @@ import { dismissNotification } from "~/app/appActions";
 import { notificationsSelector } from "~/app/appSelectors";
 import { styled, useTheme } from "~/components";
 import NotificationToast from "./NotificationToast";
-import { NotificationModel } from "~/app/appTypes";
-import { ReduxState } from "~/redux/reduxTypes";
+import { NotificationModel, ReduxState } from "~/typeDefs";
 
 const Base = styled.div({
   position: "absolute",

@@ -14,8 +14,7 @@ import { credentialsByToolNameSelector } from "~/credentials/credentialsSelector
 import { sourceProjectsByIdSelector } from "~/projects/projectsSelectors";
 import { tagIdsByNameBySelectorFactory } from "~/tags/tagsSelectors";
 import { sourceTasksByIdSelector } from "~/tasks/tasksSelectors";
-import { EntityGroup, ToolName } from "~/allEntities/allEntitiesTypes";
-import { TimeEntryModel } from "~/timeEntries/timeEntriesTypes";
+import { EntityGroup, TimeEntryModel, ToolName } from "~/typeDefs";
 
 interface TogglTotalCurrencyModel {
   currency: string | null;

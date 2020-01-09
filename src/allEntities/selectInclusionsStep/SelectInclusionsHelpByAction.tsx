@@ -1,6 +1,6 @@
 import React from "react";
-import { ToolAction } from "~/app/appTypes";
 import { HelpDetails, Note } from "~/components";
+import { ToolAction } from "~/typeDefs";
 
 const SelectInclusionsHelpForDelete: React.FC = () => (
   <HelpDetails>

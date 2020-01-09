@@ -1,8 +1,7 @@
 import { createSelector } from "reselect";
 import * as R from "ramda";
 import { activeWorkspaceIdSelector } from "~/workspaces/workspacesSelectors";
-import { ReduxState } from "~/redux/reduxTypes";
-import { UserGroupModel } from "./userGroupsTypes";
+import { ReduxState, UserGroupModel } from "~/typeDefs";
 
 export const sourceUserGroupsSelector = createSelector(
   (state: ReduxState) => state.userGroups.source,

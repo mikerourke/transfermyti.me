@@ -1,6 +1,6 @@
 import React from "react";
-import { styled } from "./emotion";
 import Button from "./Button";
+import { styled } from "./emotion";
 import Flex from "./Flex";
 
 const Base = styled(Flex)(

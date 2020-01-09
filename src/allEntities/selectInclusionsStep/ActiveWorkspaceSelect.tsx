@@ -6,8 +6,7 @@ import {
   includedSourceWorkspacesSelector,
 } from "~/workspaces/workspacesSelectors";
 import { styled } from "~/components";
-import { ReduxState } from "~/redux/reduxTypes";
-import { WorkspaceModel } from "~/workspaces/workspacesTypes";
+import { ReduxState, WorkspaceModel } from "~/typeDefs";
 
 const Base = styled.div(
   {

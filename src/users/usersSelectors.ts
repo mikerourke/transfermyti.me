@@ -4,8 +4,7 @@ import {
   activeWorkspaceIdSelector,
   workspaceIdToLinkedIdSelector,
 } from "~/workspaces/workspacesSelectors";
-import { ReduxState } from "~/redux/reduxTypes";
-import { UserModel } from "./usersTypes";
+import { ReduxState, UserModel } from "~/typeDefs";
 
 export const sourceUsersSelector = createSelector(
   (state: ReduxState) => state.users.source,

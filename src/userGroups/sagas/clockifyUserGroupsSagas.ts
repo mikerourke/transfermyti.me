@@ -1,13 +1,7 @@
 import { SagaIterator } from "@redux-saga/types";
 import { call } from "redux-saga/effects";
-import {
-  createEntitiesForTool,
-  fetchEntitiesForTool,
-  fetchObject,
-  fetchPaginatedFromClockify,
-} from "~/redux/reduxUtils";
-import { EntityGroup, ToolName } from "~/allEntities/allEntitiesTypes";
-import { UserGroupModel } from "~/userGroups/userGroupsTypes";
+import * as reduxUtils from "~/redux/reduxUtils";
+import { EntityGroup, ToolName, UserGroupModel } from "~/typeDefs";
 
 interface ClockifyUserGroupResponseModel {
   id: string;
@@ -18,12 +12,11 @@ interface ClockifyUserGroupResponseModel {
 /**
  * Creates new Clockify user groups in all target workspaces and returns array of
  * transformed user groups.
- * @see https://clockify.github.io/clockify_api_docs/#operation--workspaces--workspaceId--userGroups--post
  */
 export function* createClockifyUserGroupsSaga(
   sourceUserGroups: UserGroupModel[],
 ): SagaIterator<UserGroupModel[]> {
-  return yield call(createEntitiesForTool, {
+  return yield call(reduxUtils.createEntitiesForTool, {
     toolName: ToolName.Clockify,
     sourceRecords: sourceUserGroups,
     apiCreateFunc: createClockifyUserGroup,
@@ -31,24 +24,42 @@ export function* createClockifyUserGroupsSaga(
 }
 
 /**
+ * Deletes all specified source user groups from Clockify.
+ */
+export function* deleteClockifyUserGroupsSaga(
+  sourceUserGroups: UserGroupModel[],
+): SagaIterator {
+  yield call(reduxUtils.deleteEntitiesForTool, {
+    toolName: ToolName.Clockify,
+    sourceRecords: sourceUserGroups,
+    apiDeleteFunc: deleteClockifyUserGroup,
+  });
+}
+
+/**
  * Fetches all user groups in Clockify workspaces and returns array of
  * transformed user groups.
- * @see https://clockify.github.io/clockify_api_docs/#operation--workspaces--workspaceId--userGroups-get
  */
 export function* fetchClockifyUserGroupsSaga(): SagaIterator<UserGroupModel[]> {
-  return yield call(fetchEntitiesForTool, {
+  return yield call(reduxUtils.fetchEntitiesForTool, {
     toolName: ToolName.Clockify,
     apiFetchFunc: fetchClockifyUserGroupsInWorkspace,
   });
 }
 
+/**
+ * Creates a new Clockify user group.
+ * @see https://clockify.github.io/clockify_api_docs/#operation--workspaces--workspaceId--userGroups--post
+ * @deprecated This is part of the old API and will need to be updated as soon
+ *             as the v1 endpoint is available.
+ */
 function* createClockifyUserGroup(
   sourceUserGroup: UserGroupModel,
   targetWorkspaceId: string,
 ): SagaIterator {
   const userGroupRequest = { name: sourceUserGroup.name };
   const clockifyUserGroup = yield call(
-    fetchObject,
+    reduxUtils.fetchObject,
     `/clockify/api/workspaces/${targetWorkspaceId}/userGroups/`,
     { method: "POST", body: userGroupRequest },
   );
@@ -56,12 +67,35 @@ function* createClockifyUserGroup(
   return transformFromResponse(clockifyUserGroup, targetWorkspaceId);
 }
 
+/**
+ * Deletes the specified Clockify user group.
+ * @see https://clockify.github.io/clockify_api_docs/#operation--workspaces--workspaceId--userGroups--id--delete
+ * @deprecated This is part of the old API and will need to be updated as soon
+ *             as the v1 endpoint is available.
+ */
+function* deleteClockifyUserGroup(
+  sourceUserGroup: UserGroupModel,
+): SagaIterator {
+  const { workspaceId, id } = sourceUserGroup;
+  yield call(
+    reduxUtils.fetchObject,
+    `/clockify/api/workspaces/${workspaceId}/userGroups/${id}`,
+    { method: "DELETE" },
+  );
+}
+
+/**
+ * Fetches Clockify user groups in specified workspace.
+ * @see https://clockify.github.io/clockify_api_docs/#operation--workspaces--workspaceId--userGroups-get
+ * @deprecated This is part of the old API and will need to be updated as soon
+ *             as the v1 endpoint is available.
+ */
 function* fetchClockifyUserGroupsInWorkspace(
   workspaceId: string,
 ): SagaIterator<UserGroupModel[]> {
   const clockifyUserGroups: ClockifyUserGroupResponseModel[] = yield call(
-    fetchPaginatedFromClockify,
-    `/clockify/api/workspaces/${workspaceId}/userGroups/`,
+    reduxUtils.fetchPaginatedFromClockify,
+    `/clockify/api/workspaces/${workspaceId}/userGroups`,
   );
 
   return clockifyUserGroups.map(clockifyUserGroup =>

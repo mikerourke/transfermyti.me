@@ -19,11 +19,15 @@ import {
 } from "~/tasks/tasksSelectors";
 import * as clockifySagas from "./clockifyTasksSagas";
 import * as togglSagas from "./togglTasksSagas";
-import { Mapping, ToolName } from "~/allEntities/allEntitiesTypes";
-import { ToolAction } from "~/app/appTypes";
-import { ProjectModel } from "~/projects/projectsTypes";
-import { ReduxAction } from "~/redux/reduxTypes";
-import { TaskModel, TasksByIdModel } from "~/tasks/tasksTypes";
+import {
+  Mapping,
+  ProjectModel,
+  ReduxAction,
+  TaskModel,
+  TasksByIdModel,
+  ToolAction,
+  ToolName,
+} from "~/typeDefs";
 
 export function* taskMonitoringSaga(): SagaIterator {
   yield all([

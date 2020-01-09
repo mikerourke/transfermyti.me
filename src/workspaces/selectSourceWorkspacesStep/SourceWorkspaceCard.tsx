@@ -1,6 +1,6 @@
 import React from "react";
 import { Card, styled, Toggle } from "~/components";
-import { WorkspaceModel } from "~/workspaces/workspacesTypes";
+import { WorkspaceModel } from "~/typeDefs";
 
 const WorkspaceToggle = styled(Toggle)({}, ({ theme }) => ({
   marginTop: "0.5rem",

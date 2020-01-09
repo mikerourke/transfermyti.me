@@ -1,8 +1,7 @@
 import { SagaIterator } from "@redux-saga/types";
 import { call } from "redux-saga/effects";
 import * as reduxUtils from "~/redux/reduxUtils";
-import { EntityGroup, ToolName } from "~/allEntities/allEntitiesTypes";
-import { ClientModel } from "~/clients/clientsTypes";
+import { ClientModel, EntityGroup, ToolName } from "~/typeDefs";
 
 interface TogglClientResponseModel {
   id: number;
@@ -39,8 +38,8 @@ export function* deleteTogglClientsSaga(
 }
 
 /**
- * Fetches all clients in Toggl workspaces and returns returns array of
- * transformed clients.
+ * Fetches all clients in Toggl workspaces and returns array of transformed
+ * clients.
  */
 export function* fetchTogglClientsSaga(): SagaIterator<ClientModel[]> {
   return yield call(reduxUtils.fetchEntitiesForTool, {

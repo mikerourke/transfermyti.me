@@ -9,8 +9,7 @@ import { sourceTasksByIdSelector } from "~/tasks/tasksSelectors";
 import { ClockifyProjectResponseModel } from "~/projects/sagas/clockifyProjectsSagas";
 import { ClockifyTagResponseModel } from "~/tags/sagas/clockifyTagsSagas";
 import { ClockifyTaskResponseModel } from "~/tasks/sagas/clockifyTasksSagas";
-import { EntityGroup, ToolName } from "~/allEntities/allEntitiesTypes";
-import { TimeEntryModel } from "~/timeEntries/timeEntriesTypes";
+import { EntityGroup, TimeEntryModel, ToolName } from "~/typeDefs";
 
 interface ClockifyTimeIntervalModel {
   duration: string;
@@ -128,7 +127,7 @@ function* deleteClockifyTimeEntry(
   const { workspaceId, id } = sourceTimeEntry;
   yield call(
     reduxUtils.fetchObject,
-    `/clockify/api/workspaces/${workspaceId}/time-entries/${id}`,
+    `/clockify/api/v1/workspaces/${workspaceId}/time-entries/${id}`,
     { method: "DELETE" },
   );
 }

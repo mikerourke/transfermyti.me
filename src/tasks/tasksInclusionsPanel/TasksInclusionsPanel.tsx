@@ -10,9 +10,7 @@ import {
   tasksTotalCountsByTypeSelector,
 } from "~/tasks/tasksSelectors";
 import { EntityGroupInclusionsPanel } from "~/components";
-import { EntityGroup, TableViewModel } from "~/allEntities/allEntitiesTypes";
-import { TaskModel } from "~/tasks/tasksTypes";
-import { ReduxState } from "~/redux/reduxTypes";
+import { EntityGroup, ReduxState, TableViewModel, TaskModel } from "~/typeDefs";
 
 interface ConnectStateProps {
   tasks: TableViewModel<TaskModel & { projectName: string }>[];

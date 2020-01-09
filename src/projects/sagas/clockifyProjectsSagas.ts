@@ -9,8 +9,7 @@ import {
   ClockifyMembershipResponseModel,
   ClockifyUserResponseModel,
 } from "~/users/sagas/clockifyUsersSagas";
-import { EntityGroup, ToolName } from "~/allEntities/allEntitiesTypes";
-import { ProjectModel } from "~/projects/projectsTypes";
+import { EntityGroup, ProjectModel, ToolName } from "~/typeDefs";
 
 interface ClockifyEstimateModel {
   estimate: number;

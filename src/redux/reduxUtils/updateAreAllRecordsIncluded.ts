@@ -1,5 +1,5 @@
 import * as R from "ramda";
-import { BaseEntityModel } from "~/allEntities/allEntitiesTypes";
+import { BaseEntityModel } from "~/typeDefs";
 
 export function updateAreAllRecordsIncluded<TEntity>(
   entityRecordsById: Record<string, TEntity & BaseEntityModel>,

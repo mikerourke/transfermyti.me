@@ -2,7 +2,7 @@ import { keyframes } from "@emotion/core";
 import React from "react";
 import { TransitionStatus } from "react-transition-group/Transition";
 import { styled, useTheme } from "~/components";
-import { NotificationModel } from "~/app/appTypes";
+import { NotificationModel } from "~/typeDefs";
 
 const slideInRight = keyframes({
   from: {

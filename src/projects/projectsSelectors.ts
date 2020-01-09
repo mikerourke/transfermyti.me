@@ -3,9 +3,12 @@ import * as R from "ramda";
 import { toolNameByMappingSelector } from "~/app/appSelectors";
 import { sourceTimeEntryCountByIdFieldSelectorFactory } from "~/timeEntries/timeEntriesSelectors";
 import { activeWorkspaceIdSelector } from "~/workspaces/workspacesSelectors";
-import { TableViewModel } from "~/allEntities/allEntitiesTypes";
-import { ReduxState } from "~/redux/reduxTypes";
-import { ProjectModel, ProjectsByIdModel } from "./projectsTypes";
+import {
+  ReduxState,
+  ProjectModel,
+  ProjectsByIdModel,
+  TableViewModel,
+} from "~/typeDefs";
 
 export const sourceProjectsByIdSelector = createSelector(
   (state: ReduxState) => state.projects.source,
@@ -31,6 +34,11 @@ export const includedSourceProjectsSelector = createSelector(
   sourceProjectsSelector,
   (sourceProjects): ProjectModel[] =>
     sourceProjects.filter(sourceProject => sourceProject.isIncluded),
+);
+
+export const includedSourceProjectIdsSelector = createSelector(
+  includedSourceProjectsSelector,
+  (sourceProjects): string[] => R.pluck("id", sourceProjects),
 );
 
 export const sourceProjectsForTransferSelector = createSelector(

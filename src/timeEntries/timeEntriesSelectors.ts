@@ -1,8 +1,11 @@
 import { createSelector, Selector } from "reselect";
 import * as R from "ramda";
 import { activeWorkspaceIdSelector } from "~/workspaces/workspacesSelectors";
-import { ReduxState } from "~/redux/reduxTypes";
-import { TimeEntryModel, TimeEntryTableViewModel } from "./timeEntriesTypes";
+import {
+  ReduxState,
+  TimeEntryModel,
+  TimeEntryTableViewModel,
+} from "~/typeDefs";
 
 export const sourceTimeEntriesSelector = createSelector(
   (state: ReduxState) => state.timeEntries.source,

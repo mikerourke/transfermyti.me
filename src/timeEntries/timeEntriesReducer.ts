@@ -3,8 +3,7 @@ import { ActionType, createReducer } from "typesafe-actions";
 import { updateAreAllRecordsIncluded } from "~/redux/reduxUtils";
 import { flushAllEntities } from "~/allEntities/allEntitiesActions";
 import * as timeEntriesActions from "./timeEntriesActions";
-import { Mapping } from "~/allEntities/allEntitiesTypes";
-import { TimeEntriesByIdModel } from "./timeEntriesTypes";
+import { Mapping, TimeEntriesByIdModel } from "~/typeDefs";
 
 type TimeEntriesAction = ActionType<
   typeof timeEntriesActions | typeof flushAllEntities

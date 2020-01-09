@@ -1,14 +1,11 @@
 import { SagaIterator } from "@redux-saga/types";
-import { call, delay, put } from "redux-saga/effects";
+import { call, delay, put, select } from "redux-saga/effects";
 import { TOGGL_API_DELAY } from "~/constants";
-import {
-  fetchArray,
-  fetchEntitiesForTool,
-  fetchObject,
-} from "~/redux/reduxUtils";
+import * as reduxUtils from "~/redux/reduxUtils";
 import { incrementEntityGroupTransferCompletedCount } from "~/allEntities/allEntitiesActions";
-import { EntityGroup, ToolName } from "~/allEntities/allEntitiesTypes";
-import { UserModel } from "~/users/usersTypes";
+import { includedSourceProjectIdsSelector } from "~/projects/projectsSelectors";
+import { includedSourceWorkspaceIdsSelector } from "~/workspaces/workspacesSelectors";
+import { EntityGroup, ToolName, UserModel } from "~/typeDefs";
 
 interface TogglUserResponseModel {
   id: number;
@@ -36,22 +33,87 @@ interface TogglUserResponseModel {
   userGroupIds?: string[];
 }
 
+interface TogglProjectUserResponseModel {
+  id: number;
+  pid: number;
+  uid: number;
+  wid: number;
+  manager: boolean;
+  rate: number;
+}
+
+/**
+ * Sends invites to the array of specified emails.
+ */
 export function* createTogglUsersSaga(
   emailsByWorkspaceId: Record<string, string[]>,
 ): SagaIterator {
   for (const [workspaceId, emails] of Object.entries(emailsByWorkspaceId)) {
-    yield put(incrementEntityGroupTransferCompletedCount(EntityGroup.Users));
     yield call(inviteTogglUsers, emails, workspaceId);
+    yield put(incrementEntityGroupTransferCompletedCount(EntityGroup.Users));
     yield delay(TOGGL_API_DELAY);
   }
 }
 
 /**
+ * Deletes all specified source users from Toggl projects that are included
+ * for deletion.
+ */
+export function* deleteTogglUsersSaga(sourceUsers: UserModel[]): SagaIterator {
+  const includedWorkspaceIds = yield select(includedSourceWorkspaceIdsSelector);
+  const includedProjectIds = yield select(includedSourceProjectIdsSelector);
+
+  // We can't actually delete a user, we can only remove them from the
+  // workspace/project. In this case we're going to delete the user from each
+  // included project that's being deleted.
+  for (const workspaceId of includedWorkspaceIds) {
+    const projectUsers: TogglProjectUserResponseModel[] = yield call(
+      fetchProjectUsersInSourceWorkspace,
+      workspaceId,
+    );
+    const projectUsersById = projectUsers.reduce(
+      (acc, projectUser) => ({
+        ...acc,
+        [projectUser.id.toString()]: projectUser,
+      }),
+      {},
+    );
+
+    yield delay(TOGGL_API_DELAY);
+
+    for (const sourceUser of sourceUsers) {
+      // First, check if the source user to be deleted is associated with the
+      // workspace projects:
+      const matchingProjectUser = projectUsersById[sourceUser.id];
+      if (matchingProjectUser) {
+        // If they are, make sure that the project that the user is associated
+        // with is going to be deleted:
+        const isProjectIncluded = includedProjectIds.includes(
+          matchingProjectUser.pid.toString(),
+        );
+
+        if (isProjectIncluded) {
+          yield call(
+            deleteTogglUserFromProject,
+            matchingProjectUser.id.toString(),
+          );
+
+          yield put(
+            incrementEntityGroupTransferCompletedCount(EntityGroup.Users),
+          );
+
+          yield delay(TOGGL_API_DELAY);
+        }
+      }
+    }
+  }
+}
+
+/**
  * Fetches all users in Toggl workspaces and returns array of transformed users.
- * @see https://github.com/toggl/toggl_api_docs/blob/master/chapters/workspaces.md#get-workspace-users
  */
 export function* fetchTogglUsersSaga(): SagaIterator<UserModel[]> {
-  return yield call(fetchEntitiesForTool, {
+  return yield call(reduxUtils.fetchEntitiesForTool, {
     toolName: ToolName.Toggl,
     apiFetchFunc: fetchTogglUsersInWorkspace,
   });
@@ -66,17 +128,53 @@ function* inviteTogglUsers(
   workspaceId: string,
 ): SagaIterator {
   const userRequest = { emails: sourceEmails };
-  yield call(fetchObject, `/toggl/api/workspaces/${workspaceId}/invite`, {
-    method: "POST",
-    body: userRequest,
-  });
+  yield call(
+    reduxUtils.fetchObject,
+    `/toggl/api/workspaces/${workspaceId}/invite`,
+    {
+      method: "POST",
+      body: userRequest,
+    },
+  );
 }
 
+/**
+ * Deletes the specified Toggl user from the specified project.
+ * @see https://github.com/toggl/toggl_api_docs/blob/master/chapters/project_users.md#delete-a-project-user
+ */
+function* deleteTogglUserFromProject(projectUserId: string): SagaIterator {
+  yield call(
+    reduxUtils.fetchEmpty,
+    `/toggl/api/project_users/${projectUserId}`,
+    {
+      method: "DELETE",
+    },
+  );
+}
+
+/**
+ * Fetches all the project users in a specified workspace.
+ * @see https://github.com/toggl/toggl_api_docs/blob/master/chapters/project_users.md#get-list-of-project-users-in-a-workspace
+ */
+function* fetchProjectUsersInSourceWorkspace(
+  workspaceId: string,
+): SagaIterator<TogglProjectUserResponseModel[]> {
+  const { data } = yield call(
+    reduxUtils.fetchObject,
+    `/toggl/api/workspaces/${workspaceId}/project_users`,
+  );
+  return data;
+}
+
+/**
+ * Fetches Toggl users in the specified workspace.
+ * @see https://github.com/toggl/toggl_api_docs/blob/master/chapters/workspaces.md#get-workspace-users
+ */
 function* fetchTogglUsersInWorkspace(
   workspaceId: string,
 ): SagaIterator<UserModel[]> {
   const togglUsers: TogglUserResponseModel[] = yield call(
-    fetchArray,
+    reduxUtils.fetchArray,
     `/toggl/api/workspaces/${workspaceId}/users`,
   );
 

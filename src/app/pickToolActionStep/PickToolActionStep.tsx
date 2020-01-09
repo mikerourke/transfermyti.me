@@ -6,10 +6,11 @@ import { updateToolAction, updateToolNameByMapping } from "~/app/appActions";
 import { Flex, HelpDetails } from "~/components";
 import ToolActionCard from "./ToolActionCard";
 import {
+  RoutePath,
+  ToolAction,
   ToolName,
   ToolNameByMappingModel,
-} from "~/allEntities/allEntitiesTypes";
-import { RoutePath, ToolAction } from "~/app/appTypes";
+} from "~/typeDefs";
 
 interface ConnectDispatchProps {
   onPush: (path: Path) => void;

@@ -1,8 +1,7 @@
 import { SagaIterator } from "@redux-saga/types";
 import { call } from "redux-saga/effects";
 import * as reduxUtils from "~/redux/reduxUtils";
-import { EntityGroup, ToolName } from "~/allEntities/allEntitiesTypes";
-import { ClientModel } from "~/clients/clientsTypes";
+import { ClientModel, EntityGroup, ToolName } from "~/typeDefs";
 
 interface ClockifyClientResponseModel {
   id: string;

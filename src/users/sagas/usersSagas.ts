@@ -7,47 +7,81 @@ import {
   toolActionSelector,
   toolNameByMappingSelector,
 } from "~/app/appSelectors";
-import { createUsers, fetchUsers } from "~/users/usersActions";
-import { sourceUserEmailsByWorkspaceIdSelector } from "~/users/usersSelectors";
+import * as usersActions from "~/users/usersActions";
 import {
-  createClockifyUsersSaga,
-  fetchClockifyUsersSaga,
-} from "./clockifyUsersSagas";
-import { createTogglUsersSaga, fetchTogglUsersSaga } from "./togglUsersSagas";
-import { Mapping, ToolName } from "~/allEntities/allEntitiesTypes";
-import { ToolAction } from "~/app/appTypes";
-import { UserModel, UsersByIdModel } from "~/users/usersTypes";
+  sourceUserEmailsByWorkspaceIdSelector,
+  includedSourceUsersSelector,
+} from "~/users/usersSelectors";
+import * as clockifySagas from "./clockifyUsersSagas";
+import * as togglSagas from "./togglUsersSagas";
+import {
+  Mapping,
+  ToolAction,
+  ToolName,
+  UserModel,
+  UsersByIdModel,
+} from "~/typeDefs";
 
+/**
+ * Invites users to the target tool based on the source users.
+ * @todo Validate this functionality, it definitely needs more work.
+ */
 export function* createUsersSaga(): SagaIterator {
-  yield put(createUsers.request());
+  yield put(usersActions.createUsers.request());
 
   try {
     const toolNameByMapping = yield select(toolNameByMappingSelector);
     const createSagaByToolName = {
-      [ToolName.Clockify]: createClockifyUsersSaga,
-      [ToolName.Toggl]: createTogglUsersSaga,
+      [ToolName.Clockify]: clockifySagas.createClockifyUsersSaga,
+      [ToolName.Toggl]: togglSagas.createTogglUsersSaga,
     }[toolNameByMapping.target];
 
     const emailsByUserId = yield select(sourceUserEmailsByWorkspaceIdSelector);
     yield call(createSagaByToolName, emailsByUserId);
 
-    yield put(createUsers.success());
+    yield put(usersActions.createUsers.success());
 
     // We're calling the fetch function here because "creating" users on the
     // target only _invites_ them to the workspace.
     yield call(fetchUsersSaga);
   } catch (err) {
     yield put(showFetchErrorNotification(err));
-    yield put(createUsers.failure());
+    yield put(usersActions.createUsers.failure());
   }
 }
 
+/**
+ * Deletes included users from the source tool.
+ */
+export function* deleteUsersSaga(): SagaIterator {
+  yield put(usersActions.deleteUsers.request());
+
+  try {
+    const toolNameByMapping = yield select(toolNameByMappingSelector);
+    const deleteSagaByToolName = {
+      [ToolName.Clockify]: clockifySagas.deleteClockifyUsersSaga,
+      [ToolName.Toggl]: togglSagas.deleteTogglUsersSaga,
+    }[toolNameByMapping.source];
+
+    const sourceUsers = yield select(includedSourceUsersSelector);
+    yield call(deleteSagaByToolName, sourceUsers);
+
+    yield put(usersActions.deleteUsers.success());
+  } catch (err) {
+    yield put(showFetchErrorNotification(err));
+    yield put(usersActions.deleteUsers.failure());
+  }
+}
+
+/**
+ * Fetches users from the source and target tools and links them by ID.
+ */
 export function* fetchUsersSaga(): SagaIterator {
-  yield put(fetchUsers.request());
+  yield put(usersActions.fetchUsers.request());
   try {
     const fetchSagaByToolName = {
-      [ToolName.Clockify]: fetchClockifyUsersSaga,
-      [ToolName.Toggl]: fetchTogglUsersSaga,
+      [ToolName.Clockify]: clockifySagas.fetchClockifyUsersSaga,
+      [ToolName.Toggl]: togglSagas.fetchTogglUsersSaga,
     };
     const { source, target } = yield select(toolNameByMappingSelector);
     const sourceUsers = yield call(fetchSagaByToolName[source]);
@@ -69,9 +103,9 @@ export function* fetchUsersSaga(): SagaIterator {
       };
     }
 
-    yield put(fetchUsers.success(usersByIdByMapping));
+    yield put(usersActions.fetchUsers.success(usersByIdByMapping));
   } catch (err) {
     yield put(showFetchErrorNotification(err));
-    yield put(fetchUsers.failure());
+    yield put(usersActions.fetchUsers.failure());
   }
 }

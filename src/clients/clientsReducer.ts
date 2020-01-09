@@ -3,8 +3,7 @@ import { ActionType, createReducer } from "typesafe-actions";
 import { updateAreAllRecordsIncluded } from "~/redux/reduxUtils";
 import { flushAllEntities } from "~/allEntities/allEntitiesActions";
 import * as clientsActions from "./clientsActions";
-import { Mapping } from "~/allEntities/allEntitiesTypes";
-import { ClientsByIdModel } from "./clientsTypes";
+import { ClientsByIdModel, Mapping } from "~/typeDefs";
 
 type ClientsAction = ActionType<
   typeof clientsActions | typeof flushAllEntities

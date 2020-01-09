@@ -1,8 +1,7 @@
 import { SagaIterator } from "@redux-saga/types";
 import { call } from "redux-saga/effects";
 import * as reduxUtils from "~/redux/reduxUtils";
-import { EntityGroup, ToolName } from "~/allEntities/allEntitiesTypes";
-import { TagModel } from "~/tags/tagsTypes";
+import { EntityGroup, TagModel, ToolName } from "~/typeDefs";
 
 interface TogglTagResponseModel {
   id: number;

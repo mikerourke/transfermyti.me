@@ -10,9 +10,7 @@ import {
   tagsTotalCountsByTypeSelector,
 } from "~/tags/tagsSelectors";
 import { EntityGroupInclusionsPanel } from "~/components";
-import { EntityGroup, TableViewModel } from "~/allEntities/allEntitiesTypes";
-import { ReduxState } from "~/redux/reduxTypes";
-import { TagModel } from "~/tags/tagsTypes";
+import { EntityGroup, ReduxState, TableViewModel, TagModel } from "~/typeDefs";
 
 interface ConnectStateProps {
   tags: TableViewModel<TagModel>[];

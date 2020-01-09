@@ -3,27 +3,29 @@ import { Path } from "history";
 import React from "react";
 import { connect } from "react-redux";
 import { PayloadActionCreator } from "typesafe-actions";
-import { capitalize, getEntityGroupDisplay } from "~/utils";
 import {
   createAllEntities,
+  deleteAllEntities,
   resetTransferCountsByEntityGroup,
 } from "~/allEntities/allEntitiesActions";
 import {
-  pushAllChangesFetchStatusSelector,
   includedCountsByEntityGroupSelector,
+  pushAllChangesFetchStatusSelector,
   transferCountsByEntityGroupSelector,
 } from "~/allEntities/allEntitiesSelectors";
 import { toolActionSelector } from "~/app/appSelectors";
 import { Flex, HelpDetails, NavigationButtonsRow } from "~/components";
-import ConfirmToolActionModal from "./ConfirmToolActionModal";
-import ProgressBar from "./ProgressBar";
 import {
   CountsByEntityGroupModel,
   EntityGroup,
   FetchStatus,
-} from "~/allEntities/allEntitiesTypes";
-import { RoutePath, ToolAction } from "~/app/appTypes";
-import { ReduxState } from "~/redux/reduxTypes";
+  ReduxState,
+  RoutePath,
+  ToolAction,
+} from "~/typeDefs";
+import { capitalize, getEntityGroupDisplay } from "~/utils";
+import ConfirmToolActionModal from "./ConfirmToolActionModal";
+import ProgressBar from "./ProgressBar";
 
 interface ConnectStateProps {
   pushAllChangesFetchStatus: FetchStatus;
@@ -34,6 +36,7 @@ interface ConnectStateProps {
 
 interface ConnectDispatchProps {
   onCreateAllEntities: PayloadActionCreator<string, void>;
+  onDeleteAllEntities: PayloadActionCreator<string, void>;
   onPush: (path: Path) => void;
   onResetTransferCountsByEntityGroup: PayloadActionCreator<string, void>;
 }
@@ -73,13 +76,37 @@ export const PerformToolActionStepComponent: React.FC<Props> = props => {
 
   const handleConfirmClick = (): void => {
     setIsConfirmModalOpen(false);
-    props.onCreateAllEntities();
+    switch (props.toolAction) {
+      case ToolAction.Delete:
+        props.onDeleteAllEntities();
+        break;
+
+      case ToolAction.Transfer:
+        props.onCreateAllEntities();
+        break;
+
+      default:
+        break;
+    }
   };
 
   const title =
     props.toolAction === ToolAction.None
       ? "Perform Action"
       : `Perform ${capitalize(props.toolAction)} Action`;
+
+  // If the records are being deleted, the order of entity groups processed is
+  // in reverse (starts with time entries):
+  const orderedEntityGroups =
+    props.toolAction === ToolAction.Delete
+      ? [
+          EntityGroup.TimeEntries,
+          EntityGroup.Tasks,
+          EntityGroup.Projects,
+          EntityGroup.Tags,
+          EntityGroup.Clients,
+        ]
+      : Object.keys(totalCountsByEntityGroup);
 
   return (
     <section>
@@ -96,7 +123,7 @@ export const PerformToolActionStepComponent: React.FC<Props> = props => {
         </p>
       </HelpDetails>
       <Flex direction="column">
-        {Object.keys(totalCountsByEntityGroup).map(entityGroup => (
+        {orderedEntityGroups.map(entityGroup => (
           <ProgressBar
             key={entityGroup}
             css={{ marginTop: 0 }}
@@ -131,6 +158,7 @@ const mapStateToProps = (state: ReduxState): ConnectStateProps => ({
 
 const mapDispatchToProps: ConnectDispatchProps = {
   onCreateAllEntities: createAllEntities.request,
+  onDeleteAllEntities: deleteAllEntities.request,
   onPush: push,
   onResetTransferCountsByEntityGroup: resetTransferCountsByEntityGroup,
 };

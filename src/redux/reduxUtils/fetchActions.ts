@@ -7,7 +7,7 @@ import {
   CLOCKIFY_API_PAGE_SIZE,
   TOGGL_API_DELAY,
 } from "~/constants";
-import { ToolName } from "~/allEntities/allEntitiesTypes";
+import { ToolName } from "~/typeDefs";
 
 export function* fetchPaginatedFromClockify<TEntity>(
   apiUrl: string,

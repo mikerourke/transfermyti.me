@@ -5,12 +5,12 @@ import { includedSourceProjectsSelector } from "~/projects/projectsSelectors";
 import { includedSourceTagsSelector } from "~/tags/tagsSelectors";
 import { includedSourceTasksSelector } from "~/tasks/tasksSelectors";
 import { includedSourceTimeEntriesSelector } from "~/timeEntries/timeEntriesSelectors";
-import { ReduxState } from "~/redux/reduxTypes";
 import {
   CountsByEntityGroupModel,
   EntityGroup,
   FetchStatus,
-} from "./allEntitiesTypes";
+  ReduxState,
+} from "~/typeDefs";
 
 export const areExistsInTargetShownSelector = (state: ReduxState): boolean =>
   state.allEntities.areExistsInTargetShown;

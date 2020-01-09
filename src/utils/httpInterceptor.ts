@@ -8,7 +8,7 @@ import {
   TOGGL_REPORTS_URL,
 } from "~/constants";
 import { credentialsByToolNameSelector } from "~/credentials/credentialsSelectors";
-import { ToolName } from "~/allEntities/allEntitiesTypes";
+import { ToolName } from "~/typeDefs";
 
 enum Context {
   Api = "api",

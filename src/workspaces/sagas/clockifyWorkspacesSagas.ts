@@ -4,8 +4,7 @@ import { CLOCKIFY_API_DELAY } from "~/constants";
 import { fetchArray, fetchObject } from "~/redux/reduxUtils";
 import { incrementEntityGroupTransferCompletedCount } from "~/allEntities/allEntitiesActions";
 import { ClockifyMembershipResponseModel } from "~/users/sagas/clockifyUsersSagas";
-import { EntityGroup } from "~/allEntities/allEntitiesTypes";
-import { WorkspaceModel } from "~/workspaces/workspacesTypes";
+import { EntityGroup, WorkspaceModel } from "~/typeDefs";
 
 interface ClockifyWorkspaceSettingsResponseModel {
   timeRoundingInReports: boolean;
@@ -46,7 +45,6 @@ interface ClockifyWorkspaceResponseModel {
 /**
  * Creates Clockify workspaces for transfer and returns array of transformed
  * workspaces.
- * @see https://clockify.me/developers-api#operation--v1-workspaces-post
  */
 export function* createClockifyWorkspacesSaga(
   sourceWorkspaces: WorkspaceModel[],
@@ -54,13 +52,11 @@ export function* createClockifyWorkspacesSaga(
   const targetWorkspaces: WorkspaceModel[] = [];
 
   for (const sourceWorkspace of sourceWorkspaces) {
-    const workspaceRequest = { name: sourceWorkspace.name };
     const targetWorkspace = yield call(
-      fetchObject,
-      "/clockify/api/v1/workspaces",
-      { method: "POST", body: workspaceRequest },
+      createClockifyWorkspace,
+      sourceWorkspace,
     );
-    targetWorkspaces.push(transformFromResponse(targetWorkspace));
+    targetWorkspaces.push(targetWorkspace);
 
     yield put(
       incrementEntityGroupTransferCompletedCount(EntityGroup.Workspaces),
@@ -84,6 +80,23 @@ export function* fetchClockifyWorkspacesSaga(): SagaIterator<WorkspaceModel[]> {
   );
 
   return clockifyWorkspaces.map(transformFromResponse);
+}
+
+/**
+ * Creates a new Clockify workspace.
+ * @see https://clockify.me/developers-api#operation--v1-workspaces-post
+ */
+function* createClockifyWorkspace(
+  sourceWorkspace: WorkspaceModel,
+): SagaIterator<WorkspaceModel> {
+  const workspaceRequest = { name: sourceWorkspace.name };
+  const clockifyWorkspace = yield call(
+    fetchObject,
+    `/clockify/api/v1/workspaces`,
+    { method: "POST", body: workspaceRequest },
+  );
+
+  return transformFromResponse(clockifyWorkspace);
 }
 
 function transformFromResponse(

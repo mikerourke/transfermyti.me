@@ -1,8 +1,11 @@
 import { createSelector, createStructuredSelector } from "reselect";
 import * as R from "ramda";
-import { Mapping } from "~/allEntities/allEntitiesTypes";
-import { ReduxState } from "~/redux/reduxTypes";
-import { WorkspaceModel, WorkspacesByIdModel } from "./workspacesTypes";
+import {
+  Mapping,
+  ReduxState,
+  WorkspaceModel,
+  WorkspacesByIdModel,
+} from "~/typeDefs";
 
 export const areWorkspacesFetchingSelector = (state: ReduxState): boolean =>
   state.workspaces.isFetching;
@@ -60,7 +63,7 @@ const limitIdsToIncluded = (workspaces: WorkspaceModel[]): string[] =>
     return [...acc, workspace.id];
   }, [] as string[]);
 
-const includedSourceWorkspaceIdsSelector = createSelector(
+export const includedSourceWorkspaceIdsSelector = createSelector(
   sourceWorkspacesSelector,
   limitIdsToIncluded,
 );

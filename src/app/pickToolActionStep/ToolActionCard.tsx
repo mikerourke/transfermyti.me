@@ -1,7 +1,6 @@
 import React from "react";
 import { Button, Card } from "~/components";
-import { ToolName } from "~/allEntities/allEntitiesTypes";
-import { ToolAction } from "~/app/appTypes";
+import { ToolAction, ToolName } from "~/typeDefs";
 
 interface Props {
   action: ToolAction;

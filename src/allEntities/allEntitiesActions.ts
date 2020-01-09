@@ -1,9 +1,5 @@
 import { createAction, createAsyncAction } from "typesafe-actions";
-import {
-  CountsByEntityGroupModel,
-  EntityGroup,
-  FetchStatus,
-} from "./allEntitiesTypes";
+import { CountsByEntityGroupModel, EntityGroup, FetchStatus } from "~/typeDefs";
 
 export const createAllEntities = createAsyncAction(
   "@allEntities/CREATE_ALL_ENTITIES_REQUEST",

@@ -7,34 +7,33 @@ import {
   toolActionSelector,
   toolNameByMappingSelector,
 } from "~/app/appSelectors";
+import * as userGroupsActions from "~/userGroups/userGroupsActions";
 import {
-  createUserGroups,
-  fetchUserGroups,
-} from "~/userGroups/userGroupsActions";
-import { sourceUserGroupsForTransferSelector } from "~/userGroups/userGroupsSelectors";
+  sourceUserGroupsForTransferSelector,
+  includedSourceUserGroupsSelector,
+} from "~/userGroups/userGroupsSelectors";
+import * as clockifySagas from "./clockifyUserGroupsSagas";
+import * as togglSagas from "./togglUserGroupsSagas";
 import {
-  createClockifyUserGroupsSaga,
-  fetchClockifyUserGroupsSaga,
-} from "./clockifyUserGroupsSagas";
-import {
-  createTogglUserGroupsSaga,
-  fetchTogglUserGroupsSaga,
-} from "./togglUserGroupsSagas";
-import { Mapping, ToolName } from "~/allEntities/allEntitiesTypes";
-import { ToolAction } from "~/app/appTypes";
-import {
+  Mapping,
+  ToolAction,
+  ToolName,
   UserGroupModel,
   UserGroupsByIdModel,
-} from "~/userGroups/userGroupsTypes";
+} from "~/typeDefs";
 
+/**
+ * Creates user groups in the target tool based on the included user groups from
+ * the source tool and links them by ID.
+ */
 export function* createUserGroupsSaga(): SagaIterator {
-  yield put(createUserGroups.request());
+  yield put(userGroupsActions.createUserGroups.request());
 
   try {
     const toolNameByMapping = yield select(toolNameByMappingSelector);
     const createSagaByToolName = {
-      [ToolName.Clockify]: createClockifyUserGroupsSaga,
-      [ToolName.Toggl]: createTogglUserGroupsSaga,
+      [ToolName.Clockify]: clockifySagas.createClockifyUserGroupsSaga,
+      [ToolName.Toggl]: togglSagas.createTogglUserGroupsSaga,
     }[toolNameByMapping.target];
 
     const sourceUserGroups = yield select(sourceUserGroupsForTransferSelector);
@@ -44,20 +43,48 @@ export function* createUserGroupsSaga(): SagaIterator {
       targetUserGroups,
     );
 
-    yield put(createUserGroups.success(userGroupsByIdByMapping));
+    yield put(
+      userGroupsActions.createUserGroups.success(userGroupsByIdByMapping),
+    );
   } catch (err) {
     yield put(showFetchErrorNotification(err));
-    yield put(createUserGroups.failure());
+    yield put(userGroupsActions.createUserGroups.failure());
   }
 }
 
+/**
+ * Deletes included user groups from the source tool.
+ */
+export function* deleteUserGroupsSaga(): SagaIterator {
+  yield put(userGroupsActions.deleteUserGroups.request());
+
+  try {
+    const toolNameByMapping = yield select(toolNameByMappingSelector);
+    const deleteSagaByToolName = {
+      [ToolName.Clockify]: clockifySagas.deleteClockifyUserGroupsSaga,
+      [ToolName.Toggl]: togglSagas.deleteTogglUserGroupsSaga,
+    }[toolNameByMapping.source];
+
+    const sourceUserGroups = yield select(includedSourceUserGroupsSelector);
+    yield call(deleteSagaByToolName, sourceUserGroups);
+
+    yield put(userGroupsActions.deleteUserGroups.success());
+  } catch (err) {
+    yield put(showFetchErrorNotification(err));
+    yield put(userGroupsActions.deleteUserGroups.failure());
+  }
+}
+
+/**
+ * Fetches user groups from the source and target tools and links them by ID.
+ */
 export function* fetchUserGroupsSaga(): SagaIterator {
-  yield put(fetchUserGroups.request());
+  yield put(userGroupsActions.fetchUserGroups.request());
 
   try {
     const fetchSagaByToolName = {
-      [ToolName.Clockify]: fetchClockifyUserGroupsSaga,
-      [ToolName.Toggl]: fetchTogglUserGroupsSaga,
+      [ToolName.Clockify]: clockifySagas.fetchClockifyUserGroupsSaga,
+      [ToolName.Toggl]: togglSagas.fetchTogglUserGroupsSaga,
     };
     const { source, target } = yield select(toolNameByMappingSelector);
     const sourceUserGroups = yield call(fetchSagaByToolName[source]);
@@ -79,9 +106,11 @@ export function* fetchUserGroupsSaga(): SagaIterator {
       };
     }
 
-    yield put(fetchUserGroups.success(userGroupsByIdByMapping));
+    yield put(
+      userGroupsActions.fetchUserGroups.success(userGroupsByIdByMapping),
+    );
   } catch (err) {
     yield put(showFetchErrorNotification(err));
-    yield put(fetchUserGroups.failure());
+    yield put(userGroupsActions.fetchUserGroups.failure());
   }
 }

@@ -1,18 +1,16 @@
 import { createSelector } from "reselect";
 import * as R from "ramda";
-import {
-  Mapping,
-  ToolName,
-  ToolNameByMappingModel,
-} from "~/allEntities/allEntitiesTypes";
-import { ReduxState } from "~/redux/reduxTypes";
 import { capitalize } from "~/utils";
 import {
+  Mapping,
   NotificationModel,
+  ReduxState,
   RoutePath,
   ToolAction,
   ToolHelpDetailsModel,
-} from "./appTypes";
+  ToolName,
+  ToolNameByMappingModel,
+} from "~/typeDefs";
 
 export const currentPathSelector = (state: ReduxState): RoutePath =>
   state.router.location.pathname as RoutePath;

@@ -4,7 +4,7 @@ import { call, delay, select } from "redux-saga/effects";
 import { mappingByToolNameSelector } from "~/app/appSelectors";
 import { includedWorkspaceIdsByMappingSelector } from "~/workspaces/workspacesSelectors";
 import { getApiDelayForTool } from "./fetchActions";
-import { ToolName } from "~/allEntities/allEntitiesTypes";
+import { ToolName } from "~/typeDefs";
 
 export function* fetchEntitiesForTool<TEntity>({
   toolName,

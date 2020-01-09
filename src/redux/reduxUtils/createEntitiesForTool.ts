@@ -5,11 +5,7 @@ import { call, delay, put, select } from "redux-saga/effects";
 import { incrementEntityGroupTransferCompletedCount } from "~/allEntities/allEntitiesActions";
 import { workspaceIdToLinkedIdSelector } from "~/workspaces/workspacesSelectors";
 import { getApiDelayForTool } from "./fetchActions";
-import {
-  BaseEntityModel,
-  EntityGroup,
-  ToolName,
-} from "~/allEntities/allEntitiesTypes";
+import { BaseEntityModel, EntityGroup, ToolName } from "~/typeDefs";
 
 export function* createEntitiesForTool<TEntity>({
   toolName,

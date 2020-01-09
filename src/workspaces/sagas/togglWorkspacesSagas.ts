@@ -1,10 +1,8 @@
+/* eslint-disable @typescript-eslint/camelcase */
 import { SagaIterator } from "@redux-saga/types";
-import { call, delay, put } from "redux-saga/effects";
-import { TOGGL_API_DELAY } from "~/constants";
-import { fetchArray, fetchObject } from "~/redux/reduxUtils";
-import { incrementEntityGroupTransferCompletedCount } from "~/allEntities/allEntitiesActions";
-import { EntityGroup } from "~/allEntities/allEntitiesTypes";
-import { WorkspaceModel } from "~/workspaces/workspacesTypes";
+import { call } from "redux-saga/effects";
+import { fetchArray } from "~/redux/reduxUtils";
+import { EntityGroup, WorkspaceModel } from "~/typeDefs";
 
 export interface TogglWorkspaceResponseModel {
   id: number;
@@ -13,32 +11,8 @@ export interface TogglWorkspaceResponseModel {
   at: string;
 }
 
-/**
- * Creates Toggl workspaces for transfer and returns array of transformed
- * workspaces.
- * @todo Validate endpoint (creating a Toggl workspace is not documented).
- */
-export function* createTogglWorkspacesSaga(
-  sourceWorkspaces: WorkspaceModel[],
-): SagaIterator<WorkspaceModel[]> {
-  const targetWorkspaces: WorkspaceModel[] = [];
-
-  for (const sourceWorkspace of sourceWorkspaces) {
-    const workspaceRequest = { name: sourceWorkspace.name };
-    const targetWorkspace = yield call(fetchObject, "/workspaces", {
-      method: "POST",
-      body: workspaceRequest,
-    });
-    targetWorkspaces.push(transformFromResponse(targetWorkspace));
-
-    yield put(
-      incrementEntityGroupTransferCompletedCount(EntityGroup.Workspaces),
-    );
-
-    yield delay(TOGGL_API_DELAY);
-  }
-
-  return targetWorkspaces;
+export function* createTogglWorkspacesSaga(): SagaIterator {
+  // TODO: Add handler for this in the UI (since Toggl workspaces cannot be created).
 }
 
 /**

@@ -8,6 +8,12 @@ export const createUsers = createAsyncAction(
   "@users/CREATE_USERS_FAILURE",
 )<void, void, void>();
 
+export const deleteUsers = createAsyncAction(
+  "@users/DELETE_USERS_REQUEST",
+  "@users/DELETE_USERS_SUCCESS",
+  "@users/DELETE_USERS_FAILURE",
+)<void, void, void>();
+
 export const fetchUsers = createAsyncAction(
   "@users/FETCH_USERS_REQUEST",
   "@users/FETCH_USERS_SUCCESS",

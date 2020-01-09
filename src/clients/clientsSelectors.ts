@@ -3,13 +3,14 @@ import * as R from "ramda";
 import { mappingByToolNameSelector } from "~/app/appSelectors";
 import { sourceTimeEntryCountByIdFieldSelectorFactory } from "~/timeEntries/timeEntriesSelectors";
 import { activeWorkspaceIdSelector } from "~/workspaces/workspacesSelectors";
-import { ToolName, Mapping } from "~/allEntities/allEntitiesTypes";
-import { ReduxState } from "~/redux/reduxTypes";
 import {
   ClientModel,
   ClientsByIdModel,
   ClientTableViewModel,
-} from "./clientsTypes";
+  Mapping,
+  ReduxState,
+  ToolName,
+} from "~/typeDefs";
 
 export const sourceClientsByIdSelector = createSelector(
   (state: ReduxState) => state.clients.source,
@@ -82,7 +83,6 @@ export const clientsForInclusionsTableSelector = createSelector(
     timeEntryCountByClientId,
   ): ClientTableViewModel[] =>
     sourceClients.reduce((acc, sourceClient) => {
-      console.log(sourceClient);
       const existsInTarget = sourceClient.linkedId !== null;
       if (existsInTarget && !areExistsInTargetShown) {
         return acc;

@@ -3,8 +3,7 @@ import * as R from "ramda";
 import { updateAreAllRecordsIncluded } from "~/redux/reduxUtils";
 import { flushAllEntities } from "~/allEntities/allEntitiesActions";
 import * as tasksActions from "./tasksActions";
-import { Mapping } from "~/allEntities/allEntitiesTypes";
-import { TasksByIdModel } from "./tasksTypes";
+import { Mapping, TasksByIdModel } from "~/typeDefs";
 
 type TasksAction = ActionType<typeof tasksActions | typeof flushAllEntities>;
 

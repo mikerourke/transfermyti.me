@@ -10,9 +10,7 @@ import {
   clientsTotalCountsByTypeSelector,
 } from "~/clients/clientsSelectors";
 import { EntityGroupInclusionsPanel } from "~/components";
-import { EntityGroup } from "~/allEntities/allEntitiesTypes";
-import { ClientTableViewModel } from "~/clients/clientsTypes";
-import { ReduxState } from "~/redux/reduxTypes";
+import { ClientTableViewModel, EntityGroup, ReduxState } from "~/typeDefs";
 
 interface ConnectStateProps {
   clients: ClientTableViewModel[];

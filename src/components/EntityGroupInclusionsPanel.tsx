@@ -13,9 +13,9 @@ import NoRecordsFound from "./NoRecordsFound";
 import {
   BaseEntityModel,
   EntityGroup,
+  ReduxState,
   TableViewModel,
-} from "~/allEntities/allEntitiesTypes";
-import { ReduxState } from "~/redux/reduxTypes";
+} from "~/typeDefs";
 
 interface ConnectStateProps {
   replaceMappingWithToolName: (label: string) => string;

@@ -1,13 +1,7 @@
 import { SagaIterator } from "@redux-saga/types";
 import { call } from "redux-saga/effects";
-import {
-  createEntitiesForTool,
-  fetchArray,
-  fetchEntitiesForTool,
-  fetchObject,
-} from "~/redux/reduxUtils";
-import { EntityGroup, ToolName } from "~/allEntities/allEntitiesTypes";
-import { UserGroupModel } from "~/userGroups/userGroupsTypes";
+import * as reduxUtils from "~/redux/reduxUtils";
+import { EntityGroup, ToolName, UserGroupModel } from "~/typeDefs";
 
 interface TogglUserGroupResponseModel {
   id: number;
@@ -19,12 +13,11 @@ interface TogglUserGroupResponseModel {
 /**
  * Creates new Toggl user groups that correspond to source and returns an array of
  * transformed user groups.
- * @see https://github.com/toggl/toggl_api_docs/blob/master/chapters/groups.md#create-a-group
  */
 export function* createTogglUserGroupsSaga(
   sourceUserGroups: UserGroupModel[],
 ): SagaIterator<UserGroupModel[]> {
-  return yield call(createEntitiesForTool, {
+  return yield call(reduxUtils.createEntitiesForTool, {
     toolName: ToolName.Toggl,
     sourceRecords: sourceUserGroups,
     apiCreateFunc: createTogglUserGroup,
@@ -32,16 +25,33 @@ export function* createTogglUserGroupsSaga(
 }
 
 /**
- * Fetches all user groups in Toggl workspaces and returns result.
- * @see https://github.com/toggl/toggl_api_docs/blob/master/chapters/workspaces.md#get-workspace-groups
+ * Deletes all specified source user groups from Toggl.
+ */
+export function* deleteTogglUserGroupsSaga(
+  sourceUserGroups: UserGroupModel[],
+): SagaIterator {
+  yield call(reduxUtils.deleteEntitiesForTool, {
+    toolName: ToolName.Toggl,
+    sourceRecords: sourceUserGroups,
+    apiDeleteFunc: deleteTogglUserGroup,
+  });
+}
+
+/**
+ * Fetches all user groups in Toggl workspaces and returns array of transformed
+ * user groups.
  */
 export function* fetchTogglUserGroupsSaga(): SagaIterator {
-  return yield call(fetchEntitiesForTool, {
+  return yield call(reduxUtils.fetchEntitiesForTool, {
     toolName: ToolName.Toggl,
     apiFetchFunc: fetchTogglUserGroupsInWorkspace,
   });
 }
 
+/**
+ * Creates a new Toggl user group.
+ * @see https://github.com/toggl/toggl_api_docs/blob/master/chapters/groups.md#create-a-group
+ */
 function* createTogglUserGroup(
   sourceUserGroup: UserGroupModel,
   targetWorkspaceId: string,
@@ -50,7 +60,7 @@ function* createTogglUserGroup(
     name: sourceUserGroup.name,
     wid: +targetWorkspaceId,
   };
-  const { data } = yield call(fetchObject, "/toggl/api/groups", {
+  const { data } = yield call(reduxUtils.fetchObject, "/toggl/api/groups", {
     method: "POST",
     body: userGroupRequest,
   });
@@ -58,11 +68,25 @@ function* createTogglUserGroup(
   return transformFromResponse(data);
 }
 
+/**
+ * Deletes the specified Toggl user group.
+ * @see https://github.com/toggl/toggl_api_docs/blob/master/chapters/groups.md#delete-a-group
+ */
+function* deleteTogglUserGroup(sourceUserGroup: UserGroupModel): SagaIterator {
+  yield call(reduxUtils.fetchEmpty, `/toggl/api/groups/${sourceUserGroup.id}`, {
+    method: "DELETE",
+  });
+}
+
+/**
+ * Fetches Toggl user groups in the specified workspace.
+ * @see https://github.com/toggl/toggl_api_docs/blob/master/chapters/workspaces.md#get-workspace-groups
+ */
 function* fetchTogglUserGroupsInWorkspace(
   workspaceId: string,
 ): SagaIterator<UserGroupModel[]> {
   const togglUserGroups: TogglUserGroupResponseModel[] = yield call(
-    fetchArray,
+    reduxUtils.fetchArray,
     `/toggl/api/workspaces/${workspaceId}/groups`,
   );
 

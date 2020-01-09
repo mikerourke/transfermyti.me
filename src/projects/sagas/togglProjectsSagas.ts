@@ -5,8 +5,7 @@ import { call, delay } from "redux-saga/effects";
 import { TOGGL_API_DELAY, TOGGL_TEMPLATE_ID } from "~/constants";
 import * as reduxUtils from "~/redux/reduxUtils";
 import { sourceClientsByIdSelector } from "~/clients/clientsSelectors";
-import { EntityGroup, ToolName } from "~/allEntities/allEntitiesTypes";
-import { ProjectModel } from "~/projects/projectsTypes";
+import { EntityGroup, ProjectModel, ToolName } from "~/typeDefs";
 
 interface TogglProjectResponseModel {
   id: number;

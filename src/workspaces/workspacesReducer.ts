@@ -2,7 +2,7 @@ import * as R from "ramda";
 import { ActionType, createReducer } from "typesafe-actions";
 import { flushAllEntities } from "~/allEntities/allEntitiesActions";
 import * as workspacesActions from "./workspacesActions";
-import { WorkspacesByIdModel } from "./workspacesTypes";
+import { Mapping, WorkspacesByIdModel } from "~/typeDefs";
 
 type WorkspacesAction = ActionType<
   typeof workspacesActions | typeof flushAllEntities
@@ -93,13 +93,13 @@ export const workspacesReducer = createReducer<
     workspacesActions.flipIsWorkspaceIncluded,
     (state, { payload }) => {
       const updatedState = R.over(
-        R.lensPath(["source", payload.id, "isIncluded"]),
+        R.lensPath([Mapping.Source, payload.id, "isIncluded"]),
         R.not,
         state,
       );
       if (payload.linkedId) {
         return R.over(
-          R.lensPath(["target", payload.linkedId, "isIncluded"]),
+          R.lensPath([Mapping.Target, payload.linkedId, "isIncluded"]),
           R.not,
           updatedState,
         );

@@ -5,11 +5,12 @@ import { sourceTimeEntryCountByTagIdSelector } from "~/timeEntries/timeEntriesSe
 import { activeWorkspaceIdSelector } from "~/workspaces/workspacesSelectors";
 import {
   Mapping,
+  ReduxState,
   TableViewModel,
+  TagModel,
+  TagsByIdModel,
   ToolName,
-} from "~/allEntities/allEntitiesTypes";
-import { ReduxState } from "~/redux/reduxTypes";
-import { TagModel, TagsByIdModel } from "./tagsTypes";
+} from "~/typeDefs";
 
 const sourceTagsByIdSelector = createSelector(
   (state: ReduxState) => state.tags.source,
