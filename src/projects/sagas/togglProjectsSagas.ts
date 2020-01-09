@@ -2,7 +2,7 @@
 import { SagaIterator } from "@redux-saga/types";
 import * as R from "ramda";
 import { call, delay } from "redux-saga/effects";
-import { TOGGL_API_DELAY, TOGGL_TEMPLATE_ID } from "~/constants";
+import { TOGGL_API_DELAY } from "~/constants";
 import * as reduxUtils from "~/redux/reduxUtils";
 import { sourceClientsByIdSelector } from "~/clients/clientsSelectors";
 import { EntityGroup, ProjectModel, ToolName } from "~/typeDefs";
@@ -15,13 +15,7 @@ interface TogglProjectResponseModel {
   billable: boolean;
   is_private: boolean;
   active: boolean;
-  template: boolean;
   at: string;
-  created_at: string;
-  color: string;
-  auto_estimates: boolean;
-  actual_hours: number;
-  hex_color: string;
 }
 
 interface TogglProjectUserResponseModel {
@@ -73,7 +67,7 @@ export function* fetchTogglProjectsSaga(): SagaIterator<ProjectModel[]> {
 
 /**
  * Creates a new Toggl project.
- * @see https://github.com/toggl/toggl_api_docs/blob/master/chapters/clients.md#create-a-client
+ * @see https://github.com/toggl/toggl_api_docs/blob/master/chapters/projects.md#create-project
  */
 function* createTogglProject(
   sourceProject: ProjectModel,
@@ -88,9 +82,8 @@ function* createTogglProject(
   const projectRequest = {
     name: sourceProject.name,
     wid: +targetWorkspaceId,
-    template_id: TOGGL_TEMPLATE_ID,
-    is_private: !sourceProject.isPublic,
     cid: R.isNil(targetClientId) ? undefined : +targetClientId,
+    is_private: !sourceProject.isPublic,
   };
 
   const { data } = yield call(reduxUtils.fetchObject, "/toggl/api/projects", {
@@ -162,7 +155,7 @@ function transformFromResponse(
     isBillable: project.billable,
     isPublic: !project.is_private,
     isActive: project.active,
-    color: project.hex_color,
+    color: "1",
     userIds,
     entryCount: 0,
     linkedId: null,

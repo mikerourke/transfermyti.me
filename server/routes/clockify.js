@@ -173,6 +173,29 @@ function assignClockifyRoutes(router) {
 
       res.status(200).send(newWorkspace);
     });
+
+  router
+    .delete("/workspaces/:workspaceId/clients/:clientId", (req, res) =>
+      res.status(200).send({}),
+    )
+    .delete("/v1/workspaces/:workspaceId/projects/:projectId", (req, res) =>
+      res.status(200).send({}),
+    )
+    .delete("/workspaces/:workspaceId/tags/:tagId", (req, res) =>
+      res.status(200).send({}),
+    )
+    .delete(
+      "/workspaces/:workspaceId/projects/:projectId/tasks/:taskId",
+      (req, res) => res.status(200).send({}),
+    )
+    .delete(
+      "/v1/workspaces/:workspaceId/time-entries/:timeEntryId",
+      (req, res) => res.status(200).send({}),
+    )
+    .delete("/workspaces/:workspaceId/userGroups/:userGroupId", (req, res) =>
+      res.status(200).send({}),
+    )
+    .delete("/users/:userId", (req, res) => res.status(200).send());
 }
 
 module.exports = { assignClockifyRoutes };

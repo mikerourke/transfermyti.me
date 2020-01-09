@@ -17,6 +17,3 @@ export const TOGGL_API_URL = "https://www.toggl.com/api/v8";
 export const TOGGL_REPORTS_URL = "https://toggl.com/reports/api/v2";
 // Delay time for requests to ensure rate limits are not exceeded:
 export const TOGGL_API_DELAY = IS_USING_LOCAL_API ? 0 : 1_000 / 4;
-
-// TODO: Find out if this template_id value is valid?
-export const TOGGL_TEMPLATE_ID = 10237;
