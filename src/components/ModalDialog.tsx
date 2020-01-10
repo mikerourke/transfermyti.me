@@ -33,7 +33,7 @@ const Container = styled.div(
     marginTop: "20%",
     maxWidth: "32rem",
     minWidth: "24rem",
-    padding: "1.5rem",
+    padding: "2rem",
     zIndex: 2,
 
     h2: {

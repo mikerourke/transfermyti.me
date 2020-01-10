@@ -1,18 +1,18 @@
 import React from "react";
-import { useTheme } from "./emotion";
+import { useTheme, ThemeColors } from "./emotion";
 
 interface Props extends Omit<React.HTMLProps<HTMLAnchorElement>, "color"> {
   children: React.ReactNode;
-  color?: string | null;
+  color?: keyof ThemeColors;
 }
 
 const ExternalLink: React.FC<Props> = ({
   children,
-  color = null,
+  color = "navy",
   ...props
 }) => {
   const theme = useTheme();
-  const fillColor = color === null ? theme.colors.navy : color;
+  const fillColor = theme.colors[color];
 
   /**
    * SVG icon taken from Font Awesome (`external-link-alt.svg`).
