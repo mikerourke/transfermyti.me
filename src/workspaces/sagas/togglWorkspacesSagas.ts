@@ -16,7 +16,7 @@ export function* createTogglWorkspacesSaga(): SagaIterator {
 }
 
 /**
- * Fetches all workspaces from Toggl and returns transformed array of transformed
+ * Fetches all workspaces from Toggl and returns array of transformed
  * workspaces.
  * @see https://github.com/toggl/toggl_api_docs/blob/master/chapters/workspaces.md#get-workspace-workspaces
  */

@@ -16,6 +16,7 @@ const sourceTagsByIdSelector = createSelector(
   (state: ReduxState) => state.tags.source,
   (sourceTagsById): TagsByIdModel => sourceTagsById,
 );
+
 const sourceTagsSelector = createSelector(
   sourceTagsByIdSelector,
   (sourceTagsById): TagModel[] => Object.values(sourceTagsById),

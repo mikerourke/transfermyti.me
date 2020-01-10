@@ -3,15 +3,15 @@ import * as R from "ramda";
 import { updateAreAllRecordsIncluded } from "~/redux/reduxUtils";
 import { flushAllEntities } from "~/allEntities/allEntitiesActions";
 import * as projectsActions from "./projectsActions";
-import { Mapping, ProjectModel } from "~/typeDefs";
+import { Mapping, ProjectsByIdModel } from "~/typeDefs";
 
 type ProjectsAction = ActionType<
   typeof projectsActions | typeof flushAllEntities
 >;
 
 export interface ProjectsState {
-  readonly source: Record<string, ProjectModel>;
-  readonly target: Record<string, ProjectModel>;
+  readonly source: ProjectsByIdModel;
+  readonly target: ProjectsByIdModel;
   readonly isFetching: boolean;
 }
 
