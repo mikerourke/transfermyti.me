@@ -2,7 +2,6 @@ import { connectRouter, routerMiddleware } from "connected-react-router";
 import { History } from "history";
 import { AnyAction, applyMiddleware, compose, createStore } from "redux";
 import createSagaMiddleware from "redux-saga";
-import thunkMiddleware from "redux-thunk";
 import storage from "store";
 import { IS_USING_LOCAL_API, STORAGE_KEY } from "~/constants";
 import { getIfDev } from "~/utils";
@@ -38,11 +37,7 @@ export function configureStore(history: History): ReduxStore {
   const rootReducer = createRootReducer(routerReducer);
   const sagaMiddleware = createSagaMiddleware();
 
-  const middleware = [
-    sagaMiddleware,
-    routerMiddleware(history),
-    thunkMiddleware,
-  ];
+  const middleware = [sagaMiddleware, routerMiddleware(history)];
 
   const store = createStore(
     rootReducer,
