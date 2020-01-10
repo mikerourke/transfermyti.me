@@ -8,12 +8,14 @@ import {
   updateFetchAllFetchStatus,
 } from "~/allEntities/allEntitiesActions";
 import { dismissAllNotifications, showNotification } from "~/app/appActions";
+import { toolForTargetMappingSelector } from "~/app/appSelectors";
 import {
   fetchWorkspaces,
   flipIsWorkspaceIncluded,
 } from "~/workspaces/workspacesActions";
 import {
   areWorkspacesFetchingSelector,
+  missingTargetWorkspacesSelector,
   sourceIncludedWorkspacesCountSelector,
   sourceWorkspacesSelector,
 } from "~/workspaces/workspacesSelectors";
@@ -27,18 +29,22 @@ import {
 } from "~/components";
 import NoWorkspacesModal from "./NoWorkspacesModal";
 import SourceWorkspaceCard from "./SourceWorkspaceCard";
+import TogglWorkspacesModal from "./TogglWorkspacesModal";
 import {
   FetchStatus,
   NotificationModel,
   ReduxState,
   RoutePath,
+  ToolName,
   WorkspaceModel,
 } from "~/typeDefs";
 
 interface ConnectStateProps {
   areWorkspacesFetching: boolean;
   includedWorkspacesCount: number;
-  workspaces: WorkspaceModel[];
+  missingTargetWorkspaces: WorkspaceModel[];
+  sourceWorkspaces: WorkspaceModel[];
+  toolForTargetMapping: ToolName;
 }
 
 interface ConnectDispatchProps {
@@ -54,12 +60,16 @@ interface ConnectDispatchProps {
 type Props = ConnectStateProps & ConnectDispatchProps;
 
 export const SelectSourceWorkspacesStepComponent: React.FC<Props> = props => {
-  const [isErrorModalOpen, setIsErrorModalOpen] = React.useState<boolean>(
-    false,
-  );
+  const [isNoSelectionsModalOpen, setIsNoSelectionsModalOpen] = React.useState<
+    boolean
+  >(false);
+  const [
+    isTogglWorkspacesModalOpen,
+    setIsTogglWorkspacesModalOpen,
+  ] = React.useState<boolean>(false);
 
   React.useEffect(() => {
-    if (props.workspaces.length === 0) {
+    if (props.sourceWorkspaces.length === 0) {
       props.onFetchWorkspaces();
     }
   }, []);
@@ -69,8 +79,16 @@ export const SelectSourceWorkspacesStepComponent: React.FC<Props> = props => {
   };
 
   const handleNextClick = (): void => {
+    if (
+      props.toolForTargetMapping === ToolName.Toggl &&
+      props.missingTargetWorkspaces.length !== 0
+    ) {
+      setIsTogglWorkspacesModalOpen(true);
+      return;
+    }
+
     if (props.includedWorkspacesCount === 0) {
-      setIsErrorModalOpen(true);
+      setIsNoSelectionsModalOpen(true);
       return;
     }
 
@@ -102,7 +120,7 @@ export const SelectSourceWorkspacesStepComponent: React.FC<Props> = props => {
         <Loader>Loading workspaces, please wait...</Loader>
       ) : (
         <Flex as="ul" css={{ listStyle: "none", padding: 0 }}>
-          {props.workspaces.map(workspace => (
+          {props.sourceWorkspaces.map(workspace => (
             <SourceWorkspaceCard
               key={workspace.id}
               workspace={workspace}
@@ -126,8 +144,13 @@ export const SelectSourceWorkspacesStepComponent: React.FC<Props> = props => {
         </Button>
       </NavigationButtonsRow>
       <NoWorkspacesModal
-        isOpen={isErrorModalOpen}
-        onClose={() => setIsErrorModalOpen(false)}
+        isOpen={isNoSelectionsModalOpen}
+        onClose={() => setIsNoSelectionsModalOpen(false)}
+      />
+      <TogglWorkspacesModal
+        isOpen={isTogglWorkspacesModalOpen}
+        workspaces={props.missingTargetWorkspaces}
+        onClose={() => setIsTogglWorkspacesModalOpen(false)}
       />
     </section>
   );
@@ -136,7 +159,9 @@ export const SelectSourceWorkspacesStepComponent: React.FC<Props> = props => {
 const mapStateToProps = (state: ReduxState): ConnectStateProps => ({
   areWorkspacesFetching: areWorkspacesFetchingSelector(state),
   includedWorkspacesCount: sourceIncludedWorkspacesCountSelector(state),
-  workspaces: sourceWorkspacesSelector(state),
+  missingTargetWorkspaces: missingTargetWorkspacesSelector(state),
+  sourceWorkspaces: sourceWorkspacesSelector(state),
+  toolForTargetMapping: toolForTargetMappingSelector(state),
 });
 
 const mapDispatchToProps: ConnectDispatchProps = {

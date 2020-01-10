@@ -7,6 +7,8 @@ const { take, uniqueId } = require("lodash");
 const dbPath = path.resolve(__dirname, "..", "db", "toggl.json");
 const db = fse.readJSONSync(dbPath);
 
+const isEmpty = process.env.LOCAL_API_TOGGL_EMPTY == "true";
+
 function assignTogglRoutes(router) {
   router
     .get("/me", (req, res) => {
@@ -22,19 +24,19 @@ function assignTogglRoutes(router) {
       res.status(200).send(payload);
     })
     .get("/workspaces/:workspaceId/clients", (req, res) =>
-      res.status(200).send(db.clients),
+      res.status(200).send(isEmpty === true ? [] : db.clients),
     )
     .get("/workspaces/:workspaceId/projects", (req, res) =>
-      res.status(200).send(db.projects),
+      res.status(200).send(isEmpty === true ? [] : db.projects),
     )
     .get("/projects/:projectId/project_users", (req, res) =>
-      res.status(200).send(db.projectUsers),
+      res.status(200).send(isEmpty === true ? [] : db.projectUsers),
     )
     .get("/workspaces/:workspaceId/tags", (req, res) =>
-      res.status(200).send(db.tags),
+      res.status(200).send(isEmpty === true ? [] : db.tags),
     )
     .get("/workspaces/:workspaceId/tasks", (req, res) =>
-      res.status(200).send(db.tasks),
+      res.status(200).send(isEmpty === true ? [] : db.tasks),
     )
     .get("/details", (req, res) => {
       const { since } = req.query;
@@ -45,25 +47,27 @@ function assignTogglRoutes(router) {
       );
 
       const payload = {
-        total_grand: 10000,
-        total_billable: 10000,
+        total_grand: isEmpty === true ? 0 : 10000,
+        total_billable: isEmpty === true ? 0 : 10000,
         total_currencies: [],
-        total_count: timeEntries.length,
+        total_count: isEmpty === true ? 0 : timeEntries.length,
         per_page: 50,
-        data: take(timeEntries, 50),
+        data: isEmpty === true ? [] : take(timeEntries, 50),
       };
 
       res.status(200).send(payload);
     })
     .get("/workspaces/:workspaceId/groups", (req, res) =>
-      res.status(200).send(db.userGroups),
+      res.status(200).send(isEmpty === true ? [] : db.userGroups),
     )
     .get("/workspaces/:workspaceId/users", (req, res) =>
-      res.status(200).send(db.users),
+      res.status(200).send(isEmpty === true ? [] : db.users),
     )
-    .get("/workspaces", (req, res) => res.status(200).send(db.workspaces))
+    .get("/workspaces", (req, res) =>
+      res.status(200).send(isEmpty === true ? [] : db.workspaces),
+    )
     .get("/workspaces/:workspaceId/workspace_users", (req, res) =>
-      res.status(200).send(db.workspaceUsers),
+      res.status(200).send(isEmpty === true ? [] : db.workspaceUsers),
     );
 
   router

@@ -55,6 +55,12 @@ const targetWorkspacesSelector = createSelector(
   (workspacesById): WorkspaceModel[] => Object.values(workspacesById),
 );
 
+export const missingTargetWorkspacesSelector = createSelector(
+  includedSourceWorkspacesSelector,
+  (includedSourceWorkspaces): WorkspaceModel[] =>
+    includedSourceWorkspaces.filter(({ linkedId }) => linkedId === null),
+);
+
 const limitIdsToIncluded = (workspaces: WorkspaceModel[]): string[] =>
   workspaces.reduce((acc, workspace) => {
     if (!workspace.isIncluded) {

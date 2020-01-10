@@ -24,6 +24,11 @@ export const toolNameByMappingSelector = (
   state: ReduxState,
 ): ToolNameByMappingModel => state.app.toolNameByMapping;
 
+export const toolForTargetMappingSelector = createSelector(
+  toolNameByMappingSelector,
+  (toolNameByMapping): ToolName => toolNameByMapping.target,
+);
+
 export const toolActionSelector = (state: ReduxState): ToolAction =>
   state.app.toolAction;
 
