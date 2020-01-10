@@ -48,7 +48,7 @@ const LinkToMe: React.FC = () => (
 const LinkToIssues: React.FC = () => (
   <ExternalLink
     color="white"
-    href="https://github.com/mikerourke/transfer-my-time/issues"
+    href="https://github.com/mikerourke/transfermyti.me/issues"
   >
     in the GitHub repository
   </ExternalLink>

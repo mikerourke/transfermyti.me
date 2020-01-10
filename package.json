@@ -1,9 +1,9 @@
 {
-  "name": "transfer-my-time",
+  "name": "transfermyti.me",
   "version": "0.0.1",
   "description": "Web app to transfer data between time tracking tools.",
   "main": "index.js",
-  "repository": "https://github.com/mikerourke/transfer-my-time.git",
+  "repository": "https://github.com/mikerourke/transfermyti.me.git",
   "author": "Mike Rourke <mike.w.rourke@gmail.com>",
   "license": "MIT",
   "private": false,
