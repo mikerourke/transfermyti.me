@@ -1,7 +1,23 @@
 import React from "react";
-import { ModalDialog } from "~/components";
+import { ModalDialog, ExternalLink } from "~/components";
 
-// TODO: Add links for filing an issue/contacting the developer.
+const LinkToIssues: React.FC = () => (
+  <ExternalLink
+    color="primary"
+    href="https://github.com/mikerourke/transfermyti.me/issues"
+  >
+    file a GitHub issue
+  </ExternalLink>
+);
+
+const MailToLink: React.FC = () => (
+  <a
+    href="mailto:mike.w.rourke@gmail.com"
+    css={{ textDecoration: "underline" }}
+  >
+    contact the developer
+  </a>
+);
 
 interface Props {
   isOpen: boolean;
@@ -17,8 +33,7 @@ const NoSelectionsModal: React.FC<Props> = props => (
     </p>
     <p>
       Alternatively, all of the records may already exist on the target tool. If
-      you believe this is an error, please file a GitHub issue or contact the
-      developer.
+      you believe this is an error, please <LinkToIssues /> or <MailToLink />.
     </p>
   </ModalDialog>
 );
