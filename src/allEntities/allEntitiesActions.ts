@@ -1,5 +1,11 @@
 import { createAction, createAsyncAction } from "typesafe-actions";
-import { CountsByEntityGroupModel, EntityGroup, FetchStatus } from "~/typeDefs";
+import {
+  CountsByEntityGroupModel,
+  EntityGroup,
+  FetchStatus,
+  ToolAction,
+  ToolNameByMappingModel,
+} from "~/typeDefs";
 
 export const createAllEntities = createAsyncAction(
   "@allEntities/CREATE_ALL_ENTITIES_REQUEST",
@@ -18,6 +24,14 @@ export const fetchAllEntities = createAsyncAction(
   "@allEntities/FETCH_ALL_ENTITIES_SUCCESS",
   "@allEntities/FETCH_ALL_ENTITIES_FAILURE",
 )<void, void, void>();
+
+export const updateToolAction = createAction("@allEntities/UPDATE_TOOL_ACTION")<
+  ToolAction
+>();
+
+export const updateToolNameByMapping = createAction(
+  "@allEntities/UPDATE_TOOL_NAME_BY_MAPPING",
+)<ToolNameByMappingModel>();
 
 export const flushAllEntities = createAction("@allEntities/FLUSH_ALL_ENTITIES")<
   void

@@ -2,7 +2,7 @@ import * as R from "ramda";
 import React from "react";
 import { connect } from "react-redux";
 import { PayloadActionCreator } from "typesafe-actions";
-import { toolActionSelector } from "~/app/appSelectors";
+import { toolActionSelector } from "~/allEntities/allEntitiesSelectors";
 import {
   updateAreAllTasksIncluded,
   flipIsTaskIncluded,

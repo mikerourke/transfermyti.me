@@ -3,12 +3,12 @@ import { History } from "history";
 import React from "react";
 import { Redirect, Route, Switch } from "react-router";
 import AppRoot from "~/app/appRoot/AppRoot";
-import PickToolActionStep from "~/app/pickToolActionStep/PickToolActionStep";
+import PickToolActionStep from "~/allEntities/pickToolActionStep/PickToolActionStep";
 import EnterApiKeysStep from "~/credentials/enterApiKeysStep/EnterApiKeysStep";
 import SelectSourceWorkspacesStep from "~/workspaces/selectSourceWorkspacesStep/SelectSourceWorkspacesStep";
 import SelectInclusionsStep from "~/allEntities/selectInclusionsStep/SelectInclusionsStep";
 import PerformToolActionStep from "~/allEntities/performToolActionStep/PerformToolActionStep";
-import ToolActionSuccess from "~/app/toolActionSuccess/ToolActionSuccess";
+import ToolActionSuccess from "~/allEntities/toolActionSuccess/ToolActionSuccess";
 import { RoutePath } from "~/./typeDefs";
 
 interface Props {

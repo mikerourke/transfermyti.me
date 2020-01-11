@@ -1,15 +1,24 @@
 import * as R from "ramda";
 import { ActionType, createReducer } from "typesafe-actions";
 import * as allEntitiesActions from "./allEntitiesActions";
-import { CountsByEntityGroupModel, EntityGroup, FetchStatus } from "~/typeDefs";
+import {
+  CountsByEntityGroupModel,
+  EntityGroup,
+  FetchStatus,
+  ToolAction,
+  ToolName,
+  ToolNameByMappingModel,
+} from "~/typeDefs";
 
 type AllEntitiesAction = ActionType<typeof allEntitiesActions>;
 
 export interface AllEntitiesState {
   readonly areExistsInTargetShown: boolean;
+  readonly entityGroupInProcess: EntityGroup | null;
   readonly fetchAllFetchStatus: FetchStatus;
   readonly pushAllChangesFetchStatus: FetchStatus;
-  readonly entityGroupInProcess: EntityGroup | null;
+  readonly toolAction: ToolAction;
+  readonly toolNameByMapping: ToolNameByMappingModel;
   readonly transferCountsByEntityGroup: CountsByEntityGroupModel;
 }
 
@@ -25,9 +34,14 @@ const DEFAULT_TRANSFER_COUNTS = {
 
 export const initialState: AllEntitiesState = {
   areExistsInTargetShown: true,
+  entityGroupInProcess: null,
   fetchAllFetchStatus: FetchStatus.Pending,
   pushAllChangesFetchStatus: FetchStatus.Pending,
-  entityGroupInProcess: null,
+  toolAction: ToolAction.None,
+  toolNameByMapping: {
+    source: ToolName.None,
+    target: ToolName.None,
+  },
   transferCountsByEntityGroup: {
     ...DEFAULT_TRANSFER_COUNTS,
   },
@@ -85,6 +99,20 @@ export const allEntitiesReducer = createReducer<
     fetchAllFetchStatus: FetchStatus.Error,
     entityGroupInProcess: null,
   }))
+  .handleAction(allEntitiesActions.updateToolAction, (state, { payload }) => ({
+    ...state,
+    toolAction: payload,
+  }))
+  .handleAction(
+    allEntitiesActions.updateToolNameByMapping,
+    (state, { payload }) => ({
+      ...state,
+      toolNameByMapping: {
+        ...state.toolNameByMapping,
+        ...payload,
+      },
+    }),
+  )
   .handleAction(allEntitiesActions.flushAllEntities, state => ({
     ...state,
     pushAllChangesFetchStatus: FetchStatus.Pending,

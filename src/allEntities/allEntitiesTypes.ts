@@ -9,6 +9,18 @@ export enum Mapping {
   Target = "target",
 }
 
+export enum ToolAction {
+  None = "none",
+  Delete = "delete",
+  Transfer = "transfer",
+}
+
+export interface ToolHelpDetailsModel {
+  toolName: ToolName;
+  displayName: string;
+  toolLink: string;
+}
+
 export enum EntityGroup {
   Clients = "clients",
   Projects = "projects",

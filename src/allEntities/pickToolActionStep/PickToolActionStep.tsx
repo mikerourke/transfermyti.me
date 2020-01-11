@@ -2,7 +2,10 @@ import { push } from "connected-react-router";
 import { Path } from "history";
 import React from "react";
 import { connect } from "react-redux";
-import { updateToolAction, updateToolNameByMapping } from "~/app/appActions";
+import {
+  updateToolAction,
+  updateToolNameByMapping,
+} from "~/allEntities/allEntitiesActions";
 import { Flex, HelpDetails } from "~/components";
 import ToolActionCard from "./ToolActionCard";
 import {

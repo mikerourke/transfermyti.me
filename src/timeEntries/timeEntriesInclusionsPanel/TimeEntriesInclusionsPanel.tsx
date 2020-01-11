@@ -4,7 +4,7 @@ import { PayloadActionCreator } from "typesafe-actions";
 import {
   replaceMappingWithToolNameSelector,
   toolActionSelector,
-} from "~/app/appSelectors";
+} from "~/allEntities/allEntitiesSelectors";
 import {
   flipIsTimeEntryIncluded,
   updateAreAllTimeEntriesIncluded,

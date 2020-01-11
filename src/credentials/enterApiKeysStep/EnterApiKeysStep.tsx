@@ -3,7 +3,7 @@ import { Path } from "history";
 import React from "react";
 import { connect } from "react-redux";
 import { PayloadActionCreator } from "typesafe-actions";
-import { toolHelpDetailsByMappingSelector } from "~/app/appSelectors";
+import { toolHelpDetailsByMappingSelector } from "~/allEntities/allEntitiesSelectors";
 import * as credentialsActions from "~/credentials/credentialsActions";
 import {
   credentialsByMappingSelector,

@@ -2,15 +2,15 @@ import { SagaIterator } from "@redux-saga/types";
 import * as R from "ramda";
 import { call, put, select } from "redux-saga/effects";
 import { linkEntitiesByIdByMapping } from "~/redux/reduxUtils";
-import { showFetchErrorNotification } from "~/app/appActions";
 import {
-  toolNameByMappingSelector,
   toolActionSelector,
-} from "~/app/appSelectors";
+  toolNameByMappingSelector,
+} from "~/allEntities/allEntitiesSelectors";
+import { showFetchErrorNotification } from "~/app/appActions";
 import * as timeEntriesActions from "~/timeEntries/timeEntriesActions";
 import {
-  sourceTimeEntriesForTransferSelector,
   includedSourceTimeEntriesSelector,
+  sourceTimeEntriesForTransferSelector,
 } from "~/timeEntries/timeEntriesSelectors";
 import * as clockifySagas from "./clockifyTimeEntriesSagas";
 import * as togglSagas from "./togglTimeEntriesSagas";

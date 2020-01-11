@@ -2,7 +2,7 @@ import React from "react";
 import { connect } from "react-redux";
 import { PayloadActionCreator } from "typesafe-actions";
 import { getEntityGroupDisplay } from "~/utils";
-import { replaceMappingWithToolNameSelector } from "~/app/appSelectors";
+import { replaceMappingWithToolNameSelector } from "~/allEntities/allEntitiesSelectors";
 import AccordionPanel from "./AccordionPanel";
 import InclusionsTable from "./InclusionsTable";
 import InclusionsTableBody from "./InclusionsTableBody";

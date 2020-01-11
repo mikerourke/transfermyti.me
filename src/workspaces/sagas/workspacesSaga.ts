@@ -2,11 +2,11 @@ import { SagaIterator } from "@redux-saga/types";
 import * as R from "ramda";
 import { all, call, put, select, takeEvery } from "redux-saga/effects";
 import { linkEntitiesByIdByMapping } from "~/redux/reduxUtils";
-import { showFetchErrorNotification } from "~/app/appActions";
 import {
   toolActionSelector,
   toolNameByMappingSelector,
-} from "~/app/appSelectors";
+} from "~/allEntities/allEntitiesSelectors";
+import { showFetchErrorNotification } from "~/app/appActions";
 import * as workspacesActions from "~/workspaces/workspacesActions";
 import { sourceWorkspacesForTransferSelector } from "~/workspaces/workspacesSelectors";
 import * as clockifySagas from "./clockifyWorkspacesSagas";

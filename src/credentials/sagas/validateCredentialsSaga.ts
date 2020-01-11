@@ -1,7 +1,7 @@
 import { SagaIterator } from "@redux-saga/types";
 import { call, put, select } from "redux-saga/effects";
 import { fetchObject } from "~/redux/reduxUtils";
-import { mappingByToolNameSelector } from "~/app/appSelectors";
+import { mappingByToolNameSelector } from "~/allEntities/allEntitiesSelectors";
 import { validateCredentials } from "~/credentials/credentialsActions";
 import { credentialsByMappingSelector } from "~/credentials/credentialsSelectors";
 import { TogglWorkspaceResponseModel } from "~/workspaces/sagas/togglWorkspacesSagas";

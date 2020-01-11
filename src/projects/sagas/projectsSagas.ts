@@ -3,11 +3,11 @@ import * as R from "ramda";
 import { all, call, put, select, takeEvery } from "redux-saga/effects";
 import { isActionOf } from "typesafe-actions";
 import { linkEntitiesByIdByMapping } from "~/redux/reduxUtils";
-import { showFetchErrorNotification } from "~/app/appActions";
 import {
   toolActionSelector,
   toolNameByMappingSelector,
-} from "~/app/appSelectors";
+} from "~/allEntities/allEntitiesSelectors";
+import { showFetchErrorNotification } from "~/app/appActions";
 import * as projectActions from "~/projects/projectsActions";
 import {
   includedSourceProjectsSelector,

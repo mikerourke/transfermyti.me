@@ -7,8 +7,8 @@ import {
   fetchAllEntities,
   updateFetchAllFetchStatus,
 } from "~/allEntities/allEntitiesActions";
+import { toolForTargetMappingSelector } from "~/allEntities/allEntitiesSelectors";
 import { dismissAllNotifications, showNotification } from "~/app/appActions";
-import { toolForTargetMappingSelector } from "~/app/appSelectors";
 import {
   fetchWorkspaces,
   flipIsWorkspaceIncluded,

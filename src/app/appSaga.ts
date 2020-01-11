@@ -7,10 +7,8 @@ import {
   flushAllEntities,
   updatePushAllChangesFetchStatus,
 } from "~/allEntities/allEntitiesActions";
-import {
-  currentPathSelector,
-  toolNameByMappingSelector,
-} from "~/app/appSelectors";
+import { toolNameByMappingSelector } from "~/allEntities/allEntitiesSelectors";
+import { currentPathSelector } from "~/app/appSelectors";
 import { updateValidationFetchStatus } from "~/credentials/credentialsActions";
 import { credentialsByMappingSelector } from "~/credentials/credentialsSelectors";
 import { sourceWorkspacesSelector } from "~/workspaces/workspacesSelectors";

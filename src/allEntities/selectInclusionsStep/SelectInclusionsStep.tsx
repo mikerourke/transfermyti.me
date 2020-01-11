@@ -12,9 +12,9 @@ import {
   areExistsInTargetShownSelector,
   entityGroupInProcessDisplaySelector,
   fetchAllFetchStatusSelector,
+  toolActionSelector,
   totalIncludedRecordsCountSelector,
 } from "~/allEntities/allEntitiesSelectors";
-import { toolActionSelector } from "~/app/appSelectors";
 import { activeWorkspaceIdSelector } from "~/workspaces/workspacesSelectors";
 import {
   Button,

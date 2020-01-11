@@ -12,9 +12,9 @@ import {
 import {
   includedCountsByEntityGroupSelector,
   pushAllChangesFetchStatusSelector,
+  toolActionSelector,
   transferCountsByEntityGroupSelector,
 } from "~/allEntities/allEntitiesSelectors";
-import { toolActionSelector } from "~/app/appSelectors";
 import { Flex, HelpDetails, NavigationButtonsRow, Note } from "~/components";
 import ConfirmToolActionModal from "./ConfirmToolActionModal";
 import ProgressBar from "./ProgressBar";

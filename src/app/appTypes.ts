@@ -1,5 +1,3 @@
-import { ToolName } from "~/allEntities/allEntitiesTypes";
-
 type NotificationType = "error" | "info" | "success";
 
 export interface NotificationModel {
@@ -15,16 +13,4 @@ export enum RoutePath {
   SelectInclusions = "/select-inclusions",
   PerformToolAction = "/perform-tool-action",
   ToolActionSuccess = "/tool-action-success",
-}
-
-export enum ToolAction {
-  None = "none",
-  Delete = "delete",
-  Transfer = "transfer",
-}
-
-export interface ToolHelpDetailsModel {
-  toolName: ToolName;
-  displayName: string;
-  toolLink: string;
 }

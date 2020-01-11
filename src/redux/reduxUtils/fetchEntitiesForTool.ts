@@ -1,7 +1,7 @@
 import { SagaIterator } from "@redux-saga/types";
 import * as R from "ramda";
 import { call, delay, select } from "redux-saga/effects";
-import { mappingByToolNameSelector } from "~/app/appSelectors";
+import { mappingByToolNameSelector } from "~/allEntities/allEntitiesSelectors";
 import { includedWorkspaceIdsByMappingSelector } from "~/workspaces/workspacesSelectors";
 import { getApiDelayForTool } from "./fetchActions";
 import { ToolName } from "~/typeDefs";

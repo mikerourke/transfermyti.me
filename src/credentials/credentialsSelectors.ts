@@ -1,5 +1,5 @@
 import { createSelector } from "reselect";
-import { toolNameByMappingSelector } from "~/app/appSelectors";
+import { toolNameByMappingSelector } from "~/allEntities/allEntitiesSelectors";
 import {
   CredentialsByMappingModel,
   CredentialsModel,

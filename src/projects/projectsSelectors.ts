@@ -1,6 +1,6 @@
 import { createSelector } from "reselect";
 import * as R from "ramda";
-import { toolNameByMappingSelector } from "~/app/appSelectors";
+import { toolNameByMappingSelector } from "~/allEntities/allEntitiesSelectors";
 import { sourceTimeEntryCountByIdFieldSelectorFactory } from "~/timeEntries/timeEntriesSelectors";
 import { activeWorkspaceIdSelector } from "~/workspaces/workspacesSelectors";
 import {
