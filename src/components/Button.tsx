@@ -20,6 +20,7 @@ const Base = styled.button({
   fontWeight: 400,
   padding: "0.5rem 0.75rem",
   textAlign: "center",
+  transition: "0.3s all linear",
   verticalAlign: "middle",
 });
 
@@ -126,10 +127,7 @@ const Button: React.FC<ButtonProps> = ({
         opacity: disabled ? 0.5 : 1,
 
         "&:hover": {
-          background: isOutline ? "initial" : mainColor.darken(0.1).hex(),
-          borderColor: isOutline
-            ? altColor.lighten(0.1).hex()
-            : mainColor.darken(0.1).hex(),
+          background: mainColor.darken(0.1).hex(),
           textDecoration: disabled ? "none" : "underline",
         },
 

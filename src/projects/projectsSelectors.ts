@@ -1,6 +1,9 @@
 import { createSelector } from "reselect";
 import * as R from "ramda";
-import { toolNameByMappingSelector } from "~/allEntities/allEntitiesSelectors";
+import {
+  areExistsInTargetShownSelector,
+  toolNameByMappingSelector,
+} from "~/allEntities/allEntitiesSelectors";
 import { sourceTimeEntryCountByIdFieldSelectorFactory } from "~/timeEntries/timeEntriesSelectors";
 import { activeWorkspaceIdSelector } from "~/workspaces/workspacesSelectors";
 import {
@@ -73,7 +76,7 @@ export const projectIdToLinkedIdSelector = createSelector(
 );
 
 export const projectsForInclusionsTableSelector = createSelector(
-  (state: ReduxState) => state.allEntities.areExistsInTargetShown,
+  areExistsInTargetShownSelector,
   sourceProjectsInActiveWorkspaceSelector,
   targetProjectsByIdSelector,
   sourceTimeEntryCountByIdFieldSelectorFactory("projectId"),

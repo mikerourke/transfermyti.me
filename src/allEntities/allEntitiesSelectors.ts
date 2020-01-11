@@ -1,12 +1,8 @@
 import { createSelector } from "reselect";
 import * as R from "ramda";
 import { getEntityGroupDisplay, capitalize } from "~/utils";
-import { includedSourceClientsSelector } from "~/clients/clientsSelectors";
-import { includedSourceProjectsSelector } from "~/projects/projectsSelectors";
-import { includedSourceTagsSelector } from "~/tags/tagsSelectors";
-import { includedSourceTasksSelector } from "~/tasks/tasksSelectors";
-import { includedSourceTimeEntriesSelector } from "~/timeEntries/timeEntriesSelectors";
 import {
+  BaseEntityModel,
   CountsByEntityGroupModel,
   EntityGroup,
   FetchStatus,
@@ -40,25 +36,32 @@ export const transferCountsByEntityGroupSelector = createSelector(
     transferCountsByEntityGroup,
 );
 
+const findLengthOfIncluded = (
+  entityRecordsById: Record<string, BaseEntityModel>,
+): number =>
+  Object.values(entityRecordsById).filter(
+    entityRecord => entityRecord.isIncluded,
+  ).length;
+
 export const includedCountsByEntityGroupSelector = createSelector(
-  includedSourceClientsSelector,
-  includedSourceTagsSelector,
-  includedSourceProjectsSelector,
-  includedSourceTasksSelector,
-  includedSourceTimeEntriesSelector,
+  (state: ReduxState) => state.clients.source,
+  (state: ReduxState) => state.tags.source,
+  (state: ReduxState) => state.projects.source,
+  (state: ReduxState) => state.tasks.source,
+  (state: ReduxState) => state.timeEntries.source,
   (
-    sourceClients,
-    sourceTags,
-    sourceProjects,
-    sourceTasks,
-    sourceTimeEntries,
+    sourceClientsById,
+    sourceTagsById,
+    sourceProjectsById,
+    sourceTasksById,
+    sourceTimeEntriesById,
   ): CountsByEntityGroupModel =>
     ({
-      [EntityGroup.Clients]: sourceClients.length,
-      [EntityGroup.Tags]: sourceTags.length,
-      [EntityGroup.Projects]: sourceProjects.length,
-      [EntityGroup.Tasks]: sourceTasks.length,
-      [EntityGroup.TimeEntries]: sourceTimeEntries.length,
+      [EntityGroup.Clients]: findLengthOfIncluded(sourceClientsById),
+      [EntityGroup.Tags]: findLengthOfIncluded(sourceTagsById),
+      [EntityGroup.Projects]: findLengthOfIncluded(sourceProjectsById),
+      [EntityGroup.Tasks]: findLengthOfIncluded(sourceTasksById),
+      [EntityGroup.TimeEntries]: findLengthOfIncluded(sourceTimeEntriesById),
       [EntityGroup.UserGroups]: 0,
       [EntityGroup.Users]: 0,
     } as CountsByEntityGroupModel),
@@ -110,17 +113,17 @@ export const replaceMappingWithToolNameSelector = createSelector(
   },
 );
 
-export const toolDisplayNameByMapping = createSelector(
+const toolDisplayNameByMappingSelector = createSelector(
   toolNameByMappingSelector,
   (toolNameByMapping): Record<Mapping, string> => ({
-    source: capitalize(toolNameByMapping.source),
-    target: capitalize(toolNameByMapping.target),
+    [Mapping.Source]: capitalize(toolNameByMapping.source),
+    [Mapping.Target]: capitalize(toolNameByMapping.target),
   }),
 );
 
 export const toolHelpDetailsByMappingSelector = createSelector(
   toolNameByMappingSelector,
-  toolDisplayNameByMapping,
+  toolDisplayNameByMappingSelector,
   (
     toolNameByMapping,
     displayNameByMapping,
@@ -132,8 +135,8 @@ export const toolHelpDetailsByMappingSelector = createSelector(
       }[toolName]);
 
     const toolHelpDetailsByMapping: Record<Mapping, ToolHelpDetailsModel> = {
-      source: {} as ToolHelpDetailsModel,
-      target: {} as ToolHelpDetailsModel,
+      [Mapping.Source]: {} as ToolHelpDetailsModel,
+      [Mapping.Target]: {} as ToolHelpDetailsModel,
     };
 
     for (const [mapping, toolName] of Object.entries(toolNameByMapping)) {
@@ -146,4 +149,19 @@ export const toolHelpDetailsByMappingSelector = createSelector(
 
     return toolHelpDetailsByMapping;
   },
+);
+
+export const targetToolDisplayNameSelector = createSelector(
+  toolDisplayNameByMappingSelector,
+  (toolDisplayNameByMapping): string =>
+    toolDisplayNameByMapping[Mapping.Target],
+);
+
+export const targetToolTrackerUrlSelector = createSelector(
+  toolNameByMappingSelector,
+  (toolNameByMapping): string =>
+    ({
+      [ToolName.Clockify]: "https://clockify.me/tracker",
+      [ToolName.Toggl]: "https://toggl.com/app/timer",
+    }[toolNameByMapping[Mapping.Target]]),
 );

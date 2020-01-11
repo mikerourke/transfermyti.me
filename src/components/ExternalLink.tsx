@@ -1,19 +1,7 @@
 import React from "react";
-import { useTheme, ThemeColors } from "./emotion";
+import { ThemeColors } from "./emotion";
 
-interface Props extends Omit<React.HTMLProps<HTMLAnchorElement>, "color"> {
-  children: React.ReactNode;
-  color?: keyof ThemeColors;
-}
-
-const ExternalLink: React.FC<Props> = ({
-  children,
-  color = "navy",
-  ...props
-}) => {
-  const theme = useTheme();
-  const fillColor = theme.colors[color];
-
+export const getOpenInNewTabContent = (color: string): string => {
   /**
    * SVG icon taken from Font Awesome (`external-link-alt.svg`).
    * @see https://github.com/FortAwesome/Font-Awesome/blob/master/svgs/solid/external-link-alt.svg
@@ -34,27 +22,38 @@ const ExternalLink: React.FC<Props> = ({
       height='12px'
       width='12px'
     >
-      <path d='${openInNewTabPath}' fill='${fillColor}' fill-opacity='1'></path>
+      <path d='${openInNewTabPath}' fill='${color}' fill-opacity='1'></path>
     </svg>
   `;
 
-  return (
-    <a
-      css={{
-        color: fillColor,
-
-        "&:after": {
-          content: `url("data:image/svg+xml;utf8,${openInNewTagSvg}")`,
-          margin: "0.25rem",
-        },
-      }}
-      target="_blank"
-      rel="noopener noreferrer"
-      {...props}
-    >
-      {children}
-    </a>
-  );
+  return `url("data:image/svg+xml;utf8,${openInNewTagSvg}")`;
 };
+
+interface Props extends Omit<React.HTMLProps<HTMLAnchorElement>, "color"> {
+  children: React.ReactNode;
+  color?: keyof ThemeColors;
+}
+
+const ExternalLink: React.FC<Props> = ({
+  children,
+  color = "navy",
+  ...props
+}) => (
+  <a
+    css={theme => ({
+      color: theme.colors[color],
+
+      "&:after": {
+        content: getOpenInNewTabContent(theme.colors[color]),
+        margin: "0.25rem",
+      },
+    })}
+    target="_blank"
+    rel="noopener noreferrer"
+    {...props}
+  >
+    {children}
+  </a>
+);
 
 export default ExternalLink;
