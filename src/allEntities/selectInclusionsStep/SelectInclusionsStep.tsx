@@ -115,7 +115,7 @@ export const SelectInclusionsStepComponent: React.FC<Props> = props => {
       >
         <Button
           disabled={props.fetchAllFetchStatus === FetchStatus.InProcess}
-          variant="outlinePrimary"
+          variant="eggplant"
           onClick={handleRefreshClick}
         >
           Refresh

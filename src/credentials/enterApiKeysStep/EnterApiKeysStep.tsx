@@ -185,7 +185,7 @@ const EnterApiKeysStepComponent: React.FC<Props> = props => {
         onBackClick={handleBackClick}
         onNextClick={handleNextClick}
       >
-        <Button variant="outlinePrimary" onClick={handleResetClick}>
+        <Button variant="eggplant" onClick={handleResetClick}>
           Reset
         </Button>
       </NavigationButtonsRow>

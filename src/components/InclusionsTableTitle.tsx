@@ -6,12 +6,9 @@ import Flex from "./Flex";
 const Base = styled(Flex)(
   {
     button: {
+      borderRadius: "0.25rem",
       fontSize: "0.875rem",
       padding: "0.25rem 0.5rem",
-
-      ":not(:last-of-type)": {
-        marginRight: "0.75rem",
-      },
     },
   },
   ({ theme }) => ({
@@ -36,7 +33,7 @@ const InclusionsTableTitle: React.FC<Props> = ({
     <h4 {...props}>{children}</h4>
     <Button
       disabled={flipDisabled}
-      variant="outlinePrimary"
+      variant="outline"
       onClick={() => onFlipAreAllIncluded()}
     >
       Include All/None

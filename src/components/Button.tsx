@@ -14,15 +14,20 @@ const spinAnimation = keyframes({
   },
 });
 
-const Base = styled.button({
-  borderRadius: "0.375rem",
-  fontSize: "1.25rem",
-  fontWeight: 400,
-  padding: "0.5rem 0.75rem",
-  textAlign: "center",
-  transition: "0.3s all linear",
-  verticalAlign: "middle",
-});
+const Base = styled.button(
+  {
+    borderRadius: "0.375rem",
+    fontSize: "1.25rem",
+    fontWeight: 400,
+    padding: "0.5rem 0.75rem",
+    textAlign: "center",
+    transition: "0.3s all linear",
+    verticalAlign: "middle",
+  },
+  ({ theme }) => ({
+    boxShadow: theme.elevation.dp1,
+  }),
+);
 
 const Loading = styled.div<{ bgColor: string; fgColor: string }>(
   {
@@ -70,12 +75,7 @@ const Loading = styled.div<{ bgColor: string; fgColor: string }>(
   }),
 );
 
-type Variant =
-  | "primary"
-  | "secondary"
-  | "default"
-  | "outlinePrimary"
-  | "outlineDefault";
+type Variant = "default" | "eggplant" | "outline" | "primary" | "secondary";
 
 export interface ButtonProps
   extends React.ButtonHTMLAttributes<HTMLButtonElement> {
@@ -96,16 +96,16 @@ const Button: React.FC<ButtonProps> = ({
   const { colors } = useTheme();
   const mainColorByVariant = {
     default: colors.midnight,
-    outlineDefault: colors.secondary,
-    outlinePrimary: colors.secondary,
+    eggplant: colors.eggplant,
+    outline: colors.secondary,
     primary: colors.primary,
     secondary: colors.secondary,
   }[variant];
 
   const altColorByVariant = {
     default: colors.secondary,
-    outlineDefault: colors.midnight,
-    outlinePrimary: colors.primary,
+    eggplant: colors.secondary,
+    outline: colors.primary,
     primary: colors.secondary,
     secondary: colors.primary,
   }[variant];
@@ -113,21 +113,23 @@ const Button: React.FC<ButtonProps> = ({
   const mainColor = Color(mainColorByVariant);
   const altColor = Color(altColorByVariant);
 
-  const isOutline = /outline/gi.test(variant);
+  const isOutline = variant === "outline";
+  // Don't change the background color on hover if these conditions are met:
+  const isHoverInitial = isOutline || disabled || variant === "secondary";
 
   return (
     <Base
       aria-disabled={disabled}
       css={{
         background: mainColor.hex(),
-        borderWidth: 3,
-        borderStyle: "solid",
-        borderColor: isOutline ? altColor.hex() : mainColor.hex(),
+        border: isOutline ? `3px solid ${altColor.hex()}` : "none",
         color: altColor.hex(),
         opacity: disabled ? 0.5 : 1,
 
         "&:hover": {
-          background: mainColor.darken(0.1).hex(),
+          background: isHoverInitial
+            ? mainColor.hex()
+            : mainColor.darken(0.2).hex(),
           textDecoration: disabled ? "none" : "underline",
         },
 
