@@ -17,21 +17,22 @@ import {
  * and returns an object with a `source` and `target` property containing the
  * corresponding records by their `id` field.
  * @example
- *   const sourceRecords = [{ id: "S1", name: "Foo" }, { id: "S2", name: "Bar" }];
- *   const targetRecords = [{ id: "T1", name: "Foo" }, { id: "T2", name: "Baz" }];
+ *  const sourceRecords = [{ id: "S1", name: "Foo" }, { id: "S2", name: "Bar" }];
+ *  const targetRecords = [{ id: "T1", name: "Foo" }, { id: "T2", name: "Baz" }];
  *
- *   const result = linkEntitiesByIdByMapping(sourceRecords, targetRecords);
- *   console.log(result);
- *   {
- *     source: {
- *       S1: { id: "S1", name: "Foo", linkedId: "T1", isIncluded: false },
- *       S2: { id: "S2", name: "Bar", linkedId: null, isIncluded: true },
- *     },
- *     target: {
- *       T1: { id: "T1", name: "Foo", linkedId: "S1", isIncluded: false },
- *       T2: { id: "T2", name: "Bar", linkedId: null, isIncluded: true },
- *     },
- *   }
+ *  const result = linkEntitiesByIdByMapping(sourceRecords, targetRecords);
+ *  console.log(result);
+ *  // Logs out:
+ *  {
+ *    source: {
+ *      S1: { id: "S1", name: "Foo", linkedId: "T1", isIncluded: false },
+ *      S2: { id: "S2", name: "Bar", linkedId: null, isIncluded: true },
+ *    },
+ *    target: {
+ *      T1: { id: "T1", name: "Foo", linkedId: "S1", isIncluded: false },
+ *      T2: { id: "T2", name: "Bar", linkedId: null, isIncluded: true },
+ *    },
+ *  }
  */
 export function* linkEntitiesByIdByMapping<TEntity>(
   sourceRecords: TEntity[],

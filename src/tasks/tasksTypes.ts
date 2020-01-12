@@ -8,7 +8,7 @@ export interface TaskModel extends BaseEntityModel {
   name: string;
   estimate: string;
   projectId: string;
-  assigneeIds: string[] | null;
+  assigneeIds: string[];
   isActive: boolean;
 }
 

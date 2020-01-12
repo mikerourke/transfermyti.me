@@ -9,6 +9,13 @@ import {
 } from "~/constants";
 import { ToolName } from "~/typeDefs";
 
+/**
+ * Several Clockify endpoints support passing in a page size and page number
+ * as query params to the API fetch call. To ensure we're getting all the
+ * records associated with an entity group, this function keeps fetching
+ * pages and stops when the request returns either zero records or a record
+ * count less than the page size.
+ */
 export function* fetchPaginatedFromClockify<TEntity>(
   apiUrl: string,
   queryParams: object = {},
@@ -16,7 +23,7 @@ export function* fetchPaginatedFromClockify<TEntity>(
   let keepFetching = true;
   let currentPage = 1;
 
-  const allEntities: TEntity[] = [];
+  const allEntityRecords: TEntity[] = [];
 
   while (keepFetching) {
     const query = qs.stringify({
@@ -25,16 +32,19 @@ export function* fetchPaginatedFromClockify<TEntity>(
       ...queryParams,
     });
     const endpoint = `${apiUrl}?${query}`;
+    const entityRecords: TEntity[] = yield call(fetchArray, endpoint);
+    allEntityRecords.push(...entityRecords);
 
-    const entities: TEntity[] = yield call(fetchArray, endpoint);
-    keepFetching = entities.length === CLOCKIFY_API_PAGE_SIZE;
+    // The record count = maximum page size, which means there are either
+    // additional records that need to be fetched _or_ this is the last
+    // page and the record count is evenly divisible by the page size:
+    keepFetching = entityRecords.length === CLOCKIFY_API_PAGE_SIZE;
 
-    allEntities.push(...entities);
     yield delay(CLOCKIFY_API_DELAY);
     currentPage += 1;
   }
 
-  return allEntities;
+  return allEntityRecords;
 }
 
 /**
@@ -69,6 +79,12 @@ export function* fetchObject<TResponse>(
   return R.isNil(response) ? {} : response;
 }
 
+/**
+ * Attempts to make a fetch call to the specified endpoint. If the response
+ * returns a 429 status code, the API rate limit was hit. It waits a little over
+ * a second and tries again. If after 5 attempts, the fetch call was
+ * unsuccessful, throw an error.
+ */
 async function fetchWithRetries<TResponse>(
   endpoint: string,
   fetchOptions: unknown,
@@ -78,9 +94,15 @@ async function fetchWithRetries<TResponse>(
     return await fetch(endpoint, fetchOptions as RequestInit);
   } catch (err) {
     if (err.status === 429) {
-      // This is an arbitrary delay to ensure the API limits aren't reached.
-      // Eventually we can make this tool specific:
-      await delay(1_100);
+      if (attempt <= 0) {
+        throw new Error("Maximum API request attempts reached");
+      }
+
+      // Most API services allow at least 1 request per second. If we encounter
+      // a tool that doesn't adhere to this standard, we may have to make this
+      // tool-specific. I added a 200ms cushion to ensure we don't max out
+      // our attempts because of a time disparity:
+      await delay(1_200);
       return await fetchWithRetries(endpoint, fetchOptions, attempt - 1);
     } else {
       throw err;
@@ -88,6 +110,10 @@ async function fetchWithRetries<TResponse>(
   }
 }
 
+/**
+ * Returns the delay to use for making API requests based on the specified
+ * tool name.
+ */
 export function getApiDelayForTool(toolName: ToolName): number {
   return {
     [ToolName.Clockify]: CLOCKIFY_API_DELAY,

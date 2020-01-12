@@ -6,6 +6,11 @@ import { includedWorkspaceIdsByMappingSelector } from "~/workspaces/workspacesSe
 import { getApiDelayForTool } from "./fetchActions";
 import { ToolName } from "~/typeDefs";
 
+/**
+ * Fetches all the of the entity records in all workspaces associated with the
+ * specified tool name by calling the specified fetch function for each
+ * workspace.
+ */
 export function* fetchEntitiesForTool<TEntity>({
   toolName,
   apiFetchFunc,
@@ -19,9 +24,8 @@ export function* fetchEntitiesForTool<TEntity>({
     return [];
   }
 
-  const allRecords: TEntity[] = [];
   const apiDelay = getApiDelayForTool(toolName);
-
+  const allRecords: TEntity[] = [];
   for (const workspaceId of workspaceIds) {
     const recordsInWorkspace: TEntity[] = yield call(apiFetchFunc, workspaceId);
     allRecords.push(...recordsInWorkspace);
@@ -32,6 +36,10 @@ export function* fetchEntitiesForTool<TEntity>({
   return allRecords;
 }
 
+/**
+ * Returns the workspace IDs associated with the specified tool name based on
+ * the mapping in state.
+ */
 function* findWorkspaceIdsForTool(toolName: ToolName): SagaIterator<string[]> {
   const workspaceIdsByMapping = yield select(
     includedWorkspaceIdsByMappingSelector,

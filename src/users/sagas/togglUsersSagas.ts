@@ -64,7 +64,7 @@ export function* deleteTogglUsersSaga(sourceUsers: UserModel[]): SagaIterator {
   const includedProjectIds = yield select(includedSourceProjectIdsSelector);
 
   // We can't actually delete a user, we can only remove them from the
-  // workspace/project. In this case we're going to delete the user from each
+  // workspace/project. In this case we're going to remove the user from each
   // included project that's being deleted.
   for (const workspaceId of includedWorkspaceIds) {
     const projectUsers: TogglProjectUserResponseModel[] = yield call(
@@ -193,7 +193,7 @@ function transformFromResponse(
     email: user.email,
     isAdmin: null,
     isActive: true,
-    userGroupIds: user.userGroupIds || [],
+    userGroupIds: user?.userGroupIds ?? [],
     workspaceId,
     entryCount: 0,
     linkedId: null,
