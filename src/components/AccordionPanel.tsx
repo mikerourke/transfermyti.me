@@ -15,8 +15,8 @@ const AccordionPanel: React.FC<Props> = ({
 }) => {
   const [isExpanded, setIsExpanded] = React.useState<boolean>(false);
 
-  const titleId = `${rowNumber}AccordionTitle`;
-  const contentId = `${rowNumber}AccordionContent`;
+  const titleId = `accordionTitle${rowNumber}`;
+  const contentId = `accordionContent${rowNumber}`;
 
   return (
     <div {...props}>
