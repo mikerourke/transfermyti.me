@@ -20,7 +20,7 @@ export const showErrorNotification = createAction(
     let { message } = err;
     // This is a redux-saga error that should only occur during development, but
     // we're cleaning it up here (just in case):
-    if (/call\: argument fn is undefined or null/gi.test(message)) {
+    if (/call: argument fn is undefined or null/gi.test(message)) {
       message = "Parsing error";
     }
 

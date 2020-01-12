@@ -2,12 +2,12 @@ import { SagaIterator } from "@redux-saga/types";
 import differenceInMinutes from "date-fns/differenceInMinutes";
 import * as R from "ramda";
 import { call, select } from "redux-saga/effects";
-import { sourceProjectsByIdSelector } from "~/projects/projectsSelectors";
 import {
   BaseEntityModel,
   EntityGroup,
   Mapping,
   ProjectsByIdModel,
+  ReduxState,
   TimeEntriesByIdModel,
   TimeEntryModel,
 } from "~/typeDefs";
@@ -121,7 +121,13 @@ function* linkForMappingForTimeEntries(
   sourceTimeEntries: TimeEntryModel[],
   targetTimeEntries: TimeEntryModel[],
 ): SagaIterator<Record<Mapping, TimeEntriesByIdModel>> {
-  const sourceProjectsById = yield select(sourceProjectsByIdSelector);
+  // I can't use the `sourceProjectsById` selector here because I get a reselect
+  // error. Since the linking process only happens when the time entries are
+  // initially fetched/created, it shouldn't cause a performance hit due to
+  // lack of memoization:
+  const sourceProjectsById = yield select(
+    (state: ReduxState) => state.projects.source,
+  );
 
   // Expedite the matching process by sorting by start date (since the start
   // and end date/time are compared against each other):

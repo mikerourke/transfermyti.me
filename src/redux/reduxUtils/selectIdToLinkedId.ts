@@ -7,17 +7,17 @@ import { ValidEntity } from "~/typeDefs";
  * `select` because it's used in selectors.
  * @example
  *  const sourceTagsById = {
- *    srctag1: { id: "srctag1", name: "Tag 1", linkedId: "tartag1" },
- *    srctag2: { id: "srctag2", name: "Tag 2", linkedId: "tartag2" },
+ *    srcTag1: { id: "srcTag1", name: "Tag 1", linkedId: "tarTag1" },
+ *    srcTag2: { id: "srcTag2", name: "Tag 2", linkedId: "tarTag2" },
  *  }
  *
  *  console.log(selectIdToLinkedId(sourceTagsById));
  *  // Logs out:
  *  {
- *    srctag1: tartag1,
- *    tartag1: srctag1,
- *    srctag2: tartag2,
- *    tartag2: srctag2,
+ *    srcTag1: tarTag1,
+ *    tarTag1: srcTag1,
+ *    srcTag2: tarTag2,
+ *    tarTag2: srcTag2,
  *  }
  */
 export function selectIdToLinkedId<TEntity>(

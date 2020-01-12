@@ -23,6 +23,7 @@ export const flipIsUserGroupIncluded = createAction(
   "@userGroups/FLIP_IS_INCLUDED",
 )<string>();
 
+// TODO: When adding multi-user transfer, we'll probably need to add this in.
 export const addUserIdToGroup = createAction(
   "@userGroups/ADD_USER_ID_TO_GROUP",
 )<{ mapping: Mapping; userId: string; userGroupId: string }>();

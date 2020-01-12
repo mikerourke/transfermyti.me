@@ -36,7 +36,7 @@ function createAnalyticsMiddleware(): Middleware {
     if (
       !isActionOf(
         [
-          // These are useful for determing how long the fetch/delete/transfer
+          // These are useful for determining how long the fetch/delete/transfer
           // action takes. If it's taking a super long time (relative to the
           // record count), is it a rate limiting issue? I believe there are
           // endpoints that can handle bulk updates/fetches, so it might be

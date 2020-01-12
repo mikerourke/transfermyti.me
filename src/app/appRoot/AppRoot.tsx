@@ -17,7 +17,7 @@ const Main = styled.main({
 });
 
 const AppRoot: React.FC = props => {
-  const description = "Transfer your time entries between time tracking tools.";
+  const description = "Transfer your data between time tracking tools.";
   const title = "transfermyti.me";
 
   return (

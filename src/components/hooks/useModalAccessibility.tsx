@@ -68,7 +68,7 @@ class ModalDelegator {
     const lastFocused = document.activeElement as HTMLElement;
     this.elementsMap.set(ElementKey.LastFocused, lastFocused);
 
-    const [focusableFirst, focusableLast] = this.findFocusabledElements();
+    const [focusableFirst, focusableLast] = this.findFocusableElements();
     this.elementsMap.set(ElementKey.FocusableFirst, focusableFirst);
     this.elementsMap.set(ElementKey.FocusableLast, focusableLast);
 
@@ -117,7 +117,7 @@ class ModalDelegator {
    * Finds the first and last focusable elements on the modal. If none are
    * found, throw an error.
    */
-  private findFocusabledElements(): [HTMLElement, HTMLElement] {
+  private findFocusableElements(): [HTMLElement, HTMLElement] {
     // Types of elements that can receive focus:
     const focusableSelector = [
       "a[href]",
