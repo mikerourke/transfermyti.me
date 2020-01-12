@@ -1,18 +1,16 @@
 import Color from "color";
 import React from "react";
+import ReactGA from "react-ga";
 import { connect } from "react-redux";
 import { PayloadActionCreator } from "typesafe-actions";
 import {
-  targetToolTrackerUrlSelector,
   targetToolDisplayNameSelector,
+  targetToolTrackerUrlSelector,
 } from "~/allEntities/allEntitiesSelectors";
 import { flushCredentials } from "~/credentials/credentialsActions";
-import { Flex, styled, getOpenInNewTabContent } from "~/components";
+import { Flex, getOpenInNewTabContent, styled } from "~/components";
 import BuyMeACoffeeButton from "./BuyMeACoffeeButton";
-import { ReduxState } from "~/typeDefs";
-
-// TODO: Add link to view records on the transfer tool (if tool action was
-//       for transfer). Also, maybe a link to buy me a coffee or something?
+import { AnalyticsEventCategory, ReduxState } from "~/typeDefs";
 
 const Celebrate: React.FC = () => (
   <span role="img" aria-label="Celebrate">
@@ -74,6 +72,14 @@ export const ToolActionSuccessComponent: React.FC<Props> = props => {
     props.onFlushCredentials();
   }, []);
 
+  const handleGoToTargetClick = (): void => {
+    ReactGA.event({
+      category: AnalyticsEventCategory.UIInteraction,
+      action: "Go To Result",
+      label: `Target: ${props.targetToolDisplayName}`,
+    });
+  };
+
   return (
     <Flex alignItems="center" justifyContent="center" direction="column">
       <h1 css={{ fontSize: "3rem", margin: "2rem 0" }}>
@@ -89,7 +95,12 @@ export const ToolActionSuccessComponent: React.FC<Props> = props => {
         allowFullScreen
       />
       <Flex css={{ marginTop: "3rem" }}>
-        <ViewDataLinkButton href={props.targetToolTrackerUrl}>
+        <ViewDataLinkButton
+          href={props.targetToolTrackerUrl}
+          rel="noopener noreferrer"
+          target="_blank"
+          onClick={handleGoToTargetClick}
+        >
           <span>Go To {props.targetToolDisplayName}</span>
         </ViewDataLinkButton>
         <BuyMeACoffeeButton />

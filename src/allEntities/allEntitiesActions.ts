@@ -1,6 +1,5 @@
 import { createAction, createAsyncAction } from "typesafe-actions";
 import {
-  CountsByEntityGroupModel,
   EntityGroup,
   FetchStatus,
   ToolAction,
@@ -56,10 +55,6 @@ export const updateEntityGroupInProcess = createAction(
 export const resetTransferCountsByEntityGroup = createAction(
   "@allEntities/RESET_TRANSFER_COUNTS_BY_ENTITY_GROUP",
 )<void>();
-
-export const updateTransferCountsByEntityGroup = createAction(
-  "@allEntities/UPDATE_TRANSFER_COUNTS_BY_ENTITY_GROUP",
-)<CountsByEntityGroupModel>();
 
 export const incrementEntityGroupTransferCompletedCount = createAction(
   "@allEntities/INCREMENT_ENTITY_GROUP_TRANSFER_COMPLETED_COUNT",

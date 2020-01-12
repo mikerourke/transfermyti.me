@@ -48,8 +48,8 @@ const ExternalLink: React.FC<Props> = ({
         margin: "0.25rem",
       },
     })}
-    target="_blank"
     rel="noopener noreferrer"
+    target="_blank"
     {...props}
   >
     {children}

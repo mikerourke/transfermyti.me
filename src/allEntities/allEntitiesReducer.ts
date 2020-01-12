@@ -148,13 +148,6 @@ export const allEntitiesReducer = createReducer<
     transferCountsByEntityGroup: { ...DEFAULT_TRANSFER_COUNTS },
   }))
   .handleAction(
-    allEntitiesActions.updateTransferCountsByEntityGroup,
-    (state, { payload }) => ({
-      ...state,
-      transferCountsByEntityGroup: payload,
-    }),
-  )
-  .handleAction(
     allEntitiesActions.incrementEntityGroupTransferCompletedCount,
     (state, { payload }) =>
       R.over<AllEntitiesState>(
