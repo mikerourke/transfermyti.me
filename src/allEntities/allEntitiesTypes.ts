@@ -48,6 +48,8 @@ export interface BaseEntityModel {
   memberOf?: EntityGroup;
 }
 
+export type ValidEntity<TEntity> = TEntity & BaseEntityModel;
+
 export type TableViewModel<TEntity> = TEntity & {
   existsInTarget: boolean;
   isActiveInSource: boolean;

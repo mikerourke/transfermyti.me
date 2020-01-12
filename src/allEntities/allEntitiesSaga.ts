@@ -5,8 +5,8 @@ import * as projectsSagas from "~/projects/sagas/projectsSagas";
 import * as tagsSagas from "~/tags/sagas/tagsSagas";
 import * as tasksSagas from "~/tasks/sagas/tasksSagas";
 import * as timeEntriesSagas from "~/timeEntries/sagas/timeEntriesSagas";
-// import * as userGroupsSagas from "~/userGroups/sagas/userGroupsSagas";
-// import * as usersSagas from "~/users/sagas/usersSagas";
+import * as userGroupsSagas from "~/userGroups/sagas/userGroupsSagas";
+import * as usersSagas from "~/users/sagas/usersSagas";
 import * as allEntitiesActions from "./allEntitiesActions";
 import { EntityGroup } from "~/typeDefs";
 
@@ -119,6 +119,14 @@ function* deleteAllEntitiesSaga(): SagaIterator {
  */
 function* fetchAllEntitiesSaga(): SagaIterator {
   try {
+    yield put(allEntitiesActions.updateEntityGroupInProcess(EntityGroup.Users));
+    yield call(usersSagas.fetchUsersSaga);
+
+    yield put(
+      allEntitiesActions.updateEntityGroupInProcess(EntityGroup.UserGroups),
+    );
+    yield call(userGroupsSagas.fetchUserGroupsSaga);
+
     yield put(
       allEntitiesActions.updateEntityGroupInProcess(EntityGroup.Clients),
     );
@@ -134,13 +142,6 @@ function* fetchAllEntitiesSaga(): SagaIterator {
 
     yield put(allEntitiesActions.updateEntityGroupInProcess(EntityGroup.Tasks));
     yield call(tasksSagas.fetchTasksSaga);
-
-    // TODO: Add this back in once you hash out multi-user transfers.
-    // yield put(allEntitiesActions.updateEntityGroupInProcess(EntityGroup.Users));
-    // yield call(usersSagas.fetchUsersSaga);
-
-    // yield put(allEntitiesActions.updateEntityGroupInProcess(EntityGroup.UserGroups));
-    // yield call(userGroupsSagas.fetchUserGroupsSaga);
 
     yield put(
       allEntitiesActions.updateEntityGroupInProcess(EntityGroup.TimeEntries),

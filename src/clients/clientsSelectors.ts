@@ -1,5 +1,6 @@
 import { createSelector, createStructuredSelector, Selector } from "reselect";
 import * as R from "ramda";
+import { selectIdToLinkedId } from "~/redux/reduxUtils";
 import { mappingByToolNameSelector } from "~/allEntities/allEntitiesSelectors";
 import { sourceTimeEntryCountByIdFieldSelectorFactory } from "~/timeEntries/timeEntriesSelectors";
 import { activeWorkspaceIdSelector } from "~/workspaces/workspacesSelectors";
@@ -51,6 +52,12 @@ export const sourceClientsInActiveWorkspaceSelector = createSelector(
     sourceClients.filter(
       sourceClient => sourceClient.workspaceId === activeWorkspaceId,
     ),
+);
+
+export const clientIdToLinkedIdSelector = createSelector(
+  sourceClientsByIdSelector,
+  (sourceClientsById): Record<string, string> =>
+    selectIdToLinkedId(sourceClientsById),
 );
 
 const projectCountBySourceClientIdSelector = createSelector(

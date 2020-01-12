@@ -3,9 +3,9 @@ import * as R from "ramda";
 import { call, select } from "redux-saga/effects";
 import * as reduxUtils from "~/redux/reduxUtils";
 import { credentialsByToolNameSelector } from "~/credentials/credentialsSelectors";
-import { sourceProjectsByIdSelector } from "~/projects/projectsSelectors";
+import { projectIdToLinkedIdSelector } from "~/projects/projectsSelectors";
 import { targetTagIdsSelectorFactory } from "~/tags/tagsSelectors";
-import { sourceTasksByIdSelector } from "~/tasks/tasksSelectors";
+import { taskIdToLinkedIdSelector } from "~/tasks/tasksSelectors";
 import { ClockifyProjectResponseModel } from "~/projects/sagas/clockifyProjectsSagas";
 import { ClockifyTagResponseModel } from "~/tags/sagas/clockifyTagsSagas";
 import { ClockifyTaskResponseModel } from "~/tasks/sagas/clockifyTasksSagas";
@@ -79,20 +79,22 @@ function* createClockifyTimeEntry(
   sourceTimeEntry: TimeEntryModel,
   targetWorkspaceId: string,
 ): SagaIterator<TimeEntryModel> {
-  const targetProjectId = yield call(
-    reduxUtils.findTargetEntityId,
-    sourceTimeEntry.projectId,
-    sourceProjectsByIdSelector,
-  );
+  const projectIdToLinkedId = yield select(projectIdToLinkedIdSelector);
+  const targetProjectId = R.propOr<
+    string | null,
+    Record<string, string>,
+    string
+  >(null, sourceTimeEntry.projectId ?? "", projectIdToLinkedId);
 
   const targetTagIds = yield select(
     targetTagIdsSelectorFactory(sourceTimeEntry.tagIds),
   );
 
-  const targetTaskId = yield call(
-    reduxUtils.findTargetEntityId,
-    sourceTimeEntry.taskId,
-    sourceTasksByIdSelector,
+  const taskIdToLinkedId = yield select(taskIdToLinkedIdSelector);
+  const targetTaskId = R.propOr<string | null, Record<string, string>, string>(
+    null,
+    sourceTimeEntry.taskId ?? "",
+    taskIdToLinkedId,
   );
 
   const timeEntryRequest = {

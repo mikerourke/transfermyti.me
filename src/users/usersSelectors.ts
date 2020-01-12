@@ -1,13 +1,16 @@
 import { createSelector } from "reselect";
 import * as R from "ramda";
-import {
-  activeWorkspaceIdSelector,
-  workspaceIdToLinkedIdSelector,
-} from "~/workspaces/workspacesSelectors";
-import { ReduxState, UserModel } from "~/typeDefs";
+import { selectIdToLinkedId } from "~/redux/reduxUtils";
+import { workspaceIdToLinkedIdSelector } from "~/workspaces/workspacesSelectors";
+import { ReduxState, UserModel, UsersByIdModel } from "~/typeDefs";
+
+const sourceUsersByIdSelector = createSelector(
+  (state: ReduxState) => state.users.source,
+  (sourceUsersById): UsersByIdModel => sourceUsersById,
+);
 
 export const sourceUsersSelector = createSelector(
-  (state: ReduxState) => state.users.source,
+  sourceUsersByIdSelector,
   (sourceUsersById): UserModel[] => Object.values(sourceUsersById),
 );
 
@@ -15,6 +18,12 @@ export const includedSourceUsersSelector = createSelector(
   sourceUsersSelector,
   (sourceUsers): UserModel[] =>
     sourceUsers.filter(sourceUser => sourceUser.isIncluded),
+);
+
+export const userIdToLinkedIdSelector = createSelector(
+  sourceUsersByIdSelector,
+  (sourceUsersById): Record<string, string> =>
+    selectIdToLinkedId(sourceUsersById),
 );
 
 export const sourceUsersForTransferSelector = createSelector(
@@ -26,7 +35,7 @@ export const sourceUsersForTransferSelector = createSelector(
 export const sourceUserEmailsByWorkspaceIdSelector = createSelector(
   sourceUsersSelector,
   workspaceIdToLinkedIdSelector,
-  (sourceUsers, workspaceIdToLinkedId) => {
+  (sourceUsers, workspaceIdToLinkedId): Record<string, string[]> => {
     const emailsByWorkspaceId: Record<string, string[]> = {};
 
     for (const sourceUser of sourceUsers) {
@@ -47,11 +56,4 @@ export const sourceUserEmailsByWorkspaceIdSelector = createSelector(
 
     return emailsByWorkspaceId;
   },
-);
-
-export const sourceUsersInActiveWorkspaceSelector = createSelector(
-  sourceUsersSelector,
-  activeWorkspaceIdSelector,
-  (sourceUsers, workspaceId): UserModel[] =>
-    sourceUsers.filter(user => user.workspaceId === workspaceId),
 );

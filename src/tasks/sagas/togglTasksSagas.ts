@@ -1,7 +1,8 @@
 import { SagaIterator } from "@redux-saga/types";
-import { call } from "redux-saga/effects";
+import * as R from "ramda";
+import { call, select } from "redux-saga/effects";
 import * as reduxUtils from "~/redux/reduxUtils";
-import { sourceProjectsByIdSelector } from "~/projects/projectsSelectors";
+import { projectIdToLinkedIdSelector } from "~/projects/projectsSelectors";
 import { EntityGroup, TaskModel, ToolName } from "~/typeDefs";
 
 interface TogglTaskResponseModel {
@@ -53,11 +54,19 @@ export function* fetchTogglTasksSaga(): SagaIterator<TaskModel[]> {
  * @see https://github.com/toggl/toggl_api_docs/blob/master/chapters/tasks.md#create-a-task
  */
 function* createTogglTask(sourceTask: TaskModel): SagaIterator<TaskModel> {
-  const targetProjectId = yield call(
-    reduxUtils.findTargetEntityId,
-    sourceTask.projectId,
-    sourceProjectsByIdSelector,
-  );
+  const projectIdToLinkedId = yield select(projectIdToLinkedIdSelector);
+  const targetProjectId = R.propOr<
+    string | null,
+    Record<string, string>,
+    string
+  >(null, sourceTask.projectId, projectIdToLinkedId);
+
+  if (R.isNil(targetProjectId)) {
+    throw new Error(
+      `Could not find target project ID for Toggl task ${sourceTask.name}`,
+    );
+  }
+
   const taskRequest = {
     name: sourceTask.name,
     pid: +targetProjectId,

@@ -1,9 +1,9 @@
 import { SagaIterator } from "@redux-saga/types";
 import * as R from "ramda";
-import { call, delay } from "redux-saga/effects";
+import { call, delay, select } from "redux-saga/effects";
 import { CLOCKIFY_API_DELAY } from "~/constants";
 import * as reduxUtils from "~/redux/reduxUtils";
-import { sourceClientsByIdSelector } from "~/clients/clientsSelectors";
+import { clientIdToLinkedIdSelector } from "~/clients/clientsSelectors";
 import {
   ClockifyHourlyRateResponseModel,
   ClockifyMembershipResponseModel,
@@ -78,11 +78,13 @@ function* createClockifyProject(
   sourceProject: ProjectModel,
   targetWorkspaceId: string,
 ): SagaIterator<ProjectModel> {
-  const targetClientId = yield call(
-    reduxUtils.findTargetEntityId,
-    sourceProject.clientId,
-    sourceClientsByIdSelector,
-  );
+  const clientIdToLinkedId = yield select(clientIdToLinkedIdSelector);
+  const targetClientId = R.propOr<
+    string | null,
+    Record<string, string>,
+    string
+  >(null, sourceProject.clientId ?? "", clientIdToLinkedId);
+
   const projectRequest = {
     name: sourceProject.name,
     clientId: R.isNil(targetClientId) ? undefined : targetClientId,

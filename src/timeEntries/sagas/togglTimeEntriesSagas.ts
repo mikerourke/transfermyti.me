@@ -6,14 +6,14 @@ import format from "date-fns/format";
 import startOfYear from "date-fns/startOfYear";
 import qs from "qs";
 import * as R from "ramda";
-import { call, select, delay } from "redux-saga/effects";
+import { call, delay, select } from "redux-saga/effects";
 import { TOGGL_API_DELAY } from "~/constants";
 import * as reduxUtils from "~/redux/reduxUtils";
 import { clientIdsByNameSelectorFactory } from "~/clients/clientsSelectors";
 import { credentialsByToolNameSelector } from "~/credentials/credentialsSelectors";
-import { sourceProjectsByIdSelector } from "~/projects/projectsSelectors";
+import { projectIdToLinkedIdSelector } from "~/projects/projectsSelectors";
 import { tagIdsByNameBySelectorFactory } from "~/tags/tagsSelectors";
-import { sourceTasksByIdSelector } from "~/tasks/tasksSelectors";
+import { taskIdToLinkedIdSelector } from "~/tasks/tasksSelectors";
 import { EntityGroup, TimeEntryModel, ToolName } from "~/typeDefs";
 
 interface TogglTotalCurrencyModel {
@@ -99,16 +99,18 @@ function* createTogglTimeEntry(
   sourceTimeEntry: TimeEntryModel,
   targetWorkspaceId: string,
 ): SagaIterator {
-  const targetProjectId = yield call(
-    reduxUtils.findTargetEntityId,
-    sourceTimeEntry.projectId,
-    sourceProjectsByIdSelector,
-  );
+  const projectIdToLinkedId = yield select(projectIdToLinkedIdSelector);
+  const targetProjectId = R.propOr<
+    string | null,
+    Record<string, string>,
+    string
+  >(null, sourceTimeEntry.projectId, projectIdToLinkedId);
 
-  const targetTaskId = yield call(
-    reduxUtils.findTargetEntityId,
-    sourceTimeEntry.taskId,
-    sourceTasksByIdSelector,
+  const taskIdToLinkedId = yield select(taskIdToLinkedIdSelector);
+  const targetTaskId = R.propOr<string | null, Record<string, string>, string>(
+    null,
+    sourceTimeEntry.taskId ?? "",
+    taskIdToLinkedId,
   );
 
   const timeEntryRequest = {

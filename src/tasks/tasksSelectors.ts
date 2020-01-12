@@ -1,5 +1,6 @@
 import { createSelector } from "reselect";
 import * as R from "ramda";
+import { selectIdToLinkedId } from "~/redux/reduxUtils";
 import { sourceProjectsByIdSelector } from "~/projects/projectsSelectors";
 import { sourceTimeEntryCountByIdFieldSelectorFactory } from "~/timeEntries/timeEntriesSelectors";
 import { activeWorkspaceIdSelector } from "~/workspaces/workspacesSelectors";
@@ -46,6 +47,12 @@ export const sourceTasksInActiveWorkspaceSelector = createSelector(
   sourceTasksSelector,
   (workspaceId, sourceTasks): TaskModel[] =>
     sourceTasks.filter(task => task.workspaceId === workspaceId),
+);
+
+export const taskIdToLinkedIdSelector = createSelector(
+  sourceTasksByIdSelector,
+  (sourceTasksById): Record<string, string> =>
+    selectIdToLinkedId(sourceTasksById),
 );
 
 export const tasksForInclusionsTableSelector = createSelector(

@@ -1,5 +1,6 @@
 import { createSelector } from "reselect";
 import * as R from "ramda";
+import { selectIdToLinkedId } from "~/redux/reduxUtils";
 import {
   areExistsInTargetShownSelector,
   toolNameByMappingSelector,
@@ -61,18 +62,8 @@ export const sourceProjectsInActiveWorkspaceSelector = createSelector(
 
 export const projectIdToLinkedIdSelector = createSelector(
   sourceProjectsByIdSelector,
-  sourceProjectsById => {
-    const projectIdToLinkedId: Record<string, string> = {};
-
-    for (const [id, project] of Object.entries(sourceProjectsById)) {
-      if (!R.isNil(project.linkedId)) {
-        projectIdToLinkedId[id] = project.linkedId;
-        projectIdToLinkedId[project.linkedId] = project.id;
-      }
-    }
-
-    return projectIdToLinkedId;
-  },
+  (sourceProjectsById): Record<string, string> =>
+    selectIdToLinkedId(sourceProjectsById),
 );
 
 export const projectsForInclusionsTableSelector = createSelector(

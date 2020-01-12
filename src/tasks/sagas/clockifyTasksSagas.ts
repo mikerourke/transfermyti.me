@@ -7,6 +7,7 @@ import {
   projectIdToLinkedIdSelector,
   projectsByWorkspaceIdByToolNameSelector,
 } from "~/projects/projectsSelectors";
+import { userIdToLinkedIdSelector } from "~/users/usersSelectors";
 import { EntityGroup, TaskModel, ToolName } from "~/typeDefs";
 
 type ClockifyTaskStatus = "ACTIVE" | "DONE";
@@ -67,14 +68,31 @@ function* createClockifyTask(
   targetWorkspaceId: string,
 ): SagaIterator<TaskModel> {
   const projectIdToLinkedId = yield select(projectIdToLinkedIdSelector);
-  const targetProjectId = projectIdToLinkedId[sourceTask.projectId];
+  const targetProjectId = R.propOr<
+    string | null,
+    Record<string, string>,
+    string
+  >(null, sourceTask.projectId, projectIdToLinkedId);
 
-  // TODO: Add assigneeIds selector.
-  const assigneeIds: string[] = [];
+  if (R.isNil(targetProjectId)) {
+    throw new Error(
+      `Could not find target project ID for Clockify task ${sourceTask.name}`,
+    );
+  }
+
+  const userIdToLinkedId = yield select(userIdToLinkedIdSelector);
+  const targetAssigneeIds: string[] = [];
+  for (const sourceAssigneeId of sourceTask.assigneeIds) {
+    const assigneeLinkedId = userIdToLinkedId[sourceAssigneeId];
+    if (assigneeLinkedId) {
+      targetAssigneeIds.push(assigneeLinkedId);
+    }
+  }
+
   const taskRequest = {
     name: sourceTask.name,
     projectId: targetProjectId,
-    assigneeIds,
+    assigneeIds: targetAssigneeIds.length !== 0 ? targetAssigneeIds : undefined,
     estimate: sourceTask.estimate,
     status: sourceTask.isActive ? "ACTIVE" : "DONE",
   };
@@ -147,7 +165,7 @@ function transformFromResponse(
     name: task.name,
     estimate: task.estimate,
     projectId: task.projectId,
-    assigneeIds: task.assigneeIds,
+    assigneeIds: task.assigneeIds ?? [],
     isActive: task.status === "ACTIVE",
     workspaceId,
     entryCount: 0,
