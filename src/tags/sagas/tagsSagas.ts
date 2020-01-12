@@ -6,7 +6,7 @@ import {
   toolActionSelector,
   toolNameByMappingSelector,
 } from "~/allEntities/allEntitiesSelectors";
-import { showFetchErrorNotification } from "~/app/appActions";
+import { showErrorNotification } from "~/app/appActions";
 import * as tagsActions from "~/tags/tagsActions";
 import {
   includedSourceTagsSelector,
@@ -40,7 +40,7 @@ export function* createTagsSaga(): SagaIterator {
 
     yield put(tagsActions.createTags.success(tagsByIdByMapping));
   } catch (err) {
-    yield put(showFetchErrorNotification(err));
+    yield put(showErrorNotification(err));
     yield put(tagsActions.createTags.failure());
   }
 }
@@ -63,7 +63,7 @@ export function* deleteTagsSaga(): SagaIterator {
 
     yield put(tagsActions.deleteTags.success());
   } catch (err) {
-    yield put(showFetchErrorNotification(err));
+    yield put(showErrorNotification(err));
     yield put(tagsActions.deleteTags.failure());
   }
 }
@@ -102,7 +102,7 @@ export function* fetchTagsSaga(): SagaIterator {
 
     yield put(tagsActions.fetchTags.success(tagsByIdByMapping));
   } catch (err) {
-    yield put(showFetchErrorNotification(err));
+    yield put(showErrorNotification(err));
     yield put(tagsActions.fetchTags.failure());
   }
 }

@@ -1,7 +1,7 @@
 import cuid from "cuid";
 import { createAction } from "typesafe-actions";
-import { capitalize, getIfDev } from "~/utils";
-import { NotificationModel, ToolName } from "~/typeDefs";
+import { getIfDev } from "~/utils";
+import { NotificationModel } from "~/typeDefs";
 
 export const showNotification = createAction(
   "@app/SHOW_NOTIFICATION",
@@ -10,20 +10,23 @@ export const showNotification = createAction(
   },
 )<NotificationModel>();
 
-// REFACTOR: Change this to `showErrorNotification` and extrapolate error type from the Error object.
-export const showFetchErrorNotification = createAction(
+export const showErrorNotification = createAction(
   "@app/SHOW_FETCH_ERROR_NOTIFICATION",
-  (err: Error & { toolName: ToolName }) => {
+  (err: Error) => {
     if (getIfDev()) {
       console.error(err);
     }
 
-    const name = capitalize(err.toolName);
-    const message = `An error occurred when making a request to the ${name} API`;
+    let { message } = err;
+    // This is a redux-saga error that should only occur during development, but
+    // we're cleaning it up here (just in case):
+    if (/call\: argument fn is undefined or null/gi.test(message)) {
+      message = "Parsing error";
+    }
 
     return {
       id: cuid(),
-      message,
+      message: `The following error occurred: ${message}`,
       type: "error",
     };
   },

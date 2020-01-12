@@ -6,7 +6,7 @@ import {
   toolActionSelector,
   toolNameByMappingSelector,
 } from "~/allEntities/allEntitiesSelectors";
-import { showFetchErrorNotification } from "~/app/appActions";
+import { showErrorNotification } from "~/app/appActions";
 import * as timeEntriesActions from "~/timeEntries/timeEntriesActions";
 import {
   includedSourceTimeEntriesSelector,
@@ -54,7 +54,7 @@ export function* createTimeEntriesSaga(): SagaIterator {
       timeEntriesActions.createTimeEntries.success(timeEntriesByIdByMapping),
     );
   } catch (err) {
-    yield put(showFetchErrorNotification(err));
+    yield put(showErrorNotification(err));
     yield put(timeEntriesActions.createTimeEntries.failure());
   }
 }
@@ -77,7 +77,7 @@ export function* deleteTimeEntriesSaga(): SagaIterator {
 
     yield put(timeEntriesActions.deleteTimeEntries.success());
   } catch (err) {
-    yield put(showFetchErrorNotification(err));
+    yield put(showErrorNotification(err));
     yield put(timeEntriesActions.deleteTimeEntries.failure());
   }
 }
@@ -121,7 +121,7 @@ export function* fetchTimeEntriesSaga(): SagaIterator {
       timeEntriesActions.fetchTimeEntries.success(timeEntriesByIdByMapping),
     );
   } catch (err) {
-    yield put(showFetchErrorNotification(err));
+    yield put(showErrorNotification(err));
     yield put(timeEntriesActions.fetchTimeEntries.failure());
   }
 }

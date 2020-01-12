@@ -6,7 +6,7 @@ import {
   toolActionSelector,
   toolNameByMappingSelector,
 } from "~/allEntities/allEntitiesSelectors";
-import { showFetchErrorNotification } from "~/app/appActions";
+import { showErrorNotification } from "~/app/appActions";
 import * as userGroupsActions from "~/userGroups/userGroupsActions";
 import {
   includedSourceUserGroupsSelector,
@@ -42,7 +42,7 @@ export function* createUserGroupsSaga(): SagaIterator {
       userGroupsActions.createUserGroups.success(userGroupsByIdByMapping),
     );
   } catch (err) {
-    yield put(showFetchErrorNotification(err));
+    yield put(showErrorNotification(err));
     yield put(userGroupsActions.createUserGroups.failure());
   }
 }
@@ -65,7 +65,7 @@ export function* deleteUserGroupsSaga(): SagaIterator {
 
     yield put(userGroupsActions.deleteUserGroups.success());
   } catch (err) {
-    yield put(showFetchErrorNotification(err));
+    yield put(showErrorNotification(err));
     yield put(userGroupsActions.deleteUserGroups.failure());
   }
 }
@@ -106,7 +106,7 @@ export function* fetchUserGroupsSaga(): SagaIterator {
       userGroupsActions.fetchUserGroups.success(userGroupsByIdByMapping),
     );
   } catch (err) {
-    yield put(showFetchErrorNotification(err));
+    yield put(showErrorNotification(err));
     yield put(userGroupsActions.fetchUserGroups.failure());
   }
 }

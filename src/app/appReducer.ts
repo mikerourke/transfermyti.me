@@ -14,7 +14,7 @@ export const initialState: AppState = {
 
 export const appReducer = createReducer<AppState, AppAction>(initialState)
   .handleAction(
-    [appActions.showNotification, appActions.showFetchErrorNotification],
+    [appActions.showNotification, appActions.showErrorNotification],
     (state, { payload }) => ({
       ...state,
       notifications: [...state.notifications, payload],

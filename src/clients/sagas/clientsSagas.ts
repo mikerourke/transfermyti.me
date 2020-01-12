@@ -6,7 +6,7 @@ import {
   toolActionSelector,
   toolNameByMappingSelector,
 } from "~/allEntities/allEntitiesSelectors";
-import { showFetchErrorNotification } from "~/app/appActions";
+import { showErrorNotification } from "~/app/appActions";
 import * as clientsActions from "~/clients/clientsActions";
 import {
   includedSourceClientsSelector,
@@ -40,7 +40,7 @@ export function* createClientsSaga(): SagaIterator {
 
     yield put(clientsActions.createClients.success(clientsByIdByMapping));
   } catch (err) {
-    yield put(showFetchErrorNotification(err));
+    yield put(showErrorNotification(err));
     yield put(clientsActions.createClients.failure());
   }
 }
@@ -63,7 +63,7 @@ export function* deleteClientsSaga(): SagaIterator {
 
     yield put(clientsActions.deleteClients.success());
   } catch (err) {
-    yield put(showFetchErrorNotification(err));
+    yield put(showErrorNotification(err));
     yield put(clientsActions.deleteClients.failure());
   }
 }
@@ -102,7 +102,7 @@ export function* fetchClientsSaga(): SagaIterator {
 
     yield put(clientsActions.fetchClients.success(clientsByIdByMapping));
   } catch (err) {
-    yield put(showFetchErrorNotification(err));
+    yield put(showErrorNotification(err));
     yield put(clientsActions.fetchClients.failure());
   }
 }

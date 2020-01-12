@@ -6,7 +6,7 @@ import {
   toolActionSelector,
   toolNameByMappingSelector,
 } from "~/allEntities/allEntitiesSelectors";
-import { showFetchErrorNotification } from "~/app/appActions";
+import { showErrorNotification } from "~/app/appActions";
 import * as usersActions from "~/users/usersActions";
 import {
   includedSourceUsersSelector,
@@ -39,7 +39,7 @@ export function* createUsersSaga(): SagaIterator {
     // target only _invites_ them to the workspace.
     yield call(fetchUsersSaga);
   } catch (err) {
-    yield put(showFetchErrorNotification(err));
+    yield put(showErrorNotification(err));
     yield put(usersActions.createUsers.failure());
   }
 }
@@ -62,7 +62,7 @@ export function* deleteUsersSaga(): SagaIterator {
 
     yield put(usersActions.deleteUsers.success());
   } catch (err) {
-    yield put(showFetchErrorNotification(err));
+    yield put(showErrorNotification(err));
     yield put(usersActions.deleteUsers.failure());
   }
 }
@@ -100,7 +100,7 @@ export function* fetchUsersSaga(): SagaIterator {
 
     yield put(usersActions.fetchUsers.success(usersByIdByMapping));
   } catch (err) {
-    yield put(showFetchErrorNotification(err));
+    yield put(showErrorNotification(err));
     yield put(usersActions.fetchUsers.failure());
   }
 }

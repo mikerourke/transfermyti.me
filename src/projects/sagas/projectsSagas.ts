@@ -7,7 +7,7 @@ import {
   toolActionSelector,
   toolNameByMappingSelector,
 } from "~/allEntities/allEntitiesSelectors";
-import { showFetchErrorNotification } from "~/app/appActions";
+import { showErrorNotification } from "~/app/appActions";
 import * as projectActions from "~/projects/projectsActions";
 import {
   includedSourceProjectsSelector,
@@ -114,7 +114,7 @@ export function* createProjectsSaga(): SagaIterator {
 
     yield put(projectActions.createProjects.success(projectsByIdByMapping));
   } catch (err) {
-    yield put(showFetchErrorNotification(err));
+    yield put(showErrorNotification(err));
     yield put(projectActions.createProjects.failure());
   }
 }
@@ -137,7 +137,7 @@ export function* deleteProjectsSaga(): SagaIterator {
 
     yield put(projectActions.deleteProjects.success());
   } catch (err) {
-    yield put(showFetchErrorNotification(err));
+    yield put(showErrorNotification(err));
     yield put(projectActions.deleteProjects.failure());
   }
 }
@@ -176,7 +176,7 @@ export function* fetchProjectsSaga(): SagaIterator {
 
     yield put(projectActions.fetchProjects.success(projectsByIdByMapping));
   } catch (err) {
-    yield put(showFetchErrorNotification(err));
+    yield put(showErrorNotification(err));
     yield put(projectActions.fetchProjects.failure());
   }
 }
