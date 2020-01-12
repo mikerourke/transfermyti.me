@@ -14,13 +14,7 @@ import {
 } from "~/tags/tagsSelectors";
 import * as clockifySagas from "./clockifyTagsSagas";
 import * as togglSagas from "./togglTagsSagas";
-import {
-  Mapping,
-  TagModel,
-  TagsByIdModel,
-  ToolAction,
-  ToolName,
-} from "~/typeDefs";
+import { Mapping, TagsByIdModel, ToolAction, ToolName } from "~/typeDefs";
 
 /**
  * Creates tags in the target tool based on the included tags from the
@@ -38,7 +32,8 @@ export function* createTagsSaga(): SagaIterator {
 
     const sourceTags = yield select(sourceTagsForTransferSelector);
     const targetTags = yield call(createSagaByToolName, sourceTags);
-    const tagsByIdByMapping = linkEntitiesByIdByMapping<TagModel>(
+    const tagsByIdByMapping = yield call(
+      linkEntitiesByIdByMapping,
       sourceTags,
       targetTags,
     );
@@ -93,7 +88,8 @@ export function* fetchTagsSaga(): SagaIterator {
     if (toolAction === ToolAction.Transfer) {
       const targetTags = yield call(fetchSagaByToolName[target]);
 
-      tagsByIdByMapping = linkEntitiesByIdByMapping<TagModel>(
+      tagsByIdByMapping = yield call(
+        linkEntitiesByIdByMapping,
         sourceTags,
         targetTags,
       );

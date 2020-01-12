@@ -11,13 +11,7 @@ import * as workspacesActions from "~/workspaces/workspacesActions";
 import { sourceWorkspacesForTransferSelector } from "~/workspaces/workspacesSelectors";
 import * as clockifySagas from "./clockifyWorkspacesSagas";
 import * as togglSagas from "./togglWorkspacesSagas";
-import {
-  Mapping,
-  ToolAction,
-  ToolName,
-  WorkspaceModel,
-  WorkspacesByIdModel,
-} from "~/typeDefs";
+import { Mapping, ToolAction, ToolName, WorkspacesByIdModel } from "~/typeDefs";
 
 export function* workspacesSaga(): SagaIterator {
   yield all([
@@ -36,7 +30,8 @@ function* createWorkspacesSaga(): SagaIterator {
 
     const sourceWorkspaces = yield select(sourceWorkspacesForTransferSelector);
     const targetWorkspaces = yield call(createSagaByToolName, sourceWorkspaces);
-    const workspaceByIdByMapping = linkEntitiesByIdByMapping<WorkspaceModel>(
+    const workspaceByIdByMapping = yield call(
+      linkEntitiesByIdByMapping,
       sourceWorkspaces,
       targetWorkspaces,
     );
@@ -70,7 +65,8 @@ function* fetchWorkspacesSaga(): SagaIterator {
     if (toolAction === ToolAction.Transfer) {
       const targetWorkspaces = yield call(fetchSagaByToolName[target]);
 
-      workspaceByIdByMapping = linkEntitiesByIdByMapping<WorkspaceModel>(
+      workspaceByIdByMapping = yield call(
+        linkEntitiesByIdByMapping,
         sourceWorkspaces,
         targetWorkspaces,
       );

@@ -20,7 +20,6 @@ import * as clockifySagas from "./clockifyProjectsSagas";
 import * as togglSagas from "./togglProjectsSagas";
 import {
   Mapping,
-  ProjectModel,
   ProjectsByIdModel,
   ReduxAction,
   ToolAction,
@@ -107,7 +106,8 @@ export function* createProjectsSaga(): SagaIterator {
 
     const sourceProjects = yield select(sourceProjectsForTransferSelector);
     const targetProjects = yield call(createSagaByToolName, sourceProjects);
-    const projectsByIdByMapping = linkEntitiesByIdByMapping<ProjectModel>(
+    const projectsByIdByMapping = yield call(
+      linkEntitiesByIdByMapping,
       sourceProjects,
       targetProjects,
     );
@@ -162,7 +162,8 @@ export function* fetchProjectsSaga(): SagaIterator {
     if (toolAction === ToolAction.Transfer) {
       const targetProjects = yield call(fetchSagaByToolName[target]);
 
-      projectsByIdByMapping = linkEntitiesByIdByMapping<ProjectModel>(
+      projectsByIdByMapping = yield call(
+        linkEntitiesByIdByMapping,
         sourceProjects,
         targetProjects,
       );

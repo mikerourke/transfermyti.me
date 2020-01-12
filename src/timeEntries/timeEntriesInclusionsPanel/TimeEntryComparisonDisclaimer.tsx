@@ -33,10 +33,7 @@ const TimeEntryComparisonDisclaimer: React.FC = () => (
         Do the <strong>description</strong> fields <i>exactly</i> match?
       </li>
       <li>
-        Are the source and target entry both <strong>active</strong>?
-      </li>
-      <li>
-        Are the source and target entry both <strong>billable</strong>?
+        Is the source and target entry in the same <strong>project</strong>?
       </li>
       <li>
         Is there less than 1 minute of difference between the

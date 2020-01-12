@@ -44,7 +44,8 @@ export function* createTimeEntriesSaga(): SagaIterator {
       sourceTimeEntries,
     );
 
-    const timeEntriesByIdByMapping = linkEntitiesByIdByMapping<TimeEntryModel>(
+    const timeEntriesByIdByMapping = yield call(
+      linkEntitiesByIdByMapping,
       sourceTimeEntries,
       targetTimeEntries,
     );
@@ -104,7 +105,8 @@ export function* fetchTimeEntriesSaga(): SagaIterator {
       let targetTimeEntries = yield call(fetchSagaByToolName[target]);
       targetTimeEntries = sortTimeEntries(targetTimeEntries);
 
-      timeEntriesByIdByMapping = linkEntitiesByIdByMapping<TimeEntryModel>(
+      timeEntriesByIdByMapping = yield call(
+        linkEntitiesByIdByMapping,
         sourceTimeEntries,
         targetTimeEntries,
       );

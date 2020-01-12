@@ -14,13 +14,7 @@ import {
 } from "~/users/usersSelectors";
 import * as clockifySagas from "./clockifyUsersSagas";
 import * as togglSagas from "./togglUsersSagas";
-import {
-  Mapping,
-  ToolAction,
-  ToolName,
-  UserModel,
-  UsersByIdModel,
-} from "~/typeDefs";
+import { Mapping, ToolAction, ToolName, UsersByIdModel } from "~/typeDefs";
 
 /**
  * Invites users to the target tool based on the source users.
@@ -92,7 +86,8 @@ export function* fetchUsersSaga(): SagaIterator {
     if (toolAction === ToolAction.Transfer) {
       const targetUsers = yield call(fetchSagaByToolName[target]);
 
-      usersByIdByMapping = linkEntitiesByIdByMapping<UserModel>(
+      usersByIdByMapping = yield call(
+        linkEntitiesByIdByMapping,
         sourceUsers,
         targetUsers,
       );

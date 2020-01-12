@@ -23,7 +23,6 @@ import {
   Mapping,
   ProjectModel,
   ReduxAction,
-  TaskModel,
   TasksByIdModel,
   ToolAction,
   ToolName,
@@ -115,7 +114,8 @@ export function* createTasksSaga(): SagaIterator {
 
     const sourceTasks = yield select(sourceTasksForTransferSelector);
     const targetTasks = yield call(createSagaByToolName, sourceTasks);
-    const tasksByIdByMapping = linkEntitiesByIdByMapping<TaskModel>(
+    const tasksByIdByMapping = yield call(
+      linkEntitiesByIdByMapping,
       sourceTasks,
       targetTasks,
     );
@@ -170,7 +170,8 @@ export function* fetchTasksSaga(): SagaIterator {
     if (toolAction === ToolAction.Transfer) {
       const targetTasks = yield call(fetchSagaByToolName[target]);
 
-      tasksByIdByMapping = linkEntitiesByIdByMapping<TaskModel>(
+      tasksByIdByMapping = yield call(
+        linkEntitiesByIdByMapping,
         sourceTasks,
         targetTasks,
       );

@@ -1,11 +1,15 @@
+import { SagaIterator } from "@redux-saga/types";
 import differenceInMinutes from "date-fns/differenceInMinutes";
 import * as R from "ramda";
+import { call, select } from "redux-saga/effects";
+import { sourceProjectsByIdSelector } from "~/projects/projectsSelectors";
 import {
   BaseEntityModel,
   EntityGroup,
   Mapping,
-  TimeEntryModel,
+  ProjectsByIdModel,
   TimeEntriesByIdModel,
+  TimeEntryModel,
 } from "~/typeDefs";
 
 /**
@@ -29,10 +33,10 @@ import {
  *     },
  *   }
  */
-export function linkEntitiesByIdByMapping<TEntity>(
+export function* linkEntitiesByIdByMapping<TEntity>(
   sourceRecords: TEntity[],
   targetRecords: TEntity[],
-): Record<Mapping, Record<string, TEntity>> {
+): SagaIterator<Record<Mapping, Record<string, TEntity>>> {
   if (sourceRecords.length === 0) {
     return {
       source: {},
@@ -45,8 +49,12 @@ export function linkEntitiesByIdByMapping<TEntity>(
     // TypeScript freaks out on this one, but I don't want to add 400 type
     // assertions. I know they're time entries and I know the function is going
     // to return the correct values!
-    // @ts-ignore
-    return linkForMappingForTimeEntries(sourceRecords, targetRecords);
+    return yield call(
+      // @ts-ignore
+      linkForMappingForTimeEntries,
+      sourceRecords,
+      targetRecords,
+    );
   }
 
   // Users may have the same name, but they should never have the same email:
@@ -108,10 +116,12 @@ function linkForMappingByField<TEntity>(
  * property to false. The criteria for what represents a "matching" entry is
  * in the `doTimeEntriesMatch()` function below.
  */
-function linkForMappingForTimeEntries(
+function* linkForMappingForTimeEntries(
   sourceTimeEntries: TimeEntryModel[],
   targetTimeEntries: TimeEntryModel[],
-): Record<Mapping, TimeEntriesByIdModel> {
+): SagaIterator<Record<Mapping, TimeEntriesByIdModel>> {
+  const sourceProjectsById = yield select(sourceProjectsByIdSelector);
+
   // Expedite the matching process by sorting by start date (since the start
   // and end date/time are compared against each other):
   const sortByDate = R.sortBy(R.prop("start"));
@@ -127,7 +137,16 @@ function linkForMappingForTimeEntries(
     for (const targetEntry of sortedTargetEntries) {
       targetById[targetEntry.id] = targetEntry;
 
-      if (doTimeEntriesMatch(sourceEntry, targetEntry)) {
+      // Even if the times are similar and the descriptions match, we still
+      // want to make sure they're in the same project:
+      const projectsMatch = doProjectsMatch(
+        sourceProjectsById,
+        sourceEntry,
+        targetEntry,
+      );
+      const timeEntriesMatch = doTimeEntriesMatch(sourceEntry, targetEntry);
+
+      if (projectsMatch && timeEntriesMatch) {
         sourceById[sourceEntry.id].linkedId = targetEntry.id;
         targetById[targetEntry.id].linkedId = sourceEntry.id;
       }
@@ -145,8 +164,33 @@ function linkForMappingForTimeEntries(
 }
 
 /**
+ * Compares the linked ID of the source entry's project to the target entry's
+ * project ID. If they match, return true.
+ */
+function doProjectsMatch(
+  sourceProjectsById: ProjectsByIdModel,
+  sourceEntry: TimeEntryModel,
+  targetEntry: TimeEntryModel,
+): boolean {
+  const sourceProject = sourceProjectsById[sourceEntry.projectId] ?? null;
+  if (sourceProject === null) {
+    return false;
+  }
+
+  if (targetEntry.projectId === null) {
+    return false;
+  }
+
+  if (sourceProject.linkedId === null) {
+    return false;
+  }
+
+  return sourceProject.linkedId === targetEntry.projectId;
+}
+
+/**
  * Compares the two time entries and returns true if they _appear_ to match
- * based on the date, description, flags, etc.
+ * based on the date and description.
  */
 function doTimeEntriesMatch(
   sourceEntry: TimeEntryModel,
@@ -154,8 +198,6 @@ function doTimeEntriesMatch(
 ): boolean {
   return [
     sourceEntry.description === targetEntry.description,
-    sourceEntry.isActive === targetEntry.isActive,
-    sourceEntry.isBillable === targetEntry.isBillable,
     differenceInMinutes(sourceEntry.start, targetEntry.start) <= 1,
     differenceInMinutes(sourceEntry.end, targetEntry.end) <= 1,
   ].every(Boolean);

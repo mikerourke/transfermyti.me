@@ -14,13 +14,7 @@ import {
 } from "~/userGroups/userGroupsSelectors";
 import * as clockifySagas from "./clockifyUserGroupsSagas";
 import * as togglSagas from "./togglUserGroupsSagas";
-import {
-  Mapping,
-  ToolAction,
-  ToolName,
-  UserGroupModel,
-  UserGroupsByIdModel,
-} from "~/typeDefs";
+import { Mapping, ToolAction, ToolName, UserGroupsByIdModel } from "~/typeDefs";
 
 /**
  * Creates user groups in the target tool based on the included user groups from
@@ -38,7 +32,8 @@ export function* createUserGroupsSaga(): SagaIterator {
 
     const sourceUserGroups = yield select(sourceUserGroupsForTransferSelector);
     const targetUserGroups = yield call(createSagaByToolName, sourceUserGroups);
-    const userGroupsByIdByMapping = linkEntitiesByIdByMapping<UserGroupModel>(
+    const userGroupsByIdByMapping = yield call(
+      linkEntitiesByIdByMapping,
       sourceUserGroups,
       targetUserGroups,
     );
@@ -95,7 +90,8 @@ export function* fetchUserGroupsSaga(): SagaIterator {
     if (toolAction === ToolAction.Transfer) {
       const targetUserGroups = yield call(fetchSagaByToolName[target]);
 
-      userGroupsByIdByMapping = linkEntitiesByIdByMapping<UserGroupModel>(
+      userGroupsByIdByMapping = yield call(
+        linkEntitiesByIdByMapping,
         sourceUserGroups,
         targetUserGroups,
       );

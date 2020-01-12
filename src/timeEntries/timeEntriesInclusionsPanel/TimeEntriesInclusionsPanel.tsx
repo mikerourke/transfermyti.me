@@ -22,6 +22,9 @@ import TimeEntriesInclusionsTable from "./TimeEntriesInclusionsTable";
 import TimeEntryComparisonDisclaimer from "./TimeEntryComparisonDisclaimer";
 import { ReduxState, TimeEntryTableViewModel, ToolAction } from "~/typeDefs";
 
+// TODO: Add a form that allows the user to specify which criteria should be
+//       used to detect duplicate time entries.
+
 interface ConnectStateProps {
   replaceMappingWithToolName: (label: string) => string;
   timeEntries: TimeEntryTableViewModel[];

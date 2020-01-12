@@ -14,13 +14,7 @@ import {
 } from "~/clients/clientsSelectors";
 import * as clockifySagas from "./clockifyClientsSagas";
 import * as togglSagas from "./togglClientsSagas";
-import {
-  ClientModel,
-  ClientsByIdModel,
-  Mapping,
-  ToolAction,
-  ToolName,
-} from "~/typeDefs";
+import { ClientsByIdModel, Mapping, ToolAction, ToolName } from "~/typeDefs";
 
 /**
  * Creates clients in the target tool based on the included clients from the
@@ -38,7 +32,8 @@ export function* createClientsSaga(): SagaIterator {
 
     const sourceClients = yield select(sourceClientsForTransferSelector);
     const targetClients = yield call(createSagaByToolName, sourceClients);
-    const clientsByIdByMapping = linkEntitiesByIdByMapping<ClientModel>(
+    const clientsByIdByMapping = yield call(
+      linkEntitiesByIdByMapping,
       sourceClients,
       targetClients,
     );
@@ -93,7 +88,8 @@ export function* fetchClientsSaga(): SagaIterator {
     if (toolAction === ToolAction.Transfer) {
       const targetClients = yield call(fetchSagaByToolName[target]);
 
-      clientsByIdByMapping = linkEntitiesByIdByMapping<ClientModel>(
+      clientsByIdByMapping = yield call(
+        linkEntitiesByIdByMapping,
         sourceClients,
         targetClients,
       );

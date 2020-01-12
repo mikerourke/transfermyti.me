@@ -7,7 +7,10 @@ import {
   flushAllEntities,
   updatePushAllChangesFetchStatus,
 } from "~/allEntities/allEntitiesActions";
-import { toolNameByMappingSelector } from "~/allEntities/allEntitiesSelectors";
+import {
+  toolNameByMappingSelector,
+  totalIncludedRecordsCountSelector,
+} from "~/allEntities/allEntitiesSelectors";
 import { currentPathSelector } from "~/app/appSelectors";
 import { updateValidationFetchStatus } from "~/credentials/credentialsActions";
 import { credentialsByMappingSelector } from "~/credentials/credentialsSelectors";
@@ -97,7 +100,12 @@ function* respondToRouteChangesSaga(): SagaIterator {
       break;
 
     case isPathPastStep(RoutePath.SelectInclusions):
-      // TODO: Add check for transfer counts.
+      const totalIncludedCount = yield select(
+        totalIncludedRecordsCountSelector,
+      );
+      if (totalIncludedCount === 0) {
+        yield put(push(RoutePath.SelectInclusions));
+      }
       break;
 
     default:

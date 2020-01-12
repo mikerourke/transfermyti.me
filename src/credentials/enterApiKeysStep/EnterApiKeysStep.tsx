@@ -44,10 +44,6 @@ interface ConnectDispatchProps {
 
 type Props = ConnectStateProps & ConnectDispatchProps;
 
-// TODO: Accommodate for only deleting content from a tool. You only need to
-//       validate the API key for one tool, so we need to add that as an if
-//       statement so we don't fail silently.
-
 const EnterApiKeysStepComponent: React.FC<Props> = props => {
   type InputFields = Record<string, string | null>;
 
