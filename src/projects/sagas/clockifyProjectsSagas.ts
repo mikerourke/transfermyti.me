@@ -9,12 +9,7 @@ import {
   ClockifyMembershipResponseModel,
   ClockifyUserResponseModel,
 } from "~/users/sagas/clockifyUsersSagas";
-import { EntityGroup, ProjectModel, ToolName } from "~/typeDefs";
-
-interface ClockifyEstimateModel {
-  estimate: number;
-  type: "AUTO" | "MANUAL";
-}
+import { EntityGroup, EstimateModel, ProjectModel, ToolName } from "~/typeDefs";
 
 export interface ClockifyProjectResponseModel {
   archived: boolean;
@@ -23,7 +18,7 @@ export interface ClockifyProjectResponseModel {
   clientName: string;
   color: string;
   duration: string;
-  estimate: ClockifyEstimateModel;
+  estimate: EstimateModel;
   hourlyRate: ClockifyHourlyRateResponseModel;
   id: string;
   memberships?: ClockifyMembershipResponseModel[];
@@ -85,14 +80,16 @@ function* createClockifyProject(
     string
   >(null, sourceProject.clientId ?? "", clientIdToLinkedId);
 
+  const estimateHours = R.pathOr(0, ["estimate", "estimate"], sourceProject);
+  const estimateType = R.pathOr("AUTO", ["estimate", "type"], sourceProject);
+
   const projectRequest = {
     name: sourceProject.name,
     clientId: R.isNil(targetClientId) ? undefined : targetClientId,
     isPublic: sourceProject.isPublic,
-    // TODO: Add project estimate from source (if applicable).
     estimate: {
-      estimate: 0,
-      type: "AUTO",
+      estimate: estimateHours.toString(),
+      type: estimateType,
     },
     color: sourceProject.color,
     billable: sourceProject.isBillable,
@@ -179,6 +176,10 @@ function transformFromResponse(
     isPublic: project.public,
     isActive: !project.archived,
     color: project.color,
+    estimate: {
+      estimate: project?.estimate?.estimate ?? 0,
+      type: project?.estimate?.type ?? "AUTO",
+    },
     userIds,
     entryCount: 0,
     linkedId: null,

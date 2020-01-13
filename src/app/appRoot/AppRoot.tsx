@@ -8,7 +8,7 @@ import Header from "./Header";
 import Footer from "./Footer";
 
 const Main = styled.main({
-  height: "calc(100vh - 8rem)",
+  height: "calc(100vh - 9rem)",
   margin: "0 auto",
   maxWidth: "56rem",
   overflowY: "auto",

@@ -1,5 +1,10 @@
 import { BaseEntityModel } from "~/allEntities/allEntitiesTypes";
 
+export interface EstimateModel {
+  estimate: number;
+  type: "AUTO" | "MANUAL";
+}
+
 export interface ProjectModel extends BaseEntityModel {
   id: string;
   name: string;
@@ -7,6 +12,7 @@ export interface ProjectModel extends BaseEntityModel {
   isBillable: boolean;
   isPublic: boolean;
   isActive: boolean;
+  estimate: EstimateModel;
   color: string;
   userIds: string[];
 }

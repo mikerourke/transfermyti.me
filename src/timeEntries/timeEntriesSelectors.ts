@@ -53,15 +53,15 @@ export const timeEntriesForInclusionsTableSelector = createSelector(
       }
 
       const projectName = R.pathOr(
-        "Unknown Project",
+        null,
         [sourceTimeEntry.projectId, "name"],
         sourceProjectsById,
       );
 
-      let taskName = "No Task";
+      let taskName = null;
       if (sourceTimeEntry.taskId !== null) {
         taskName = R.pathOr(
-          "No Task",
+          null,
           [sourceTimeEntry.taskId, "name"],
           sourceTasksById,
         );

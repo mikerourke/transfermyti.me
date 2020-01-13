@@ -52,6 +52,8 @@ const ApiKeyInputField: React.FC<Props> = ({
   ...props
 }) => {
   const inputId = cuid.slug();
+  const inputErrorId = `${inputId}-error`;
+
   return (
     <>
       <Label htmlFor={inputId}>
@@ -66,12 +68,12 @@ const ApiKeyInputField: React.FC<Props> = ({
         name={mapping}
         type="text"
         autoComplete="hidden"
-        aria-describedby={`${inputId}Error`}
+        aria-describedby={inputErrorId}
         aria-required={true}
         aria-invalid={errorMessage !== null}
         {...props}
       />
-      <ErrorMessage id={`${inputId}Error`}>{errorMessage}</ErrorMessage>
+      <ErrorMessage id={inputErrorId}>{errorMessage}</ErrorMessage>
     </>
   );
 };

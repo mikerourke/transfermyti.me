@@ -10,9 +10,9 @@ import { ReduxState, WorkspaceModel } from "~/typeDefs";
 
 const Base = styled.div(
   {
-    position: "relative",
     display: "inline-block",
     marginBottom: "1rem",
+    position: "relative",
     width: "100%",
   },
   ({ theme }) => ({
@@ -40,8 +40,8 @@ const Label = styled.label(
 const Select = styled.select(
   {
     appearance: "none",
-    borderRadius: "0.375rem",
     border: "none",
+    borderRadius: "0.375rem",
     cursor: "pointer",
     display: "inline-block",
     fontSize: "1rem",
@@ -58,17 +58,17 @@ const Select = styled.select(
 
 const Arrow = styled.span(
   {
-    position: "absolute",
-    bottom: "1.125rem",
-    right: "1.5rem",
-    width: 0,
-    height: 0,
-    pointerEvents: "none",
-    borderStyle: "solid",
-    borderWidth: "0.5rem 0.5rem 0",
     borderBottomColor: "transparent",
     borderLeftColor: "transparent",
     borderRightColor: "transparent",
+    borderStyle: "solid",
+    borderWidth: "0.5rem 0.5rem 0",
+    bottom: "1.125rem",
+    height: 0,
+    pointerEvents: "none",
+    position: "absolute",
+    right: "1.5rem",
+    width: 0,
   },
   ({ theme }) => ({
     borderTopColor: theme.colors.midnight,
@@ -95,10 +95,10 @@ export const ActiveWorkspaceSelectComponent: React.FC<Props> = props => {
 
   return (
     <Base>
-      <Label htmlFor="activeWorkspaceSelect">Active Workspace</Label>
+      <Label htmlFor="active-workspace-select">Active Workspace</Label>
       <Select
-        id="activeWorkspaceSelect"
-        name="activeWorkspaceSelect"
+        id="active-workspace-select"
+        name="active-workspace-select"
         value={props.activeWorkspaceId}
         onChange={handleSelectChange}
       >

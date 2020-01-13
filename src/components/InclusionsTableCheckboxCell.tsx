@@ -10,15 +10,21 @@ const InclusionsTableCheckboxCell: React.FC<Props> = ({
   entityRecord,
   onFlipIsIncluded,
   ...props
-}) => (
-  <td data-include={true} {...props}>
-    <input
-      type="checkbox"
-      checked={entityRecord.existsInTarget ? false : entityRecord.isIncluded}
-      disabled={entityRecord.existsInTarget}
-      onChange={() => onFlipIsIncluded(entityRecord.id)}
-    />
-  </td>
-);
+}) => {
+  const handleInputChange = (): void => {
+    onFlipIsIncluded(entityRecord.id);
+  };
+
+  return (
+    <td data-include={true} {...props}>
+      <input
+        type="checkbox"
+        checked={entityRecord.existsInTarget ? false : entityRecord.isIncluded}
+        disabled={entityRecord.existsInTarget}
+        onChange={handleInputChange}
+      />
+    </td>
+  );
+};
 
 export default InclusionsTableCheckboxCell;

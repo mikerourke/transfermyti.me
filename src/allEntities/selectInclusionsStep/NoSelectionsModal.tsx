@@ -1,5 +1,6 @@
 import React from "react";
 import { ModalDialog, ExternalLink } from "~/components";
+import { ToolAction } from "~/typeDefs";
 
 const LinkToIssues: React.FC = () => (
   <ExternalLink
@@ -21,12 +22,13 @@ const MailToLink: React.FC = () => (
 
 interface Props {
   isOpen: boolean;
+  toolAction: ToolAction;
   onClose: VoidFunction;
 }
 
 const NoSelectionsModal: React.FC<Props> = props => (
   <ModalDialog isOpen={props.isOpen} title="Error" onClose={props.onClose}>
-    <p>You haven&apos;t selected any records to include in the transfer.</p>
+    <p>You haven&apos;t selected any records to {props.toolAction}.</p>
     <p>
       Please ensure you have checked the checkbox next to the records you&apos;d
       like to include before proceeding.

@@ -34,8 +34,8 @@ interface ConnectStateProps {
   areExistsInTargetShown: boolean;
   entityGroupInProcessDisplay: string;
   fetchAllFetchStatus: FetchStatus;
-  totalIncludedRecordsCount: number;
   toolAction: ToolAction;
+  totalIncludedRecordsCount: number;
 }
 
 interface ConnectDispatchProps {
@@ -121,7 +121,11 @@ export const SelectInclusionsStepComponent: React.FC<Props> = props => {
           Refresh
         </Button>
       </NavigationButtonsRow>
-      <NoSelectionsModal isOpen={isErrorModalOpen} onClose={handleCloseModal} />
+      <NoSelectionsModal
+        isOpen={isErrorModalOpen}
+        toolAction={props.toolAction}
+        onClose={handleCloseModal}
+      />
     </section>
   );
 };
@@ -131,8 +135,8 @@ const mapStateToProps = (state: ReduxState): ConnectStateProps => ({
   areExistsInTargetShown: areExistsInTargetShownSelector(state),
   entityGroupInProcessDisplay: entityGroupInProcessDisplaySelector(state),
   fetchAllFetchStatus: fetchAllFetchStatusSelector(state),
-  totalIncludedRecordsCount: totalIncludedRecordsCountSelector(state),
   toolAction: toolActionSelector(state),
+  totalIncludedRecordsCount: totalIncludedRecordsCountSelector(state),
 });
 
 const mapDispatchToProps: ConnectDispatchProps = {

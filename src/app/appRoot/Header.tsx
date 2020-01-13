@@ -5,10 +5,10 @@ import { RoutePath } from "~/typeDefs";
 
 const Base = styled.header(
   {
-    display: "flex",
     alignItems: "center",
-    justifyContent: "space-between",
+    display: "flex",
     height: "3rem",
+    justifyContent: "space-between",
     padding: "0 1rem",
     width: "100%",
   },

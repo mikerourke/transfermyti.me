@@ -24,6 +24,6 @@ export type TimeEntriesByIdModel = Record<string, TimeEntryModel>;
 
 export interface TimeEntryTableViewModel
   extends TableViewModel<TimeEntryModel> {
-  taskName: string;
-  projectName: string;
+  taskName: string | null;
+  projectName: string | null;
 }

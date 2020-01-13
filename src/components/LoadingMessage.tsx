@@ -7,8 +7,8 @@ interface Props {
 const LoadingMessage: React.FC<Props> = ({ size = "small", ...props }) => (
   <div
     css={theme => ({
-      fontWeight: theme.fontWeights.bold,
       fontSize: size === "large" ? "2rem" : "1rem",
+      fontWeight: theme.fontWeights.bold,
       margin: "1rem 0 3rem 0",
       textAlign: "center",
     })}

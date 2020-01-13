@@ -15,7 +15,22 @@ interface TogglProjectResponseModel {
   billable: boolean;
   is_private: boolean;
   active: boolean;
+  // ID of the color selected for the project:
+  color: string;
+  hex_color: string;
   at: string;
+  // Whether the estimated hours are automatically calculated based on task
+  //estimations or manually fixed based on the value of 'estimated_hours':
+  auto_estimates?: boolean;
+  // If auto_estimates is true then the sum of task estimations is returned,
+  // otherwise user inserted hours:
+  estimated_hours?: number;
+  // Hourly rate of the project (float, not required, premium functionality):
+  rate?: number;
+  // Whether the project can be used as a template
+  template?: boolean;
+  // ID of the template project used on current project's creation:
+  template_id?: number;
 }
 
 interface TogglProjectUserResponseModel {
@@ -156,7 +171,11 @@ function transformFromResponse(
     isBillable: project.billable,
     isPublic: !project.is_private,
     isActive: project.active,
-    color: "1",
+    color: project.hex_color,
+    estimate: {
+      estimate: project?.estimated_hours ?? 0,
+      type: project?.auto_estimates ? "AUTO" : "MANUAL",
+    },
     userIds,
     entryCount: 0,
     linkedId: null,

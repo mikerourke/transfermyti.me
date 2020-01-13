@@ -33,9 +33,9 @@ const Anchor = styled.a(
 );
 
 const LogoSvg = styled.svg({
-  marginBottom: 1,
-  boxShadow: "none",
   border: "none",
+  boxShadow: "none",
+  marginBottom: 1,
   verticalAlign: "middle",
 });
 

@@ -28,17 +28,23 @@ const InclusionsTableTitle: React.FC<Props> = ({
   flipDisabled = false,
   onFlipAreAllIncluded,
   ...props
-}) => (
-  <Base alignItems="center" justifyContent="space-between">
-    <h4 {...props}>{children}</h4>
-    <Button
-      disabled={flipDisabled}
-      variant="outline"
-      onClick={() => onFlipAreAllIncluded()}
-    >
-      Include All/None
-    </Button>
-  </Base>
-);
+}) => {
+  const handleIncludeButtonClick = (): void => {
+    onFlipAreAllIncluded();
+  };
+
+  return (
+    <Base alignItems="center" justifyContent="space-between">
+      <h4 {...props}>{children}</h4>
+      <Button
+        disabled={flipDisabled}
+        variant="outline"
+        onClick={handleIncludeButtonClick}
+      >
+        Include All/None
+      </Button>
+    </Base>
+  );
+};
 
 export default InclusionsTableTitle;

@@ -1,17 +1,24 @@
 import React from "react";
-import { ExternalLink, Icon, styled } from "~/components";
+import {
+  ExternalLink,
+  Icon,
+  styled,
+  VisuallyHidden,
+  Flex,
+  IconLink,
+} from "~/components";
 
 const Base = styled.footer(
   {
+    alignItems: "center",
+    display: "flex",
+    height: "6rem",
+    justifyContent: "space-between",
+    padding: "0 2rem",
     position: "fixed",
-    right: 0,
     bottom: 0,
     left: 0,
-    display: "flex",
-    alignItems: "center",
-    justifyContent: "space-between",
-    height: "5rem",
-    padding: "0 2rem",
+    right: 0,
 
     a: {
       textDecoration: "underline",
@@ -62,6 +69,44 @@ const Footer: React.FC = () => (
         <Love />
         by <LinkToMe />
       </p>
+      <nav aria-labelledby="footer-social-links">
+        <VisuallyHidden id="footer-social-links">
+          Social Media Links
+        </VisuallyHidden>
+        <Flex
+          as="ul"
+          id="footer-social-links"
+          css={{ listStyle: "none", padding: 0 }}
+        >
+          <li css={{ marginRight: "1rem" }}>
+            <IconLink
+              href="https://github.com/mikerourke"
+              iconName="github"
+              color="white"
+            >
+              GitHub
+            </IconLink>
+          </li>
+          <li css={{ marginRight: "1rem" }}>
+            <IconLink
+              href="https://www.linkedin.com/in/michaelwrourke"
+              iconName="linkedIn"
+              color="white"
+            >
+              LinkedIn
+            </IconLink>
+          </li>
+          <li>
+            <IconLink
+              href="https://twitter.com/codelikeawolf"
+              iconName="twitter"
+              color="white"
+            >
+              Twitter
+            </IconLink>
+          </li>
+        </Flex>
+      </nav>
     </div>
     <RightColumn>
       <p>The time tracking tool companies are not responsible for this tool.</p>

@@ -21,7 +21,11 @@ const SourceWorkspaceCard: React.FC<Props> = ({
   onToggleIncluded,
   ...props
 }) => {
-  const titleId = `includeToggle${workspace.id}`;
+  const titleId = `include-toggle-${workspace.id}`;
+
+  const handleToggleIncludeWorkspace = (): void => {
+    onToggleIncluded(workspace);
+  };
 
   return (
     <Card title={workspace.name} {...props}>
@@ -30,7 +34,7 @@ const SourceWorkspaceCard: React.FC<Props> = ({
         aria-label="Include this workspace"
         aria-labelledby={titleId}
         isToggled={workspace.isIncluded}
-        onToggle={() => onToggleIncluded(workspace)}
+        onToggle={handleToggleIncludeWorkspace}
       />
     </Card>
   );

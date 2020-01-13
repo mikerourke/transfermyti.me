@@ -65,7 +65,7 @@ export const TimeEntriesInclusionsPanelComponent: React.FC<Props> = ({
             <TimeEntryComparisonDisclaimer />
           )}
           <InclusionsTableTitle
-            id="timeEntriesDesc"
+            id="time-entries-desc"
             flipDisabled={nonExistingRecords.length === 0}
             onFlipAreAllIncluded={handleFlipInclusions}
           >

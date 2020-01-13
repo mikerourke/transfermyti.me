@@ -9,6 +9,19 @@ import {
 } from "~/components";
 import { TimeEntryTableViewModel } from "~/typeDefs";
 
+const NullValueCell: React.FC<{ value: string | null }> = ({
+  value,
+  ...props
+}) => (
+  <td
+    css={({ colors }) => ({
+      color: `${value === null ? colors.manatee : colors.midnight} !important`,
+      fontStyle: value === null ? "italic" : "normal",
+    })}
+    {...props}
+  />
+);
+
 interface Props {
   timeEntries: TimeEntryTableViewModel[];
   totalCountsByType: Record<string, number>;
@@ -16,7 +29,7 @@ interface Props {
 }
 
 const TimeEntriesInclusionsTable: React.FC<Props> = props => (
-  <InclusionsTable aria-labelledby="timeEntriesDesc">
+  <InclusionsTable aria-labelledby="time-entries-desc">
     <thead>
       <tr>
         <th scope="col">Start Time</th>
@@ -40,8 +53,12 @@ const TimeEntriesInclusionsTable: React.FC<Props> = props => (
           <InclusionsTableRow disabled={timeEntry.existsInTarget}>
             <td>{format(timeEntry.start, "Pp")}</td>
             <td>{format(timeEntry.end, "Pp")}</td>
-            <td>{timeEntry.taskName}</td>
-            <td>{timeEntry.projectName}</td>
+            <NullValueCell value={timeEntry.taskName}>
+              {timeEntry.taskName ?? "No Task"}
+            </NullValueCell>
+            <NullValueCell value={timeEntry.projectName}>
+              {timeEntry.projectName ?? "No Project"}
+            </NullValueCell>
             <InclusionsTableCheckboxCell
               rowSpan={2}
               entityRecord={timeEntry}

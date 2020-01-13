@@ -11,6 +11,7 @@ export {
 export { default as Flex } from "./Flex";
 export { default as HelpDetails } from "./HelpDetails";
 export { default as Icon } from "./Icon";
+export { default as IconLink } from "./IconLink";
 export { default as InclusionsTable } from "./InclusionsTable";
 export { default as InclusionsTableCheckboxCell } from "./InclusionsTableCheckboxCell";
 export { default as InclusionsTableFoot } from "./InclusionsTableFoot";
@@ -23,3 +24,4 @@ export { default as NavigationButtonsRow } from "./NavigationButtonsRow";
 export { default as NoRecordsFound } from "./NoRecordsFound";
 export { default as Note } from "./Note";
 export { default as Toggle } from "./Toggle";
+export { default as VisuallyHidden } from "./VisuallyHidden";

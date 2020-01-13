@@ -1,36 +1,24 @@
 import React from "react";
 import { styled } from "./emotion";
 
-type Size = "large" | "small";
-
-const height = (size: Size): string => (size === "small" ? "1.5rem" : "2rem");
-
-const width = (size: Size): string => (size === "small" ? "3.5rem" : "4.5rem");
-
-const scale = (value: string, percentage: number): string => {
-  const numericValue = parseFloat(value.replace("rem", ""));
-  return (numericValue * percentage).toFixed(3).concat("rem");
-};
-
-const Button = styled.button<{ size: Size }>(
+const Button = styled.button(
   {
     border: "none",
+    borderRadius: "2rem",
     display: "inline-block",
+    height: "2rem",
+    width: "4.5rem",
     overflow: "hidden",
     position: "relative",
     transition: "background 0.1s ease-in-out",
   },
-  ({ size, theme }) => ({
-    borderRadius: height(size),
+  ({ theme }) => ({
     boxShadow: theme.elevation.dp2,
-    height: height(size),
-    width: width(size),
   }),
 );
 
 const Switch = styled.span<{
   isToggled: boolean;
-  size: Size;
 }>(
   {
     borderRadius: "50%",
@@ -45,53 +33,41 @@ const Switch = styled.span<{
       position: "absolute",
     },
   },
-  ({ isToggled, size, theme }) => ({
+  ({ isToggled, theme }) => ({
     background: isToggled ? theme.colors.primary : theme.colors.silver,
     boxShadow: theme.elevation.dp2,
-    fontSize: scale(height(size), 0.5),
+    fontSize: "1rem",
     fontWeight: theme.fontWeights.bold,
-    left: isToggled ? scale(width(size), 0.6125) : scale(width(size), 0.05),
-    top: scale(height(size), 0.1),
-    height: scale(height(size), 0.8),
-    width: scale(height(size), 0.8),
+    left: isToggled ? "2.75rem" : "0.225rem",
+    top: "0.2rem",
+    height: "1.6rem",
+    width: "1.6rem",
 
     "&::before,&::after": {
       color: theme.colors.primary,
-      lineHeight: scale(height(size), 0.85),
+      lineHeight: "1.7rem",
     },
 
     "&::before": {
       content: isToggled ? `"YES"` : undefined,
-      left: isToggled ? scale(width(size), -0.5) : undefined,
+      left: isToggled ? "-2.25rem" : undefined,
     },
 
     "&::after": {
       content: isToggled ? undefined : `"NO"`,
-      right: isToggled ? undefined : scale(width(size), -0.475),
+      right: isToggled ? undefined : "-2.1375rem",
     },
   }),
 );
 
 interface Props {
   isToggled: boolean;
-  size?: Size;
   onToggle: VoidFunction;
 }
 
-const Toggle: React.FC<Props> = ({
-  isToggled,
-  size = "large",
-  onToggle,
-  ...props
-}) => (
-  <Button
-    aria-checked={isToggled}
-    role="switch"
-    size={size}
-    onClick={onToggle}
-    {...props}
-  >
-    <Switch isToggled={isToggled} size={size} />
+const Toggle: React.FC<Props> = ({ isToggled, onToggle, ...props }) => (
+  <Button aria-checked={isToggled} role="switch" onClick={onToggle} {...props}>
+    <Switch isToggled={isToggled} />
   </Button>
 );
 

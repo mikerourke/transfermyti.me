@@ -91,8 +91,11 @@ const ModalDialog: React.FC<Props> = ({
   onClose,
   ...props
 }) => {
-  const modalId = cuid.slug();
   useModalAccessibility(isOpen, onClose);
+
+  const modalId = cuid.slug();
+  const modalDescId = `modal-${modalId}-desc`;
+  const modalTitleId = `modal-${modalId}-title`;
 
   return (
     <ModalPortal>
@@ -106,15 +109,15 @@ const ModalDialog: React.FC<Props> = ({
             <Container
               role={role}
               id={modalId}
-              aria-describedby={`${modalId}Desc`}
-              aria-labelledby={`${modalId}Title`}
+              aria-describedby={modalDescId}
+              aria-labelledby={modalTitleId}
               aria-hidden={!isOpen}
               aria-modal
               {...props}
             >
               <div role="document">
-                <h2 id={`${modalId}Title`}>{title}</h2>
-                <Description id={`${modalId}Desc`}>{children}</Description>
+                <h2 id={modalTitleId}>{title}</h2>
+                <Description id={modalDescId}>{children}</Description>
                 <ActionsRow justifyContent="flex-end">
                   {actions ?? (
                     <Button variant="primary" onClick={onClose}>

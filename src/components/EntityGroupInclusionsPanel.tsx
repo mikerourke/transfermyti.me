@@ -54,7 +54,7 @@ export const EntityGroupInclusionsPanelComponent: React.FC<Props> = ({
     bodyFieldNames.push(tableField.field);
   }
 
-  const tableTitleId = `${props.entityGroup}Desc`;
+  const tableTitleId = `${props.entityGroup}-desc`;
   const nonExistingRecords = tableData.filter(
     ({ existsInTarget }) => !existsInTarget,
   );
