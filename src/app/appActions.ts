@@ -10,14 +10,39 @@ export const showNotification = createAction(
   },
 )<NotificationModel>();
 
+const getApiErrorMessage = (response: Response): string => {
+  const { status, statusText, url } = response;
+  let toolName = "";
+  if (/clockify/gi.test(url)) {
+    toolName = "Clockify";
+  } else if (/toggl/gi.test(url)) {
+    toolName = "Toggl";
+  } else {
+    toolName = "Unknown";
+  }
+
+  let message = `Error code ${status} when fetching from ${toolName} API.`;
+  if (statusText) {
+    message += `Error message: ${statusText}`;
+  }
+
+  return message;
+};
+
 export const showErrorNotification = createAction(
   "@app/SHOW_FETCH_ERROR_NOTIFICATION",
-  (err: Error) => {
+  (err: Error | Response) => {
     if (getIfDev()) {
       console.error(err);
     }
 
-    let { message } = err;
+    let message = "";
+    if ("ok" in err) {
+      message = getApiErrorMessage(err);
+    } else {
+      message = err.message;
+    }
+
     // This is a redux-saga error that should only occur during development, but
     // we're cleaning it up here (just in case):
     if (/call: argument fn is undefined or null/gi.test(message)) {
