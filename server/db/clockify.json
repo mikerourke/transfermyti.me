@@ -214,25 +214,55 @@
       "workspaceId": "clock-workspace-01"
     }
   ],
-  "tasks": [],
+  "tasks": [
+    {
+      "assigneeIds": ["clock-user-01"],
+      "estimate": "PT1H30M15S",
+      "id": "clock-task-01",
+      "name": "Task 1",
+      "projectId": "clock-project-01",
+      "status": "ACTIVE"
+    },
+    {
+      "assigneeIds": ["clock-user-01"],
+      "estimate": "PT1H",
+      "id": "clock-task-02",
+      "name": "Task 2",
+      "projectId": "clock-project-01",
+      "status": "DONE"
+    },
+    {
+      "assigneeIds": ["clock-user-01"],
+      "estimate": "PT2H10M",
+      "id": "clock-task-03",
+      "name": "Task 3",
+      "projectId": "clock-project-01",
+      "status": "ACTIVE"
+    },
+    {
+      "assigneeIds": ["clock-user-01"],
+      "estimate": "PT2H20M",
+      "id": "clock-task-04",
+      "name": "Task 4",
+      "projectId": "clock-project-02",
+      "status": "ACTIVE"
+    },
+    {
+      "assigneeIds": ["clock-user-01"],
+      "estimate": "PT4H15M30S",
+      "id": "clock-task-05",
+      "name": "Task 5",
+      "projectId": "clock-project-02",
+      "status": "DONE"
+    }
+  ],
   "timeEntries": [
     {
       "id": "clock-entry-01",
       "description": "This is a test entry (01)",
-      "tags": [
-        {
-          "id": "clock-tag-01",
-          "name": "tag-a",
-          "workspaceId": "clock-workspace-01"
-        },
-        {
-          "id": "clock-tag-02",
-          "name": "tag-b",
-          "workspaceId": "clock-workspace-01"
-        }
-      ],
+      "tagIds": ["clock-tag-01", "clock-tag-02"],
       "billable": false,
-      "task": null,
+      "taskId": "clock-task-01",
       "timeInterval": {
         "start": "2019-06-25T18:00:00Z",
         "end": "2019-06-25T23:00:00Z",
@@ -248,9 +278,9 @@
     {
       "id": "clock-entry-02",
       "description": "This is a test entry (02)",
-      "tags": null,
+      "tagIds": [],
       "billable": false,
-      "task": null,
+      "taskId": "clock-task-02",
       "timeInterval": {
         "start": "2019-06-24T14:00:00Z",
         "end": "2019-06-24T22:00:00Z",
@@ -266,15 +296,9 @@
     {
       "id": "clock-entry-03",
       "description": "This is a test entry (03)",
-      "tags": [
-        {
-          "id": "clock-tag-01",
-          "name": "tag-a",
-          "workspaceId": "clock-workspace-01"
-        }
-      ],
+      "tagIds": ["clock-tag-01"],
       "billable": false,
-      "task": null,
+      "taskId": "clock-task-03",
       "timeInterval": {
         "start": "2019-06-23T14:30:00Z",
         "end": "2019-06-24T04:30:00Z",
@@ -290,9 +314,9 @@
     {
       "id": "clock-entry-04",
       "description": "This is a test entry (04)",
-      "tags": null,
+      "tagIds": ["clock-tag-02", "clock-tag-03"],
       "billable": false,
-      "task": null,
+      "taskId": "clock-task-04",
       "timeInterval": {
         "start": "2019-06-23T14:00:20Z",
         "end": "2019-06-23T17:05:20Z",
@@ -308,9 +332,9 @@
     {
       "id": "clock-entry-05",
       "description": "This is a test entry (05)",
-      "tags": null,
+      "tagIds": [],
       "billable": false,
-      "task": null,
+      "taskId": "clock-task-04",
       "timeInterval": {
         "start": "2019-06-22T14:00:19Z",
         "end": "2019-06-22T19:15:19Z",
@@ -326,9 +350,9 @@
     {
       "id": "clock-entry-06",
       "description": "This is a test entry (06)",
-      "tags": null,
+      "tagIds": ["clock-tag-03", "clock-tag-04"],
       "billable": false,
-      "task": null,
+      "taskId": "clock-task-05",
       "timeInterval": {
         "start": "2019-06-21T20:45:57Z",
         "end": "2019-06-21T21:50:57Z",
@@ -344,9 +368,9 @@
     {
       "id": "clock-entry-07",
       "description": "This is a test entry (07)",
-      "tags": null,
+      "tagIds": [],
       "billable": false,
-      "task": null,
+      "taskId": null,
       "timeInterval": {
         "start": "2019-05-02T10:00:00Z",
         "end": "2019-05-02T12:00:00Z",
@@ -362,9 +386,9 @@
     {
       "id": "clock-entry-08",
       "description": "This is a test entry (08)",
-      "tags": null,
+      "tagIds": [],
       "billable": false,
-      "task": null,
+      "taskId":  null,
       "timeInterval": {
         "start": "2019-05-01T20:00:00Z",
         "end": "2019-05-01T21:00:00Z",
@@ -380,9 +404,9 @@
     {
       "id": "clock-entry-09",
       "description": "This is a test entry (09)",
-      "tags": null,
+      "tagIds": ["clock-tag-03", "clock-tag-04", "clock-tag-05"],
       "billable": false,
-      "task": null,
+      "taskId":  null,
       "timeInterval": {
         "start": "2018-06-25T18:00:00Z",
         "end": "2018-06-25T23:00:00Z",
@@ -398,9 +422,9 @@
     {
       "id": "clock-entry-10",
       "description": "This is a test entry (10)",
-      "tags": null,
+      "tagIds": [],
       "billable": false,
-      "task": null,
+      "taskId":  null,
       "timeInterval": {
         "start": "2018-06-24T14:00:00Z",
         "end": "2018-06-24T22:00:00Z",
@@ -416,9 +440,9 @@
     {
       "id": "clock-entry-11",
       "description": "This is a test entry (11)",
-      "tags": null,
+      "tagIds": [],
       "billable": false,
-      "task": null,
+      "taskId":  null,
       "timeInterval": {
         "start": "2018-06-23T14:30:00Z",
         "end": "2018-06-24T04:30:00Z",
@@ -434,9 +458,9 @@
     {
       "id": "clock-entry-12",
       "description": "This is a test entry (12)",
-      "tags": null,
+      "tagIds": [],
       "billable": false,
-      "task": null,
+      "taskId":  null,
       "timeInterval": {
         "start": "2018-06-23T14:00:20Z",
         "end": "2018-06-23T17:05:20Z",
@@ -452,9 +476,9 @@
     {
       "id": "clock-entry-13",
       "description": "This is a test entry (13)",
-      "tags": null,
+      "tagIds": [],
       "billable": false,
-      "task": null,
+      "taskId":  null,
       "timeInterval": {
         "start": "2018-06-22T14:00:19Z",
         "end": "2018-06-22T19:15:19Z",
@@ -470,9 +494,9 @@
     {
       "id": "clock-entry-14",
       "description": "This is a test entry (14)",
-      "tags": null,
+      "tagIds": [],
       "billable": false,
-      "task": null,
+      "taskId":  null,
       "timeInterval": {
         "start": "2018-06-21T20:45:57Z",
         "end": "2018-06-21T21:50:57Z",
@@ -488,9 +512,9 @@
     {
       "id": "clock-entry-15",
       "description": "This is a test entry (15)",
-      "tags": null,
+      "tagIds": [],
       "billable": false,
-      "task": null,
+      "taskId":  null,
       "timeInterval": {
         "start": "2017-06-25T18:00:00Z",
         "end": "2017-06-25T23:00:00Z",
@@ -506,9 +530,9 @@
     {
       "id": "clock-entry-16",
       "description": "This is a test entry (16)",
-      "tags": null,
+      "tagIds": [],
       "billable": false,
-      "task": null,
+      "taskId":  null,
       "timeInterval": {
         "start": "2017-06-24T14:00:00Z",
         "end": "2017-06-24T22:00:00Z",
@@ -524,9 +548,9 @@
     {
       "id": "clock-entry-17",
       "description": "This is a test entry (17)",
-      "tags": null,
+      "tagIds": [],
       "billable": false,
-      "task": null,
+      "taskId":  null,
       "timeInterval": {
         "start": "2017-06-23T14:30:00Z",
         "end": "2017-06-24T04:30:00Z",
@@ -542,9 +566,9 @@
     {
       "id": "clock-entry-18",
       "description": "This is a test entry (18)",
-      "tags": null,
+      "tagIds": [],
       "billable": false,
-      "task": null,
+      "taskId":  null,
       "timeInterval": {
         "start": "2017-06-23T14:00:20Z",
         "end": "2017-06-23T17:05:20Z",
@@ -560,9 +584,9 @@
     {
       "id": "clock-entry-19",
       "description": "This is a test entry (19)",
-      "tags": null,
+      "tagIds": [],
       "billable": false,
-      "task": null,
+      "taskId":  null,
       "timeInterval": {
         "start": "2017-06-22T14:00:19Z",
         "end": "2017-06-22T19:15:19Z",
@@ -578,9 +602,9 @@
     {
       "id": "clock-entry-20",
       "description": "This is a test entry (20)",
-      "tags": null,
+      "tagIds": [],
       "billable": false,
-      "task": null,
+      "taskId":  null,
       "timeInterval": {
         "start": "2017-06-21T20:45:57Z",
         "end": "2017-06-21T21:50:57Z",
@@ -599,9 +623,7 @@
       "id": "clock-user-group-01",
       "name": "Admins",
       "workspaceId": "clock-workspace-01",
-      "userIds": [
-        "clock-user-01"
-      ]
+      "userIds": ["clock-user-01"]
     },
     {
       "id": "clock-user-group-02",

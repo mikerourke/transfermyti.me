@@ -4,9 +4,8 @@ const fetch = require("node-fetch");
 const { cyan, green, magenta, yellow } = require("chalk");
 const fs = require("fs-extra");
 const _ = require("lodash");
-const jsonFile = require("jsonfile");
-const yargs = require("yargs");
 const PromiseThrottle = require("promise-throttle");
+const yargs = require("yargs");
 const httpEnv = require("../http-client.private.env.json");
 
 /**
@@ -22,7 +21,7 @@ const clockifyUserId = httpEnv.development["clockify-user-id"];
 yargs
   .command({
     command: "delete",
-    desc: "Delete all entities on Clockify testing workspace",
+    desc: "Delete all allEntities on Clockify testing workspace",
     handler: async () => {
       await deleteEntitiesInWorkspaces();
     },
@@ -30,7 +29,7 @@ yargs
   .command({
     command: "write",
     desc:
-      "Grabs all the Clockify entities and writes them to clockify.json in CWD",
+      "Grabs all the Clockify allEntities and writes them to clockify.json in CWD",
     handler: async () => {
       await writeEntitiesToOutputFile();
     },
@@ -91,12 +90,12 @@ async function writeEntitiesToOutputFile() {
     await addEntityGroupToWorkspaceData(id, name, "time-entries");
   }
 
-  await jsonFile.writeFile(outputPath, dataByWorkspaceName, { spaces: 2 });
-  console.log(green("Clockify entities written to file!"));
+  await fs.writeJSON(outputPath, dataByWorkspaceName, { spaces: 2 });
+  console.log(green("Clockify allEntities written to file!"));
 }
 
 /**
- * Deletes all of the entities in the specified group from the specified
+ * Deletes all of the allEntities in the specified group from the specified
  * workspace.
  */
 async function deleteEntityGroupInWorkspace(workspaceId, entityGroup) {
@@ -115,7 +114,7 @@ async function deleteEntityGroupInWorkspace(workspaceId, entityGroup) {
 
   const baseEndpoint = getEntityGroupEndpoint(workspaceId, entityGroup);
   const apiDeleteEntity = entityId =>
-    clockifyFetch(`${baseEndpoint}${entityId}`, { method: "DELETE" });
+    clockifyFetch(`${baseEndpoint}/${entityId}`, { method: "DELETE" });
 
   const { promiseThrottle, throttledFn } = buildThrottler(apiDeleteEntity);
 
@@ -293,7 +292,11 @@ function buildThrottler(fetchFunc) {
  * specified options.
  */
 async function clockifyFetch(endpoint, options) {
-  const fullUrl = `https://api.clockify.me/api/v1${endpoint}`;
+  let rootUrl = "https://api.clockify.me/api";
+  if (!/tags|clients/gi.test(endpoint)) {
+    rootUrl += "/v1";
+  }
+  const fullUrl = `${rootUrl}${endpoint}`;
 
   const requestOptions = {
     headers: {
@@ -311,7 +314,6 @@ async function clockifyFetch(endpoint, options) {
     });
     requestOptions.body = JSON.stringify(requestOptions.body);
   }
-
   const response = await fetch(fullUrl, requestOptions);
 
   try {

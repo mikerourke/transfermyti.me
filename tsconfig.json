@@ -16,7 +16,7 @@
     "skipLibCheck": true,
     "noEmit": true,
     "allowJs": true,
-    "jsx": "react",
+    "jsx": "preserve",
     "moduleResolution": "node",
     "rootDir": "src",
     "resolveJsonModule": true,
@@ -25,24 +25,23 @@
     "noImplicitThis": true,
     "noImplicitAny": true,
     "noUnusedLocals": true,
+    "strict": true,
     "suppressImplicitAnyIndexErrors": true,
-    "strictNullChecks": false,
     "paths": {
       "~/*": ["./src/*"]
-    }
+    },
+    "types": ["@emotion/core"]
   },
   "exclude": [
     ".cache",
+    ".idea",
     "build",
     "coverage",
     "dist",
     "node_modules",
     "public",
     "requests",
-    "responses",
     "scripts",
-    "server",
-    "src/setupJest",
-    "state.js"
+    "server"
   ]
 }

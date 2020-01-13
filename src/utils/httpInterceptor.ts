@@ -2,11 +2,13 @@ import fetchIntercept from "fetch-intercept";
 import { Store } from "redux";
 import {
   CLOCKIFY_API_URL,
+  IS_USING_LOCAL_API,
   LOCAL_API_URL,
   TOGGL_API_URL,
   TOGGL_REPORTS_URL,
 } from "~/constants";
-import { CredentialsModel, ToolName } from "~/types";
+import { credentialsByToolNameSelector } from "~/credentials/credentialsSelectors";
+import { ToolName } from "~/typeDefs";
 
 enum Context {
   Api = "api",
@@ -23,13 +25,16 @@ export function initInterceptor(store: Store): VoidFunction {
     request(url, config: RequestConfig = {}) {
       const { toolName, context, endpoint } = extrapolateFromUrl(url);
 
-      const { credentials } = store.getState();
+      const credentialsByToolName = credentialsByToolNameSelector(
+        store.getState(),
+      );
+      const apiKey = credentialsByToolName[toolName]?.apiKey ?? "";
 
       if (config.body) {
         config.body = JSON.stringify(config.body);
       }
 
-      const baseHeaders = getHeaders(toolName, credentials);
+      const baseHeaders = getHeaders(toolName, apiKey);
       if (config.headers) {
         config.headers = {
           ...config.headers,
@@ -40,27 +45,23 @@ export function initInterceptor(store: Store): VoidFunction {
       }
 
       const fullUrl = getApiUrl(toolName, context).concat("/", endpoint);
-
       return [fullUrl, config];
     },
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
     response(response): any {
       if (!response.ok) {
-        const toolName = response.url.includes("clockify")
-          ? ToolName.Clockify
-          : ToolName.Toggl;
-
-        const { url, status, statusText } = response;
-
-        return response
-          .json()
-          .then((result: object) => Promise.reject({ ...result, toolName }))
-          .catch(() => Promise.reject({ url, status, statusText, toolName }));
+        return Promise.reject(response);
       }
-      const type = response.headers.get("content-type") || "json";
+
+      const type = response.headers.get("content-type") ?? null;
+      if (type === null) {
+        return response;
+      }
+
       if (type.includes("json")) {
         return response.json();
       }
+
       return response.text();
     },
   });
@@ -68,17 +69,17 @@ export function initInterceptor(store: Store): VoidFunction {
 
 function getHeaders(
   toolName: ToolName,
-  credentials: CredentialsModel,
+  apiKey: string,
 ): Record<string, string> {
   if (toolName === ToolName.Clockify) {
     return {
       "Content-Type": "application/json",
-      "X-Api-Key": credentials.clockifyApiKey,
+      "X-Api-Key": apiKey,
     };
   }
 
-  const authString = `${credentials.togglApiKey}:api_token`;
-  const encodedAuth = Buffer.from(authString).toString("base64");
+  const authString = `${apiKey}:api_token`;
+  const encodedAuth = window.btoa(authString);
   return {
     "Content-Type": "application/json",
     Authorization: `Basic ${encodedAuth}`,
@@ -99,7 +100,7 @@ function extrapolateFromUrl(
 }
 
 function getApiUrl(toolName: ToolName, context: Context): string {
-  if (process.env.USE_LOCAL_API === "true" || process.env.NODE_ENV === "test") {
+  if (IS_USING_LOCAL_API) {
     return `${LOCAL_API_URL}/${toolName}`;
   }
 
