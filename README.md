@@ -63,5 +63,3 @@ section.
 
 - [ ] Verify Clockify -> Toggl transfer works
 - [ ] Add tests
-- [ ] Add analytics
-- [ ] Add link to buy me a beverage
