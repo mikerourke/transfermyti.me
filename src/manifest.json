@@ -1,0 +1,10 @@
+{
+  "short_name": "transfermyti.me",
+  "name": "transfermyti.me",
+  "start_url": "/",
+  "background_color": "#f2fcea",
+  "theme_color": "#3b769d",
+  "display": "standalone",
+  "scope": "/",
+  "icons": []
+}

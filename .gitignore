@@ -66,3 +66,4 @@ build
 http-client.private.env.json
 dist
 .env
+public
