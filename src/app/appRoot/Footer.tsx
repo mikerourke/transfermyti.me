@@ -69,7 +69,7 @@ const Footer: React.FC = () => (
         <Love />
         by <LinkToMe />
       </p>
-      <nav aria-labelledby="footer-social-links">
+      <nav aria-labelledby="footer-social-links" css={{ marginTop: "0.25rem" }}>
         <VisuallyHidden id="footer-social-links">
           Social Media Links
         </VisuallyHidden>

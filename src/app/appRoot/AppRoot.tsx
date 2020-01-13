@@ -16,6 +16,57 @@ const Main = styled.main({
   position: "relative",
 });
 
+const GlobalStyles: React.FC = () => (
+  <Global
+    styles={{
+      "*": {
+        boxSizing: "border-box",
+        fontFamily: theme.fonts.body,
+
+        "&:before, &:after": {
+          boxSizing: "border-box",
+        },
+      },
+
+      html: {
+        boxSizing: "border-box",
+        height: "100%",
+      },
+
+      body: {
+        backgroundColor: theme.colors.secondary,
+        color: theme.colors.primary,
+        lineHeight: theme.lineHeights.body,
+        margin: 0,
+        position: "relative",
+      },
+
+      "#app": {
+        margin: "0 auto",
+        minHeight: "100vh",
+      },
+
+      a: {
+        color: theme.colors.primary,
+        cursor: "pointer",
+        textDecoration: "none",
+
+        "&:hover,&:focus": {
+          textDecoration: "underline",
+        },
+      },
+
+      "h1,h2,h3,h4,h5,h6,p": {
+        margin: "1rem 0",
+      },
+
+      ul: {
+        margin: 0,
+      },
+    }}
+  />
+);
+
 const AppRoot: React.FC = props => {
   const description = "Transfer your data between time tracking tools.";
   const title = "transfermyti.me";
@@ -38,55 +89,9 @@ const AppRoot: React.FC = props => {
           name="keywords"
           content={["toggl", "clockify", "transfer"].join(",")}
         />
+        <link href="manifest.json" rel="manifest" />
       </Helmet>
-      <Global
-        styles={{
-          "*": {
-            fontFamily: theme.fonts.body,
-            boxSizing: "border-box",
-
-            "&:before, &:after": {
-              boxSizing: "border-box",
-            },
-          },
-
-          html: {
-            boxSizing: "border-box",
-            height: "100%",
-          },
-
-          body: {
-            color: theme.colors.primary,
-            backgroundColor: theme.colors.secondary,
-            lineHeight: theme.lineHeights.body,
-            position: "relative",
-            margin: 0,
-          },
-
-          "#app": {
-            margin: "0 auto",
-            minHeight: "100vh",
-          },
-
-          a: {
-            color: theme.colors.primary,
-            cursor: "pointer",
-            textDecoration: "none",
-
-            "&:hover,&:focus": {
-              textDecoration: "underline",
-            },
-          },
-
-          "h1,h2,h3,h4,h5,h6,p": {
-            margin: "1rem 0",
-          },
-
-          ul: {
-            margin: 0,
-          },
-        }}
-      />
+      <GlobalStyles />
       <Header />
       <Main role="main">{props.children}</Main>
       <NotificationsDisplay />
