@@ -1,20 +1,18 @@
 import React from "react";
-import { render } from "@testing-library/react";
+import { render } from "~/jestHelpers";
 import Loader from "../Loader";
 
 describe("<Loader> Component", () => {
-  test(`displays a default message if one isn't specified`, () => {
-    const { getByTestId } = render(<Loader />);
-    const loaderMessage = getByTestId("loader-message");
+  test(`displays no message if one props.children isn't specified`, () => {
+    const { queryByText } = render(<Loader />);
 
-    expect(loaderMessage).toHaveTextContent("Loading, please wait...");
+    expect(queryByText("Loading")).toBeNull();
   });
 
   test("displays the message from props.children", () => {
     const expectedMessage = "Test Loading";
-    const { getByTestId } = render(<Loader>{expectedMessage}</Loader>);
-    const loaderMessage = getByTestId("loader-message");
+    const { getByText } = render(<Loader>{expectedMessage}</Loader>);
 
-    expect(loaderMessage).toHaveTextContent(expectedMessage);
+    expect(getByText(expectedMessage)).toBeDefined();
   });
 });

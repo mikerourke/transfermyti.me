@@ -23,7 +23,7 @@ const getApiErrorMessage = (response: Response): string => {
 
   let message = `Error code ${status} when fetching from ${toolName} API.`;
   if (statusText) {
-    message += `Error message: ${statusText}`;
+    message += ` Status: ${statusText}`;
   }
 
   return message;
