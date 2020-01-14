@@ -129,8 +129,8 @@ const Icon: React.FC<Props> = ({ name, color, size = 24, ...props }) => {
       <desc id={svgDescId}>{iconAttributes[name].desc}</desc>
       <path
         data-testid="svg-icon-path"
-        d={iconAttributes[name].path}
         css={theme => ({ fill: theme.colors[color] })}
+        d={iconAttributes[name].path}
       />
     </svg>
   );
