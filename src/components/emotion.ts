@@ -25,7 +25,6 @@ export interface ThemeColors {
 }
 
 export interface Theme {
-  readonly breakpoints: string[];
   readonly colors: ThemeColors;
   readonly fonts: {
     readonly body: string;
@@ -52,12 +51,15 @@ export interface Theme {
     notificationHeight: number;
     notificationGap: number;
   };
+  readonly query: {
+    mobile: string;
+    small: string;
+  };
 }
 
 export const theme: Theme = {
-  breakpoints: ["40em", "52em", "64em"],
   colors: {
-    primary: "rgb(30, 120, 161)",
+    primary: "rgb(30,120,161)",
     secondary: "rgb(239, 253, 232)",
     ruby: "rgb(165, 19, 35)",
     navy: "rgb(31, 58, 147)",
@@ -108,6 +110,10 @@ export const theme: Theme = {
   sizes: {
     notificationHeight: 6,
     notificationGap: 1,
+  },
+  query: {
+    mobile: "@media (max-width: 32rem)",
+    small: "@media (min-width: 33rem) and (max-width: 52rem)",
   },
 };
 

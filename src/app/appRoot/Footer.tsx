@@ -1,20 +1,19 @@
 import React from "react";
 import {
   ExternalLink,
+  Flex,
   Icon,
+  IconLink,
   styled,
   VisuallyHidden,
-  Flex,
-  IconLink,
 } from "~/components";
 
 const Base = styled.footer(
   {
-    alignItems: "center",
     display: "flex",
-    height: "6rem",
+    height: "7rem",
     justifyContent: "space-between",
-    padding: "0 2rem",
+    padding: "2rem",
     position: "fixed",
     bottom: 0,
     left: 0,
@@ -32,6 +31,14 @@ const Base = styled.footer(
     background: theme.colors.primary,
     color: theme.colors.secondary,
 
+    [theme.query.mobile]: {
+      justifyContent: "center",
+    },
+
+    [theme.query.small]: {
+      fontSize: 14,
+    },
+
     "a:focus": {
       outlineColor: theme.colors.secondary,
     },
@@ -39,10 +46,25 @@ const Base = styled.footer(
 );
 
 const RightColumn = styled.div({
-  fontSize: 14,
   fontWeight: 500,
   textAlign: "right",
+
+  "@media (max-width: 32rem)": {
+    display: "none",
+  },
 });
+
+const SocialLinksNav = styled.nav(
+  {
+    marginTop: "0.25rem",
+  },
+  ({ theme }) => ({
+    [theme.query.mobile]: {
+      display: "flex",
+      justifyContent: "center",
+    },
+  }),
+);
 
 const Love: React.FC = () => <Icon name="heart" color="ruby" height={12} />;
 
@@ -67,9 +89,9 @@ const Footer: React.FC = () => (
       <p>
         Made with
         <Love />
-        by <LinkToMe />
+        by <LinkToMe /> © {new Date().getFullYear()}
       </p>
-      <nav aria-labelledby="footer-social-links" css={{ marginTop: "0.25rem" }}>
+      <SocialLinksNav aria-labelledby="footer-social-links">
         <VisuallyHidden id="footer-social-links">
           Social Media Links
         </VisuallyHidden>
@@ -106,7 +128,7 @@ const Footer: React.FC = () => (
             </IconLink>
           </li>
         </Flex>
-      </nav>
+      </SocialLinksNav>
     </div>
     <RightColumn>
       <p>The time tracking tool companies are not responsible for this tool.</p>

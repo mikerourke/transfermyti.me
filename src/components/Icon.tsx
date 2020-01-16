@@ -57,7 +57,7 @@ export const iconAttributes = {
   },
   heart: {
     viewBox: "0 0 1792 1536",
-    desc: "A heart",
+    desc: "A filled-in heart (the cartoon kind, not one with ventricles).",
     title: "Heart Icon",
     path: `
       M896 1536q-26 0-44-18L228 916q-10-8-27.5-26 T145 824.5 77 727 23.5 606 0 

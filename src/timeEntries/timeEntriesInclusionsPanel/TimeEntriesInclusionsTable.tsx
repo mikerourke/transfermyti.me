@@ -54,10 +54,10 @@ const TimeEntriesInclusionsTable: React.FC<Props> = props => (
             <td>{format(timeEntry.start, "Pp")}</td>
             <td>{format(timeEntry.end, "Pp")}</td>
             <NullValueCell value={timeEntry.taskName}>
-              {timeEntry.taskName ?? "No Task"}
+              {timeEntry.taskName ?? "None"}
             </NullValueCell>
             <NullValueCell value={timeEntry.projectName}>
-              {timeEntry.projectName ?? "No Project"}
+              {timeEntry.projectName ?? "None"}
             </NullValueCell>
             <InclusionsTableCheckboxCell
               rowSpan={2}

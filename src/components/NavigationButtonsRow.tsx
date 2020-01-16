@@ -2,18 +2,27 @@ import React from "react";
 import Button from "./Button";
 import { styled } from "./emotion";
 
-const Base = styled.nav({
-  marginTop: "1rem",
+const Base = styled.nav(
+  {
+    marginTop: "1rem",
 
-  button: {
-    minHeight: "3rem",
-    minWidth: "6.5rem",
+    button: {
+      minHeight: "3rem",
+      minWidth: "6.5rem",
 
-    ":not(:last-of-type)": {
-      marginRight: "0.75rem",
+      ":not(:last-of-type)": {
+        marginRight: "0.75rem",
+      },
     },
   },
-});
+  ({ theme }) => ({
+    [theme.query.mobile]: {
+      button: {
+        minWidth: "unset",
+      },
+    },
+  }),
+);
 
 interface Props {
   disabled?: boolean;

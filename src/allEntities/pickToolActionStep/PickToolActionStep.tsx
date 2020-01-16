@@ -55,7 +55,12 @@ export const PickToolActionStepComponent: React.FC<Props> = props => {
           perform and you&apos;ll be guided through the appropriate steps.
         </p>
       </HelpDetails>
-      <Flex as="ul" css={{ listStyle: "none", padding: 0 }} wrap="wrap">
+      <Flex
+        as="ul"
+        css={{ listStyle: "none", padding: 0 }}
+        justifyContent="center"
+        wrap="wrap"
+      >
         <ToolActionCard
           action={ToolAction.Transfer}
           source={ToolName.Toggl}

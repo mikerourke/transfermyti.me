@@ -11,7 +11,7 @@ const LinkToIssues: React.FC = () => (
   </ExternalLink>
 );
 
-const MailToLink: React.FC = () => (
+const MailTo: React.FC = () => (
   <a
     href="mailto:mike.w.rourke@gmail.com"
     css={{ textDecoration: "underline" }}
@@ -33,10 +33,12 @@ const NoSelectionsModal: React.FC<Props> = props => (
       Please ensure you have checked the checkbox next to the records you&apos;d
       like to include before proceeding.
     </p>
-    <p>
-      Alternatively, all of the records may already exist on the target tool. If
-      you believe this is an error, please <LinkToIssues /> or <MailToLink />.
-    </p>
+    {props.toolAction !== ToolAction.Delete && (
+      <p>
+        Alternatively, all of the records may already exist on the target tool.
+        If you believe this is an error, please <LinkToIssues /> or <MailTo />.
+      </p>
+    )}
   </ModalDialog>
 );
 

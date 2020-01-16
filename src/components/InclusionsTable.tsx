@@ -57,6 +57,17 @@ const Table = styled.table(
     "tbody tr:last-of-type td": {
       borderBottom: `1px solid ${theme.colors.white}`,
     },
+
+    [theme.query.mobile]: {
+      "td, th": {
+        fontSize: "0.875rem",
+        padding: "0.375rem",
+      },
+
+      "[data-include='true']": {
+        width: "4.25rem",
+      },
+    },
   }),
 );
 

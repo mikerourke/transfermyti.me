@@ -119,7 +119,7 @@ export const SelectSourceWorkspacesStepComponent: React.FC<Props> = props => {
       {props.areWorkspacesFetching ? (
         <Loader>Loading workspaces, please wait...</Loader>
       ) : (
-        <Flex as="ul" css={{ listStyle: "none", padding: 0 }}>
+        <Flex as="ul" css={{ listStyle: "none", padding: 0 }} wrap="wrap">
           {props.sourceWorkspaces.map(workspace => (
             <SourceWorkspaceCard
               key={workspace.id}

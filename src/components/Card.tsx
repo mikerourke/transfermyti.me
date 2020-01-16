@@ -14,6 +14,10 @@ const Base = styled.li(
     background: theme.colors.primary,
     boxShadow: theme.elevation.dp4,
     color: theme.colors.secondary,
+
+    [theme.query.mobile]: {
+      flexBasis: "16rem",
+    },
   }),
 );
 
