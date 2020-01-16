@@ -10,8 +10,8 @@
   "scripts": {
     "prebuild": "yarn tidy",
     "build": "parcel build ./src/index.html --out-dir public --no-source-maps --no-cache",
-    "postbuild": "cp ./src/manifest.json ./public && cp ./src/robots.txt ./public",
-    "prestart:web": "mkdir -p ./dist && cp ./src/manifest.json ./dist && cp ./src/robots.txt ./dist",
+    "postbuild": "cp ./resources/* public",
+    "prestart:web": "mkdir -p ./dist && cp ./resources/* dist",
     "start:web": "parcel serve src/index.html --out-dir ./dist --public-url / --port 3000 --target browser",
     "start:server": "nodemon ./server/index.js",
     "start": "USE_LOCAL_API=true concurrently --kill-others \"yarn start:server\" \"yarn start:web\"",

@@ -1,27 +1,35 @@
+import Color from "color";
+import { Global } from "@emotion/core";
+import { ThemeProvider } from "emotion-theming";
 import React from "react";
 import { Helmet } from "react-helmet";
-import { ThemeProvider } from "emotion-theming";
-import { Global } from "@emotion/core";
-import { styled, theme } from "~/components/emotion";
+import { styled, theme as customTheme } from "~/components/emotion";
 import NotificationsDisplay from "~/app/notificationsDisplay/NotificationsDisplay";
 import Header from "./Header";
 import Footer from "./Footer";
 
-const Main = styled.main({
-  height: "calc(100vh - 9rem)",
-  margin: "0 auto",
-  maxWidth: "56rem",
-  overflowY: "auto",
-  padding: "0 1.5rem 1.5rem",
-  position: "relative",
-});
+const Main = styled.main(
+  {
+    height: "calc(100vh - 10rem)",
+    margin: "0 auto",
+    maxWidth: "56rem",
+    overflowY: "auto",
+    padding: "0 1.5rem 1.5rem",
+    position: "relative",
+  },
+  ({ theme }) => ({
+    [theme.query.mobile]: {
+      padding: "0 0.375rem 1.5rem",
+    },
+  }),
+);
 
 const GlobalStyles: React.FC = () => (
   <Global
     styles={{
       "*": {
         boxSizing: "border-box",
-        fontFamily: theme.fonts.body,
+        fontFamily: customTheme.fonts.body,
 
         "&:before, &:after": {
           boxSizing: "border-box",
@@ -34,9 +42,9 @@ const GlobalStyles: React.FC = () => (
       },
 
       body: {
-        backgroundColor: theme.colors.secondary,
-        color: theme.colors.primary,
-        lineHeight: theme.lineHeights.body,
+        backgroundColor: customTheme.colors.secondary,
+        color: customTheme.colors.primary,
+        lineHeight: customTheme.lineHeights.body,
         margin: 0,
         position: "relative",
       },
@@ -47,7 +55,7 @@ const GlobalStyles: React.FC = () => (
       },
 
       a: {
-        color: theme.colors.primary,
+        color: customTheme.colors.primary,
         cursor: "pointer",
         textDecoration: "none",
 
@@ -68,28 +76,59 @@ const GlobalStyles: React.FC = () => (
 );
 
 const AppRoot: React.FC = props => {
+  const author = "Mike Rourke";
   const description = "Transfer your data between time tracking tools.";
   const title = "transfermyti.me";
+  const cardImageUrl = "https://transfermyti.me/logo-card.png";
+
+  const primaryColor = Color(customTheme.colors.primary).hex();
+  const secondaryColor = Color(customTheme.colors.secondary).hex();
 
   return (
-    <ThemeProvider theme={theme}>
+    <ThemeProvider theme={customTheme}>
       <Helmet>
         <meta charSet="utf-8" />
         <meta name="viewport" content="width=device-width, initial-scale=1" />
         <title>{title}</title>
+        <meta name="author" content={author} />
         <meta name="description" content={description} />
         <meta property="og:title" content={title} />
         <meta name="og:description" content={description} />
+        <meta name="og:image" content={cardImageUrl} />
         <meta name="og:type" content="website" />
         <meta name="twitter:card" content="summary" />
-        <meta name="twitter:creator" content="Mike Rourke" />
+        <meta name="twitter:url" content="https://transfermyti.me" />
         <meta name="twitter:title" content={title} />
         <meta name="twitter:description" content={description} />
+        <meta name="twitter:image" content={cardImageUrl} />
+        <meta name="twitter:image:width" content="600" />
+        <meta name="twitter:image:height" content="600" />
+        <meta name="twitter:site" content="@codelikeawolf" />
+        <meta name="twitter:creator" content="@codelikeawolf" />
         <meta
           name="keywords"
           content={["toggl", "clockify", "transfer"].join(",")}
         />
-        <link href="manifest.json" rel="manifest" />
+        <link
+          rel="apple-touch-icon"
+          sizes="180x180"
+          href="/apple-touch-icon.png"
+        />
+        <link
+          rel="icon"
+          type="image/png"
+          sizes="32x32"
+          href="/favicon-32x32.png"
+        />
+        <link
+          rel="icon"
+          type="image/png"
+          sizes="16x16"
+          href="/favicon-16x16.png"
+        />
+        <link rel="manifest" href="/site.webmanifest" />
+        <meta name="msapplication-TileColor" content={primaryColor} />
+        <meta name="theme-color" content={secondaryColor} />
       </Helmet>
       <GlobalStyles />
       <Header />
