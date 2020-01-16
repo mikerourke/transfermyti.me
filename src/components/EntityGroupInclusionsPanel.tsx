@@ -1,3 +1,4 @@
+import * as R from "ramda";
 import React from "react";
 import { connect } from "react-redux";
 import { PayloadActionCreator } from "typesafe-actions";
@@ -59,6 +60,15 @@ export const EntityGroupInclusionsPanelComponent: React.FC<Props> = ({
     ({ existsInTarget }) => !existsInTarget,
   );
 
+  let sortedTableData = tableData;
+  try {
+    const sortByName = R.sortBy(R.compose(R.toLower, R.prop("name")));
+    sortedTableData = sortByName(tableData);
+  } catch {
+    // Do nothing. If the data records don't have a `name` field, just pass the
+    // original data into the table.
+  }
+
   return (
     <AccordionPanel rowNumber={props.rowNumber} title={groupDisplay}>
       {recordCount === 0 ? (
@@ -76,7 +86,7 @@ export const EntityGroupInclusionsPanelComponent: React.FC<Props> = ({
             <InclusionsTableHead labels={headerLabels} />
             <InclusionsTableBody
               fieldNames={bodyFieldNames}
-              tableData={tableData}
+              tableData={sortedTableData}
               onFlipIsIncluded={props.onFlipIsIncluded}
             />
             <InclusionsTableFoot
