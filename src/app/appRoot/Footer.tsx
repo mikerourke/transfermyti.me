@@ -69,7 +69,7 @@ const SocialLinksNav = styled.nav(
 const Love: React.FC = () => <Icon name="heart" color="ruby" height={12} />;
 
 const LinkToMe: React.FC = () => (
-  <ExternalLink color="white" href="https://github.com/mikerourke">
+  <ExternalLink color="white" href="https://mikerourke.dev">
     Mike Rourke
   </ExternalLink>
 );
