@@ -1,0 +1,171 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`the <Button> component matches its snapshot based on props.variant when props.variant = default 1`] = `
+.emotion-0 {
+  border-radius: 0.375rem;
+  font-size: 1.25rem;
+  font-weight: 400;
+  padding: 0.5rem 0.75rem;
+  text-align: center;
+  -webkit-transition: 0.3s all linear;
+  transition: 0.3s all linear;
+  vertical-align: middle;
+  box-shadow: 0 1px 3px 0 rgba(0,0,0,0.2), 0 1px 1px 0 rgba(0,0,0,0.14), 0 2px 1px -1px rgba(0,0,0,0.12);
+  background: #484848;
+  border: none;
+  color: #EFFDE8;
+  opacity: 1;
+}
+
+.emotion-0:hover {
+  background: #3A3A3A;
+  -webkit-text-decoration: underline;
+  text-decoration: underline;
+}
+
+.emotion-0:focus {
+  outline-color: rgb(30,120,161);
+}
+
+<button
+  aria-disabled="false"
+  class="emotion-0"
+  type="button"
+/>
+`;
+
+exports[`the <Button> component matches its snapshot based on props.variant when props.variant = eggplant 1`] = `
+.emotion-0 {
+  border-radius: 0.375rem;
+  font-size: 1.25rem;
+  font-weight: 400;
+  padding: 0.5rem 0.75rem;
+  text-align: center;
+  -webkit-transition: 0.3s all linear;
+  transition: 0.3s all linear;
+  vertical-align: middle;
+  box-shadow: 0 1px 3px 0 rgba(0,0,0,0.2), 0 1px 1px 0 rgba(0,0,0,0.14), 0 2px 1px -1px rgba(0,0,0,0.12);
+  background: #550055;
+  border: none;
+  color: #EFFDE8;
+  opacity: 1;
+}
+
+.emotion-0:hover {
+  background: #440044;
+  -webkit-text-decoration: underline;
+  text-decoration: underline;
+}
+
+.emotion-0:focus {
+  outline-color: rgb(30,120,161);
+}
+
+<button
+  aria-disabled="false"
+  class="emotion-0"
+  type="button"
+/>
+`;
+
+exports[`the <Button> component matches its snapshot based on props.variant when props.variant = outline 1`] = `
+.emotion-0 {
+  border-radius: 0.375rem;
+  font-size: 1.25rem;
+  font-weight: 400;
+  padding: 0.5rem 0.75rem;
+  text-align: center;
+  -webkit-transition: 0.3s all linear;
+  transition: 0.3s all linear;
+  vertical-align: middle;
+  box-shadow: 0 1px 3px 0 rgba(0,0,0,0.2), 0 1px 1px 0 rgba(0,0,0,0.14), 0 2px 1px -1px rgba(0,0,0,0.12);
+  background: #EFFDE8;
+  border: 3px solid #1E78A1;
+  color: #1E78A1;
+  opacity: 1;
+}
+
+.emotion-0:hover {
+  background: #EFFDE8;
+  -webkit-text-decoration: underline;
+  text-decoration: underline;
+}
+
+.emotion-0:focus {
+  outline-color: rgb(30,120,161);
+}
+
+<button
+  aria-disabled="false"
+  class="emotion-0"
+  type="button"
+/>
+`;
+
+exports[`the <Button> component matches its snapshot based on props.variant when props.variant = primary 1`] = `
+.emotion-0 {
+  border-radius: 0.375rem;
+  font-size: 1.25rem;
+  font-weight: 400;
+  padding: 0.5rem 0.75rem;
+  text-align: center;
+  -webkit-transition: 0.3s all linear;
+  transition: 0.3s all linear;
+  vertical-align: middle;
+  box-shadow: 0 1px 3px 0 rgba(0,0,0,0.2), 0 1px 1px 0 rgba(0,0,0,0.14), 0 2px 1px -1px rgba(0,0,0,0.12);
+  background: #1E78A1;
+  border: none;
+  color: #EFFDE8;
+  opacity: 1;
+}
+
+.emotion-0:hover {
+  background: #186081;
+  -webkit-text-decoration: underline;
+  text-decoration: underline;
+}
+
+.emotion-0:focus {
+  outline-color: rgb(30,120,161);
+}
+
+<button
+  aria-disabled="false"
+  class="emotion-0"
+  type="button"
+/>
+`;
+
+exports[`the <Button> component matches its snapshot based on props.variant when props.variant = secondary 1`] = `
+.emotion-0 {
+  border-radius: 0.375rem;
+  font-size: 1.25rem;
+  font-weight: 400;
+  padding: 0.5rem 0.75rem;
+  text-align: center;
+  -webkit-transition: 0.3s all linear;
+  transition: 0.3s all linear;
+  vertical-align: middle;
+  box-shadow: 0 1px 3px 0 rgba(0,0,0,0.2), 0 1px 1px 0 rgba(0,0,0,0.14), 0 2px 1px -1px rgba(0,0,0,0.12);
+  background: #EFFDE8;
+  border: none;
+  color: #1E78A1;
+  opacity: 1;
+}
+
+.emotion-0:hover {
+  background: #EFFDE8;
+  -webkit-text-decoration: underline;
+  text-decoration: underline;
+}
+
+.emotion-0:focus {
+  outline-color: rgb(239,253,232);
+}
+
+<button
+  aria-disabled="false"
+  class="emotion-0"
+  type="button"
+/>
+`;

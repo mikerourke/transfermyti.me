@@ -1,0 +1,14 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`the <Note> component matches its snapshot with valid props 1`] = `
+.emotion-0 {
+  color: rgb(85,0,85);
+  font-weight: 600;
+}
+
+<p
+  class="emotion-0"
+>
+  Test Note
+</p>
+`;

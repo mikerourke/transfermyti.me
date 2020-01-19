@@ -62,7 +62,7 @@ const Loader: React.FC = ({ children, ...props }) => (
   <Flex
     alignItems="center"
     justifyContent="center"
-    direction="column"
+    flexDirection="column"
     {...props}
   >
     <CubesContainer>

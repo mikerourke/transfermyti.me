@@ -1,0 +1,26 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`the <InclusionsTableHead> component renders successfully with valid props 1`] = `
+<table>
+  <thead>
+    <tr>
+      <th
+        scope="col"
+      >
+        Column A
+      </th>
+      <th
+        scope="col"
+      >
+        Column B
+      </th>
+      <th
+        data-include="true"
+        scope="col"
+      >
+        Include?
+      </th>
+    </tr>
+  </thead>
+</table>
+`;

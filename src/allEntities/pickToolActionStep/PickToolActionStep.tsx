@@ -59,7 +59,7 @@ export const PickToolActionStepComponent: React.FC<Props> = props => {
         as="ul"
         css={{ listStyle: "none", padding: 0 }}
         justifyContent="center"
-        wrap="wrap"
+        flexWrap="wrap"
       >
         <ToolActionCard
           action={ToolAction.Transfer}

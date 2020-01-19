@@ -120,7 +120,7 @@ export const PerformToolActionStepComponent: React.FC<Props> = props => {
           Note: This could take several minutes due to API rate limiting.
         </Note>
       </HelpDetails>
-      <Flex direction="column">
+      <Flex flexDirection="column">
         {orderedEntityGroups.map(entityGroup => (
           <ProgressBar
             key={entityGroup}

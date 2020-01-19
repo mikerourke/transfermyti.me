@@ -30,11 +30,11 @@ export interface FlexProps {
   alignSelf?: CommonPositionalOption | SelfPositionalOption;
   justifyContent?: CommonPositionalOption | SpacePositionalOption;
   justifySelf?: CommonPositionalOption | SelfPositionalOption;
-  direction?: "column" | "column-reverse" | "row" | "row-reverse";
+  flexDirection?: "column" | "column-reverse" | "row" | "row-reverse";
   flex?: string | number;
-  grow?: number;
-  shrink?: number;
-  wrap?: GlobalOption | "nowrap" | "wrap" | "wrap-reverse";
+  flexGrow?: number;
+  flexShrink?: number;
+  flexWrap?: GlobalOption | "nowrap" | "wrap" | "wrap-reverse";
 }
 
 interface Props extends FlexProps, React.HTMLAttributes<HTMLElement> {
@@ -51,11 +51,11 @@ const Flex: React.FC<Props> = ({
   alignSelf,
   justifyContent,
   justifySelf,
-  direction,
+  flexDirection,
   flex,
-  grow,
-  shrink,
-  wrap,
+  flexGrow,
+  flexShrink,
+  flexWrap,
   ...props
 }) => {
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
@@ -70,11 +70,11 @@ const Flex: React.FC<Props> = ({
         alignSelf,
         justifyContent,
         justifySelf,
-        flexDirection: direction,
+        flexDirection,
         flex,
-        flexGrow: grow,
-        flexShrink: shrink,
-        flexWrap: wrap,
+        flexGrow,
+        flexShrink,
+        flexWrap,
       }}
       {...props}
     />

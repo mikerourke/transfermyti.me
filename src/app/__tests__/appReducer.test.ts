@@ -50,7 +50,7 @@ describe("within appReducer", () => {
       {
         name: "when the error is thrown from redux-saga",
         payload: new Error("call: argument fn is undefined or null"),
-        expected: "Parsing error",
+        expected: "The following error occurred: Parsing error",
       },
     ],
   );
