@@ -10,7 +10,7 @@ describe("<Icon> Component", () => {
     };
     const { getByTestId } = render(<Icon {...props} />);
     const innerPath = getByTestId("svg-icon-path");
-    const validColor = theme.colors.success.replace(/ /ig, "");
+    const validColor = theme.colors.success.replace(/ /gi, "");
 
     expect(innerPath).toHaveAttribute("d", iconAttributes.heart.path);
     expect(innerPath).toHaveStyleRule("fill", validColor);

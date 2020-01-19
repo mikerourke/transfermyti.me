@@ -18,7 +18,7 @@ export const updateActiveWorkspaceId = createAction(
 )<string>();
 
 export const appendUserIdsToWorkspace = createAction(
-  "@workspaces/APPEND_USER_IDS",
+  "@workspaces/APPEND_USER_IDS_TO_WORKSPACE",
 )<{ mapping: Mapping; workspaceId: string; userIds: string[] }>();
 
 export const flipIsWorkspaceIncluded = createAction(

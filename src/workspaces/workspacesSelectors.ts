@@ -18,26 +18,37 @@ export const sourceWorkspacesByIdSelector = createSelector(
   (workspacesById): WorkspacesByIdModel => workspacesById,
 );
 
-export const targetWorkspacesByIdSelector = createSelector(
-  (state: ReduxState): WorkspacesByIdModel => state.workspaces.target,
-  (workspacesById): WorkspacesByIdModel => workspacesById,
-);
-
-export const workspaceIdToLinkedIdSelector = createSelector(
-  sourceWorkspacesByIdSelector,
-  (sourceWorkspacesById): Record<string, string> =>
-    selectIdToLinkedId(sourceWorkspacesById),
-);
-
 export const sourceWorkspacesSelector = createSelector(
   sourceWorkspacesByIdSelector,
   (workspacesById): WorkspaceModel[] => Object.values(workspacesById),
+);
+
+export const targetWorkspacesByIdSelector = createSelector(
+  (state: ReduxState): WorkspacesByIdModel => state.workspaces.target,
+  (workspacesById): WorkspacesByIdModel => workspacesById,
 );
 
 export const includedSourceWorkspacesSelector = createSelector(
   sourceWorkspacesSelector,
   (workspaces): WorkspaceModel[] =>
     workspaces.filter(workspace => workspace.isIncluded),
+);
+
+export const sourceIncludedWorkspacesCountSelector = createSelector(
+  includedSourceWorkspacesSelector,
+  (includedWorkspaces): number => includedWorkspaces.length,
+);
+
+export const sourceWorkspacesForTransferSelector = createSelector(
+  sourceWorkspacesSelector,
+  (sourceWorkspaces): WorkspaceModel[] =>
+    sourceWorkspaces.filter(workspace => workspace.isIncluded),
+);
+
+export const workspaceIdToLinkedIdSelector = createSelector(
+  sourceWorkspacesByIdSelector,
+  (sourceWorkspacesById): Record<string, string> =>
+    selectIdToLinkedId(sourceWorkspacesById),
 );
 
 const targetWorkspacesSelector = createSelector(
@@ -76,15 +87,3 @@ export const includedWorkspaceIdsByMappingSelector = createStructuredSelector<
   source: includedSourceWorkspaceIdsSelector,
   target: includedTargetWorkspaceIdsSelector,
 });
-
-export const sourceIncludedWorkspacesCountSelector = createSelector(
-  sourceWorkspacesSelector,
-  (workspaces): number =>
-    workspaces.filter(workspace => workspace.isIncluded).length,
-);
-
-export const sourceWorkspacesForTransferSelector = createSelector(
-  sourceWorkspacesSelector,
-  (sourceWorkspaces): WorkspaceModel[] =>
-    sourceWorkspaces.filter(workspace => workspace.isIncluded),
-);

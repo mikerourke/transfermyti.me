@@ -59,7 +59,7 @@ const sourceTagsInActiveWorkspaceSelector = createSelector(
     sourceTags.filter(tag => tag.workspaceId === workspaceId),
 );
 
-export const tagsForInclusionTableSelector = createSelector(
+export const tagsForInclusionsTableSelector = createSelector(
   (state: ReduxState) => state.allEntities.areExistsInTargetShown,
   sourceTagsInActiveWorkspaceSelector,
   sourceTimeEntryCountByTagIdSelector,
@@ -94,7 +94,7 @@ export const tagsForInclusionTableSelector = createSelector(
 );
 
 export const tagsTotalCountsByTypeSelector = createSelector(
-  tagsForInclusionTableSelector,
+  tagsForInclusionsTableSelector,
   tagsForInclusionTable =>
     tagsForInclusionTable.reduce(
       (

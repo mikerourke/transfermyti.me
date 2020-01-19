@@ -66,13 +66,6 @@ export const timeEntriesReducer = createReducer<
     }),
   )
   .handleAction(
-    timeEntriesActions.addLinksToTimeEntries,
-    (state, { payload }) => ({
-      ...state,
-      ...payload,
-    }),
-  )
-  .handleAction(
     timeEntriesActions.flipIsTimeEntryIncluded,
     (state, { payload }) =>
       R.over(R.lensPath([Mapping.Source, payload, "isIncluded"]), R.not, state),

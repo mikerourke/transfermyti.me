@@ -71,9 +71,7 @@ const Loader: React.FC = ({ children, ...props }) => (
       <Cube rotation={270} delay={0.9} />
       <Cube rotation={180} delay={0.6} />
     </CubesContainer>
-    {!R.isNil(children) && (
-      <LoadingMessage>{children}</LoadingMessage>
-    )}
+    {!R.isNil(children) && <LoadingMessage>{children}</LoadingMessage>}
   </Flex>
 );
 

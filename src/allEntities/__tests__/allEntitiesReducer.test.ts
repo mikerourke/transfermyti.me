@@ -2,7 +2,7 @@ import cases from "jest-in-case";
 import { state, invalidAction } from "~/redux/__mocks__/mockStoreWithState";
 import * as allEntitiesActions from "../allEntitiesActions";
 import { allEntitiesReducer, initialState } from "../allEntitiesReducer";
-import { EntityGroup, FetchStatus, ToolName, ToolAction } from "~/typeDefs";
+import { EntityGroup, FetchStatus, ToolAction, ToolName } from "~/typeDefs";
 
 const DEFAULT_TRANSFER_COUNTS = {
   ...initialState.transferCountsByEntityGroup,

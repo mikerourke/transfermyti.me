@@ -86,6 +86,7 @@ export const workspacesReducer = createReducer<
       const newUserIds = R.uniq(
         R.concat(R.view(userIdLens, state) as string[], userIds),
       );
+
       return R.set(userIdLens, newUserIds, state);
     },
   )
@@ -97,6 +98,7 @@ export const workspacesReducer = createReducer<
         R.not,
         state,
       );
+
       if (payload.linkedId) {
         return R.over(
           R.lensPath([Mapping.Target, payload.linkedId, "isIncluded"]),
@@ -104,6 +106,7 @@ export const workspacesReducer = createReducer<
           updatedState,
         );
       }
+
       return updatedState;
     },
   )

@@ -6,7 +6,7 @@ import {
   updateAreAllTagsIncluded,
 } from "~/tags/tagsActions";
 import {
-  tagsForInclusionTableSelector,
+  tagsForInclusionsTableSelector,
   tagsTotalCountsByTypeSelector,
 } from "~/tags/tagsSelectors";
 import { EntityGroupInclusionsPanel } from "~/components";
@@ -40,7 +40,7 @@ export const TagsInclusionsPanelComponent: React.FC<Props> = props => (
 );
 
 const mapStateToProps = (state: ReduxState): ConnectStateProps => ({
-  tags: tagsForInclusionTableSelector(state),
+  tags: tagsForInclusionsTableSelector(state),
   totalCountsByType: tagsTotalCountsByTypeSelector(state),
 });
 
