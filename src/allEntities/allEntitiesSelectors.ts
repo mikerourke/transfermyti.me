@@ -24,6 +24,13 @@ export const pushAllChangesFetchStatusSelector = (
   state: ReduxState,
 ): FetchStatus => state.allEntities.pushAllChangesFetchStatus;
 
+export const toolActionSelector = (state: ReduxState): ToolAction =>
+  state.allEntities.toolAction;
+
+export const toolNameByMappingSelector = (
+  state: ReduxState,
+): ToolNameByMappingModel => state.allEntities.toolNameByMapping;
+
 export const entityGroupInProcessDisplaySelector = createSelector(
   (state: ReduxState) => state.allEntities.entityGroupInProcess,
   (entityGroupInProcess): string =>
@@ -76,17 +83,10 @@ export const totalIncludedRecordsCountSelector = createSelector(
     ),
 );
 
-export const toolNameByMappingSelector = (
-  state: ReduxState,
-): ToolNameByMappingModel => state.allEntities.toolNameByMapping;
-
 export const toolForTargetMappingSelector = createSelector(
   toolNameByMappingSelector,
   (toolNameByMapping): ToolName => toolNameByMapping.target,
 );
-
-export const toolActionSelector = (state: ReduxState): ToolAction =>
-  state.allEntities.toolAction;
 
 export const mappingByToolNameSelector = createSelector(
   toolNameByMappingSelector,
@@ -100,16 +100,17 @@ export const replaceMappingWithToolNameSelector = createSelector(
   toolNameByMappingSelector,
   toolNameByMapping => (label: string): string => {
     const { source, target } = toolNameByMapping;
+    let updatedLabel = label;
 
     if (/source/gi.test(label)) {
-      return label.replace(/source/gi, capitalize(source));
+      updatedLabel = updatedLabel.replace(/source/gi, capitalize(source));
     }
 
     if (/target/gi.test(label)) {
-      return label.replace(/target/gi, capitalize(target));
+      updatedLabel = updatedLabel.replace(/target/gi, capitalize(target));
     }
 
-    return label;
+    return updatedLabel;
   },
 );
 
@@ -152,16 +153,28 @@ export const toolHelpDetailsByMappingSelector = createSelector(
 );
 
 export const targetToolDisplayNameSelector = createSelector(
+  toolNameByMappingSelector,
   toolDisplayNameByMappingSelector,
-  (toolDisplayNameByMapping): string =>
-    toolDisplayNameByMapping[Mapping.Target],
+  (toolNameByMapping, toolDisplayNameByMapping): string => {
+    if (toolNameByMapping[Mapping.Target] === ToolName.None) {
+      return toolDisplayNameByMapping[Mapping.Source];
+    }
+
+    return toolDisplayNameByMapping[Mapping.Target];
+  },
 );
 
 export const targetToolTrackerUrlSelector = createSelector(
   toolNameByMappingSelector,
-  (toolNameByMapping): string =>
-    ({
+  (toolNameByMapping): string => {
+    const validToolName =
+      toolNameByMapping[Mapping.Target] === ToolName.None
+        ? toolNameByMapping[Mapping.Source]
+        : toolNameByMapping[Mapping.Target];
+
+    return {
       [ToolName.Clockify]: "https://clockify.me/tracker",
       [ToolName.Toggl]: "https://toggl.com/app/timer",
-    }[toolNameByMapping[Mapping.Target]]),
+    }[validToolName];
+  },
 );
