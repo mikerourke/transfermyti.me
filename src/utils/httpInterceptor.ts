@@ -20,6 +20,10 @@ interface RequestConfig {
   headers?: Record<string, string>;
 }
 
+/**
+ * Intercepts fetch requests and allows us to form the correct URL when sending
+ * and automatically convert to JSON when receiving responses.
+ */
 export function initInterceptor(store: Store): VoidFunction {
   return fetchIntercept.register({
     request(url, config: RequestConfig = {}) {
@@ -67,6 +71,10 @@ export function initInterceptor(store: Store): VoidFunction {
   });
 }
 
+/**
+ * Returns the headers with correct authentication based on the specified
+ * tool name.
+ */
 function getHeaders(
   toolName: ToolName,
   apiKey: string,
@@ -86,6 +94,11 @@ function getHeaders(
   };
 }
 
+/**
+ * Extrapolates the tool name, context, and endpoint from the specified URL.
+ * This allows us to specify a simpler URL for fetch requests and get the
+ * tool information based on the path.
+ */
 function extrapolateFromUrl(
   url: string,
 ): { toolName: ToolName; context: Context; endpoint: string } {
@@ -99,6 +112,10 @@ function extrapolateFromUrl(
   };
 }
 
+/**
+ * Returns the base URL to prefix the endpoint based on the specified tool
+ * name and context (e.g. reports).
+ */
 function getApiUrl(toolName: ToolName, context: Context): string {
   if (IS_USING_LOCAL_API) {
     return `${LOCAL_API_URL}/${toolName}`;

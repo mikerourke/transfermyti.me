@@ -22,7 +22,9 @@
     "timeEntriesTypes.ts",
     "userGroupsTypes.ts",
     "usersTypes.ts",
-    "workspacesTypes.ts"
+    "workspacesTypes.ts",
+    "utils/index.ts",
+    "components/index.tsx"
   ],
   "coverageReporters": ["lcov"],
   "moduleFileExtensions": ["js", "json", "jsx", "ts", "tsx"],

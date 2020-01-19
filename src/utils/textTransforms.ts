@@ -8,8 +8,8 @@ export function booleanToYesNo(value: boolean | string): string {
   return value;
 }
 
-export function capitalize(value: string): string {
-  if (R.or(R.isNil(value), R.isEmpty(value))) {
+export function capitalize(value: string | null): string {
+  if (R.isNil(value) || R.isEmpty(value)) {
     return "";
   }
 
