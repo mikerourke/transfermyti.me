@@ -36,8 +36,8 @@ export default {
       userId: "clock-user-01",
     },
     validationErrorsByMapping: {
-      source: null,
-      target: null,
+      source: "Error getting source",
+      target: "Error getting target",
     },
     validationFetchStatus: "PENDING",
   },
