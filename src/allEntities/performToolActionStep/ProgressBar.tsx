@@ -61,7 +61,10 @@ const ProgressBar: React.FC<Props> = ({
     <div css={{ marginBottom: "1rem", marginTop: "0.5rem" }} {...props}>
       <Title>{title}</Title>
       <Bar>
-        <Filler css={{ width: `${percentage}%` }} />
+        <Filler
+          data-testid="progress-bar-filler"
+          css={{ width: `${percentage}%` }}
+        />
       </Bar>
       <CountsLabel>
         {completedCount} / {totalCount}
