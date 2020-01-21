@@ -1,6 +1,7 @@
 import { SagaIterator } from "@redux-saga/types";
 import { call, delay, put, select } from "redux-saga/effects";
 import { TOGGL_API_DELAY } from "~/constants";
+import { validStringify } from "~/utils";
 import * as reduxUtils from "~/redux/reduxUtils";
 import { incrementEntityGroupTransferCompletedCount } from "~/allEntities/allEntitiesActions";
 import { includedSourceProjectIdsSelector } from "~/projects/projectsSelectors";
@@ -71,13 +72,16 @@ export function* deleteTogglUsersSaga(sourceUsers: UserModel[]): SagaIterator {
       fetchProjectUsersInSourceWorkspace,
       workspaceId,
     );
-    const projectUsersById = projectUsers.reduce(
-      (acc, projectUser) => ({
+    const projectUsersById = projectUsers.reduce((acc, projectUser) => {
+      if (!projectUser?.id) {
+        return acc;
+      }
+
+      return {
         ...acc,
         [projectUser.id.toString()]: projectUser,
-      }),
-      {},
-    );
+      };
+    }, {});
 
     yield delay(TOGGL_API_DELAY);
 
@@ -89,13 +93,13 @@ export function* deleteTogglUsersSaga(sourceUsers: UserModel[]): SagaIterator {
         // If they are, make sure that the project that the user is associated
         // with is going to be deleted:
         const isProjectIncluded = includedProjectIds.includes(
-          matchingProjectUser.pid.toString(),
+          validStringify(matchingProjectUser.pid, ""),
         );
 
         if (isProjectIncluded) {
           yield call(
             deleteTogglUserFromProject,
-            matchingProjectUser.id.toString(),
+            validStringify(matchingProjectUser.id, ""),
           );
 
           yield put(
@@ -188,7 +192,7 @@ function transformFromResponse(
   workspaceId: string,
 ): UserModel {
   return {
-    id: user.id.toString(),
+    id: validStringify(user?.id, ""),
     name: user.fullname,
     email: user.email,
     isAdmin: null,

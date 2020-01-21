@@ -1,5 +1,6 @@
 import { SagaIterator } from "@redux-saga/types";
 import { call } from "redux-saga/effects";
+import { validStringify } from "~/utils";
 import * as reduxUtils from "~/redux/reduxUtils";
 import { ClientModel, EntityGroup, ToolName } from "~/typeDefs";
 
@@ -96,9 +97,9 @@ function* fetchTogglClientsInWorkspace(
 
 function transformFromResponse(client: TogglClientResponseModel): ClientModel {
   return {
-    id: client.id.toString(),
+    id: validStringify(client.id, ""),
     name: client.name,
-    workspaceId: client.wid.toString(),
+    workspaceId: validStringify(client.wid, ""),
     entryCount: 0,
     linkedId: null,
     isIncluded: true,

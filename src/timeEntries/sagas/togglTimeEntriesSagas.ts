@@ -8,6 +8,7 @@ import qs from "qs";
 import * as R from "ramda";
 import { call, delay, select } from "redux-saga/effects";
 import { TOGGL_API_DELAY } from "~/constants";
+import { validStringify } from "~/utils";
 import * as reduxUtils from "~/redux/reduxUtils";
 import { clientIdsByNameSelectorFactory } from "~/clients/clientsSelectors";
 import { credentialsByToolNameSelector } from "~/credentials/credentialsSelectors";
@@ -104,7 +105,7 @@ function* createTogglTimeEntry(
     string | null,
     Record<string, string>,
     string
-  >(null, sourceTimeEntry.projectId, projectIdToLinkedId);
+  >(null, sourceTimeEntry.projectId ?? "", projectIdToLinkedId);
 
   const taskIdToLinkedId = yield select(taskIdToLinkedIdSelector);
   const targetTaskId = R.propOr<string | null, Record<string, string>, string>(
@@ -278,7 +279,7 @@ function transformFromResponse(
   const tagNames = timeEntry.tags ?? [];
   const tagIds = tagNames.map(tagName => tagIdsByName[tagName]);
   return {
-    id: timeEntry.id.toString(),
+    id: validStringify(timeEntry?.id, ""),
     description: timeEntry.description,
     isBillable: timeEntry.is_billable,
     start: startTime,
@@ -286,11 +287,11 @@ function transformFromResponse(
     year: startTime.getFullYear(),
     isActive: false,
     clientId,
-    projectId: timeEntry.pid.toString(),
+    projectId: validStringify(timeEntry?.pid, null),
     tagIds,
     tagNames,
-    taskId: R.isNil(timeEntry.tid) ? null : timeEntry.tid.toString(),
-    userId: timeEntry.uid.toString(),
+    taskId: validStringify(timeEntry?.tid, null),
+    userId: validStringify(timeEntry?.uid, null),
     userGroupIds: [],
     workspaceId,
     entryCount: 0,

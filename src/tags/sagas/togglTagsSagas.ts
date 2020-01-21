@@ -1,5 +1,6 @@
 import { SagaIterator } from "@redux-saga/types";
 import { call } from "redux-saga/effects";
+import { validStringify } from "~/utils";
 import * as reduxUtils from "~/redux/reduxUtils";
 import { EntityGroup, TagModel, ToolName } from "~/typeDefs";
 
@@ -92,9 +93,9 @@ function* fetchTogglTagsInWorkspace(
 
 function transformFromResponse(tag: TogglTagResponseModel): TagModel {
   return {
-    id: tag.id.toString(),
+    id: validStringify(tag?.id, ""),
     name: tag.name,
-    workspaceId: tag.wid.toString(),
+    workspaceId: validStringify(tag?.wid, ""),
     entryCount: 0,
     linkedId: null,
     isIncluded: true,

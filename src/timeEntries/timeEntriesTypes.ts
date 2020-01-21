@@ -12,11 +12,11 @@ export interface TimeEntryModel extends BaseEntityModel {
   year: number;
   isActive: boolean;
   clientId: string | null;
-  projectId: string;
+  projectId: string | null;
   tagIds: string[];
   tagNames: string[];
   taskId: string | null;
-  userId: string;
+  userId: string | null;
   userGroupIds: string[];
 }
 

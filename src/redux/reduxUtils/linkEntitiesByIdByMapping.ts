@@ -179,6 +179,10 @@ function doProjectsMatch(
   sourceEntry: TimeEntryModel,
   targetEntry: TimeEntryModel,
 ): boolean {
+  if (sourceEntry.projectId === null) {
+    return false;
+  }
+
   const sourceProject = sourceProjectsById[sourceEntry.projectId] ?? null;
   if (sourceProject === null) {
     return false;

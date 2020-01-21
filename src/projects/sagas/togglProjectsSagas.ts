@@ -3,6 +3,7 @@ import { SagaIterator } from "@redux-saga/types";
 import * as R from "ramda";
 import { call, delay, select } from "redux-saga/effects";
 import { TOGGL_API_DELAY } from "~/constants";
+import { validStringify } from "~/utils";
 import * as reduxUtils from "~/redux/reduxUtils";
 import { clientIdToLinkedIdSelector } from "~/clients/clientsSelectors";
 import { EntityGroup, ProjectModel, ToolName } from "~/typeDefs";
@@ -135,7 +136,7 @@ function* fetchTogglProjectsInWorkspace(
   );
 
   for (const togglProject of togglProjects) {
-    const projectId = togglProject.id.toString();
+    const projectId = validStringify(togglProject?.id, "");
     const userIds: string[] = yield call(fetchUserIdsInProject, projectId);
     allTogglProjects.push(transformFromResponse(togglProject, userIds));
 
@@ -156,7 +157,7 @@ function* fetchUserIdsInProject(projectId: string): SagaIterator<string[]> {
     reduxUtils.fetchArray,
     `/toggl/api/projects/${projectId}/project_users`,
   );
-  return projectUsers.map(({ uid }) => uid.toString());
+  return projectUsers.map(({ uid }) => validStringify(uid, ""));
 }
 
 function transformFromResponse(
@@ -164,10 +165,10 @@ function transformFromResponse(
   userIds: string[],
 ): ProjectModel {
   return {
-    id: project.id.toString(),
+    id: validStringify(project.id, ""),
     name: project.name,
-    workspaceId: project.wid.toString(),
-    clientId: project.cid ? project.cid.toString() : null,
+    workspaceId: validStringify(project?.wid, ""),
+    clientId: validStringify(project?.cid, null),
     isBillable: project.billable,
     isPublic: !project.is_private,
     isActive: project.active,

@@ -1,5 +1,6 @@
 import { SagaIterator } from "@redux-saga/types";
 import { call } from "redux-saga/effects";
+import { validStringify } from "~/utils";
 import * as reduxUtils from "~/redux/reduxUtils";
 import { EntityGroup, ToolName, UserGroupModel } from "~/typeDefs";
 
@@ -97,10 +98,10 @@ function transformFromResponse(
   userGroup: TogglUserGroupResponseModel,
 ): UserGroupModel {
   return {
-    id: userGroup.id.toString(),
+    id: validStringify(userGroup?.id, ""),
     name: userGroup.name,
     userIds: [],
-    workspaceId: userGroup.wid.toString(),
+    workspaceId: validStringify(userGroup?.wid, ""),
     entryCount: 0,
     linkedId: null,
     isIncluded: true,

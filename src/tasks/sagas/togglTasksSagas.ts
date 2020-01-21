@@ -1,6 +1,7 @@
 import { SagaIterator } from "@redux-saga/types";
 import * as R from "ramda";
 import { call, select } from "redux-saga/effects";
+import { validStringify } from "~/utils";
 import * as reduxUtils from "~/redux/reduxUtils";
 import { projectIdToLinkedIdSelector } from "~/projects/projectsSelectors";
 import { EntityGroup, TaskModel, ToolName } from "~/typeDefs";
@@ -107,13 +108,13 @@ function* fetchTogglTasksInWorkspace(
 
 function transformFromResponse(task: TogglTaskResponseModel): TaskModel {
   return {
-    id: task.id.toString(),
+    id: validStringify(task?.id, ""),
     name: task.name,
     estimate: convertSecondsToClockifyEstimate(task.estimated_seconds),
     projectId: task.pid.toString(),
-    assigneeIds: task.uid ? [task.uid.toString()] : [],
+    assigneeIds: task.uid ? [validStringify(task?.uid, "")] : [],
     isActive: task.active,
-    workspaceId: task.wid.toString(),
+    workspaceId: validStringify(task?.wid, ""),
     entryCount: 0,
     linkedId: null,
     isIncluded: true,
