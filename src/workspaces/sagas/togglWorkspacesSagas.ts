@@ -3,6 +3,7 @@ import { SagaIterator } from "@redux-saga/types";
 import { call } from "redux-saga/effects";
 import { fetchArray } from "~/redux/reduxUtils";
 import { EntityGroup, WorkspaceModel } from "~/typeDefs";
+import { validStringify } from "~/utils";
 
 export interface TogglWorkspaceResponseModel {
   id: number;
@@ -34,12 +35,13 @@ export function* fetchTogglWorkspacesSaga(): SagaIterator {
 function transformFromResponse(
   workspace: TogglWorkspaceResponseModel,
 ): WorkspaceModel {
+  const workspaceId = validStringify(workspace?.id, "");
   return {
-    id: workspace.id.toString(),
+    id: workspaceId,
     name: workspace.name,
     userIds: [],
     isAdmin: true,
-    workspaceId: workspace.id.toString(),
+    workspaceId,
     entryCount: 0,
     linkedId: null,
     isIncluded: true,

@@ -2,6 +2,7 @@ import { SagaIterator } from "@redux-saga/types";
 import * as R from "ramda";
 import { call, delay, select } from "redux-saga/effects";
 import { CLOCKIFY_API_DELAY } from "~/constants";
+import { validStringify } from "~/utils";
 import * as reduxUtils from "~/redux/reduxUtils";
 import { clientIdToLinkedIdSelector } from "~/clients/clientsSelectors";
 import {
@@ -88,7 +89,7 @@ function* createClockifyProject(
     clientId: R.isNil(targetClientId) ? undefined : targetClientId,
     isPublic: sourceProject.isPublic,
     estimate: {
-      estimate: estimateHours.toString(),
+      estimate: validStringify(estimateHours, "0"),
       type: estimateType,
     },
     color: sourceProject.color,

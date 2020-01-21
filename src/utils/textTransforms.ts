@@ -43,3 +43,18 @@ export function kebabCase(value: string): string {
 
   return cleanValue.toLowerCase().replace(/\s+/g, "-");
 }
+
+export function validStringify<TDefault>(
+  value: string | number | null | undefined,
+  defaultIfNil: TDefault,
+): TDefault {
+  if (R.isNil(value)) {
+    return defaultIfNil;
+  }
+
+  try {
+    return (value.toString() as unknown) as TDefault;
+  } catch (err) {
+    return defaultIfNil;
+  }
+}

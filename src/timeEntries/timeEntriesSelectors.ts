@@ -54,7 +54,7 @@ export const timeEntriesForInclusionsTableSelector = createSelector(
 
       const projectName = R.pathOr(
         null,
-        [sourceTimeEntry.projectId, "name"],
+        [sourceTimeEntry.projectId ?? "", "name"],
         sourceProjectsById,
       );
 

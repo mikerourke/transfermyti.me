@@ -5,4 +5,5 @@ export {
   capitalize,
   getEntityGroupDisplay,
   kebabCase,
+  validStringify,
 } from "./textTransforms";

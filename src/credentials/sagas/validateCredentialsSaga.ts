@@ -6,6 +6,7 @@ import { validateCredentials } from "~/credentials/credentialsActions";
 import { credentialsByMappingSelector } from "~/credentials/credentialsSelectors";
 import { TogglWorkspaceResponseModel } from "~/workspaces/sagas/togglWorkspacesSagas";
 import { ToolName, ValidationErrorsByMappingModel } from "~/typeDefs";
+import { validStringify } from "~/utils";
 
 interface TogglMeResponseModel {
   since: number;
@@ -51,7 +52,10 @@ export function* validateCredentialsSaga(): SagaIterator {
         "/toggl/api/me",
       );
       credentialsByMapping[togglMapping].email = data.email;
-      credentialsByMapping[togglMapping].userId = data.id.toString();
+      credentialsByMapping[togglMapping].userId = validStringify(
+        data?.id,
+        null,
+      );
     } catch (err) {
       validationErrorsByMapping[togglMapping] = "Invalid API key";
       hasValidationErrors = true;
