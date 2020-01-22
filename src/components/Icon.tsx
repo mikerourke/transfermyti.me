@@ -19,7 +19,7 @@ export const iconAttributes = {
       "M26 14h-4v8h-8v4h8v8h4v-8h8v-4h-8v-8zM24 4C12.95 4 4 12.95 4 24",
       "s8.95 20 20 20 20-8.95 20-20S35.05 4 24 4zm0 36c-8.82 0-16-7.18-16-16S15.18",
       "8 24 8s16 7.18 16 16-7.18 16-16 16z",
-    ].join(""),
+    ].join(" "),
   },
   // Source: https://github.com/google/material-design-icons/blob/master/content/svg/production/ic_remove_circle_outline_48px.svg
   circleRemove: {
@@ -30,7 +30,7 @@ export const iconAttributes = {
       "M14 22v4h20v-4H14zM24 4C12.95 4 4 12.95 4 24s8.95 20 20 20 20-8.95",
       "20-20S35.05 4 24 4zm0 36c-8.82 0-16-7.18-16-16S15.18 8 24 8s16 7.18 16",
       "16-7.18 16-16 16z",
-    ].join(""),
+    ].join(" "),
   },
   // Source: https://github.com/FortAwesome/Font-Awesome/blob/master/svgs/brands/github.svg
   github: {
@@ -55,7 +55,7 @@ export const iconAttributes = {
       "m-10.8-8.1c-.7 1.3.3 2.9 2.3 3.9 1.6 1 3.6.7 4.3-.7.7-1.3-.3-2.9-2.3-3.9-2-.6-3.6-.3-4.3.7z",
       "m32.4 35.6c-1.6 1.3-1 4.3 1.3 6.2 2.3 2.3 5.2 2.6 6.5 1 1.3-1.3.7-4.3-1.3-6.2-2.2-2.3-5.2-2.6-6.5-1z",
       "m-11.4-14.7c-1.6 1-1.6 3.6 0 5.9 1.6 2.3 4.3 3.3 5.6 2.3 1.6-1.3 1.6-3.9 0-6.2-1.4-2.3-4-3.3-5.6-2z",
-    ].join(""),
+    ].join(" "),
   },
   heart: {
     viewBox: "0 0 1792 1536",
@@ -66,7 +66,7 @@ export const iconAttributes = {
       "468q0-220 127-344T478 0 q62 0 126.5 21.5t120 58T820 148t76 68q36-36 76-68",
       "t95.5-68.5 120-58T1314 0q224 0 351 124t127 344 q0 221-229 450l-623",
       "600q-18 18-44 18z",
-    ].join(""),
+    ].join(" "),
   },
   // Source: https://github.com/FortAwesome/Font-Awesome/blob/master/svgs/brands/linkedin.svg
   linkedIn: {
@@ -80,7 +80,7 @@ export const iconAttributes = {
       "c21.2 0 38.5 17.3 38.5 38.5 0 21.3-17.2 38.5-38.5 38.5zm282.1 243h-66.4",
       "V312c0-24.8-.5-56.7-34.5-56.7-34.6 0-39.9 27-39.9 54.9V416h-66.4V202.2",
       "h63.7v29.2h.9c8.9-16.8 30.6-34.5 62.9-34.5 67.2 0 79.7 44.3 79.7 101.9V416z",
-    ].join(""),
+    ].join(" "),
   },
   // Source: https://github.com/FortAwesome/Font-Awesome/blob/master/svgs/brands/twitter.svg
   twitter: {
@@ -99,7 +99,7 @@ export const iconAttributes = {
       "104.934-104.934 30.213 0 57.502 12.67 76.67 33.137 23.715-4.548 46.456-13.32",
       "66.599-25.34-7.798 24.366-24.366 44.833-46.132 57.827 21.117-2.273",
       "41.584-8.122 60.426-16.243-14.292 20.791-32.161 39.308-52.628 54.253z",
-    ].join(""),
+    ].join(" "),
   },
 };
 

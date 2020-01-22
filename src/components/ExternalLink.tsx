@@ -13,7 +13,7 @@ export const getOpenInNewTabContent = (color: string): string => {
     "c-21.37,0-32.05,25.91-17,41l35.73,35.73L135,320.37a24,24,0,0,0,0,34",
     "L157.67,377a24,24,0,0,0,34,0L435.28,133.32,471,169",
     "c15,15,41,4.5,41-17V24A24,24,0,0,0,488,0Z",
-  ].join("");
+  ].join(" ");
 
   const openInNewTagSvg = `
     <svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 512 512' height='12px' width='12px'>
