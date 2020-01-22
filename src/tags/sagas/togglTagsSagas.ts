@@ -93,7 +93,7 @@ function* fetchTogglTagsInWorkspace(
 
 function transformFromResponse(tag: TogglTagResponseModel): TagModel {
   return {
-    id: validStringify(tag?.id, ""),
+    id: tag.id.toString(),
     name: tag.name,
     workspaceId: validStringify(tag?.wid, ""),
     entryCount: 0,
