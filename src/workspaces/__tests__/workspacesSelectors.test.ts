@@ -25,7 +25,7 @@ const TEST_STATE = {
         workspaceId: "1002",
         entryCount: 20,
         linkedId: null,
-        isIncluded: false,
+        isIncluded: true,
         memberOf: "workspaces",
       },
     },
@@ -125,6 +125,6 @@ describe("within workspacesSelectors", () => {
       TEST_STATE,
     );
 
-    expect(result).toBe(1);
+    expect(result).toBe(2);
   });
 });

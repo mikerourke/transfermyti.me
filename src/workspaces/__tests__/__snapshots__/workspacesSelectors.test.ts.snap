@@ -3,6 +3,7 @@
 exports[`within workspacesSelectors the selectors match their snapshots for the includedSourceWorkspaceIdsSelector 1`] = `
 Array [
   "1001",
+  "1002",
 ]
 `;
 
@@ -21,6 +22,19 @@ Array [
     ],
     "workspaceId": "1001",
   },
+  Object {
+    "entryCount": 20,
+    "id": "1002",
+    "isAdmin": true,
+    "isIncluded": true,
+    "linkedId": null,
+    "memberOf": "workspaces",
+    "name": "Test Workspace 2",
+    "userIds": Array [
+      "6001",
+    ],
+    "workspaceId": "1002",
+  },
 ]
 `;
 
@@ -28,6 +42,7 @@ exports[`within workspacesSelectors the selectors match their snapshots for the 
 Object {
   "source": Array [
     "1001",
+    "1002",
   ],
   "target": Array [
     "clock-workspace-01",
@@ -35,22 +50,38 @@ Object {
 }
 `;
 
-exports[`within workspacesSelectors the selectors match their snapshots for the missingTargetWorkspacesSelector 1`] = `Array []`;
+exports[`within workspacesSelectors the selectors match their snapshots for the missingTargetWorkspacesSelector 1`] = `
+Array [
+  Object {
+    "entryCount": 20,
+    "id": "1002",
+    "isAdmin": true,
+    "isIncluded": true,
+    "linkedId": null,
+    "memberOf": "workspaces",
+    "name": "Test Workspace 2",
+    "userIds": Array [
+      "6001",
+    ],
+    "workspaceId": "1002",
+  },
+]
+`;
 
 exports[`within workspacesSelectors the selectors match their snapshots for the sourceWorkspacesForTransferSelector 1`] = `
 Array [
   Object {
     "entryCount": 20,
-    "id": "1001",
+    "id": "1002",
     "isAdmin": true,
     "isIncluded": true,
-    "linkedId": "clock-workspace-01",
+    "linkedId": null,
     "memberOf": "workspaces",
-    "name": "Test Workspace",
+    "name": "Test Workspace 2",
     "userIds": Array [
       "6001",
     ],
-    "workspaceId": "1001",
+    "workspaceId": "1002",
   },
 ]
 `;
