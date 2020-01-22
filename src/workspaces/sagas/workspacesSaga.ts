@@ -15,12 +15,13 @@ import { Mapping, ToolAction, ToolName, WorkspacesByIdModel } from "~/typeDefs";
 
 export function* workspacesSaga(): SagaIterator {
   yield all([
-    takeEvery(workspacesActions.createWorkspaces.request, createWorkspacesSaga),
     takeEvery(workspacesActions.fetchWorkspaces.request, fetchWorkspacesSaga),
   ]);
 }
 
-function* createWorkspacesSaga(): SagaIterator {
+export function* createWorkspacesSaga(): SagaIterator {
+  yield put(workspacesActions.createWorkspaces.request());
+
   try {
     const toolNameByMapping = yield select(toolNameByMappingSelector);
     const createSagaByToolName = {
