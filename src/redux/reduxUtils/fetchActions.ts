@@ -100,9 +100,8 @@ async function fetchWithRetries<TResponse>(
 
       // Most API services allow at least 1 request per second. If we encounter
       // a tool that doesn't adhere to this standard, we may have to make this
-      // tool-specific. I added a 200ms cushion to ensure we don't max out
-      // our attempts because of a time disparity:
-      await delay(1_200);
+      // tool-specific. Just to hedge my bets, I'm using a 3 second delay:
+      await delay(3_000);
       return await fetchWithRetries(endpoint, fetchOptions, attempt - 1);
     } else {
       throw err;

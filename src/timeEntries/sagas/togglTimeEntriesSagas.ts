@@ -279,7 +279,7 @@ function transformFromResponse(
   const tagNames = timeEntry.tags ?? [];
   const tagIds = tagNames.map(tagName => tagIdsByName[tagName]);
   return {
-    id: validStringify(timeEntry?.id, ""),
+    id: timeEntry.id.toString(),
     description: timeEntry.description,
     isBillable: timeEntry.is_billable,
     start: startTime,

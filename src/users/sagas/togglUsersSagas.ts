@@ -96,11 +96,8 @@ export function* deleteTogglUsersSaga(sourceUsers: UserModel[]): SagaIterator {
           validStringify(matchingProjectUser.pid, ""),
         );
 
-        if (isProjectIncluded) {
-          yield call(
-            deleteTogglUserFromProject,
-            validStringify(matchingProjectUser.id, ""),
-          );
+        if (isProjectIncluded && matchingProjectUser.id) {
+          yield call(deleteTogglUserFromProject, matchingProjectUser.id);
 
           yield put(
             incrementEntityGroupTransferCompletedCount(EntityGroup.Users),
@@ -192,7 +189,7 @@ function transformFromResponse(
   workspaceId: string,
 ): UserModel {
   return {
-    id: validStringify(user?.id, ""),
+    id: user.id.toString(),
     name: user.fullname,
     email: user.email,
     isAdmin: null,

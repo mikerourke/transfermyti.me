@@ -80,22 +80,29 @@ function* createClockifyTimeEntry(
   targetWorkspaceId: string,
 ): SagaIterator<TimeEntryModel> {
   const projectIdToLinkedId = yield select(projectIdToLinkedIdSelector);
-  const targetProjectId = R.propOr<
-    string | null,
-    Record<string, string>,
-    string
-  >(null, sourceTimeEntry.projectId ?? "", projectIdToLinkedId);
-
-  const targetTagIds = yield select(
-    targetTagIdsSelectorFactory(sourceTimeEntry.tagIds),
-  );
-
   const taskIdToLinkedId = yield select(taskIdToLinkedIdSelector);
-  const targetTaskId = R.propOr<string | null, Record<string, string>, string>(
-    null,
-    sourceTimeEntry.taskId ?? "",
-    taskIdToLinkedId,
-  );
+
+  let targetProjectId = null;
+  let targetTagIds = [];
+  let targetTaskId = null;
+
+  try {
+    if (sourceTimeEntry.projectId) {
+      targetProjectId = R.prop(sourceTimeEntry.projectId, projectIdToLinkedId);
+    }
+
+    targetTagIds = yield select(
+      targetTagIdsSelectorFactory(sourceTimeEntry.tagIds),
+    );
+
+    if (sourceTimeEntry.taskId) {
+      targetTaskId = R.prop(sourceTimeEntry.taskId, taskIdToLinkedId);
+    }
+  } catch {
+    // Ignore any errors here. We set default values for target properties,
+    // so if any of them are null/empty, we just set them to undefined in the
+    // payload.
+  }
 
   const timeEntryRequest = {
     start: sourceTimeEntry.start,
@@ -174,11 +181,11 @@ function transformFromResponse(
     end: getTime(timeEntry, "end"),
     year: startTime.getFullYear(),
     isActive: false,
-    clientId: timeEntry.project?.clientId ?? null,
-    projectId: timeEntry.project?.id ?? null,
+    clientId: timeEntry?.project?.clientId ?? null,
+    projectId: timeEntry?.project?.id ?? null,
     tagIds: clockifyTags.map(({ id }) => id),
     tagNames: clockifyTags.map(({ name }) => name),
-    taskId: timeEntry.task?.id ?? null,
+    taskId: timeEntry?.task?.id ?? null,
     userId: timeEntry.userId ?? null,
     userGroupIds: [],
     workspaceId: timeEntry.workspaceId,

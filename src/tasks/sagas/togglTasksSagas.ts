@@ -108,7 +108,7 @@ function* fetchTogglTasksInWorkspace(
 
 function transformFromResponse(task: TogglTaskResponseModel): TaskModel {
   return {
-    id: validStringify(task?.id, ""),
+    id: task.id.toString(),
     name: task.name,
     estimate: convertSecondsToClockifyEstimate(task.estimated_seconds),
     projectId: task.pid.toString(),
