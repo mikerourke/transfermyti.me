@@ -165,9 +165,9 @@ function transformFromResponse(
   userIds: string[],
 ): ProjectModel {
   return {
-    id: validStringify(project.id, ""),
+    id: project.id.toString(),
     name: project.name,
-    workspaceId: validStringify(project?.wid, ""),
+    workspaceId: project.wid.toString(),
     clientId: validStringify(project?.cid, null),
     isBillable: project.billable,
     isPublic: !project.is_private,

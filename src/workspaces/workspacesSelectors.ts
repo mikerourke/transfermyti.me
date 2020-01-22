@@ -1,4 +1,5 @@
 import { createSelector, createStructuredSelector } from "reselect";
+import * as R from "ramda";
 import { selectIdToLinkedId } from "~/redux/reduxUtils";
 import {
   Mapping,
@@ -78,13 +79,12 @@ export const includedWorkspaceIdsByMappingSelector = createStructuredSelector<
 });
 
 export const sourceIncludedWorkspacesCountSelector = createSelector(
-  sourceWorkspacesSelector,
-  (workspaces): number =>
-    workspaces.filter(workspace => workspace.isIncluded).length,
+  includedSourceWorkspacesSelector,
+  (includedSourceWorkspaces): number => includedSourceWorkspaces.length,
 );
 
 export const sourceWorkspacesForTransferSelector = createSelector(
   sourceWorkspacesSelector,
   (sourceWorkspaces): WorkspaceModel[] =>
-    sourceWorkspaces.filter(workspace => workspace.isIncluded),
+    sourceWorkspaces.filter(workspace => R.isNil(workspace.linkedId)),
 );

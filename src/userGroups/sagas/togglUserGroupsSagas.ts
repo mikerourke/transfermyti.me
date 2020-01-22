@@ -98,7 +98,7 @@ function transformFromResponse(
   userGroup: TogglUserGroupResponseModel,
 ): UserGroupModel {
   return {
-    id: validStringify(userGroup?.id, ""),
+    id: userGroup.id.toString(),
     name: userGroup.name,
     userIds: [],
     workspaceId: validStringify(userGroup?.wid, ""),

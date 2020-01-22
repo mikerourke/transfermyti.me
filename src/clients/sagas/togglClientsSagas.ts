@@ -97,7 +97,7 @@ function* fetchTogglClientsInWorkspace(
 
 function transformFromResponse(client: TogglClientResponseModel): ClientModel {
   return {
-    id: validStringify(client.id, ""),
+    id: client.id.toString(),
     name: client.name,
     workspaceId: validStringify(client.wid, ""),
     entryCount: 0,
