@@ -41,9 +41,9 @@ export const sourceIncludedWorkspacesCountSelector = createSelector(
 );
 
 export const sourceWorkspacesForTransferSelector = createSelector(
-  sourceWorkspacesSelector,
-  (sourceWorkspaces): WorkspaceModel[] =>
-    sourceWorkspaces.filter(workspace => workspace.isIncluded),
+  includedSourceWorkspacesSelector,
+  (includedWorkspaces): WorkspaceModel[] =>
+    includedWorkspaces.filter(workspace => R.isNil(workspace.linkedId)),
 );
 
 export const workspaceIdToLinkedIdSelector = createSelector(
