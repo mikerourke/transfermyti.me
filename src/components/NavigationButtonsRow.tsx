@@ -2,7 +2,7 @@ import React from "react";
 import Button from "./Button";
 import { styled } from "./emotion";
 
-const Base = styled.nav(
+const Nav = styled.nav(
   {
     marginTop: "1rem",
 
@@ -41,7 +41,7 @@ const NavigationButtonsRow: React.FC<Props> = ({
   onNextClick,
   ...props
 }) => (
-  <Base {...props}>
+  <Nav {...props}>
     <Button variant="default" disabled={disabled} onClick={onBackClick}>
       Back
     </Button>
@@ -54,7 +54,7 @@ const NavigationButtonsRow: React.FC<Props> = ({
       {nextLabel}
     </Button>
     {children}
-  </Base>
+  </Nav>
 );
 
 export default NavigationButtonsRow;

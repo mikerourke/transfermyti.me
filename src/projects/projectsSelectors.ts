@@ -138,9 +138,19 @@ export const projectsTotalCountsByTypeSelector = createSelector(
     ),
 );
 
-const groupProjectsByWorkspaceId = (
+export const projectsByWorkspaceIdByToolNameSelector = createSelector(
+  toolNameByMappingSelector,
+  sourceProjectsSelector,
+  targetProjectsSelector,
+  (toolNameByMapping, sourceProjects, targetProjects) => ({
+    [toolNameByMapping.source]: groupProjectsByWorkspaceId(sourceProjects),
+    [toolNameByMapping.target]: groupProjectsByWorkspaceId(targetProjects),
+  }),
+);
+
+function groupProjectsByWorkspaceId(
   projects: ProjectModel[],
-): Record<string, ProjectModel[]> => {
+): Record<string, ProjectModel[]> {
   const projectsByWorkspaceId: Record<string, ProjectModel[]> = {};
 
   for (const project of projects) {
@@ -157,14 +167,4 @@ const groupProjectsByWorkspaceId = (
   }
 
   return projectsByWorkspaceId;
-};
-
-export const projectsByWorkspaceIdByToolNameSelector = createSelector(
-  toolNameByMappingSelector,
-  sourceProjectsSelector,
-  targetProjectsSelector,
-  (toolNameByMapping, sourceProjects, targetProjects) => ({
-    [toolNameByMapping.source]: groupProjectsByWorkspaceId(sourceProjects),
-    [toolNameByMapping.target]: groupProjectsByWorkspaceId(targetProjects),
-  }),
-);
+}

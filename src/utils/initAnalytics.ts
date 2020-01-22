@@ -1,5 +1,6 @@
 import ReactGA from "react-ga";
 
+/* istanbul ignore next: if analytics fails, oh well */
 export function initAnalytics(): void {
   // The GA key is stored in CI and local `.env` file. Since we're using the
   // transform-inline-environment-variables plugin, it should get swapped out

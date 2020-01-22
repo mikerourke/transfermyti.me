@@ -13,6 +13,18 @@ import {
 export const validationFetchStatusSelector = (state: ReduxState): FetchStatus =>
   state.credentials.validationFetchStatus;
 
+export const validationErrorsByMappingSelector = createSelector(
+  (state: ReduxState) => state.credentials.validationErrorsByMapping,
+  (validationErrorsByMapping): ValidationErrorsByMappingModel =>
+    validationErrorsByMapping,
+);
+
+export const hasValidationErrorsSelector = createSelector(
+  validationErrorsByMappingSelector,
+  (validationErrorsByMapping): boolean =>
+    Object.values(validationErrorsByMapping).some(Boolean),
+);
+
 const sourceCredentialsSelector = createSelector(
   (state: ReduxState) => state.credentials.source,
   sourceCredentials => sourceCredentials,
@@ -45,16 +57,4 @@ export const credentialsByToolNameSelector = createSelector(
       [toolNameByMapping[Mapping.Source]]: sourceCredentials,
       [toolNameByMapping[Mapping.Target]]: targetCredentials,
     } as Record<ToolName, CredentialsModel>),
-);
-
-export const validationErrorsByMappingSelector = createSelector(
-  (state: ReduxState) => state.credentials.validationErrorsByMapping,
-  (validationErrorsByMapping): ValidationErrorsByMappingModel =>
-    validationErrorsByMapping,
-);
-
-export const hasValidationErrorsSelector = createSelector(
-  validationErrorsByMappingSelector,
-  (validationErrorsByMapping): boolean =>
-    Object.values(validationErrorsByMapping).some(Boolean),
 );

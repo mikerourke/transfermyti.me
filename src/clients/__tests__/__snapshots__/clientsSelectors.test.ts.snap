@@ -1,0 +1,160 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`within clientsSelectors the clientIdsByNameSelectorFactory matches its snapshot 1`] = `
+Object {
+  "Test Client A": "3001",
+  "Test Client B": "3002",
+  "Test Client C": "3003",
+}
+`;
+
+exports[`within clientsSelectors the clientsForInclusionsTableSelector matches its snapshot based on state.allEntities.areExistsInTargetShown when state.allEntities.areExistsInTargetShown = false 1`] = `
+Array [
+  Object {
+    "entryCount": 3,
+    "existsInTarget": false,
+    "id": "3002",
+    "isActiveInSource": true,
+    "isActiveInTarget": false,
+    "isIncluded": false,
+    "linkedId": null,
+    "memberOf": "clients",
+    "name": "Test Client B",
+    "projectCount": 1,
+    "workspaceId": "1001",
+  },
+  Object {
+    "entryCount": 0,
+    "existsInTarget": false,
+    "id": "3003",
+    "isActiveInSource": true,
+    "isActiveInTarget": false,
+    "isIncluded": true,
+    "linkedId": null,
+    "memberOf": "clients",
+    "name": "Test Client C",
+    "projectCount": 1,
+    "workspaceId": "1001",
+  },
+]
+`;
+
+exports[`within clientsSelectors the clientsForInclusionsTableSelector matches its snapshot based on state.allEntities.areExistsInTargetShown when state.allEntities.areExistsInTargetShown = true 1`] = `
+Array [
+  Object {
+    "entryCount": 3,
+    "existsInTarget": true,
+    "id": "3001",
+    "isActiveInSource": true,
+    "isActiveInTarget": true,
+    "isIncluded": false,
+    "linkedId": "clock-client-01",
+    "memberOf": "clients",
+    "name": "Test Client A",
+    "projectCount": 1,
+    "workspaceId": "1001",
+  },
+  Object {
+    "entryCount": 3,
+    "existsInTarget": false,
+    "id": "3002",
+    "isActiveInSource": true,
+    "isActiveInTarget": false,
+    "isIncluded": false,
+    "linkedId": null,
+    "memberOf": "clients",
+    "name": "Test Client B",
+    "projectCount": 1,
+    "workspaceId": "1001",
+  },
+  Object {
+    "entryCount": 0,
+    "existsInTarget": false,
+    "id": "3003",
+    "isActiveInSource": true,
+    "isActiveInTarget": false,
+    "isIncluded": true,
+    "linkedId": null,
+    "memberOf": "clients",
+    "name": "Test Client C",
+    "projectCount": 1,
+    "workspaceId": "1001",
+  },
+]
+`;
+
+exports[`within clientsSelectors the selectors match their snapshots for the clientIdToLinkedIdSelector 1`] = `
+Object {
+  "3001": "clock-client-01",
+  "clock-client-01": "3001",
+}
+`;
+
+exports[`within clientsSelectors the selectors match their snapshots for the clientsTotalCountsByTypeSelector 1`] = `
+Object {
+  "entryCount": 6,
+  "existsInTarget": 1,
+  "isIncluded": 1,
+  "projectCount": 3,
+}
+`;
+
+exports[`within clientsSelectors the selectors match their snapshots for the includedSourceClientsSelector 1`] = `
+Array [
+  Object {
+    "entryCount": 1,
+    "id": "3003",
+    "isIncluded": true,
+    "linkedId": null,
+    "memberOf": "clients",
+    "name": "Test Client C",
+    "workspaceId": "1001",
+  },
+]
+`;
+
+exports[`within clientsSelectors the selectors match their snapshots for the sourceClientsForTransferSelector 1`] = `
+Array [
+  Object {
+    "entryCount": 1,
+    "id": "3003",
+    "isIncluded": true,
+    "linkedId": null,
+    "memberOf": "clients",
+    "name": "Test Client C",
+    "workspaceId": "1001",
+  },
+]
+`;
+
+exports[`within clientsSelectors the selectors match their snapshots for the sourceClientsInActiveWorkspaceSelector 1`] = `
+Array [
+  Object {
+    "entryCount": 3,
+    "id": "3001",
+    "isIncluded": false,
+    "linkedId": "clock-client-01",
+    "memberOf": "clients",
+    "name": "Test Client A",
+    "workspaceId": "1001",
+  },
+  Object {
+    "entryCount": 3,
+    "id": "3002",
+    "isIncluded": false,
+    "linkedId": null,
+    "memberOf": "clients",
+    "name": "Test Client B",
+    "workspaceId": "1001",
+  },
+  Object {
+    "entryCount": 1,
+    "id": "3003",
+    "isIncluded": true,
+    "linkedId": null,
+    "memberOf": "clients",
+    "name": "Test Client C",
+    "workspaceId": "1001",
+  },
+]
+`;

@@ -10,7 +10,8 @@ import { theme } from "./components/emotion";
 
 // These are exported for convenience (so we don't have to add an additional import
 // to the test file).
-export { createEvent, fireEvent } from "@testing-library/react";
+export { createEvent, fireEvent, RenderResult } from "@testing-library/react";
+export { theme } from "./components/emotion";
 
 /**
  * Renders the specified component with react-testing-library wrapped in a theme

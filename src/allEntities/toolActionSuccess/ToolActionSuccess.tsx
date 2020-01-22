@@ -81,7 +81,7 @@ export const ToolActionSuccessComponent: React.FC<Props> = props => {
   };
 
   return (
-    <Flex alignItems="center" justifyContent="center" direction="column">
+    <Flex alignItems="center" justifyContent="center" flexDirection="column">
       <h1 css={{ fontSize: "3rem", margin: "2rem 0" }}>
         <Celebrate /> Transfer Complete! <Celebrate />
       </h1>

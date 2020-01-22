@@ -30,7 +30,7 @@
     "paths": {
       "~/*": ["./src/*"]
     },
-    "types": ["@emotion/core"]
+    "types": ["@emotion/core", "jest"]
   },
   "exclude": [
     ".cache",

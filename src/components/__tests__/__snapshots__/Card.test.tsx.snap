@@ -1,0 +1,40 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`the <Card> component matches its snapshot with valid props 1`] = `
+.emotion-0 {
+  border-radius: 0.5rem;
+  display: -webkit-box;
+  display: -webkit-flex;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-flex: 0 0 20rem;
+  -ms-flex: 0 0 20rem;
+  flex: 0 0 20rem;
+  -webkit-flex-direction: column;
+  -ms-flex-direction: column;
+  flex-direction: column;
+  margin: 0 1rem 2rem;
+  padding: 1rem;
+  background: rgb(30,120,161);
+  box-shadow: 0 2px 4px -1px rgba(0,0,0,0.2), 0 4px 5px 0 rgba(0,0,0,0.14), 0 1px 10px 0 rgba(0,0,0,0.12);
+  color: rgb(239,253,232);
+}
+
+@media (max-width:32rem) {
+  .emotion-0 {
+    -webkit-flex-basis: 16rem;
+    -ms-flex-preferred-size: 16rem;
+    flex-basis: 16rem;
+  }
+}
+
+<div>
+  <li
+    class="emotion-0"
+  >
+    <h2>
+      Test Title
+    </h2>
+  </li>
+</div>
+`;

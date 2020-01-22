@@ -1,5 +1,5 @@
 import React from "react";
-import { render } from "@testing-library/react";
+import { render, theme } from "~/jestHelpers";
 import Icon, { IconName, iconAttributes } from "../Icon";
 
 describe("<Icon> Component", () => {
@@ -10,8 +10,9 @@ describe("<Icon> Component", () => {
     };
     const { getByTestId } = render(<Icon {...props} />);
     const innerPath = getByTestId("svg-icon-path");
+    const validColor = theme.colors.success.replace(/ /gi, "");
 
     expect(innerPath).toHaveAttribute("d", iconAttributes.heart.path);
-    expect(innerPath).toHaveAttribute("fill", props.color);
+    expect(innerPath).toHaveStyleRule("fill", validColor);
   });
 });

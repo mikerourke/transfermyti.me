@@ -1,0 +1,29 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`the <InclusionsTableFoot> component matches its snapshot with valid props 1`] = `
+.emotion-1 td:last-of-type {
+  text-align: center;
+}
+
+.emotion-0 {
+  text-align: right;
+}
+
+<table>
+  <tfoot
+    class="emotion-1"
+  >
+    <tr>
+      <th
+        class="emotion-0"
+        colspan="3"
+      >
+        Total
+      </th>
+      <td>
+        10
+      </td>
+    </tr>
+  </tfoot>
+</table>
+`;

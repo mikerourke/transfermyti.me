@@ -99,29 +99,6 @@ export const allEntitiesReducer = createReducer<
     fetchAllFetchStatus: FetchStatus.Error,
     entityGroupInProcess: null,
   }))
-  .handleAction(allEntitiesActions.updateToolAction, (state, { payload }) => ({
-    ...state,
-    toolAction: payload,
-  }))
-  .handleAction(
-    allEntitiesActions.updateToolNameByMapping,
-    (state, { payload }) => ({
-      ...state,
-      toolNameByMapping: {
-        ...state.toolNameByMapping,
-        ...payload,
-      },
-    }),
-  )
-  .handleAction(allEntitiesActions.flushAllEntities, state => ({
-    ...state,
-    pushAllChangesFetchStatus: FetchStatus.Pending,
-    fetchAllFetchStatus: FetchStatus.Pending,
-  }))
-  .handleAction(allEntitiesActions.flipIfExistsInTargetShown, state => ({
-    ...state,
-    areExistsInTargetShown: !state.areExistsInTargetShown,
-  }))
   .handleAction(
     allEntitiesActions.updatePushAllChangesFetchStatus,
     (state, { payload }) => ({
@@ -136,6 +113,29 @@ export const allEntitiesReducer = createReducer<
       fetchAllFetchStatus: payload,
     }),
   )
+  .handleAction(allEntitiesActions.flushAllEntities, state => ({
+    ...state,
+    pushAllChangesFetchStatus: FetchStatus.Pending,
+    fetchAllFetchStatus: FetchStatus.Pending,
+  }))
+  .handleAction(allEntitiesActions.updateToolAction, (state, { payload }) => ({
+    ...state,
+    toolAction: payload,
+  }))
+  .handleAction(
+    allEntitiesActions.updateToolNameByMapping,
+    (state, { payload }) => ({
+      ...state,
+      toolNameByMapping: {
+        ...state.toolNameByMapping,
+        ...payload,
+      },
+    }),
+  )
+  .handleAction(allEntitiesActions.flipIfExistsInTargetShown, state => ({
+    ...state,
+    areExistsInTargetShown: !state.areExistsInTargetShown,
+  }))
   .handleAction(
     allEntitiesActions.updateEntityGroupInProcess,
     (state, { payload }) => ({

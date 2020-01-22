@@ -22,16 +22,12 @@ const cubeFoldingAnimation = keyframes({
   },
 });
 
-const CubesContainer = styled.div<{ size: "small" | "large" }>(
-  {
-    transform: "rotateZ(45deg)",
-  },
-  ({ size }) => ({
-    margin: size === "large" ? "3rem auto" : "2rem auto",
-    width: size === "large" ? "6rem" : "4rem",
-    height: size === "large" ? "6rem" : "4rem",
-  }),
-);
+const CubesContainer = styled.div({
+  transform: "rotateZ(45deg)",
+  margin: "2rem auto",
+  width: "4rem",
+  height: "6rem",
+});
 
 const Cube = styled.div<{ rotation: number; delay: number }>(
   {
@@ -62,26 +58,20 @@ const Cube = styled.div<{ rotation: number; delay: number }>(
   }),
 );
 
-interface Props {
-  size?: "small" | "large";
-}
-
-const Loader: React.FC<Props> = ({ size = "small", children, ...props }) => (
+const Loader: React.FC = ({ children, ...props }) => (
   <Flex
     alignItems="center"
     justifyContent="center"
-    direction="column"
+    flexDirection="column"
     {...props}
   >
-    <CubesContainer size={size}>
+    <CubesContainer>
       <Cube rotation={0} delay={0} />
       <Cube rotation={90} delay={0.3} />
       <Cube rotation={270} delay={0.9} />
       <Cube rotation={180} delay={0.6} />
     </CubesContainer>
-    {!R.isNil(children) && (
-      <LoadingMessage size={size}>{children}</LoadingMessage>
-    )}
+    {!R.isNil(children) && <LoadingMessage>{children}</LoadingMessage>}
   </Flex>
 );
 

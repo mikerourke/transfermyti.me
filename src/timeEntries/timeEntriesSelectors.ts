@@ -96,6 +96,26 @@ export const timeEntriesTotalCountsByTypeSelector = createSelector(
     ),
 );
 
+export const sourceTimeEntryCountByTagIdSelector = createSelector(
+  sourceTimeEntriesSelector,
+  sourceTimeEntries => {
+    const timeEntryCountByTagIdField: Record<string, number> = {};
+
+    for (const timeEntry of sourceTimeEntries) {
+      for (const tagId of timeEntry.tagIds) {
+        const currentValue = R.propOr<number, Record<string, number>, number>(
+          0,
+          tagId,
+          timeEntryCountByTagIdField,
+        );
+        timeEntryCountByTagIdField[tagId] = currentValue + 1;
+      }
+    }
+
+    return timeEntryCountByTagIdField;
+  },
+);
+
 export const sourceTimeEntryCountByIdFieldSelectorFactory = (
   idField: string,
 ): Selector<ReduxState, Record<string, number>> =>
@@ -116,23 +136,3 @@ export const sourceTimeEntryCountByIdFieldSelectorFactory = (
 
     return timeEntryCountByIdField;
   });
-
-export const sourceTimeEntryCountByTagIdSelector = createSelector(
-  sourceTimeEntriesSelector,
-  sourceTimeEntries => {
-    const timeEntryCountByTagIdField: Record<string, number> = {};
-
-    for (const timeEntry of sourceTimeEntries) {
-      for (const tagId of timeEntry.tagIds) {
-        const currentValue = R.propOr<number, Record<string, number>, number>(
-          0,
-          tagId,
-          timeEntryCountByTagIdField,
-        );
-        timeEntryCountByTagIdField[tagId] = currentValue + 1;
-      }
-    }
-
-    return timeEntryCountByTagIdField;
-  },
-);

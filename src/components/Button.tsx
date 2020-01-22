@@ -144,7 +144,11 @@ const Button: React.FC<ButtonProps> = ({
       {...props}
     >
       {loading ? (
-        <Flex alignItems="center" justifyContent="center">
+        <Flex
+          alignItems="center"
+          justifyContent="center"
+          data-testid="button-loading"
+        >
           <Loading bgColor={mainColor.hex()} fgColor={altColor.hex()} />
         </Flex>
       ) : (
