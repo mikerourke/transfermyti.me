@@ -25,7 +25,7 @@ const cubeFoldingAnimation = keyframes({
 const CubesContainer = styled.div({
   transform: "rotateZ(45deg)",
   margin: "2rem auto",
-  width: "4rem",
+  width: "6rem",
   height: "6rem",
 });
 
