@@ -156,9 +156,9 @@ function* fetchTogglTimeEntriesInWorkspace(
   workspaceId: string,
 ): SagaIterator<TimeEntryModel[]> {
   const credentialsByToolName = yield select(credentialsByToolNameSelector);
-  const togglEmail = credentialsByToolName?.toggl?.email;
-  if (!togglEmail) {
-    throw new Error("Invalid or missing Toggl email");
+  const togglUserId = credentialsByToolName?.toggl?.userId;
+  if (!togglUserId) {
+    throw new Error("Invalid or missing Toggl user ID");
   }
 
   const togglTimeEntries: TogglTimeEntryResponseModel[] = [];
@@ -174,7 +174,7 @@ function* fetchTogglTimeEntriesInWorkspace(
   for (let year = 2007; year <= currentYear; year += 1) {
     const timeEntriesForYear = yield call(
       fetchAllTogglTimeEntriesForYear,
-      togglEmail,
+      togglUserId,
       workspaceId,
       year,
     );
@@ -186,24 +186,32 @@ function* fetchTogglTimeEntriesInWorkspace(
     yield delay(TOGGL_API_DELAY);
   }
 
-  return togglTimeEntries.map(togglTimeEntry => {
+  return togglTimeEntries.reduce((acc, togglTimeEntry) => {
+    const validUserId = togglTimeEntry?.uid ?? 0;
+    // Extra check to ensure we only transfer time entries for the user
+    // associated with the API key:
+    if (validUserId.toString() !== togglUserId) {
+      return acc;
+    }
+
     const clientId = R.propOr<null, string, string>(
       null,
       togglTimeEntry.client,
       clientIdsByName,
     );
 
-    return transformFromResponse(
+    const transformedEntry = transformFromResponse(
       togglTimeEntry,
       workspaceId,
       clientId,
       tagIdsByName,
     );
-  });
+    return [...acc, transformedEntry];
+  }, [] as TimeEntryModel[]);
 }
 
 function* fetchAllTogglTimeEntriesForYear(
-  email: string,
+  userId: string,
   workspaceId: string,
   year: number,
 ): SagaIterator<TogglTimeEntryResponseModel[]> {
@@ -213,7 +221,7 @@ function* fetchAllTogglTimeEntriesForYear(
     data: firstPageEntries,
   } = yield call(
     fetchTogglTimeEntriesForYearAndPage,
-    email,
+    userId,
     workspaceId,
     year,
     1,
@@ -233,7 +241,7 @@ function* fetchAllTogglTimeEntriesForYear(
   for (let page = 2; page <= totalPages; page += 1) {
     const { data } = yield call(
       fetchTogglTimeEntriesForYearAndPage,
-      email,
+      userId,
       workspaceId,
       year,
       page,
@@ -247,7 +255,7 @@ function* fetchAllTogglTimeEntriesForYear(
 }
 
 function* fetchTogglTimeEntriesForYearAndPage(
-  email: string,
+  userId: string,
   workspaceId: string,
   year: number,
   page: number,
@@ -262,7 +270,8 @@ function* fetchTogglTimeEntriesForYearAndPage(
     workspace_id: workspaceId,
     since: firstDay,
     until: lastDay,
-    user_agent: email,
+    user_agent: "transfermyti.me",
+    user_ids: userId,
     page: page,
   });
 

@@ -9,13 +9,16 @@ import {
 } from "~/components";
 import { TimeEntryTableViewModel } from "~/typeDefs";
 
-const NullValueCell: React.FC<{ value: string | null }> = ({
-  value,
-  ...props
-}) => (
+const NullValueCell: React.FC<{
+  disabled: boolean;
+  value: string | null;
+}> = ({ disabled, value, ...props }) => (
   <td
     css={({ colors }) => ({
-      color: `${value === null ? colors.manatee : colors.midnight} !important`,
+      color: (value === null || disabled
+        ? colors.manatee
+        : colors.midnight
+      ).concat(" !important"),
       fontStyle: value === null ? "italic" : "normal",
     })}
     {...props}
@@ -53,10 +56,16 @@ const TimeEntriesInclusionsTable: React.FC<Props> = props => (
           <InclusionsTableRow disabled={timeEntry.existsInTarget}>
             <td>{format(timeEntry.start, "Pp")}</td>
             <td>{format(timeEntry.end, "Pp")}</td>
-            <NullValueCell value={timeEntry.taskName}>
+            <NullValueCell
+              disabled={timeEntry.existsInTarget}
+              value={timeEntry.taskName}
+            >
               {timeEntry.taskName ?? "None"}
             </NullValueCell>
-            <NullValueCell value={timeEntry.projectName}>
+            <NullValueCell
+              disabled={timeEntry.existsInTarget}
+              value={timeEntry.projectName}
+            >
               {timeEntry.projectName ?? "None"}
             </NullValueCell>
             <InclusionsTableCheckboxCell
