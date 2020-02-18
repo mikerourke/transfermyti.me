@@ -120,6 +120,60 @@ describe("within workspacesSelectors", () => {
     ],
   );
 
+  describe("the firstIncludedWorkspaceIdSelector", () => {
+    test("returns the ID of the first included workspace if one is present in state", () => {
+      const result = workspacesSelectors.firstIncludedWorkspaceIdSelector(
+        TEST_STATE,
+      );
+
+      expect(result).toBe("1001");
+    });
+
+    test("returns an empty string if no included workspaces are present", () => {
+      const updatedState = {
+        ...TEST_STATE,
+        workspaces: {
+          source: {
+            "1001": {
+              ...TEST_STATE.workspaces.source["1001"],
+              isIncluded: false,
+            },
+          },
+          target: TEST_STATE.workspaces.target,
+        },
+      };
+      const result = workspacesSelectors.firstIncludedWorkspaceIdSelector(
+        updatedState,
+      );
+
+      expect(result).toBe("");
+    });
+  });
+
+  test("the includedWorkspaceIdsByMappingSelector ignores workspaces that aren't included", () => {
+    const updatedState = {
+      ...TEST_STATE,
+      workspaces: {
+        source: {
+          ...TEST_STATE.workspaces.source,
+          "1002": {
+            ...TEST_STATE.workspaces.source["1002"],
+            isIncluded: false,
+          },
+        },
+        target: TEST_STATE.workspaces.target,
+      },
+    };
+    const result = workspacesSelectors.includedWorkspaceIdsByMappingSelector(
+      updatedState,
+    );
+
+    expect(result).toEqual({
+      source: ["1001"],
+      target: ["clock-workspace-01"],
+    });
+  });
+
   test("the sourceIncludedWorkspacesCountSelector returns the count of included source workspaces", () => {
     const result = workspacesSelectors.sourceIncludedWorkspacesCountSelector(
       TEST_STATE,
