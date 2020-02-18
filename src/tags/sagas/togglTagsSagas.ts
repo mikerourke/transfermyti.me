@@ -55,8 +55,10 @@ function* createTogglTag(
   targetWorkspaceId: string,
 ): SagaIterator<TagModel> {
   const tagRequest = {
-    name: sourceTag.name,
-    wid: +targetWorkspaceId,
+    tag: {
+      name: sourceTag.name,
+      wid: +targetWorkspaceId,
+    },
   };
   const { data } = yield call(reduxUtils.fetchObject, "/toggl/api/tags", {
     method: "POST",
