@@ -24,6 +24,21 @@ export const sourceWorkspacesSelector = createSelector(
   (workspacesById): WorkspaceModel[] => Object.values(workspacesById),
 );
 
+export const firstIncludedWorkspaceIdSelector = createSelector(
+  sourceWorkspacesSelector,
+  (sourceWorkspaces): string => {
+    const firstIncluded = sourceWorkspaces.find(
+      sourceWorkspace => sourceWorkspace.isIncluded,
+    );
+
+    if (!firstIncluded) {
+      return "";
+    }
+
+    return firstIncluded.id;
+  },
+);
+
 export const targetWorkspacesByIdSelector = createSelector(
   (state: ReduxState): WorkspacesByIdModel => state.workspaces.target,
   (workspacesById): WorkspacesByIdModel => workspacesById,

@@ -58,8 +58,10 @@ function* createTogglClient(
   targetWorkspaceId: string,
 ): SagaIterator<ClientModel> {
   const clientRequest = {
-    name: sourceClient.name,
-    wid: +targetWorkspaceId,
+    client: {
+      name: sourceClient.name,
+      wid: +targetWorkspaceId,
+    },
   };
 
   const { data } = yield call(reduxUtils.fetchObject, "/toggl/api/clients", {

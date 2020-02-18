@@ -97,10 +97,12 @@ function* createTogglProject(
   >(null, sourceProject.clientId ?? "", clientIdToLinkedId);
 
   const projectRequest = {
-    name: sourceProject.name,
-    wid: +targetWorkspaceId,
-    cid: R.isNil(targetClientId) ? undefined : +targetClientId,
-    is_private: !sourceProject.isPublic,
+    project: {
+      name: sourceProject.name,
+      wid: +targetWorkspaceId,
+      cid: R.isNil(targetClientId) ? undefined : +targetClientId,
+      is_private: !sourceProject.isPublic,
+    },
   };
 
   const { data } = yield call(reduxUtils.fetchObject, "/toggl/api/projects", {

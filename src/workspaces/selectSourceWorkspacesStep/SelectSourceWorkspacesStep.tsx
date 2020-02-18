@@ -12,12 +12,14 @@ import { dismissAllNotifications, showNotification } from "~/app/appActions";
 import {
   fetchWorkspaces,
   flipIsWorkspaceIncluded,
+  updateActiveWorkspaceId,
 } from "~/workspaces/workspacesActions";
 import {
   areWorkspacesFetchingSelector,
   missingTargetWorkspacesSelector,
   sourceIncludedWorkspacesCountSelector,
   sourceWorkspacesSelector,
+  firstIncludedWorkspaceIdSelector,
 } from "~/workspaces/workspacesSelectors";
 import {
   Button,
@@ -41,6 +43,7 @@ import {
 
 interface ConnectStateProps {
   areWorkspacesFetching: boolean;
+  firstIncludedWorkspaceId: string;
   includedWorkspacesCount: number;
   missingTargetWorkspaces: WorkspaceModel[];
   sourceWorkspaces: WorkspaceModel[];
@@ -54,6 +57,7 @@ interface ConnectDispatchProps {
   onFlipIsWorkspaceIncluded: (workspace: WorkspaceModel) => void;
   onPush: (path: Path) => void;
   onShowNotification: (notification: Partial<NotificationModel>) => void;
+  onUpdateActiveWorkspaceId: (workspaceId: string) => void;
   onUpdateFetchAllFetchStatus: PayloadActionCreator<string, FetchStatus>;
 }
 
@@ -92,6 +96,7 @@ export const SelectSourceWorkspacesStepComponent: React.FC<Props> = props => {
       return;
     }
 
+    props.onUpdateActiveWorkspaceId(props.firstIncludedWorkspaceId);
     props.onUpdateFetchAllFetchStatus(FetchStatus.Pending);
     props.onPush(RoutePath.SelectInclusions);
   };
@@ -158,6 +163,7 @@ export const SelectSourceWorkspacesStepComponent: React.FC<Props> = props => {
 
 const mapStateToProps = (state: ReduxState): ConnectStateProps => ({
   areWorkspacesFetching: areWorkspacesFetchingSelector(state),
+  firstIncludedWorkspaceId: firstIncludedWorkspaceIdSelector(state),
   includedWorkspacesCount: sourceIncludedWorkspacesCountSelector(state),
   missingTargetWorkspaces: missingTargetWorkspacesSelector(state),
   sourceWorkspaces: sourceWorkspacesSelector(state),
@@ -171,6 +177,7 @@ const mapDispatchToProps: ConnectDispatchProps = {
   onFlipIsWorkspaceIncluded: flipIsWorkspaceIncluded,
   onPush: push,
   onShowNotification: showNotification,
+  onUpdateActiveWorkspaceId: updateActiveWorkspaceId,
   onUpdateFetchAllFetchStatus: updateFetchAllFetchStatus,
 };
 

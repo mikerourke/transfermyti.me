@@ -58,11 +58,6 @@ function* fetchWorkspacesSaga(): SagaIterator {
     const toolAction = yield select(toolActionSelector);
     let workspaceByIdByMapping: Record<Mapping, WorkspacesByIdModel>;
 
-    if (sourceWorkspaces.length !== 0) {
-      const [firstWorkspace] = sourceWorkspaces;
-      yield put(workspacesActions.updateActiveWorkspaceId(firstWorkspace.id));
-    }
-
     if (toolAction === ToolAction.Transfer) {
       const targetWorkspaces = yield call(fetchSagaByToolName[target]);
 

@@ -69,8 +69,10 @@ function* createTogglTask(sourceTask: TaskModel): SagaIterator<TaskModel> {
   }
 
   const taskRequest = {
-    name: sourceTask.name,
-    pid: +targetProjectId,
+    task: {
+      name: sourceTask.name,
+      pid: +targetProjectId,
+    },
   };
 
   const { data } = yield call(reduxUtils.fetchObject, "/toggl/api/tasks", {
