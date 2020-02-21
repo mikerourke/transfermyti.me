@@ -179,16 +179,21 @@ function doProjectsMatch(
   sourceEntry: TimeEntryModel,
   targetEntry: TimeEntryModel,
 ): boolean {
-  if (sourceEntry.projectId === null) {
+  if (sourceEntry.projectId === null && targetEntry.projectId === null) {
+    return true;
+  }
+
+  if (sourceEntry.projectId !== null && targetEntry.projectId === null) {
     return false;
   }
 
-  const sourceProject = sourceProjectsById[sourceEntry.projectId] ?? null;
+  if (sourceEntry.projectId === null && targetEntry.projectId !== null) {
+    return false;
+  }
+
+  const validProjectId = sourceEntry.projectId ?? "";
+  const sourceProject = sourceProjectsById[validProjectId] ?? null;
   if (sourceProject === null) {
-    return false;
-  }
-
-  if (targetEntry.projectId === null) {
     return false;
   }
 
