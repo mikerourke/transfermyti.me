@@ -110,7 +110,7 @@ function transformFromResponse(
     workspaceId: workspace.id,
     entryCount: 0,
     linkedId: null,
-    isIncluded: true,
+    isIncluded: false,
     memberOf: EntityGroup.Workspaces,
   };
 }

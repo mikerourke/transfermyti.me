@@ -2,6 +2,7 @@ import { SagaIterator } from "@redux-saga/types";
 import differenceInMinutes from "date-fns/differenceInMinutes";
 import * as R from "ramda";
 import { call, select } from "redux-saga/effects";
+import { workspaceIdToLinkedIdSelector } from "~/workspaces/workspacesSelectors";
 import {
   BaseEntityModel,
   EntityGroup,
@@ -11,6 +12,11 @@ import {
   TimeEntriesByIdModel,
   TimeEntryModel,
 } from "~/typeDefs";
+
+enum LinkFromType {
+  Source,
+  Target,
+}
 
 /**
  * Sets the `linkedId` and `isIncluded` field of the source and target records
@@ -60,11 +66,24 @@ export function* linkEntitiesByIdByMapping<TEntity>(
 
   // Users may have the same name, but they should never have the same email:
   const field = memberOf === EntityGroup.Users ? "email" : "name";
+  const workspaceIdToLinkedId = yield select(workspaceIdToLinkedIdSelector);
 
-  return {
-    source: linkForMappingByField(field, targetRecords, sourceRecords),
-    target: linkForMappingByField(field, sourceRecords, targetRecords),
-  };
+  const source = linkForMappingByField(
+    field,
+    workspaceIdToLinkedId,
+    LinkFromType.Target,
+    targetRecords,
+    sourceRecords,
+  );
+  const target = linkForMappingByField(
+    field,
+    workspaceIdToLinkedId,
+    LinkFromType.Source,
+    sourceRecords,
+    targetRecords,
+  );
+
+  return { source, target };
 }
 
 /**
@@ -75,36 +94,55 @@ export function* linkEntitiesByIdByMapping<TEntity>(
  */
 function linkForMappingByField<TEntity>(
   field: string,
+  workspaceIdToLinkedId: Record<string, string>,
+  linkFromType: LinkFromType,
   linkFromRecords: TEntity[],
   recordsToUpdate: TEntity[],
 ): Record<string, TEntity> {
   type LinkableRecord = TEntity & {
     id: string;
+    workspaceId: string;
     memberOf: EntityGroup;
   };
 
-  const linkFromEntitiesByField = R.indexBy<LinkableRecord>(
-    R.prop(field),
-    linkFromRecords as LinkableRecord[],
-  );
-
   const linkedRecordsById = {};
+
   for (const recordToUpdate of recordsToUpdate as LinkableRecord[]) {
-    const linkedId = R.pathOr(
-      null,
-      [recordToUpdate[field], "id"],
-      linkFromEntitiesByField,
+    const matchingLinkedRecord = (linkFromRecords as LinkableRecord[]).find(
+      linkFromRecord => {
+        // For workspaces, we only want to check if the names match (since
+        // workspaces are the top-level entity and it's impossible to have 2
+        // workspaces with the same name):
+        const fieldsMatch = recordToUpdate[field] === linkFromRecord[field];
+        if (recordToUpdate.memberOf === EntityGroup.Workspaces) {
+          return fieldsMatch;
+        }
+
+        // For all other entities, we need to ensure the fields match _and_
+        // the workspaces are linked. If we don't perform this check, the
+        // transfer process will fail if the user has multiple workspaces
+        // that have the same named entity in each one. For example, if a user
+        // has Workspace A and Workspace B, and both of them have a client
+        // named "Client", the client ID of Workspace A may be associated
+        // with a project in Workspace B and the API will return a 400.
+        // See this issue: https://github.com/mikerourke/transfermyti.me/issues/32
+        const linkedWorkspaceId =
+          workspaceIdToLinkedId[linkFromRecord.workspaceId];
+        return fieldsMatch && recordToUpdate.workspaceId === linkedWorkspaceId;
+      },
     );
+
+    const linkedId = R.isNil(matchingLinkedRecord)
+      ? null
+      : matchingLinkedRecord.id;
+    const isIncluded = R.isNil(linkedId)
+      ? recordToUpdate.memberOf !== EntityGroup.Workspaces
+      : false;
 
     linkedRecordsById[recordToUpdate.id] = {
       ...recordToUpdate,
       linkedId,
-      isIncluded: R.or(
-        // By default, we want all the workspaces to be included (even if they
-        // already exist on the target):
-        recordToUpdate.memberOf === EntityGroup.Workspaces,
-        R.isNil(linkedId),
-      ),
+      isIncluded,
     };
   }
 
@@ -179,16 +217,21 @@ function doProjectsMatch(
   sourceEntry: TimeEntryModel,
   targetEntry: TimeEntryModel,
 ): boolean {
-  if (sourceEntry.projectId === null) {
+  if (sourceEntry.projectId === null && targetEntry.projectId === null) {
+    return true;
+  }
+
+  if (sourceEntry.projectId !== null && targetEntry.projectId === null) {
     return false;
   }
 
-  const sourceProject = sourceProjectsById[sourceEntry.projectId] ?? null;
+  if (sourceEntry.projectId === null && targetEntry.projectId !== null) {
+    return false;
+  }
+
+  const validProjectId = sourceEntry.projectId ?? "";
+  const sourceProject = sourceProjectsById[validProjectId] ?? null;
   if (sourceProject === null) {
-    return false;
-  }
-
-  if (targetEntry.projectId === null) {
     return false;
   }
 

@@ -33,6 +33,7 @@ const Base = styled.div(
     right: "1rem",
     transition: "top 500ms ease-out",
     width: "20rem",
+    zIndex: 999,
   },
   ({ theme }) => ({
     background: theme.colors.midnight,

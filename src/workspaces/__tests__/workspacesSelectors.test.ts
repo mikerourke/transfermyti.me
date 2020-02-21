@@ -150,6 +150,42 @@ describe("within workspacesSelectors", () => {
     });
   });
 
+  describe("the hasDuplicateTargetWorkspacesSelector", () => {
+    test("returns false if not duplicate linkedIds are present", () => {
+      const result = workspacesSelectors.hasDuplicateTargetWorkspacesSelector(
+        TEST_STATE,
+      );
+
+      expect(result).toBe(false);
+    });
+
+    test("returns true if duplicate linkedIds are present", () => {
+      const updatedState = {
+        ...TEST_STATE,
+        workspaces: {
+          ...TEST_STATE.workspaces,
+          source: {
+            ...TEST_STATE.workspaces.source,
+            "1001": {
+              ...TEST_STATE.workspaces.source["1001"],
+              linkedId: "clock-workspace-01",
+            },
+            "1002": {
+              ...TEST_STATE.workspaces.source["1002"],
+              linkedId: "clock-workspace-01",
+            },
+          },
+        },
+      };
+
+      const result = workspacesSelectors.hasDuplicateTargetWorkspacesSelector(
+        updatedState,
+      );
+
+      expect(result).toBe(true);
+    });
+  });
+
   test("the includedWorkspaceIdsByMappingSelector ignores workspaces that aren't included", () => {
     const updatedState = {
       ...TEST_STATE,

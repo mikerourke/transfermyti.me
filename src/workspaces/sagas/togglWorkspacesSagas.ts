@@ -42,7 +42,7 @@ function transformFromResponse(
     workspaceId: workspace.id.toString(),
     entryCount: 0,
     linkedId: null,
-    isIncluded: true,
+    isIncluded: false,
     memberOf: EntityGroup.Workspaces,
   };
 }

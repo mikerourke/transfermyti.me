@@ -25,3 +25,4 @@ export { default as NoRecordsFound } from "./NoRecordsFound";
 export { default as Note } from "./Note";
 export { default as Toggle } from "./Toggle";
 export { default as VisuallyHidden } from "./VisuallyHidden";
+export { default as WorkspaceSelect } from "./WorkspaceSelect";

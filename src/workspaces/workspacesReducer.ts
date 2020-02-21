@@ -2,7 +2,7 @@ import * as R from "ramda";
 import { ActionType, createReducer } from "typesafe-actions";
 import { flushAllEntities } from "~/allEntities/allEntitiesActions";
 import * as workspacesActions from "./workspacesActions";
-import { Mapping, WorkspacesByIdModel } from "~/typeDefs";
+import { WorkspacesByIdModel } from "~/typeDefs";
 
 type WorkspacesAction = ActionType<
   typeof workspacesActions | typeof flushAllEntities
@@ -72,6 +72,42 @@ export const workspacesReducer = createReducer<
     }),
   )
   .handleAction(
+    workspacesActions.updateWorkspaceLinking,
+    (state, { payload }) => {
+      const { sourceId, targetId } = payload;
+
+      const source = {
+        ...state.source,
+        [sourceId]: {
+          ...state.source[sourceId],
+          isIncluded: targetId !== null,
+          linkedId: targetId,
+        },
+      };
+
+      const target = Object.entries({ ...state.target }).reduce(
+        (acc, [workspaceId, workspace]) => {
+          const idMatchesTarget = workspaceId === targetId;
+          if (workspace.linkedId === sourceId || idMatchesTarget) {
+            return {
+              ...acc,
+              [workspaceId]: {
+                ...workspace,
+                isIncluded: idMatchesTarget,
+                linkedId: idMatchesTarget ? sourceId : null,
+              },
+            };
+          }
+
+          return { ...acc, [workspaceId]: workspace };
+        },
+        {},
+      );
+
+      return { ...state, source, target };
+    },
+  )
+  .handleAction(
     workspacesActions.resetContentsForMapping,
     (state, { payload }) => ({
       ...state,
@@ -93,21 +129,30 @@ export const workspacesReducer = createReducer<
   .handleAction(
     workspacesActions.flipIsWorkspaceIncluded,
     (state, { payload }) => {
-      const updatedState = R.over(
-        R.lensPath([Mapping.Source, payload.id, "isIncluded"]),
-        R.not,
-        state,
-      );
+      const { id, linkedId } = payload;
+      const isIncluded = !state.source[id].isIncluded;
+      const source = {
+        ...state.source,
+        [id]: {
+          ...state.source[id],
+          isIncluded,
+          linkedId: isIncluded ? linkedId : null,
+        },
+      };
 
-      if (payload.linkedId) {
-        return R.over(
-          R.lensPath([Mapping.Target, payload.linkedId, "isIncluded"]),
-          R.not,
-          updatedState,
-        );
+      let target = { ...state.target };
+      if (linkedId) {
+        target = {
+          ...state.target,
+          [linkedId]: {
+            ...state.target[linkedId],
+            isIncluded,
+            linkedId: isIncluded ? id : null,
+          },
+        };
       }
 
-      return updatedState;
+      return { ...state, source, target };
     },
   )
   .handleAction(flushAllEntities, () => ({ ...initialState }));

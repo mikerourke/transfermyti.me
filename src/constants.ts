@@ -10,8 +10,10 @@ export const STORAGE_KEY = "transfermytime";
 
 export const CLOCKIFY_API_URL = "https://api.clockify.me/api";
 export const CLOCKIFY_API_PAGE_SIZE = 100;
-// Delay time for requests to ensure rate limits are not exceeded:
-export const CLOCKIFY_API_DELAY = IS_USING_LOCAL_API ? 0 : 1_000 / 4;
+// Delay time for requests to ensure rate limits are not exceeded.
+// The documentation limits requests to 10 per second, but we're using a higher
+// delay to accommodate for differences between the working API and stable API:
+export const CLOCKIFY_API_DELAY = IS_USING_LOCAL_API ? 0 : 1_000 / 8;
 
 export const TOGGL_API_URL = "https://www.toggl.com/api/v8";
 export const TOGGL_REPORTS_URL = "https://toggl.com/reports/api/v2";

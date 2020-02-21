@@ -8,7 +8,7 @@ const Base = styled.svg(
     position: "absolute",
     top: "0.5rem",
     right: "0.5rem",
-    zIndex: 999,
+    zIndex: 10,
 
     circle: {
       strokeWidth: 24,
