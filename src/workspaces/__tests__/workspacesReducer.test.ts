@@ -118,6 +118,87 @@ describe("within workspacesReducer", () => {
     });
   });
 
+  describe("the workspacesActions.updateWorkspaceLinking action", () => {
+    const TEST_TARGET_ID = "clockify-workspace-01";
+
+    test(`updates the "isIncluded" and "linkedId" values when payload.targetId is not null`, () => {
+      const updatedState = {
+        ...TEST_WORKSPACES_STATE,
+        source: {
+          [TEST_WORKSPACE_ID]: {
+            ...TEST_WORKSPACES_STATE.source[TEST_WORKSPACE_ID],
+            isIncluded: false,
+            linkedId: null,
+          },
+        },
+        target: {
+          [TEST_TARGET_ID]: {
+            ...TEST_WORKSPACES_STATE.target[TEST_TARGET_ID],
+            isIncluded: false,
+            linkedId: null,
+          },
+        },
+      };
+
+      const result = workspacesReducer(
+        updatedState,
+        workspacesActions.updateWorkspaceLinking({
+          sourceId: TEST_WORKSPACE_ID,
+          targetId: TEST_TARGET_ID,
+        }),
+      );
+
+      expect(result.source[TEST_WORKSPACE_ID].isIncluded).toBe(true);
+      expect(result.source[TEST_WORKSPACE_ID].linkedId).toBe(TEST_TARGET_ID);
+      expect(result.target[TEST_TARGET_ID].isIncluded).toBe(true);
+      expect(result.target[TEST_TARGET_ID].linkedId).toBe(TEST_WORKSPACE_ID);
+    });
+
+    test(`updates the "isIncluded" and "linkedId" values when payload.targetId is null`, () => {
+      const updatedState = {
+        ...TEST_WORKSPACES_STATE,
+        source: {
+          [TEST_WORKSPACE_ID]: {
+            ...TEST_WORKSPACES_STATE.source[TEST_WORKSPACE_ID],
+            isIncluded: true,
+            linkedId: TEST_TARGET_ID,
+          },
+        },
+        target: {
+          [TEST_TARGET_ID]: {
+            ...TEST_WORKSPACES_STATE.target[TEST_TARGET_ID],
+            isIncluded: true,
+            linkedId: TEST_WORKSPACE_ID,
+          },
+          "clock-workspace-02": {
+            id: "clock-workspace-02",
+            name: "Test Workspace",
+            userIds: [],
+            isAdmin: true,
+            workspaceId: "clock-workspace-02",
+            entryCount: 0,
+            linkedId: null,
+            isIncluded: false,
+            memberOf: "workspaces",
+          },
+        },
+      };
+
+      const result = workspacesReducer(
+        updatedState,
+        workspacesActions.updateWorkspaceLinking({
+          sourceId: TEST_WORKSPACE_ID,
+          targetId: null,
+        }),
+      );
+
+      expect(result.source[TEST_WORKSPACE_ID].isIncluded).toBe(false);
+      expect(result.source[TEST_WORKSPACE_ID].linkedId).toBeNull();
+      expect(result.target[TEST_TARGET_ID].isIncluded).toBe(false);
+      expect(result.target[TEST_TARGET_ID].linkedId).toBeNull();
+    });
+  });
+
   describe("the flipIsWorkspaceIncluded action", () => {
     const TARGET_ID = "clock-workspace-01";
 
