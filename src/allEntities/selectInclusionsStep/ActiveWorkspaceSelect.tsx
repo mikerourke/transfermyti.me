@@ -5,7 +5,7 @@ import {
   activeWorkspaceIdSelector,
   includedSourceWorkspacesSelector,
 } from "~/workspaces/workspacesSelectors";
-import { styled } from "~/components";
+import { styled, WorkspaceSelect } from "~/components";
 import { ReduxState, WorkspaceModel } from "~/typeDefs";
 
 const Base = styled.div(
@@ -37,44 +37,6 @@ const Label = styled.label(
   }),
 );
 
-const Select = styled.select(
-  {
-    appearance: "none",
-    border: "none",
-    borderRadius: "0.375rem",
-    cursor: "pointer",
-    display: "inline-block",
-    fontSize: "1rem",
-    marginTop: "0.5rem",
-    padding: "0.75rem 1rem",
-    width: "100%",
-  },
-  ({ theme }) => ({
-    background: theme.colors.white,
-    boxShadow: theme.elevation.dp2,
-    color: theme.colors.primary,
-  }),
-);
-
-const Arrow = styled.span(
-  {
-    borderBottomColor: "transparent",
-    borderLeftColor: "transparent",
-    borderRightColor: "transparent",
-    borderStyle: "solid",
-    borderWidth: "0.5rem 0.5rem 0",
-    bottom: "1.125rem",
-    height: 0,
-    pointerEvents: "none",
-    position: "absolute",
-    right: "1.5rem",
-    width: 0,
-  },
-  ({ theme }) => ({
-    borderTopColor: theme.colors.midnight,
-  }),
-);
-
 interface ConnectStateProps {
   activeWorkspaceId: string;
   workspaces: WorkspaceModel[];
@@ -87,32 +49,20 @@ interface ConnectDispatchProps {
 type Props = ConnectStateProps & ConnectDispatchProps;
 
 export const ActiveWorkspaceSelectComponent: React.FC<Props> = props => {
-  const handleSelectChange = (
-    event: React.ChangeEvent<HTMLSelectElement>,
-  ): void => {
-    props.onUpdateActiveWorkspaceId(event.target.value);
+  const handleSelectWorkspace = (workspace: WorkspaceModel): void => {
+    props.onUpdateActiveWorkspaceId(workspace.id);
   };
 
   return (
     <Base>
       <Label htmlFor="active-workspace-select">Active Workspace</Label>
-      <Select
+      <WorkspaceSelect
         id="active-workspace-select"
         name="active-workspace-select"
+        workspaces={props.workspaces}
         value={props.activeWorkspaceId}
-        onChange={handleSelectChange}
-      >
-        {props.workspaces.map(workspace => (
-          <option
-            key={workspace.id}
-            label={workspace.name}
-            value={workspace.id}
-          >
-            {workspace.name}
-          </option>
-        ))}
-      </Select>
-      <Arrow />
+        onSelectWorkspace={handleSelectWorkspace}
+      />
     </Base>
   );
 };
