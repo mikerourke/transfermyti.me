@@ -7,19 +7,25 @@ import {
   fetchAllEntities,
   updateFetchAllFetchStatus,
 } from "~/allEntities/allEntitiesActions";
-import { toolForTargetMappingSelector } from "~/allEntities/allEntitiesSelectors";
+import {
+  toolActionSelector,
+  toolForTargetMappingSelector,
+} from "~/allEntities/allEntitiesSelectors";
 import { dismissAllNotifications, showNotification } from "~/app/appActions";
 import {
   fetchWorkspaces,
   flipIsWorkspaceIncluded,
   updateActiveWorkspaceId,
+  updateWorkspaceLinking,
 } from "~/workspaces/workspacesActions";
 import {
   areWorkspacesFetchingSelector,
+  firstIncludedWorkspaceIdSelector,
+  hasDuplicateTargetWorkspacesSelector,
   missingTargetWorkspacesSelector,
   sourceIncludedWorkspacesCountSelector,
   sourceWorkspacesSelector,
-  firstIncludedWorkspaceIdSelector,
+  targetWorkspacesSelector,
 } from "~/workspaces/workspacesSelectors";
 import {
   Button,
@@ -29,6 +35,7 @@ import {
   NavigationButtonsRow,
   Note,
 } from "~/components";
+import DuplicateTargetsModal from "./DuplicateTargetsModal";
 import NoWorkspacesModal from "./NoWorkspacesModal";
 import SourceWorkspaceCard from "./SourceWorkspaceCard";
 import TogglWorkspacesModal from "./TogglWorkspacesModal";
@@ -37,6 +44,7 @@ import {
   NotificationModel,
   ReduxState,
   RoutePath,
+  ToolAction,
   ToolName,
   WorkspaceModel,
 } from "~/typeDefs";
@@ -44,9 +52,12 @@ import {
 interface ConnectStateProps {
   areWorkspacesFetching: boolean;
   firstIncludedWorkspaceId: string;
+  hasDuplicateTargetWorkspaces: boolean;
   includedWorkspacesCount: number;
   missingTargetWorkspaces: WorkspaceModel[];
   sourceWorkspaces: WorkspaceModel[];
+  targetWorkspaces: WorkspaceModel[];
+  toolAction: ToolAction;
   toolForTargetMapping: ToolName;
 }
 
@@ -59,6 +70,10 @@ interface ConnectDispatchProps {
   onShowNotification: (notification: Partial<NotificationModel>) => void;
   onUpdateActiveWorkspaceId: (workspaceId: string) => void;
   onUpdateFetchAllFetchStatus: PayloadActionCreator<string, FetchStatus>;
+  onUpdateWorkspaceLinking: (newValues: {
+    sourceId: string;
+    targetId: string | null;
+  }) => void;
 }
 
 type Props = ConnectStateProps & ConnectDispatchProps;
@@ -71,12 +86,26 @@ export const SelectSourceWorkspacesStepComponent: React.FC<Props> = props => {
     isTogglWorkspacesModalOpen,
     setIsTogglWorkspacesModalOpen,
   ] = React.useState<boolean>(false);
+  const [
+    isDuplicateTargetsModalOpen,
+    setIsDuplicateTargetsModalOpen,
+  ] = React.useState<boolean>(false);
 
   React.useEffect(() => {
     if (props.sourceWorkspaces.length === 0) {
       props.onFetchWorkspaces();
     }
   }, []);
+
+  const handleSelectTargetForSource = (
+    sourceWorkspace: WorkspaceModel,
+    targetWorkspace: WorkspaceModel,
+  ): void => {
+    props.onUpdateWorkspaceLinking({
+      sourceId: sourceWorkspace.id,
+      targetId: targetWorkspace?.id || null,
+    });
+  };
 
   const handleBackClick = (): void => {
     props.onPush(RoutePath.EnterApiKeys);
@@ -96,6 +125,11 @@ export const SelectSourceWorkspacesStepComponent: React.FC<Props> = props => {
       return;
     }
 
+    if (props.hasDuplicateTargetWorkspaces) {
+      setIsDuplicateTargetsModalOpen(true);
+      return;
+    }
+
     props.onUpdateActiveWorkspaceId(props.firstIncludedWorkspaceId);
     props.onUpdateFetchAllFetchStatus(FetchStatus.Pending);
     props.onPush(RoutePath.SelectInclusions);
@@ -106,7 +140,7 @@ export const SelectSourceWorkspacesStepComponent: React.FC<Props> = props => {
       <h1>Step 3: Select Workspaces</h1>
       <HelpDetails>
         <p>
-          Select which workspaces you would like to include in the
+          Toggle which workspaces you would like to include in the
           deletion/transfer and press the <strong>Next</strong> button to move
           on to the inclusions selection step.
         </p>
@@ -128,7 +162,10 @@ export const SelectSourceWorkspacesStepComponent: React.FC<Props> = props => {
           {props.sourceWorkspaces.map(workspace => (
             <SourceWorkspaceCard
               key={workspace.id}
-              workspace={workspace}
+              sourceWorkspace={workspace}
+              targetWorkspaces={props.targetWorkspaces}
+              toolAction={props.toolAction}
+              onSelectTarget={handleSelectTargetForSource}
               onToggleIncluded={props.onFlipIsWorkspaceIncluded}
             />
           ))}
@@ -157,6 +194,10 @@ export const SelectSourceWorkspacesStepComponent: React.FC<Props> = props => {
         workspaces={props.missingTargetWorkspaces}
         onClose={() => setIsTogglWorkspacesModalOpen(false)}
       />
+      <DuplicateTargetsModal
+        isOpen={isDuplicateTargetsModalOpen}
+        onClose={() => setIsDuplicateTargetsModalOpen(false)}
+      />
     </section>
   );
 };
@@ -164,9 +205,12 @@ export const SelectSourceWorkspacesStepComponent: React.FC<Props> = props => {
 const mapStateToProps = (state: ReduxState): ConnectStateProps => ({
   areWorkspacesFetching: areWorkspacesFetchingSelector(state),
   firstIncludedWorkspaceId: firstIncludedWorkspaceIdSelector(state),
+  hasDuplicateTargetWorkspaces: hasDuplicateTargetWorkspacesSelector(state),
   includedWorkspacesCount: sourceIncludedWorkspacesCountSelector(state),
   missingTargetWorkspaces: missingTargetWorkspacesSelector(state),
   sourceWorkspaces: sourceWorkspacesSelector(state),
+  targetWorkspaces: targetWorkspacesSelector(state),
+  toolAction: toolActionSelector(state),
   toolForTargetMapping: toolForTargetMappingSelector(state),
 });
 
@@ -179,6 +223,7 @@ const mapDispatchToProps: ConnectDispatchProps = {
   onShowNotification: showNotification,
   onUpdateActiveWorkspaceId: updateActiveWorkspaceId,
   onUpdateFetchAllFetchStatus: updateFetchAllFetchStatus,
+  onUpdateWorkspaceLinking: updateWorkspaceLinking,
 };
 
 export default connect(

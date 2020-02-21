@@ -17,6 +17,10 @@ export const updateActiveWorkspaceId = createAction(
   "@workspaces/UPDATE_ACTIVE_WORKSPACE_ID",
 )<string>();
 
+export const updateWorkspaceLinking = createAction(
+  "@workspaces/UPDATE_WORKSPACE_LINKING",
+)<{ sourceId: string; targetId: string | null }>();
+
 export const appendUserIdsToWorkspace = createAction(
   "@workspaces/APPEND_USER_IDS_TO_WORKSPACE",
 )<{ mapping: Mapping; workspaceId: string; userIds: string[] }>();

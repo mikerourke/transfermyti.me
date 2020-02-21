@@ -72,6 +72,37 @@ export const workspacesReducer = createReducer<
     }),
   )
   .handleAction(
+    workspacesActions.updateWorkspaceLinking,
+    (state, { payload }) => {
+      const { sourceId, targetId } = payload;
+
+      const source = {
+        ...state.source,
+        [sourceId]: { ...state.source[sourceId], linkedId: targetId },
+      };
+
+      const target = Object.entries({ ...state.target }).reduce(
+        (acc, [workspaceId, workspace]) => {
+          const idMatchesTarget = workspaceId === targetId;
+          if (workspace.linkedId === sourceId || idMatchesTarget) {
+            return {
+              ...acc,
+              [workspaceId]: {
+                ...workspace,
+                isIncluded: idMatchesTarget,
+                linkedId: idMatchesTarget ? sourceId : null,
+              },
+            };
+          }
+          return { ...acc, [workspaceId]: workspace };
+        },
+        {},
+      );
+
+      return { ...state, source, target };
+    },
+  )
+  .handleAction(
     workspacesActions.resetContentsForMapping,
     (state, { payload }) => ({
       ...state,

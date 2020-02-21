@@ -21,7 +21,10 @@ export const sourceWorkspacesByIdSelector = createSelector(
 
 export const sourceWorkspacesSelector = createSelector(
   sourceWorkspacesByIdSelector,
-  (workspacesById): WorkspaceModel[] => Object.values(workspacesById),
+  (workspacesById): WorkspaceModel[] => {
+    const workspaces = Object.values(workspacesById);
+    return R.sortBy(R.compose(R.toLower, R.prop("name")), workspaces);
+  },
 );
 
 export const firstIncludedWorkspaceIdSelector = createSelector(
@@ -67,15 +70,39 @@ export const workspaceIdToLinkedIdSelector = createSelector(
     selectIdToLinkedId(sourceWorkspacesById),
 );
 
-const targetWorkspacesSelector = createSelector(
+export const targetWorkspacesSelector = createSelector(
   targetWorkspacesByIdSelector,
-  (workspacesById): WorkspaceModel[] => Object.values(workspacesById),
+  (workspacesById): WorkspaceModel[] => {
+    const workspaces = Object.values(workspacesById);
+    return R.sortBy(R.compose(R.toLower, R.prop("name")), workspaces);
+  },
 );
 
 export const missingTargetWorkspacesSelector = createSelector(
   includedSourceWorkspacesSelector,
   (includedSourceWorkspaces): WorkspaceModel[] =>
     includedSourceWorkspaces.filter(({ linkedId }) => linkedId === null),
+);
+
+export const hasDuplicateTargetWorkspacesSelector = createSelector(
+  includedSourceWorkspacesSelector,
+  (includedSourceWorkspaces): boolean => {
+    const countByLinkedId: Record<string, number> = {};
+
+    for (const { linkedId } of includedSourceWorkspaces) {
+      if (!linkedId) {
+        continue;
+      }
+
+      if (linkedId in countByLinkedId) {
+        countByLinkedId[linkedId] += 1;
+      } else {
+        countByLinkedId[linkedId] = 1;
+      }
+    }
+
+    return Object.values(countByLinkedId).some(count => count > 1);
+  },
 );
 
 const limitIdsToIncluded = (workspaces: WorkspaceModel[]): string[] =>
