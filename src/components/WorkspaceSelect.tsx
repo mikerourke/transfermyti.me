@@ -60,7 +60,12 @@ const WorkspaceSelect: React.FC<Props> = ({
 
   return (
     <>
-      <Select value={value} onChange={handleSelectChange} {...props}>
+      <Select
+        data-testid="workspace-select"
+        value={value}
+        onChange={handleSelectChange}
+        {...props}
+      >
         {workspaces.map(workspace => (
           <option
             key={workspace.id}
