@@ -78,7 +78,11 @@ export const workspacesReducer = createReducer<
 
       const source = {
         ...state.source,
-        [sourceId]: { ...state.source[sourceId], linkedId: targetId },
+        [sourceId]: {
+          ...state.source[sourceId],
+          isIncluded: targetId !== null,
+          linkedId: targetId,
+        },
       };
 
       const target = Object.entries({ ...state.target }).reduce(
@@ -94,6 +98,7 @@ export const workspacesReducer = createReducer<
               },
             };
           }
+
           return { ...acc, [workspaceId]: workspace };
         },
         {},
