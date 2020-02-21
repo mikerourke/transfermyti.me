@@ -144,6 +144,14 @@ export const SelectSourceWorkspacesStepComponent: React.FC<Props> = props => {
           deletion/transfer and press the <strong>Next</strong> button to move
           on to the inclusions selection step.
         </p>
+        {props.toolAction === ToolAction.Transfer && (
+          <p>
+            Once a workspace is toggled, you must select a target workspace for
+            transfer (if workspaces exist on the target tool) from the
+            <strong> Target Workspace</strong> dropdown. If you&apos;re
+            transferring to Toggl, you must create the workspaces first.
+          </p>
+        )}
         <p>
           If you decide you want to include additional workspaces, you&apos;ll
           need to come back to this page and select them, otherwise the

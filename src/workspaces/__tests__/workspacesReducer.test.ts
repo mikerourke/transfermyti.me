@@ -233,10 +233,26 @@ describe("within workspacesReducer", () => {
     });
 
     test(`flips the source "isIncluded" value only if not linked`, () => {
+      const TEST_CLOCKIFY_WORKSPACE = {
+        id: "clock-workspace-01",
+        name: "Test Workspace",
+        userIds: [],
+        isAdmin: true,
+        workspaceId: "clock-workspace-01",
+        entryCount: 0,
+        linkedId: TEST_WORKSPACE_ID,
+        isIncluded: true,
+        memberOf: "workspaces",
+      } as any;
+
       const updatedState = {
         ...TEST_WORKSPACES_STATE,
-        target: {
+        source: {
+          ...TEST_WORKSPACES_STATE.source,
           [TEST_ALT_WORKSPACE.id]: TEST_ALT_WORKSPACE,
+        },
+        target: {
+          [TEST_CLOCKIFY_WORKSPACE.id]: TEST_CLOCKIFY_WORKSPACE,
         },
       };
 
@@ -245,7 +261,7 @@ describe("within workspacesReducer", () => {
         workspacesActions.flipIsWorkspaceIncluded(TEST_ALT_WORKSPACE),
       );
 
-      expect(result.source[TEST_ALT_WORKSPACE.id].isIncluded).toBe(true);
+      expect(result.source[TEST_WORKSPACE_ID].isIncluded).toBe(true);
     });
   });
 

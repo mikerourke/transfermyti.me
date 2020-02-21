@@ -36,29 +36,41 @@ const SourceWorkspaceCard: React.FC<Props> = ({
 }) => {
   const titleId = `include-toggle-${sourceWorkspace.id}`;
   const targetWorkspace = targetWorkspaces.find(
-    workspace => workspace.id === sourceWorkspace.linkedId,
+    ({ id }) => id === sourceWorkspace.linkedId,
   );
   const targetSelectValue = R.isNil(targetWorkspace)
     ? undefined
     : targetWorkspace.id;
 
-  const handleToggleIncludeWorkspace = (): void => {
-    props.onToggleIncluded(sourceWorkspace);
-  };
+  const workspacesForSelect = [...targetWorkspaces];
+  const matchingNameWorkspace = targetWorkspaces.find(
+    ({ name }) => name.toLowerCase() === sourceWorkspace.name.toLowerCase(),
+  );
 
-  const handleSelectWorkspace = (workspace: WorkspaceModel): void => {
-    props.onSelectTarget(sourceWorkspace, workspace);
-  };
-
-  const workspacesForSelect = [
-    { id: "", name: "None (Create New)" } as WorkspaceModel,
-    ...targetWorkspaces,
-  ];
+  // Don't allow the user to pick the "Create New" option if a workspace with
+  // a matching name exists on the target:
+  if (!matchingNameWorkspace) {
+    workspacesForSelect.unshift({
+      id: "",
+      name: "None (Create New)",
+    } as WorkspaceModel);
+  }
 
   const actionTitle =
     props.toolAction === ToolAction.Delete
       ? "Include in Deletion?"
       : "Include in Transfer?";
+
+  const handleToggleIncludeWorkspace = (): void => {
+    props.onToggleIncluded(sourceWorkspace);
+    if (matchingNameWorkspace && !sourceWorkspace.isIncluded) {
+      props.onSelectTarget(sourceWorkspace, matchingNameWorkspace);
+    }
+  };
+
+  const handleSelectWorkspace = (workspace: WorkspaceModel): void => {
+    props.onSelectTarget(sourceWorkspace, workspace);
+  };
 
   return (
     <Card title={sourceWorkspace.name} css={{ h2: { margin: 0 } }}>
