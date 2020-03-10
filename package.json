@@ -1,6 +1,6 @@
 {
   "name": "transfermyti.me",
-  "version": "0.0.3",
+  "version": "0.0.4",
   "description": "Web app to transfer data between time tracking tools.",
   "repository": "https://github.com/mikerourke/transfermyti.me.git",
   "author": "Mike Rourke <mike.w.rourke@gmail.com>",
@@ -106,7 +106,7 @@
     "redux-mock-store": "^1.5.4",
     "redux-saga-test-plan": "^4.0.0-rc.3",
     "rimraf": "^3.0.0",
-    "typescript": "^3.7.3",
+    "typescript": "3.7.5",
     "yargs": "^15.0.2"
   },
   "prettier": {
