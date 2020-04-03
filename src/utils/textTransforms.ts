@@ -13,10 +13,7 @@ export function capitalize(value: string | null): string {
     return "";
   }
 
-  return value
-    .charAt(0)
-    .toUpperCase()
-    .concat(value.slice(1));
+  return value.charAt(0).toUpperCase().concat(value.slice(1));
 }
 
 export function getEntityGroupDisplay(entityGroup: EntityGroup | null): string {

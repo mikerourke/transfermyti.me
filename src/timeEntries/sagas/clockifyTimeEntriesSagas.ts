@@ -82,9 +82,9 @@ function* createClockifyTimeEntry(
   const projectIdToLinkedId = yield select(projectIdToLinkedIdSelector);
   const taskIdToLinkedId = yield select(taskIdToLinkedIdSelector);
 
-  let targetProjectId = null;
+  let targetProjectId;
   let targetTagIds = [];
-  let targetTaskId = null;
+  let targetTaskId;
 
   try {
     if (sourceTimeEntry.projectId) {
@@ -108,8 +108,8 @@ function* createClockifyTimeEntry(
     start: sourceTimeEntry.start,
     billable: sourceTimeEntry.isBillable,
     description: sourceTimeEntry.description,
-    projectId: targetProjectId ?? undefined,
-    taskId: targetTaskId ?? undefined,
+    projectId: targetProjectId,
+    taskId: targetTaskId,
     end: sourceTimeEntry.end,
     tagIds: targetTagIds.length !== 0 ? targetTagIds : undefined,
   };

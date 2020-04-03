@@ -12,9 +12,7 @@ const Anchor = styled.a<{ color: keyof ThemeColors }>(
   ({ color, theme }) => ({
     "&:hover": {
       path: {
-        fill: Color(theme.colors[color])
-          .darken(0.2)
-          .hex(),
+        fill: Color(theme.colors[color]).darken(0.2).hex(),
       },
     },
   }),
