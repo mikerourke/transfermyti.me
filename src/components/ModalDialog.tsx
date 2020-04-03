@@ -20,10 +20,7 @@ const Backdrop = styled(Flex)(
     zIndex: 1,
   },
   ({ theme }) => ({
-    background: Color(theme.colors.midnight)
-      .alpha(0.9)
-      .hsl()
-      .string(),
+    background: Color(theme.colors.midnight).alpha(0.9).hsl().string(),
   }),
 );
 

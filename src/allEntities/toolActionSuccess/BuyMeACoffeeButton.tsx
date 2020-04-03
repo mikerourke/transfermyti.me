@@ -20,9 +20,7 @@ const Anchor = styled.a(
     color: theme.colors.white,
 
     "&:hover": {
-      background: Color("#bd5fff")
-        .darken(0.1)
-        .hex(),
+      background: Color("#bd5fff").darken(0.1).hex(),
     },
 
     "&:after": {

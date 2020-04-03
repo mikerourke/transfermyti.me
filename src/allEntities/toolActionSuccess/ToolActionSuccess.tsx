@@ -44,9 +44,7 @@ const ViewDataLinkButton = styled.a(
     color: theme.colors.white,
 
     "&:hover": {
-      background: Color(theme.colors.primary)
-        .darken(0.1)
-        .hex(),
+      background: Color(theme.colors.primary).darken(0.1).hex(),
     },
 
     "&:after": {
