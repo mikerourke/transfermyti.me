@@ -1,5 +1,7 @@
 # transfermyti.me
 
+[![Netlify Status](https://api.netlify.com/api/v1/badges/c999c9b1-0c44-4186-ba27-d6eba1f6b223/deploy-status)](https://app.netlify.com/sites/transfer-my-time/deploys)
+
 > Formerly toggl-to-clockify-web
 
 ## Purpose
