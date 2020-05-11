@@ -19,7 +19,6 @@
         }
       }
     ],
-    "@babel/plugin-proposal-numeric-separator",
     [
       "transform-inline-environment-variables",
       {
@@ -41,5 +40,12 @@
       "@babel/plugin-transform-react-jsx",
       { "pragma": "___EmotionJSX", "pragmaFrag": "React.Fragment" }
     ]
-  ]
+  ],
+  "env": {
+    "test": {
+      "plugins": [
+        "@babel/plugin-proposal-numeric-separator"
+      ]
+    }
+  }
 }
