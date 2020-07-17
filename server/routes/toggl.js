@@ -1,4 +1,3 @@
-/* eslint-disable @typescript-eslint/camelcase */
 const path = require("path");
 const fse = require("fs-extra");
 const { isSameYear } = require("date-fns");

@@ -1,5 +1,4 @@
 import { push } from "connected-react-router";
-import { Path } from "history";
 import React from "react";
 import { connect } from "react-redux";
 import {
@@ -16,7 +15,7 @@ import {
 } from "~/typeDefs";
 
 interface ConnectDispatchProps {
-  onPush: (path: Path) => void;
+  onPush: (path: RoutePath) => void;
   onUpdateToolAction: (toolAction: ToolAction) => void;
   onUpdateToolNameByMapping: (
     toolNameByMapping: ToolNameByMappingModel,

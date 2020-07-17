@@ -104,6 +104,6 @@ const mapStateToProps = (state: ReduxState): ConnectStateProps => ({
   replaceMappingWithToolName: replaceMappingWithToolNameSelector(state),
 });
 
-export default connect<ConnectStateProps, {}, OwnProps, ReduxState>(
+export default connect<ConnectStateProps, AnyValid, OwnProps, ReduxState>(
   mapStateToProps,
 )(EntityGroupInclusionsPanelComponent);

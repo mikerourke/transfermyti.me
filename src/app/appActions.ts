@@ -26,7 +26,7 @@ export const showErrorNotification = createAction(
       console.error(err);
     }
 
-    let message = "";
+    let message;
     if ("ok" in err) {
       message = getApiErrorMessage(err);
     } else {
@@ -49,7 +49,7 @@ export const showErrorNotification = createAction(
 
 function getApiErrorMessage(response: Response): string {
   const { status, statusText, url } = response;
-  let toolName = "";
+  let toolName;
   if (/clockify/gi.test(url)) {
     toolName = "Clockify";
   } else if (/toggl/gi.test(url)) {

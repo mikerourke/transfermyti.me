@@ -1,4 +1,3 @@
-/* eslint-disable @typescript-eslint/no-explicit-any */
 import { SagaIterator } from "@redux-saga/types";
 import { call, delay, put } from "redux-saga/effects";
 import { incrementEntityGroupTransferCompletedCount } from "~/allEntities/allEntitiesActions";
@@ -16,7 +15,7 @@ export function* deleteEntitiesForTool<TEntity>({
 }: {
   toolName: ToolName;
   sourceRecords: TEntity[];
-  apiDeleteFunc: (sourceRecord: any) => SagaIterator;
+  apiDeleteFunc: (sourceRecord: AnyValid) => SagaIterator;
 }): SagaIterator {
   const apiDelay = getApiDelayForTool(toolName);
 

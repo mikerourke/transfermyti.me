@@ -1,4 +1,3 @@
-/* eslint-disable @typescript-eslint/camelcase */
 import { SagaIterator } from "@redux-saga/types";
 import * as R from "ramda";
 import { call, delay, select } from "redux-saga/effects";

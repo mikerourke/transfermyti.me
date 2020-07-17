@@ -1,5 +1,4 @@
 import { push } from "connected-react-router";
-import { Path } from "history";
 import React from "react";
 import { connect } from "react-redux";
 import { PayloadActionCreator } from "typesafe-actions";
@@ -37,7 +36,7 @@ interface ConnectStateProps {
 interface ConnectDispatchProps {
   onCreateAllEntities: PayloadActionCreator<string, void>;
   onDeleteAllEntities: PayloadActionCreator<string, void>;
-  onPush: (path: Path) => void;
+  onPush: (path: RoutePath) => void;
   onResetTransferCountsByEntityGroup: PayloadActionCreator<string, void>;
 }
 

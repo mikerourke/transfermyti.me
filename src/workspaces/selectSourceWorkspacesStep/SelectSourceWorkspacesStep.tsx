@@ -1,5 +1,4 @@
 import { push } from "connected-react-router";
-import { Path } from "history";
 import React from "react";
 import { connect } from "react-redux";
 import { PayloadActionCreator } from "typesafe-actions";
@@ -66,7 +65,7 @@ interface ConnectDispatchProps {
   onFetchAllEntities: PayloadActionCreator<string, void>;
   onFetchWorkspaces: PayloadActionCreator<string, void>;
   onFlipIsWorkspaceIncluded: (workspace: WorkspaceModel) => void;
-  onPush: (path: Path) => void;
+  onPush: (path: RoutePath) => void;
   onShowNotification: (notification: Partial<NotificationModel>) => void;
   onUpdateActiveWorkspaceId: (workspaceId: string) => void;
   onUpdateFetchAllFetchStatus: PayloadActionCreator<string, FetchStatus>;

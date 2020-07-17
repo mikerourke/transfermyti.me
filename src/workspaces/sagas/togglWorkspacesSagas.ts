@@ -1,4 +1,3 @@
-/* eslint-disable @typescript-eslint/camelcase */
 import { SagaIterator } from "@redux-saga/types";
 import { call } from "redux-saga/effects";
 import { fetchArray } from "~/redux/reduxUtils";

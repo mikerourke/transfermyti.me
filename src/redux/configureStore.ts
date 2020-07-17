@@ -18,7 +18,7 @@ import { createRootReducer, RouterReducer } from "./rootReducer";
 import { ReduxState, ReduxStore } from "./reduxTypes";
 
 const devTools = window.__REDUX_DEVTOOLS_EXTENSION_COMPOSE__;
-const composeEnhancers: Function = devTools || compose;
+const composeEnhancers: AnyValid = devTools || compose;
 
 export function configureStore(history: History): ReduxStore {
   let credentials = initialCredentialsState;

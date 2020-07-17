@@ -1,4 +1,4 @@
-/* eslint-disable import/no-extraneous-dependencies,@typescript-eslint/no-explicit-any,no-console */
+/* eslint-disable import/no-extraneous-dependencies,no-console */
 import React from "react";
 import {
   RenderOptions,

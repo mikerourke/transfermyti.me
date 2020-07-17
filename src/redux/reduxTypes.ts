@@ -1,18 +1,16 @@
-/* eslint-disable @typescript-eslint/no-explicit-any */
 import { Store } from "redux";
 import { State } from "./rootReducer";
 
 export type ReduxStore = Store;
 export type ReduxState = State;
-export type ReduxGetState = () => ReduxState;
 
 export interface ReduxDispatch {
-  <TAction>(action: TAction & { type: any }): TAction & { type: any };
+  <TAction>(action: TAction & { type: AnyValid }): TAction & { type: AnyValid };
 }
 
-export interface ReduxAction<TPayload = {}> {
+export interface ReduxAction<TPayload = Record<string, unknown>> {
   type: string;
   payload?: TPayload;
   error?: boolean;
-  meta?: any;
+  meta?: AnyValid;
 }

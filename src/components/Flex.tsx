@@ -58,8 +58,7 @@ const Flex: React.FC<Props> = ({
   flexWrap,
   ...props
 }) => {
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  const Element = as as any;
+  const Element = as as AnyValid;
   return (
     <Element
       ref={R.isNil(innerRef) ? undefined : innerRef}

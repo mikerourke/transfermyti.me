@@ -1,4 +1,3 @@
-/* eslint-disable @typescript-eslint/camelcase */
 import { SagaIterator } from "@redux-saga/types";
 import differenceInSeconds from "date-fns/differenceInSeconds";
 import endOfYear from "date-fns/endOfYear";

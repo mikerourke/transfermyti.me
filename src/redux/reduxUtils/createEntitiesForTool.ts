@@ -1,4 +1,3 @@
-/* eslint-disable @typescript-eslint/no-explicit-any */
 import { SagaIterator } from "@redux-saga/types";
 import * as R from "ramda";
 import { call, delay, put, select } from "redux-saga/effects";
@@ -18,7 +17,7 @@ export function* createEntitiesForTool<TEntity>({
 }: {
   toolName: ToolName;
   sourceRecords: TEntity[];
-  apiCreateFunc: (sourceRecord: any, workspaceId: string) => SagaIterator;
+  apiCreateFunc: (sourceRecord: AnyValid, workspaceId: string) => SagaIterator;
 }): SagaIterator<TEntity[]> {
   const apiDelay = getApiDelayForTool(toolName);
 

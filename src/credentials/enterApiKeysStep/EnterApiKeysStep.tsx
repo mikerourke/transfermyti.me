@@ -1,5 +1,4 @@
 import { push } from "connected-react-router";
-import { Path } from "history";
 import React from "react";
 import { connect } from "react-redux";
 import { PayloadActionCreator } from "typesafe-actions";
@@ -35,7 +34,7 @@ interface ConnectStateProps {
 }
 
 interface ConnectDispatchProps {
-  onPush: (path: Path) => void;
+  onPush: (path: RoutePath) => void;
   onStoreCredentials: PayloadActionCreator<string, void>;
   onUpdateCredentials: (credentials: PartialCredentialsUpdateModel) => void;
   onUpdateValidationFetchStatus: PayloadActionCreator<string, FetchStatus>;

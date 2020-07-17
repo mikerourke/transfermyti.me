@@ -18,7 +18,7 @@ import { ToolName } from "~/typeDefs";
  */
 export function* fetchPaginatedFromClockify<TEntity>(
   apiUrl: string,
-  queryParams: object = {},
+  queryParams: Record<string, unknown> = {},
 ): SagaIterator<TEntity[]> {
   let keepFetching = true;
   let currentPage = 1;

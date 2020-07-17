@@ -51,8 +51,7 @@ export function initInterceptor(store: Store): VoidFunction {
       const fullUrl = getApiUrl(toolName, context).concat("/", endpoint);
       return [fullUrl, config];
     },
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    response(response): any {
+    response(response): AnyValid {
       if (!response.ok) {
         return Promise.reject(response);
       }
