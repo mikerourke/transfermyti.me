@@ -116,7 +116,7 @@ function* createClockifyTimeEntry(
 
   const targetTimeEntry = yield call(
     reduxUtils.fetchObject,
-    `/clockify/api/v1/workspaces/${targetWorkspaceId}/time-entries`,
+    `/clockify/api/workspaces/${targetWorkspaceId}/time-entries`,
     {
       method: "POST",
       body: timeEntryRequest,
@@ -136,7 +136,7 @@ function* deleteClockifyTimeEntry(
   const { workspaceId, id } = sourceTimeEntry;
   yield call(
     reduxUtils.fetchObject,
-    `/clockify/api/v1/workspaces/${workspaceId}/time-entries/${id}`,
+    `/clockify/api/workspaces/${workspaceId}/time-entries/${id}`,
     { method: "DELETE" },
   );
 }
@@ -156,7 +156,7 @@ function* fetchClockifyTimeEntriesInWorkspace(
 
   const clockifyTimeEntries: ClockifyTimeEntryResponseModel[] = yield call(
     reduxUtils.fetchPaginatedFromClockify,
-    `/clockify/api/v1/workspaces/${workspaceId}/user/${clockifyUserId}/time-entries`,
+    `/clockify/api/workspaces/${workspaceId}/user/${clockifyUserId}/time-entries`,
     { hydrated: true },
   );
 

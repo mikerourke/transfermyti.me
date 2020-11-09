@@ -99,7 +99,7 @@ function* createClockifyTask(
 
   const clockifyTask = yield call(
     reduxUtils.fetchObject,
-    `/clockify/api/v1/workspaces/${targetWorkspaceId}/projects/${targetProjectId}/tasks`,
+    `/clockify/api/workspaces/${targetWorkspaceId}/projects/${targetProjectId}/tasks`,
     { method: "POST", body: taskRequest },
   );
 
@@ -108,9 +108,7 @@ function* createClockifyTask(
 
 /**
  * Deletes the specified Clockify task.
- * @see https://clockify.github.io/clockify_api_docs/#operation--workspaces--workspaceId--projects--projectId--tasks--id--delete
- * @deprecated This is part of the old API and will need to be updated as soon
- *             as the v1 endpoint is available.
+ * @see https://clockify.me/developers-api#operation--v1-workspaces--workspaceId--projects--projectId--tasks-delete
  */
 function* deleteClockifyTask(sourceTask: TaskModel): SagaIterator {
   const { workspaceId, projectId, id } = sourceTask;
@@ -144,7 +142,7 @@ function* fetchClockifyTasksInWorkspace(
     const { id: projectId } = clockifyProject;
     const clockifyTasks: ClockifyTaskResponseModel[] = yield call(
       reduxUtils.fetchPaginatedFromClockify,
-      `/clockify/api/v1/workspaces/${workspaceId}/projects/${projectId}/tasks`,
+      `/clockify/api/workspaces/${workspaceId}/projects/${projectId}/tasks`,
     );
     allClockifyTasks.push(...clockifyTasks);
 

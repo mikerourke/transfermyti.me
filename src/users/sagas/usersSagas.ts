@@ -53,8 +53,8 @@ export function* deleteUsersSaga(): SagaIterator {
   try {
     const toolNameByMapping = yield select(toolNameByMappingSelector);
     const deleteSagaByToolName = {
-      [ToolName.Clockify]: clockifySagas.deleteClockifyUsersSaga,
-      [ToolName.Toggl]: togglSagas.deleteTogglUsersSaga,
+      [ToolName.Clockify]: clockifySagas.removeClockifyUsersSaga,
+      [ToolName.Toggl]: togglSagas.removeTogglUsersSaga,
     }[toolNameByMapping.source];
 
     const sourceUsers = yield select(includedSourceUsersSelector);

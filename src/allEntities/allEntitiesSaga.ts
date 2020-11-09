@@ -7,7 +7,6 @@ import * as tasksSagas from "~/tasks/sagas/tasksSagas";
 import * as timeEntriesSagas from "~/timeEntries/sagas/timeEntriesSagas";
 import * as userGroupsSagas from "~/userGroups/sagas/userGroupsSagas";
 import * as usersSagas from "~/users/sagas/usersSagas";
-import * as workspacesSagas from "~/workspaces/sagas/workspacesSaga";
 import * as allEntitiesActions from "./allEntitiesActions";
 import { EntityGroup } from "~/typeDefs";
 
@@ -37,12 +36,6 @@ export function* allEntitiesSaga(): SagaIterator {
  */
 function* createAllEntitiesSaga(): SagaIterator {
   try {
-    // TODO: Add progress bar in for workspaces.
-    // yield put(
-    //   allEntitiesActions.updateEntityGroupInProcess(EntityGroup.Workspaces),
-    // );
-    yield call(workspacesSagas.createWorkspacesSaga);
-
     yield put(
       allEntitiesActions.updateEntityGroupInProcess(EntityGroup.Clients),
     );

@@ -13,20 +13,21 @@ const ListItem = styled.li(
 
 interface Props {
   isOpen: boolean;
+  targetToolDisplayName: string;
   workspaces: WorkspaceModel[];
   onClose: VoidFunction;
 }
 
-const TogglWorkspacesModal: React.FC<Props> = props => (
+const MissingWorkspacesModal: React.FC<Props> = ({
+  targetToolDisplayName,
+  ...props
+}) => (
   <ModalDialog isOpen={props.isOpen} title="Error" onClose={props.onClose}>
     <p>
-      The workspaces you selected don&apos;t exist in Toggl, and this tool is
-      unable to create them.
+      The workspaces you selected don&apos;t exist in {targetToolDisplayName},
+      and this tool is unable to create them.
     </p>
-    <p>
-      Please manually create the following workspaces on Toggl before
-      proceeding:
-    </p>
+    <p>Please manually create the following workspaces before proceeding:</p>
     <ul>
       {props.workspaces.map(workspace => (
         <ListItem key={workspace.id}>{workspace.name}</ListItem>
@@ -35,4 +36,4 @@ const TogglWorkspacesModal: React.FC<Props> = props => (
   </ModalDialog>
 );
 
-export default TogglWorkspacesModal;
+export default MissingWorkspacesModal;

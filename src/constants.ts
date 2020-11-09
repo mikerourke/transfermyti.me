@@ -8,7 +8,7 @@ export const IS_USING_LOCAL_API =
 
 export const STORAGE_KEY = "transfermytime";
 
-export const CLOCKIFY_API_URL = "https://api.clockify.me/api";
+export const CLOCKIFY_API_URL = "https://api.clockify.me/api/v1";
 export const CLOCKIFY_API_PAGE_SIZE = 100;
 // Delay time for requests to ensure rate limits are not exceeded.
 // The documentation limits requests to 10 per second, but we're using a higher

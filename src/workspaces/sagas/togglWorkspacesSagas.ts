@@ -10,12 +10,6 @@ export interface TogglWorkspaceResponseModel {
   at: string;
 }
 
-export function* createTogglWorkspacesSaga(): SagaIterator {
-  // This saga never gets fired because Toggl does not allow for creating
-  // workspaces through their public API. The app displays a modal asking the
-  // user to create the workspaces on Toggl before proceeding.
-}
-
 /**
  * Fetches all workspaces from Toggl and returns array of transformed
  * workspaces.

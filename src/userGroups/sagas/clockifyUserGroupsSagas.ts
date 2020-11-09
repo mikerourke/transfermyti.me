@@ -49,9 +49,7 @@ export function* fetchClockifyUserGroupsSaga(): SagaIterator<UserGroupModel[]> {
 
 /**
  * Creates a new Clockify user group.
- * @see https://clockify.github.io/clockify_api_docs/#operation--workspaces--workspaceId--userGroups--post
- * @deprecated This is part of the old API and will need to be updated as soon
- *             as the v1 endpoint is available.
+ * @see https://clockify.me/developers-api#operation--v1-workspaces--workspaceId--user-groups--post
  */
 function* createClockifyUserGroup(
   sourceUserGroup: UserGroupModel,
@@ -60,7 +58,7 @@ function* createClockifyUserGroup(
   const userGroupRequest = { name: sourceUserGroup.name };
   const clockifyUserGroup = yield call(
     reduxUtils.fetchObject,
-    `/clockify/api/workspaces/${targetWorkspaceId}/userGroups/`,
+    `/clockify/api/workspaces/${targetWorkspaceId}/user-groups`,
     { method: "POST", body: userGroupRequest },
   );
 
@@ -69,9 +67,7 @@ function* createClockifyUserGroup(
 
 /**
  * Deletes the specified Clockify user group.
- * @see https://clockify.github.io/clockify_api_docs/#operation--workspaces--workspaceId--userGroups--id--delete
- * @deprecated This is part of the old API and will need to be updated as soon
- *             as the v1 endpoint is available.
+ * @see https://clockify.me/developers-api#operation--v1-workspaces--workspaceId--user-groups--userGroupId--delete
  */
 function* deleteClockifyUserGroup(
   sourceUserGroup: UserGroupModel,
@@ -79,23 +75,21 @@ function* deleteClockifyUserGroup(
   const { workspaceId, id } = sourceUserGroup;
   yield call(
     reduxUtils.fetchObject,
-    `/clockify/api/workspaces/${workspaceId}/userGroups/${id}`,
+    `/clockify/api/workspaces/${workspaceId}/user-groups/${id}`,
     { method: "DELETE" },
   );
 }
 
 /**
  * Fetches Clockify user groups in specified workspace.
- * @see https://clockify.github.io/clockify_api_docs/#operation--workspaces--workspaceId--userGroups-get
- * @deprecated This is part of the old API and will need to be updated as soon
- *             as the v1 endpoint is available.
+ * @see https://clockify.me/developers-api#operation--v1-workspace--workspaceId--usergroups-get
  */
 function* fetchClockifyUserGroupsInWorkspace(
   workspaceId: string,
 ): SagaIterator<UserGroupModel[]> {
   const clockifyUserGroups: ClockifyUserGroupResponseModel[] = yield call(
     reduxUtils.fetchPaginatedFromClockify,
-    `/clockify/api/workspaces/${workspaceId}/userGroups`,
+    `/clockify/api/workspaces/${workspaceId}/user-groups`,
   );
 
   return clockifyUserGroups.map(clockifyUserGroup =>

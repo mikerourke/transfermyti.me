@@ -7,6 +7,7 @@ const db = fse.readJSONSync(dbPath);
 
 const isEmpty = process.env.LOCAL_API_CLOCKIFY_EMPTY == "true";
 
+// TODO: Update routes to reflect V1 Clockify API only.
 function assignClockifyRoutes(router) {
   let entriesCreated = 20;
 
