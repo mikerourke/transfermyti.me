@@ -57,10 +57,10 @@ export function* createTogglUsersSaga(
 }
 
 /**
- * Deletes all specified source users from Toggl projects that are included
+ * Removes all specified source users from Toggl projects that are included
  * for deletion.
  */
-export function* deleteTogglUsersSaga(sourceUsers: UserModel[]): SagaIterator {
+export function* removeTogglUsersSaga(sourceUsers: UserModel[]): SagaIterator {
   const includedWorkspaceIds = yield select(includedSourceWorkspaceIdsSelector);
   const includedProjectIds = yield select(includedSourceProjectIdsSelector);
 
@@ -97,7 +97,7 @@ export function* deleteTogglUsersSaga(sourceUsers: UserModel[]): SagaIterator {
         );
 
         if (isProjectIncluded && matchingProjectUser.id) {
-          yield call(deleteTogglUserFromProject, matchingProjectUser.id);
+          yield call(removeTogglUserFromProject, matchingProjectUser.id);
 
           yield put(
             incrementEntityGroupTransferCompletedCount(EntityGroup.Users),
@@ -143,7 +143,7 @@ function* inviteTogglUsers(
  * Deletes the specified Toggl user from the specified project.
  * @see https://github.com/toggl/toggl_api_docs/blob/master/chapters/project_users.md#delete-a-project-user
  */
-function* deleteTogglUserFromProject(projectUserId: string): SagaIterator {
+function* removeTogglUserFromProject(projectUserId: string): SagaIterator {
   yield call(
     reduxUtils.fetchEmpty,
     `/toggl/api/project_users/${projectUserId}`,

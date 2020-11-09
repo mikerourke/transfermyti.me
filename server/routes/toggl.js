@@ -4,7 +4,7 @@ const { isSameYear } = require("date-fns");
 const { take, uniqueId } = require("lodash");
 
 const dbPath = path.resolve(__dirname, "..", "db", "toggl.json");
-const db = fse.readJSONSync(dbPath);
+const db = fse.readJsonSync(dbPath);
 
 const isEmpty = process.env.LOCAL_API_TOGGL_EMPTY == "true";
 

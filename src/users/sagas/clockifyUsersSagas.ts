@@ -74,13 +74,13 @@ export function* createClockifyUsersSaga(
 /**
  * Deletes all specified source clients from Clockify.
  */
-export function* deleteClockifyUsersSaga(
+export function* removeClockifyUsersSaga(
   sourceUsers: UserModel[],
 ): SagaIterator {
   yield call(reduxUtils.deleteEntitiesForTool, {
     toolName: ToolName.Clockify,
     sourceRecords: sourceUsers,
-    apiDeleteFunc: deleteClockifyUser,
+    apiDeleteFunc: removeClockifyUserFromWorkspace,
   });
 }
 
@@ -97,36 +97,37 @@ export function* fetchClockifyUsersSaga(): SagaIterator<UserModel[]> {
 
 /**
  * Invites Clockify users to workspace.
- * @see https://clockify.github.io/clockify_api_docs/#operation--workspaces--workspaceId--users-post
- * @deprecated This is part of the old API and will need to be updated as soon
- *             as the v1 endpoint is available.
+ * @see https://clockify.me/developers-api#operation--v1-workspaces--workspaceId--users-post
  */
 function* inviteClockifyUsers(
   sourceEmails: string[],
   targetWorkspaceId: string,
 ): SagaIterator {
-  const usersRequest = { emails: sourceEmails };
-  yield call(
-    reduxUtils.fetchObject,
-    `/clockify/api/workspaces/${targetWorkspaceId}/users`,
-    {
-      method: "POST",
-      body: usersRequest,
-    },
-  );
+  for (const email of sourceEmails) {
+    const userRequest = { email };
+    yield call(
+      reduxUtils.fetchObject,
+      `/clockify/api/workspaces/${targetWorkspaceId}/users`,
+      {
+        method: "POST",
+        body: userRequest,
+      },
+    );
+
+    yield delay(CLOCKIFY_API_DELAY);
+  }
 }
 
 /**
- * Deletes the specified Clockify user.
- * @see https://clockify.github.io/clockify_api_docs/#operation--users--userId--delete-post
- * @deprecated This is part of the old API and will need to be updated as soon
- *             as the v1 endpoint is available.
+ * Removes the specified Clockify user from the workspace.
+ * @see https://clockify.me/developers-api#operation--v1-workspaces--workspaceId--users--userId--delete
  */
-function* deleteClockifyUser(sourceUser: UserModel): SagaIterator {
+function* removeClockifyUserFromWorkspace(sourceUser: UserModel): SagaIterator {
+  const { workspaceId, id } = sourceUser;
   yield call(
     reduxUtils.fetchObject,
-    `/clockify/api/users/${sourceUser.id}/delete`,
-    { method: "POST" },
+    `/clockify/api/workspaces/${workspaceId}/users/${id}`,
+    { method: "DELETE" },
   );
 }
 
@@ -139,7 +140,7 @@ function* fetchClockifyUsersInWorkspace(
 ): SagaIterator<UserModel[]> {
   const clockifyUsers: ClockifyUserResponseModel[] = yield call(
     reduxUtils.fetchPaginatedFromClockify,
-    `/clockify/api/v1/workspaces/${workspaceId}/users`,
+    `/clockify/api/workspaces/${workspaceId}/users`,
   );
 
   return clockifyUsers.map(clockifyUser =>

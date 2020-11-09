@@ -8,7 +8,7 @@ import {
 } from "~/allEntities/allEntitiesActions";
 import {
   toolActionSelector,
-  toolForTargetMappingSelector,
+  targetToolDisplayNameSelector,
 } from "~/allEntities/allEntitiesSelectors";
 import { dismissAllNotifications, showNotification } from "~/app/appActions";
 import {
@@ -35,16 +35,15 @@ import {
   Note,
 } from "~/components";
 import DuplicateTargetsModal from "./DuplicateTargetsModal";
+import MissingWorkspacesModal from "./MissingWorkspacesModal";
 import NoWorkspacesModal from "./NoWorkspacesModal";
 import SourceWorkspaceCard from "./SourceWorkspaceCard";
-import TogglWorkspacesModal from "./TogglWorkspacesModal";
 import {
   FetchStatus,
   NotificationModel,
   ReduxState,
   RoutePath,
   ToolAction,
-  ToolName,
   WorkspaceModel,
 } from "~/typeDefs";
 
@@ -55,9 +54,9 @@ interface ConnectStateProps {
   includedWorkspacesCount: number;
   missingTargetWorkspaces: WorkspaceModel[];
   sourceWorkspaces: WorkspaceModel[];
+  targetToolDisplayName: string;
   targetWorkspaces: WorkspaceModel[];
   toolAction: ToolAction;
-  toolForTargetMapping: ToolName;
 }
 
 interface ConnectDispatchProps {
@@ -82,8 +81,8 @@ export const SelectSourceWorkspacesStepComponent: React.FC<Props> = props => {
     boolean
   >(false);
   const [
-    isTogglWorkspacesModalOpen,
-    setIsTogglWorkspacesModalOpen,
+    isMissingWorkspacesModalOpen,
+    setIsMissingWorkspacesModalOpen,
   ] = React.useState<boolean>(false);
   const [
     isDuplicateTargetsModalOpen,
@@ -112,10 +111,10 @@ export const SelectSourceWorkspacesStepComponent: React.FC<Props> = props => {
 
   const handleNextClick = (): void => {
     if (
-      props.toolForTargetMapping === ToolName.Toggl &&
-      props.missingTargetWorkspaces.length !== 0
+      props.missingTargetWorkspaces.length !== 0 &&
+      props.toolAction === ToolAction.Transfer
     ) {
-      setIsTogglWorkspacesModalOpen(true);
+      setIsMissingWorkspacesModalOpen(true);
       return;
     }
 
@@ -196,10 +195,11 @@ export const SelectSourceWorkspacesStepComponent: React.FC<Props> = props => {
         isOpen={isNoSelectionsModalOpen}
         onClose={() => setIsNoSelectionsModalOpen(false)}
       />
-      <TogglWorkspacesModal
-        isOpen={isTogglWorkspacesModalOpen}
+      <MissingWorkspacesModal
+        isOpen={isMissingWorkspacesModalOpen}
+        targetToolDisplayName={props.targetToolDisplayName}
         workspaces={props.missingTargetWorkspaces}
-        onClose={() => setIsTogglWorkspacesModalOpen(false)}
+        onClose={() => setIsMissingWorkspacesModalOpen(false)}
       />
       <DuplicateTargetsModal
         isOpen={isDuplicateTargetsModalOpen}
@@ -216,9 +216,9 @@ const mapStateToProps = (state: ReduxState): ConnectStateProps => ({
   includedWorkspacesCount: sourceIncludedWorkspacesCountSelector(state),
   missingTargetWorkspaces: missingTargetWorkspacesSelector(state),
   sourceWorkspaces: sourceWorkspacesSelector(state),
+  targetToolDisplayName: targetToolDisplayNameSelector(state),
   targetWorkspaces: targetWorkspacesSelector(state),
   toolAction: toolActionSelector(state),
-  toolForTargetMapping: toolForTargetMappingSelector(state),
 });
 
 const mapDispatchToProps: ConnectDispatchProps = {

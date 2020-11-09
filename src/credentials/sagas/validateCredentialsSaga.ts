@@ -35,7 +35,7 @@ export function* validateCredentialsSaga(): SagaIterator {
   const clockifyMapping = mappingByToolName[ToolName.Clockify];
   if (clockifyMapping) {
     try {
-      const clockifyUser = yield call(fetchObject, "/clockify/api/v1/user");
+      const clockifyUser = yield call(fetchObject, "/clockify/api/user");
       credentialsByMapping[clockifyMapping].email = clockifyUser.email;
       credentialsByMapping[clockifyMapping].userId = clockifyUser.id;
     } catch (err) {

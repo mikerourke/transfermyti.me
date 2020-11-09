@@ -58,7 +58,7 @@ function* createClockifyClient(
   const clientRequest = { name: sourceClient.name };
   const clockifyClient = yield call(
     reduxUtils.fetchObject,
-    `/clockify/api/v1/workspaces/${targetWorkspaceId}/clients`,
+    `/clockify/api/workspaces/${targetWorkspaceId}/clients`,
     { method: "POST", body: clientRequest },
   );
 
@@ -67,9 +67,7 @@ function* createClockifyClient(
 
 /**
  * Deletes the specified Clockify client.
- * @see https://clockify.github.io/clockify_api_docs/#operation--workspaces--workspaceId--clients--clientId--delete
- * @deprecated This is part of the old API and will need to be updated as soon
- *             as the v1 endpoint is available.
+ * @see https://clockify.me/developers-api#operation--v1-workspaces--workspaceId--clients--clientId--delete
  */
 function* deleteClockifyClient(sourceClient: ClientModel): SagaIterator {
   const { workspaceId, id } = sourceClient;
@@ -89,7 +87,7 @@ function* fetchClockifyClientsInWorkspace(
 ): SagaIterator<ClientModel[]> {
   const clockifyClients: ClockifyClientResponseModel[] = yield call(
     reduxUtils.fetchPaginatedFromClockify,
-    `/clockify/api/v1/workspaces/${workspaceId}/clients`,
+    `/clockify/api/workspaces/${workspaceId}/clients`,
   );
 
   return clockifyClients.map(transformFromResponse);

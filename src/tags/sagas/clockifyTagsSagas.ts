@@ -54,7 +54,7 @@ function* createClockifyTag(
   const tagRequest = { name: sourceTag.name };
   const clockifyTag = yield call(
     reduxUtils.fetchObject,
-    `/clockify/api/v1/workspaces/${targetWorkspaceId}/tags`,
+    `/clockify/api/workspaces/${targetWorkspaceId}/tags`,
     { method: "POST", body: tagRequest },
   );
 
@@ -63,9 +63,7 @@ function* createClockifyTag(
 
 /**
  * Deletes the specified Clockify tag.
- * @see https://clockify.github.io/clockify_api_docs/#operation--workspaces--workspaceId--tags--tagId--delete
- * @deprecated This is part of the old API and will need to be updated as soon
- *             as the v1 endpoint is available.
+ * @see https://clockify.me/developers-api#operation--v1-workspaces--workspaceId--tags--tagId--delete
  */
 function* deleteClockifyTag(sourceTag: TagModel): SagaIterator {
   const { workspaceId, id } = sourceTag;
@@ -85,7 +83,7 @@ function* fetchClockifyTagsInWorkspace(
 ): SagaIterator<TagModel[]> {
   const clockifyTags: ClockifyTagResponseModel[] = yield call(
     reduxUtils.fetchPaginatedFromClockify,
-    `/clockify/api/v1/workspaces/${workspaceId}/tags`,
+    `/clockify/api/workspaces/${workspaceId}/tags`,
   );
 
   return clockifyTags.map(transformFromResponse);

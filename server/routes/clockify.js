@@ -3,10 +3,11 @@ const fse = require("fs-extra");
 const { find, get, isNil, uniqueId } = require("lodash");
 
 const dbPath = path.resolve(__dirname, "..", "db", "clockify.json");
-const db = fse.readJSONSync(dbPath);
+const db = fse.readJsonSync(dbPath);
 
 const isEmpty = process.env.LOCAL_API_CLOCKIFY_EMPTY == "true";
 
+// TODO: Update routes to reflect V1 Clockify API only.
 function assignClockifyRoutes(router) {
   let entriesCreated = 20;
 

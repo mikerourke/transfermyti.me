@@ -27,7 +27,7 @@ export function render(
 type LogMethod = "log" | "warn" | "error";
 
 export class ConsoleToggle {
-  private consoleMethod: (...args: any[]) => void = console.warn;
+  private consoleMethod: (...args: AnyValid[]) => void = console.warn;
   private readonly logMethod: LogMethod;
 
   public constructor(logMethod: LogMethod) {
