@@ -95,10 +95,7 @@ describe("within timeEntriesReducer", () => {
       timeEntriesActions.flipIsDuplicateCheckEnabled(),
     );
 
-    expect(result).toEqual({
-      ...state,
-      isDuplicateCheckEnabled: !state.isDuplicateCheckEnabled,
-    });
+    expect(result.isDuplicateCheckEnabled).toBe(true);
   });
 
   test(`the flipIsTimeEntryIncluded action flips the "isIncluded" value of the timeEntry with id = payload`, () => {
