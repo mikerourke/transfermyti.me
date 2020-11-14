@@ -12,68 +12,65 @@ function assignClockifyRoutes(router) {
   let entriesCreated = 20;
 
   router
-    .get("/v1/user", (req, res) => {
+    .get("/user", (req, res) => {
       const [firstUser] = db.users;
       res.status(200).send(firstUser);
     })
-    .get("/v1/workspaces/:workspaceId/clients", (req, res) =>
+    .get("/workspaces/:workspaceId/clients", (req, res) =>
       res.status(200).send(isEmpty === true ? [] : db.clients),
     )
-    .get("/v1/workspaces/:workspaceId/projects", (req, res) =>
+    .get("/workspaces/:workspaceId/projects", (req, res) =>
       res.status(200).send(isEmpty === true ? [] : db.projects),
     )
     .get("/workspaces/:workspaceId/projects/:projectId/users/", (req, res) =>
       res.status(200).send(isEmpty === true ? [] : db.users),
     )
-    .get("/v1/workspaces/:workspaceId/tags", (req, res) =>
+    .get("/workspaces/:workspaceId/tags", (req, res) =>
       res.status(200).send(isEmpty === true ? [] : db.tags),
     )
-    .get("/v1/workspaces/:workspaceId/projects/:projectId/tasks", (req, res) =>
+    .get("/workspaces/:workspaceId/projects/:projectId/tasks", (req, res) =>
       res.status(200).send(isEmpty === true ? [] : db.tasks),
     )
-    .get(
-      "/v1/workspaces/:workspaceId/user/:userId/time-entries",
-      (req, res) => {
-        if (isEmpty === true) {
-          return res.status(200).send([]);
+    .get("/workspaces/:workspaceId/user/:userId/time-entries", (req, res) => {
+      if (isEmpty === true) {
+        return res.status(200).send([]);
+      }
+
+      const responseEntries = db.timeEntries.reduce((acc, timeEntry) => {
+        const { projectId, tagIds, taskId, ...responseEntry } = timeEntry;
+        if (!isNil(projectId)) {
+          const project = find(db.projects, ["id", projectId]);
+          responseEntry.project = project || null;
         }
 
-        const responseEntries = db.timeEntries.reduce((acc, timeEntry) => {
-          const { projectId, tagIds, taskId, ...responseEntry } = timeEntry;
-          if (!isNil(projectId)) {
-            const project = find(db.projects, ["id", projectId]);
-            responseEntry.project = project || null;
-          }
+        if (tagIds.length !== 0) {
+          responseEntry.tags = tagIds.map(tagId =>
+            db.tags.find(({ id }) => id === tagId),
+          );
+        } else {
+          responseEntry.tags = [];
+        }
 
-          if (tagIds.length !== 0) {
-            responseEntry.tags = tagIds.map(tagId =>
-              db.tags.find(({ id }) => id === tagId),
-            );
-          } else {
-            responseEntry.tags = [];
-          }
+        if (!isNil(taskId)) {
+          const task = find(db.tasks, ["id", taskId]);
+          responseEntry.task = task || null;
+        }
 
-          if (!isNil(taskId)) {
-            const task = find(db.tasks, ["id", taskId]);
-            responseEntry.task = task || null;
-          }
+        return [...acc, responseEntry];
+      }, []);
 
-          return [...acc, responseEntry];
-        }, []);
-
-        res.status(200).send(responseEntries);
-      },
-    )
+      res.status(200).send(responseEntries);
+    })
     .get("/workspaces/:workspaceId/userGroups/", (req, res) =>
       res.status(200).send(isEmpty === true ? [] : db.userGroups),
     )
-    .get("/v1/workspaces/:workspaceId/users", (req, res) =>
+    .get("/workspaces/:workspaceId/users", (req, res) =>
       res.status(200).send(isEmpty === true ? [] : db.users),
     )
-    .get("/v1/workspaces", (req, res) => res.status(200).send(db.workspaces));
+    .get("/workspaces", (req, res) => res.status(200).send(db.workspaces));
 
   router
-    .post("/v1/workspaces/:workspaceId/clients", (req, res) => {
+    .post("/workspaces/:workspaceId/clients", (req, res) => {
       const newClient = {
         id: uniqueId("clock-client-0"),
         name: req.body.name,
@@ -82,7 +79,7 @@ function assignClockifyRoutes(router) {
 
       res.status(200).send(newClient);
     })
-    .post("/v1/workspaces/:workspaceId/projects", (req, res) => {
+    .post("/workspaces/:workspaceId/projects", (req, res) => {
       const newProject = {
         id: uniqueId("clock-client-0"),
         name: req.body.name,
@@ -103,7 +100,7 @@ function assignClockifyRoutes(router) {
 
       res.status(200).send(newProject);
     })
-    .post("/v1/workspaces/:workspaceId/tags", (req, res) => {
+    .post("/workspaces/:workspaceId/tags", (req, res) => {
       const newTag = {
         id: uniqueId("clock-tag-0"),
         name: req.body.name,
@@ -112,23 +109,20 @@ function assignClockifyRoutes(router) {
 
       res.status(200).send(newTag);
     })
-    .post(
-      "/v1/workspaces/:workspaceId/projects/:projectId/tasks",
-      (req, res) => {
-        const newTask = {
-          id: uniqueId("clock-task-"),
-          name: req.body.name,
-          workspace: req.params.workspaceId,
-          projectId: req.params.projectId,
-          assigneeIds: req.body.assigneeIds || [],
-          estimate: req.body.estimate || "",
-          status: "ACTIVE",
-        };
+    .post("/workspaces/:workspaceId/projects/:projectId/tasks", (req, res) => {
+      const newTask = {
+        id: uniqueId("clock-task-"),
+        name: req.body.name,
+        workspace: req.params.workspaceId,
+        projectId: req.params.projectId,
+        assigneeIds: req.body.assigneeIds || [],
+        estimate: req.body.estimate || "",
+        status: "ACTIVE",
+      };
 
-        res.status(200).send(newTask);
-      },
-    )
-    .post("/v1/workspaces/:workspaceId/time-entries", (req, res) => {
+      res.status(200).send(newTask);
+    })
+    .post("/workspaces/:workspaceId/time-entries", (req, res) => {
       const [firstUser] = db.users;
       entriesCreated += 1;
 
@@ -150,7 +144,7 @@ function assignClockifyRoutes(router) {
 
       res.status(200).send(newTimeEntry);
     })
-    .post("/workspaces/:workspaceId/userGroups/", (req, res) => {
+    .post("/workspaces/:workspaceId/user-groups", (req, res) => {
       const newUserGroup = {
         id: uniqueId("clock-user-group-0"),
         name: req.body.name,
@@ -164,7 +158,7 @@ function assignClockifyRoutes(router) {
       const workspace = get(db.workspaces, req.params.workspaceId, {});
       res.status(200).send(workspace);
     })
-    .post("/v1/workspaces", (req, res) => {
+    .post("/workspaces", (req, res) => {
       const [firstWorkspace] = db.workspaces;
       const newWorkspace = {
         ...firstWorkspace,
@@ -179,7 +173,7 @@ function assignClockifyRoutes(router) {
     .delete("/workspaces/:workspaceId/clients/:clientId", (req, res) =>
       res.status(200).send({}),
     )
-    .delete("/v1/workspaces/:workspaceId/projects/:projectId", (req, res) =>
+    .delete("/workspaces/:workspaceId/projects/:projectId", (req, res) =>
       res.status(200).send({}),
     )
     .delete("/workspaces/:workspaceId/tags/:tagId", (req, res) =>
@@ -189,11 +183,10 @@ function assignClockifyRoutes(router) {
       "/workspaces/:workspaceId/projects/:projectId/tasks/:taskId",
       (req, res) => res.status(200).send({}),
     )
-    .delete(
-      "/v1/workspaces/:workspaceId/time-entries/:timeEntryId",
-      (req, res) => res.status(200).send({}),
+    .delete("/workspaces/:workspaceId/time-entries/:timeEntryId", (req, res) =>
+      res.status(200).send({}),
     )
-    .delete("/workspaces/:workspaceId/userGroups/:userGroupId", (req, res) =>
+    .delete("/workspaces/:workspaceId/user-groups/:userGroupId", (req, res) =>
       res.status(200).send({}),
     )
     .delete("/users/:userId", (req, res) => res.status(200).send());

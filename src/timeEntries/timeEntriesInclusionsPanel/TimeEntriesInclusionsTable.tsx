@@ -26,6 +26,7 @@ const NullValueCell: React.FC<{
 );
 
 interface Props {
+  isDuplicateCheckEnabled: boolean;
   timeEntries: TimeEntryTableViewModel[];
   totalCountsByType: Record<string, number>;
   onFlipIsIncluded: PayloadActionCreator<string, string>;

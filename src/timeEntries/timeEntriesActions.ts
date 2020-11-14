@@ -23,6 +23,10 @@ export const flipIsTimeEntryIncluded = createAction(
   "@timeEntries/FLIP_IS_INCLUDED",
 )<string>();
 
+export const flipIsDuplicateCheckEnabled = createAction(
+  "@timeEntries/FLIP_IS_DUPLICATE_CHECK_ENABLED",
+)();
+
 export const updateAreAllTimeEntriesIncluded = createAction(
   "@timeEntries/UPDATE_ARE_ALL_INCLUDED",
 )<boolean>();

@@ -1,6 +1,6 @@
 import React from "react";
 import { connect } from "react-redux";
-import { PayloadActionCreator } from "typesafe-actions";
+import { PayloadActionCreator, EmptyActionCreator } from "typesafe-actions";
 import {
   replaceMappingWithToolNameSelector,
   toolActionSelector,
@@ -8,24 +8,25 @@ import {
 import {
   flipIsTimeEntryIncluded,
   updateAreAllTimeEntriesIncluded,
+  flipIsDuplicateCheckEnabled,
 } from "~/timeEntries/timeEntriesActions";
 import {
   timeEntriesForInclusionsTableSelector,
   timeEntriesTotalCountsByTypeSelector,
+  isDuplicateCheckEnabledSelector,
 } from "~/timeEntries/timeEntriesSelectors";
 import {
   AccordionPanel,
   InclusionsTableTitle,
   NoRecordsFound,
 } from "~/components";
+import DuplicateCheckToggle from "./DuplicateCheckToggle";
 import TimeEntriesInclusionsTable from "./TimeEntriesInclusionsTable";
 import TimeEntryComparisonDisclaimer from "./TimeEntryComparisonDisclaimer";
 import { ReduxState, TimeEntryTableViewModel, ToolAction } from "~/typeDefs";
 
-// TODO: Add a form that allows the user to specify which criteria should be
-//       used to detect duplicate time entries.
-
 interface ConnectStateProps {
+  isDuplicateCheckEnabled: boolean;
   replaceMappingWithToolName: (label: string) => string;
   timeEntries: TimeEntryTableViewModel[];
   toolAction: ToolAction;
@@ -33,6 +34,7 @@ interface ConnectStateProps {
 }
 
 interface ConnectDispatchProps {
+  onFlipIsDuplicateCheckEnabled: EmptyActionCreator<string>;
   onFlipIsIncluded: PayloadActionCreator<string, string>;
   onUpdateAreAllIncluded: PayloadActionCreator<string, boolean>;
 }
@@ -44,7 +46,7 @@ export const TimeEntriesInclusionsPanelComponent: React.FC<Props> = ({
   ...props
 }) => {
   const { isIncluded, existsInTarget } = props.totalCountsByType;
-  const recordCount = timeEntries.length;
+  const recordCount = timeEntries.length || 1;
   const areAllToggled = isIncluded + existsInTarget === recordCount;
 
   const handleFlipInclusions = (): void => {
@@ -62,7 +64,13 @@ export const TimeEntriesInclusionsPanelComponent: React.FC<Props> = ({
       ) : (
         <>
           {props.toolAction === ToolAction.Transfer && (
-            <TimeEntryComparisonDisclaimer />
+            <>
+              <TimeEntryComparisonDisclaimer />
+              <DuplicateCheckToggle
+                onToggle={props.onFlipIsDuplicateCheckEnabled}
+                isToggled={props.isDuplicateCheckEnabled}
+              />
+            </>
           )}
           <InclusionsTableTitle
             id="time-entries-desc"
@@ -72,6 +80,7 @@ export const TimeEntriesInclusionsPanelComponent: React.FC<Props> = ({
             {props.replaceMappingWithToolName("Time Entry Records in Source")}
           </InclusionsTableTitle>
           <TimeEntriesInclusionsTable
+            isDuplicateCheckEnabled={props.isDuplicateCheckEnabled}
             timeEntries={timeEntries}
             totalCountsByType={props.totalCountsByType}
             onFlipIsIncluded={props.onFlipIsIncluded}
@@ -83,6 +92,7 @@ export const TimeEntriesInclusionsPanelComponent: React.FC<Props> = ({
 };
 
 const mapStateToProps = (state: ReduxState): ConnectStateProps => ({
+  isDuplicateCheckEnabled: isDuplicateCheckEnabledSelector(state),
   replaceMappingWithToolName: replaceMappingWithToolNameSelector(state),
   timeEntries: timeEntriesForInclusionsTableSelector(state),
   toolAction: toolActionSelector(state),
@@ -90,6 +100,7 @@ const mapStateToProps = (state: ReduxState): ConnectStateProps => ({
 });
 
 const mapDispatchToProps: ConnectDispatchProps = {
+  onFlipIsDuplicateCheckEnabled: flipIsDuplicateCheckEnabled,
   onFlipIsIncluded: flipIsTimeEntryIncluded,
   onUpdateAreAllIncluded: updateAreAllTimeEntriesIncluded,
 };
