@@ -7,6 +7,11 @@ import {
   TimeEntryTableViewModel,
 } from "~/typeDefs";
 
+export const isDuplicateCheckEnabledSelector = createSelector(
+  (state: ReduxState) => state.timeEntries.isDuplicateCheckEnabled,
+  (isDuplicateCheckEnabled): boolean => isDuplicateCheckEnabled,
+);
+
 export const sourceTimeEntriesSelector = createSelector(
   (state: ReduxState) => state.timeEntries.source,
   (timeEntriesById): TimeEntryModel[] => Object.values(timeEntriesById),
@@ -20,10 +25,13 @@ export const includedSourceTimeEntriesSelector = createSelector(
 
 export const sourceTimeEntriesForTransferSelector = createSelector(
   includedSourceTimeEntriesSelector,
-  sourceTimeEntries =>
-    sourceTimeEntries.filter(sourceTimeEntry =>
-      R.isNil(sourceTimeEntry.linkedId),
-    ),
+  isDuplicateCheckEnabledSelector,
+  (sourceTimeEntries, isDuplicateCheckEnabled) =>
+    isDuplicateCheckEnabled
+      ? sourceTimeEntries.filter(sourceTimeEntry =>
+          R.isNil(sourceTimeEntry.linkedId),
+        )
+      : sourceTimeEntries,
 );
 
 export const sourceTimeEntriesInActiveWorkspaceSelector = createSelector(
@@ -40,11 +48,13 @@ export const timeEntriesForInclusionsTableSelector = createSelector(
   sourceTimeEntriesInActiveWorkspaceSelector,
   (state: ReduxState) => state.projects.source,
   (state: ReduxState) => state.tasks.source,
+  isDuplicateCheckEnabledSelector,
   (
     areExistsInTargetShown,
     sourceTimeEntries,
     sourceProjectsById,
     sourceTasksById,
+    isDuplicateCheckEnabled,
   ): TimeEntryTableViewModel[] =>
     sourceTimeEntries.reduce((acc, sourceTimeEntry) => {
       const existsInTarget = sourceTimeEntry.linkedId !== null;
@@ -73,7 +83,7 @@ export const timeEntriesForInclusionsTableSelector = createSelector(
           ...sourceTimeEntry,
           projectName,
           taskName,
-          existsInTarget,
+          existsInTarget: isDuplicateCheckEnabled ? existsInTarget : false,
           isActiveInSource: true,
           isActiveInTarget: existsInTarget,
         },

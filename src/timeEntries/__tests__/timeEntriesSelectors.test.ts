@@ -178,6 +178,7 @@ const TEST_STATE = {
       },
     },
     isFetching: false,
+    isDuplicateCheckEnabled: true,
   },
 };
 
@@ -220,6 +221,24 @@ describe("within timeEntriesSelectors", () => {
     ],
   );
 
+  test(`the sourceTimeEntriesForTransferSelector returns all values if state.isDuplicateCheckEnabled = false`, () => {
+    const updatedState = {
+      ...TEST_STATE,
+      timeEntries: {
+        ...TEST_STATE.timeEntries,
+        isDuplicateCheckEnabled: false,
+      },
+    };
+    const result = timeEntriesSelectors.sourceTimeEntriesForTransferSelector(
+      updatedState,
+    );
+    const expected = timeEntriesSelectors.includedSourceTimeEntriesSelector(
+      TEST_STATE,
+    );
+
+    expect(result).toEqual(expected);
+  });
+
   cases(
     "the timeEntriesForInclusionsTableSelector matches its snapshot based on state.allEntities.areExistsInTargetShown",
     options => {
@@ -247,6 +266,21 @@ describe("within timeEntriesSelectors", () => {
       },
     ],
   );
+
+  test(`the timeEntriesForInclusionsTableSelector matches its snapshot when state.isDuplicateCheckEnabled = false`, () => {
+    const updatedState = {
+      ...TEST_STATE,
+      timeEntries: {
+        ...TEST_STATE.timeEntries,
+        isDuplicateCheckEnabled: false,
+      },
+    };
+    const result = timeEntriesSelectors.timeEntriesForInclusionsTableSelector(
+      updatedState,
+    );
+
+    expect(result).toMatchSnapshot();
+  });
 
   test("the sourceTimeEntryCountByIdFieldSelectorFactory matches its snapshot", () => {
     const getCounts = timeEntriesSelectors.sourceTimeEntryCountByIdFieldSelectorFactory(

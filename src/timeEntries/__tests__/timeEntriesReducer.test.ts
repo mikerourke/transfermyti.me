@@ -89,6 +89,18 @@ describe("within timeEntriesReducer", () => {
     ],
   );
 
+  test("the flipIsDuplicateCheckEnabled action flips the isDuplicateCheckEnabled value in state", () => {
+    const result = timeEntriesReducer(
+      state,
+      timeEntriesActions.flipIsDuplicateCheckEnabled(),
+    );
+
+    expect(result).toEqual({
+      ...state,
+      isDuplicateCheckEnabled: !state.isDuplicateCheckEnabled,
+    });
+  });
+
   test(`the flipIsTimeEntryIncluded action flips the "isIncluded" value of the timeEntry with id = payload`, () => {
     const updatedState = R.set(
       R.lensProp("source"),

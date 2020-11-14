@@ -1,6 +1,5 @@
 import * as R from "ramda";
 import { ActionType, createReducer } from "typesafe-actions";
-import { updateAreAllRecordsIncluded } from "~/redux/reduxUtils";
 import { flushAllEntities } from "~/allEntities/allEntitiesActions";
 import * as timeEntriesActions from "./timeEntriesActions";
 import { Mapping, TimeEntriesByIdModel } from "~/typeDefs";
@@ -13,12 +12,14 @@ export interface TimeEntriesState {
   readonly source: TimeEntriesByIdModel;
   readonly target: TimeEntriesByIdModel;
   readonly isFetching: boolean;
+  readonly isDuplicateCheckEnabled: boolean;
 }
 
 export const initialState: TimeEntriesState = {
   source: {},
   target: {},
   isFetching: false,
+  isDuplicateCheckEnabled: true,
 };
 
 export const timeEntriesReducer = createReducer<
@@ -70,11 +71,24 @@ export const timeEntriesReducer = createReducer<
     (state, { payload }) =>
       R.over(R.lensPath([Mapping.Source, payload, "isIncluded"]), R.not, state),
   )
+  .handleAction(timeEntriesActions.flipIsDuplicateCheckEnabled, state => ({
+    ...state,
+    isDuplicateCheckEnabled: !state.isDuplicateCheckEnabled,
+  }))
   .handleAction(
     timeEntriesActions.updateAreAllTimeEntriesIncluded,
     (state, { payload }) => ({
       ...state,
-      source: updateAreAllRecordsIncluded(state.source, payload),
+      source: Object.entries(state.source).reduce(
+        (acc, [id, record]) => ({
+          ...acc,
+          [id]: {
+            ...record,
+            isIncluded: payload,
+          },
+        }),
+        {},
+      ),
     }),
   )
   .handleAction(
