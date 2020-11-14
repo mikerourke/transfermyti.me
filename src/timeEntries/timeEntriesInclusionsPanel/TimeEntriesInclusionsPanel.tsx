@@ -20,7 +20,7 @@ import {
   InclusionsTableTitle,
   NoRecordsFound,
 } from "~/components";
-import DisableDuplicateCheckToggle from "./DisableDuplicateCheckToggle";
+import DuplicateCheckToggle from "./DuplicateCheckToggle";
 import TimeEntriesInclusionsTable from "./TimeEntriesInclusionsTable";
 import TimeEntryComparisonDisclaimer from "./TimeEntryComparisonDisclaimer";
 import { ReduxState, TimeEntryTableViewModel, ToolAction } from "~/typeDefs";
@@ -66,7 +66,7 @@ export const TimeEntriesInclusionsPanelComponent: React.FC<Props> = ({
           {props.toolAction === ToolAction.Transfer && (
             <>
               <TimeEntryComparisonDisclaimer />
-              <DisableDuplicateCheckToggle
+              <DuplicateCheckToggle
                 onToggle={props.onFlipIsDuplicateCheckEnabled}
                 isToggled={props.isDuplicateCheckEnabled}
               />

@@ -71,10 +71,27 @@ export const timeEntriesReducer = createReducer<
     (state, { payload }) =>
       R.over(R.lensPath([Mapping.Source, payload, "isIncluded"]), R.not, state),
   )
-  .handleAction(timeEntriesActions.flipIsDuplicateCheckEnabled, state => ({
-    ...state,
-    isDuplicateCheckEnabled: !state.isDuplicateCheckEnabled,
-  }))
+  .handleAction(timeEntriesActions.flipIsDuplicateCheckEnabled, state => {
+    const newIsDuplicateCheckEnabled = !state.isDuplicateCheckEnabled;
+    const newSource = Object.entries({ ...state.source }).reduce(
+      (acc, [id, timeEntry]) => ({
+        ...acc,
+        [id]: {
+          ...timeEntry,
+          isIncluded: newIsDuplicateCheckEnabled
+            ? false
+            : R.isNil(timeEntry.linkedId),
+        },
+      }),
+      {},
+    );
+
+    return {
+      ...state,
+      source: newSource,
+      isDuplicateCheckEnabled: !state.isDuplicateCheckEnabled,
+    };
+  })
   .handleAction(
     timeEntriesActions.updateAreAllTimeEntriesIncluded,
     (state, { payload }) => ({

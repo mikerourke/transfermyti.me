@@ -15,17 +15,17 @@ interface Props {
   onToggle: VoidFunction;
 }
 
-const DisableDuplicateCheckToggle: React.FC<Props> = ({
+const DuplicateCheckToggle: React.FC<Props> = ({
   isToggled,
   onToggle,
   ...props
 }) => (
   <div css={{ marginBottom: "0.75rem" }} {...props}>
     <Label id="disable-duplicate-check-toggle">
-      Disable the time entry duplication check?
+      Use the time entry duplication check?
     </Label>
     <Toggle
-      aria-label="Disable the time entry duplication check?"
+      aria-label="Use the time entry duplication check?"
       aria-labelledby="disable-duplicate-check-toggle"
       css={theme => ({ background: theme.colors.white })}
       isToggled={isToggled}
@@ -34,4 +34,4 @@ const DisableDuplicateCheckToggle: React.FC<Props> = ({
   </div>
 );
 
-export default DisableDuplicateCheckToggle;
+export default DuplicateCheckToggle;
