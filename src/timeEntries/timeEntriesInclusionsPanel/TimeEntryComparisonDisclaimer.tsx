@@ -45,7 +45,7 @@ const TimeEntryComparisonDisclaimer: React.FC = () => (
         <strong> end date and time</strong> of the source and target entry?
       </li>
     </ul>
-    <p css={{ marginTop: "1rem", fontWeight: "bold" }}>
+    <p style={{ marginTop: "1rem", fontWeight: "bold" }}>
       You can disable this check by toggling the switch below.
     </p>
   </Details>
