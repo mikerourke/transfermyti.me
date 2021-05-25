@@ -3,6 +3,17 @@ import React from "react";
 import { connect } from "react-redux";
 import { PayloadActionCreator } from "typesafe-actions";
 
+import { replaceMappingWithToolNameSelector } from "~/allEntities/allEntitiesSelectors";
+
+import {
+  BaseEntityModel,
+  EntityGroup,
+  ReduxState,
+  TableViewModel,
+} from "~/typeDefs";
+
+import { getEntityGroupDisplay } from "~/utils";
+
 import AccordionPanel from "./AccordionPanel";
 import InclusionsTable from "./InclusionsTable";
 import InclusionsTableBody from "./InclusionsTableBody";
@@ -10,14 +21,6 @@ import InclusionsTableFoot from "./InclusionsTableFoot";
 import InclusionsTableHead from "./InclusionsTableHead";
 import InclusionsTableTitle from "./InclusionsTableTitle";
 import NoRecordsFound from "./NoRecordsFound";
-import { replaceMappingWithToolNameSelector } from "~/allEntities/allEntitiesSelectors";
-import {
-  BaseEntityModel,
-  EntityGroup,
-  ReduxState,
-  TableViewModel,
-} from "~/typeDefs";
-import { getEntityGroupDisplay } from "~/utils";
 
 interface ConnectStateProps {
   replaceMappingWithToolName: (label: string) => string;

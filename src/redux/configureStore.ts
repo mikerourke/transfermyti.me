@@ -4,9 +4,6 @@ import { AnyAction, applyMiddleware, compose, createStore } from "redux";
 import createSagaMiddleware from "redux-saga";
 import storage from "store";
 
-import { analyticsMiddleware } from "./analyticsMiddlewares";
-import { ReduxState, ReduxStore } from "./reduxTypes";
-import { createRootReducer, RouterReducer } from "./rootReducer";
 import { allEntitiesSaga } from "~/allEntities/allEntitiesSaga";
 import { appSaga } from "~/app/appSaga";
 import { IS_USING_LOCAL_API, STORAGE_KEY } from "~/constants";
@@ -17,6 +14,10 @@ import { projectMonitoringSaga } from "~/projects/sagas/projectsSagas";
 import { taskMonitoringSaga } from "~/tasks/sagas/tasksSagas";
 import { getIfDev } from "~/utils";
 import { workspacesSaga } from "~/workspaces/sagas/workspacesSaga";
+
+import { analyticsMiddleware } from "./analyticsMiddlewares";
+import { ReduxState, ReduxStore } from "./reduxTypes";
+import { createRootReducer, RouterReducer } from "./rootReducer";
 
 const devTools = window.__REDUX_DEVTOOLS_EXTENSION_COMPOSE__;
 const composeEnhancers: AnyValid = devTools || compose;

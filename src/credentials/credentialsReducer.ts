@@ -1,11 +1,12 @@
 import { ActionType, createReducer } from "typesafe-actions";
 
-import * as credentialsActions from "./credentialsActions";
 import {
   CredentialsModel,
   FetchStatus,
   ValidationErrorsByMappingModel,
 } from "~/typeDefs";
+
+import * as credentialsActions from "./credentialsActions";
 
 type CredentialsAction = ActionType<typeof credentialsActions>;
 

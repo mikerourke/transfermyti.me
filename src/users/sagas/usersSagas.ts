@@ -3,8 +3,6 @@ import { SagaIterator } from "@redux-saga/types";
 import * as R from "ramda";
 import { call, put, select } from "redux-saga/effects";
 
-import * as clockifySagas from "./clockifyUsersSagas";
-import * as togglSagas from "./togglUsersSagas";
 import {
   toolActionSelector,
   toolNameByMappingSelector,
@@ -17,6 +15,9 @@ import {
   includedSourceUsersSelector,
   sourceUserEmailsByWorkspaceIdSelector,
 } from "~/users/usersSelectors";
+
+import * as clockifySagas from "./clockifyUsersSagas";
+import * as togglSagas from "./togglUsersSagas";
 
 /**
  * Invites users to the target tool based on the source users.

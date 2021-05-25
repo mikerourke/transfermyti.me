@@ -3,7 +3,6 @@ import React from "react";
 import { connect } from "react-redux";
 import { PayloadActionCreator } from "typesafe-actions";
 
-import ApiKeyInputField from "./ApiKeyInputField";
 import { toolHelpDetailsByMappingSelector } from "~/allEntities/allEntitiesSelectors";
 import { Button, HelpDetails, NavigationButtonsRow } from "~/components";
 import { useDeepCompareEffect } from "~/components/hooks";
@@ -25,6 +24,8 @@ import {
   ToolName,
   ValidationErrorsByMappingModel,
 } from "~/typeDefs";
+
+import ApiKeyInputField from "./ApiKeyInputField";
 
 interface ConnectStateProps {
   credentialsByMapping: Record<Mapping, CredentialsModel>;

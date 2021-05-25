@@ -4,8 +4,6 @@ import * as R from "ramda";
 import { all, call, put, select, takeEvery } from "redux-saga/effects";
 import { isActionOf } from "typesafe-actions";
 
-import * as clockifySagas from "./clockifyTasksSagas";
-import * as togglSagas from "./togglTasksSagas";
 import {
   toolActionSelector,
   toolNameByMappingSelector,
@@ -29,6 +27,9 @@ import {
   ToolAction,
   ToolName,
 } from "~/typeDefs";
+
+import * as clockifySagas from "./clockifyTasksSagas";
+import * as togglSagas from "./togglTasksSagas";
 
 export function* taskMonitoringSaga(): SagaIterator {
   yield all([

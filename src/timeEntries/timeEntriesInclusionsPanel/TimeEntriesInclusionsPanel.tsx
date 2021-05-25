@@ -2,9 +2,6 @@ import React from "react";
 import { connect } from "react-redux";
 import { PayloadActionCreator, EmptyActionCreator } from "typesafe-actions";
 
-import DuplicateCheckToggle from "./DuplicateCheckToggle";
-import TimeEntriesInclusionsTable from "./TimeEntriesInclusionsTable";
-import TimeEntryComparisonDisclaimer from "./TimeEntryComparisonDisclaimer";
 import {
   replaceMappingWithToolNameSelector,
   toolActionSelector,
@@ -25,6 +22,10 @@ import {
   isDuplicateCheckEnabledSelector,
 } from "~/timeEntries/timeEntriesSelectors";
 import { ReduxState, TimeEntryTableViewModel, ToolAction } from "~/typeDefs";
+
+import DuplicateCheckToggle from "./DuplicateCheckToggle";
+import TimeEntriesInclusionsTable from "./TimeEntriesInclusionsTable";
+import TimeEntryComparisonDisclaimer from "./TimeEntryComparisonDisclaimer";
 
 interface ConnectStateProps {
   isDuplicateCheckEnabled: boolean;

@@ -3,10 +3,12 @@ import Color from "color";
 import React from "react";
 import { Helmet } from "react-helmet";
 
+import NotificationsDisplay from "~/app/notificationsDisplay/NotificationsDisplay";
+
+import { styled, theme as customTheme } from "~/components/emotion";
+
 import Footer from "./Footer";
 import Header from "./Header";
-import NotificationsDisplay from "~/app/notificationsDisplay/NotificationsDisplay";
-import { styled, theme as customTheme } from "~/components/emotion";
 
 const Main = styled.main(
   {

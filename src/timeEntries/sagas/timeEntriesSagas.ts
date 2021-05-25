@@ -3,8 +3,6 @@ import { SagaIterator } from "@redux-saga/types";
 import * as R from "ramda";
 import { call, put, select } from "redux-saga/effects";
 
-import * as clockifySagas from "./clockifyTimeEntriesSagas";
-import * as togglSagas from "./togglTimeEntriesSagas";
 import {
   toolActionSelector,
   toolNameByMappingSelector,
@@ -23,6 +21,9 @@ import {
   ToolAction,
   ToolName,
 } from "~/typeDefs";
+
+import * as clockifySagas from "./clockifyTimeEntriesSagas";
+import * as togglSagas from "./togglTimeEntriesSagas";
 
 /**
  * Creates time entries in the target tool based on the included time entries

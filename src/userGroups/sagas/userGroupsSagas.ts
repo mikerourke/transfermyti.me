@@ -3,8 +3,6 @@ import { SagaIterator } from "@redux-saga/types";
 import * as R from "ramda";
 import { call, put, select } from "redux-saga/effects";
 
-import * as clockifySagas from "./clockifyUserGroupsSagas";
-import * as togglSagas from "./togglUserGroupsSagas";
 import {
   toolActionSelector,
   toolNameByMappingSelector,
@@ -17,6 +15,9 @@ import {
   includedSourceUserGroupsSelector,
   sourceUserGroupsForTransferSelector,
 } from "~/userGroups/userGroupsSelectors";
+
+import * as clockifySagas from "./clockifyUserGroupsSagas";
+import * as togglSagas from "./togglUserGroupsSagas";
 
 /**
  * Creates user groups in the target tool based on the included user groups from

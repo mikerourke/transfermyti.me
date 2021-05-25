@@ -1,10 +1,11 @@
 import * as R from "ramda";
 import { ActionType, createReducer } from "typesafe-actions";
 
-import * as projectsActions from "./projectsActions";
 import { flushAllEntities } from "~/allEntities/allEntitiesActions";
 import { updateAreAllRecordsIncluded } from "~/redux/reduxUtils";
 import { Mapping, ProjectsByIdModel } from "~/typeDefs";
+
+import * as projectsActions from "./projectsActions";
 
 type ProjectsAction = ActionType<
   typeof projectsActions | typeof flushAllEntities

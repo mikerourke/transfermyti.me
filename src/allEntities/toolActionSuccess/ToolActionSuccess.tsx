@@ -4,7 +4,6 @@ import ReactGA from "react-ga";
 import { connect } from "react-redux";
 import { PayloadActionCreator } from "typesafe-actions";
 
-import BuyMeACoffeeButton from "./BuyMeACoffeeButton";
 import {
   targetToolDisplayNameSelector,
   targetToolTrackerUrlSelector,
@@ -12,6 +11,8 @@ import {
 import { Flex, getOpenInNewTabContent, styled } from "~/components";
 import { flushCredentials } from "~/credentials/credentialsActions";
 import { AnalyticsEventCategory, ReduxState } from "~/typeDefs";
+
+import BuyMeACoffeeButton from "./BuyMeACoffeeButton";
 
 const Celebrate: React.FC = () => (
   <span role="img" aria-label="Celebrate">
@@ -82,7 +83,7 @@ export const ToolActionSuccessComponent: React.FC<Props> = (props) => {
   return (
     <Flex alignItems="center" justifyContent="center" flexDirection="column">
       <h1 css={{ fontSize: "3rem", margin: "2rem 0" }}>
-        <Celebrate /> Transfer Complete! <Celebrate />
+        <Celebrate /> All Done! <Celebrate />
       </h1>
       <VideoIframe
         title="Thank you for being a friend"

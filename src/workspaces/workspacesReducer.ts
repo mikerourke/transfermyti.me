@@ -1,9 +1,10 @@
 import * as R from "ramda";
 import { ActionType, createReducer } from "typesafe-actions";
 
-import * as workspacesActions from "./workspacesActions";
 import { flushAllEntities } from "~/allEntities/allEntitiesActions";
 import { WorkspacesByIdModel } from "~/typeDefs";
+
+import * as workspacesActions from "./workspacesActions";
 
 type WorkspacesAction = ActionType<
   typeof workspacesActions | typeof flushAllEntities

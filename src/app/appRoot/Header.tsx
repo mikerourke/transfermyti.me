@@ -1,9 +1,10 @@
 import React from "react";
 import { Link } from "react-router-dom";
 
-import Logo from "./Logo";
 import { styled } from "~/components";
 import { RoutePath } from "~/typeDefs";
+
+import Logo from "./Logo";
 
 const Base = styled.header(
   {

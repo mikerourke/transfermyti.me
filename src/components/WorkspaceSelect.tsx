@@ -1,7 +1,8 @@
 import React from "react";
 
-import { styled } from "./emotion";
 import { WorkspaceModel } from "~/typeDefs";
+
+import { styled } from "./emotion";
 
 const Select = styled.select(
   {

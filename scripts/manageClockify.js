@@ -23,7 +23,7 @@ const clockifyUserId = httpEnv.development["clockify-user-id"];
 yargs
   .command({
     command: "delete",
-    describe: "Delete all allEntities on Clockify testing workspace",
+    describe: "Delete all all entities on Clockify testing workspace",
     handler: async () => {
       await deleteEntitiesInWorkspaces();
     },
@@ -31,7 +31,7 @@ yargs
   .command({
     command: "write",
     describe:
-      "Grabs all the Clockify allEntities and writes them to clockify.json in CWD",
+      "Grabs all the Clockify all entities and writes them to clockify.json in CWD",
     handler: async () => {
       await writeEntitiesToOutputFile();
     },
@@ -93,11 +93,11 @@ async function writeEntitiesToOutputFile() {
   }
 
   await fse.writeJson(outputPath, dataByWorkspaceName, { spaces: 2 });
-  console.log(green("Clockify allEntities written to file!"));
+  console.log(green("Clockify entities written to file!"));
 }
 
 /**
- * Deletes all of the allEntities in the specified group from the specified
+ * Deletes all of the entities in the specified group from the specified
  * workspace.
  */
 async function deleteEntityGroupInWorkspace(workspaceId, entityGroup) {

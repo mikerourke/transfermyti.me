@@ -3,8 +3,6 @@ import { SagaIterator } from "@redux-saga/types";
 import * as R from "ramda";
 import { call, put, select } from "redux-saga/effects";
 
-import * as clockifySagas from "./clockifyTagsSagas";
-import * as togglSagas from "./togglTagsSagas";
 import {
   toolActionSelector,
   toolNameByMappingSelector,
@@ -17,6 +15,9 @@ import {
   sourceTagsForTransferSelector,
 } from "~/tags/tagsSelectors";
 import { Mapping, TagsByIdModel, ToolAction, ToolName } from "~/typeDefs";
+
+import * as clockifySagas from "./clockifyTagsSagas";
+import * as togglSagas from "./togglTagsSagas";
 
 /**
  * Creates tags in the target tool based on the included tags from the

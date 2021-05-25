@@ -3,10 +3,6 @@ import React from "react";
 import { connect } from "react-redux";
 import { PayloadActionCreator } from "typesafe-actions";
 
-import DuplicateTargetsModal from "./DuplicateTargetsModal";
-import MissingWorkspacesModal from "./MissingWorkspacesModal";
-import NoWorkspacesModal from "./NoWorkspacesModal";
-import SourceWorkspaceCard from "./SourceWorkspaceCard";
 import {
   fetchAllEntities,
   updateFetchAllFetchStatus,
@@ -47,6 +43,11 @@ import {
   sourceWorkspacesSelector,
   targetWorkspacesSelector,
 } from "~/workspaces/workspacesSelectors";
+
+import DuplicateTargetsModal from "./DuplicateTargetsModal";
+import MissingWorkspacesModal from "./MissingWorkspacesModal";
+import NoWorkspacesModal from "./NoWorkspacesModal";
+import SourceWorkspaceCard from "./SourceWorkspaceCard";
 
 interface ConnectStateProps {
   areWorkspacesFetching: boolean;

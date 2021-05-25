@@ -3,11 +3,12 @@ import { connect } from "react-redux";
 import { TransitionGroup, Transition } from "react-transition-group";
 import { TransitionStatus } from "react-transition-group/Transition";
 
-import NotificationToast from "./NotificationToast";
 import { dismissNotification } from "~/app/appActions";
 import { notificationsSelector } from "~/app/appSelectors";
 import { styled, useTheme } from "~/components";
 import { NotificationModel, ReduxState } from "~/typeDefs";
+
+import NotificationToast from "./NotificationToast";
 
 const Base = styled.div({
   position: "absolute",

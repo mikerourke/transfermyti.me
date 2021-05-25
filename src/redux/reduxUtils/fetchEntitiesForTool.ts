@@ -3,10 +3,11 @@ import { SagaIterator } from "@redux-saga/types";
 import * as R from "ramda";
 import { call, delay, select } from "redux-saga/effects";
 
-import { getApiDelayForTool } from "./fetchActions";
 import { mappingByToolNameSelector } from "~/allEntities/allEntitiesSelectors";
 import { ToolName } from "~/typeDefs";
 import { includedWorkspaceIdsByMappingSelector } from "~/workspaces/workspacesSelectors";
+
+import { getApiDelayForTool } from "./fetchActions";
 
 /**
  * Fetches all the of the entity records in all workspaces associated with the

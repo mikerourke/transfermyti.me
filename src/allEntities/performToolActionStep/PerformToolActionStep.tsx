@@ -3,8 +3,6 @@ import React from "react";
 import { connect } from "react-redux";
 import { PayloadActionCreator } from "typesafe-actions";
 
-import ConfirmToolActionModal from "./ConfirmToolActionModal";
-import ProgressBar from "./ProgressBar";
 import {
   createAllEntities,
   deleteAllEntities,
@@ -26,6 +24,9 @@ import {
   ToolAction,
 } from "~/typeDefs";
 import { capitalize, getEntityGroupDisplay } from "~/utils";
+
+import ConfirmToolActionModal from "./ConfirmToolActionModal";
+import ProgressBar from "./ProgressBar";
 
 interface ConnectStateProps {
   pushAllChangesFetchStatus: FetchStatus;

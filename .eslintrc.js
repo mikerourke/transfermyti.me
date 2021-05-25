@@ -78,7 +78,8 @@ module.exports = {
         groups: [
           "builtin",
           "external",
-          ["internal", "parent", "sibling"],
+          ["internal", "parent"],
+          "sibling",
           "object",
         ],
         pathGroups: [

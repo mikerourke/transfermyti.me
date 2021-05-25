@@ -3,11 +3,6 @@ import React from "react";
 import { connect } from "react-redux";
 import { PayloadActionCreator } from "typesafe-actions";
 
-import ActiveWorkspaceSelect from "./ActiveWorkspaceSelect";
-import InclusionsPanelsAccordion from "./InclusionsPanelsAccordion";
-import NoSelectionsModal from "./NoSelectionsModal";
-import SelectInclusionsHelpByAction from "./SelectInclusionsHelpByAction";
-import ShowExistingToggle from "./ShowExistingToggle";
 import {
   fetchAllEntities,
   flipIfExistsInTargetShown,
@@ -28,6 +23,12 @@ import {
 import { FetchStatus, ReduxState, RoutePath, ToolAction } from "~/typeDefs";
 import { capitalize } from "~/utils";
 import { activeWorkspaceIdSelector } from "~/workspaces/workspacesSelectors";
+
+import ActiveWorkspaceSelect from "./ActiveWorkspaceSelect";
+import InclusionsPanelsAccordion from "./InclusionsPanelsAccordion";
+import NoSelectionsModal from "./NoSelectionsModal";
+import SelectInclusionsHelpByAction from "./SelectInclusionsHelpByAction";
+import ShowExistingToggle from "./ShowExistingToggle";
 
 interface ConnectStateProps {
   activeWorkspaceId: string;

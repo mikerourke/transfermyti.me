@@ -1,10 +1,12 @@
 import React from "react";
 import { PayloadActionCreator } from "typesafe-actions";
 
+import { BaseEntityModel, TableViewModel } from "~/typeDefs";
+
+import { booleanToYesNo } from "~/utils";
+
 import InclusionsTableCheckboxCell from "./InclusionsTableCheckboxCell";
 import InclusionsTableRow from "./InclusionsTableRow";
-import { BaseEntityModel, TableViewModel } from "~/typeDefs";
-import { booleanToYesNo } from "~/utils";
 
 interface Props {
   fieldNames: string[];

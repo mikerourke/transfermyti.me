@@ -2,7 +2,6 @@ import { SagaIterator } from "@redux-saga/types";
 
 import { all, call, put, takeEvery } from "redux-saga/effects";
 
-import * as allEntitiesActions from "./allEntitiesActions";
 import * as clientsSagas from "~/clients/sagas/clientsSagas";
 import * as projectsSagas from "~/projects/sagas/projectsSagas";
 import * as tagsSagas from "~/tags/sagas/tagsSagas";
@@ -11,6 +10,8 @@ import * as timeEntriesSagas from "~/timeEntries/sagas/timeEntriesSagas";
 import { EntityGroup } from "~/typeDefs";
 import * as userGroupsSagas from "~/userGroups/sagas/userGroupsSagas";
 import * as usersSagas from "~/users/sagas/usersSagas";
+
+import * as allEntitiesActions from "./allEntitiesActions";
 
 export function* allEntitiesSaga(): SagaIterator {
   yield all([

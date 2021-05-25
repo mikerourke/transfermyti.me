@@ -2,7 +2,6 @@ import { push } from "connected-react-router";
 import React from "react";
 import { connect } from "react-redux";
 
-import ToolActionCard from "./ToolActionCard";
 import {
   updateToolAction,
   updateToolNameByMapping,
@@ -14,6 +13,8 @@ import {
   ToolName,
   ToolNameByMappingModel,
 } from "~/typeDefs";
+
+import ToolActionCard from "./ToolActionCard";
 
 interface ConnectDispatchProps {
   onPush: (path: RoutePath) => void;
