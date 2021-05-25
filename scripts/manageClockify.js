@@ -2,7 +2,7 @@ const path = require("path");
 const qs = require("querystring");
 
 const { cyan, green, magenta, yellow } = require("chalk");
-const fs = require("fs-extra");
+const fse = require("fs-extra");
 const _ = require("lodash");
 const fetch = require("node-fetch");
 const PromiseThrottle = require("promise-throttle");
@@ -67,7 +67,7 @@ async function deleteEntitiesInWorkspaces() {
  */
 async function writeEntitiesToOutputFile() {
   const outputPath = path.resolve(process.cwd(), "clockify.json");
-  await fs.remove(outputPath);
+  await fse.remove(outputPath);
 
   const workspaces = await fetchValidWorkspaces();
   const dataByWorkspaceName = {};
@@ -92,7 +92,7 @@ async function writeEntitiesToOutputFile() {
     await addEntityGroupToWorkspaceData(id, name, "time-entries");
   }
 
-  await fs.writeJSON(outputPath, dataByWorkspaceName, { spaces: 2 });
+  await fse.writeJson(outputPath, dataByWorkspaceName, { spaces: 2 });
   console.log(green("Clockify allEntities written to file!"));
 }
 
@@ -268,7 +268,7 @@ async function fetchValidWorkspaces() {
 function buildThrottler(fetchFunc) {
   const promiseThrottle = new PromiseThrottle({
     requestsPerSecond: 4,
-    promiseImplementation: Promise,
+    promiseImplementation: /** @type {PromiseConstructorLike} */ Promise,
   });
 
   const throttledFn = (...args) =>

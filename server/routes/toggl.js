@@ -1,6 +1,7 @@
 const path = require("path");
-const fse = require("fs-extra");
+
 const { isSameYear } = require("date-fns");
+const fse = require("fs-extra");
 const { take, uniqueId } = require("lodash");
 
 const dbPath = path.resolve(__dirname, "..", "db", "toggl.json");

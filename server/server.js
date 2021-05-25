@@ -1,6 +1,7 @@
-const express = require("express");
 const bodyParser = require("body-parser");
+const express = require("express");
 const morgan = require("morgan");
+
 const { assignClockifyRoutes } = require("./routes/clockify");
 const { assignTogglRoutes } = require("./routes/toggl");
 
