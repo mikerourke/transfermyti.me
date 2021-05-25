@@ -22,7 +22,7 @@
     [
       "transform-inline-environment-variables",
       {
-        "exclude": "USE_LOCAL_API"
+        "exclude": ["USE_LOCAL_API", "PARCEL_SERVE"]
       }
     ],
     [
