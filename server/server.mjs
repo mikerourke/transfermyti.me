@@ -1,11 +1,11 @@
-const bodyParser = require("body-parser");
-const express = require("express");
-const morgan = require("morgan");
+import bodyParser from "body-parser";
+import express from "express";
+import morgan from "morgan";
 
-const { assignClockifyRoutes } = require("./routes/clockify");
-const { assignTogglRoutes } = require("./routes/toggl");
+import { assignClockifyRoutes } from "./routes/clockify.mjs";
+import { assignTogglRoutes } from "./routes/toggl.mjs";
 
-function startServer() {
+export function startServer() {
   const app = express();
 
   const port = process.env.LOCAL_API_PORT || 3005;
@@ -70,5 +70,3 @@ function assignRoutes(thisApp) {
     res.status(200).send(null);
   });
 }
-
-module.exports = { startServer };

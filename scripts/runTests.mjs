@@ -1,8 +1,6 @@
-"use strict";
+import jest from "jest";
 
-const { run: runJest } = require("jest");
-
-const { startServer } = require("../server/server");
+import { startServer } from "../server/server.mjs";
 
 // Do this as the first thing so that any code reading it knows the right env.
 process.env.NODE_ENV = "test";
@@ -28,7 +26,7 @@ if (process.env.CI) {
 
 async function runTests() {
   await startServer();
-  await runJest(argv);
+  await jest.run(argv);
   process.exit(0);
 }
 
