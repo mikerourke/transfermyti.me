@@ -1,6 +1,6 @@
-import { state, invalidAction } from "~/redux/__mocks__/mockStoreWithState";
 import * as credentialsActions from "../credentialsActions";
 import { credentialsReducer, initialState } from "../credentialsReducer";
+import { state, invalidAction } from "~/redux/__mocks__/mockStoreWithState";
 import { FetchStatus, Mapping } from "~/typeDefs";
 
 const TEST_CREDENTIALS = {

@@ -1,12 +1,14 @@
 import { SagaIterator } from "@redux-saga/types";
+
 import { call, put, select } from "redux-saga/effects";
-import { validStringify } from "~/utils";
-import { fetchObject } from "~/redux/reduxUtils";
+
 import { mappingByToolNameSelector } from "~/allEntities/allEntitiesSelectors";
 import { validateCredentials } from "~/credentials/credentialsActions";
 import { credentialsByMappingSelector } from "~/credentials/credentialsSelectors";
-import { TogglWorkspaceResponseModel } from "~/workspaces/sagas/togglWorkspacesSagas";
+import { fetchObject } from "~/redux/reduxUtils";
 import { ToolName, ValidationErrorsByMappingModel } from "~/typeDefs";
+import { validStringify } from "~/utils";
+import { TogglWorkspaceResponseModel } from "~/workspaces/sagas/togglWorkspacesSagas";
 
 interface TogglMeResponseModel {
   since: number;

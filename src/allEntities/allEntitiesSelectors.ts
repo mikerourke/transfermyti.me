@@ -1,6 +1,7 @@
 import { createSelector } from "reselect";
+
 import * as R from "ramda";
-import { getEntityGroupDisplay, capitalize } from "~/utils";
+
 import {
   BaseEntityModel,
   CountsByEntityGroupModel,
@@ -13,6 +14,7 @@ import {
   ToolName,
   ToolNameByMappingModel,
 } from "~/typeDefs";
+import { capitalize, getEntityGroupDisplay } from "~/utils";
 
 export const areExistsInTargetShownSelector = (state: ReduxState): boolean =>
   state.allEntities.areExistsInTargetShown;
@@ -47,7 +49,7 @@ const findLengthOfIncluded = (
   entityRecordsById: Record<string, BaseEntityModel>,
 ): number =>
   Object.values(entityRecordsById).filter(
-    entityRecord => entityRecord.isIncluded,
+    (entityRecord) => entityRecord.isIncluded,
   ).length;
 
 export const includedCountsByEntityGroupSelector = createSelector(
@@ -92,26 +94,27 @@ export const mappingByToolNameSelector = createSelector(
   toolNameByMappingSelector,
   (toolNameByMapping): Record<ToolName, Mapping> =>
     R.invertObj(
-      (toolNameByMapping as unknown) as { [mapping: string]: string },
+      toolNameByMapping as unknown as { [mapping: string]: string },
     ) as Record<ToolName, Mapping>,
 );
 
 export const replaceMappingWithToolNameSelector = createSelector(
   toolNameByMappingSelector,
-  toolNameByMapping => (label: string): string => {
-    const { source, target } = toolNameByMapping;
-    let updatedLabel = label;
+  (toolNameByMapping) =>
+    (label: string): string => {
+      const { source, target } = toolNameByMapping;
+      let updatedLabel = label;
 
-    if (/source/gi.test(label)) {
-      updatedLabel = updatedLabel.replace(/source/gi, capitalize(source));
-    }
+      if (/source/gi.test(label)) {
+        updatedLabel = updatedLabel.replace(/source/gi, capitalize(source));
+      }
 
-    if (/target/gi.test(label)) {
-      updatedLabel = updatedLabel.replace(/target/gi, capitalize(target));
-    }
+      if (/target/gi.test(label)) {
+        updatedLabel = updatedLabel.replace(/target/gi, capitalize(target));
+      }
 
-    return updatedLabel;
-  },
+      return updatedLabel;
+    },
 );
 
 const toolDisplayNameByMappingSelector = createSelector(
@@ -129,11 +132,12 @@ export const toolHelpDetailsByMappingSelector = createSelector(
     toolNameByMapping,
     displayNameByMapping,
   ): Record<Mapping, ToolHelpDetailsModel> => {
-    const findToolLink = (toolName: ToolName): string =>
-      ({
-        [ToolName.Clockify]: "https://clockify.me/user/settings",
-        [ToolName.Toggl]: "https://toggl.com/app/profile",
-      }[toolName]);
+    const findToolLink = (toolName: ToolName): string => {
+      if (toolName === ToolName.Clockify) {
+        return "https://clockify.me/user/settings";
+      }
+      return "https://toggl.com/app/profile";
+    };
 
     const toolHelpDetailsByMapping: Record<Mapping, ToolHelpDetailsModel> = {
       [Mapping.Source]: {} as ToolHelpDetailsModel,
@@ -172,9 +176,14 @@ export const targetToolTrackerUrlSelector = createSelector(
         ? toolNameByMapping[Mapping.Source]
         : toolNameByMapping[Mapping.Target];
 
-    return {
-      [ToolName.Clockify]: "https://clockify.me/tracker",
-      [ToolName.Toggl]: "https://toggl.com/app/timer",
-    }[validToolName];
+    if (validToolName === ToolName.Clockify) {
+      return "https://clockify.me/tracker";
+    }
+
+    if (validToolName === ToolName.Toggl) {
+      return "https://toggl.com/app/timer";
+    }
+
+    return "";
   },
 );

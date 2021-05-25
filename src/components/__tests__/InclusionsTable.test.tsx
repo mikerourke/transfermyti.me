@@ -1,6 +1,7 @@
 import React from "react";
-import { render } from "~/jestHelpers";
+
 import InclusionsTable from "../InclusionsTable";
+import { render } from "~/jestHelpers";
 
 describe("the <InclusionsTable> component", () => {
   test("matches its snapshot with valid props", () => {

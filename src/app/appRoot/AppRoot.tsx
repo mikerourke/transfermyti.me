@@ -1,12 +1,12 @@
+import { Global, ThemeProvider } from "@emotion/react";
 import Color from "color";
-import { Global } from "@emotion/core";
-import { ThemeProvider } from "emotion-theming";
 import React from "react";
 import { Helmet } from "react-helmet";
-import { styled, theme as customTheme } from "~/components/emotion";
-import NotificationsDisplay from "~/app/notificationsDisplay/NotificationsDisplay";
-import Header from "./Header";
+
 import Footer from "./Footer";
+import Header from "./Header";
+import NotificationsDisplay from "~/app/notificationsDisplay/NotificationsDisplay";
+import { styled, theme as customTheme } from "~/components/emotion";
 
 const Main = styled.main(
   {
@@ -75,7 +75,7 @@ const GlobalStyles: React.FC = () => (
   />
 );
 
-const AppRoot: React.FC = props => {
+const AppRoot: React.FC = (props) => {
   const author = "Mike Rourke";
   const description = "Transfer your data between time tracking tools.";
   const title = "transfermyti.me";

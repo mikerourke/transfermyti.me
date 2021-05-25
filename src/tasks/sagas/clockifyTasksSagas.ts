@@ -1,14 +1,16 @@
 import { SagaIterator } from "@redux-saga/types";
+
 import * as R from "ramda";
 import { call, delay, select } from "redux-saga/effects";
+
 import { CLOCKIFY_API_DELAY } from "~/constants";
-import * as reduxUtils from "~/redux/reduxUtils";
 import {
   projectIdToLinkedIdSelector,
   projectsByWorkspaceIdByToolNameSelector,
 } from "~/projects/projectsSelectors";
-import { userIdToLinkedIdSelector } from "~/users/usersSelectors";
+import * as reduxUtils from "~/redux/reduxUtils";
 import { EntityGroup, TaskModel, ToolName } from "~/typeDefs";
+import { userIdToLinkedIdSelector } from "~/users/usersSelectors";
 
 type ClockifyTaskStatus = "ACTIVE" | "DONE";
 
@@ -149,7 +151,7 @@ function* fetchClockifyTasksInWorkspace(
     yield delay(CLOCKIFY_API_DELAY);
   }
 
-  return allClockifyTasks.map(clockifyTask =>
+  return allClockifyTasks.map((clockifyTask) =>
     transformFromResponse(clockifyTask, workspaceId),
   );
 }

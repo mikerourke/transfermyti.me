@@ -1,6 +1,7 @@
 import cases from "jest-in-case";
-import { state } from "~/redux/__mocks__/mockStoreWithState";
+
 import * as projectsSelectors from "../projectsSelectors";
+import { state } from "~/redux/__mocks__/mockStoreWithState";
 
 const TEST_STATE = {
   ...state,
@@ -160,7 +161,7 @@ const TEST_STATE = {
 describe("within projectsSelectors", () => {
   cases(
     "selectors that directly access state return the correct value",
-    options => {
+    (options) => {
       const result = options.selector(TEST_STATE);
 
       expect(result).toEqual(options.expected);
@@ -172,8 +173,7 @@ describe("within projectsSelectors", () => {
         expected: TEST_STATE.projects.source,
       },
       {
-        name:
-          "sourceProjectsSelector returns values from state.sourceProjectsById",
+        name: "sourceProjectsSelector returns values from state.sourceProjectsById",
         selector: projectsSelectors.sourceProjectsSelector,
         expected: Object.values(TEST_STATE.projects.source),
       },
@@ -187,7 +187,7 @@ describe("within projectsSelectors", () => {
 
   cases(
     "the selectors match their snapshots",
-    options => {
+    (options) => {
       const result = options.selector(TEST_STATE);
 
       expect(result).toMatchSnapshot();
@@ -226,7 +226,7 @@ describe("within projectsSelectors", () => {
 
   cases(
     "the projectsForInclusionsTableSelector matches its snapshot based on state.allEntities.areExistsInTargetShown",
-    options => {
+    (options) => {
       const updatedState = {
         ...TEST_STATE,
         allEntities: {
@@ -234,9 +234,8 @@ describe("within projectsSelectors", () => {
           areExistsInTargetShown: options.areExistsInTargetShown,
         },
       };
-      const result = projectsSelectors.projectsForInclusionsTableSelector(
-        updatedState,
-      );
+      const result =
+        projectsSelectors.projectsForInclusionsTableSelector(updatedState);
 
       expect(result).toMatchSnapshot();
     },

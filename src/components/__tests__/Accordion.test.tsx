@@ -1,6 +1,7 @@
 import React from "react";
-import { render } from "~/jestHelpers";
+
 import Accordion from "../Accordion";
+import { render } from "~/jestHelpers";
 
 describe("the <Accordion> component", () => {
   test("renders successfully with valid props", () => {

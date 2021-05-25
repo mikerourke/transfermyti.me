@@ -1,5 +1,6 @@
 import fetchIntercept from "fetch-intercept";
 import { Store } from "redux";
+
 import {
   CLOCKIFY_API_URL,
   IS_USING_LOCAL_API,
@@ -98,9 +99,11 @@ function getHeaders(
  * This allows us to specify a simpler URL for fetch requests and get the
  * tool information based on the path.
  */
-function extrapolateFromUrl(
-  url: string,
-): { toolName: ToolName; context: Context; endpoint: string } {
+function extrapolateFromUrl(url: string): {
+  toolName: ToolName;
+  context: Context;
+  endpoint: string;
+} {
   const validUrl = url.startsWith("/") ? url.substring(1) : url;
   const [toolName, context, ...rest] = validUrl.split("/");
 

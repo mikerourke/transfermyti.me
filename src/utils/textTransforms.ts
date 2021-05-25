@@ -1,4 +1,5 @@
 import * as R from "ramda";
+
 import { EntityGroup } from "~/typeDefs";
 
 export function booleanToYesNo(value: boolean | string): string {
@@ -50,7 +51,7 @@ export function validStringify<TDefault>(
   }
 
   try {
-    return (value.toString() as unknown) as TDefault;
+    return value.toString() as unknown as TDefault;
   } catch (err) {
     return defaultIfNil;
   }

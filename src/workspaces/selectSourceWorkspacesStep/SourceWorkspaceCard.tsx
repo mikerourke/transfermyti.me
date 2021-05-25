@@ -1,5 +1,6 @@
 import * as R from "ramda";
 import React from "react";
+
 import { Card, styled, Toggle, WorkspaceSelect } from "~/components";
 import { ToolAction, WorkspaceModel } from "~/typeDefs";
 
@@ -87,7 +88,7 @@ const SourceWorkspaceCard: React.FC<Props> = ({
           <SectionHeader>Target Workspace</SectionHeader>
           <div css={{ marginBottom: "0.5rem", position: "relative" }}>
             <WorkspaceSelect
-              css={theme => ({
+              css={(theme) => ({
                 background: theme.colors.secondary,
                 fontSize: "1.125rem",
               })}

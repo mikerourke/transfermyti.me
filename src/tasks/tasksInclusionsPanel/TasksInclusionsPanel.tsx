@@ -2,7 +2,9 @@ import * as R from "ramda";
 import React from "react";
 import { connect } from "react-redux";
 import { PayloadActionCreator } from "typesafe-actions";
+
 import { toolActionSelector } from "~/allEntities/allEntitiesSelectors";
+import { EntityGroupInclusionsPanel } from "~/components";
 import {
   updateAreAllTasksIncluded,
   flipIsTaskIncluded,
@@ -11,7 +13,6 @@ import {
   tasksForInclusionsTableSelector,
   tasksTotalCountsByTypeSelector,
 } from "~/tasks/tasksSelectors";
-import { EntityGroupInclusionsPanel } from "~/components";
 import {
   EntityGroup,
   ReduxState,
@@ -33,7 +34,7 @@ interface ConnectDispatchProps {
 
 type Props = ConnectStateProps & ConnectDispatchProps;
 
-export const TasksInclusionsPanelComponent: React.FC<Props> = props => {
+export const TasksInclusionsPanelComponent: React.FC<Props> = (props) => {
   // Only show the `isActiveInTarget` field if you're performing a transfer.
   // If the user is just deleting records, there is no "target":
   const tableFields = [

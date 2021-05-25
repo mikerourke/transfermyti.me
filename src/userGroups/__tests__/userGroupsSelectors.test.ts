@@ -1,6 +1,7 @@
 import cases from "jest-in-case";
-import { state } from "~/redux/__mocks__/mockStoreWithState";
+
 import * as userGroupsSelectors from "../userGroupsSelectors";
+import { state } from "~/redux/__mocks__/mockStoreWithState";
 
 const TEST_STATE = {
   ...state,
@@ -62,7 +63,7 @@ describe("within userGroupsSelectors", () => {
 
   cases(
     "the selectors match their snapshots",
-    options => {
+    (options) => {
       const result = options.selector(TEST_STATE);
 
       expect(result).toMatchSnapshot();

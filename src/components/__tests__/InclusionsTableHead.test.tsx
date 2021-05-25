@@ -1,6 +1,7 @@
 import React from "react";
-import { render } from "~/jestHelpers";
+
 import InclusionsTableHead from "../InclusionsTableHead";
+import { render } from "~/jestHelpers";
 
 describe("the <InclusionsTableHead> component", () => {
   test("renders successfully with valid props", () => {

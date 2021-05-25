@@ -1,4 +1,5 @@
 import { Store } from "redux";
+
 import { State } from "./rootReducer";
 
 export type ReduxStore = Store;

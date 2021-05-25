@@ -44,7 +44,7 @@ function assignClockifyRoutes(router) {
         }
 
         if (tagIds.length !== 0) {
-          responseEntry.tags = tagIds.map(tagId =>
+          responseEntry.tags = tagIds.map((tagId) =>
             db.tags.find(({ id }) => id === tagId),
           );
         } else {

@@ -1,8 +1,9 @@
-import { ActionType, createReducer } from "typesafe-actions";
 import * as R from "ramda";
-import { updateAreAllRecordsIncluded } from "~/redux/reduxUtils";
-import { flushAllEntities } from "~/allEntities/allEntitiesActions";
+import { ActionType, createReducer } from "typesafe-actions";
+
 import * as tasksActions from "./tasksActions";
+import { flushAllEntities } from "~/allEntities/allEntitiesActions";
+import { updateAreAllRecordsIncluded } from "~/redux/reduxUtils";
 import { Mapping, TasksByIdModel } from "~/typeDefs";
 
 type TasksAction = ActionType<typeof tasksActions | typeof flushAllEntities>;
@@ -41,7 +42,7 @@ export const tasksReducer = createReducer<TasksState, TasksAction>(initialState)
       tasksActions.deleteTasks.request,
       tasksActions.fetchTasks.request,
     ],
-    state => ({
+    (state) => ({
       ...state,
       isFetching: true,
     }),
@@ -52,7 +53,7 @@ export const tasksReducer = createReducer<TasksState, TasksAction>(initialState)
       tasksActions.deleteTasks.failure,
       tasksActions.fetchTasks.failure,
     ],
-    state => ({
+    (state) => ({
       ...state,
       isFetching: false,
     }),

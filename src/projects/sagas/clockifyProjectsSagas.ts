@@ -1,14 +1,16 @@
 import { SagaIterator } from "@redux-saga/types";
+
 import * as R from "ramda";
 import { call, delay, select } from "redux-saga/effects";
+
+import { clientIdToLinkedIdSelector } from "~/clients/clientsSelectors";
 import { CLOCKIFY_API_DELAY } from "~/constants";
 import * as reduxUtils from "~/redux/reduxUtils";
-import { clientIdToLinkedIdSelector } from "~/clients/clientsSelectors";
+import { EntityGroup, EstimateModel, ProjectModel, ToolName } from "~/typeDefs";
 import {
   ClockifyHourlyRateResponseModel,
   ClockifyMembershipResponseModel,
 } from "~/users/sagas/clockifyUsersSagas";
-import { EntityGroup, EstimateModel, ProjectModel, ToolName } from "~/typeDefs";
 
 export interface ClockifyProjectResponseModel {
   archived: boolean;
@@ -134,7 +136,7 @@ function* fetchClockifyProjectsInWorkspace(
   for (const clockifyProject of clockifyProjects) {
     const memberships = clockifyProject?.memberships ?? [];
     const userIds: string[] = memberships
-      .map(membership => {
+      .map((membership) => {
         if (
           membership.membershipType === "PROJECT" &&
           membership.membershipStatus === "ACTIVE"

@@ -1,4 +1,5 @@
 import { createSelector } from "reselect";
+
 import { toolNameByMappingSelector } from "~/allEntities/allEntitiesSelectors";
 import {
   CredentialsByMappingModel,
@@ -27,12 +28,12 @@ export const hasValidationErrorsSelector = createSelector(
 
 const sourceCredentialsSelector = createSelector(
   (state: ReduxState) => state.credentials.source,
-  sourceCredentials => sourceCredentials,
+  (sourceCredentials) => sourceCredentials,
 );
 
 const targetCredentialsSelector = createSelector(
   (state: ReduxState) => state.credentials.target,
-  targetCredentials => targetCredentials,
+  (targetCredentials) => targetCredentials,
 );
 
 export const credentialsByMappingSelector = createSelector(

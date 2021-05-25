@@ -2,10 +2,11 @@ import React from "react";
 import { connect } from "react-redux";
 import { TransitionGroup, Transition } from "react-transition-group";
 import { TransitionStatus } from "react-transition-group/Transition";
+
+import NotificationToast from "./NotificationToast";
 import { dismissNotification } from "~/app/appActions";
 import { notificationsSelector } from "~/app/appSelectors";
 import { styled, useTheme } from "~/components";
-import NotificationToast from "./NotificationToast";
 import { NotificationModel, ReduxState } from "~/typeDefs";
 
 const Base = styled.div({
@@ -42,7 +43,7 @@ export interface ConnectDispatchProps {
 
 type Props = ConnectStateProps & ConnectDispatchProps;
 
-export const NotificationsDisplayComponent: React.FC<Props> = props => {
+export const NotificationsDisplayComponent: React.FC<Props> = (props) => {
   const { sizes } = useTheme();
   const paddedNotificationHeight =
     sizes.notificationHeight + sizes.notificationGap;
@@ -103,7 +104,7 @@ export const NotificationsDisplayComponent: React.FC<Props> = props => {
             mountOnEnter
             unmountOnExit
           >
-            {transitionStatus => (
+            {(transitionStatus) => (
               <NotificationToast
                 index={Math.min(index, maxIndexAllowed)}
                 notification={notification}
@@ -115,7 +116,7 @@ export const NotificationsDisplayComponent: React.FC<Props> = props => {
         ))}
         {showCounter && (
           <Transition key={currentMaxIndex} timeout={300}>
-            {transitionStatus => (
+            {(transitionStatus) => (
               <CountIndicator
                 css={{ top: `${indicatorTopRems}rem` }}
                 transitionStatus={transitionStatus}

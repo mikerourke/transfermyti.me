@@ -1,7 +1,9 @@
 import { createSelector } from "reselect";
+
 import * as R from "ramda";
-import { activeWorkspaceIdSelector } from "~/workspaces/workspacesSelectors";
+
 import { ReduxState, UserGroupModel } from "~/typeDefs";
+import { activeWorkspaceIdSelector } from "~/workspaces/workspacesSelectors";
 
 export const sourceUserGroupsSelector = createSelector(
   (state: ReduxState) => state.userGroups.source,
@@ -12,13 +14,13 @@ export const sourceUserGroupsSelector = createSelector(
 export const includedSourceUserGroupsSelector = createSelector(
   sourceUserGroupsSelector,
   (sourceUserGroups): UserGroupModel[] =>
-    sourceUserGroups.filter(sourceUserGroup => sourceUserGroup.isIncluded),
+    sourceUserGroups.filter((sourceUserGroup) => sourceUserGroup.isIncluded),
 );
 
 export const sourceUserGroupsForTransferSelector = createSelector(
   sourceUserGroupsSelector,
   (sourceUserGroups): UserGroupModel[] =>
-    sourceUserGroups.filter(sourceUserGroup =>
+    sourceUserGroups.filter((sourceUserGroup) =>
       R.isNil(sourceUserGroup.linkedId),
     ),
 );
@@ -27,5 +29,7 @@ export const sourceUserGroupsInActiveWorkspaceSelector = createSelector(
   sourceUserGroupsSelector,
   activeWorkspaceIdSelector,
   (sourceUserGroups, workspaceId): UserGroupModel[] =>
-    sourceUserGroups.filter(userGroup => userGroup.workspaceId === workspaceId),
+    sourceUserGroups.filter(
+      (userGroup) => userGroup.workspaceId === workspaceId,
+    ),
 );

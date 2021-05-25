@@ -1,6 +1,7 @@
 import React from "react";
-import { render } from "~/jestHelpers";
+
 import Flex from "../Flex";
+import { render } from "~/jestHelpers";
 
 describe("the <Flex> component", () => {
   test("renders with the correct attributes based on props", () => {

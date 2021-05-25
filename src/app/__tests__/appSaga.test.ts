@@ -1,8 +1,9 @@
 import { push } from "connected-react-router";
 import cases from "jest-in-case";
-import { select } from "redux-saga/effects";
 import { expectSaga } from "redux-saga-test-plan";
-import { state } from "~/redux/__mocks__/mockStoreWithState";
+import { select } from "redux-saga/effects";
+
+import { appSaga } from "../appSaga";
 import {
   flushAllEntities,
   updatePushAllChangesFetchStatus,
@@ -13,9 +14,9 @@ import {
 } from "~/allEntities/allEntitiesSelectors";
 import { updateValidationFetchStatus } from "~/credentials/credentialsActions";
 import { credentialsByMappingSelector } from "~/credentials/credentialsSelectors";
-import { sourceWorkspacesSelector } from "~/workspaces/workspacesSelectors";
-import { appSaga } from "../appSaga";
+import { state } from "~/redux/__mocks__/mockStoreWithState";
 import { RoutePath, FetchStatus, ToolName } from "~/typeDefs";
+import { sourceWorkspacesSelector } from "~/workspaces/workspacesSelectors";
 
 describe("within appSaga", () => {
   const providers = [
@@ -55,7 +56,7 @@ describe("within appSaga", () => {
 
   cases(
     "dispatches the appropriate actions when route path = PickToolAction or ToolActionSuccess",
-    options => {
+    (options) => {
       return expectSaga(appSaga)
         .provide(providers as any)
         .put(options.expectedAction)

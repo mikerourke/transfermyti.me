@@ -1,16 +1,18 @@
 import { SagaIterator } from "@redux-saga/types";
+
 import * as R from "ramda";
 import { all, call, put, select, takeEvery } from "redux-saga/effects";
-import { linkEntitiesByIdByMapping } from "~/redux/reduxUtils";
+
+import * as clockifySagas from "./clockifyWorkspacesSagas";
+import * as togglSagas from "./togglWorkspacesSagas";
 import {
   toolActionSelector,
   toolNameByMappingSelector,
 } from "~/allEntities/allEntitiesSelectors";
 import { showErrorNotification } from "~/app/appActions";
-import * as workspacesActions from "~/workspaces/workspacesActions";
-import * as clockifySagas from "./clockifyWorkspacesSagas";
-import * as togglSagas from "./togglWorkspacesSagas";
+import { linkEntitiesByIdByMapping } from "~/redux/reduxUtils";
 import { Mapping, ToolAction, ToolName, WorkspacesByIdModel } from "~/typeDefs";
+import * as workspacesActions from "~/workspaces/workspacesActions";
 
 export function* workspacesSaga(): SagaIterator {
   yield all([

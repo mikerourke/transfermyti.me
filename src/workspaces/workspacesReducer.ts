@@ -1,7 +1,8 @@
 import * as R from "ramda";
 import { ActionType, createReducer } from "typesafe-actions";
-import { flushAllEntities } from "~/allEntities/allEntitiesActions";
+
 import * as workspacesActions from "./workspacesActions";
+import { flushAllEntities } from "~/allEntities/allEntitiesActions";
 import { WorkspacesByIdModel } from "~/typeDefs";
 
 type WorkspacesAction = ActionType<
@@ -49,7 +50,7 @@ export const workspacesReducer = createReducer<
       workspacesActions.createWorkspaces.request,
       workspacesActions.fetchWorkspaces.request,
     ],
-    state => ({
+    (state) => ({
       ...state,
       isFetching: true,
     }),
@@ -59,7 +60,7 @@ export const workspacesReducer = createReducer<
       workspacesActions.createWorkspaces.failure,
       workspacesActions.fetchWorkspaces.failure,
     ],
-    state => ({
+    (state) => ({
       ...state,
       isFetching: false,
     }),

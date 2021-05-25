@@ -1,4 +1,5 @@
 import cases from "jest-in-case";
+
 import * as textTransforms from "../textTransforms";
 import { EntityGroup } from "~/typeDefs";
 
@@ -46,7 +47,7 @@ describe("within textTransforms", () => {
   describe("the getEntityGroupDisplay method", () => {
     cases(
       "returns the correct display based on the entityGroup arg",
-      options => {
+      (options) => {
         const result = textTransforms.getEntityGroupDisplay(
           options.entityGroup,
         );

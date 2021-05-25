@@ -1,8 +1,9 @@
-import { ActionType, createReducer } from "typesafe-actions";
 import * as R from "ramda";
-import { updateAreAllRecordsIncluded } from "~/redux/reduxUtils";
-import { flushAllEntities } from "~/allEntities/allEntitiesActions";
+import { ActionType, createReducer } from "typesafe-actions";
+
 import * as projectsActions from "./projectsActions";
+import { flushAllEntities } from "~/allEntities/allEntitiesActions";
+import { updateAreAllRecordsIncluded } from "~/redux/reduxUtils";
 import { Mapping, ProjectsByIdModel } from "~/typeDefs";
 
 type ProjectsAction = ActionType<
@@ -48,7 +49,7 @@ export const projectsReducer = createReducer<ProjectsState, ProjectsAction>(
       projectsActions.deleteProjects.request,
       projectsActions.fetchProjects.request,
     ],
-    state => ({
+    (state) => ({
       ...state,
       isFetching: true,
     }),
@@ -59,7 +60,7 @@ export const projectsReducer = createReducer<ProjectsState, ProjectsAction>(
       projectsActions.deleteProjects.failure,
       projectsActions.fetchProjects.failure,
     ],
-    state => ({
+    (state) => ({
       ...state,
       isFetching: false,
     }),

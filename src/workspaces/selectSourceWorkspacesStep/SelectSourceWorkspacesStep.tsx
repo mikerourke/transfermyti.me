@@ -2,6 +2,11 @@ import { push } from "connected-react-router";
 import React from "react";
 import { connect } from "react-redux";
 import { PayloadActionCreator } from "typesafe-actions";
+
+import DuplicateTargetsModal from "./DuplicateTargetsModal";
+import MissingWorkspacesModal from "./MissingWorkspacesModal";
+import NoWorkspacesModal from "./NoWorkspacesModal";
+import SourceWorkspaceCard from "./SourceWorkspaceCard";
 import {
   fetchAllEntities,
   updateFetchAllFetchStatus,
@@ -11,6 +16,22 @@ import {
   targetToolDisplayNameSelector,
 } from "~/allEntities/allEntitiesSelectors";
 import { dismissAllNotifications, showNotification } from "~/app/appActions";
+import {
+  Button,
+  Flex,
+  HelpDetails,
+  Loader,
+  NavigationButtonsRow,
+  Note,
+} from "~/components";
+import {
+  FetchStatus,
+  NotificationModel,
+  ReduxState,
+  RoutePath,
+  ToolAction,
+  WorkspaceModel,
+} from "~/typeDefs";
 import {
   fetchWorkspaces,
   flipIsWorkspaceIncluded,
@@ -26,26 +47,6 @@ import {
   sourceWorkspacesSelector,
   targetWorkspacesSelector,
 } from "~/workspaces/workspacesSelectors";
-import {
-  Button,
-  Flex,
-  HelpDetails,
-  Loader,
-  NavigationButtonsRow,
-  Note,
-} from "~/components";
-import DuplicateTargetsModal from "./DuplicateTargetsModal";
-import MissingWorkspacesModal from "./MissingWorkspacesModal";
-import NoWorkspacesModal from "./NoWorkspacesModal";
-import SourceWorkspaceCard from "./SourceWorkspaceCard";
-import {
-  FetchStatus,
-  NotificationModel,
-  ReduxState,
-  RoutePath,
-  ToolAction,
-  WorkspaceModel,
-} from "~/typeDefs";
 
 interface ConnectStateProps {
   areWorkspacesFetching: boolean;
@@ -76,18 +77,13 @@ interface ConnectDispatchProps {
 
 type Props = ConnectStateProps & ConnectDispatchProps;
 
-export const SelectSourceWorkspacesStepComponent: React.FC<Props> = props => {
-  const [isNoSelectionsModalOpen, setIsNoSelectionsModalOpen] = React.useState<
-    boolean
-  >(false);
-  const [
-    isMissingWorkspacesModalOpen,
-    setIsMissingWorkspacesModalOpen,
-  ] = React.useState<boolean>(false);
-  const [
-    isDuplicateTargetsModalOpen,
-    setIsDuplicateTargetsModalOpen,
-  ] = React.useState<boolean>(false);
+export const SelectSourceWorkspacesStepComponent: React.FC<Props> = (props) => {
+  const [isNoSelectionsModalOpen, setIsNoSelectionsModalOpen] =
+    React.useState<boolean>(false);
+  const [isMissingWorkspacesModalOpen, setIsMissingWorkspacesModalOpen] =
+    React.useState<boolean>(false);
+  const [isDuplicateTargetsModalOpen, setIsDuplicateTargetsModalOpen] =
+    React.useState<boolean>(false);
 
   React.useEffect(() => {
     if (props.sourceWorkspaces.length === 0) {
@@ -165,7 +161,7 @@ export const SelectSourceWorkspacesStepComponent: React.FC<Props> = props => {
         <Loader>Loading workspaces, please wait...</Loader>
       ) : (
         <Flex as="ul" css={{ listStyle: "none", padding: 0 }} flexWrap="wrap">
-          {props.sourceWorkspaces.map(workspace => (
+          {props.sourceWorkspaces.map((workspace) => (
             <SourceWorkspaceCard
               key={workspace.id}
               sourceWorkspace={workspace}

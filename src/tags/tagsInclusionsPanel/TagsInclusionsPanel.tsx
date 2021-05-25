@@ -1,6 +1,8 @@
 import React from "react";
 import { connect } from "react-redux";
 import { PayloadActionCreator } from "typesafe-actions";
+
+import { EntityGroupInclusionsPanel } from "~/components";
 import {
   flipIsTagIncluded,
   updateAreAllTagsIncluded,
@@ -9,7 +11,6 @@ import {
   tagsForInclusionsTableSelector,
   tagsTotalCountsByTypeSelector,
 } from "~/tags/tagsSelectors";
-import { EntityGroupInclusionsPanel } from "~/components";
 import { EntityGroup, ReduxState, TableViewModel, TagModel } from "~/typeDefs";
 
 interface ConnectStateProps {
@@ -24,7 +25,7 @@ interface ConnectDispatchProps {
 
 type Props = ConnectStateProps & ConnectDispatchProps;
 
-export const TagsInclusionsPanelComponent: React.FC<Props> = props => (
+export const TagsInclusionsPanelComponent: React.FC<Props> = (props) => (
   <EntityGroupInclusionsPanel
     entityGroup={EntityGroup.Tags}
     rowNumber={2}

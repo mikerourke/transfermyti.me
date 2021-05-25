@@ -1,10 +1,19 @@
 import React from "react";
 import { connect } from "react-redux";
 import { PayloadActionCreator, EmptyActionCreator } from "typesafe-actions";
+
+import DuplicateCheckToggle from "./DuplicateCheckToggle";
+import TimeEntriesInclusionsTable from "./TimeEntriesInclusionsTable";
+import TimeEntryComparisonDisclaimer from "./TimeEntryComparisonDisclaimer";
 import {
   replaceMappingWithToolNameSelector,
   toolActionSelector,
 } from "~/allEntities/allEntitiesSelectors";
+import {
+  AccordionPanel,
+  InclusionsTableTitle,
+  NoRecordsFound,
+} from "~/components";
 import {
   flipIsTimeEntryIncluded,
   updateAreAllTimeEntriesIncluded,
@@ -15,14 +24,6 @@ import {
   timeEntriesTotalCountsByTypeSelector,
   isDuplicateCheckEnabledSelector,
 } from "~/timeEntries/timeEntriesSelectors";
-import {
-  AccordionPanel,
-  InclusionsTableTitle,
-  NoRecordsFound,
-} from "~/components";
-import DuplicateCheckToggle from "./DuplicateCheckToggle";
-import TimeEntriesInclusionsTable from "./TimeEntriesInclusionsTable";
-import TimeEntryComparisonDisclaimer from "./TimeEntryComparisonDisclaimer";
 import { ReduxState, TimeEntryTableViewModel, ToolAction } from "~/typeDefs";
 
 interface ConnectStateProps {
@@ -46,7 +47,7 @@ export const TimeEntriesInclusionsPanelComponent: React.FC<Props> = ({
   ...props
 }) => {
   const { isIncluded, existsInTarget } = props.totalCountsByType;
-  const recordCount = timeEntries.length || 1;
+  const recordCount = timeEntries.length !== 0 ? timeEntries.length : 1;
   const areAllToggled = isIncluded + existsInTarget === recordCount;
 
   const handleFlipInclusions = (): void => {

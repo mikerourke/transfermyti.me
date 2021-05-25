@@ -1,8 +1,9 @@
 import { SagaIterator } from "@redux-saga/types";
+
 import { push, LocationChangeAction } from "connected-react-router";
 import * as R from "ramda";
 import { all, put, select, takeEvery } from "redux-saga/effects";
-import { getIfDev } from "~/utils";
+
 import {
   flushAllEntities,
   updatePushAllChangesFetchStatus,
@@ -13,8 +14,9 @@ import {
 } from "~/allEntities/allEntitiesSelectors";
 import { updateValidationFetchStatus } from "~/credentials/credentialsActions";
 import { credentialsByMappingSelector } from "~/credentials/credentialsSelectors";
-import { sourceWorkspacesSelector } from "~/workspaces/workspacesSelectors";
 import { FetchStatus, Mapping, RoutePath, ToolName } from "~/typeDefs";
+import { getIfDev } from "~/utils";
+import { sourceWorkspacesSelector } from "~/workspaces/workspacesSelectors";
 
 export function* appSaga(): SagaIterator {
   yield all([
@@ -76,7 +78,7 @@ function* validateRouteChangesSaga(action: LocationChangeAction): SagaIterator {
   // transfer mapping selection to ensure the user picks a valid option:
   /* istanbul ignore else */
   if (isPathPastStep(RoutePath.PickToolAction)) {
-    if (Object.values(mapping).every(mapping => mapping === ToolName.None)) {
+    if (Object.values(mapping).every((mapping) => mapping === ToolName.None)) {
       yield put(push(RoutePath.PickToolAction));
       return;
     }
@@ -91,13 +93,13 @@ function* validateRouteChangesSaga(action: LocationChangeAction): SagaIterator {
       credentials.source.apiKey,
       credentials.source.email,
       credentials.source.userId,
-    ].some(value => R.isNil(value));
+    ].some((value) => R.isNil(value));
 
     let areTargetInvalid = [
       credentials.target.apiKey,
       credentials.target.email,
       credentials.target.userId,
-    ].some(value => R.isNil(value));
+    ].some((value) => R.isNil(value));
 
     // If you're deleting records and the target is null, the credentials
     // are still valid:

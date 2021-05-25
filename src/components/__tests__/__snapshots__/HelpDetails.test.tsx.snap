@@ -1,35 +1,35 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
 exports[`the <HelpDetails> component matches its snapshot with valid props 1`] = `
-.emotion-1 {
+.emotion-0 {
   margin-bottom: 1rem;
   width: 100%;
   color: rgb(30,120,161);
 }
 
-.emotion-1 div,
-.emotion-1 summary {
+.emotion-0 div,
+.emotion-0 summary {
   margin: 0;
   padding: 0.5rem 0.25rem;
 }
 
-.emotion-1 p:not(first-of-type) {
+.emotion-0 p:not(first-of-type) {
   margin-top: 0;
 }
 
-.emotion-1 p:last-of-type {
+.emotion-0 p:last-of-type {
   margin-bottom: 0;
 }
 
-.emotion-0 {
+.emotion-1 {
   font-weight: 600;
 }
 
 <details
-  class="emotion-1"
+  class="emotion-0"
 >
   <summary
-    class="emotion-0"
+    class="emotion-1"
   >
     Test Title
   </summary>

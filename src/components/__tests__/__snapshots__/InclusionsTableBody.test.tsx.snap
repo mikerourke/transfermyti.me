@@ -2,7 +2,7 @@
 
 exports[`the <InclusionsTableBody> component matches its snapshot with valid props 1`] = `
 .emotion-0 td {
-  color: rgb(136,136,136);
+  color: rgb(136, 136, 136);
   -webkit-text-decoration: line-through;
   text-decoration: line-through;
 }

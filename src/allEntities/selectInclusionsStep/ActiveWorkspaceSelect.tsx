@@ -1,12 +1,13 @@
 import React from "react";
 import { connect } from "react-redux";
+
+import { styled, WorkspaceSelect } from "~/components";
+import { ReduxState, WorkspaceModel } from "~/typeDefs";
 import { updateActiveWorkspaceId } from "~/workspaces/workspacesActions";
 import {
   activeWorkspaceIdSelector,
   includedSourceWorkspacesSelector,
 } from "~/workspaces/workspacesSelectors";
-import { styled, WorkspaceSelect } from "~/components";
-import { ReduxState, WorkspaceModel } from "~/typeDefs";
 
 const Base = styled.div(
   {
@@ -48,7 +49,7 @@ interface ConnectDispatchProps {
 
 type Props = ConnectStateProps & ConnectDispatchProps;
 
-export const ActiveWorkspaceSelectComponent: React.FC<Props> = props => {
+export const ActiveWorkspaceSelectComponent: React.FC<Props> = (props) => {
   const handleSelectWorkspace = (workspace: WorkspaceModel): void => {
     props.onUpdateActiveWorkspaceId(workspace.id);
   };

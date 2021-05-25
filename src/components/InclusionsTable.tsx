@@ -1,4 +1,5 @@
 import React from "react";
+
 import { styled } from "./emotion";
 
 const Table = styled.table(
@@ -71,6 +72,6 @@ const Table = styled.table(
   }),
 );
 
-const InclusionsTable: React.FC = props => <Table role="grid" {...props} />;
+const InclusionsTable: React.FC = (props) => <Table role="grid" {...props} />;
 
 export default InclusionsTable;

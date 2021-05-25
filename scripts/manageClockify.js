@@ -1,11 +1,13 @@
 const path = require("path");
 const qs = require("querystring");
-const fetch = require("node-fetch");
+
 const { cyan, green, magenta, yellow } = require("chalk");
 const fs = require("fs-extra");
 const _ = require("lodash");
+const fetch = require("node-fetch");
 const PromiseThrottle = require("promise-throttle");
 const yargs = require("yargs");
+
 const httpEnv = require("../http-client.private.env.json");
 
 /**
@@ -21,14 +23,14 @@ const clockifyUserId = httpEnv.development["clockify-user-id"];
 yargs
   .command({
     command: "delete",
-    desc: "Delete all allEntities on Clockify testing workspace",
+    describe: "Delete all allEntities on Clockify testing workspace",
     handler: async () => {
       await deleteEntitiesInWorkspaces();
     },
   })
   .command({
     command: "write",
-    desc:
+    describe:
       "Grabs all the Clockify allEntities and writes them to clockify.json in CWD",
     handler: async () => {
       await writeEntitiesToOutputFile();
@@ -113,7 +115,7 @@ async function deleteEntityGroupInWorkspace(workspaceId, entityGroup) {
   }
 
   const baseEndpoint = getEntityGroupEndpoint(workspaceId, entityGroup);
-  const apiDeleteEntity = entityId =>
+  const apiDeleteEntity = (entityId) =>
     clockifyFetch(`${baseEndpoint}/${entityId}`, { method: "DELETE" });
 
   const { promiseThrottle, throttledFn } = buildThrottler(apiDeleteEntity);
@@ -125,7 +127,7 @@ async function deleteEntityGroupInWorkspace(workspaceId, entityGroup) {
       .then(() => {
         console.log(green(`Delete ${name} successful`));
       })
-      .catch(err => {
+      .catch((err) => {
         console.log(magenta(`Error deleting ${entityGroup}: ${err}`));
       });
   }
@@ -156,7 +158,7 @@ function getEntityGroupEndpoint(workspaceId, entityGroup) {
 async function deleteTimeEntriesInWorkspace(workspaceId) {
   const timeEntries = await fetchTimeEntriesInWorkspace(workspaceId);
 
-  const apiDeleteTimeEntryById = entryId =>
+  const apiDeleteTimeEntryById = (entryId) =>
     clockifyFetch(`/workspaces/${workspaceId}/time-entries/${entryId}`, {
       method: "DELETE",
     });
@@ -175,7 +177,7 @@ async function deleteTimeEntriesInWorkspace(workspaceId) {
         console.log(green(`Deleted ${currentEntry} of ${totalEntryCount}`));
         currentEntry += 1;
       })
-      .catch(err => {
+      .catch((err) => {
         console.log(magenta(`Error deleting time entries: ${err}`));
       });
   }
@@ -186,7 +188,7 @@ async function deleteTimeEntriesInWorkspace(workspaceId) {
  * rate limits aren't exceeded.
  */
 function pause(duration = 1000) {
-  return new Promise(resolve => {
+  return new Promise((resolve) => {
     setTimeout(resolve, duration);
   });
 }
@@ -195,7 +197,7 @@ function pause(duration = 1000) {
  * Fetches all time entries (for all years) for the specified workspace ID.
  */
 async function fetchTimeEntriesInWorkspace(workspaceId) {
-  const apiFetchTimeEntriesForYear = page => {
+  const apiFetchTimeEntriesForYear = (page) => {
     const endpointUrl = [
       "workspaces",
       workspaceId,
@@ -222,7 +224,7 @@ async function fetchTimeEntriesInWorkspace(workspaceId) {
   while (keepFetching) {
     await promiseThrottle
       .add(throttledFn.bind(this, currentPage))
-      .then(timeEntries => {
+      .then((timeEntries) => {
         keepFetching = timeEntries.length === 100;
         allEntries.push(timeEntries);
         console.log(
@@ -231,7 +233,7 @@ async function fetchTimeEntriesInWorkspace(workspaceId) {
           ),
         );
       })
-      .catch(err => {
+      .catch((err) => {
         keepFetching = false;
         console.log(magenta(`Error fetching time entries: ${err}`));
       });
@@ -273,10 +275,10 @@ function buildThrottler(fetchFunc) {
     new Promise((resolve, reject) =>
       fetchFunc
         .call(null, ...args)
-        .then(response => {
+        .then((response) => {
           resolve(response);
         })
-        .catch(err => {
+        .catch((err) => {
           reject(err);
         }),
     );
@@ -288,7 +290,7 @@ function buildThrottler(fetchFunc) {
 }
 
 /**
- * Makes a fetch call to the Clockify API to the specifed endpoint with
+ * Makes a fetch call to the Clockify API to the specified endpoint with
  * specified options.
  */
 async function clockifyFetch(endpoint, options) {

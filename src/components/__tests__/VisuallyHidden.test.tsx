@@ -1,6 +1,7 @@
 import React from "react";
-import { render } from "~/jestHelpers";
+
 import VisuallyHidden from "../VisuallyHidden";
+import { render } from "~/jestHelpers";
 
 describe("the <VisuallyHidden> component", () => {
   test("matches its snapshot with valid props", () => {

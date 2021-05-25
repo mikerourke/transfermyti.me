@@ -1,4 +1,5 @@
 import React from "react";
+
 import { HelpDetails, styled } from "~/components";
 
 const Details = styled(HelpDetails)({

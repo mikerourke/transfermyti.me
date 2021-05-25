@@ -1,8 +1,10 @@
 import { SagaIterator } from "@redux-saga/types";
+
 import { call, delay, put } from "redux-saga/effects";
+
+import { incrementEntityGroupTransferCompletedCount } from "~/allEntities/allEntitiesActions";
 import { CLOCKIFY_API_DELAY } from "~/constants";
 import * as reduxUtils from "~/redux/reduxUtils";
-import { incrementEntityGroupTransferCompletedCount } from "~/allEntities/allEntitiesActions";
 import { EntityGroup, ToolName, UserModel } from "~/typeDefs";
 
 export interface ClockifyHourlyRateResponseModel {
@@ -143,7 +145,7 @@ function* fetchClockifyUsersInWorkspace(
     `/clockify/api/workspaces/${workspaceId}/users`,
   );
 
-  return clockifyUsers.map(clockifyUser =>
+  return clockifyUsers.map((clockifyUser) =>
     transformFromResponse(clockifyUser, workspaceId),
   );
 }

@@ -1,6 +1,7 @@
 import React from "react";
-import { render } from "~/jestHelpers";
+
 import Loader from "../Loader";
+import { render } from "~/jestHelpers";
 
 describe("<Loader> Component", () => {
   test(`displays no message if one props.children isn't specified`, () => {

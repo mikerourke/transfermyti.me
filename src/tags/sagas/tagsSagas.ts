@@ -1,19 +1,21 @@
 import { SagaIterator } from "@redux-saga/types";
+
 import * as R from "ramda";
 import { call, put, select } from "redux-saga/effects";
-import { linkEntitiesByIdByMapping } from "~/redux/reduxUtils";
+
+import * as clockifySagas from "./clockifyTagsSagas";
+import * as togglSagas from "./togglTagsSagas";
 import {
   toolActionSelector,
   toolNameByMappingSelector,
 } from "~/allEntities/allEntitiesSelectors";
 import { showErrorNotification } from "~/app/appActions";
+import { linkEntitiesByIdByMapping } from "~/redux/reduxUtils";
 import * as tagsActions from "~/tags/tagsActions";
 import {
   includedSourceTagsSelector,
   sourceTagsForTransferSelector,
 } from "~/tags/tagsSelectors";
-import * as clockifySagas from "./clockifyTagsSagas";
-import * as togglSagas from "./togglTagsSagas";
 import { Mapping, TagsByIdModel, ToolAction, ToolName } from "~/typeDefs";
 
 /**

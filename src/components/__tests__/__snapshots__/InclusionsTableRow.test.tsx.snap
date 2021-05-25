@@ -2,7 +2,7 @@
 
 exports[`the <InclusionsTableRow> component matches its snapshot when props.disabled = false 1`] = `
 .emotion-0 td {
-  color: rgb(72,72,72);
+  color: rgb(72, 72, 72);
   -webkit-text-decoration: none;
   text-decoration: none;
 }
@@ -18,7 +18,7 @@ exports[`the <InclusionsTableRow> component matches its snapshot when props.disa
 
 exports[`the <InclusionsTableRow> component matches its snapshot when props.disabled = true 1`] = `
 .emotion-0 td {
-  color: rgb(136,136,136);
+  color: rgb(136, 136, 136);
   -webkit-text-decoration: line-through;
   text-decoration: line-through;
 }

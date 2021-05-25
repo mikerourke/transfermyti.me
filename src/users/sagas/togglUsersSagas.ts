@@ -1,12 +1,14 @@
 import { SagaIterator } from "@redux-saga/types";
+
 import { call, delay, put, select } from "redux-saga/effects";
-import { TOGGL_API_DELAY } from "~/constants";
-import { validStringify } from "~/utils";
-import * as reduxUtils from "~/redux/reduxUtils";
+
 import { incrementEntityGroupTransferCompletedCount } from "~/allEntities/allEntitiesActions";
+import { TOGGL_API_DELAY } from "~/constants";
 import { includedSourceProjectIdsSelector } from "~/projects/projectsSelectors";
-import { includedSourceWorkspaceIdsSelector } from "~/workspaces/workspacesSelectors";
+import * as reduxUtils from "~/redux/reduxUtils";
 import { EntityGroup, ToolName, UserModel } from "~/typeDefs";
+import { validStringify } from "~/utils";
+import { includedSourceWorkspaceIdsSelector } from "~/workspaces/workspacesSelectors";
 
 interface TogglUserResponseModel {
   id: number;
@@ -179,7 +181,7 @@ function* fetchTogglUsersInWorkspace(
     `/toggl/api/workspaces/${workspaceId}/users`,
   );
 
-  return togglUsers.map(togglUser =>
+  return togglUsers.map((togglUser) =>
     transformFromResponse(togglUser, workspaceId),
   );
 }

@@ -1,6 +1,7 @@
 import React from "react";
-import { render } from "~/jestHelpers";
+
 import Note from "../Note";
+import { render } from "~/jestHelpers";
 
 describe("the <Note> component", () => {
   test("matches its snapshot with valid props", () => {

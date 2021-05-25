@@ -1,18 +1,19 @@
 import React from "react";
 import { Provider } from "react-redux";
+
+import PerformToolActionStep, {
+  PerformToolActionStepComponent,
+} from "../PerformToolActionStep";
+import {
+  includedCountsByEntityGroupSelector,
+  transferCountsByEntityGroupSelector,
+} from "~/allEntities/allEntitiesSelectors";
+import { render, RenderResult } from "~/jestHelpers";
 import {
   MockStore,
   mockStoreWithState,
   state,
 } from "~/redux/__mocks__/mockStoreWithState";
-import { render, RenderResult } from "~/jestHelpers";
-import {
-  includedCountsByEntityGroupSelector,
-  transferCountsByEntityGroupSelector,
-} from "~/allEntities/allEntitiesSelectors";
-import PerformToolActionStep, {
-  PerformToolActionStepComponent,
-} from "../PerformToolActionStep";
 import { FetchStatus, ToolAction, ReduxState } from "~/typeDefs";
 
 // TODO: Fix this test, it's failing because of portals.

@@ -60,8 +60,3 @@ section.
 3. Set `USE_LOCAL_API` to `false`
 4. Run `yarn start:web`
 5. Navigate to `http://localhost:3000`
-
-## TODO
-
-- [ ] Verify Clockify -> Toggl transfer works
-- [ ] Add tests

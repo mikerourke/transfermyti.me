@@ -1,4 +1,5 @@
 import React from "react";
+
 import { styled } from "./emotion";
 
 const Details = styled.details(
@@ -35,8 +36,8 @@ const HelpDetails: React.FC<Props> = ({
   title = "Show/Hide Help",
   ...props
 }) => (
-  <Details {...props}>
-    <summary css={theme => ({ fontWeight: theme.fontWeights.bold })}>
+  <Details {...props} as={undefined}>
+    <summary css={(theme) => ({ fontWeight: theme.fontWeights.bold })}>
       {title}
     </summary>
     <div>{children}</div>

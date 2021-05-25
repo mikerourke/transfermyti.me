@@ -1,4 +1,5 @@
 import React from "react";
+
 import { BaseEntityModel, TableViewModel } from "~/typeDefs";
 
 interface Props extends React.HTMLProps<HTMLTableCellElement> {

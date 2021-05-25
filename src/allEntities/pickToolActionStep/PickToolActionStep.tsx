@@ -1,12 +1,13 @@
 import { push } from "connected-react-router";
 import React from "react";
 import { connect } from "react-redux";
+
+import ToolActionCard from "./ToolActionCard";
 import {
   updateToolAction,
   updateToolNameByMapping,
 } from "~/allEntities/allEntitiesActions";
 import { Flex, HelpDetails } from "~/components";
-import ToolActionCard from "./ToolActionCard";
 import {
   RoutePath,
   ToolAction,
@@ -24,7 +25,7 @@ interface ConnectDispatchProps {
 
 type Props = ConnectDispatchProps;
 
-export const PickToolActionStepComponent: React.FC<Props> = props => {
+export const PickToolActionStepComponent: React.FC<Props> = (props) => {
   const handleSelectClick = (
     action: ToolAction,
     source: ToolName,

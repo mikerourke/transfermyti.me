@@ -1,5 +1,7 @@
 declare function fetch(input: RequestInfo, init?: RequestInit): any;
 
+declare type AnyFixMe = any;
+
 // Used to avoid the no-explicit-any ESLint rule explicitly. In some cases, it
 // is totally OK to just say it's `any`:
 declare type AnyValid = any;

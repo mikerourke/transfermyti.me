@@ -1,8 +1,9 @@
 import cases from "jest-in-case";
 import * as R from "ramda";
-import { state, invalidAction } from "~/redux/__mocks__/mockStoreWithState";
+
 import * as usersActions from "../usersActions";
 import { usersReducer, initialState } from "../usersReducer";
+import { state, invalidAction } from "~/redux/__mocks__/mockStoreWithState";
 
 const TEST_USERS_STATE = { ...state.users };
 
@@ -28,7 +29,7 @@ describe("within usersReducer", () => {
 
   cases(
     "the isFetching is set to the correct value based on the dispatched action",
-    options => {
+    (options) => {
       const updatedState = {
         ...TEST_USERS_STATE,
         isFetching: options.initialStatus,

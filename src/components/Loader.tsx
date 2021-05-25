@@ -1,6 +1,7 @@
-import { keyframes } from "@emotion/core";
+import { keyframes } from "@emotion/react";
 import * as R from "ramda";
 import React from "react";
+
 import { styled } from "./emotion";
 import Flex from "./Flex";
 import LoadingMessage from "./LoadingMessage";

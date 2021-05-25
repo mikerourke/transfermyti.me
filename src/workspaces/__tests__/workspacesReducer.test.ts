@@ -1,8 +1,9 @@
 import cases from "jest-in-case";
-import { state, invalidAction } from "~/redux/__mocks__/mockStoreWithState";
-import { flushAllEntities } from "~/allEntities/allEntitiesActions";
+
 import * as workspacesActions from "../workspacesActions";
 import { workspacesReducer, initialState } from "../workspacesReducer";
+import { flushAllEntities } from "~/allEntities/allEntitiesActions";
+import { state, invalidAction } from "~/redux/__mocks__/mockStoreWithState";
 import { Mapping } from "~/typeDefs";
 
 const TEST_WORKSPACES_STATE = { ...state.workspaces };
@@ -45,7 +46,7 @@ describe("within workspacesReducer", () => {
 
   cases(
     "the isFetching is set to the correct value based on the dispatched action",
-    options => {
+    (options) => {
       const updatedState = {
         ...TEST_WORKSPACES_STATE,
         isFetching: options.initialStatus,

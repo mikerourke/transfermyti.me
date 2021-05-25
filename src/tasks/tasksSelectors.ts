@@ -1,15 +1,17 @@
 import { createSelector } from "reselect";
+
 import * as R from "ramda";
-import { selectIdToLinkedId } from "~/redux/reduxUtils";
+
 import { sourceProjectsByIdSelector } from "~/projects/projectsSelectors";
+import { selectIdToLinkedId } from "~/redux/reduxUtils";
 import { sourceTimeEntryCountByIdFieldSelectorFactory } from "~/timeEntries/timeEntriesSelectors";
-import { activeWorkspaceIdSelector } from "~/workspaces/workspacesSelectors";
 import {
   ReduxState,
   TaskModel,
   TasksByIdModel,
   TaskTableViewModel,
 } from "~/typeDefs";
+import { activeWorkspaceIdSelector } from "~/workspaces/workspacesSelectors";
 
 export const sourceTasksByIdSelector = createSelector(
   (state: ReduxState) => state.tasks.source,
@@ -29,24 +31,25 @@ export const sourceTasksSelector = createSelector(
 export const includedSourceTasksSelector = createSelector(
   sourceTasksSelector,
   (sourceTasks): TaskModel[] =>
-    sourceTasks.filter(sourceTask => sourceTask.isIncluded),
+    sourceTasks.filter((sourceTask) => sourceTask.isIncluded),
 );
 
 export const includedSourceTasksCountSelector = createSelector(
   includedSourceTasksSelector,
-  includedSourceTasks => includedSourceTasks.length,
+  (includedSourceTasks) => includedSourceTasks.length,
 );
 
 export const sourceTasksForTransferSelector = createSelector(
   includedSourceTasksSelector,
-  sourceTasks => sourceTasks.filter(sourceTask => R.isNil(sourceTask.linkedId)),
+  (sourceTasks) =>
+    sourceTasks.filter((sourceTask) => R.isNil(sourceTask.linkedId)),
 );
 
 export const sourceTasksInActiveWorkspaceSelector = createSelector(
   activeWorkspaceIdSelector,
   sourceTasksSelector,
   (workspaceId, sourceTasks): TaskModel[] =>
-    sourceTasks.filter(task => task.workspaceId === workspaceId),
+    sourceTasks.filter((task) => task.workspaceId === workspaceId),
 );
 
 export const taskIdToLinkedIdSelector = createSelector(
@@ -102,7 +105,7 @@ export const tasksForInclusionsTableSelector = createSelector(
 
 export const tasksTotalCountsByTypeSelector = createSelector(
   tasksForInclusionsTableSelector,
-  tasksForInclusionsTable =>
+  (tasksForInclusionsTable) =>
     tasksForInclusionsTable.reduce(
       (
         acc,

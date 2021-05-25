@@ -1,8 +1,11 @@
 import { SagaIterator } from "@redux-saga/types";
+
 import * as R from "ramda";
 import { all, call, put, select, takeEvery } from "redux-saga/effects";
 import { isActionOf } from "typesafe-actions";
-import { linkEntitiesByIdByMapping } from "~/redux/reduxUtils";
+
+import * as clockifySagas from "./clockifyProjectsSagas";
+import * as togglSagas from "./togglProjectsSagas";
 import {
   toolActionSelector,
   toolNameByMappingSelector,
@@ -14,10 +17,9 @@ import {
   sourceProjectsByIdSelector,
   sourceProjectsForTransferSelector,
 } from "~/projects/projectsSelectors";
+import { linkEntitiesByIdByMapping } from "~/redux/reduxUtils";
 import { updateIsTaskIncluded } from "~/tasks/tasksActions";
 import { sourceTasksSelector } from "~/tasks/tasksSelectors";
-import * as clockifySagas from "./clockifyProjectsSagas";
-import * as togglSagas from "./togglProjectsSagas";
 import {
   Mapping,
   ProjectsByIdModel,

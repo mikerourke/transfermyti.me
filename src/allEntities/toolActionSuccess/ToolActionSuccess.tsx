@@ -3,13 +3,14 @@ import React from "react";
 import ReactGA from "react-ga";
 import { connect } from "react-redux";
 import { PayloadActionCreator } from "typesafe-actions";
+
+import BuyMeACoffeeButton from "./BuyMeACoffeeButton";
 import {
   targetToolDisplayNameSelector,
   targetToolTrackerUrlSelector,
 } from "~/allEntities/allEntitiesSelectors";
-import { flushCredentials } from "~/credentials/credentialsActions";
 import { Flex, getOpenInNewTabContent, styled } from "~/components";
-import BuyMeACoffeeButton from "./BuyMeACoffeeButton";
+import { flushCredentials } from "~/credentials/credentialsActions";
 import { AnalyticsEventCategory, ReduxState } from "~/typeDefs";
 
 const Celebrate: React.FC = () => (
@@ -65,7 +66,7 @@ interface ConnectDispatchProps {
 
 type Props = ConnectStateProps & ConnectDispatchProps;
 
-export const ToolActionSuccessComponent: React.FC<Props> = props => {
+export const ToolActionSuccessComponent: React.FC<Props> = (props) => {
   React.useEffect(() => {
     props.onFlushCredentials();
   }, []);

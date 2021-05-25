@@ -1,6 +1,7 @@
 import React from "react";
-import { render } from "~/jestHelpers";
+
 import NoRecordsFound from "../NoRecordsFound";
+import { render } from "~/jestHelpers";
 
 describe("the <NoRecordsFound> component", () => {
   test("matches its snapshot with valid props", () => {

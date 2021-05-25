@@ -1,4 +1,5 @@
 import React from "react";
+
 import { styled, Toggle } from "~/components";
 
 const Label = styled.div(
@@ -27,7 +28,7 @@ const ShowExistingToggle: React.FC<Props> = ({
     <Toggle
       aria-label="Show records that already exist in target?"
       aria-labelledby="show-existing-toggle"
-      css={theme => ({ background: theme.colors.white })}
+      css={(theme) => ({ background: theme.colors.white })}
       isToggled={isToggled}
       onToggle={onToggle}
     />

@@ -1,14 +1,16 @@
 import { SagaIterator } from "@redux-saga/types";
+
 import * as R from "ramda";
 import { call, select } from "redux-saga/effects";
-import * as reduxUtils from "~/redux/reduxUtils";
+
 import { credentialsByToolNameSelector } from "~/credentials/credentialsSelectors";
 import { projectIdToLinkedIdSelector } from "~/projects/projectsSelectors";
-import { targetTagIdsSelectorFactory } from "~/tags/tagsSelectors";
-import { taskIdToLinkedIdSelector } from "~/tasks/tasksSelectors";
 import { ClockifyProjectResponseModel } from "~/projects/sagas/clockifyProjectsSagas";
+import * as reduxUtils from "~/redux/reduxUtils";
 import { ClockifyTagResponseModel } from "~/tags/sagas/clockifyTagsSagas";
+import { targetTagIdsSelectorFactory } from "~/tags/tagsSelectors";
 import { ClockifyTaskResponseModel } from "~/tasks/sagas/clockifyTasksSagas";
+import { taskIdToLinkedIdSelector } from "~/tasks/tasksSelectors";
 import { EntityGroup, TimeEntryModel, ToolName } from "~/typeDefs";
 
 interface ClockifyTimeIntervalModel {

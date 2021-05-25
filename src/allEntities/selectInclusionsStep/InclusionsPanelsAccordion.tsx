@@ -1,10 +1,11 @@
 import React from "react";
+
 import ClientsInclusionsPanel from "~/clients/clientsInclusionsPanel/ClientsInclusionsPanel";
+import { Accordion } from "~/components";
 import ProjectsInclusionsPanel from "~/projects/projectsInclusionsPanel/ProjectsInclusionsPanel";
 import TagsInclusionsPanel from "~/tags/tagsInclusionsPanel/TagsInclusionsPanel";
 import TasksInclusionsPanel from "~/tasks/tasksInclusionsPanel/TasksInclusionsPanel";
 import TimeEntriesInclusionsPanel from "~/timeEntries/timeEntriesInclusionsPanel/TimeEntriesInclusionsPanel";
-import { Accordion } from "~/components";
 
 const InclusionsPanelsAccordion: React.FC = () => (
   <>

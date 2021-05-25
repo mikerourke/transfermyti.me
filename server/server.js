@@ -12,7 +12,7 @@ function startServer() {
   assignMiddleware(app);
   assignRoutes(app);
 
-  return new Promise(resolve => {
+  return new Promise((resolve) => {
     app.listen(port, () => {
       console.log(`Example app listening at http://localhost/${port}`);
       resolve();

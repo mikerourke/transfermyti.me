@@ -1,6 +1,7 @@
 import cases from "jest-in-case";
-import { state } from "~/redux/__mocks__/mockStoreWithState";
+
 import * as clientsSelectors from "../clientsSelectors";
+import { state } from "~/redux/__mocks__/mockStoreWithState";
 import { ToolName } from "~/typeDefs";
 
 const TEST_STATE = {
@@ -59,7 +60,7 @@ describe("within clientsSelectors", () => {
 
   cases(
     "the selectors match their snapshots",
-    options => {
+    (options) => {
       const result = options.selector(TEST_STATE);
 
       expect(result).toMatchSnapshot();
@@ -90,7 +91,7 @@ describe("within clientsSelectors", () => {
 
   cases(
     "the clientsForInclusionsTableSelector matches its snapshot based on state.allEntities.areExistsInTargetShown",
-    options => {
+    (options) => {
       const updatedState = {
         ...TEST_STATE,
         allEntities: {
@@ -98,9 +99,8 @@ describe("within clientsSelectors", () => {
           areExistsInTargetShown: options.areExistsInTargetShown,
         },
       };
-      const result = clientsSelectors.clientsForInclusionsTableSelector(
-        updatedState,
-      );
+      const result =
+        clientsSelectors.clientsForInclusionsTableSelector(updatedState);
 
       expect(result).toMatchSnapshot();
     },

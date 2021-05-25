@@ -26,19 +26,26 @@
       }
     ],
     [
-      "emotion",
+      "jsx-pragmatic",
       {
-        "autoLabel": true,
-        "labelFormat": "[filename]-[local]"
+        "export": "jsx",
+        "module": "@emotion/react",
+        "import": "___EmotionJSX"
       }
     ],
     [
-      "jsx-pragmatic",
-      { "export": "jsx", "module": "@emotion/core", "import": "___EmotionJSX" }
+      "@babel/plugin-transform-react-jsx",
+      {
+        "pragma": "___EmotionJSX",
+        "pragmaFrag": "React.Fragment"
+      }
     ],
     [
-      "@babel/plugin-transform-react-jsx",
-      { "pragma": "___EmotionJSX", "pragmaFrag": "React.Fragment" }
+      "@emotion/babel-plugin",
+      {
+        "autoLabel": "dev-only",
+        "labelFormat": "[local]"
+      }
     ]
   ],
   "env": {
