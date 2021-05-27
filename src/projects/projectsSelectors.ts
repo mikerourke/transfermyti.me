@@ -1,18 +1,20 @@
 import { createSelector } from "reselect";
+
 import * as R from "ramda";
-import { selectIdToLinkedId } from "~/redux/reduxUtils";
+
 import {
   areExistsInTargetShownSelector,
   toolNameByMappingSelector,
 } from "~/allEntities/allEntitiesSelectors";
+import { selectIdToLinkedId } from "~/redux/reduxUtils";
 import { sourceTimeEntryCountByIdFieldSelectorFactory } from "~/timeEntries/timeEntriesSelectors";
-import { activeWorkspaceIdSelector } from "~/workspaces/workspacesSelectors";
 import {
   ReduxState,
   ProjectModel,
   ProjectsByIdModel,
   TableViewModel,
 } from "~/typeDefs";
+import { activeWorkspaceIdSelector } from "~/workspaces/workspacesSelectors";
 
 export const sourceProjectsByIdSelector = createSelector(
   (state: ReduxState) => state.projects.source,
@@ -37,7 +39,7 @@ const targetProjectsSelector = createSelector(
 export const includedSourceProjectsSelector = createSelector(
   sourceProjectsSelector,
   (sourceProjects): ProjectModel[] =>
-    sourceProjects.filter(sourceProject => sourceProject.isIncluded),
+    sourceProjects.filter((sourceProject) => sourceProject.isIncluded),
 );
 
 export const includedSourceProjectIdsSelector = createSelector(
@@ -48,7 +50,7 @@ export const includedSourceProjectIdsSelector = createSelector(
 export const sourceProjectsForTransferSelector = createSelector(
   includedSourceProjectsSelector,
   (sourceProjects): ProjectModel[] =>
-    sourceProjects.filter(sourceProject => R.isNil(sourceProject.linkedId)),
+    sourceProjects.filter((sourceProject) => R.isNil(sourceProject.linkedId)),
 );
 
 export const sourceProjectsInActiveWorkspaceSelector = createSelector(
@@ -56,7 +58,7 @@ export const sourceProjectsInActiveWorkspaceSelector = createSelector(
   activeWorkspaceIdSelector,
   (sourceProjects, activeWorkspaceId) =>
     sourceProjects.filter(
-      sourceProject => sourceProject.workspaceId === activeWorkspaceId,
+      (sourceProject) => sourceProject.workspaceId === activeWorkspaceId,
     ),
 );
 
@@ -110,7 +112,7 @@ export const projectsForInclusionsTableSelector = createSelector(
 
 export const projectsTotalCountsByTypeSelector = createSelector(
   projectsForInclusionsTableSelector,
-  projectsForInclusionsTable =>
+  (projectsForInclusionsTable) =>
     projectsForInclusionsTable.reduce(
       (
         acc,

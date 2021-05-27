@@ -1,4 +1,5 @@
 import { createAction, createAsyncAction } from "typesafe-actions";
+
 import { Mapping, TasksByIdModel } from "~/typeDefs";
 
 export const createTasks = createAsyncAction(
@@ -19,9 +20,9 @@ export const fetchTasks = createAsyncAction(
   "@tasks/FETCH_TASKS_FAILURE",
 )<void, Record<Mapping, TasksByIdModel>, void>();
 
-export const flipIsTaskIncluded = createAction("@tasks/FLIP_IS_INCLUDED")<
-  string
->();
+export const flipIsTaskIncluded = createAction(
+  "@tasks/FLIP_IS_INCLUDED",
+)<string>();
 
 export const updateIsTaskIncluded = createAction("@tasks/UPDATE_IS_INCLUDED")<{
   id: string;

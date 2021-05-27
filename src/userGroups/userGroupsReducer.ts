@@ -1,8 +1,10 @@
 import * as R from "ramda";
 import { ActionType, createReducer } from "typesafe-actions";
+
 import { flushAllEntities } from "~/allEntities/allEntitiesActions";
-import * as userGroupsActions from "./userGroupsActions";
 import { Mapping, UserGroupsByIdModel } from "~/typeDefs";
+
+import * as userGroupsActions from "./userGroupsActions";
 
 type UserGroupsAction = ActionType<
   typeof userGroupsActions | typeof flushAllEntities
@@ -48,7 +50,7 @@ export const userGroupsReducer = createReducer<
       userGroupsActions.deleteUserGroups.request,
       userGroupsActions.fetchUserGroups.request,
     ],
-    state => ({
+    (state) => ({
       ...state,
       isFetching: true,
     }),
@@ -59,7 +61,7 @@ export const userGroupsReducer = createReducer<
       userGroupsActions.deleteUserGroups.failure,
       userGroupsActions.fetchUserGroups.failure,
     ],
-    state => ({
+    (state) => ({
       ...state,
       isFetching: false,
     }),

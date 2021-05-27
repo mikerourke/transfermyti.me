@@ -1,5 +1,6 @@
 import Color from "color";
 import React from "react";
+
 import { styled, getOpenInNewTabContent } from "~/components";
 
 const Anchor = styled.a(

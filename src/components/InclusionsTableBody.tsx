@@ -1,9 +1,12 @@
 import React from "react";
 import { PayloadActionCreator } from "typesafe-actions";
+
+import { BaseEntityModel, TableViewModel } from "~/typeDefs";
+
 import { booleanToYesNo } from "~/utils";
+
 import InclusionsTableCheckboxCell from "./InclusionsTableCheckboxCell";
 import InclusionsTableRow from "./InclusionsTableRow";
-import { BaseEntityModel, TableViewModel } from "~/typeDefs";
 
 interface Props {
   fieldNames: string[];
@@ -18,9 +21,9 @@ const InclusionsTableBody: React.FC<Props> = ({
   ...props
 }) => (
   <tbody {...props}>
-    {tableData.map(record => (
+    {tableData.map((record) => (
       <InclusionsTableRow key={record.id} disabled={record.existsInTarget}>
-        {fieldNames.map(fieldName => (
+        {fieldNames.map((fieldName) => (
           <td key={`${record.id}-${fieldName}`}>
             {booleanToYesNo(record[fieldName])}
           </td>

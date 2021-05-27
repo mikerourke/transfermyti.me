@@ -2,8 +2,18 @@ import * as R from "ramda";
 import React from "react";
 import { connect } from "react-redux";
 import { PayloadActionCreator } from "typesafe-actions";
-import { getEntityGroupDisplay } from "~/utils";
+
 import { replaceMappingWithToolNameSelector } from "~/allEntities/allEntitiesSelectors";
+
+import {
+  BaseEntityModel,
+  EntityGroup,
+  ReduxState,
+  TableViewModel,
+} from "~/typeDefs";
+
+import { getEntityGroupDisplay } from "~/utils";
+
 import AccordionPanel from "./AccordionPanel";
 import InclusionsTable from "./InclusionsTable";
 import InclusionsTableBody from "./InclusionsTableBody";
@@ -11,12 +21,6 @@ import InclusionsTableFoot from "./InclusionsTableFoot";
 import InclusionsTableHead from "./InclusionsTableHead";
 import InclusionsTableTitle from "./InclusionsTableTitle";
 import NoRecordsFound from "./NoRecordsFound";
-import {
-  BaseEntityModel,
-  EntityGroup,
-  ReduxState,
-  TableViewModel,
-} from "~/typeDefs";
 
 interface ConnectStateProps {
   replaceMappingWithToolName: (label: string) => string;
@@ -62,7 +66,9 @@ export const EntityGroupInclusionsPanelComponent: React.FC<Props> = ({
 
   let sortedTableData = tableData;
   try {
-    const sortByName = R.sortBy(R.compose(R.toLower, R.prop("name")));
+    const sortByName = R.sortBy<AnyFixMe>(
+      R.compose(R.toLower, R.prop<AnyFixMe>("name")),
+    );
     sortedTableData = sortByName(tableData);
   } catch {
     // Do nothing. If the data records don't have a `name` field, just pass the

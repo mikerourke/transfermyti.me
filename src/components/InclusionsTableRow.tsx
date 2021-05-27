@@ -6,7 +6,7 @@ interface Props extends React.HTMLProps<HTMLTableRowElement> {
 
 const InclusionsTableRow: React.FC<Props> = ({ disabled, ...props }) => (
   <tr
-    css={theme => ({
+    css={(theme) => ({
       td: {
         color: disabled ? theme.colors.manatee : theme.colors.midnight,
         textDecoration: disabled ? "line-through" : "none",

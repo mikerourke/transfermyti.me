@@ -1,61 +1,5 @@
+import { useTheme as emotionUseTheme, Theme } from "@emotion/react";
 import emotionStyled, { CreateStyled } from "@emotion/styled";
-import { useTheme as emotionUseTheme } from "emotion-theming";
-
-/**
- * Some of the colors were taken from A11y Style Guide.
- * @see https://a11y-style-guide.com/style-guide/section-general.html#kssref-general-colors
- */
-export interface ThemeColors {
-  primary: string;
-  secondary: string;
-  ruby: string;
-  navy: string;
-  eggplant: string;
-  error: string;
-  success: string;
-  black: string;
-  midnight: string;
-  manatee: string;
-  silver: string;
-  alto: string;
-  alabaster: string;
-  white: string;
-  clockifyBlue: string;
-  togglRed: string;
-}
-
-export interface Theme {
-  readonly colors: ThemeColors;
-  readonly fonts: {
-    readonly body: string;
-    readonly heading: string;
-    readonly monospace: string;
-  };
-  readonly fontWeights: {
-    readonly body: number;
-    readonly bold: number;
-    readonly heading: number;
-  };
-  readonly lineHeights: {
-    readonly body: number;
-    readonly heading: number;
-  };
-  readonly elevation: {
-    readonly dp1: string;
-    readonly dp2: string;
-    readonly dp4: string;
-    readonly dp8: string;
-    readonly dp16: string;
-  };
-  readonly sizes: {
-    notificationHeight: number;
-    notificationGap: number;
-  };
-  readonly query: {
-    mobile: string;
-    small: string;
-  };
-}
 
 export const theme: Theme = {
   colors: {
@@ -117,6 +61,6 @@ export const theme: Theme = {
   },
 };
 
-export const styled = emotionStyled as CreateStyled<Theme>;
+export const styled = emotionStyled as CreateStyled;
 
-export const useTheme = (): Theme => emotionUseTheme<Theme>();
+export const useTheme = (): Theme => emotionUseTheme() as Theme;

@@ -1,11 +1,12 @@
 import cuid from "cuid";
 import { createAction } from "typesafe-actions";
-import { getIfDev } from "~/utils";
-import { NotificationModel } from "~/typeDefs";
 
-export const dismissNotification = createAction("@app/DISMISS_NOTIFICATION")<
-  string
->();
+import { NotificationModel } from "~/typeDefs";
+import { getIfDev } from "~/utils";
+
+export const dismissNotification = createAction(
+  "@app/DISMISS_NOTIFICATION",
+)<string>();
 
 export const dismissAllNotifications = createAction(
   "@app/DISMISS_ALL_NOTIFICATIONS",

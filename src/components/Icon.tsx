@@ -1,5 +1,5 @@
+import { ThemeColors } from "@emotion/react";
 import React from "react";
-import { ThemeColors } from "./emotion";
 
 export type IconName =
   | "circleAdd"
@@ -103,7 +103,7 @@ export const iconAttributes = {
   },
 };
 
-interface Props extends React.SVGAttributes<SVGElement> {
+interface Props extends React.SVGAttributes<Omit<SVGElement, "color">> {
   name: IconName;
   color: keyof ThemeColors;
   size?: number;
@@ -133,7 +133,7 @@ const Icon: React.FC<Props> = ({ name, color, size = 24, ...props }) => {
       <desc id={svgDescId}>{iconAttributes[name].desc}</desc>
       <path
         data-testid="svg-icon-path"
-        css={theme => ({ fill: theme.colors[color] })}
+        css={(theme) => ({ fill: theme.colors[color] })}
         d={iconAttributes[name].path}
       />
     </svg>

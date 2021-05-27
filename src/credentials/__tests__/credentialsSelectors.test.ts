@@ -1,6 +1,7 @@
 import cases from "jest-in-case";
-import { state } from "~/redux/__mocks__/mockStoreWithState";
+
 import * as credentialsSelectors from "../credentialsSelectors";
+import { state } from "~/redux/__mocks__/mockStoreWithState";
 
 const TEST_STATE = {
   ...state,
@@ -22,21 +23,19 @@ const TEST_STATE = {
 describe("within credentialsSelectors", () => {
   cases(
     "selectors that directly access state return the correct value",
-    options => {
+    (options) => {
       const result = options.selector(state);
 
       expect(result).toEqual(options.expected);
     },
     [
       {
-        name:
-          "validationFetchStatusSelector returns state.validationFetchStatus",
+        name: "validationFetchStatusSelector returns state.validationFetchStatus",
         selector: credentialsSelectors.validationFetchStatusSelector,
         expected: TEST_STATE.credentials.validationFetchStatus,
       },
       {
-        name:
-          "validationErrorsByMappingSelector returns state.validationErrorsByMapping",
+        name: "validationErrorsByMappingSelector returns state.validationErrorsByMapping",
         selector: credentialsSelectors.validationErrorsByMappingSelector,
         expected: TEST_STATE.credentials.validationErrorsByMapping,
       },
@@ -51,7 +50,7 @@ describe("within credentialsSelectors", () => {
 
   cases(
     "the selectors match their snapshots",
-    options => {
+    (options) => {
       const result = options.selector(TEST_STATE);
 
       expect(result).toMatchSnapshot();

@@ -3,14 +3,16 @@ import React from "react";
 import ReactGA from "react-ga";
 import { connect } from "react-redux";
 import { PayloadActionCreator } from "typesafe-actions";
+
 import {
   targetToolDisplayNameSelector,
   targetToolTrackerUrlSelector,
 } from "~/allEntities/allEntitiesSelectors";
-import { flushCredentials } from "~/credentials/credentialsActions";
 import { Flex, getOpenInNewTabContent, styled } from "~/components";
-import BuyMeACoffeeButton from "./BuyMeACoffeeButton";
+import { flushCredentials } from "~/credentials/credentialsActions";
 import { AnalyticsEventCategory, ReduxState } from "~/typeDefs";
+
+import BuyMeACoffeeButton from "./BuyMeACoffeeButton";
 
 const Celebrate: React.FC = () => (
   <span role="img" aria-label="Celebrate">
@@ -65,7 +67,7 @@ interface ConnectDispatchProps {
 
 type Props = ConnectStateProps & ConnectDispatchProps;
 
-export const ToolActionSuccessComponent: React.FC<Props> = props => {
+export const ToolActionSuccessComponent: React.FC<Props> = (props) => {
   React.useEffect(() => {
     props.onFlushCredentials();
   }, []);
@@ -81,7 +83,7 @@ export const ToolActionSuccessComponent: React.FC<Props> = props => {
   return (
     <Flex alignItems="center" justifyContent="center" flexDirection="column">
       <h1 css={{ fontSize: "3rem", margin: "2rem 0" }}>
-        <Celebrate /> Transfer Complete! <Celebrate />
+        <Celebrate /> All Done! <Celebrate />
       </h1>
       <VideoIframe
         title="Thank you for being a friend"

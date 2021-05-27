@@ -1,9 +1,10 @@
 import { createSelector, createStructuredSelector, Selector } from "reselect";
+
 import * as R from "ramda";
-import { selectIdToLinkedId } from "~/redux/reduxUtils";
+
 import { mappingByToolNameSelector } from "~/allEntities/allEntitiesSelectors";
+import { selectIdToLinkedId } from "~/redux/reduxUtils";
 import { sourceTimeEntryCountByIdFieldSelectorFactory } from "~/timeEntries/timeEntriesSelectors";
-import { activeWorkspaceIdSelector } from "~/workspaces/workspacesSelectors";
 import {
   ClientModel,
   ClientsByIdModel,
@@ -12,6 +13,7 @@ import {
   ReduxState,
   ToolName,
 } from "~/typeDefs";
+import { activeWorkspaceIdSelector } from "~/workspaces/workspacesSelectors";
 
 export const sourceClientsByIdSelector = createSelector(
   (state: ReduxState) => state.clients.source,
@@ -36,13 +38,13 @@ const targetClientsSelector = createSelector(
 export const includedSourceClientsSelector = createSelector(
   sourceClientsSelector,
   (sourceClients): ClientModel[] =>
-    sourceClients.filter(sourceClient => sourceClient.isIncluded),
+    sourceClients.filter((sourceClient) => sourceClient.isIncluded),
 );
 
 export const sourceClientsForTransferSelector = createSelector(
   includedSourceClientsSelector,
   (sourceClients): ClientModel[] =>
-    sourceClients.filter(sourceClient => R.isNil(sourceClient.linkedId)),
+    sourceClients.filter((sourceClient) => R.isNil(sourceClient.linkedId)),
 );
 
 export const sourceClientsInActiveWorkspaceSelector = createSelector(
@@ -50,7 +52,7 @@ export const sourceClientsInActiveWorkspaceSelector = createSelector(
   activeWorkspaceIdSelector,
   (sourceClients, activeWorkspaceId): ClientModel[] =>
     sourceClients.filter(
-      sourceClient => sourceClient.workspaceId === activeWorkspaceId,
+      (sourceClient) => sourceClient.workspaceId === activeWorkspaceId,
     ),
 );
 

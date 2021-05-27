@@ -1,7 +1,9 @@
+import { ThemeColors } from "@emotion/react";
 import Color from "color";
 import React from "react";
+
+import { styled } from "./emotion";
 import Icon, { IconName } from "./Icon";
-import { styled, ThemeColors } from "./emotion";
 
 const Anchor = styled.a<{ color: keyof ThemeColors }>(
   {
@@ -31,7 +33,12 @@ const IconLink: React.FC<Props> = ({
   size = 24,
   ...props
 }) => (
-  <Anchor color={color} css={{ width: size, height: size }} {...props}>
+  <Anchor
+    color={color}
+    css={{ width: size, height: size }}
+    {...props}
+    as={undefined}
+  >
     <Icon color={color} name={iconName} size={size} />
     {children}
   </Anchor>

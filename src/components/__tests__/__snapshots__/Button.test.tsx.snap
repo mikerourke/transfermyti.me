@@ -10,7 +10,7 @@ exports[`the <Button> component matches its snapshot based on props.variant when
   -webkit-transition: 0.3s all linear;
   transition: 0.3s all linear;
   vertical-align: middle;
-  box-shadow: 0 1px 3px 0 rgba(0,0,0,0.2), 0 1px 1px 0 rgba(0,0,0,0.14), 0 2px 1px -1px rgba(0,0,0,0.12);
+  box-shadow: 0 1px 3px 0 rgba(0, 0, 0, 0.2),0 1px 1px 0 rgba(0, 0, 0, 0.14),0 2px 1px -1px rgba(0, 0, 0, 0.12);
   background: #484848;
   border: none;
   color: #EFFDE8;
@@ -44,7 +44,7 @@ exports[`the <Button> component matches its snapshot based on props.variant when
   -webkit-transition: 0.3s all linear;
   transition: 0.3s all linear;
   vertical-align: middle;
-  box-shadow: 0 1px 3px 0 rgba(0,0,0,0.2), 0 1px 1px 0 rgba(0,0,0,0.14), 0 2px 1px -1px rgba(0,0,0,0.12);
+  box-shadow: 0 1px 3px 0 rgba(0, 0, 0, 0.2),0 1px 1px 0 rgba(0, 0, 0, 0.14),0 2px 1px -1px rgba(0, 0, 0, 0.12);
   background: #550055;
   border: none;
   color: #EFFDE8;
@@ -78,7 +78,7 @@ exports[`the <Button> component matches its snapshot based on props.variant when
   -webkit-transition: 0.3s all linear;
   transition: 0.3s all linear;
   vertical-align: middle;
-  box-shadow: 0 1px 3px 0 rgba(0,0,0,0.2), 0 1px 1px 0 rgba(0,0,0,0.14), 0 2px 1px -1px rgba(0,0,0,0.12);
+  box-shadow: 0 1px 3px 0 rgba(0, 0, 0, 0.2),0 1px 1px 0 rgba(0, 0, 0, 0.14),0 2px 1px -1px rgba(0, 0, 0, 0.12);
   background: #EFFDE8;
   border: 3px solid #1E78A1;
   color: #1E78A1;
@@ -112,7 +112,7 @@ exports[`the <Button> component matches its snapshot based on props.variant when
   -webkit-transition: 0.3s all linear;
   transition: 0.3s all linear;
   vertical-align: middle;
-  box-shadow: 0 1px 3px 0 rgba(0,0,0,0.2), 0 1px 1px 0 rgba(0,0,0,0.14), 0 2px 1px -1px rgba(0,0,0,0.12);
+  box-shadow: 0 1px 3px 0 rgba(0, 0, 0, 0.2),0 1px 1px 0 rgba(0, 0, 0, 0.14),0 2px 1px -1px rgba(0, 0, 0, 0.12);
   background: #1E78A1;
   border: none;
   color: #EFFDE8;
@@ -146,7 +146,7 @@ exports[`the <Button> component matches its snapshot based on props.variant when
   -webkit-transition: 0.3s all linear;
   transition: 0.3s all linear;
   vertical-align: middle;
-  box-shadow: 0 1px 3px 0 rgba(0,0,0,0.2), 0 1px 1px 0 rgba(0,0,0,0.14), 0 2px 1px -1px rgba(0,0,0,0.12);
+  box-shadow: 0 1px 3px 0 rgba(0, 0, 0, 0.2),0 1px 1px 0 rgba(0, 0, 0, 0.14),0 2px 1px -1px rgba(0, 0, 0, 0.12);
   background: #EFFDE8;
   border: none;
   color: #1E78A1;
@@ -160,7 +160,7 @@ exports[`the <Button> component matches its snapshot based on props.variant when
 }
 
 .emotion-0:focus {
-  outline-color: rgb(239,253,232);
+  outline-color: rgb(239, 253, 232);
 }
 
 <button

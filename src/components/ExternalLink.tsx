@@ -1,5 +1,5 @@
+import { ThemeColors } from "@emotion/react";
 import React from "react";
-import { ThemeColors } from "./emotion";
 
 export const getOpenInNewTabContent = (color: string): string => {
   /**
@@ -35,7 +35,7 @@ const ExternalLink: React.FC<Props> = ({
   ...props
 }) => (
   <a
-    css={theme => ({
+    css={(theme) => ({
       color: theme.colors[color],
 
       "&:after": {

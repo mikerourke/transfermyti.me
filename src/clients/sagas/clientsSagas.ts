@@ -1,7 +1,8 @@
 import { SagaIterator } from "@redux-saga/types";
+
 import * as R from "ramda";
 import { call, put, select } from "redux-saga/effects";
-import { linkEntitiesByIdByMapping } from "~/redux/reduxUtils";
+
 import {
   toolActionSelector,
   toolNameByMappingSelector,
@@ -12,9 +13,11 @@ import {
   includedSourceClientsSelector,
   sourceClientsForTransferSelector,
 } from "~/clients/clientsSelectors";
+import { linkEntitiesByIdByMapping } from "~/redux/reduxUtils";
+import { ClientsByIdModel, Mapping, ToolAction, ToolName } from "~/typeDefs";
+
 import * as clockifySagas from "./clockifyClientsSagas";
 import * as togglSagas from "./togglClientsSagas";
-import { ClientsByIdModel, Mapping, ToolAction, ToolName } from "~/typeDefs";
 
 /**
  * Creates clients in the target tool based on the included clients from the

@@ -1,8 +1,10 @@
 import * as R from "ramda";
 import { ActionType, createReducer } from "typesafe-actions";
+
 import { flushAllEntities } from "~/allEntities/allEntitiesActions";
-import * as usersActions from "./usersActions";
 import { Mapping, UsersByIdModel } from "~/typeDefs";
+
+import * as usersActions from "./usersActions";
 
 type UsersAction = ActionType<typeof usersActions | typeof flushAllEntities>;
 
@@ -37,7 +39,7 @@ export const usersReducer = createReducer<UsersState, UsersAction>(initialState)
       usersActions.deleteUsers.request,
       usersActions.fetchUsers.request,
     ],
-    state => ({
+    (state) => ({
       ...state,
       isFetching: true,
     }),
@@ -49,7 +51,7 @@ export const usersReducer = createReducer<UsersState, UsersAction>(initialState)
       usersActions.deleteUsers.failure,
       usersActions.fetchUsers.failure,
     ],
-    state => ({
+    (state) => ({
       ...state,
       isFetching: false,
     }),

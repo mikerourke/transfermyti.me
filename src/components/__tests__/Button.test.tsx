@@ -1,8 +1,9 @@
 import Color from "color";
 import cases from "jest-in-case";
 import React from "react";
-import { fireEvent, render, RenderResult, theme } from "~/jestHelpers";
+
 import Button from "../Button";
+import { fireEvent, render, RenderResult, theme } from "~/jestHelpers";
 
 const setup = (
   propOverrides: any = {},
@@ -22,7 +23,7 @@ const setup = (
 describe("the <Button> component", () => {
   cases(
     "matches its snapshot based on props.variant",
-    options => {
+    (options) => {
       const { wrapper } = setup({ variant: options.variant });
 
       expect(wrapper.getByRole("button")).toMatchSnapshot();

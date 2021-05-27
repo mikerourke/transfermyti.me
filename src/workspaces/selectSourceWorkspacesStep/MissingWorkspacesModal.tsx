@@ -1,4 +1,5 @@
 import React from "react";
+
 import { ModalDialog, styled } from "~/components";
 import { WorkspaceModel } from "~/typeDefs";
 
@@ -29,7 +30,7 @@ const MissingWorkspacesModal: React.FC<Props> = ({
     </p>
     <p>Please manually create the following workspaces before proceeding:</p>
     <ul>
-      {props.workspaces.map(workspace => (
+      {props.workspaces.map((workspace) => (
         <ListItem key={workspace.id}>{workspace.name}</ListItem>
       ))}
     </ul>

@@ -1,4 +1,5 @@
 import React from "react";
+
 import { ModalDialog, ExternalLink } from "~/components";
 import { ToolAction } from "~/typeDefs";
 
@@ -26,7 +27,7 @@ interface Props {
   onClose: VoidFunction;
 }
 
-const NoSelectionsModal: React.FC<Props> = props => (
+const NoSelectionsModal: React.FC<Props> = (props) => (
   <ModalDialog isOpen={props.isOpen} title="Error" onClose={props.onClose}>
     <p>You haven&apos;t selected any records to {props.toolAction}.</p>
     <p>

@@ -2,13 +2,15 @@ import { ConnectedRouter } from "connected-react-router";
 import { History } from "history";
 import React from "react";
 import { Redirect, Route, Switch } from "react-router";
-import AppRoot from "~/app/appRoot/AppRoot";
+
+import PerformToolActionStep from "~/allEntities/performToolActionStep/PerformToolActionStep";
 import PickToolActionStep from "~/allEntities/pickToolActionStep/PickToolActionStep";
+import SelectInclusionsStep from "~/allEntities/selectInclusionsStep/SelectInclusionsStep";
+import ToolActionSuccess from "~/allEntities/toolActionSuccess/ToolActionSuccess";
+import AppRoot from "~/app/appRoot/AppRoot";
 import EnterApiKeysStep from "~/credentials/enterApiKeysStep/EnterApiKeysStep";
 import SelectSourceWorkspacesStep from "~/workspaces/selectSourceWorkspacesStep/SelectSourceWorkspacesStep";
-import SelectInclusionsStep from "~/allEntities/selectInclusionsStep/SelectInclusionsStep";
-import PerformToolActionStep from "~/allEntities/performToolActionStep/PerformToolActionStep";
-import ToolActionSuccess from "~/allEntities/toolActionSuccess/ToolActionSuccess";
+
 import { RoutePath } from "~/./typeDefs";
 
 interface Props {

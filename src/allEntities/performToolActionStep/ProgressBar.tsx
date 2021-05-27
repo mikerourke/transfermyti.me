@@ -1,4 +1,5 @@
 import React from "react";
+
 import { styled } from "~/components";
 
 const Title = styled.h2({

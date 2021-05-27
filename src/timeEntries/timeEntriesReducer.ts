@@ -1,8 +1,10 @@
 import * as R from "ramda";
 import { ActionType, createReducer } from "typesafe-actions";
+
 import { flushAllEntities } from "~/allEntities/allEntitiesActions";
-import * as timeEntriesActions from "./timeEntriesActions";
 import { Mapping, TimeEntriesByIdModel } from "~/typeDefs";
+
+import * as timeEntriesActions from "./timeEntriesActions";
 
 type TimeEntriesAction = ActionType<
   typeof timeEntriesActions | typeof flushAllEntities
@@ -50,7 +52,7 @@ export const timeEntriesReducer = createReducer<
       timeEntriesActions.deleteTimeEntries.request,
       timeEntriesActions.fetchTimeEntries.request,
     ],
-    state => ({
+    (state) => ({
       ...state,
       isFetching: true,
     }),
@@ -61,7 +63,7 @@ export const timeEntriesReducer = createReducer<
       timeEntriesActions.deleteTimeEntries.failure,
       timeEntriesActions.fetchTimeEntries.failure,
     ],
-    state => ({
+    (state) => ({
       ...state,
       isFetching: false,
     }),
@@ -71,7 +73,7 @@ export const timeEntriesReducer = createReducer<
     (state, { payload }) =>
       R.over(R.lensPath([Mapping.Source, payload, "isIncluded"]), R.not, state),
   )
-  .handleAction(timeEntriesActions.flipIsDuplicateCheckEnabled, state => {
+  .handleAction(timeEntriesActions.flipIsDuplicateCheckEnabled, (state) => {
     const newIsDuplicateCheckEnabled = !state.isDuplicateCheckEnabled;
     const newSource = Object.entries({ ...state.source }).reduce(
       (acc, [id, timeEntry]) => ({

@@ -1,6 +1,7 @@
 import cases from "jest-in-case";
-import { state } from "~/redux/__mocks__/mockStoreWithState";
+
 import * as timeEntriesSelectors from "../timeEntriesSelectors";
+import { state } from "~/redux/__mocks__/mockStoreWithState";
 
 const TEST_STATE = {
   ...state,
@@ -191,7 +192,7 @@ describe("within timeEntriesSelectors", () => {
 
   cases(
     "the selectors match their snapshots",
-    options => {
+    (options) => {
       const result = options.selector(TEST_STATE);
 
       expect(result).toMatchSnapshot();
@@ -229,19 +230,17 @@ describe("within timeEntriesSelectors", () => {
         isDuplicateCheckEnabled: false,
       },
     };
-    const result = timeEntriesSelectors.sourceTimeEntriesForTransferSelector(
-      updatedState,
-    );
-    const expected = timeEntriesSelectors.includedSourceTimeEntriesSelector(
-      TEST_STATE,
-    );
+    const result =
+      timeEntriesSelectors.sourceTimeEntriesForTransferSelector(updatedState);
+    const expected =
+      timeEntriesSelectors.includedSourceTimeEntriesSelector(TEST_STATE);
 
     expect(result).toEqual(expected);
   });
 
   cases(
     "the timeEntriesForInclusionsTableSelector matches its snapshot based on state.allEntities.areExistsInTargetShown",
-    options => {
+    (options) => {
       const updatedState = {
         ...TEST_STATE,
         allEntities: {
@@ -249,9 +248,10 @@ describe("within timeEntriesSelectors", () => {
           areExistsInTargetShown: options.areExistsInTargetShown,
         },
       };
-      const result = timeEntriesSelectors.timeEntriesForInclusionsTableSelector(
-        updatedState,
-      );
+      const result =
+        timeEntriesSelectors.timeEntriesForInclusionsTableSelector(
+          updatedState,
+        );
 
       expect(result).toMatchSnapshot();
     },
@@ -275,17 +275,15 @@ describe("within timeEntriesSelectors", () => {
         isDuplicateCheckEnabled: false,
       },
     };
-    const result = timeEntriesSelectors.timeEntriesForInclusionsTableSelector(
-      updatedState,
-    );
+    const result =
+      timeEntriesSelectors.timeEntriesForInclusionsTableSelector(updatedState);
 
     expect(result).toMatchSnapshot();
   });
 
   test("the sourceTimeEntryCountByIdFieldSelectorFactory matches its snapshot", () => {
-    const getCounts = timeEntriesSelectors.sourceTimeEntryCountByIdFieldSelectorFactory(
-      "6001",
-    );
+    const getCounts =
+      timeEntriesSelectors.sourceTimeEntryCountByIdFieldSelectorFactory("6001");
     const result = getCounts(TEST_STATE);
 
     expect(result).toMatchSnapshot();

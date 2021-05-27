@@ -1,6 +1,7 @@
 import cases from "jest-in-case";
-import { state } from "~/redux/__mocks__/mockStoreWithState";
+
 import * as tagsSelectors from "../tagsSelectors";
+import { state } from "~/redux/__mocks__/mockStoreWithState";
 import { ToolName } from "~/typeDefs";
 
 const TEST_STATE = {
@@ -125,7 +126,7 @@ const TEST_STATE = {
 describe("within tagsSelectors", () => {
   cases(
     "the selectors match their snapshots",
-    options => {
+    (options) => {
       const result = options.selector(TEST_STATE);
 
       expect(result).toMatchSnapshot();
@@ -148,7 +149,7 @@ describe("within tagsSelectors", () => {
 
   cases(
     "the tagsForInclusionsTableSelector matches its snapshot based on state.allEntities.areExistsInTargetShown",
-    options => {
+    (options) => {
       const updatedState = {
         ...TEST_STATE,
         allEntities: {

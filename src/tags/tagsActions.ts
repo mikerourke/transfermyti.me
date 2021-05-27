@@ -1,4 +1,5 @@
 import { createAction, createAsyncAction } from "typesafe-actions";
+
 import { Mapping, TagsByIdModel } from "~/typeDefs";
 
 export const createTags = createAsyncAction(
@@ -19,9 +20,9 @@ export const fetchTags = createAsyncAction(
   "@tags/FETCH_TAGS_FAILURE",
 )<void, Record<Mapping, TagsByIdModel>, void>();
 
-export const flipIsTagIncluded = createAction("@tags/FLIP_IS_INCLUDED")<
-  string
->();
+export const flipIsTagIncluded = createAction(
+  "@tags/FLIP_IS_INCLUDED",
+)<string>();
 
 export const updateAreAllTagsIncluded = createAction(
   "@tags/UPDATE_ARE_ALL_INCLUDED",

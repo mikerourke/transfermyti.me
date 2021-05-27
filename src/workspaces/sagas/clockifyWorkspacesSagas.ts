@@ -1,8 +1,10 @@
 import { SagaIterator } from "@redux-saga/types";
+
 import { call } from "redux-saga/effects";
+
 import { fetchArray } from "~/redux/reduxUtils";
-import { ClockifyMembershipResponseModel } from "~/users/sagas/clockifyUsersSagas";
 import { EntityGroup, WorkspaceModel } from "~/typeDefs";
+import { ClockifyMembershipResponseModel } from "~/users/sagas/clockifyUsersSagas";
 
 interface ClockifyWorkspaceSettingsResponseModel {
   timeRoundingInReports: boolean;

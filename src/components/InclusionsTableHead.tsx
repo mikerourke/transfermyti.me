@@ -1,4 +1,5 @@
 import React from "react";
+
 import { kebabCase } from "~/utils";
 
 interface Props {
@@ -8,7 +9,7 @@ interface Props {
 const InclusionsTableHead: React.FC<Props> = ({ labels, ...props }) => (
   <thead {...props}>
     <tr>
-      {labels.map(label => (
+      {labels.map((label) => (
         <th key={kebabCase(label)} scope="col">
           {label}
         </th>

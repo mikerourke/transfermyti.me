@@ -1,8 +1,9 @@
 import { createSelector, createStructuredSelector, Selector } from "reselect";
+
 import * as R from "ramda";
+
 import { mappingByToolNameSelector } from "~/allEntities/allEntitiesSelectors";
 import { sourceTimeEntryCountByTagIdSelector } from "~/timeEntries/timeEntriesSelectors";
-import { activeWorkspaceIdSelector } from "~/workspaces/workspacesSelectors";
 import {
   Mapping,
   ReduxState,
@@ -11,6 +12,7 @@ import {
   TagsByIdModel,
   ToolName,
 } from "~/typeDefs";
+import { activeWorkspaceIdSelector } from "~/workspaces/workspacesSelectors";
 
 const sourceTagsByIdSelector = createSelector(
   (state: ReduxState) => state.tags.source,
@@ -43,20 +45,20 @@ const tagsByMappingSelector = createStructuredSelector<
 export const includedSourceTagsSelector = createSelector(
   sourceTagsSelector,
   (sourceTags): TagModel[] =>
-    sourceTags.filter(sourceTag => sourceTag.isIncluded),
+    sourceTags.filter((sourceTag) => sourceTag.isIncluded),
 );
 
 export const sourceTagsForTransferSelector = createSelector(
   includedSourceTagsSelector,
   (sourceTags): TagModel[] =>
-    sourceTags.filter(sourceTag => R.isNil(sourceTag.linkedId)),
+    sourceTags.filter((sourceTag) => R.isNil(sourceTag.linkedId)),
 );
 
 const sourceTagsInActiveWorkspaceSelector = createSelector(
   sourceTagsSelector,
   activeWorkspaceIdSelector,
   (sourceTags, workspaceId): TagModel[] =>
-    sourceTags.filter(tag => tag.workspaceId === workspaceId),
+    sourceTags.filter((tag) => tag.workspaceId === workspaceId),
 );
 
 export const tagsForInclusionsTableSelector = createSelector(
@@ -95,7 +97,7 @@ export const tagsForInclusionsTableSelector = createSelector(
 
 export const tagsTotalCountsByTypeSelector = createSelector(
   tagsForInclusionsTableSelector,
-  tagsForInclusionTable =>
+  (tagsForInclusionTable) =>
     tagsForInclusionTable.reduce(
       (
         acc,

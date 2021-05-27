@@ -1,8 +1,10 @@
 import { SagaIterator } from "@redux-saga/types";
+
 import { call } from "redux-saga/effects";
-import { validStringify } from "~/utils";
+
 import * as reduxUtils from "~/redux/reduxUtils";
 import { EntityGroup, ToolName, UserGroupModel } from "~/typeDefs";
+import { validStringify } from "~/utils";
 
 interface TogglUserGroupResponseModel {
   id: number;

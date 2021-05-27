@@ -1,6 +1,7 @@
 import { Middleware } from "redux";
 import configureStore, { MockStore } from "redux-mock-store";
 import createSagaMiddleware from "redux-saga";
+
 import { default as stateFixture } from "../__fixtures__/state";
 
 export { MockStoreCreator, MockStore } from "redux-mock-store";

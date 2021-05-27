@@ -1,6 +1,7 @@
 import format from "date-fns/format";
 import React from "react";
 import { PayloadActionCreator } from "typesafe-actions";
+
 import {
   InclusionsTable,
   InclusionsTableCheckboxCell,
@@ -32,7 +33,7 @@ interface Props {
   onFlipIsIncluded: PayloadActionCreator<string, string>;
 }
 
-const TimeEntriesInclusionsTable: React.FC<Props> = props => (
+const TimeEntriesInclusionsTable: React.FC<Props> = (props) => (
   <InclusionsTable aria-labelledby="time-entries-desc">
     <thead>
       <tr>
@@ -52,7 +53,7 @@ const TimeEntriesInclusionsTable: React.FC<Props> = props => (
       </tr>
     </thead>
     <tbody>
-      {props.timeEntries.map(timeEntry => (
+      {props.timeEntries.map((timeEntry) => (
         <React.Fragment key={timeEntry.id}>
           <InclusionsTableRow disabled={timeEntry.existsInTarget}>
             <td>{format(timeEntry.start, "Pp")}</td>

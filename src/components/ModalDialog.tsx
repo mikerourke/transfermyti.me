@@ -3,10 +3,11 @@ import cuid from "cuid";
 import React from "react";
 import { createPortal } from "react-dom";
 import { Transition } from "react-transition-group";
+
 import Button from "./Button";
 import { styled } from "./emotion";
-import { useModalAccessibility } from "./hooks";
 import Flex from "./Flex";
+import { useModalAccessibility } from "./hooks";
 
 const Backdrop = styled(Flex)(
   {
@@ -97,7 +98,7 @@ const ModalDialog: React.FC<Props> = ({
   return (
     <ModalPortal>
       <Transition in={isOpen} timeout={100} unmountOnExit mountOnEnter>
-        {state => (
+        {(state) => (
           <Backdrop
             alignItems="flex-start"
             justifyContent="center"

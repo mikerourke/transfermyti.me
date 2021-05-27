@@ -1,4 +1,5 @@
 import { SagaIterator } from "@redux-saga/types";
+
 import differenceInSeconds from "date-fns/differenceInSeconds";
 import endOfYear from "date-fns/endOfYear";
 import format from "date-fns/format";
@@ -6,15 +7,16 @@ import startOfYear from "date-fns/startOfYear";
 import qs from "qs";
 import * as R from "ramda";
 import { call, delay, select } from "redux-saga/effects";
-import { TOGGL_API_DELAY } from "~/constants";
-import { validStringify } from "~/utils";
-import * as reduxUtils from "~/redux/reduxUtils";
+
 import { clientIdsByNameSelectorFactory } from "~/clients/clientsSelectors";
+import { TOGGL_API_DELAY } from "~/constants";
 import { credentialsByToolNameSelector } from "~/credentials/credentialsSelectors";
 import { projectIdToLinkedIdSelector } from "~/projects/projectsSelectors";
+import * as reduxUtils from "~/redux/reduxUtils";
 import { tagIdsByNameBySelectorFactory } from "~/tags/tagsSelectors";
 import { taskIdToLinkedIdSelector } from "~/tasks/tasksSelectors";
 import { EntityGroup, TimeEntryModel, ToolName } from "~/typeDefs";
+import { validStringify } from "~/utils";
 
 interface TogglTotalCurrencyModel {
   currency: string | null;
@@ -285,7 +287,7 @@ function transformFromResponse(
 ): TimeEntryModel {
   const startTime = getTime(timeEntry, "start");
   const tagNames = timeEntry.tags ?? [];
-  const tagIds = tagNames.map(tagName => tagIdsByName[tagName]);
+  const tagIds = tagNames.map((tagName) => tagIdsByName[tagName]);
   return {
     id: timeEntry.id.toString(),
     description: timeEntry.description,

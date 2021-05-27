@@ -1,10 +1,11 @@
-const express = require("express");
-const bodyParser = require("body-parser");
-const morgan = require("morgan");
-const { assignClockifyRoutes } = require("./routes/clockify");
-const { assignTogglRoutes } = require("./routes/toggl");
+import bodyParser from "body-parser";
+import express from "express";
+import morgan from "morgan";
 
-function startServer() {
+import { assignClockifyRoutes } from "./routes/clockify.mjs";
+import { assignTogglRoutes } from "./routes/toggl.mjs";
+
+export function startServer() {
   const app = express();
 
   const port = process.env.LOCAL_API_PORT || 3005;
@@ -12,7 +13,7 @@ function startServer() {
   assignMiddleware(app);
   assignRoutes(app);
 
-  return new Promise(resolve => {
+  return new Promise((resolve) => {
     app.listen(port, () => {
       console.log(`Example app listening at http://localhost/${port}`);
       resolve();
@@ -69,5 +70,3 @@ function assignRoutes(thisApp) {
     res.status(200).send(null);
   });
 }
-
-module.exports = { startServer };

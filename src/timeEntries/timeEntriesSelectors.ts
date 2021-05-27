@@ -1,11 +1,13 @@
 import { createSelector, Selector } from "reselect";
+
 import * as R from "ramda";
-import { activeWorkspaceIdSelector } from "~/workspaces/workspacesSelectors";
+
 import {
   ReduxState,
   TimeEntryModel,
   TimeEntryTableViewModel,
 } from "~/typeDefs";
+import { activeWorkspaceIdSelector } from "~/workspaces/workspacesSelectors";
 
 export const isDuplicateCheckEnabledSelector = createSelector(
   (state: ReduxState) => state.timeEntries.isDuplicateCheckEnabled,
@@ -20,7 +22,7 @@ export const sourceTimeEntriesSelector = createSelector(
 export const includedSourceTimeEntriesSelector = createSelector(
   sourceTimeEntriesSelector,
   (sourceTimeEntries): TimeEntryModel[] =>
-    sourceTimeEntries.filter(sourceTimeEntry => sourceTimeEntry.isIncluded),
+    sourceTimeEntries.filter((sourceTimeEntry) => sourceTimeEntry.isIncluded),
 );
 
 export const sourceTimeEntriesForTransferSelector = createSelector(
@@ -28,7 +30,7 @@ export const sourceTimeEntriesForTransferSelector = createSelector(
   isDuplicateCheckEnabledSelector,
   (sourceTimeEntries, isDuplicateCheckEnabled) =>
     isDuplicateCheckEnabled
-      ? sourceTimeEntries.filter(sourceTimeEntry =>
+      ? sourceTimeEntries.filter((sourceTimeEntry) =>
           R.isNil(sourceTimeEntry.linkedId),
         )
       : sourceTimeEntries,
@@ -39,7 +41,7 @@ export const sourceTimeEntriesInActiveWorkspaceSelector = createSelector(
   activeWorkspaceIdSelector,
   (sourceTimeEntries, activeWorkspaceId) =>
     sourceTimeEntries.filter(
-      sourceTimeEntry => sourceTimeEntry.workspaceId === activeWorkspaceId,
+      (sourceTimeEntry) => sourceTimeEntry.workspaceId === activeWorkspaceId,
     ),
 );
 
@@ -93,7 +95,7 @@ export const timeEntriesForInclusionsTableSelector = createSelector(
 
 export const timeEntriesTotalCountsByTypeSelector = createSelector(
   timeEntriesForInclusionsTableSelector,
-  timeEntriesForInclusionsTable =>
+  (timeEntriesForInclusionsTable) =>
     timeEntriesForInclusionsTable.reduce(
       (acc, { existsInTarget, isIncluded }: TimeEntryTableViewModel) => ({
         existsInTarget: acc.existsInTarget + (existsInTarget ? 1 : 0),
@@ -108,7 +110,7 @@ export const timeEntriesTotalCountsByTypeSelector = createSelector(
 
 export const sourceTimeEntryCountByTagIdSelector = createSelector(
   sourceTimeEntriesSelector,
-  sourceTimeEntries => {
+  (sourceTimeEntries) => {
     const timeEntryCountByTagIdField: Record<string, number> = {};
 
     for (const timeEntry of sourceTimeEntries) {
@@ -129,7 +131,7 @@ export const sourceTimeEntryCountByTagIdSelector = createSelector(
 export const sourceTimeEntryCountByIdFieldSelectorFactory = (
   idField: string,
 ): Selector<ReduxState, Record<string, number>> =>
-  createSelector(sourceTimeEntriesSelector, sourceTimeEntries => {
+  createSelector(sourceTimeEntriesSelector, (sourceTimeEntries) => {
     const timeEntryCountByIdField: Record<string, number> = {};
 
     for (const timeEntry of sourceTimeEntries) {

@@ -2,7 +2,10 @@ import { push } from "connected-react-router";
 import React from "react";
 import { connect } from "react-redux";
 import { PayloadActionCreator } from "typesafe-actions";
+
 import { toolHelpDetailsByMappingSelector } from "~/allEntities/allEntitiesSelectors";
+import { Button, HelpDetails, NavigationButtonsRow } from "~/components";
+import { useDeepCompareEffect } from "~/components/hooks";
 import * as credentialsActions from "~/credentials/credentialsActions";
 import {
   credentialsByMappingSelector,
@@ -10,9 +13,6 @@ import {
   validationErrorsByMappingSelector,
   validationFetchStatusSelector,
 } from "~/credentials/credentialsSelectors";
-import { Button, HelpDetails, NavigationButtonsRow } from "~/components";
-import { useDeepCompareEffect } from "~/components/hooks";
-import ApiKeyInputField from "./ApiKeyInputField";
 import {
   CredentialsModel,
   FetchStatus,
@@ -24,6 +24,8 @@ import {
   ToolName,
   ValidationErrorsByMappingModel,
 } from "~/typeDefs";
+
+import ApiKeyInputField from "./ApiKeyInputField";
 
 interface ConnectStateProps {
   credentialsByMapping: Record<Mapping, CredentialsModel>;
@@ -43,7 +45,7 @@ interface ConnectDispatchProps {
 
 type Props = ConnectStateProps & ConnectDispatchProps;
 
-const EnterApiKeysStepComponent: React.FC<Props> = props => {
+const EnterApiKeysStepComponent: React.FC<Props> = (props) => {
   type InputFields = Record<string, string | null>;
 
   const defaultErrors: InputFields = {
@@ -156,7 +158,7 @@ const EnterApiKeysStepComponent: React.FC<Props> = props => {
       <form
         autoComplete="hidden"
         css={{ margin: "0 1rem" }}
-        onSubmit={event => event.preventDefault()}
+        onSubmit={(event) => event.preventDefault()}
       >
         <ApiKeyInputField
           mapping={Mapping.Source}

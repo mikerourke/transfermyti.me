@@ -1,7 +1,8 @@
 import cases from "jest-in-case";
 import React from "react";
-import { render, RenderResult, fireEvent } from "~/jestHelpers";
+
 import InclusionsTableCheckboxCell from "../InclusionsTableCheckboxCell";
+import { render, RenderResult, fireEvent } from "~/jestHelpers";
 
 const TEST_ENTITY_RECORD = {
   id: "testEntity",
@@ -40,7 +41,7 @@ describe("the <InclusionsTableCheckboxCell> component", () => {
 
   cases(
     "sets the checkbox input attributes based on props.entityRecord",
-    options => {
+    (options) => {
       const { wrapper } = setup({ entityRecord: options.entityRecord });
       const checkbox = wrapper.getByRole("checkbox");
 
@@ -60,8 +61,7 @@ describe("the <InclusionsTableCheckboxCell> component", () => {
         attrs: { checked: "" },
       },
       {
-        name:
-          "when props.entityRecord.existsInTarget = false props.entityRecord.isIncluded = true",
+        name: "when props.entityRecord.existsInTarget = false props.entityRecord.isIncluded = true",
         entityRecord: {
           ...TEST_ENTITY_RECORD,
           existsInTarget: false,

@@ -1,6 +1,7 @@
 import React from "react";
-import { render, RenderResult } from "~/jestHelpers";
+
 import InclusionsTableRow from "../InclusionsTableRow";
+import { render, RenderResult } from "~/jestHelpers";
 
 const setup = (
   propOverrides: any = {},

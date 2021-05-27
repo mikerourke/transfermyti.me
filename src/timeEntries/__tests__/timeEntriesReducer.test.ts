@@ -1,8 +1,9 @@
 import cases from "jest-in-case";
 import * as R from "ramda";
-import { state, invalidAction } from "~/redux/__mocks__/mockStoreWithState";
+
 import * as timeEntriesActions from "../timeEntriesActions";
 import { timeEntriesReducer, initialState } from "../timeEntriesReducer";
+import { state, invalidAction } from "~/redux/__mocks__/mockStoreWithState";
 
 const TEST_TIME_ENTRIES_STATE = { ...state.timeEntries };
 
@@ -28,7 +29,7 @@ describe("within timeEntriesReducer", () => {
 
   cases(
     "the isFetching is set to the correct value based on the dispatched action",
-    options => {
+    (options) => {
       const updatedState = {
         ...TEST_TIME_ENTRIES_STATE,
         isFetching: options.initialStatus,

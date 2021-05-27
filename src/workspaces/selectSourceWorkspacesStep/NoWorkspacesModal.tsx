@@ -1,4 +1,5 @@
 import React from "react";
+
 import { ModalDialog } from "~/components";
 
 interface Props {
@@ -6,7 +7,7 @@ interface Props {
   onClose: VoidFunction;
 }
 
-const NoWorkspacesModal: React.FC<Props> = props => (
+const NoWorkspacesModal: React.FC<Props> = (props) => (
   <ModalDialog isOpen={props.isOpen} title="Error" onClose={props.onClose}>
     <p>You haven&apos;t selected any workspaces to include in the transfer.</p>
     <p>

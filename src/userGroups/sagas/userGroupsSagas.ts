@@ -1,20 +1,23 @@
 import { SagaIterator } from "@redux-saga/types";
+
 import * as R from "ramda";
 import { call, put, select } from "redux-saga/effects";
-import { linkEntitiesByIdByMapping } from "~/redux/reduxUtils";
+
 import {
   toolActionSelector,
   toolNameByMappingSelector,
 } from "~/allEntities/allEntitiesSelectors";
 import { showErrorNotification } from "~/app/appActions";
+import { linkEntitiesByIdByMapping } from "~/redux/reduxUtils";
+import { Mapping, ToolAction, ToolName, UserGroupsByIdModel } from "~/typeDefs";
 import * as userGroupsActions from "~/userGroups/userGroupsActions";
 import {
   includedSourceUserGroupsSelector,
   sourceUserGroupsForTransferSelector,
 } from "~/userGroups/userGroupsSelectors";
+
 import * as clockifySagas from "./clockifyUserGroupsSagas";
 import * as togglSagas from "./togglUserGroupsSagas";
-import { Mapping, ToolAction, ToolName, UserGroupsByIdModel } from "~/typeDefs";
 
 /**
  * Creates user groups in the target tool based on the included user groups from

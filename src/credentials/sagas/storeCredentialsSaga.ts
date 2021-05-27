@@ -1,9 +1,11 @@
 import { SagaIterator } from "@redux-saga/types";
+
 import { select } from "redux-saga/effects";
 import storage from "store";
+
 import { STORAGE_KEY } from "~/constants";
-import { getIfDev } from "~/utils";
 import { credentialsByMappingSelector } from "~/credentials/credentialsSelectors";
+import { getIfDev } from "~/utils";
 
 export function* storeCredentialsSaga(): SagaIterator {
   const credentialsByMapping = yield select(credentialsByMappingSelector);

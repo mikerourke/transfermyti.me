@@ -3,8 +3,9 @@ import { createBrowserHistory } from "history";
 import React from "react";
 import { render } from "react-dom";
 import { Provider } from "react-redux";
-import Routes from "./Routes";
+
 import { configureStore } from "./redux/configureStore";
+import Routes from "./Routes";
 import { initInterceptor } from "./utils/httpInterceptor";
 import { initAnalytics } from "./utils/initAnalytics";
 

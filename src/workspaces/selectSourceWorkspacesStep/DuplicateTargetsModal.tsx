@@ -1,4 +1,5 @@
 import React from "react";
+
 import { ModalDialog } from "~/components";
 
 interface Props {
@@ -6,7 +7,7 @@ interface Props {
   onClose: VoidFunction;
 }
 
-const DuplicateTargetsModal: React.FC<Props> = props => (
+const DuplicateTargetsModal: React.FC<Props> = (props) => (
   <ModalDialog isOpen={props.isOpen} title="Error" onClose={props.onClose}>
     <p>
       You cannot select the same target workspace for two different source

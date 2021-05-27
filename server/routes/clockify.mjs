@@ -1,14 +1,20 @@
-const path = require("path");
-const fse = require("fs-extra");
-const { find, get, isNil, uniqueId } = require("lodash");
+import path from "path";
+import { fileURLToPath, URL } from "url";
 
-const dbPath = path.resolve(__dirname, "..", "db", "clockify.json");
+import fse from "fs-extra";
+import { find, get, isNil, uniqueId } from "lodash-es";
+
+const dbPath = fileURLToPath(
+  new URL(path.join("..", "db", "clockify.json"), import.meta.url),
+);
+
 const db = fse.readJsonSync(dbPath);
 
+// noinspection EqualityComparisonWithCoercionJS
 const isEmpty = process.env.LOCAL_API_CLOCKIFY_EMPTY == "true";
 
 // TODO: Update routes to reflect V1 Clockify API only.
-function assignClockifyRoutes(router) {
+export function assignClockifyRoutes(router) {
   let entriesCreated = 20;
 
   router
@@ -44,7 +50,7 @@ function assignClockifyRoutes(router) {
         }
 
         if (tagIds.length !== 0) {
-          responseEntry.tags = tagIds.map(tagId =>
+          responseEntry.tags = tagIds.map((tagId) =>
             db.tags.find(({ id }) => id === tagId),
           );
         } else {
@@ -191,5 +197,3 @@ function assignClockifyRoutes(router) {
     )
     .delete("/users/:userId", (req, res) => res.status(200).send());
 }
-
-module.exports = { assignClockifyRoutes };

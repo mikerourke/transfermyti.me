@@ -1,6 +1,8 @@
 import React from "react";
-import { styled } from "./emotion";
+
 import { WorkspaceModel } from "~/typeDefs";
+
+import { styled } from "./emotion";
 
 const Select = styled.select(
   {
@@ -65,8 +67,9 @@ const WorkspaceSelect: React.FC<Props> = ({
         value={value}
         onChange={handleSelectChange}
         {...props}
+        as={undefined}
       >
-        {workspaces.map(workspace => (
+        {workspaces.map((workspace) => (
           <option
             key={workspace.id}
             label={workspace.name}

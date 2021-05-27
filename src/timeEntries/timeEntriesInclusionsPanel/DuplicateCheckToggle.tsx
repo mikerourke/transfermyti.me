@@ -1,4 +1,5 @@
 import React from "react";
+
 import { styled, Toggle } from "~/components";
 
 const Label = styled.div(
@@ -27,7 +28,7 @@ const DuplicateCheckToggle: React.FC<Props> = ({
     <Toggle
       aria-label="Use the time entry duplication check?"
       aria-labelledby="use-duplicate-check-toggle"
-      css={theme => ({ background: theme.colors.white })}
+      css={(theme) => ({ background: theme.colors.white })}
       isToggled={isToggled}
       onToggle={onToggle}
     />

@@ -1,4 +1,5 @@
 import React from "react";
+
 import { HelpDetails, Note } from "~/components";
 import { ToolAction } from "~/typeDefs";
 
@@ -61,7 +62,7 @@ interface Props {
   toolAction: ToolAction;
 }
 
-const SelectInclusionsHelpByAction: React.FC<Props> = props => {
+const SelectInclusionsHelpByAction: React.FC<Props> = (props) => {
   switch (props.toolAction) {
     case ToolAction.Delete:
       return <SelectInclusionsHelpForDelete />;

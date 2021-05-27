@@ -1,6 +1,6 @@
 import * as R from "ramda";
 import { ActionType, createReducer } from "typesafe-actions";
-import * as allEntitiesActions from "./allEntitiesActions";
+
 import {
   CountsByEntityGroupModel,
   EntityGroup,
@@ -9,6 +9,8 @@ import {
   ToolName,
   ToolNameByMappingModel,
 } from "~/typeDefs";
+
+import * as allEntitiesActions from "./allEntitiesActions";
 
 type AllEntitiesAction = ActionType<typeof allEntitiesActions>;
 
@@ -56,7 +58,7 @@ export const allEntitiesReducer = createReducer<
       allEntitiesActions.createAllEntities.request,
       allEntitiesActions.deleteAllEntities.request,
     ],
-    state => ({
+    (state) => ({
       ...state,
       pushAllChangesFetchStatus: FetchStatus.InProcess,
       entityGroupInProcess: null,
@@ -67,7 +69,7 @@ export const allEntitiesReducer = createReducer<
       allEntitiesActions.createAllEntities.success,
       allEntitiesActions.deleteAllEntities.success,
     ],
-    state => ({
+    (state) => ({
       ...state,
       pushAllChangesFetchStatus: FetchStatus.Success,
       entityGroupInProcess: null,
@@ -78,23 +80,23 @@ export const allEntitiesReducer = createReducer<
       allEntitiesActions.createAllEntities.failure,
       allEntitiesActions.deleteAllEntities.failure,
     ],
-    state => ({
+    (state) => ({
       ...state,
       pushAllChangesFetchStatus: FetchStatus.Error,
       entityGroupInProcess: null,
     }),
   )
-  .handleAction(allEntitiesActions.fetchAllEntities.request, state => ({
+  .handleAction(allEntitiesActions.fetchAllEntities.request, (state) => ({
     ...state,
     fetchAllFetchStatus: FetchStatus.InProcess,
     entityGroupInProcess: null,
   }))
-  .handleAction(allEntitiesActions.fetchAllEntities.success, state => ({
+  .handleAction(allEntitiesActions.fetchAllEntities.success, (state) => ({
     ...state,
     fetchAllFetchStatus: FetchStatus.Success,
     entityGroupInProcess: null,
   }))
-  .handleAction(allEntitiesActions.fetchAllEntities.failure, state => ({
+  .handleAction(allEntitiesActions.fetchAllEntities.failure, (state) => ({
     ...state,
     fetchAllFetchStatus: FetchStatus.Error,
     entityGroupInProcess: null,
@@ -113,7 +115,7 @@ export const allEntitiesReducer = createReducer<
       fetchAllFetchStatus: payload,
     }),
   )
-  .handleAction(allEntitiesActions.flushAllEntities, state => ({
+  .handleAction(allEntitiesActions.flushAllEntities, (state) => ({
     ...state,
     pushAllChangesFetchStatus: FetchStatus.Pending,
     fetchAllFetchStatus: FetchStatus.Pending,
@@ -132,7 +134,7 @@ export const allEntitiesReducer = createReducer<
       },
     }),
   )
-  .handleAction(allEntitiesActions.flipIfExistsInTargetShown, state => ({
+  .handleAction(allEntitiesActions.flipIfExistsInTargetShown, (state) => ({
     ...state,
     areExistsInTargetShown: !state.areExistsInTargetShown,
   }))
@@ -143,14 +145,17 @@ export const allEntitiesReducer = createReducer<
       entityGroupInProcess: payload,
     }),
   )
-  .handleAction(allEntitiesActions.resetTransferCountsByEntityGroup, state => ({
-    ...state,
-    transferCountsByEntityGroup: { ...DEFAULT_TRANSFER_COUNTS },
-  }))
+  .handleAction(
+    allEntitiesActions.resetTransferCountsByEntityGroup,
+    (state) => ({
+      ...state,
+      transferCountsByEntityGroup: { ...DEFAULT_TRANSFER_COUNTS },
+    }),
+  )
   .handleAction(
     allEntitiesActions.incrementEntityGroupTransferCompletedCount,
     (state, { payload }) =>
-      R.over<AllEntitiesState>(
+      R.over<AllEntitiesState, number>(
         R.lensPath(["transferCountsByEntityGroup", payload]),
         R.inc,
         state,

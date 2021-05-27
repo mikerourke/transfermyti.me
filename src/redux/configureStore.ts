@@ -3,19 +3,21 @@ import { History } from "history";
 import { AnyAction, applyMiddleware, compose, createStore } from "redux";
 import createSagaMiddleware from "redux-saga";
 import storage from "store";
-import { IS_USING_LOCAL_API, STORAGE_KEY } from "~/constants";
-import { getIfDev } from "~/utils";
-import { validateCredentials } from "~/credentials/credentialsActions";
-import { initialState as initialCredentialsState } from "~/credentials/credentialsReducer";
+
 import { allEntitiesSaga } from "~/allEntities/allEntitiesSaga";
 import { appSaga } from "~/app/appSaga";
+import { IS_USING_LOCAL_API, STORAGE_KEY } from "~/constants";
+import { validateCredentials } from "~/credentials/credentialsActions";
+import { initialState as initialCredentialsState } from "~/credentials/credentialsReducer";
 import { credentialsSaga } from "~/credentials/sagas/credentialsSaga";
 import { projectMonitoringSaga } from "~/projects/sagas/projectsSagas";
 import { taskMonitoringSaga } from "~/tasks/sagas/tasksSagas";
+import { getIfDev } from "~/utils";
 import { workspacesSaga } from "~/workspaces/sagas/workspacesSaga";
+
 import { analyticsMiddleware } from "./analyticsMiddlewares";
-import { createRootReducer, RouterReducer } from "./rootReducer";
 import { ReduxState, ReduxStore } from "./reduxTypes";
+import { createRootReducer, RouterReducer } from "./rootReducer";
 
 const devTools = window.__REDUX_DEVTOOLS_EXTENSION_COMPOSE__;
 const composeEnhancers: AnyValid = devTools || compose;
@@ -46,6 +48,8 @@ export function configureStore(history: History): ReduxStore {
 
   const store = createStore(
     rootReducer,
+    // TODO: Figure out why TypeScript is throwing an error.
+    // @ts-ignore
     { credentials } as ReduxState,
     composeEnhancers(applyMiddleware(...middleware)),
   );

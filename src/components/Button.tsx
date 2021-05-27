@@ -1,6 +1,7 @@
+import { keyframes } from "@emotion/react";
 import Color from "color";
-import { keyframes } from "@emotion/core";
 import React from "react";
+
 import { styled, useTheme } from "./emotion";
 import Flex from "./Flex";
 

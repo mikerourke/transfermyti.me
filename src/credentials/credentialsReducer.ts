@@ -1,10 +1,12 @@
 import { ActionType, createReducer } from "typesafe-actions";
-import * as credentialsActions from "./credentialsActions";
+
 import {
   CredentialsModel,
   FetchStatus,
   ValidationErrorsByMappingModel,
 } from "~/typeDefs";
+
+import * as credentialsActions from "./credentialsActions";
 
 type CredentialsAction = ActionType<typeof credentialsActions>;
 
@@ -39,7 +41,7 @@ export const credentialsReducer = createReducer<
   CredentialsState,
   CredentialsAction
 >(initialState)
-  .handleAction(credentialsActions.validateCredentials.request, state => ({
+  .handleAction(credentialsActions.validateCredentials.request, (state) => ({
     ...state,
     validationFetchStatus: FetchStatus.InProcess,
     validationErrorsByMapping: { ...DEFAULT_VALIDATION_ERRORS },

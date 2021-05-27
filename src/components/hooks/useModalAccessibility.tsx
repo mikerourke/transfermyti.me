@@ -175,10 +175,10 @@ class ModalDelegator {
     const mapKey = (event.target as HTMLElement).getAttribute(
       "name",
     ) as ElementKey;
-    const focusableKey = {
-      [ElementKey.BoundaryStart]: ElementKey.FocusableLast,
-      [ElementKey.BoundaryEnd]: ElementKey.FocusableFirst,
-    }[mapKey];
+    let focusableKey = ElementKey.FocusableLast;
+    if (mapKey === ElementKey.BoundaryStart) {
+      focusableKey = ElementKey.FocusableFirst;
+    }
 
     const focusableElement = this.elementsMap.get(focusableKey);
     if (focusableElement) {

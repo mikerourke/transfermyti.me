@@ -2,7 +2,7 @@ import { push } from "connected-react-router";
 import React from "react";
 import { connect } from "react-redux";
 import { PayloadActionCreator } from "typesafe-actions";
-import { capitalize } from "~/utils";
+
 import {
   fetchAllEntities,
   flipIfExistsInTargetShown,
@@ -14,19 +14,21 @@ import {
   toolActionSelector,
   totalIncludedRecordsCountSelector,
 } from "~/allEntities/allEntitiesSelectors";
-import { activeWorkspaceIdSelector } from "~/workspaces/workspacesSelectors";
 import {
   Button,
   Loader,
   LoadingMessage,
   NavigationButtonsRow,
 } from "~/components";
+import { FetchStatus, ReduxState, RoutePath, ToolAction } from "~/typeDefs";
+import { capitalize } from "~/utils";
+import { activeWorkspaceIdSelector } from "~/workspaces/workspacesSelectors";
+
 import ActiveWorkspaceSelect from "./ActiveWorkspaceSelect";
 import InclusionsPanelsAccordion from "./InclusionsPanelsAccordion";
 import NoSelectionsModal from "./NoSelectionsModal";
 import SelectInclusionsHelpByAction from "./SelectInclusionsHelpByAction";
 import ShowExistingToggle from "./ShowExistingToggle";
-import { FetchStatus, ReduxState, RoutePath, ToolAction } from "~/typeDefs";
 
 interface ConnectStateProps {
   activeWorkspaceId: string;
@@ -45,10 +47,9 @@ interface ConnectDispatchProps {
 
 type Props = ConnectStateProps & ConnectDispatchProps;
 
-export const SelectInclusionsStepComponent: React.FC<Props> = props => {
-  const [isErrorModalOpen, setIsErrorModalOpen] = React.useState<boolean>(
-    false,
-  );
+export const SelectInclusionsStepComponent: React.FC<Props> = (props) => {
+  const [isErrorModalOpen, setIsErrorModalOpen] =
+    React.useState<boolean>(false);
 
   React.useEffect(() => {
     if (props.fetchAllFetchStatus === FetchStatus.Pending) {

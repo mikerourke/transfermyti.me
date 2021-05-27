@@ -1,7 +1,8 @@
 import cases from "jest-in-case";
-import { state, invalidAction } from "~/redux/__mocks__/mockStoreWithState";
+
 import * as allEntitiesActions from "../allEntitiesActions";
 import { allEntitiesReducer, initialState } from "../allEntitiesReducer";
+import { state, invalidAction } from "~/redux/__mocks__/mockStoreWithState";
 import { EntityGroup, FetchStatus, ToolAction, ToolName } from "~/typeDefs";
 
 const DEFAULT_TRANSFER_COUNTS = {
@@ -23,7 +24,7 @@ describe("within allEntitiesReducer", () => {
 
   cases(
     "the pushAllChangesFetchStatus is set to the correct value based on the dispatched action",
-    options => {
+    (options) => {
       const updatedState = {
         ...state.allEntities,
         entityGroupInProcess: EntityGroup.Projects,
@@ -89,7 +90,7 @@ describe("within allEntitiesReducer", () => {
 
   cases(
     "the fetchAllFetchStatus is set to the correct value based on the dispatched action",
-    options => {
+    (options) => {
       const updatedState = {
         ...state.allEntities,
         entityGroupInProcess: EntityGroup.Projects,
@@ -137,7 +138,7 @@ describe("within allEntitiesReducer", () => {
 
   cases(
     "the correct state value is updated based on the dispatched action",
-    options => {
+    (options) => {
       const updatedState = {
         ...state.allEntities,
         ...options.initialStateChange,
@@ -158,8 +159,7 @@ describe("within allEntitiesReducer", () => {
         expectedStateChange: { toolAction: ToolAction.Delete },
       },
       {
-        name:
-          "the updateToolNameByMapping action updates state.toolNameByMapping",
+        name: "the updateToolNameByMapping action updates state.toolNameByMapping",
         initialStateChange: {
           toolNameByMapping: initialState.toolNameByMapping,
         },
@@ -175,15 +175,13 @@ describe("within allEntitiesReducer", () => {
         },
       },
       {
-        name:
-          "the flipIfExistsInTargetShown action updates state.areExistsInTargetShown",
+        name: "the flipIfExistsInTargetShown action updates state.areExistsInTargetShown",
         initialStateChange: { areExistsInTargetShown: true },
         action: allEntitiesActions.flipIfExistsInTargetShown(),
         expectedStateChange: { areExistsInTargetShown: false },
       },
       {
-        name:
-          "the updateEntityGroupInProcess action updates state.entityGroupInProcess",
+        name: "the updateEntityGroupInProcess action updates state.entityGroupInProcess",
         initialStateChange: { entityGroupInProcess: null },
         action: allEntitiesActions.updateEntityGroupInProcess(
           EntityGroup.Clients,
@@ -191,8 +189,7 @@ describe("within allEntitiesReducer", () => {
         expectedStateChange: { entityGroupInProcess: EntityGroup.Clients },
       },
       {
-        name:
-          "the resetTransferCountsByEntityGroup action sets state.transferCountsByEntityGroup to default",
+        name: "the resetTransferCountsByEntityGroup action sets state.transferCountsByEntityGroup to default",
         initialStateChange: {
           transferCountsByEntityGroup: {
             ...DEFAULT_TRANSFER_COUNTS,
@@ -206,8 +203,7 @@ describe("within allEntitiesReducer", () => {
         },
       },
       {
-        name:
-          "the incrementEntityGroupTransferCompletedCount action increments state.transferCountsByEntityGroup for specified group",
+        name: "the incrementEntityGroupTransferCompletedCount action increments state.transferCountsByEntityGroup for specified group",
         initialStateChange: {
           transferCountsByEntityGroup: { ...DEFAULT_TRANSFER_COUNTS },
         },

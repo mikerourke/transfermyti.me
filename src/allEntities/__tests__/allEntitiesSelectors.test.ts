@@ -1,21 +1,21 @@
 import cases from "jest-in-case";
 import * as R from "ramda";
-import { state } from "~/redux/__mocks__/mockStoreWithState";
+
 import * as allEntitiesSelectors from "../allEntitiesSelectors";
+import { state } from "~/redux/__mocks__/mockStoreWithState";
 import { EntityGroup, ToolName } from "~/typeDefs";
 
 describe("within allEntitiesSelectors", () => {
   cases(
     "selectors that directly access state return the correct value",
-    options => {
+    (options) => {
       const result = options.selector(state);
 
       expect(result).toEqual(options.expected);
     },
     [
       {
-        name:
-          "areExistsInTargetShownSelector returns state.areExistsInTargetShown",
+        name: "areExistsInTargetShownSelector returns state.areExistsInTargetShown",
         selector: allEntitiesSelectors.areExistsInTargetShownSelector,
         expected: state.allEntities.areExistsInTargetShown,
       },
@@ -25,8 +25,7 @@ describe("within allEntitiesSelectors", () => {
         expected: state.allEntities.fetchAllFetchStatus,
       },
       {
-        name:
-          "pushAllChangesFetchStatusSelector returns state.pushAllChangesFetchStatus",
+        name: "pushAllChangesFetchStatusSelector returns state.pushAllChangesFetchStatus",
         selector: allEntitiesSelectors.pushAllChangesFetchStatusSelector,
         expected: state.allEntities.pushAllChangesFetchStatus,
       },
@@ -41,14 +40,12 @@ describe("within allEntitiesSelectors", () => {
         expected: state.allEntities.toolNameByMapping,
       },
       {
-        name:
-          "transferCountsByEntityGroupSelector returns state.transferCountsByEntityGroup",
+        name: "transferCountsByEntityGroupSelector returns state.transferCountsByEntityGroup",
         selector: allEntitiesSelectors.transferCountsByEntityGroupSelector,
         expected: state.allEntities.transferCountsByEntityGroup,
       },
       {
-        name:
-          "toolForTargetMappingSelector returns state.toolNameByMapping.target",
+        name: "toolForTargetMappingSelector returns state.toolNameByMapping.target",
         selector: allEntitiesSelectors.toolForTargetMappingSelector,
         expected: state.allEntities.toolNameByMapping.target,
       },
@@ -61,17 +58,15 @@ describe("within allEntitiesSelectors", () => {
       EntityGroup.TimeEntries,
       state,
     );
-    const result = allEntitiesSelectors.entityGroupInProcessDisplaySelector(
-      updatedState,
-    );
+    const result =
+      allEntitiesSelectors.entityGroupInProcessDisplaySelector(updatedState);
 
     expect(result).toBe("time entries");
   });
 
   test("the includedCountsByEntityGroupSelector returns the count of entities by group", () => {
-    const result = allEntitiesSelectors.includedCountsByEntityGroupSelector(
-      state,
-    );
+    const result =
+      allEntitiesSelectors.includedCountsByEntityGroupSelector(state);
 
     expect(result).toEqual({
       clients: 0,
@@ -85,9 +80,8 @@ describe("within allEntitiesSelectors", () => {
   });
 
   test("the totalIncludedRecordsCountSelector returns sum of included record counts", () => {
-    const result = allEntitiesSelectors.totalIncludedRecordsCountSelector(
-      state,
-    );
+    const result =
+      allEntitiesSelectors.totalIncludedRecordsCountSelector(state);
 
     expect(result).toBe(4);
   });
@@ -108,9 +102,8 @@ describe("within allEntitiesSelectors", () => {
       { source: ToolName.Clockify, target: ToolName.Toggl },
       state,
     );
-    const result = allEntitiesSelectors.toolHelpDetailsByMappingSelector(
-      updatedState,
-    );
+    const result =
+      allEntitiesSelectors.toolHelpDetailsByMappingSelector(updatedState);
 
     expect(result).toEqual({
       source: {
@@ -132,9 +125,8 @@ describe("within allEntitiesSelectors", () => {
       { source: ToolName.Clockify, target: ToolName.Toggl },
       state,
     );
-    const replacer = allEntitiesSelectors.replaceMappingWithToolNameSelector(
-      updatedState,
-    );
+    const replacer =
+      allEntitiesSelectors.replaceMappingWithToolNameSelector(updatedState);
 
     test(`replaces instances of "source" and "target" with the tool display name`, () => {
       const result = replacer("Records in Source and Target");
@@ -156,9 +148,8 @@ describe("within allEntitiesSelectors", () => {
         { source: ToolName.Clockify, target: ToolName.None },
         state,
       );
-      const result = allEntitiesSelectors.targetToolDisplayNameSelector(
-        updatedState,
-      );
+      const result =
+        allEntitiesSelectors.targetToolDisplayNameSelector(updatedState);
 
       expect(result).toBe("Clockify");
     });
@@ -169,9 +160,8 @@ describe("within allEntitiesSelectors", () => {
         { source: ToolName.Clockify, target: ToolName.Toggl },
         state,
       );
-      const result = allEntitiesSelectors.targetToolDisplayNameSelector(
-        updatedState,
-      );
+      const result =
+        allEntitiesSelectors.targetToolDisplayNameSelector(updatedState);
 
       expect(result).toBe("Toggl");
     });
@@ -184,9 +174,8 @@ describe("within allEntitiesSelectors", () => {
         { source: ToolName.Clockify, target: ToolName.None },
         state,
       );
-      const result = allEntitiesSelectors.targetToolTrackerUrlSelector(
-        updatedState,
-      );
+      const result =
+        allEntitiesSelectors.targetToolTrackerUrlSelector(updatedState);
 
       expect(result).toBe("https://clockify.me/tracker");
     });
@@ -197,9 +186,8 @@ describe("within allEntitiesSelectors", () => {
         { source: ToolName.Clockify, target: ToolName.Toggl },
         state,
       );
-      const result = allEntitiesSelectors.targetToolTrackerUrlSelector(
-        updatedState,
-      );
+      const result =
+        allEntitiesSelectors.targetToolTrackerUrlSelector(updatedState);
 
       expect(result).toBe("https://toggl.com/app/timer");
     });

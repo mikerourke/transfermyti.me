@@ -1,6 +1,7 @@
 import React from "react";
 import { connect } from "react-redux";
 import { PayloadActionCreator } from "typesafe-actions";
+
 import {
   updateAreAllClientsIncluded,
   flipIsClientIncluded,
@@ -23,7 +24,7 @@ interface ConnectDispatchProps {
 
 type Props = ConnectStateProps & ConnectDispatchProps;
 
-export const ClientsInclusionsPanelComponent: React.FC<Props> = props => (
+export const ClientsInclusionsPanelComponent: React.FC<Props> = (props) => (
   <EntityGroupInclusionsPanel
     entityGroup={EntityGroup.Clients}
     rowNumber={1}

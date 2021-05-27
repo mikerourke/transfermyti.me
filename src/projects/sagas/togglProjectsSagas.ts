@@ -1,11 +1,13 @@
 import { SagaIterator } from "@redux-saga/types";
+
 import * as R from "ramda";
 import { call, delay, select } from "redux-saga/effects";
-import { TOGGL_API_DELAY } from "~/constants";
-import { validStringify } from "~/utils";
-import * as reduxUtils from "~/redux/reduxUtils";
+
 import { clientIdToLinkedIdSelector } from "~/clients/clientsSelectors";
+import { TOGGL_API_DELAY } from "~/constants";
+import * as reduxUtils from "~/redux/reduxUtils";
 import { EntityGroup, ProjectModel, ToolName } from "~/typeDefs";
+import { validStringify } from "~/utils";
 
 interface TogglProjectResponseModel {
   id: number;

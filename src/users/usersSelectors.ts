@@ -1,8 +1,10 @@
 import { createSelector } from "reselect";
+
 import * as R from "ramda";
+
 import { selectIdToLinkedId } from "~/redux/reduxUtils";
-import { workspaceIdToLinkedIdSelector } from "~/workspaces/workspacesSelectors";
 import { ReduxState, UserModel, UsersByIdModel } from "~/typeDefs";
+import { workspaceIdToLinkedIdSelector } from "~/workspaces/workspacesSelectors";
 
 const sourceUsersByIdSelector = createSelector(
   (state: ReduxState) => state.users.source,
@@ -17,7 +19,7 @@ export const sourceUsersSelector = createSelector(
 export const includedSourceUsersSelector = createSelector(
   sourceUsersSelector,
   (sourceUsers): UserModel[] =>
-    sourceUsers.filter(sourceUser => sourceUser.isIncluded),
+    sourceUsers.filter((sourceUser) => sourceUser.isIncluded),
 );
 
 export const userIdToLinkedIdSelector = createSelector(
@@ -29,7 +31,7 @@ export const userIdToLinkedIdSelector = createSelector(
 export const sourceUsersForTransferSelector = createSelector(
   includedSourceUsersSelector,
   (sourceUsers): UserModel[] =>
-    sourceUsers.filter(sourceUser => R.isNil(sourceUser.linkedId)),
+    sourceUsers.filter((sourceUser) => R.isNil(sourceUser.linkedId)),
 );
 
 export const sourceUserEmailsByWorkspaceIdSelector = createSelector(

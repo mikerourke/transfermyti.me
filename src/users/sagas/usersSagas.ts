@@ -1,20 +1,23 @@
 import { SagaIterator } from "@redux-saga/types";
+
 import * as R from "ramda";
 import { call, put, select } from "redux-saga/effects";
-import { linkEntitiesByIdByMapping } from "~/redux/reduxUtils";
+
 import {
   toolActionSelector,
   toolNameByMappingSelector,
 } from "~/allEntities/allEntitiesSelectors";
 import { showErrorNotification } from "~/app/appActions";
+import { linkEntitiesByIdByMapping } from "~/redux/reduxUtils";
+import { Mapping, ToolAction, ToolName, UsersByIdModel } from "~/typeDefs";
 import * as usersActions from "~/users/usersActions";
 import {
   includedSourceUsersSelector,
   sourceUserEmailsByWorkspaceIdSelector,
 } from "~/users/usersSelectors";
+
 import * as clockifySagas from "./clockifyUsersSagas";
 import * as togglSagas from "./togglUsersSagas";
-import { Mapping, ToolAction, ToolName, UsersByIdModel } from "~/typeDefs";
 
 /**
  * Invites users to the target tool based on the source users.

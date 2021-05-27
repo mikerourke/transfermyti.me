@@ -1,8 +1,10 @@
 import React from "react";
 import { Link } from "react-router-dom";
+
 import { styled } from "~/components";
-import Logo from "./Logo";
 import { RoutePath } from "~/typeDefs";
+
+import Logo from "./Logo";
 
 const Base = styled.header(
   {
@@ -22,7 +24,7 @@ const Header: React.FC = () => (
   <Base>
     <Logo />
     <Link
-      css={theme => ({ color: theme.colors.secondary, fontSize: "1.5rem" })}
+      css={(theme) => ({ color: theme.colors.secondary, fontSize: "1.5rem" })}
       to={RoutePath.PickToolAction}
     >
       transfermyti.me

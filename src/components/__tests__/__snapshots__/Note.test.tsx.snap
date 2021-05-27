@@ -2,7 +2,7 @@
 
 exports[`the <Note> component matches its snapshot with valid props 1`] = `
 .emotion-0 {
-  color: rgb(85,0,85);
+  color: rgb(85, 0, 85);
   font-weight: 600;
 }
 

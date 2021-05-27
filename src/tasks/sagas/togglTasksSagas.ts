@@ -1,10 +1,12 @@
 import { SagaIterator } from "@redux-saga/types";
+
 import * as R from "ramda";
 import { call, select } from "redux-saga/effects";
-import { validStringify } from "~/utils";
-import * as reduxUtils from "~/redux/reduxUtils";
+
 import { projectIdToLinkedIdSelector } from "~/projects/projectsSelectors";
+import * as reduxUtils from "~/redux/reduxUtils";
 import { EntityGroup, TaskModel, ToolName } from "~/typeDefs";
+import { validStringify } from "~/utils";
 
 interface TogglTaskResponseModel {
   name: string;

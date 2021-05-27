@@ -1,11 +1,12 @@
 /* eslint-disable import/no-extraneous-dependencies,no-console */
-import React from "react";
+import { ThemeProvider } from "@emotion/react";
 import {
   RenderOptions,
   RenderResult,
   render as testRender,
 } from "@testing-library/react";
-import { ThemeProvider } from "emotion-theming";
+import React from "react";
+
 import { theme } from "./components/emotion";
 
 // These are exported for convenience (so we don't have to add an additional import

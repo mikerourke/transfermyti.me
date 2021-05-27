@@ -1,4 +1,5 @@
 import React from "react";
+
 import { styled } from "./emotion";
 
 const Base = styled.div({
@@ -16,6 +17,7 @@ const AccordionContent: React.FC<Props> = ({ isExpanded, ...props }) => (
     role="region"
     aria-hidden={!isExpanded}
     {...props}
+    as={undefined}
   />
 );
 

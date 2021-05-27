@@ -1,8 +1,11 @@
 import { SagaIterator } from "@redux-saga/types";
+
 import { call, delay, put } from "redux-saga/effects";
+
 import { incrementEntityGroupTransferCompletedCount } from "~/allEntities/allEntitiesActions";
-import { getApiDelayForTool } from "./fetchActions";
 import { EntityGroup, ToolName, ValidEntity } from "~/typeDefs";
+
+import { getApiDelayForTool } from "./fetchActions";
 
 /**
  * Loops through specified source records and calls the specified apiDeleteFunc

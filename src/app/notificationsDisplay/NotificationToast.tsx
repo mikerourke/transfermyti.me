@@ -1,6 +1,7 @@
-import { keyframes } from "@emotion/core";
+import { keyframes } from "@emotion/react";
 import React from "react";
 import { TransitionStatus } from "react-transition-group/Transition";
+
 import { styled, useTheme } from "~/components";
 import { NotificationModel } from "~/typeDefs";
 
@@ -85,6 +86,7 @@ const NotificationToast: React.FC<Props> = ({
     }, 5_000);
   }, []);
 
+  // @ts-ignore
   const animation = {
     entering: `${slideInRight} 300ms 1 linear both`,
     exiting: `${slideOutLeft} 600ms 1 linear both`,

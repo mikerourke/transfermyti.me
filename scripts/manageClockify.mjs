@@ -1,12 +1,22 @@
-const path = require("path");
-const qs = require("querystring");
-const fetch = require("node-fetch");
-const { cyan, green, magenta, yellow } = require("chalk");
-const fs = require("fs-extra");
-const _ = require("lodash");
-const PromiseThrottle = require("promise-throttle");
-const yargs = require("yargs");
-const httpEnv = require("../http-client.private.env.json");
+import path from "path";
+import qs from "querystring";
+import { fileURLToPath, URL } from "url";
+
+import chalk from "chalk";
+import fse from "fs-extra";
+import { flatten, isNil, set } from "lodash-es";
+import fetch from "node-fetch";
+import PromiseThrottle from "promise-throttle";
+import yargs from "yargs";
+import { hideBin } from "yargs/helpers";
+
+const { cyan, green, magenta, yellow } = chalk;
+
+const httpEnvPath = fileURLToPath(
+  new URL(path.join("..", "http-client.private.env.json"), import.meta.url),
+);
+
+const httpEnv = fse.readJsonSync(httpEnvPath);
 
 /**
  * You need to copy the http-client.private.env.example.json file in the root
@@ -17,24 +27,6 @@ const httpEnv = require("../http-client.private.env.json");
  */
 const clockifyApiKey = httpEnv.development["clockify-api-key"];
 const clockifyUserId = httpEnv.development["clockify-user-id"];
-
-yargs
-  .command({
-    command: "delete",
-    desc: "Delete all allEntities on Clockify testing workspace",
-    handler: async () => {
-      await deleteEntitiesInWorkspaces();
-    },
-  })
-  .command({
-    command: "write",
-    desc:
-      "Grabs all the Clockify allEntities and writes them to clockify.json in CWD",
-    handler: async () => {
-      await writeEntitiesToOutputFile();
-    },
-  })
-  .help().argv;
 
 /**
  * Deletes the time entries, clients, tags, and projects from all workspaces.
@@ -65,19 +57,19 @@ async function deleteEntitiesInWorkspaces() {
  */
 async function writeEntitiesToOutputFile() {
   const outputPath = path.resolve(process.cwd(), "clockify.json");
-  await fs.remove(outputPath);
+  await fse.remove(outputPath);
 
   const workspaces = await fetchValidWorkspaces();
   const dataByWorkspaceName = {};
 
   const addEntityGroupToWorkspaceData = async (id, name, entityGroup) => {
     const contents = await getEntityGroupRecordsInWorkspace(id, entityGroup);
-    _.set(dataByWorkspaceName, [name, entityGroup], contents);
+    set(dataByWorkspaceName, [name, entityGroup], contents);
   };
 
   for (const { id, name, ...workspace } of workspaces) {
     console.log(cyan(`Processing ${name}...`));
-    _.set(dataByWorkspaceName, [name, "data"], { id, ...workspace });
+    set(dataByWorkspaceName, [name, "data"], { id, ...workspace });
     await addEntityGroupToWorkspaceData(id, name, "projects");
     await pause(1000);
 
@@ -90,12 +82,12 @@ async function writeEntitiesToOutputFile() {
     await addEntityGroupToWorkspaceData(id, name, "time-entries");
   }
 
-  await fs.writeJSON(outputPath, dataByWorkspaceName, { spaces: 2 });
-  console.log(green("Clockify allEntities written to file!"));
+  await fse.writeJson(outputPath, dataByWorkspaceName, { spaces: 2 });
+  console.log(green("Clockify entities written to file!"));
 }
 
 /**
- * Deletes all of the allEntities in the specified group from the specified
+ * Deletes all of the entities in the specified group from the specified
  * workspace.
  */
 async function deleteEntityGroupInWorkspace(workspaceId, entityGroup) {
@@ -113,7 +105,7 @@ async function deleteEntityGroupInWorkspace(workspaceId, entityGroup) {
   }
 
   const baseEndpoint = getEntityGroupEndpoint(workspaceId, entityGroup);
-  const apiDeleteEntity = entityId =>
+  const apiDeleteEntity = (entityId) =>
     clockifyFetch(`${baseEndpoint}/${entityId}`, { method: "DELETE" });
 
   const { promiseThrottle, throttledFn } = buildThrottler(apiDeleteEntity);
@@ -125,7 +117,7 @@ async function deleteEntityGroupInWorkspace(workspaceId, entityGroup) {
       .then(() => {
         console.log(green(`Delete ${name} successful`));
       })
-      .catch(err => {
+      .catch((err) => {
         console.log(magenta(`Error deleting ${entityGroup}: ${err}`));
       });
   }
@@ -156,7 +148,7 @@ function getEntityGroupEndpoint(workspaceId, entityGroup) {
 async function deleteTimeEntriesInWorkspace(workspaceId) {
   const timeEntries = await fetchTimeEntriesInWorkspace(workspaceId);
 
-  const apiDeleteTimeEntryById = entryId =>
+  const apiDeleteTimeEntryById = (entryId) =>
     clockifyFetch(`/workspaces/${workspaceId}/time-entries/${entryId}`, {
       method: "DELETE",
     });
@@ -175,7 +167,7 @@ async function deleteTimeEntriesInWorkspace(workspaceId) {
         console.log(green(`Deleted ${currentEntry} of ${totalEntryCount}`));
         currentEntry += 1;
       })
-      .catch(err => {
+      .catch((err) => {
         console.log(magenta(`Error deleting time entries: ${err}`));
       });
   }
@@ -186,7 +178,7 @@ async function deleteTimeEntriesInWorkspace(workspaceId) {
  * rate limits aren't exceeded.
  */
 function pause(duration = 1000) {
-  return new Promise(resolve => {
+  return new Promise((resolve) => {
     setTimeout(resolve, duration);
   });
 }
@@ -195,7 +187,7 @@ function pause(duration = 1000) {
  * Fetches all time entries (for all years) for the specified workspace ID.
  */
 async function fetchTimeEntriesInWorkspace(workspaceId) {
-  const apiFetchTimeEntriesForYear = page => {
+  const apiFetchTimeEntriesForYear = (page) => {
     const endpointUrl = [
       "workspaces",
       workspaceId,
@@ -222,7 +214,7 @@ async function fetchTimeEntriesInWorkspace(workspaceId) {
   while (keepFetching) {
     await promiseThrottle
       .add(throttledFn.bind(this, currentPage))
-      .then(timeEntries => {
+      .then((timeEntries) => {
         keepFetching = timeEntries.length === 100;
         allEntries.push(timeEntries);
         console.log(
@@ -231,14 +223,14 @@ async function fetchTimeEntriesInWorkspace(workspaceId) {
           ),
         );
       })
-      .catch(err => {
+      .catch((err) => {
         keepFetching = false;
         console.log(magenta(`Error fetching time entries: ${err}`));
       });
     currentPage += 1;
   }
 
-  return _.flatten(allEntries);
+  return flatten(allEntries);
 }
 
 /**
@@ -266,17 +258,17 @@ async function fetchValidWorkspaces() {
 function buildThrottler(fetchFunc) {
   const promiseThrottle = new PromiseThrottle({
     requestsPerSecond: 4,
-    promiseImplementation: Promise,
+    promiseImplementation: /** @type {PromiseConstructorLike} */ Promise,
   });
 
   const throttledFn = (...args) =>
     new Promise((resolve, reject) =>
       fetchFunc
         .call(null, ...args)
-        .then(response => {
+        .then((response) => {
           resolve(response);
         })
-        .catch(err => {
+        .catch((err) => {
           reject(err);
         }),
     );
@@ -288,7 +280,7 @@ function buildThrottler(fetchFunc) {
 }
 
 /**
- * Makes a fetch call to the Clockify API to the specifed endpoint with
+ * Makes a fetch call to the Clockify API to the specified endpoint with
  * specified options.
  */
 async function clockifyFetch(endpoint, options) {
@@ -308,7 +300,7 @@ async function clockifyFetch(endpoint, options) {
 
   // Make sure the request body is stringified and the "Accept" header is
   // present (for POST request):
-  if (!_.isNil(requestOptions.body)) {
+  if (!isNil(requestOptions.body)) {
     Object.assign(requestOptions.headers, {
       Accept: "application/json",
     });
@@ -325,3 +317,20 @@ async function clockifyFetch(endpoint, options) {
     return Promise.reject(err);
   }
 }
+
+yargs(hideBin(process.argv))
+  .command({
+    command: "delete",
+    describe: "Delete all entities on Clockify testing workspace",
+    handler: async () => {
+      await deleteEntitiesInWorkspaces();
+    },
+  })
+  .command({
+    command: "write",
+    describe: "Grabs all Clockify entities and writes them to ./clockify.json",
+    handler: async () => {
+      await writeEntitiesToOutputFile();
+    },
+  })
+  .help().argv;

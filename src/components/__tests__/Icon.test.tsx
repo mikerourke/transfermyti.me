@@ -1,6 +1,7 @@
 import React from "react";
-import { render, theme } from "~/jestHelpers";
+
 import Icon, { IconName, iconAttributes } from "../Icon";
+import { render, theme } from "~/jestHelpers";
 
 describe("<Icon> Component", () => {
   test("displays the correct path and color based on props", () => {
@@ -10,9 +11,8 @@ describe("<Icon> Component", () => {
     };
     const { getByTestId } = render(<Icon {...props} />);
     const innerPath = getByTestId("svg-icon-path");
-    const validColor = theme.colors.success.replace(/ /gi, "");
 
     expect(innerPath).toHaveAttribute("d", iconAttributes.heart.path);
-    expect(innerPath).toHaveStyleRule("fill", validColor);
+    expect(innerPath).toHaveStyleRule("fill", theme.colors.success);
   });
 });

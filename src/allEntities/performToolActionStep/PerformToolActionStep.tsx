@@ -2,7 +2,7 @@ import { push } from "connected-react-router";
 import React from "react";
 import { connect } from "react-redux";
 import { PayloadActionCreator } from "typesafe-actions";
-import { capitalize, getEntityGroupDisplay } from "~/utils";
+
 import {
   createAllEntities,
   deleteAllEntities,
@@ -15,8 +15,6 @@ import {
   transferCountsByEntityGroupSelector,
 } from "~/allEntities/allEntitiesSelectors";
 import { Flex, HelpDetails, NavigationButtonsRow, Note } from "~/components";
-import ConfirmToolActionModal from "./ConfirmToolActionModal";
-import ProgressBar from "./ProgressBar";
 import {
   CountsByEntityGroupModel,
   EntityGroup,
@@ -25,6 +23,10 @@ import {
   RoutePath,
   ToolAction,
 } from "~/typeDefs";
+import { capitalize, getEntityGroupDisplay } from "~/utils";
+
+import ConfirmToolActionModal from "./ConfirmToolActionModal";
+import ProgressBar from "./ProgressBar";
 
 interface ConnectStateProps {
   pushAllChangesFetchStatus: FetchStatus;
@@ -42,14 +44,11 @@ interface ConnectDispatchProps {
 
 type Props = ConnectStateProps & ConnectDispatchProps;
 
-export const PerformToolActionStepComponent: React.FC<Props> = props => {
-  const [isConfirmModalOpen, setIsConfirmModalOpen] = React.useState<boolean>(
-    false,
-  );
-  const [
-    totalCountsByEntityGroup,
-    setTotalCountsByEntityGroup,
-  ] = React.useState<CountsByEntityGroupModel>({} as CountsByEntityGroupModel);
+export const PerformToolActionStepComponent: React.FC<Props> = (props) => {
+  const [isConfirmModalOpen, setIsConfirmModalOpen] =
+    React.useState<boolean>(false);
+  const [totalCountsByEntityGroup, setTotalCountsByEntityGroup] =
+    React.useState<CountsByEntityGroupModel>({} as CountsByEntityGroupModel);
 
   React.useEffect(() => {
     props.onResetTransferCountsByEntityGroup();
@@ -120,7 +119,7 @@ export const PerformToolActionStepComponent: React.FC<Props> = props => {
         </Note>
       </HelpDetails>
       <Flex flexDirection="column">
-        {orderedEntityGroups.map(entityGroup => (
+        {orderedEntityGroups.map((entityGroup) => (
           <ProgressBar
             key={entityGroup}
             css={{ marginTop: 0 }}

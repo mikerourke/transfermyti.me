@@ -1,7 +1,8 @@
 import cases from "jest-in-case";
-import { invalidAction } from "~/redux/__mocks__/mockStoreWithState";
+
 import * as appActions from "../appActions";
 import { appReducer, initialState } from "../appReducer";
+import { invalidAction } from "~/redux/__mocks__/mockStoreWithState";
 
 describe("within appReducer", () => {
   test("returns input state if an invalid action type is passed to the reducer", () => {
@@ -58,7 +59,7 @@ describe("within appReducer", () => {
 
   cases(
     "sets the correct error message when showFetchErrorNotification is dispatched",
-    options => {
+    (options) => {
       const result = appReducer(
         initialState,
         appActions.showErrorNotification(options.payload),

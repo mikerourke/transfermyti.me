@@ -1,7 +1,9 @@
 import { SagaIterator } from "@redux-saga/types";
+
 import qs from "qs";
 import * as R from "ramda";
 import { call, delay } from "redux-saga/effects";
+
 import {
   CLOCKIFY_API_DELAY,
   CLOCKIFY_API_PAGE_SIZE,
@@ -114,8 +116,9 @@ async function fetchWithRetries<TResponse>(
  * tool name.
  */
 export function getApiDelayForTool(toolName: ToolName): number {
-  return {
-    [ToolName.Clockify]: CLOCKIFY_API_DELAY,
-    [ToolName.Toggl]: TOGGL_API_DELAY,
-  }[toolName];
+  if (toolName === ToolName.Clockify) {
+    return CLOCKIFY_API_DELAY;
+  }
+
+  return TOGGL_API_DELAY;
 }

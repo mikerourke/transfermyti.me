@@ -1,7 +1,8 @@
 import React from "react";
+
+import WorkspaceSelect from "../WorkspaceSelect";
 import { render, RenderResult, fireEvent } from "~/jestHelpers";
 import state from "~/redux/__fixtures__/state";
-import WorkspaceSelect from "../WorkspaceSelect";
 
 const setup = (
   propOverrides: any = {},

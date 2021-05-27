@@ -1,4 +1,5 @@
 import { createAction, createAsyncAction } from "typesafe-actions";
+
 import {
   EntityGroup,
   FetchStatus,
@@ -24,17 +25,17 @@ export const fetchAllEntities = createAsyncAction(
   "@allEntities/FETCH_ALL_ENTITIES_FAILURE",
 )<void, void, void>();
 
-export const updateToolAction = createAction("@allEntities/UPDATE_TOOL_ACTION")<
-  ToolAction
->();
+export const updateToolAction = createAction(
+  "@allEntities/UPDATE_TOOL_ACTION",
+)<ToolAction>();
 
 export const updateToolNameByMapping = createAction(
   "@allEntities/UPDATE_TOOL_NAME_BY_MAPPING",
 )<ToolNameByMappingModel>();
 
-export const flushAllEntities = createAction("@allEntities/FLUSH_ALL_ENTITIES")<
-  void
->();
+export const flushAllEntities = createAction(
+  "@allEntities/FLUSH_ALL_ENTITIES",
+)<void>();
 
 export const flipIfExistsInTargetShown = createAction(
   "@allEntities/FLIP_IF_EXISTS_IN_TARGET_SHOWN",

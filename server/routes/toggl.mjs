@@ -1,14 +1,20 @@
-const path = require("path");
-const fse = require("fs-extra");
-const { isSameYear } = require("date-fns");
-const { take, uniqueId } = require("lodash");
+import path from "path";
+import { fileURLToPath, URL } from "url";
 
-const dbPath = path.resolve(__dirname, "..", "db", "toggl.json");
+import { isSameYear } from "date-fns";
+import fse from "fs-extra";
+import { take, uniqueId } from "lodash-es";
+
+const dbPath = fileURLToPath(
+  new URL(path.join("..", "db", "toggl.json"), import.meta.url),
+);
+
 const db = fse.readJsonSync(dbPath);
 
+// noinspection EqualityComparisonWithCoercionJS
 const isEmpty = process.env.LOCAL_API_TOGGL_EMPTY == "true";
 
-function assignTogglRoutes(router) {
+export function assignTogglRoutes(router) {
   router
     .get("/me", (req, res) => {
       const [firstUser] = db.users;
@@ -154,5 +160,3 @@ function assignTogglRoutes(router) {
     .delete("/groups/:userGroupId", (req, res) => res.status(200).send({}))
     .delete("/project_users/:userId", (req, res) => res.status(200).send());
 }
-
-module.exports = { assignTogglRoutes };
