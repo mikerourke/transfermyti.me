@@ -15,7 +15,7 @@ export const CLOCKIFY_API_PAGE_SIZE = 100;
 // delay to accommodate for differences between the working API and stable API:
 export const CLOCKIFY_API_DELAY = IS_USING_LOCAL_API ? 0 : 1_000 / 8;
 
-export const TOGGL_API_URL = "https://www.toggl.com/api/v8";
-export const TOGGL_REPORTS_URL = "https://toggl.com/reports/api/v2";
+export const TOGGL_API_URL = "https://api.track.toggl.com/api/v8";
+export const TOGGL_REPORTS_URL = "https://api.track.toggl.com/reports/api/v2";
 // Delay time for requests to ensure rate limits are not exceeded:
 export const TOGGL_API_DELAY = IS_USING_LOCAL_API ? 0 : 1_000 / 4;
