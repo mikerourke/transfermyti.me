@@ -40,8 +40,9 @@ export function* validateCredentialsSaga(): SagaIterator {
       const clockifyUser = yield call(fetchObject, "/clockify/api/user");
       credentialsByMapping[clockifyMapping].email = clockifyUser.email;
       credentialsByMapping[clockifyMapping].userId = clockifyUser.id;
-    } catch (err) {
+    } catch {
       validationErrorsByMapping[clockifyMapping] = "Invalid API key";
+
       hasValidationErrors = true;
     }
   }
@@ -58,8 +59,9 @@ export function* validateCredentialsSaga(): SagaIterator {
         data?.id,
         null,
       );
-    } catch (err) {
+    } catch {
       validationErrorsByMapping[togglMapping] = "Invalid API key";
+
       hasValidationErrors = true;
     }
   }

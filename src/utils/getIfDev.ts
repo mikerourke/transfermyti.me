@@ -11,7 +11,7 @@ export function getIfDev(): boolean {
     }
 
     return nodeEnv.toString() === "development";
-  } catch (err) {
+  } catch {
     return false;
   }
 }

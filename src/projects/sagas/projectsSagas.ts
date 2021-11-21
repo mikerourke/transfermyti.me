@@ -116,7 +116,7 @@ export function* createProjectsSaga(): SagaIterator {
     );
 
     yield put(projectActions.createProjects.success(projectsByIdByMapping));
-  } catch (err) {
+  } catch (err: AnyValid) {
     yield put(showErrorNotification(err));
     yield put(projectActions.createProjects.failure());
   }
@@ -139,7 +139,7 @@ export function* deleteProjectsSaga(): SagaIterator {
     yield call(deleteSagaByToolName, sourceProjects);
 
     yield put(projectActions.deleteProjects.success());
-  } catch (err) {
+  } catch (err: AnyValid) {
     yield put(showErrorNotification(err));
     yield put(projectActions.deleteProjects.failure());
   }
@@ -178,7 +178,7 @@ export function* fetchProjectsSaga(): SagaIterator {
     }
 
     yield put(projectActions.fetchProjects.success(projectsByIdByMapping));
-  } catch (err) {
+  } catch (err: AnyValid) {
     yield put(showErrorNotification(err));
     yield put(projectActions.fetchProjects.failure());
   }

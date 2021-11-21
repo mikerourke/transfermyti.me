@@ -44,7 +44,7 @@ export function* createUserGroupsSaga(): SagaIterator {
     yield put(
       userGroupsActions.createUserGroups.success(userGroupsByIdByMapping),
     );
-  } catch (err) {
+  } catch (err: AnyValid) {
     yield put(showErrorNotification(err));
     yield put(userGroupsActions.createUserGroups.failure());
   }
@@ -67,7 +67,7 @@ export function* deleteUserGroupsSaga(): SagaIterator {
     yield call(deleteSagaByToolName, sourceUserGroups);
 
     yield put(userGroupsActions.deleteUserGroups.success());
-  } catch (err) {
+  } catch (err: AnyValid) {
     yield put(showErrorNotification(err));
     yield put(userGroupsActions.deleteUserGroups.failure());
   }
@@ -108,7 +108,7 @@ export function* fetchUserGroupsSaga(): SagaIterator {
     yield put(
       userGroupsActions.fetchUserGroups.success(userGroupsByIdByMapping),
     );
-  } catch (err) {
+  } catch (err: AnyValid) {
     yield put(showErrorNotification(err));
     yield put(userGroupsActions.fetchUserGroups.failure());
   }
