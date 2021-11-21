@@ -52,7 +52,7 @@ export function validStringify<TDefault>(
 
   try {
     return value.toString() as unknown as TDefault;
-  } catch (err) {
+  } catch {
     return defaultIfNil;
   }
 }

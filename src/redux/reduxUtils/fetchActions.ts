@@ -94,7 +94,7 @@ async function fetchWithRetries<TResponse>(
 ): Promise<TResponse> {
   try {
     return await fetch(endpoint, fetchOptions as RequestInit);
-  } catch (err) {
+  } catch (err: AnyValid) {
     if (err.status === 429) {
       if (attempt <= 0) {
         throw new Error("Maximum API request attempts reached");

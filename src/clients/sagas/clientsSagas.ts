@@ -42,7 +42,7 @@ export function* createClientsSaga(): SagaIterator {
     );
 
     yield put(clientsActions.createClients.success(clientsByIdByMapping));
-  } catch (err) {
+  } catch (err: AnyValid) {
     yield put(showErrorNotification(err));
     yield put(clientsActions.createClients.failure());
   }
@@ -65,7 +65,7 @@ export function* deleteClientsSaga(): SagaIterator {
     yield call(deleteSagaByToolName, sourceClients);
 
     yield put(clientsActions.deleteClients.success());
-  } catch (err) {
+  } catch (err: AnyValid) {
     yield put(showErrorNotification(err));
     yield put(clientsActions.deleteClients.failure());
   }
@@ -104,7 +104,7 @@ export function* fetchClientsSaga(): SagaIterator {
     }
 
     yield put(clientsActions.fetchClients.success(clientsByIdByMapping));
-  } catch (err) {
+  } catch (err: AnyValid) {
     yield put(showErrorNotification(err));
     yield put(clientsActions.fetchClients.failure());
   }

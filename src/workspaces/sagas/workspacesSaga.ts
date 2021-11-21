@@ -51,7 +51,7 @@ function* fetchWorkspacesSaga(): SagaIterator {
     yield put(
       workspacesActions.fetchWorkspaces.success(workspaceByIdByMapping),
     );
-  } catch (err) {
+  } catch (err: AnyValid) {
     yield put(showErrorNotification(err));
     yield put(workspacesActions.fetchWorkspaces.failure());
   }

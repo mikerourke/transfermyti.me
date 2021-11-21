@@ -124,7 +124,7 @@ export function* createTasksSaga(): SagaIterator {
     );
 
     yield put(tasksActions.createTasks.success(tasksByIdByMapping));
-  } catch (err) {
+  } catch (err: AnyValid) {
     yield put(showErrorNotification(err));
     yield put(tasksActions.createTasks.failure());
   }
@@ -147,7 +147,7 @@ export function* deleteTasksSaga(): SagaIterator {
     yield call(deleteSagaByToolName, sourceTasks);
 
     yield put(tasksActions.deleteTasks.success());
-  } catch (err) {
+  } catch (err: AnyValid) {
     yield put(showErrorNotification(err));
     yield put(tasksActions.deleteTasks.failure());
   }
@@ -186,7 +186,7 @@ export function* fetchTasksSaga(): SagaIterator {
     }
 
     yield put(tasksActions.fetchTasks.success(tasksByIdByMapping));
-  } catch (err) {
+  } catch (err: AnyValid) {
     yield put(showErrorNotification(err));
     yield put(tasksActions.fetchTasks.failure());
   }

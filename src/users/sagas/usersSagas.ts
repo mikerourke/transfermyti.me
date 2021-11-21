@@ -41,7 +41,7 @@ export function* createUsersSaga(): SagaIterator {
     // We're calling the fetch function here because "creating" users on the
     // target only _invites_ them to the workspace.
     yield call(fetchUsersSaga);
-  } catch (err) {
+  } catch (err: AnyValid) {
     yield put(showErrorNotification(err));
     yield put(usersActions.createUsers.failure());
   }
@@ -64,7 +64,7 @@ export function* deleteUsersSaga(): SagaIterator {
     yield call(deleteSagaByToolName, sourceUsers);
 
     yield put(usersActions.deleteUsers.success());
-  } catch (err) {
+  } catch (err: AnyValid) {
     yield put(showErrorNotification(err));
     yield put(usersActions.deleteUsers.failure());
   }
@@ -102,7 +102,7 @@ export function* fetchUsersSaga(): SagaIterator {
     }
 
     yield put(usersActions.fetchUsers.success(usersByIdByMapping));
-  } catch (err) {
+  } catch (err: AnyValid) {
     yield put(showErrorNotification(err));
     yield put(usersActions.fetchUsers.failure());
   }

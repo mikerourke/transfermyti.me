@@ -42,7 +42,7 @@ export function* createTagsSaga(): SagaIterator {
     );
 
     yield put(tagsActions.createTags.success(tagsByIdByMapping));
-  } catch (err) {
+  } catch (err: AnyValid) {
     yield put(showErrorNotification(err));
     yield put(tagsActions.createTags.failure());
   }
@@ -65,7 +65,7 @@ export function* deleteTagsSaga(): SagaIterator {
     yield call(deleteSagaByToolName, sourceTags);
 
     yield put(tagsActions.deleteTags.success());
-  } catch (err) {
+  } catch (err: AnyValid) {
     yield put(showErrorNotification(err));
     yield put(tagsActions.deleteTags.failure());
   }
@@ -104,7 +104,7 @@ export function* fetchTagsSaga(): SagaIterator {
     }
 
     yield put(tagsActions.fetchTags.success(tagsByIdByMapping));
-  } catch (err) {
+  } catch (err: AnyValid) {
     yield put(showErrorNotification(err));
     yield put(tagsActions.fetchTags.failure());
   }

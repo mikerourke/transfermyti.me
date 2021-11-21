@@ -56,7 +56,7 @@ export function* createTimeEntriesSaga(): SagaIterator {
     yield put(
       timeEntriesActions.createTimeEntries.success(timeEntriesByIdByMapping),
     );
-  } catch (err) {
+  } catch (err: AnyValid) {
     yield put(showErrorNotification(err));
     yield put(timeEntriesActions.createTimeEntries.failure());
   }
@@ -79,7 +79,7 @@ export function* deleteTimeEntriesSaga(): SagaIterator {
     yield call(deleteSagaByToolName, sourceTimeEntries);
 
     yield put(timeEntriesActions.deleteTimeEntries.success());
-  } catch (err) {
+  } catch (err: AnyValid) {
     yield put(showErrorNotification(err));
     yield put(timeEntriesActions.deleteTimeEntries.failure());
   }
@@ -123,7 +123,7 @@ export function* fetchTimeEntriesSaga(): SagaIterator {
     yield put(
       timeEntriesActions.fetchTimeEntries.success(timeEntriesByIdByMapping),
     );
-  } catch (err) {
+  } catch (err: AnyValid) {
     yield put(showErrorNotification(err));
     yield put(timeEntriesActions.fetchTimeEntries.failure());
   }

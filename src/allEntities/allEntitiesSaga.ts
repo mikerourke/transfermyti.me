@@ -68,7 +68,7 @@ function* createAllEntitiesSaga(): SagaIterator {
     yield call(timeEntriesSagas.createTimeEntriesSaga);
 
     yield put(allEntitiesActions.createAllEntities.success());
-  } catch (err) {
+  } catch (err: AnyValid) {
     yield put(allEntitiesActions.createAllEntities.failure());
   }
 }
@@ -109,7 +109,7 @@ function* deleteAllEntitiesSaga(): SagaIterator {
     // yield call(usersSagas.createUsersSaga);
 
     yield put(allEntitiesActions.deleteAllEntities.success());
-  } catch (err) {
+  } catch (err: AnyValid) {
     yield put(allEntitiesActions.deleteAllEntities.failure());
   }
 }
@@ -152,7 +152,7 @@ function* fetchAllEntitiesSaga(): SagaIterator {
     yield call(timeEntriesSagas.fetchTimeEntriesSaga);
 
     yield put(allEntitiesActions.fetchAllEntities.success());
-  } catch (err) {
+  } catch (err: AnyValid) {
     yield put(allEntitiesActions.fetchAllEntities.failure());
   }
 }
