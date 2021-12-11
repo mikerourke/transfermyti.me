@@ -22,7 +22,7 @@ module.exports = {
         extensions: [".js", ".jsx", ".ts", ".tsx"],
       },
     },
-    "import/core-modules": ["@redux-saga/types", "reselect"],
+    "import/core-modules": ["reselect"],
   },
   env: {
     es6: true,

@@ -1,5 +1,4 @@
-import { SagaIterator } from "@redux-saga/types";
-
+import type { SagaIterator } from "redux-saga";
 import { all, takeEvery } from "redux-saga/effects";
 
 import {

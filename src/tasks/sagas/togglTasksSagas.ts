@@ -1,6 +1,5 @@
-import { SagaIterator } from "@redux-saga/types";
-
 import * as R from "ramda";
+import type { SagaIterator } from "redux-saga";
 import { call, select } from "redux-saga/effects";
 
 import { projectIdToLinkedIdSelector } from "~/projects/projectsSelectors";

@@ -1,6 +1,5 @@
-import { SagaIterator } from "@redux-saga/types";
-
 import * as R from "ramda";
+import type { SagaIterator } from "redux-saga";
 import { call, delay, select } from "redux-saga/effects";
 
 import { clientIdToLinkedIdSelector } from "~/clients/clientsSelectors";
@@ -113,6 +112,20 @@ function* createClockifyProject(
  */
 function* deleteClockifyProject(sourceProject: ProjectModel): SagaIterator {
   const { workspaceId, id } = sourceProject;
+
+  // Need to set a project to "archived" before it can be deleted:
+  yield call(
+    reduxUtils.fetchObject,
+    `/clockify/api/workspaces/${workspaceId}/projects/${id}`,
+    {
+      method: "PUT",
+      body: {
+        ...sourceProject,
+        archived: true,
+      },
+    },
+  );
+
   yield call(
     reduxUtils.fetchObject,
     `/clockify/api/workspaces/${workspaceId}/projects/${id}`,
