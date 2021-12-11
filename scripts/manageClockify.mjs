@@ -2,15 +2,13 @@ import path from "path";
 import qs from "querystring";
 import { fileURLToPath, URL } from "url";
 
-import chalk from "chalk";
+import { cyan, green, magenta, yellow } from "picocolors";
 import fse from "fs-extra";
 import { flatten, isNil, set } from "lodash-es";
 import fetch from "node-fetch";
 import PromiseThrottle from "promise-throttle";
 import yargs from "yargs";
 import { hideBin } from "yargs/helpers";
-
-const { cyan, green, magenta, yellow } = chalk;
 
 const httpEnvPath = fileURLToPath(
   new URL(path.join("..", "http-client.private.env.json"), import.meta.url),
