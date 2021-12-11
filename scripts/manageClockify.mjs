@@ -2,10 +2,10 @@ import path from "path";
 import qs from "querystring";
 import { fileURLToPath, URL } from "url";
 
-import { cyan, green, magenta, yellow } from "picocolors";
 import fse from "fs-extra";
 import { flatten, isNil, set } from "lodash-es";
 import fetch from "node-fetch";
+import { cyan, green, magenta, yellow } from "picocolors";
 import PromiseThrottle from "promise-throttle";
 import yargs from "yargs";
 import { hideBin } from "yargs/helpers";

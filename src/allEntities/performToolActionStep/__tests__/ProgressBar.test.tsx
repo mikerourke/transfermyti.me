@@ -34,9 +34,6 @@ describe("the <ProgressBar> component", () => {
   test("uses 0% for width percentage if percentage is NaN", () => {
     const { wrapper } = setup({ completedCount: NaN, totalCount: 1 });
 
-    expect(wrapper.getByTestId("progress-bar-filler")).toHaveStyleRule(
-      "width",
-      "0%",
-    );
+    expect(wrapper.getByTestId("progress-bar-filler")).toHaveStyle("width: 0%");
   });
 });

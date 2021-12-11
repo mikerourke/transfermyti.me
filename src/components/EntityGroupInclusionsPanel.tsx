@@ -67,7 +67,7 @@ export const EntityGroupInclusionsPanelComponent: React.FC<Props> = ({
   let sortedTableData = tableData;
   try {
     const sortByName = R.sortBy<AnyFixMe>(
-      R.compose(R.toLower, R.prop<AnyFixMe>("name")),
+      R.compose(R.toLower, R.prop<AnyFixMe, AnyFixMe>("name")),
     );
     sortedTableData = sortByName(tableData);
   } catch {
