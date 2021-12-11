@@ -112,6 +112,20 @@ function* createClockifyProject(
  */
 function* deleteClockifyProject(sourceProject: ProjectModel): SagaIterator {
   const { workspaceId, id } = sourceProject;
+
+  // Need to set a project to "archived" before it can be deleted:
+  yield call(
+    reduxUtils.fetchObject,
+    `/clockify/api/workspaces/${workspaceId}/projects/${id}`,
+    {
+      method: "PUT",
+      body: {
+        ...sourceProject,
+        archived: true,
+      },
+    },
+  );
+
   yield call(
     reduxUtils.fetchObject,
     `/clockify/api/workspaces/${workspaceId}/projects/${id}`,
