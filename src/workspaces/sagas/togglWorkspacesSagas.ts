@@ -1,5 +1,4 @@
-import { SagaIterator } from "@redux-saga/types";
-
+import type { SagaIterator } from "redux-saga";
 import { call } from "redux-saga/effects";
 
 import { fetchArray } from "~/redux/reduxUtils";

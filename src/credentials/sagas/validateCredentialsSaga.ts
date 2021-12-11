@@ -1,5 +1,4 @@
-import { SagaIterator } from "@redux-saga/types";
-
+import type { SagaIterator } from "redux-saga";
 import { call, put, select } from "redux-saga/effects";
 
 import { mappingByToolNameSelector } from "~/allEntities/allEntitiesSelectors";

@@ -1,11 +1,10 @@
-import { SagaIterator } from "@redux-saga/types";
-
 import differenceInSeconds from "date-fns/differenceInSeconds";
 import endOfYear from "date-fns/endOfYear";
 import format from "date-fns/format";
 import startOfYear from "date-fns/startOfYear";
 import qs from "qs";
 import * as R from "ramda";
+import type { SagaIterator } from "redux-saga";
 import { call, delay, select } from "redux-saga/effects";
 
 import { clientIdsByNameSelectorFactory } from "~/clients/clientsSelectors";

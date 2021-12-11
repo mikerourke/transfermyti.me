@@ -1,7 +1,6 @@
-import { SagaIterator } from "@redux-saga/types";
-
 import qs from "qs";
 import * as R from "ramda";
+import type { SagaIterator } from "redux-saga";
 import { call, delay } from "redux-saga/effects";
 
 import {
@@ -34,6 +33,7 @@ export function* fetchPaginatedFromClockify<TEntity>(
       ...queryParams,
     });
     const endpoint = `${apiUrl}?${query}`;
+
     const entityRecords: TEntity[] = yield call(fetchArray, endpoint);
     allEntityRecords.push(...entityRecords);
 
@@ -57,6 +57,7 @@ export function* fetchArray<TResponse>(
   fetchOptions: unknown = {},
 ): SagaIterator<TResponse> {
   const response = yield call(fetchWithRetries, endpoint, fetchOptions);
+
   return R.isNil(response) ? [] : response;
 }
 
@@ -78,6 +79,7 @@ export function* fetchObject<TResponse>(
   fetchOptions: unknown = {},
 ): SagaIterator<TResponse> {
   const response = yield call(fetchWithRetries, endpoint, fetchOptions);
+
   return R.isNil(response) ? {} : response;
 }
 
@@ -102,8 +104,9 @@ async function fetchWithRetries<TResponse>(
 
       // Most API services allow at least 1 request per second. If we encounter
       // a tool that doesn't adhere to this standard, we may have to make this
-      // tool-specific. Just to hedge my bets, I'm using a 3 second delay:
+      // tool-specific. Just to hedge my bets, I'm using a 3-second delay:
       await delay(3_000);
+
       return await fetchWithRetries(endpoint, fetchOptions, attempt - 1);
     } else {
       throw err;

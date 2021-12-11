@@ -1,5 +1,4 @@
-import { SagaIterator } from "@redux-saga/types";
-
+import type { SagaIterator } from "redux-saga";
 import { call, delay, put, select } from "redux-saga/effects";
 
 import { incrementEntityGroupTransferCompletedCount } from "~/allEntities/allEntitiesActions";

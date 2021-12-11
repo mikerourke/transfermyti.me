@@ -1,6 +1,5 @@
-import { SagaIterator } from "@redux-saga/types";
-
 import * as R from "ramda";
+import type { SagaIterator } from "redux-saga";
 import { all, call, put, select, takeEvery } from "redux-saga/effects";
 
 import {
