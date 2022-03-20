@@ -1,9 +1,10 @@
 import React from "react";
 
-import InclusionsTableBody from "../InclusionsTableBody";
-import { clientsForInclusionsTableSelector } from "~/clients/clientsSelectors";
 import { render, RenderResult } from "~/jestHelpers";
+import { clientsForInclusionsTableSelector } from "~/modules/clients/clientsSelectors";
 import { state } from "~/redux/__mocks__/mockStoreWithState";
+
+import InclusionsTableBody from "../InclusionsTableBody";
 
 const setup = (
   propOverrides: any = {},

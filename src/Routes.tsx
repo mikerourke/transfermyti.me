@@ -4,13 +4,13 @@ import { History } from "history";
 import React from "react";
 import { Redirect, Route, Switch } from "react-router";
 
-import PerformToolActionStep from "~/allEntities/performToolActionStep/PerformToolActionStep";
-import PickToolActionStep from "~/allEntities/pickToolActionStep/PickToolActionStep";
-import SelectInclusionsStep from "~/allEntities/selectInclusionsStep/SelectInclusionsStep";
-import ToolActionSuccess from "~/allEntities/toolActionSuccess/ToolActionSuccess";
-import AppRoot from "~/app/appRoot/AppRoot";
-import EnterApiKeysStep from "~/credentials/enterApiKeysStep/EnterApiKeysStep";
-import SelectSourceWorkspacesStep from "~/workspaces/selectSourceWorkspacesStep/SelectSourceWorkspacesStep";
+import AppRoot from "~/layout/AppRoot";
+import EnterApiKeysStep from "~/pages/enterApiKeysStep/EnterApiKeysStep";
+import PerformToolActionStep from "~/pages/performToolActionStep/PerformToolActionStep";
+import PickToolActionStep from "~/pages/pickToolActionStep/PickToolActionStep";
+import SelectInclusionsStep from "~/pages/selectInclusionsStep/SelectInclusionsStep";
+import SelectSourceWorkspacesStep from "~/pages/selectSourceWorkspacesStep/SelectSourceWorkspacesStep";
+import ToolActionSuccess from "~/pages/toolActionSuccess/ToolActionSuccess";
 
 import { RoutePath } from "~/./typeDefs";
 

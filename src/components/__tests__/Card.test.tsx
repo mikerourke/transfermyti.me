@@ -1,7 +1,8 @@
 import React from "react";
 
-import Card from "../Card";
 import { render, RenderResult } from "~/jestHelpers";
+
+import Card from "../Card";
 
 const setup = (
   propOverrides: any = {},

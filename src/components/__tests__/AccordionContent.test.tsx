@@ -1,7 +1,8 @@
 import React from "react";
 
-import AccordionContent from "../AccordionContent";
 import { render, RenderResult } from "~/jestHelpers";
+
+import AccordionContent from "../AccordionContent";
 
 const setup = (
   propOverrides: any = {},

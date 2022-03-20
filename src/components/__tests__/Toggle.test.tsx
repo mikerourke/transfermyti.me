@@ -1,7 +1,8 @@
 import React from "react";
 
-import Toggle from "../Toggle";
 import { fireEvent, render, RenderResult } from "~/jestHelpers";
+
+import Toggle from "../Toggle";
 
 const setup = (
   propOverrides: any = {},

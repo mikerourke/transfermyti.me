@@ -2,8 +2,9 @@ import Color from "color";
 import cases from "jest-in-case";
 import React from "react";
 
-import Button from "../Button";
 import { fireEvent, render, RenderResult, theme } from "~/jestHelpers";
+
+import Button from "../Button";
 
 const setup = (
   propOverrides: any = {},

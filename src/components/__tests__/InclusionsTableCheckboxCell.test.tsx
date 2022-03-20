@@ -1,8 +1,9 @@
 import cases from "jest-in-case";
 import React from "react";
 
-import InclusionsTableCheckboxCell from "../InclusionsTableCheckboxCell";
 import { render, RenderResult, fireEvent } from "~/jestHelpers";
+
+import InclusionsTableCheckboxCell from "../InclusionsTableCheckboxCell";
 
 const TEST_ENTITY_RECORD = {
   id: "testEntity",

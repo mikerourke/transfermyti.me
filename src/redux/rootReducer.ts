@@ -4,29 +4,32 @@ import { combineReducers, Reducer } from "redux";
 import {
   allEntitiesReducer,
   AllEntitiesState,
-} from "~/allEntities/allEntitiesReducer";
-import { appReducer, AppState } from "~/app/appReducer";
-import { clientsReducer, ClientsState } from "~/clients/clientsReducer";
+} from "~/modules/allEntities/allEntitiesReducer";
+import { appReducer, AppState } from "~/modules/app/appReducer";
+import { clientsReducer, ClientsState } from "~/modules/clients/clientsReducer";
 import {
   credentialsReducer,
   CredentialsState,
-} from "~/credentials/credentialsReducer";
-import { projectsReducer, ProjectsState } from "~/projects/projectsReducer";
-import { tagsReducer, TagsState } from "~/tags/tagsReducer";
-import { tasksReducer, TasksState } from "~/tasks/tasksReducer";
+} from "~/modules/credentials/credentialsReducer";
+import {
+  projectsReducer,
+  ProjectsState,
+} from "~/modules/projects/projectsReducer";
+import { tagsReducer, TagsState } from "~/modules/tags/tagsReducer";
+import { tasksReducer, TasksState } from "~/modules/tasks/tasksReducer";
 import {
   timeEntriesReducer,
   TimeEntriesState,
-} from "~/timeEntries/timeEntriesReducer";
+} from "~/modules/timeEntries/timeEntriesReducer";
 import {
   userGroupsReducer,
   UserGroupsState,
-} from "~/userGroups/userGroupsReducer";
-import { usersReducer, UsersState } from "~/users/usersReducer";
+} from "~/modules/userGroups/userGroupsReducer";
+import { usersReducer, UsersState } from "~/modules/users/usersReducer";
 import {
   workspacesReducer,
   WorkspacesState,
-} from "~/workspaces/workspacesReducer";
+} from "~/modules/workspaces/workspacesReducer";
 
 export type RouterReducer = Reducer<RouterState>;
 

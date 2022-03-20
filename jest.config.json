@@ -23,7 +23,6 @@
     "userGroupsTypes.ts",
     "usersTypes.ts",
     "workspacesTypes.ts",
-    "utils/index.ts",
     "components/index.tsx"
   ],
   "coverageReporters": ["lcov"],

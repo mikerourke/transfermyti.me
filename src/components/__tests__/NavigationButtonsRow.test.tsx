@@ -1,7 +1,8 @@
 import React from "react";
 
-import NavigationButtonsRow from "../NavigationButtonsRow";
 import { fireEvent, render, RenderResult } from "~/jestHelpers";
+
+import NavigationButtonsRow from "../NavigationButtonsRow";
 
 const setup = (
   propOverrides: any = {},

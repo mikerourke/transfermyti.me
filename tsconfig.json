@@ -29,16 +29,6 @@
     "target": "ES5",
     "types": ["@emotion/react", "jest"]
   },
-  "exclude": [
-    ".cache",
-    ".idea",
-    "build",
-    "coverage",
-    "dist",
-    "node_modules",
-    "public",
-    "requests",
-    "scripts",
-    "server"
-  ]
+  "include": ["src/**/*"],
+  "exclude": ["scripts", "server"]
 }
