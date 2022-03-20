@@ -3,7 +3,7 @@ import React from "react";
 import { connect } from "react-redux";
 import { PayloadActionCreator } from "typesafe-actions";
 
-import { replaceMappingWithToolNameSelector } from "~/allEntities/allEntitiesSelectors";
+import { replaceMappingWithToolNameSelector } from "~/modules/allEntities/allEntitiesSelectors";
 
 import {
   BaseEntityModel,

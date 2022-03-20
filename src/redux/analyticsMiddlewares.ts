@@ -9,12 +9,12 @@ import {
   flipIfExistsInTargetShown,
   updateToolAction,
   updateToolNameByMapping,
-} from "~/allEntities/allEntitiesActions";
+} from "~/modules/allEntities/allEntitiesActions";
 import {
   areExistsInTargetShownSelector,
   toolNameByMappingSelector,
   totalIncludedRecordsCountSelector,
-} from "~/allEntities/allEntitiesSelectors";
+} from "~/modules/allEntities/allEntitiesSelectors";
 import {
   AnalyticsEventCategory,
   ReduxAction,

@@ -2,9 +2,9 @@ import * as R from "ramda";
 import type { SagaIterator } from "redux-saga";
 import { call, delay, put, select } from "redux-saga/effects";
 
-import { incrementEntityGroupTransferCompletedCount } from "~/allEntities/allEntitiesActions";
+import { incrementEntityGroupTransferCompletedCount } from "~/modules/allEntities/allEntitiesActions";
+import { workspaceIdToLinkedIdSelector } from "~/modules/workspaces/workspacesSelectors";
 import { EntityGroup, ToolName, ValidEntity } from "~/typeDefs";
-import { workspaceIdToLinkedIdSelector } from "~/workspaces/workspacesSelectors";
 
 import { getApiDelayForTool } from "./fetchActions";
 

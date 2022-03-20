@@ -8,7 +8,7 @@ import {
   TOGGL_API_URL,
   TOGGL_REPORTS_URL,
 } from "~/constants";
-import { credentialsByToolNameSelector } from "~/credentials/credentialsSelectors";
+import { credentialsByToolNameSelector } from "~/modules/credentials/credentialsSelectors";
 import { ToolName } from "~/typeDefs";
 
 enum Context {

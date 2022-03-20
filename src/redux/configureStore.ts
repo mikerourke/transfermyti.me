@@ -4,16 +4,16 @@ import { AnyAction, applyMiddleware, compose, createStore } from "redux";
 import createSagaMiddleware from "redux-saga";
 import storage from "store";
 
-import { allEntitiesSaga } from "~/allEntities/allEntitiesSaga";
-import { appSaga } from "~/app/appSaga";
+import { appSaga } from "~/modules/app/appSaga";
 import { IS_USING_LOCAL_API, STORAGE_KEY } from "~/constants";
-import { validateCredentials } from "~/credentials/credentialsActions";
-import { initialState as initialCredentialsState } from "~/credentials/credentialsReducer";
-import { credentialsSaga } from "~/credentials/sagas/credentialsSaga";
-import { projectMonitoringSaga } from "~/projects/sagas/projectsSagas";
-import { taskMonitoringSaga } from "~/tasks/sagas/tasksSagas";
+import { allEntitiesSaga } from "~/modules/allEntities/allEntitiesSaga";
+import { validateCredentials } from "~/modules/credentials/credentialsActions";
+import { initialState as initialCredentialsState } from "~/modules/credentials/credentialsReducer";
+import { credentialsSaga } from "~/modules/credentials/sagas/credentialsSaga";
+import { projectMonitoringSaga } from "~/modules/projects/sagas/projectsSagas";
+import { taskMonitoringSaga } from "~/modules/tasks/sagas/tasksSagas";
+import { workspacesSaga } from "~/modules/workspaces/sagas/workspacesSaga";
 import { getIfDev } from "~/utils";
-import { workspacesSaga } from "~/workspaces/sagas/workspacesSaga";
 
 import { analyticsMiddleware } from "./analyticsMiddlewares";
 import { ReduxState, ReduxStore } from "./reduxTypes";

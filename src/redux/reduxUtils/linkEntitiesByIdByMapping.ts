@@ -3,6 +3,7 @@ import * as R from "ramda";
 import type { SagaIterator } from "redux-saga";
 import { call, select } from "redux-saga/effects";
 
+import { workspaceIdToLinkedIdSelector } from "~/modules/workspaces/workspacesSelectors";
 import {
   BaseEntityModel,
   EntityGroup,
@@ -12,7 +13,6 @@ import {
   TimeEntriesByIdModel,
   TimeEntryModel,
 } from "~/typeDefs";
-import { workspaceIdToLinkedIdSelector } from "~/workspaces/workspacesSelectors";
 
 enum LinkFromType {
   Source,
