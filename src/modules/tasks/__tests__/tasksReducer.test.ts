@@ -102,10 +102,7 @@ describe("within tasksReducer", () => {
       },
       TEST_TASKS_STATE,
     );
-    const result = tasksReducer(
-      updatedState,
-      tasksActions.flipIsTaskIncluded(TEST_TASK_ID),
-    );
+    const result = tasksReducer(updatedState, tasksActions.flipIsTaskIncluded(TEST_TASK_ID));
 
     expect(result.source[TEST_TASK_ID].isIncluded).toBe(true);
   });
@@ -165,10 +162,7 @@ describe("within tasksReducer", () => {
       },
       target: {},
     };
-    const result = tasksReducer(
-      updatedState,
-      tasksActions.updateAreAllTasksIncluded(true),
-    );
+    const result = tasksReducer(updatedState, tasksActions.updateAreAllTasksIncluded(true));
 
     expect(result.source["7001"].isIncluded).toEqual(true);
     expect(result.source["7001"].isIncluded).toEqual(true);

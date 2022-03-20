@@ -59,15 +59,13 @@ describe("within allEntitiesSelectors", () => {
       EntityGroup.TimeEntries,
       state,
     );
-    const result =
-      allEntitiesSelectors.entityGroupInProcessDisplaySelector(updatedState);
+    const result = allEntitiesSelectors.entityGroupInProcessDisplaySelector(updatedState);
 
     expect(result).toBe("time entries");
   });
 
   test("the includedCountsByEntityGroupSelector returns the count of entities by group", () => {
-    const result =
-      allEntitiesSelectors.includedCountsByEntityGroupSelector(state);
+    const result = allEntitiesSelectors.includedCountsByEntityGroupSelector(state);
 
     expect(result).toEqual({
       clients: 0,
@@ -81,8 +79,7 @@ describe("within allEntitiesSelectors", () => {
   });
 
   test("the totalIncludedRecordsCountSelector returns sum of included record counts", () => {
-    const result =
-      allEntitiesSelectors.totalIncludedRecordsCountSelector(state);
+    const result = allEntitiesSelectors.totalIncludedRecordsCountSelector(state);
 
     expect(result).toBe(4);
   });
@@ -103,8 +100,7 @@ describe("within allEntitiesSelectors", () => {
       { source: ToolName.Clockify, target: ToolName.Toggl },
       state,
     );
-    const result =
-      allEntitiesSelectors.toolHelpDetailsByMappingSelector(updatedState);
+    const result = allEntitiesSelectors.toolHelpDetailsByMappingSelector(updatedState);
 
     expect(result).toEqual({
       source: {
@@ -126,8 +122,7 @@ describe("within allEntitiesSelectors", () => {
       { source: ToolName.Clockify, target: ToolName.Toggl },
       state,
     );
-    const replacer =
-      allEntitiesSelectors.replaceMappingWithToolNameSelector(updatedState);
+    const replacer = allEntitiesSelectors.replaceMappingWithToolNameSelector(updatedState);
 
     test(`replaces instances of "source" and "target" with the tool display name`, () => {
       const result = replacer("Records in Source and Target");
@@ -149,8 +144,7 @@ describe("within allEntitiesSelectors", () => {
         { source: ToolName.Clockify, target: ToolName.None },
         state,
       );
-      const result =
-        allEntitiesSelectors.targetToolDisplayNameSelector(updatedState);
+      const result = allEntitiesSelectors.targetToolDisplayNameSelector(updatedState);
 
       expect(result).toBe("Clockify");
     });
@@ -161,8 +155,7 @@ describe("within allEntitiesSelectors", () => {
         { source: ToolName.Clockify, target: ToolName.Toggl },
         state,
       );
-      const result =
-        allEntitiesSelectors.targetToolDisplayNameSelector(updatedState);
+      const result = allEntitiesSelectors.targetToolDisplayNameSelector(updatedState);
 
       expect(result).toBe("Toggl");
     });
@@ -175,8 +168,7 @@ describe("within allEntitiesSelectors", () => {
         { source: ToolName.Clockify, target: ToolName.None },
         state,
       );
-      const result =
-        allEntitiesSelectors.targetToolTrackerUrlSelector(updatedState);
+      const result = allEntitiesSelectors.targetToolTrackerUrlSelector(updatedState);
 
       expect(result).toBe("https://clockify.me/tracker");
     });
@@ -187,8 +179,7 @@ describe("within allEntitiesSelectors", () => {
         { source: ToolName.Clockify, target: ToolName.Toggl },
         state,
       );
-      const result =
-        allEntitiesSelectors.targetToolTrackerUrlSelector(updatedState);
+      const result = allEntitiesSelectors.targetToolTrackerUrlSelector(updatedState);
 
       expect(result).toBe("https://toggl.com/app/timer");
     });

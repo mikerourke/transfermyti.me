@@ -102,10 +102,7 @@ describe("within usersReducer", () => {
       },
       TEST_USERS_STATE,
     );
-    const result = usersReducer(
-      updatedState,
-      usersActions.flipIsUserIncluded(TEST_USER_ID),
-    );
+    const result = usersReducer(updatedState, usersActions.flipIsUserIncluded(TEST_USER_ID));
 
     expect(result.source[TEST_USER_ID].isIncluded).toBe(true);
   });

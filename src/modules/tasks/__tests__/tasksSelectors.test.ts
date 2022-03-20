@@ -160,8 +160,7 @@ describe("within tasksSelectors", () => {
           areExistsInTargetShown: options.areExistsInTargetShown,
         },
       };
-      const result =
-        tasksSelectors.tasksForInclusionsTableSelector(updatedState);
+      const result = tasksSelectors.tasksForInclusionsTableSelector(updatedState);
 
       expect(result).toMatchSnapshot();
     },

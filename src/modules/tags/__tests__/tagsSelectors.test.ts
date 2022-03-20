@@ -175,9 +175,7 @@ describe("within tagsSelectors", () => {
   );
 
   test("the tagIdsByNameSelectorFactory matches its snapshot", () => {
-    const getTagIdsByName = tagsSelectors.tagIdsByNameBySelectorFactory(
-      ToolName.Toggl,
-    );
+    const getTagIdsByName = tagsSelectors.tagIdsByNameBySelectorFactory(ToolName.Toggl);
     const result = getTagIdsByName(TEST_STATE);
 
     expect(result).toMatchSnapshot();

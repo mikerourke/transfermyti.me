@@ -49,9 +49,7 @@ describe("within textTransforms", () => {
     cases(
       "returns the correct display based on the entityGroup arg",
       (options) => {
-        const result = textTransforms.getEntityGroupDisplay(
-          options.entityGroup,
-        );
+        const result = textTransforms.getEntityGroupDisplay(options.entityGroup);
 
         expect(result).toBe(options.expected);
       },

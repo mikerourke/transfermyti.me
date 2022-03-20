@@ -23,9 +23,7 @@ describe("within allEntitiesSaga", () => {
       .call(projectsSagas.createProjectsSaga)
       .put(allEntitiesActions.updateEntityGroupInProcess(EntityGroup.Tasks))
       .call(tasksSagas.createTasksSaga)
-      .put(
-        allEntitiesActions.updateEntityGroupInProcess(EntityGroup.TimeEntries),
-      )
+      .put(allEntitiesActions.updateEntityGroupInProcess(EntityGroup.TimeEntries))
       .call(timeEntriesSagas.createTimeEntriesSaga)
       .put(allEntitiesActions.createAllEntities.success())
       .dispatch(allEntitiesActions.createAllEntities.request())
@@ -36,9 +34,7 @@ describe("within allEntitiesSaga", () => {
     const error = new Error("error");
 
     return expectSaga(allEntitiesSaga)
-      .provide([
-        [matchers.call.fn(clientsSagas.createClientsSaga), throwError(error)],
-      ])
+      .provide([[matchers.call.fn(clientsSagas.createClientsSaga), throwError(error)]])
       .put(allEntitiesActions.createAllEntities.failure())
       .dispatch(allEntitiesActions.createAllEntities.request())
       .silentRun();
@@ -46,9 +42,7 @@ describe("within allEntitiesSaga", () => {
 
   test("the deleteAllEntitiesSaga dispatches the correct actions", () => {
     return expectSaga(allEntitiesSaga)
-      .put(
-        allEntitiesActions.updateEntityGroupInProcess(EntityGroup.TimeEntries),
-      )
+      .put(allEntitiesActions.updateEntityGroupInProcess(EntityGroup.TimeEntries))
       .call(timeEntriesSagas.deleteTimeEntriesSaga)
       .put(allEntitiesActions.updateEntityGroupInProcess(EntityGroup.Tasks))
       .call(tasksSagas.deleteTasksSaga)
@@ -67,12 +61,7 @@ describe("within allEntitiesSaga", () => {
     const error = new Error("error");
 
     return expectSaga(allEntitiesSaga)
-      .provide([
-        [
-          matchers.call.fn(timeEntriesSagas.deleteTimeEntriesSaga),
-          throwError(error),
-        ],
-      ])
+      .provide([[matchers.call.fn(timeEntriesSagas.deleteTimeEntriesSaga), throwError(error)]])
       .put(allEntitiesActions.deleteAllEntities.failure())
       .dispatch(allEntitiesActions.deleteAllEntities.request())
       .silentRun();
@@ -88,9 +77,7 @@ describe("within allEntitiesSaga", () => {
       .call(projectsSagas.fetchProjectsSaga)
       .put(allEntitiesActions.updateEntityGroupInProcess(EntityGroup.Tasks))
       .call(tasksSagas.fetchTasksSaga)
-      .put(
-        allEntitiesActions.updateEntityGroupInProcess(EntityGroup.TimeEntries),
-      )
+      .put(allEntitiesActions.updateEntityGroupInProcess(EntityGroup.TimeEntries))
       .call(timeEntriesSagas.fetchTimeEntriesSaga)
       .put(allEntitiesActions.fetchAllEntities.success())
       .dispatch(allEntitiesActions.fetchAllEntities.request())
@@ -101,9 +88,7 @@ describe("within allEntitiesSaga", () => {
     const error = new Error("error");
 
     return expectSaga(allEntitiesSaga)
-      .provide([
-        [matchers.call.fn(clientsSagas.fetchClientsSaga), throwError(error)],
-      ])
+      .provide([[matchers.call.fn(clientsSagas.fetchClientsSaga), throwError(error)]])
       .put(allEntitiesActions.fetchAllEntities.failure())
       .dispatch(allEntitiesActions.fetchAllEntities.request())
       .silentRun();

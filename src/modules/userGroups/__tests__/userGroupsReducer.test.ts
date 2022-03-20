@@ -111,10 +111,7 @@ describe("within userGroupsReducer", () => {
   });
 
   test("the deleteUserGroups.success action resets state to initial state", () => {
-    const result = userGroupsReducer(
-      state,
-      userGroupsActions.deleteUserGroups.success(),
-    );
+    const result = userGroupsReducer(state, userGroupsActions.deleteUserGroups.success());
 
     expect(result).toEqual(initialState);
   });

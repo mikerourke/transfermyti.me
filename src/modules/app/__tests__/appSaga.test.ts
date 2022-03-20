@@ -21,10 +21,7 @@ import { appSaga } from "../appSaga";
 
 describe("within appSaga", () => {
   const providers = [
-    [
-      select(toolNameByMappingSelector),
-      { source: ToolName.Toggl, target: ToolName.None },
-    ],
+    [select(toolNameByMappingSelector), { source: ToolName.Toggl, target: ToolName.None }],
     [
       select(credentialsByMappingSelector),
       {
@@ -83,9 +80,7 @@ describe("within appSaga", () => {
   test(`redirects user to PickToolAction route if both of the tool names are "none"`, () => {
     const action = getRoutePathChangeAction(RoutePath.EnterApiKeys);
     return expectSaga(appSaga)
-      .provide([
-        [select(toolNameByMappingSelector), { source: "none", target: "none" }],
-      ])
+      .provide([[select(toolNameByMappingSelector), { source: "none", target: "none" }]])
       .put(push(RoutePath.PickToolAction))
       .dispatch(action)
       .silentRun();
@@ -95,10 +90,7 @@ describe("within appSaga", () => {
     const action = getRoutePathChangeAction(RoutePath.SelectWorkspaces);
     return expectSaga(appSaga)
       .provide([
-        [
-          select(toolNameByMappingSelector),
-          { source: ToolName.Toggl, target: ToolName.None },
-        ],
+        [select(toolNameByMappingSelector), { source: ToolName.Toggl, target: ToolName.None }],
         [
           select(credentialsByMappingSelector),
           {
@@ -116,10 +108,7 @@ describe("within appSaga", () => {
     const action = getRoutePathChangeAction(RoutePath.SelectInclusions);
     return expectSaga(appSaga)
       .provide([
-        [
-          select(toolNameByMappingSelector),
-          { source: ToolName.Toggl, target: ToolName.None },
-        ],
+        [select(toolNameByMappingSelector), { source: ToolName.Toggl, target: ToolName.None }],
         [
           select(credentialsByMappingSelector),
           {
@@ -142,10 +131,7 @@ describe("within appSaga", () => {
     const action = getRoutePathChangeAction(RoutePath.ToolActionSuccess);
     return expectSaga(appSaga)
       .provide([
-        [
-          select(toolNameByMappingSelector),
-          { source: ToolName.Toggl, target: ToolName.None },
-        ],
+        [select(toolNameByMappingSelector), { source: ToolName.Toggl, target: ToolName.None }],
         [
           select(credentialsByMappingSelector),
           {
@@ -157,10 +143,7 @@ describe("within appSaga", () => {
             target: { apiKey: null, email: null, userId: null },
           },
         ],
-        [
-          select(sourceWorkspacesSelector),
-          Object.values(state.workspaces.source),
-        ],
+        [select(sourceWorkspacesSelector), Object.values(state.workspaces.source)],
         [select(totalIncludedRecordsCountSelector), 0],
       ])
       .put(push(RoutePath.SelectInclusions))

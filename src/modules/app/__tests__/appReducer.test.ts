@@ -21,14 +21,9 @@ describe("within appReducer", () => {
   test("dismissNotification action removes the notification with id = payload from state when dispatched", () => {
     const testState = {
       ...initialState,
-      notifications: [
-        { id: "ntf1", type: "info", message: "Test Error" } as const,
-      ],
+      notifications: [{ id: "ntf1", type: "info", message: "Test Error" } as const],
     };
-    const result = appReducer(
-      testState,
-      appActions.dismissNotification("ntf1"),
-    );
+    const result = appReducer(testState, appActions.dismissNotification("ntf1"));
 
     expect(result.notifications).toHaveLength(0);
   });
@@ -61,10 +56,7 @@ describe("within appReducer", () => {
   cases(
     "sets the correct error message when showFetchErrorNotification is dispatched",
     (options) => {
-      const result = appReducer(
-        initialState,
-        appActions.showErrorNotification(options.payload),
-      );
+      const result = appReducer(initialState, appActions.showErrorNotification(options.payload));
       const [firstNotification] = result.notifications;
 
       expect(firstNotification.message).toBe(options.expected);
@@ -112,8 +104,7 @@ describe("within appReducer", () => {
           statusText: "",
           url: "/api/unknown/me",
         } as Response,
-        expected:
-          "The following error occurred: Error code 400 when fetching from unknown API.",
+        expected: "The following error occurred: Error code 400 when fetching from unknown API.",
       },
     ],
   );

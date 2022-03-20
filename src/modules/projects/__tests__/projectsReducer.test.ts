@@ -181,10 +181,7 @@ describe("within projectsReducer", () => {
   });
 
   test("the deleteProjects.success action resets state to initial state", () => {
-    const result = projectsReducer(
-      state,
-      projectsActions.deleteProjects.success(),
-    );
+    const result = projectsReducer(state, projectsActions.deleteProjects.success());
 
     expect(result).toEqual(initialState);
   });

@@ -209,8 +209,7 @@ describe("within timeEntriesSelectors", () => {
       },
       {
         name: "for the sourceTimeEntriesInActiveWorkspaceSelector",
-        selector:
-          timeEntriesSelectors.sourceTimeEntriesInActiveWorkspaceSelector,
+        selector: timeEntriesSelectors.sourceTimeEntriesInActiveWorkspaceSelector,
       },
       {
         name: "for the timeEntriesTotalCountsByTypeSelector",
@@ -231,10 +230,8 @@ describe("within timeEntriesSelectors", () => {
         isDuplicateCheckEnabled: false,
       },
     };
-    const result =
-      timeEntriesSelectors.sourceTimeEntriesForTransferSelector(updatedState);
-    const expected =
-      timeEntriesSelectors.includedSourceTimeEntriesSelector(TEST_STATE);
+    const result = timeEntriesSelectors.sourceTimeEntriesForTransferSelector(updatedState);
+    const expected = timeEntriesSelectors.includedSourceTimeEntriesSelector(TEST_STATE);
 
     expect(result).toEqual(expected);
   });
@@ -249,10 +246,7 @@ describe("within timeEntriesSelectors", () => {
           areExistsInTargetShown: options.areExistsInTargetShown,
         },
       };
-      const result =
-        timeEntriesSelectors.timeEntriesForInclusionsTableSelector(
-          updatedState,
-        );
+      const result = timeEntriesSelectors.timeEntriesForInclusionsTableSelector(updatedState);
 
       expect(result).toMatchSnapshot();
     },
@@ -276,15 +270,13 @@ describe("within timeEntriesSelectors", () => {
         isDuplicateCheckEnabled: false,
       },
     };
-    const result =
-      timeEntriesSelectors.timeEntriesForInclusionsTableSelector(updatedState);
+    const result = timeEntriesSelectors.timeEntriesForInclusionsTableSelector(updatedState);
 
     expect(result).toMatchSnapshot();
   });
 
   test("the sourceTimeEntryCountByIdFieldSelectorFactory matches its snapshot", () => {
-    const getCounts =
-      timeEntriesSelectors.sourceTimeEntryCountByIdFieldSelectorFactory("6001");
+    const getCounts = timeEntriesSelectors.sourceTimeEntryCountByIdFieldSelectorFactory("6001");
     const result = getCounts(TEST_STATE);
 
     expect(result).toMatchSnapshot();

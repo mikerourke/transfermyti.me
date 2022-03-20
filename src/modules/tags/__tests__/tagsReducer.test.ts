@@ -102,10 +102,7 @@ describe("within tagsReducer", () => {
       },
       TEST_TAGS_STATE,
     );
-    const result = tagsReducer(
-      updatedState,
-      tagsActions.flipIsTagIncluded(TEST_TAG_ID),
-    );
+    const result = tagsReducer(updatedState, tagsActions.flipIsTagIncluded(TEST_TAG_ID));
 
     expect(result.source[TEST_TAG_ID].isIncluded).toBe(true);
   });
@@ -135,10 +132,7 @@ describe("within tagsReducer", () => {
       },
       target: {},
     };
-    const result = tagsReducer(
-      updatedState,
-      tagsActions.updateAreAllTagsIncluded(true),
-    );
+    const result = tagsReducer(updatedState, tagsActions.updateAreAllTagsIncluded(true));
 
     expect(result.source["4001"].isIncluded).toEqual(true);
     expect(result.source["4002"].isIncluded).toEqual(true);

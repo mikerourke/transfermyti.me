@@ -75,9 +75,7 @@ describe("within allEntitiesReducer", () => {
       {
         name: "when the updatePushAllChangesFetchStatus action is dispatched",
         initialStatus: FetchStatus.InProcess,
-        action: allEntitiesActions.updatePushAllChangesFetchStatus(
-          FetchStatus.Pending,
-        ),
+        action: allEntitiesActions.updatePushAllChangesFetchStatus(FetchStatus.Pending),
         expectedStatus: FetchStatus.Pending,
       },
       {
@@ -123,9 +121,7 @@ describe("within allEntitiesReducer", () => {
       {
         name: "when the updateFetchAllFetchStatus action is dispatched",
         initialStatus: FetchStatus.InProcess,
-        action: allEntitiesActions.updateFetchAllFetchStatus(
-          FetchStatus.Pending,
-        ),
+        action: allEntitiesActions.updateFetchAllFetchStatus(FetchStatus.Pending),
         expectedStatus: FetchStatus.Pending,
       },
       {
@@ -184,9 +180,7 @@ describe("within allEntitiesReducer", () => {
       {
         name: "the updateEntityGroupInProcess action updates state.entityGroupInProcess",
         initialStateChange: { entityGroupInProcess: null },
-        action: allEntitiesActions.updateEntityGroupInProcess(
-          EntityGroup.Clients,
-        ),
+        action: allEntitiesActions.updateEntityGroupInProcess(EntityGroup.Clients),
         expectedStateChange: { entityGroupInProcess: EntityGroup.Clients },
       },
       {
@@ -208,9 +202,7 @@ describe("within allEntitiesReducer", () => {
         initialStateChange: {
           transferCountsByEntityGroup: { ...DEFAULT_TRANSFER_COUNTS },
         },
-        action: allEntitiesActions.incrementEntityGroupTransferCompletedCount(
-          EntityGroup.Clients,
-        ),
+        action: allEntitiesActions.incrementEntityGroupTransferCompletedCount(EntityGroup.Clients),
         expectedStateChange: {
           transferCountsByEntityGroup: {
             ...DEFAULT_TRANSFER_COUNTS,

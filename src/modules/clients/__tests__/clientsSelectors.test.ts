@@ -100,8 +100,7 @@ describe("within clientsSelectors", () => {
           areExistsInTargetShown: options.areExistsInTargetShown,
         },
       };
-      const result =
-        clientsSelectors.clientsForInclusionsTableSelector(updatedState);
+      const result = clientsSelectors.clientsForInclusionsTableSelector(updatedState);
 
       expect(result).toMatchSnapshot();
     },
@@ -118,9 +117,7 @@ describe("within clientsSelectors", () => {
   );
 
   test("the clientIdsByNameSelectorFactory matches its snapshot", () => {
-    const getClientIdsByName = clientsSelectors.clientIdsByNameSelectorFactory(
-      ToolName.Toggl,
-    );
+    const getClientIdsByName = clientsSelectors.clientIdsByNameSelectorFactory(ToolName.Toggl);
     const result = getClientIdsByName(TEST_STATE);
 
     expect(result).toMatchSnapshot();

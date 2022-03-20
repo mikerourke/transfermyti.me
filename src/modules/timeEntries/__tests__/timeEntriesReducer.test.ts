@@ -92,10 +92,7 @@ describe("within timeEntriesReducer", () => {
   );
 
   test("the flipIsDuplicateCheckEnabled action flips the isDuplicateCheckEnabled value in state", () => {
-    const result = timeEntriesReducer(
-      state,
-      timeEntriesActions.flipIsDuplicateCheckEnabled(),
-    );
+    const result = timeEntriesReducer(state, timeEntriesActions.flipIsDuplicateCheckEnabled());
 
     expect(result.isDuplicateCheckEnabled).toBe(true);
   });
@@ -178,10 +175,7 @@ describe("within timeEntriesReducer", () => {
   });
 
   test("the deleteTimeEntries.success action resets state to initial state", () => {
-    const result = timeEntriesReducer(
-      state,
-      timeEntriesActions.deleteTimeEntries.success(),
-    );
+    const result = timeEntriesReducer(state, timeEntriesActions.deleteTimeEntries.success());
 
     expect(result).toEqual(initialState);
   });

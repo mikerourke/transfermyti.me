@@ -2,9 +2,7 @@ import * as appSelectors from "../appSelectors";
 
 const state = {
   app: {
-    notifications: [
-      { id: "ntf1", type: "info", message: "Test Message" } as const,
-    ],
+    notifications: [{ id: "ntf1", type: "info", message: "Test Message" } as const],
   },
   router: {
     location: {
@@ -28,8 +26,6 @@ describe("within appSelectors", () => {
   test("the notificationsSelector returns state.app.notifications", () => {
     const result = appSelectors.notificationsSelector(state);
 
-    expect(result).toEqual([
-      { id: "ntf1", type: "info", message: "Test Message" } as const,
-    ]);
+    expect(result).toEqual([{ id: "ntf1", type: "info", message: "Test Message" } as const]);
   });
 });

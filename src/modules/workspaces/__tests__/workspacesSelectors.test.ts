@@ -122,8 +122,7 @@ describe("within workspacesSelectors", () => {
 
   describe("the firstIncludedWorkspaceIdSelector", () => {
     test("returns the ID of the first included workspace if one is present in state", () => {
-      const result =
-        workspacesSelectors.firstIncludedWorkspaceIdSelector(TEST_STATE);
+      const result = workspacesSelectors.firstIncludedWorkspaceIdSelector(TEST_STATE);
 
       expect(result).toBe("1001");
     });
@@ -141,8 +140,7 @@ describe("within workspacesSelectors", () => {
           target: TEST_STATE.workspaces.target,
         },
       };
-      const result =
-        workspacesSelectors.firstIncludedWorkspaceIdSelector(updatedState);
+      const result = workspacesSelectors.firstIncludedWorkspaceIdSelector(updatedState);
 
       expect(result).toBe("");
     });
@@ -150,8 +148,7 @@ describe("within workspacesSelectors", () => {
 
   describe("the hasDuplicateTargetWorkspacesSelector", () => {
     test("returns false if not duplicate linkedIds are present", () => {
-      const result =
-        workspacesSelectors.hasDuplicateTargetWorkspacesSelector(TEST_STATE);
+      const result = workspacesSelectors.hasDuplicateTargetWorkspacesSelector(TEST_STATE);
 
       expect(result).toBe(false);
     });
@@ -175,8 +172,7 @@ describe("within workspacesSelectors", () => {
         },
       };
 
-      const result =
-        workspacesSelectors.hasDuplicateTargetWorkspacesSelector(updatedState);
+      const result = workspacesSelectors.hasDuplicateTargetWorkspacesSelector(updatedState);
 
       expect(result).toBe(true);
     });
@@ -196,8 +192,7 @@ describe("within workspacesSelectors", () => {
         target: TEST_STATE.workspaces.target,
       },
     };
-    const result =
-      workspacesSelectors.includedWorkspaceIdsByMappingSelector(updatedState);
+    const result = workspacesSelectors.includedWorkspaceIdsByMappingSelector(updatedState);
 
     expect(result).toEqual({
       source: ["1001"],
@@ -206,8 +201,7 @@ describe("within workspacesSelectors", () => {
   });
 
   test("the sourceIncludedWorkspacesCountSelector returns the count of included source workspaces", () => {
-    const result =
-      workspacesSelectors.sourceIncludedWorkspacesCountSelector(TEST_STATE);
+    const result = workspacesSelectors.sourceIncludedWorkspacesCountSelector(TEST_STATE);
 
     expect(result).toBe(2);
   });

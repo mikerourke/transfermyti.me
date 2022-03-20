@@ -235,8 +235,7 @@ describe("within projectsSelectors", () => {
           areExistsInTargetShown: options.areExistsInTargetShown,
         },
       };
-      const result =
-        projectsSelectors.projectsForInclusionsTableSelector(updatedState);
+      const result = projectsSelectors.projectsForInclusionsTableSelector(updatedState);
 
       expect(result).toMatchSnapshot();
     },

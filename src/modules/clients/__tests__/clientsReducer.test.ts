@@ -135,20 +135,14 @@ describe("within clientsReducer", () => {
       },
       target: {},
     };
-    const result = clientsReducer(
-      updatedState,
-      clientsActions.updateAreAllClientsIncluded(true),
-    );
+    const result = clientsReducer(updatedState, clientsActions.updateAreAllClientsIncluded(true));
 
     expect(result.source["3001"].isIncluded).toEqual(true);
     expect(result.source["3002"].isIncluded).toEqual(true);
   });
 
   test("the deleteClients.success action resets state to initial state", () => {
-    const result = clientsReducer(
-      state,
-      clientsActions.deleteClients.success(),
-    );
+    const result = clientsReducer(state, clientsActions.deleteClients.success());
 
     expect(result).toEqual(initialState);
   });

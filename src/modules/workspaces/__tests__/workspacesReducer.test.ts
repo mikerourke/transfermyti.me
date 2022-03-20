@@ -225,9 +225,7 @@ describe("within workspacesReducer", () => {
 
       const result = workspacesReducer(
         updatedState,
-        workspacesActions.flipIsWorkspaceIncluded(
-          TEST_WORKSPACES_STATE.source[TEST_WORKSPACE_ID],
-        ),
+        workspacesActions.flipIsWorkspaceIncluded(TEST_WORKSPACES_STATE.source[TEST_WORKSPACE_ID]),
       );
 
       expect(result.source[TEST_WORKSPACE_ID].isIncluded).toBe(true);
