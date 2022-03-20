@@ -12,7 +12,18 @@ const httpEnvPath = fileURLToPath(
   new URL(path.join("..", "http-client.private.env.json"), import.meta.url),
 );
 
-const httpEnv = fse.readJsonSync(httpEnvPath);
+let httpEnv = {
+  development: {
+    "clockify-api-key": "",
+    "clockify-user-id": "",
+  },
+};
+
+try {
+  httpEnv = fse.readJsonSync(httpEnvPath);
+} catch {
+  // Do nothing. This is only for CI.
+}
 
 /**
  * You need to copy the http-client.private.env.example.json file in the root
