@@ -23,7 +23,7 @@ import {
   RoutePath,
   ToolAction,
 } from "~/typeDefs";
-import { capitalize, getEntityGroupDisplay } from "~/utilities";
+import { capitalize, getEntityGroupDisplay } from "~/utilities/textTransforms";
 
 import ConfirmToolActionModal from "./ConfirmToolActionModal";
 import ProgressBar from "./ProgressBar";

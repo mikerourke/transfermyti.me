@@ -12,7 +12,7 @@ import { incrementEntityGroupTransferCompletedCount } from "~/modules/allEntitie
 import { includedSourceProjectIdsSelector } from "~/modules/projects/projectsSelectors";
 import { includedSourceWorkspaceIdsSelector } from "~/modules/workspaces/workspacesSelectors";
 import { EntityGroup, ToolName, UserModel } from "~/typeDefs";
-import { validStringify } from "~/utilities";
+import { validStringify } from "~/utilities/textTransforms";
 
 interface TogglUserResponseModel {
   id: number;

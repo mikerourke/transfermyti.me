@@ -18,7 +18,7 @@ import { projectIdToLinkedIdSelector } from "~/modules/projects/projectsSelector
 import { tagIdsByNameBySelectorFactory } from "~/modules/tags/tagsSelectors";
 import { taskIdToLinkedIdSelector } from "~/modules/tasks/tasksSelectors";
 import { EntityGroup, TimeEntryModel, ToolName } from "~/typeDefs";
-import { validStringify } from "~/utilities";
+import { validStringify } from "~/utilities/textTransforms";
 
 interface TogglTotalCurrencyModel {
   currency: string | null;

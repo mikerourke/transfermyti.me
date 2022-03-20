@@ -6,7 +6,7 @@ import { deleteEntitiesForTool } from "~/entityOperations/deleteEntitiesForTool"
 import { fetchArray, fetchObject } from "~/entityOperations/fetchActions";
 import { fetchEntitiesForTool } from "~/entityOperations/fetchEntitiesForTool";
 import { EntityGroup, TagModel, ToolName } from "~/typeDefs";
-import { validStringify } from "~/utilities";
+import { validStringify } from "~/utilities/textTransforms";
 
 interface TogglTagResponseModel {
   id: number;

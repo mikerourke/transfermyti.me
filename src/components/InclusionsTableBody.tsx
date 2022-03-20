@@ -2,8 +2,7 @@ import React from "react";
 import { PayloadActionCreator } from "typesafe-actions";
 
 import { BaseEntityModel, TableViewModel } from "~/typeDefs";
-
-import { booleanToYesNo } from "~/utilities";
+import { booleanToYesNo } from "~/utilities/textTransforms";
 
 import InclusionsTableCheckboxCell from "./InclusionsTableCheckboxCell";
 import InclusionsTableRow from "./InclusionsTableRow";

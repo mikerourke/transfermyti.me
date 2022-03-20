@@ -14,7 +14,7 @@ import {
   ToolName,
   ToolNameByMappingModel,
 } from "~/typeDefs";
-import { capitalize, getEntityGroupDisplay } from "~/utilities";
+import { capitalize, getEntityGroupDisplay } from "~/utilities/textTransforms";
 
 export const areExistsInTargetShownSelector = (state: ReduxState): boolean =>
   state.allEntities.areExistsInTargetShown;

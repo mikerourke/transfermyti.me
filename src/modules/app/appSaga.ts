@@ -15,7 +15,7 @@ import { updateValidationFetchStatus } from "~/modules/credentials/credentialsAc
 import { credentialsByMappingSelector } from "~/modules/credentials/credentialsSelectors";
 import { sourceWorkspacesSelector } from "~/modules/workspaces/workspacesSelectors";
 import { FetchStatus, Mapping, RoutePath, ToolName } from "~/typeDefs";
-import { getIfDev } from "~/utilities";
+import { getIfDev } from "~/utilities/getIfDev";
 
 export function* appSaga(): SagaIterator {
   yield all([

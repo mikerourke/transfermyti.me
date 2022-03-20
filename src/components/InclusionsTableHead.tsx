@@ -1,6 +1,6 @@
 import React from "react";
 
-import { kebabCase } from "~/utilities";
+import { kebabCase } from "~/utilities/textTransforms";
 
 interface Props {
   labels: string[];

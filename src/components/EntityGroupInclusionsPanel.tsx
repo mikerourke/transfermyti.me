@@ -4,15 +4,13 @@ import { connect } from "react-redux";
 import { PayloadActionCreator } from "typesafe-actions";
 
 import { replaceMappingWithToolNameSelector } from "~/modules/allEntities/allEntitiesSelectors";
-
 import {
   BaseEntityModel,
   EntityGroup,
   ReduxState,
   TableViewModel,
 } from "~/typeDefs";
-
-import { getEntityGroupDisplay } from "~/utilities";
+import { getEntityGroupDisplay } from "~/utilities/textTransforms";
 
 import AccordionPanel from "./AccordionPanel";
 import InclusionsTable from "./InclusionsTable";
