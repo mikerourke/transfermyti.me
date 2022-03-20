@@ -3,9 +3,9 @@ import { connect } from "react-redux";
 import { TransitionGroup, Transition } from "react-transition-group";
 import { TransitionStatus } from "react-transition-group/Transition";
 
+import { styled, useTheme } from "~/components";
 import { dismissNotification } from "~/modules/app/appActions";
 import { notificationsSelector } from "~/modules/app/appSelectors";
-import { styled, useTheme } from "~/components";
 import { NotificationModel, ReduxState } from "~/typeDefs";
 
 import NotificationToast from "./NotificationToast";

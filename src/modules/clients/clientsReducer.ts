@@ -1,8 +1,8 @@
 import * as R from "ramda";
 import { ActionType, createReducer } from "typesafe-actions";
 
+import { updateAreAllRecordsIncluded } from "~/entityOperations/updateAreAllRecordsIncluded";
 import { flushAllEntities } from "~/modules/allEntities/allEntitiesActions";
-import { updateAreAllRecordsIncluded } from "~/redux/reduxUtils";
 import { ClientsByIdModel, Mapping } from "~/typeDefs";
 
 import * as clientsActions from "./clientsActions";

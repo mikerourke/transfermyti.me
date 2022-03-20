@@ -4,9 +4,9 @@ import { AnyAction, applyMiddleware, compose, createStore } from "redux";
 import createSagaMiddleware from "redux-saga";
 import storage from "store";
 
-import { appSaga } from "~/modules/app/appSaga";
 import { IS_USING_LOCAL_API, STORAGE_KEY } from "~/constants";
 import { allEntitiesSaga } from "~/modules/allEntities/allEntitiesSaga";
+import { appSaga } from "~/modules/app/appSaga";
 import { validateCredentials } from "~/modules/credentials/credentialsActions";
 import { initialState as initialCredentialsState } from "~/modules/credentials/credentialsReducer";
 import { credentialsSaga } from "~/modules/credentials/sagas/credentialsSaga";

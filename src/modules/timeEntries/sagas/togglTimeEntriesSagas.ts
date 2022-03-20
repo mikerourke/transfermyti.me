@@ -8,12 +8,15 @@ import type { SagaIterator } from "redux-saga";
 import { call, delay, select } from "redux-saga/effects";
 
 import { TOGGL_API_DELAY } from "~/constants";
+import { createEntitiesForTool } from "~/entityOperations/createEntitiesForTool";
+import { deleteEntitiesForTool } from "~/entityOperations/deleteEntitiesForTool";
+import { fetchEmpty, fetchObject } from "~/entityOperations/fetchActions";
+import { fetchEntitiesForTool } from "~/entityOperations/fetchEntitiesForTool";
 import { clientIdsByNameSelectorFactory } from "~/modules/clients/clientsSelectors";
 import { credentialsByToolNameSelector } from "~/modules/credentials/credentialsSelectors";
 import { projectIdToLinkedIdSelector } from "~/modules/projects/projectsSelectors";
 import { tagIdsByNameBySelectorFactory } from "~/modules/tags/tagsSelectors";
 import { taskIdToLinkedIdSelector } from "~/modules/tasks/tasksSelectors";
-import * as reduxUtils from "~/redux/reduxUtils";
 import { EntityGroup, TimeEntryModel, ToolName } from "~/typeDefs";
 import { validStringify } from "~/utils";
 
@@ -61,7 +64,7 @@ interface TogglTimeEntriesFetchResponseModel {
 export function* createTogglTimeEntriesSaga(
   sourceTimeEntries: TimeEntryModel[],
 ): SagaIterator<TimeEntryModel[]> {
-  return yield call(reduxUtils.createEntitiesForTool, {
+  return yield call(createEntitiesForTool, {
     toolName: ToolName.Toggl,
     sourceRecords: sourceTimeEntries,
     apiCreateFunc: createTogglTimeEntry,
@@ -74,7 +77,7 @@ export function* createTogglTimeEntriesSaga(
 export function* deleteTogglTimeEntriesSaga(
   sourceTimeEntries: TimeEntryModel[],
 ): SagaIterator {
-  yield call(reduxUtils.deleteEntitiesForTool, {
+  yield call(deleteEntitiesForTool, {
     toolName: ToolName.Toggl,
     sourceRecords: sourceTimeEntries,
     apiDeleteFunc: deleteTogglTimeEntry,
@@ -86,7 +89,7 @@ export function* deleteTogglTimeEntriesSaga(
  * transformed time entries.
  */
 export function* fetchTogglTimeEntriesSaga(): SagaIterator<TimeEntryModel[]> {
-  return yield call(reduxUtils.fetchEntitiesForTool, {
+  return yield call(fetchEntitiesForTool, {
     toolName: ToolName.Toggl,
     apiFetchFunc: fetchTogglTimeEntriesInWorkspace,
   });
@@ -128,7 +131,7 @@ function* createTogglTimeEntry(
     },
   };
 
-  yield call(reduxUtils.fetchObject, "/toggl/api/time_entries", {
+  yield call(fetchObject, "/toggl/api/time_entries", {
     method: "POST",
     body: timeEntryRequest,
   });
@@ -139,13 +142,9 @@ function* createTogglTimeEntry(
  * @see https://github.com/toggl/toggl_api_docs/blob/master/chapters/time_entries.md#delete-a-time-entry
  */
 function* deleteTogglTimeEntry(sourceTimeEntry: TimeEntryModel): SagaIterator {
-  yield call(
-    reduxUtils.fetchEmpty,
-    `/toggl/api/time_entries/${sourceTimeEntry.id}`,
-    {
-      method: "DELETE",
-    },
-  );
+  yield call(fetchEmpty, `/toggl/api/time_entries/${sourceTimeEntry.id}`, {
+    method: "DELETE",
+  });
 }
 
 /**
@@ -275,7 +274,7 @@ function* fetchTogglTimeEntriesForYearAndPage(
     page: page,
   });
 
-  return yield call(reduxUtils.fetchObject, `/toggl/reports/details?${query}`);
+  return yield call(fetchObject, `/toggl/reports/details?${query}`);
 }
 
 function transformFromResponse(

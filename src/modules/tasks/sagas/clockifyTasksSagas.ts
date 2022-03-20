@@ -3,12 +3,18 @@ import type { SagaIterator } from "redux-saga";
 import { call, delay, select } from "redux-saga/effects";
 
 import { CLOCKIFY_API_DELAY } from "~/constants";
+import { createEntitiesForTool } from "~/entityOperations/createEntitiesForTool";
+import { deleteEntitiesForTool } from "~/entityOperations/deleteEntitiesForTool";
+import {
+  fetchObject,
+  fetchPaginatedFromClockify,
+} from "~/entityOperations/fetchActions";
+import { fetchEntitiesForTool } from "~/entityOperations/fetchEntitiesForTool";
 import {
   projectIdToLinkedIdSelector,
   projectsByWorkspaceIdByToolNameSelector,
 } from "~/modules/projects/projectsSelectors";
 import { userIdToLinkedIdSelector } from "~/modules/users/usersSelectors";
-import * as reduxUtils from "~/redux/reduxUtils";
 import { EntityGroup, TaskModel, ToolName } from "~/typeDefs";
 
 type ClockifyTaskStatus = "ACTIVE" | "DONE";
@@ -29,7 +35,7 @@ export interface ClockifyTaskResponseModel {
 export function* createClockifyTasksSaga(
   sourceTasks: TaskModel[],
 ): SagaIterator<TaskModel[]> {
-  return yield call(reduxUtils.createEntitiesForTool, {
+  return yield call(createEntitiesForTool, {
     toolName: ToolName.Clockify,
     sourceRecords: sourceTasks,
     apiCreateFunc: createClockifyTask,
@@ -42,7 +48,7 @@ export function* createClockifyTasksSaga(
 export function* deleteClockifyTasksSaga(
   sourceTasks: TaskModel[],
 ): SagaIterator {
-  yield call(reduxUtils.deleteEntitiesForTool, {
+  yield call(deleteEntitiesForTool, {
     toolName: ToolName.Clockify,
     sourceRecords: sourceTasks,
     apiDeleteFunc: deleteClockifyTask,
@@ -54,7 +60,7 @@ export function* deleteClockifyTasksSaga(
  * tasks.
  */
 export function* fetchClockifyTasksSaga(): SagaIterator {
-  return yield call(reduxUtils.fetchEntitiesForTool, {
+  return yield call(fetchEntitiesForTool, {
     toolName: ToolName.Clockify,
     apiFetchFunc: fetchClockifyTasksInWorkspace,
   });
@@ -99,7 +105,7 @@ function* createClockifyTask(
   };
 
   const clockifyTask = yield call(
-    reduxUtils.fetchObject,
+    fetchObject,
     `/clockify/api/workspaces/${targetWorkspaceId}/projects/${targetProjectId}/tasks`,
     { method: "POST", body: taskRequest },
   );
@@ -114,7 +120,7 @@ function* createClockifyTask(
 function* deleteClockifyTask(sourceTask: TaskModel): SagaIterator {
   const { workspaceId, projectId, id } = sourceTask;
   yield call(
-    reduxUtils.fetchObject,
+    fetchObject,
     `/clockify/api/workspaces/${workspaceId}/projects/${projectId}/tasks/${id}`,
     { method: "DELETE" },
   );
@@ -142,7 +148,7 @@ function* fetchClockifyTasksInWorkspace(
   for (const clockifyProject of clockifyProjects) {
     const { id: projectId } = clockifyProject;
     const clockifyTasks: ClockifyTaskResponseModel[] = yield call(
-      reduxUtils.fetchPaginatedFromClockify,
+      fetchPaginatedFromClockify,
       `/clockify/api/workspaces/${workspaceId}/projects/${projectId}/tasks`,
     );
     allClockifyTasks.push(...clockifyTasks);

@@ -3,12 +3,18 @@ import type { SagaIterator } from "redux-saga";
 import { call, delay, select } from "redux-saga/effects";
 
 import { CLOCKIFY_API_DELAY } from "~/constants";
+import { createEntitiesForTool } from "~/entityOperations/createEntitiesForTool";
+import { deleteEntitiesForTool } from "~/entityOperations/deleteEntitiesForTool";
+import {
+  fetchObject,
+  fetchPaginatedFromClockify,
+} from "~/entityOperations/fetchActions";
+import { fetchEntitiesForTool } from "~/entityOperations/fetchEntitiesForTool";
 import { clientIdToLinkedIdSelector } from "~/modules/clients/clientsSelectors";
 import {
   ClockifyHourlyRateResponseModel,
   ClockifyMembershipResponseModel,
 } from "~/modules/users/sagas/clockifyUsersSagas";
-import * as reduxUtils from "~/redux/reduxUtils";
 import { EntityGroup, EstimateModel, ProjectModel, ToolName } from "~/typeDefs";
 
 export interface ClockifyProjectResponseModel {
@@ -36,7 +42,7 @@ export interface ClockifyProjectResponseModel {
 export function* createClockifyProjectsSaga(
   sourceProjects: ProjectModel[],
 ): SagaIterator<ProjectModel[]> {
-  return yield call(reduxUtils.createEntitiesForTool, {
+  return yield call(createEntitiesForTool, {
     toolName: ToolName.Clockify,
     sourceRecords: sourceProjects,
     apiCreateFunc: createClockifyProject,
@@ -49,7 +55,7 @@ export function* createClockifyProjectsSaga(
 export function* deleteClockifyProjectsSaga(
   sourceProjects: ProjectModel[],
 ): SagaIterator {
-  yield call(reduxUtils.deleteEntitiesForTool, {
+  yield call(deleteEntitiesForTool, {
     toolName: ToolName.Clockify,
     sourceRecords: sourceProjects,
     apiDeleteFunc: deleteClockifyProject,
@@ -61,7 +67,7 @@ export function* deleteClockifyProjectsSaga(
  * returns array of transformed projects.
  */
 export function* fetchClockifyProjectsSaga(): SagaIterator<ProjectModel[]> {
-  return yield call(reduxUtils.fetchEntitiesForTool, {
+  return yield call(fetchEntitiesForTool, {
     toolName: ToolName.Clockify,
     apiFetchFunc: fetchClockifyProjectsInWorkspace,
   });
@@ -98,7 +104,7 @@ function* createClockifyProject(
   };
 
   const clockifyProject = yield call(
-    reduxUtils.fetchObject,
+    fetchObject,
     `/clockify/api/workspaces/${targetWorkspaceId}/projects`,
     { method: "POST", body: projectRequest },
   );
@@ -115,7 +121,7 @@ function* deleteClockifyProject(sourceProject: ProjectModel): SagaIterator {
 
   // Need to set a project to "archived" before it can be deleted:
   yield call(
-    reduxUtils.fetchObject,
+    fetchObject,
     `/clockify/api/workspaces/${workspaceId}/projects/${id}`,
     {
       method: "PUT",
@@ -127,7 +133,7 @@ function* deleteClockifyProject(sourceProject: ProjectModel): SagaIterator {
   );
 
   yield call(
-    reduxUtils.fetchObject,
+    fetchObject,
     `/clockify/api/workspaces/${workspaceId}/projects/${id}`,
     { method: "DELETE" },
   );
@@ -143,7 +149,7 @@ function* fetchClockifyProjectsInWorkspace(
   const allClockifyProjects: ProjectModel[] = [];
 
   const clockifyProjects: ClockifyProjectResponseModel[] = yield call(
-    reduxUtils.fetchPaginatedFromClockify,
+    fetchPaginatedFromClockify,
     `/clockify/api/workspaces/${workspaceId}/projects`,
   );
   for (const clockifyProject of clockifyProjects) {

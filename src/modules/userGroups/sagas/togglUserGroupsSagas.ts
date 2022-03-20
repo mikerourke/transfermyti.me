@@ -1,7 +1,14 @@
 import type { SagaIterator } from "redux-saga";
 import { call } from "redux-saga/effects";
 
-import * as reduxUtils from "~/redux/reduxUtils";
+import { createEntitiesForTool } from "~/entityOperations/createEntitiesForTool";
+import { deleteEntitiesForTool } from "~/entityOperations/deleteEntitiesForTool";
+import {
+  fetchArray,
+  fetchEmpty,
+  fetchObject,
+} from "~/entityOperations/fetchActions";
+import { fetchEntitiesForTool } from "~/entityOperations/fetchEntitiesForTool";
 import { EntityGroup, ToolName, UserGroupModel } from "~/typeDefs";
 import { validStringify } from "~/utils";
 
@@ -19,7 +26,7 @@ interface TogglUserGroupResponseModel {
 export function* createTogglUserGroupsSaga(
   sourceUserGroups: UserGroupModel[],
 ): SagaIterator<UserGroupModel[]> {
-  return yield call(reduxUtils.createEntitiesForTool, {
+  return yield call(createEntitiesForTool, {
     toolName: ToolName.Toggl,
     sourceRecords: sourceUserGroups,
     apiCreateFunc: createTogglUserGroup,
@@ -32,7 +39,7 @@ export function* createTogglUserGroupsSaga(
 export function* deleteTogglUserGroupsSaga(
   sourceUserGroups: UserGroupModel[],
 ): SagaIterator {
-  yield call(reduxUtils.deleteEntitiesForTool, {
+  yield call(deleteEntitiesForTool, {
     toolName: ToolName.Toggl,
     sourceRecords: sourceUserGroups,
     apiDeleteFunc: deleteTogglUserGroup,
@@ -44,7 +51,7 @@ export function* deleteTogglUserGroupsSaga(
  * user groups.
  */
 export function* fetchTogglUserGroupsSaga(): SagaIterator {
-  return yield call(reduxUtils.fetchEntitiesForTool, {
+  return yield call(fetchEntitiesForTool, {
     toolName: ToolName.Toggl,
     apiFetchFunc: fetchTogglUserGroupsInWorkspace,
   });
@@ -62,7 +69,7 @@ function* createTogglUserGroup(
     name: sourceUserGroup.name,
     wid: +targetWorkspaceId,
   };
-  const { data } = yield call(reduxUtils.fetchObject, "/toggl/api/groups", {
+  const { data } = yield call(fetchObject, "/toggl/api/groups", {
     method: "POST",
     body: userGroupRequest,
   });
@@ -75,7 +82,7 @@ function* createTogglUserGroup(
  * @see https://github.com/toggl/toggl_api_docs/blob/master/chapters/groups.md#delete-a-group
  */
 function* deleteTogglUserGroup(sourceUserGroup: UserGroupModel): SagaIterator {
-  yield call(reduxUtils.fetchEmpty, `/toggl/api/groups/${sourceUserGroup.id}`, {
+  yield call(fetchEmpty, `/toggl/api/groups/${sourceUserGroup.id}`, {
     method: "DELETE",
   });
 }
@@ -88,7 +95,7 @@ function* fetchTogglUserGroupsInWorkspace(
   workspaceId: string,
 ): SagaIterator<UserGroupModel[]> {
   const togglUserGroups: TogglUserGroupResponseModel[] = yield call(
-    reduxUtils.fetchArray,
+    fetchArray,
     `/toggl/api/workspaces/${workspaceId}/groups`,
   );
 

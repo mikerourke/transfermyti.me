@@ -1,7 +1,14 @@
 import type { SagaIterator } from "redux-saga";
 import { call } from "redux-saga/effects";
 
-import * as reduxUtils from "~/redux/reduxUtils";
+import { createEntitiesForTool } from "~/entityOperations/createEntitiesForTool";
+import { deleteEntitiesForTool } from "~/entityOperations/deleteEntitiesForTool";
+import {
+  fetchArray,
+  fetchEmpty,
+  fetchObject,
+} from "~/entityOperations/fetchActions";
+import { fetchEntitiesForTool } from "~/entityOperations/fetchEntitiesForTool";
 import { ClientModel, EntityGroup, ToolName } from "~/typeDefs";
 import { validStringify } from "~/utils";
 
@@ -19,7 +26,7 @@ interface TogglClientResponseModel {
 export function* createTogglClientsSaga(
   sourceClients: ClientModel[],
 ): SagaIterator<ClientModel[]> {
-  return yield call(reduxUtils.createEntitiesForTool, {
+  return yield call(createEntitiesForTool, {
     toolName: ToolName.Toggl,
     sourceRecords: sourceClients,
     apiCreateFunc: createTogglClient,
@@ -32,7 +39,7 @@ export function* createTogglClientsSaga(
 export function* deleteTogglClientsSaga(
   sourceClients: ClientModel[],
 ): SagaIterator {
-  yield call(reduxUtils.deleteEntitiesForTool, {
+  yield call(deleteEntitiesForTool, {
     toolName: ToolName.Toggl,
     sourceRecords: sourceClients,
     apiDeleteFunc: deleteTogglClient,
@@ -44,7 +51,7 @@ export function* deleteTogglClientsSaga(
  * clients.
  */
 export function* fetchTogglClientsSaga(): SagaIterator<ClientModel[]> {
-  return yield call(reduxUtils.fetchEntitiesForTool, {
+  return yield call(fetchEntitiesForTool, {
     toolName: ToolName.Toggl,
     apiFetchFunc: fetchTogglClientsInWorkspace,
   });
@@ -65,7 +72,7 @@ function* createTogglClient(
     },
   };
 
-  const { data } = yield call(reduxUtils.fetchObject, "/toggl/api/clients", {
+  const { data } = yield call(fetchObject, "/toggl/api/clients", {
     method: "POST",
     body: clientRequest,
   });
@@ -78,7 +85,7 @@ function* createTogglClient(
  * @see https://github.com/toggl/toggl_api_docs/blob/master/chapters/clients.md#delete-a-client
  */
 function* deleteTogglClient(sourceClient: ClientModel): SagaIterator {
-  yield call(reduxUtils.fetchEmpty, `/toggl/api/clients/${sourceClient.id}`, {
+  yield call(fetchEmpty, `/toggl/api/clients/${sourceClient.id}`, {
     method: "DELETE",
   });
 }
@@ -91,7 +98,7 @@ function* fetchTogglClientsInWorkspace(
   workspaceId: string,
 ): SagaIterator<ClientModel[]> {
   const togglClients: TogglClientResponseModel[] = yield call(
-    reduxUtils.fetchArray,
+    fetchArray,
     `/toggl/api/workspaces/${workspaceId}/clients`,
   );
 

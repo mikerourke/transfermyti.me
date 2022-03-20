@@ -2,8 +2,13 @@ import type { SagaIterator } from "redux-saga";
 import { call, delay, put } from "redux-saga/effects";
 
 import { CLOCKIFY_API_DELAY } from "~/constants";
+import { deleteEntitiesForTool } from "~/entityOperations/deleteEntitiesForTool";
+import {
+  fetchObject,
+  fetchPaginatedFromClockify,
+} from "~/entityOperations/fetchActions";
+import { fetchEntitiesForTool } from "~/entityOperations/fetchEntitiesForTool";
 import { incrementEntityGroupTransferCompletedCount } from "~/modules/allEntities/allEntitiesActions";
-import * as reduxUtils from "~/redux/reduxUtils";
 import { EntityGroup, ToolName, UserModel } from "~/typeDefs";
 
 export interface ClockifyHourlyRateResponseModel {
@@ -78,7 +83,7 @@ export function* createClockifyUsersSaga(
 export function* removeClockifyUsersSaga(
   sourceUsers: UserModel[],
 ): SagaIterator {
-  yield call(reduxUtils.deleteEntitiesForTool, {
+  yield call(deleteEntitiesForTool, {
     toolName: ToolName.Clockify,
     sourceRecords: sourceUsers,
     apiDeleteFunc: removeClockifyUserFromWorkspace,
@@ -90,7 +95,7 @@ export function* removeClockifyUsersSaga(
  * users.
  */
 export function* fetchClockifyUsersSaga(): SagaIterator<UserModel[]> {
-  return yield call(reduxUtils.fetchEntitiesForTool, {
+  return yield call(fetchEntitiesForTool, {
     toolName: ToolName.Clockify,
     apiFetchFunc: fetchClockifyUsersInWorkspace,
   });
@@ -107,7 +112,7 @@ function* inviteClockifyUsers(
   for (const email of sourceEmails) {
     const userRequest = { email };
     yield call(
-      reduxUtils.fetchObject,
+      fetchObject,
       `/clockify/api/workspaces/${targetWorkspaceId}/users`,
       {
         method: "POST",
@@ -126,7 +131,7 @@ function* inviteClockifyUsers(
 function* removeClockifyUserFromWorkspace(sourceUser: UserModel): SagaIterator {
   const { workspaceId, id } = sourceUser;
   yield call(
-    reduxUtils.fetchObject,
+    fetchObject,
     `/clockify/api/workspaces/${workspaceId}/users/${id}`,
     { method: "DELETE" },
   );
@@ -140,7 +145,7 @@ function* fetchClockifyUsersInWorkspace(
   workspaceId: string,
 ): SagaIterator<UserModel[]> {
   const clockifyUsers: ClockifyUserResponseModel[] = yield call(
-    reduxUtils.fetchPaginatedFromClockify,
+    fetchPaginatedFromClockify,
     `/clockify/api/workspaces/${workspaceId}/users`,
   );
 

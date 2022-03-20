@@ -2,10 +2,10 @@ import { createSelector, createStructuredSelector, Selector } from "reselect";
 
 import * as R from "ramda";
 
+import { selectIdToLinkedId } from "~/entityOperations/selectIdToLinkedId";
 import { mappingByToolNameSelector } from "~/modules/allEntities/allEntitiesSelectors";
 import { sourceTimeEntryCountByIdFieldSelectorFactory } from "~/modules/timeEntries/timeEntriesSelectors";
 import { activeWorkspaceIdSelector } from "~/modules/workspaces/workspacesSelectors";
-import { selectIdToLinkedId } from "~/redux/reduxUtils";
 import {
   ClientModel,
   ClientsByIdModel,

@@ -1,11 +1,11 @@
 import { RouterState } from "connected-react-router";
 import { combineReducers, Reducer } from "redux";
 
-import { appReducer, AppState } from "~/modules/app/appReducer";
 import {
   allEntitiesReducer,
   AllEntitiesState,
 } from "~/modules/allEntities/allEntitiesReducer";
+import { appReducer, AppState } from "~/modules/app/appReducer";
 import { clientsReducer, ClientsState } from "~/modules/clients/clientsReducer";
 import {
   credentialsReducer,

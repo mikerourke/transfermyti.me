@@ -2,17 +2,17 @@ import * as R from "ramda";
 import type { SagaIterator } from "redux-saga";
 import { call, put, select } from "redux-saga/effects";
 
-import { showErrorNotification } from "~/modules/app/appActions";
+import { linkEntitiesByIdByMapping } from "~/entityOperations/linkEntitiesByIdByMapping";
 import {
   toolActionSelector,
   toolNameByMappingSelector,
 } from "~/modules/allEntities/allEntitiesSelectors";
+import { showErrorNotification } from "~/modules/app/appActions";
 import * as usersActions from "~/modules/users/usersActions";
 import {
   includedSourceUsersSelector,
   sourceUserEmailsByWorkspaceIdSelector,
 } from "~/modules/users/usersSelectors";
-import { linkEntitiesByIdByMapping } from "~/redux/reduxUtils";
 import { Mapping, ToolAction, ToolName, UsersByIdModel } from "~/typeDefs";
 
 import * as clockifySagas from "./clockifyUsersSagas";

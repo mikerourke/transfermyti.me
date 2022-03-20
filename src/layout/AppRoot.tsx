@@ -3,9 +3,8 @@ import Color from "color";
 import React from "react";
 import { Helmet } from "react-helmet";
 
-import NotificationsDisplay from "~/layout/NotificationsDisplay";
-
 import { styled, theme as customTheme } from "~/components/emotion";
+import NotificationsDisplay from "~/layout/NotificationsDisplay";
 
 import Footer from "./Footer";
 import Header from "./Header";

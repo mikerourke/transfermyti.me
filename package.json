@@ -20,7 +20,7 @@
     "start": "USE_LOCAL_API=true concurrently --kill-others \"yarn start:server\" \"yarn start:web\"",
     "test": "NODE_ENV=test node scripts/runTests.mjs --env=jsdom --config jest.config.json",
     "tidy": "rimraf ./.cache && rimraf ./public && rimraf ./dist",
-    "typecheck": "tsc -p tsconfig.json --noEmit --skipLibCheck"
+    "typecheck": "tsc -p tsconfig.json"
   },
   "dependencies": {
     "@emotion/react": "^11.4.0",

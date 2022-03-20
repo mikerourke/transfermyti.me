@@ -2,10 +2,15 @@ import type { SagaIterator } from "redux-saga";
 import { call, delay, put, select } from "redux-saga/effects";
 
 import { TOGGL_API_DELAY } from "~/constants";
+import {
+  fetchArray,
+  fetchEmpty,
+  fetchObject,
+} from "~/entityOperations/fetchActions";
+import { fetchEntitiesForTool } from "~/entityOperations/fetchEntitiesForTool";
 import { incrementEntityGroupTransferCompletedCount } from "~/modules/allEntities/allEntitiesActions";
 import { includedSourceProjectIdsSelector } from "~/modules/projects/projectsSelectors";
 import { includedSourceWorkspaceIdsSelector } from "~/modules/workspaces/workspacesSelectors";
-import * as reduxUtils from "~/redux/reduxUtils";
 import { EntityGroup, ToolName, UserModel } from "~/typeDefs";
 import { validStringify } from "~/utils";
 
@@ -115,7 +120,7 @@ export function* removeTogglUsersSaga(sourceUsers: UserModel[]): SagaIterator {
  * Fetches all users in Toggl workspaces and returns array of transformed users.
  */
 export function* fetchTogglUsersSaga(): SagaIterator<UserModel[]> {
-  return yield call(reduxUtils.fetchEntitiesForTool, {
+  return yield call(fetchEntitiesForTool, {
     toolName: ToolName.Toggl,
     apiFetchFunc: fetchTogglUsersInWorkspace,
   });
@@ -130,14 +135,10 @@ function* inviteTogglUsers(
   workspaceId: string,
 ): SagaIterator {
   const userRequest = { emails: sourceEmails };
-  yield call(
-    reduxUtils.fetchObject,
-    `/toggl/api/workspaces/${workspaceId}/invite`,
-    {
-      method: "POST",
-      body: userRequest,
-    },
-  );
+  yield call(fetchObject, `/toggl/api/workspaces/${workspaceId}/invite`, {
+    method: "POST",
+    body: userRequest,
+  });
 }
 
 /**
@@ -145,13 +146,9 @@ function* inviteTogglUsers(
  * @see https://github.com/toggl/toggl_api_docs/blob/master/chapters/project_users.md#delete-a-project-user
  */
 function* removeTogglUserFromProject(projectUserId: string): SagaIterator {
-  yield call(
-    reduxUtils.fetchEmpty,
-    `/toggl/api/project_users/${projectUserId}`,
-    {
-      method: "DELETE",
-    },
-  );
+  yield call(fetchEmpty, `/toggl/api/project_users/${projectUserId}`, {
+    method: "DELETE",
+  });
 }
 
 /**
@@ -162,7 +159,7 @@ function* fetchProjectUsersInSourceWorkspace(
   workspaceId: string,
 ): SagaIterator<TogglProjectUserResponseModel[]> {
   const { data } = yield call(
-    reduxUtils.fetchObject,
+    fetchObject,
     `/toggl/api/workspaces/${workspaceId}/project_users`,
   );
   return data;
@@ -176,7 +173,7 @@ function* fetchTogglUsersInWorkspace(
   workspaceId: string,
 ): SagaIterator<UserModel[]> {
   const togglUsers: TogglUserResponseModel[] = yield call(
-    reduxUtils.fetchArray,
+    fetchArray,
     `/toggl/api/workspaces/${workspaceId}/users`,
   );
 

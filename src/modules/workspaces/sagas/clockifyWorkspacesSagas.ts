@@ -1,8 +1,8 @@
 import type { SagaIterator } from "redux-saga";
 import { call } from "redux-saga/effects";
 
+import { fetchArray } from "~/entityOperations/fetchActions";
 import { ClockifyMembershipResponseModel } from "~/modules/users/sagas/clockifyUsersSagas";
-import { fetchArray } from "~/redux/reduxUtils";
 import { EntityGroup, WorkspaceModel } from "~/typeDefs";
 
 interface ClockifyWorkspaceSettingsResponseModel {

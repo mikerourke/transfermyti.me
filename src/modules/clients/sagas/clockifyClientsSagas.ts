@@ -1,7 +1,13 @@
 import type { SagaIterator } from "redux-saga";
 import { call } from "redux-saga/effects";
 
-import * as reduxUtils from "~/redux/reduxUtils";
+import { createEntitiesForTool } from "~/entityOperations/createEntitiesForTool";
+import { deleteEntitiesForTool } from "~/entityOperations/deleteEntitiesForTool";
+import {
+  fetchObject,
+  fetchPaginatedFromClockify,
+} from "~/entityOperations/fetchActions";
+import { fetchEntitiesForTool } from "~/entityOperations/fetchEntitiesForTool";
 import { ClientModel, EntityGroup, ToolName } from "~/typeDefs";
 
 interface ClockifyClientResponseModel {
@@ -17,7 +23,7 @@ interface ClockifyClientResponseModel {
 export function* createClockifyClientsSaga(
   sourceClients: ClientModel[],
 ): SagaIterator<ClientModel[]> {
-  return yield call(reduxUtils.createEntitiesForTool, {
+  return yield call(createEntitiesForTool, {
     toolName: ToolName.Clockify,
     sourceRecords: sourceClients,
     apiCreateFunc: createClockifyClient,
@@ -30,7 +36,7 @@ export function* createClockifyClientsSaga(
 export function* deleteClockifyClientsSaga(
   sourceClients: ClientModel[],
 ): SagaIterator {
-  yield call(reduxUtils.deleteEntitiesForTool, {
+  yield call(deleteEntitiesForTool, {
     toolName: ToolName.Clockify,
     sourceRecords: sourceClients,
     apiDeleteFunc: deleteClockifyClient,
@@ -42,7 +48,7 @@ export function* deleteClockifyClientsSaga(
  * clients.
  */
 export function* fetchClockifyClientsSaga(): SagaIterator<ClientModel[]> {
-  return yield call(reduxUtils.fetchEntitiesForTool, {
+  return yield call(fetchEntitiesForTool, {
     toolName: ToolName.Clockify,
     apiFetchFunc: fetchClockifyClientsInWorkspace,
   });
@@ -58,7 +64,7 @@ function* createClockifyClient(
 ): SagaIterator<ClientModel> {
   const clientRequest = { name: sourceClient.name };
   const clockifyClient = yield call(
-    reduxUtils.fetchObject,
+    fetchObject,
     `/clockify/api/workspaces/${targetWorkspaceId}/clients`,
     { method: "POST", body: clientRequest },
   );
@@ -73,7 +79,7 @@ function* createClockifyClient(
 function* deleteClockifyClient(sourceClient: ClientModel): SagaIterator {
   const { workspaceId, id } = sourceClient;
   yield call(
-    reduxUtils.fetchObject,
+    fetchObject,
     `/clockify/api/workspaces/${workspaceId}/clients/${id}`,
     { method: "DELETE" },
   );
@@ -87,7 +93,7 @@ function* fetchClockifyClientsInWorkspace(
   workspaceId: string,
 ): SagaIterator<ClientModel[]> {
   const clockifyClients: ClockifyClientResponseModel[] = yield call(
-    reduxUtils.fetchPaginatedFromClockify,
+    fetchPaginatedFromClockify,
     `/clockify/api/workspaces/${workspaceId}/clients`,
   );
 

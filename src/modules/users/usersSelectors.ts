@@ -2,8 +2,8 @@ import { createSelector } from "reselect";
 
 import * as R from "ramda";
 
+import { selectIdToLinkedId } from "~/entityOperations/selectIdToLinkedId";
 import { workspaceIdToLinkedIdSelector } from "~/modules/workspaces/workspacesSelectors";
-import { selectIdToLinkedId } from "~/redux/reduxUtils";
 import { ReduxState, UserModel, UsersByIdModel } from "~/typeDefs";
 
 const sourceUsersByIdSelector = createSelector(

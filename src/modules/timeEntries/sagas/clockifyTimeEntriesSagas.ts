@@ -2,6 +2,13 @@ import * as R from "ramda";
 import type { SagaIterator } from "redux-saga";
 import { call, select } from "redux-saga/effects";
 
+import { createEntitiesForTool } from "~/entityOperations/createEntitiesForTool";
+import { deleteEntitiesForTool } from "~/entityOperations/deleteEntitiesForTool";
+import {
+  fetchObject,
+  fetchPaginatedFromClockify,
+} from "~/entityOperations/fetchActions";
+import { fetchEntitiesForTool } from "~/entityOperations/fetchEntitiesForTool";
 import { credentialsByToolNameSelector } from "~/modules/credentials/credentialsSelectors";
 import { projectIdToLinkedIdSelector } from "~/modules/projects/projectsSelectors";
 import { ClockifyProjectResponseModel } from "~/modules/projects/sagas/clockifyProjectsSagas";
@@ -9,7 +16,6 @@ import { ClockifyTagResponseModel } from "~/modules/tags/sagas/clockifyTagsSagas
 import { targetTagIdsSelectorFactory } from "~/modules/tags/tagsSelectors";
 import { ClockifyTaskResponseModel } from "~/modules/tasks/sagas/clockifyTasksSagas";
 import { taskIdToLinkedIdSelector } from "~/modules/tasks/tasksSelectors";
-import * as reduxUtils from "~/redux/reduxUtils";
 import { EntityGroup, TimeEntryModel, ToolName } from "~/typeDefs";
 
 interface ClockifyTimeIntervalModel {
@@ -39,7 +45,7 @@ interface ClockifyTimeEntryResponseModel {
 export function* createClockifyTimeEntriesSaga(
   sourceTimeEntries: TimeEntryModel[],
 ): SagaIterator<TimeEntryModel[]> {
-  return yield call(reduxUtils.createEntitiesForTool, {
+  return yield call(createEntitiesForTool, {
     toolName: ToolName.Clockify,
     sourceRecords: sourceTimeEntries,
     apiCreateFunc: createClockifyTimeEntry,
@@ -52,7 +58,7 @@ export function* createClockifyTimeEntriesSaga(
 export function* deleteClockifyTimeEntriesSaga(
   sourceTimeEntries: TimeEntryModel[],
 ): SagaIterator {
-  yield call(reduxUtils.deleteEntitiesForTool, {
+  yield call(deleteEntitiesForTool, {
     toolName: ToolName.Clockify,
     sourceRecords: sourceTimeEntries,
     apiDeleteFunc: deleteClockifyTimeEntry,
@@ -66,7 +72,7 @@ export function* deleteClockifyTimeEntriesSaga(
 export function* fetchClockifyTimeEntriesSaga(): SagaIterator<
   TimeEntryModel[]
 > {
-  return yield call(reduxUtils.fetchEntitiesForTool, {
+  return yield call(fetchEntitiesForTool, {
     toolName: ToolName.Clockify,
     apiFetchFunc: fetchClockifyTimeEntriesInWorkspace,
   });
@@ -116,7 +122,7 @@ function* createClockifyTimeEntry(
   };
 
   const targetTimeEntry = yield call(
-    reduxUtils.fetchObject,
+    fetchObject,
     `/clockify/api/workspaces/${targetWorkspaceId}/time-entries`,
     {
       method: "POST",
@@ -136,7 +142,7 @@ function* deleteClockifyTimeEntry(
 ): SagaIterator {
   const { workspaceId, id } = sourceTimeEntry;
   yield call(
-    reduxUtils.fetchObject,
+    fetchObject,
     `/clockify/api/workspaces/${workspaceId}/time-entries/${id}`,
     { method: "DELETE" },
   );
@@ -156,7 +162,7 @@ function* fetchClockifyTimeEntriesInWorkspace(
   }
 
   const clockifyTimeEntries: ClockifyTimeEntryResponseModel[] = yield call(
-    reduxUtils.fetchPaginatedFromClockify,
+    fetchPaginatedFromClockify,
     `/clockify/api/workspaces/${workspaceId}/user/${clockifyUserId}/time-entries`,
     { hydrated: true },
   );

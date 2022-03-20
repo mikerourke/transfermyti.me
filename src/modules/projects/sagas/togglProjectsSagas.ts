@@ -3,8 +3,15 @@ import type { SagaIterator } from "redux-saga";
 import { call, delay, select } from "redux-saga/effects";
 
 import { TOGGL_API_DELAY } from "~/constants";
+import { createEntitiesForTool } from "~/entityOperations/createEntitiesForTool";
+import { deleteEntitiesForTool } from "~/entityOperations/deleteEntitiesForTool";
+import {
+  fetchArray,
+  fetchEmpty,
+  fetchObject,
+} from "~/entityOperations/fetchActions";
+import { fetchEntitiesForTool } from "~/entityOperations/fetchEntitiesForTool";
 import { clientIdToLinkedIdSelector } from "~/modules/clients/clientsSelectors";
-import * as reduxUtils from "~/redux/reduxUtils";
 import { EntityGroup, ProjectModel, ToolName } from "~/typeDefs";
 import { validStringify } from "~/utils";
 
@@ -50,7 +57,7 @@ interface TogglProjectUserResponseModel {
 export function* createTogglProjectsSaga(
   sourceProjects: ProjectModel[],
 ): SagaIterator<ProjectModel[]> {
-  return yield call(reduxUtils.createEntitiesForTool, {
+  return yield call(createEntitiesForTool, {
     toolName: ToolName.Toggl,
     sourceRecords: sourceProjects,
     apiCreateFunc: createTogglProject,
@@ -63,7 +70,7 @@ export function* createTogglProjectsSaga(
 export function* deleteTogglProjectsSaga(
   sourceProjects: ProjectModel[],
 ): SagaIterator {
-  yield call(reduxUtils.deleteEntitiesForTool, {
+  yield call(deleteEntitiesForTool, {
     toolName: ToolName.Toggl,
     sourceRecords: sourceProjects,
     apiDeleteFunc: deleteTogglProject,
@@ -75,7 +82,7 @@ export function* deleteTogglProjectsSaga(
  * returns array of transformed projects.
  */
 export function* fetchTogglProjectsSaga(): SagaIterator<ProjectModel[]> {
-  return yield call(reduxUtils.fetchEntitiesForTool, {
+  return yield call(fetchEntitiesForTool, {
     toolName: ToolName.Toggl,
     apiFetchFunc: fetchTogglProjectsInWorkspace,
   });
@@ -105,7 +112,7 @@ function* createTogglProject(
     },
   };
 
-  const { data } = yield call(reduxUtils.fetchObject, "/toggl/api/projects", {
+  const { data } = yield call(fetchObject, "/toggl/api/projects", {
     method: "POST",
     body: projectRequest,
   });
@@ -118,7 +125,7 @@ function* createTogglProject(
  * @see https://github.com/toggl/toggl_api_docs/blob/master/chapters/projects.md#delete-a-project
  */
 function* deleteTogglProject(sourceProject: ProjectModel): SagaIterator {
-  yield call(reduxUtils.fetchEmpty, `/toggl/api/projects/${sourceProject.id}`, {
+  yield call(fetchEmpty, `/toggl/api/projects/${sourceProject.id}`, {
     method: "DELETE",
   });
 }
@@ -133,7 +140,7 @@ function* fetchTogglProjectsInWorkspace(
   const allTogglProjects: ProjectModel[] = [];
 
   const togglProjects: TogglProjectResponseModel[] = yield call(
-    reduxUtils.fetchArray,
+    fetchArray,
     `/toggl/api/workspaces/${workspaceId}/projects?active=both`,
   );
 
@@ -156,7 +163,7 @@ function* fetchTogglProjectsInWorkspace(
  */
 function* fetchUserIdsInProject(projectId: string): SagaIterator<string[]> {
   const projectUsers: TogglProjectUserResponseModel[] = yield call(
-    reduxUtils.fetchArray,
+    fetchArray,
     `/toggl/api/projects/${projectId}/project_users`,
   );
   return projectUsers.map(({ uid }) => validStringify(uid, ""));

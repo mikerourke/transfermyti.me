@@ -1,7 +1,13 @@
 import type { SagaIterator } from "redux-saga";
 import { call } from "redux-saga/effects";
 
-import * as reduxUtils from "~/redux/reduxUtils";
+import { createEntitiesForTool } from "~/entityOperations/createEntitiesForTool";
+import { deleteEntitiesForTool } from "~/entityOperations/deleteEntitiesForTool";
+import {
+  fetchObject,
+  fetchPaginatedFromClockify,
+} from "~/entityOperations/fetchActions";
+import { fetchEntitiesForTool } from "~/entityOperations/fetchEntitiesForTool";
 import { EntityGroup, ToolName, UserGroupModel } from "~/typeDefs";
 
 interface ClockifyUserGroupResponseModel {
@@ -17,7 +23,7 @@ interface ClockifyUserGroupResponseModel {
 export function* createClockifyUserGroupsSaga(
   sourceUserGroups: UserGroupModel[],
 ): SagaIterator<UserGroupModel[]> {
-  return yield call(reduxUtils.createEntitiesForTool, {
+  return yield call(createEntitiesForTool, {
     toolName: ToolName.Clockify,
     sourceRecords: sourceUserGroups,
     apiCreateFunc: createClockifyUserGroup,
@@ -30,7 +36,7 @@ export function* createClockifyUserGroupsSaga(
 export function* deleteClockifyUserGroupsSaga(
   sourceUserGroups: UserGroupModel[],
 ): SagaIterator {
-  yield call(reduxUtils.deleteEntitiesForTool, {
+  yield call(deleteEntitiesForTool, {
     toolName: ToolName.Clockify,
     sourceRecords: sourceUserGroups,
     apiDeleteFunc: deleteClockifyUserGroup,
@@ -42,7 +48,7 @@ export function* deleteClockifyUserGroupsSaga(
  * transformed user groups.
  */
 export function* fetchClockifyUserGroupsSaga(): SagaIterator<UserGroupModel[]> {
-  return yield call(reduxUtils.fetchEntitiesForTool, {
+  return yield call(fetchEntitiesForTool, {
     toolName: ToolName.Clockify,
     apiFetchFunc: fetchClockifyUserGroupsInWorkspace,
   });
@@ -58,7 +64,7 @@ function* createClockifyUserGroup(
 ): SagaIterator {
   const userGroupRequest = { name: sourceUserGroup.name };
   const clockifyUserGroup = yield call(
-    reduxUtils.fetchObject,
+    fetchObject,
     `/clockify/api/workspaces/${targetWorkspaceId}/user-groups`,
     { method: "POST", body: userGroupRequest },
   );
@@ -75,7 +81,7 @@ function* deleteClockifyUserGroup(
 ): SagaIterator {
   const { workspaceId, id } = sourceUserGroup;
   yield call(
-    reduxUtils.fetchObject,
+    fetchObject,
     `/clockify/api/workspaces/${workspaceId}/user-groups/${id}`,
     { method: "DELETE" },
   );
@@ -89,7 +95,7 @@ function* fetchClockifyUserGroupsInWorkspace(
   workspaceId: string,
 ): SagaIterator<UserGroupModel[]> {
   const clockifyUserGroups: ClockifyUserGroupResponseModel[] = yield call(
-    reduxUtils.fetchPaginatedFromClockify,
+    fetchPaginatedFromClockify,
     `/clockify/api/workspaces/${workspaceId}/user-groups`,
   );
 

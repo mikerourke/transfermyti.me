@@ -4,10 +4,6 @@ import { connect } from "react-redux";
 import { PayloadActionCreator } from "typesafe-actions";
 
 import {
-  dismissAllNotifications,
-  showNotification,
-} from "~/modules/app/appActions";
-import {
   Button,
   Flex,
   HelpDetails,
@@ -23,6 +19,10 @@ import {
   toolActionSelector,
   targetToolDisplayNameSelector,
 } from "~/modules/allEntities/allEntitiesSelectors";
+import {
+  dismissAllNotifications,
+  showNotification,
+} from "~/modules/app/appActions";
 import {
   fetchWorkspaces,
   flipIsWorkspaceIncluded,

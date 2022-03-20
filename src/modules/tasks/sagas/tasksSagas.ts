@@ -3,11 +3,12 @@ import type { SagaIterator } from "redux-saga";
 import { all, call, put, select, takeEvery } from "redux-saga/effects";
 import { isActionOf } from "typesafe-actions";
 
-import { showErrorNotification } from "~/modules/app/appActions";
+import { linkEntitiesByIdByMapping } from "~/entityOperations/linkEntitiesByIdByMapping";
 import {
   toolActionSelector,
   toolNameByMappingSelector,
 } from "~/modules/allEntities/allEntitiesSelectors";
+import { showErrorNotification } from "~/modules/app/appActions";
 import { updateIsProjectIncluded } from "~/modules/projects/projectsActions";
 import { sourceProjectsSelector } from "~/modules/projects/projectsSelectors";
 import * as tasksActions from "~/modules/tasks/tasksActions";
@@ -17,7 +18,6 @@ import {
   sourceTasksByIdSelector,
   sourceTasksForTransferSelector,
 } from "~/modules/tasks/tasksSelectors";
-import { linkEntitiesByIdByMapping } from "~/redux/reduxUtils";
 import {
   Mapping,
   ProjectModel,
