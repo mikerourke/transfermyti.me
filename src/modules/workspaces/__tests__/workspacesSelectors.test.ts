@@ -1,7 +1,8 @@
 import cases from "jest-in-case";
 
-import * as workspacesSelectors from "../workspacesSelectors";
 import { state } from "~/redux/__mocks__/mockStoreWithState";
+
+import * as workspacesSelectors from "../workspacesSelectors";
 
 const TEST_STATE = {
   ...state,

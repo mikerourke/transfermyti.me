@@ -1,10 +1,11 @@
 import cases from "jest-in-case";
 
-import * as workspacesActions from "../workspacesActions";
-import { workspacesReducer, initialState } from "../workspacesReducer";
 import { flushAllEntities } from "~/modules/allEntities/allEntitiesActions";
+import * as workspacesActions from "~/modules/workspaces/workspacesActions";
 import { state, invalidAction } from "~/redux/__mocks__/mockStoreWithState";
 import { Mapping } from "~/typeDefs";
+
+import { workspacesReducer, initialState } from "../workspacesReducer";
 
 const TEST_WORKSPACES_STATE = { ...state.workspaces };
 

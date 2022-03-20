@@ -8,11 +8,10 @@ import {
   toolNameByMappingSelector,
 } from "~/modules/allEntities/allEntitiesSelectors";
 import { showErrorNotification } from "~/modules/app/appActions";
+import * as clockifySagas from "~/modules/workspaces/sagas/clockifyWorkspacesSagas";
+import * as togglSagas from "~/modules/workspaces/sagas/togglWorkspacesSagas";
 import * as workspacesActions from "~/modules/workspaces/workspacesActions";
 import { Mapping, ToolAction, ToolName, WorkspacesByIdModel } from "~/typeDefs";
-
-import * as clockifySagas from "./clockifyWorkspacesSagas";
-import * as togglSagas from "./togglWorkspacesSagas";
 
 export function* workspacesSaga(): SagaIterator {
   yield all([

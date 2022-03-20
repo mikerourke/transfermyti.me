@@ -8,15 +8,14 @@ import {
   toolNameByMappingSelector,
 } from "~/modules/allEntities/allEntitiesSelectors";
 import { showErrorNotification } from "~/modules/app/appActions";
+import * as clockifySagas from "~/modules/tags/sagas/clockifyTagsSagas";
+import * as togglSagas from "~/modules/tags/sagas/togglTagsSagas";
 import * as tagsActions from "~/modules/tags/tagsActions";
 import {
   includedSourceTagsSelector,
   sourceTagsForTransferSelector,
 } from "~/modules/tags/tagsSelectors";
 import { Mapping, TagsByIdModel, ToolAction, ToolName } from "~/typeDefs";
-
-import * as clockifySagas from "./clockifyTagsSagas";
-import * as togglSagas from "./togglTagsSagas";
 
 /**
  * Creates tags in the target tool based on the included tags from the

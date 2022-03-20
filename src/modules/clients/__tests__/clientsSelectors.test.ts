@@ -1,8 +1,9 @@
 import cases from "jest-in-case";
 
-import * as clientsSelectors from "../clientsSelectors";
 import { state } from "~/redux/__mocks__/mockStoreWithState";
 import { ToolName } from "~/typeDefs";
+
+import * as clientsSelectors from "../clientsSelectors";
 
 const TEST_STATE = {
   ...state,

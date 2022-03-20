@@ -4,10 +4,10 @@ import React from "react";
 import { render } from "react-dom";
 import { Provider } from "react-redux";
 
-import { configureStore } from "./redux/configureStore";
-import Routes from "./Routes";
-import { initInterceptor } from "./utilities/httpInterceptor";
-import { initAnalytics } from "./utilities/initAnalytics";
+import { configureStore } from "~/redux/configureStore";
+import Routes from "~/Routes";
+import { initInterceptor } from "~/utilities/httpInterceptor";
+import { initAnalytics } from "~/utilities/initAnalytics";
 
 const history = createBrowserHistory();
 const store = configureStore(history);

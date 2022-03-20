@@ -1,7 +1,8 @@
 import cases from "jest-in-case";
 
-import * as tasksSelectors from "../tasksSelectors";
 import { state } from "~/redux/__mocks__/mockStoreWithState";
+
+import * as tasksSelectors from "../tasksSelectors";
 
 const TEST_STATE = {
   ...state,

@@ -1,8 +1,9 @@
 import cases from "jest-in-case";
 
-import * as tagsSelectors from "../tagsSelectors";
 import { state } from "~/redux/__mocks__/mockStoreWithState";
 import { ToolName } from "~/typeDefs";
+
+import * as tagsSelectors from "../tagsSelectors";
 
 const TEST_STATE = {
   ...state,

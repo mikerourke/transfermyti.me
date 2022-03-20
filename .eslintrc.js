@@ -22,7 +22,6 @@ module.exports = {
         extensions: [".js", ".jsx", ".ts", ".tsx"],
       },
     },
-    "import/core-modules": ["reselect"],
   },
   env: {
     es6: true,
@@ -78,8 +77,8 @@ module.exports = {
         groups: [
           "builtin",
           "external",
-          ["internal", "parent"],
-          "sibling",
+          "internal",
+          ["parent", "sibling"],
           "object",
         ],
         pathGroups: [

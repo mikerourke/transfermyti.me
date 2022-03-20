@@ -4,10 +4,9 @@ import React from "react";
 import { Helmet } from "react-helmet";
 
 import { styled, theme as customTheme } from "~/components/emotion";
+import Footer from "~/layout/Footer";
+import Header from "~/layout/Header";
 import NotificationsDisplay from "~/layout/NotificationsDisplay";
-
-import Footer from "./Footer";
-import Header from "./Header";
 
 const Main = styled.main(
   {

@@ -1,9 +1,10 @@
 import cases from "jest-in-case";
 import * as R from "ramda";
 
-import * as userGroupsActions from "../userGroupsActions";
-import { userGroupsReducer, initialState } from "../userGroupsReducer";
+import * as userGroupsActions from "~/modules/userGroups/userGroupsActions";
 import { state, invalidAction } from "~/redux/__mocks__/mockStoreWithState";
+
+import { userGroupsReducer, initialState } from "../userGroupsReducer";
 
 const TEST_USER_GROUPS_STATE = { ...state.userGroups };
 

@@ -1,9 +1,10 @@
 import cases from "jest-in-case";
 import * as R from "ramda";
 
-import * as allEntitiesSelectors from "../allEntitiesSelectors";
 import { state } from "~/redux/__mocks__/mockStoreWithState";
 import { EntityGroup, ToolName } from "~/typeDefs";
+
+import * as allEntitiesSelectors from "../allEntitiesSelectors";
 
 describe("within allEntitiesSelectors", () => {
   cases(

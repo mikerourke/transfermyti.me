@@ -1,7 +1,8 @@
 import React from "react";
 
-import Icon, { IconName, iconAttributes } from "../Icon";
 import { render, theme } from "~/jestHelpers";
+
+import Icon, { IconName, iconAttributes } from "../Icon";
 
 describe("<Icon> Component", () => {
   test("displays the correct path and color based on props", () => {

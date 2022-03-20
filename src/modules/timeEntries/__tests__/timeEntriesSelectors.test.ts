@@ -1,7 +1,8 @@
 import cases from "jest-in-case";
 
-import * as timeEntriesSelectors from "../timeEntriesSelectors";
 import { state } from "~/redux/__mocks__/mockStoreWithState";
+
+import * as timeEntriesSelectors from "../timeEntriesSelectors";
 
 const TEST_STATE = {
   ...state,

@@ -1,7 +1,8 @@
 import cases from "jest-in-case";
 
-import * as usersSelectors from "../usersSelectors";
 import { state } from "~/redux/__mocks__/mockStoreWithState";
+
+import * as usersSelectors from "../usersSelectors";
 
 const TEST_STATE = {
   ...state,

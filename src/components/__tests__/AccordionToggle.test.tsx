@@ -1,7 +1,8 @@
 import React from "react";
 
-import AccordionToggle from "../AccordionToggle";
 import { fireEvent, render, RenderResult } from "~/jestHelpers";
+
+import AccordionToggle from "../AccordionToggle";
 
 const setup = (
   propOverrides: any = {},

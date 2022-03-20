@@ -1,6 +1,5 @@
-import { createSelector, createStructuredSelector, Selector } from "reselect";
-
 import * as R from "ramda";
+import { createSelector, createStructuredSelector, Selector } from "reselect";
 
 import { mappingByToolNameSelector } from "~/modules/allEntities/allEntitiesSelectors";
 import { sourceTimeEntryCountByTagIdSelector } from "~/modules/timeEntries/timeEntriesSelectors";

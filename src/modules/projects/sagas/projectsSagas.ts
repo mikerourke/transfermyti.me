@@ -15,6 +15,8 @@ import {
   sourceProjectsByIdSelector,
   sourceProjectsForTransferSelector,
 } from "~/modules/projects/projectsSelectors";
+import * as clockifySagas from "~/modules/projects/sagas/clockifyProjectsSagas";
+import * as togglSagas from "~/modules/projects/sagas/togglProjectsSagas";
 import { updateIsTaskIncluded } from "~/modules/tasks/tasksActions";
 import { sourceTasksSelector } from "~/modules/tasks/tasksSelectors";
 import {
@@ -24,9 +26,6 @@ import {
   ToolAction,
   ToolName,
 } from "~/typeDefs";
-
-import * as clockifySagas from "./clockifyProjectsSagas";
-import * as togglSagas from "./togglProjectsSagas";
 
 export function* projectMonitoringSaga(): SagaIterator {
   yield all([

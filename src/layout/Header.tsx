@@ -2,9 +2,8 @@ import React from "react";
 import { Link } from "react-router-dom";
 
 import { styled } from "~/components";
+import Logo from "~/layout/Logo";
 import { RoutePath } from "~/typeDefs";
-
-import Logo from "./Logo";
 
 const Base = styled.header(
   {

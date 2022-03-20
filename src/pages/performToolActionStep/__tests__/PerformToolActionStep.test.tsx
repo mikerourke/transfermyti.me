@@ -1,9 +1,6 @@
 import React from "react";
 import { Provider } from "react-redux";
 
-import PerformToolActionStep, {
-  PerformToolActionStepComponent,
-} from "../PerformToolActionStep";
 import { render, RenderResult } from "~/jestHelpers";
 import {
   includedCountsByEntityGroupSelector,
@@ -15,6 +12,10 @@ import {
   state,
 } from "~/redux/__mocks__/mockStoreWithState";
 import { FetchStatus, ToolAction, ReduxState } from "~/typeDefs";
+
+import PerformToolActionStep, {
+  PerformToolActionStepComponent,
+} from "../PerformToolActionStep";
 
 // TODO: Fix this test, it's failing because of portals.
 describe.skip("the <PerformToolActionStep> container component", () => {

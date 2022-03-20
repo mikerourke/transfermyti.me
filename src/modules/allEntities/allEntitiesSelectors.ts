@@ -1,6 +1,5 @@
-import { createSelector } from "reselect";
-
 import * as R from "ramda";
+import { createSelector } from "reselect";
 
 import {
   BaseEntityModel,

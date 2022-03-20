@@ -1,9 +1,10 @@
 import cases from "jest-in-case";
 import * as R from "ramda";
 
-import * as tagsActions from "../tagsActions";
-import { tagsReducer, initialState } from "../tagsReducer";
+import * as tagsActions from "~/modules/tags/tagsActions";
 import { state, invalidAction } from "~/redux/__mocks__/mockStoreWithState";
+
+import { tagsReducer, initialState } from "../tagsReducer";
 
 const TEST_TAGS_STATE = { ...state.tags };
 

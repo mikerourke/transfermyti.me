@@ -1,6 +1,5 @@
-import { createSelector, Selector } from "reselect";
-
 import * as R from "ramda";
+import { createSelector, Selector } from "reselect";
 
 import { activeWorkspaceIdSelector } from "~/modules/workspaces/workspacesSelectors";
 import {

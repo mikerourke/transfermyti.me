@@ -1,7 +1,8 @@
 import cases from "jest-in-case";
 
-import * as textTransforms from "../textTransforms";
 import { EntityGroup } from "~/typeDefs";
+
+import * as textTransforms from "../textTransforms";
 
 describe("within textTransforms", () => {
   describe("the booleanToYesNo method", () => {

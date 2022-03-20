@@ -1,6 +1,5 @@
-import { createSelector } from "reselect";
-
 import * as R from "ramda";
+import { createSelector } from "reselect";
 
 import { activeWorkspaceIdSelector } from "~/modules/workspaces/workspacesSelectors";
 import { ReduxState, UserGroupModel } from "~/typeDefs";

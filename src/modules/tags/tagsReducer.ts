@@ -3,9 +3,8 @@ import { ActionType, createReducer } from "typesafe-actions";
 
 import { updateAreAllRecordsIncluded } from "~/entityOperations/updateAreAllRecordsIncluded";
 import { flushAllEntities } from "~/modules/allEntities/allEntitiesActions";
+import * as tagsActions from "~/modules/tags/tagsActions";
 import { Mapping, TagsByIdModel } from "~/typeDefs";
-
-import * as tagsActions from "./tagsActions";
 
 type TagsAction = ActionType<typeof tagsActions | typeof flushAllEntities>;
 

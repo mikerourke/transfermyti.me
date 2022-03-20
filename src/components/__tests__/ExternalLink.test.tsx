@@ -1,7 +1,8 @@
 import React from "react";
 
-import ExternalLink from "../ExternalLink";
 import { render, RenderResult } from "~/jestHelpers";
+
+import ExternalLink from "../ExternalLink";
 
 const setup = (
   propOverrides: any = {},

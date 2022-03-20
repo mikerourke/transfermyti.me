@@ -11,6 +11,8 @@ import {
 import { showErrorNotification } from "~/modules/app/appActions";
 import { updateIsProjectIncluded } from "~/modules/projects/projectsActions";
 import { sourceProjectsSelector } from "~/modules/projects/projectsSelectors";
+import * as clockifySagas from "~/modules/tasks/sagas/clockifyTasksSagas";
+import * as togglSagas from "~/modules/tasks/sagas/togglTasksSagas";
 import * as tasksActions from "~/modules/tasks/tasksActions";
 import {
   includedSourceTasksCountSelector,
@@ -26,9 +28,6 @@ import {
   ToolAction,
   ToolName,
 } from "~/typeDefs";
-
-import * as clockifySagas from "./clockifyTasksSagas";
-import * as togglSagas from "./togglTasksSagas";
 
 export function* taskMonitoringSaga(): SagaIterator {
   yield all([

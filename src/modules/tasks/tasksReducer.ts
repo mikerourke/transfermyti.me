@@ -3,9 +3,8 @@ import { ActionType, createReducer } from "typesafe-actions";
 
 import { updateAreAllRecordsIncluded } from "~/entityOperations/updateAreAllRecordsIncluded";
 import { flushAllEntities } from "~/modules/allEntities/allEntitiesActions";
+import * as tasksActions from "~/modules/tasks/tasksActions";
 import { Mapping, TasksByIdModel } from "~/typeDefs";
-
-import * as tasksActions from "./tasksActions";
 
 type TasksAction = ActionType<typeof tasksActions | typeof flushAllEntities>;
 

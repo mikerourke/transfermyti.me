@@ -1,9 +1,10 @@
 import cases from "jest-in-case";
 import * as R from "ramda";
 
-import * as clientsActions from "../clientsActions";
-import { clientsReducer, initialState } from "../clientsReducer";
+import * as clientsActions from "~/modules/clients/clientsActions";
 import { state, invalidAction } from "~/redux/__mocks__/mockStoreWithState";
+
+import { clientsReducer, initialState } from "../clientsReducer";
 
 const TEST_CLIENTS_STATE = { ...state.clients };
 

@@ -2,9 +2,8 @@ import * as R from "ramda";
 import { ActionType, createReducer } from "typesafe-actions";
 
 import { flushAllEntities } from "~/modules/allEntities/allEntitiesActions";
+import * as usersActions from "~/modules/users/usersActions";
 import { Mapping, UsersByIdModel } from "~/typeDefs";
-
-import * as usersActions from "./usersActions";
 
 type UsersAction = ActionType<typeof usersActions | typeof flushAllEntities>;
 

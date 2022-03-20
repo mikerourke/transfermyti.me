@@ -8,15 +8,14 @@ import {
   toolNameByMappingSelector,
 } from "~/modules/allEntities/allEntitiesSelectors";
 import { showErrorNotification } from "~/modules/app/appActions";
+import * as clockifySagas from "~/modules/userGroups/sagas/clockifyUserGroupsSagas";
+import * as togglSagas from "~/modules/userGroups/sagas/togglUserGroupsSagas";
 import * as userGroupsActions from "~/modules/userGroups/userGroupsActions";
 import {
   includedSourceUserGroupsSelector,
   sourceUserGroupsForTransferSelector,
 } from "~/modules/userGroups/userGroupsSelectors";
 import { Mapping, ToolAction, ToolName, UserGroupsByIdModel } from "~/typeDefs";
-
-import * as clockifySagas from "./clockifyUserGroupsSagas";
-import * as togglSagas from "./togglUserGroupsSagas";
 
 /**
  * Creates user groups in the target tool based on the included user groups from

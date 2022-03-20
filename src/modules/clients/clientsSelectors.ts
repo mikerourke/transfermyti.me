@@ -1,6 +1,5 @@
-import { createSelector, createStructuredSelector, Selector } from "reselect";
-
 import * as R from "ramda";
+import { createSelector, createStructuredSelector, Selector } from "reselect";
 
 import { selectIdToLinkedId } from "~/entityOperations/selectIdToLinkedId";
 import { mappingByToolNameSelector } from "~/modules/allEntities/allEntitiesSelectors";

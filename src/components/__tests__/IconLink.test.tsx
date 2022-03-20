@@ -1,7 +1,8 @@
 import React from "react";
 
-import IconLink from "../IconLink";
 import { render, RenderResult } from "~/jestHelpers";
+
+import IconLink from "../IconLink";
 
 const setup = (
   propOverrides: any = {},

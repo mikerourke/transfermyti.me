@@ -3,7 +3,6 @@ import cases from "jest-in-case";
 import { expectSaga } from "redux-saga-test-plan";
 import { select } from "redux-saga/effects";
 
-import { appSaga } from "../appSaga";
 import {
   flushAllEntities,
   updatePushAllChangesFetchStatus,
@@ -17,6 +16,8 @@ import { credentialsByMappingSelector } from "~/modules/credentials/credentialsS
 import { sourceWorkspacesSelector } from "~/modules/workspaces/workspacesSelectors";
 import { state } from "~/redux/__mocks__/mockStoreWithState";
 import { RoutePath, FetchStatus, ToolName } from "~/typeDefs";
+
+import { appSaga } from "../appSaga";
 
 describe("within appSaga", () => {
   const providers = [

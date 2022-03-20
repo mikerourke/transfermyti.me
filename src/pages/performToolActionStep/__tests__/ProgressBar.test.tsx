@@ -1,7 +1,8 @@
 import React from "react";
 
-import ProgressBar from "../ProgressBar";
 import { render, RenderResult } from "~/jestHelpers";
+
+import ProgressBar from "../ProgressBar";
 
 const setup = (
   propOverrides: any = {},

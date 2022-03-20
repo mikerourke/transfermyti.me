@@ -2,7 +2,6 @@ import { expectSaga } from "redux-saga-test-plan";
 import * as matchers from "redux-saga-test-plan/matchers";
 import { throwError } from "redux-saga-test-plan/providers";
 
-import { allEntitiesSaga } from "../allEntitiesSaga";
 import * as allEntitiesActions from "~/modules/allEntities/allEntitiesActions";
 import * as clientsSagas from "~/modules/clients/sagas/clientsSagas";
 import * as projectsSagas from "~/modules/projects/sagas/projectsSagas";
@@ -10,6 +9,8 @@ import * as tagsSagas from "~/modules/tags/sagas/tagsSagas";
 import * as tasksSagas from "~/modules/tasks/sagas/tasksSagas";
 import * as timeEntriesSagas from "~/modules/timeEntries/sagas/timeEntriesSagas";
 import { EntityGroup } from "~/typeDefs";
+
+import { allEntitiesSaga } from "../allEntitiesSaga";
 
 describe("within allEntitiesSaga", () => {
   test("the createAllEntitiesSaga dispatches the correct actions", () => {

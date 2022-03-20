@@ -8,6 +8,8 @@ import {
   toolNameByMappingSelector,
 } from "~/modules/allEntities/allEntitiesSelectors";
 import { showErrorNotification } from "~/modules/app/appActions";
+import * as clockifySagas from "~/modules/timeEntries/sagas/clockifyTimeEntriesSagas";
+import * as togglSagas from "~/modules/timeEntries/sagas/togglTimeEntriesSagas";
 import * as timeEntriesActions from "~/modules/timeEntries/timeEntriesActions";
 import {
   includedSourceTimeEntriesSelector,
@@ -20,9 +22,6 @@ import {
   ToolAction,
   ToolName,
 } from "~/typeDefs";
-
-import * as clockifySagas from "./clockifyTimeEntriesSagas";
-import * as togglSagas from "./togglTimeEntriesSagas";
 
 /**
  * Creates time entries in the target tool based on the included time entries

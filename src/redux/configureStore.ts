@@ -13,11 +13,10 @@ import { credentialsSaga } from "~/modules/credentials/sagas/credentialsSaga";
 import { projectMonitoringSaga } from "~/modules/projects/sagas/projectsSagas";
 import { taskMonitoringSaga } from "~/modules/tasks/sagas/tasksSagas";
 import { workspacesSaga } from "~/modules/workspaces/sagas/workspacesSaga";
+import { analyticsMiddleware } from "~/redux/analyticsMiddlewares";
+import { ReduxState, ReduxStore } from "~/redux/reduxTypes";
+import { createRootReducer, RouterReducer } from "~/redux/rootReducer";
 import { getIfDev } from "~/utilities/getIfDev";
-
-import { analyticsMiddleware } from "./analyticsMiddlewares";
-import { ReduxState, ReduxStore } from "./reduxTypes";
-import { createRootReducer, RouterReducer } from "./rootReducer";
 
 const devTools = window.__REDUX_DEVTOOLS_EXTENSION_COMPOSE__;
 const composeEnhancers: AnyValid = devTools || compose;

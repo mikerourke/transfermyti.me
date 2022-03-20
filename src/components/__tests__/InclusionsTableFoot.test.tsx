@@ -1,7 +1,8 @@
 import React from "react";
 
-import InclusionsTableFoot from "../InclusionsTableFoot";
 import { render, RenderResult } from "~/jestHelpers";
+
+import InclusionsTableFoot from "../InclusionsTableFoot";
 
 const TEST_TOTAL_COUNTS = {
   existsInTarget: 10,

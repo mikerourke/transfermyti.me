@@ -1,7 +1,8 @@
 import React from "react";
 
-import HelpDetails from "../HelpDetails";
 import { render, RenderResult } from "~/jestHelpers";
+
+import HelpDetails from "../HelpDetails";
 
 const setup = (
   propOverrides: any = {},

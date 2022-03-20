@@ -1,8 +1,9 @@
 import cases from "jest-in-case";
 
-import * as appActions from "../appActions";
-import { appReducer, initialState } from "../appReducer";
+import * as appActions from "~/modules/app/appActions";
 import { invalidAction } from "~/redux/__mocks__/mockStoreWithState";
+
+import { appReducer, initialState } from "../appReducer";
 
 describe("within appReducer", () => {
   test("returns input state if an invalid action type is passed to the reducer", () => {

@@ -5,15 +5,13 @@ import {
   updateToolAction,
   updateToolNameByMapping,
 } from "~/modules/allEntities/allEntitiesActions";
-
 import {
   storeCredentials,
   validateCredentials,
 } from "~/modules/credentials/credentialsActions";
-
-import { resetCredentialsSaga } from "./resetCredentialsSaga";
-import { storeCredentialsSaga } from "./storeCredentialsSaga";
-import { validateCredentialsSaga } from "./validateCredentialsSaga";
+import { resetCredentialsSaga } from "~/modules/credentials/sagas/resetCredentialsSaga";
+import { storeCredentialsSaga } from "~/modules/credentials/sagas/storeCredentialsSaga";
+import { validateCredentialsSaga } from "~/modules/credentials/sagas/validateCredentialsSaga";
 
 export function* credentialsSaga(): SagaIterator {
   yield all([

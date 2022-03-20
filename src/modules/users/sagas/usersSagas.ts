@@ -8,15 +8,14 @@ import {
   toolNameByMappingSelector,
 } from "~/modules/allEntities/allEntitiesSelectors";
 import { showErrorNotification } from "~/modules/app/appActions";
+import * as clockifySagas from "~/modules/users/sagas/clockifyUsersSagas";
+import * as togglSagas from "~/modules/users/sagas/togglUsersSagas";
 import * as usersActions from "~/modules/users/usersActions";
 import {
   includedSourceUsersSelector,
   sourceUserEmailsByWorkspaceIdSelector,
 } from "~/modules/users/usersSelectors";
 import { Mapping, ToolAction, ToolName, UsersByIdModel } from "~/typeDefs";
-
-import * as clockifySagas from "./clockifyUsersSagas";
-import * as togglSagas from "./togglUsersSagas";
 
 /**
  * Invites users to the target tool based on the source users.
