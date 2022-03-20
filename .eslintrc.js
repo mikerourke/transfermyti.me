@@ -116,7 +116,7 @@ module.exports = {
   },
   overrides: [
     {
-      files: ["scripts/*", "server/**/*.js"],
+      files: ["*.mjs"],
       rules: {
         "no-console": "off",
         "@typescript-eslint/explicit-function-return-type": "off",

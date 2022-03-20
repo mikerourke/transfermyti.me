@@ -5,10 +5,8 @@ import { fileURLToPath, URL } from "url";
 import fse from "fs-extra";
 import { flatten, isNil, set } from "lodash-es";
 import fetch from "node-fetch";
-import { cyan, green, magenta, yellow } from "picocolors";
+import colors from "picocolors";
 import PromiseThrottle from "promise-throttle";
-import yargs from "yargs";
-import { hideBin } from "yargs/helpers";
 
 const httpEnvPath = fileURLToPath(
   new URL(path.join("..", "http-client.private.env.json"), import.meta.url),
@@ -29,12 +27,12 @@ const clockifyUserId = httpEnv.development["clockify-user-id"];
 /**
  * Deletes the time entries, clients, tags, and projects from all workspaces.
  */
-async function deleteEntitiesInWorkspaces() {
+export async function deleteEntitiesInWorkspaces() {
   const workspaces = await fetchValidWorkspaces();
 
   // Wait 1 second between each entity group, just to hedge my bets:
   for (const workspace of workspaces) {
-    console.log(cyan(`Processing ${workspace.name}...`));
+    console.log(colors.cyan(`Processing ${workspace.name}...`));
     await deleteEntityGroupInWorkspace(workspace.id, "time-entries");
     await pause(1000);
 
@@ -45,7 +43,7 @@ async function deleteEntitiesInWorkspaces() {
     await pause(1000);
 
     await deleteEntityGroupInWorkspace(workspace.id, "projects");
-    console.log(green(`Processing complete for ${workspace.name}`));
+    console.log(colors.green(`Processing complete for ${workspace.name}`));
   }
 }
 
@@ -53,7 +51,7 @@ async function deleteEntitiesInWorkspaces() {
  * Fetches the workspaces and corresponding projects, clients, tags, and time
  * entries for the user and outputs them to a "clockify.json" file in the CWD.
  */
-async function writeEntitiesToOutputFile() {
+export async function writeEntitiesToOutputFile() {
   const outputPath = path.resolve(process.cwd(), "clockify.json");
   await fse.remove(outputPath);
 
@@ -66,7 +64,7 @@ async function writeEntitiesToOutputFile() {
   };
 
   for (const { id, name, ...workspace } of workspaces) {
-    console.log(cyan(`Processing ${name}...`));
+    console.log(colors.cyan(`Processing ${name}...`));
     set(dataByWorkspaceName, [name, "data"], { id, ...workspace });
     await addEntityGroupToWorkspaceData(id, name, "projects");
     await pause(1000);
@@ -81,12 +79,11 @@ async function writeEntitiesToOutputFile() {
   }
 
   await fse.writeJson(outputPath, dataByWorkspaceName, { spaces: 2 });
-  console.log(green("Clockify entities written to file!"));
+  console.log(colors.green("Clockify entities written to file!"));
 }
 
 /**
- * Deletes all of the entities in the specified group from the specified
- * workspace.
+ * Deletes all the entities in the specified group from the specified workspace.
  */
 async function deleteEntityGroupInWorkspace(workspaceId, entityGroup) {
   if (entityGroup === "time-entries") {
@@ -99,7 +96,7 @@ async function deleteEntityGroupInWorkspace(workspaceId, entityGroup) {
   );
 
   if (!entityRecords || entityRecords.length === 0) {
-    return console.log(yellow(`No ${entityGroup} to delete.`));
+    return console.log(colors.yellow(`No ${entityGroup} to delete.`));
   }
 
   const baseEndpoint = getEntityGroupEndpoint(workspaceId, entityGroup);
@@ -108,15 +105,15 @@ async function deleteEntityGroupInWorkspace(workspaceId, entityGroup) {
 
   const { promiseThrottle, throttledFn } = buildThrottler(apiDeleteEntity);
 
-  console.log(cyan(`Deleting ${entityGroup} in workspace...`));
+  console.log(colors.cyan(`Deleting ${entityGroup} in workspace...`));
   for (const { id, name } of entityRecords) {
     await promiseThrottle
       .add(throttledFn.bind(this, id))
       .then(() => {
-        console.log(green(`Delete ${name} successful`));
+        console.log(colors.green(`Delete ${name} successful`));
       })
       .catch((err) => {
-        console.log(magenta(`Error deleting ${entityGroup}: ${err}`));
+        console.log(colors.magenta(`Error deleting ${entityGroup}: ${err}`));
       });
   }
 }
@@ -162,11 +159,13 @@ async function deleteTimeEntriesInWorkspace(workspaceId) {
     await promiseThrottle
       .add(throttledFn.bind(this, id))
       .then(() => {
-        console.log(green(`Deleted ${currentEntry} of ${totalEntryCount}`));
+        console.log(
+          colors.green(`Deleted ${currentEntry} of ${totalEntryCount}`),
+        );
         currentEntry += 1;
       })
       .catch((err) => {
-        console.log(magenta(`Error deleting time entries: ${err}`));
+        console.log(colors.magenta(`Error deleting time entries: ${err}`));
       });
   }
 }
@@ -216,14 +215,14 @@ async function fetchTimeEntriesInWorkspace(workspaceId) {
         keepFetching = timeEntries.length === 100;
         allEntries.push(timeEntries);
         console.log(
-          green(
+          colors.green(
             `Fetched ${timeEntries.length} entries for page ${currentPage}`,
           ),
         );
       })
       .catch((err) => {
         keepFetching = false;
-        console.log(magenta(`Error fetching time entries: ${err}`));
+        console.log(colors.magenta(`Error fetching time entries: ${err}`));
       });
     currentPage += 1;
   }
@@ -315,20 +314,3 @@ async function clockifyFetch(endpoint, options) {
     return Promise.reject(err);
   }
 }
-
-yargs(hideBin(process.argv))
-  .command({
-    command: "delete",
-    describe: "Delete all entities on Clockify testing workspace",
-    handler: async () => {
-      await deleteEntitiesInWorkspaces();
-    },
-  })
-  .command({
-    command: "write",
-    describe: "Grabs all Clockify entities and writes them to ./clockify.json",
-    handler: async () => {
-      await writeEntitiesToOutputFile();
-    },
-  })
-  .help().argv;
