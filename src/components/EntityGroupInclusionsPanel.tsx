@@ -12,7 +12,7 @@ import {
   TableViewModel,
 } from "~/typeDefs";
 
-import { getEntityGroupDisplay } from "~/utils";
+import { getEntityGroupDisplay } from "~/utilities";
 
 import AccordionPanel from "./AccordionPanel";
 import InclusionsTable from "./InclusionsTable";

@@ -4,7 +4,7 @@ import storage from "store";
 
 import { STORAGE_KEY } from "~/constants";
 import { credentialsByMappingSelector } from "~/modules/credentials/credentialsSelectors";
-import { getIfDev } from "~/utils";
+import { getIfDev } from "~/utilities";
 
 export function* storeCredentialsSaga(): SagaIterator {
   const credentialsByMapping = yield select(credentialsByMappingSelector);

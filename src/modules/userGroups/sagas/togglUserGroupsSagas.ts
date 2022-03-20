@@ -10,7 +10,7 @@ import {
 } from "~/entityOperations/fetchActions";
 import { fetchEntitiesForTool } from "~/entityOperations/fetchEntitiesForTool";
 import { EntityGroup, ToolName, UserGroupModel } from "~/typeDefs";
-import { validStringify } from "~/utils";
+import { validStringify } from "~/utilities";
 
 interface TogglUserGroupResponseModel {
   id: number;

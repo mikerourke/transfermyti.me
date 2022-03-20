@@ -22,7 +22,7 @@ import {
 } from "~/modules/allEntities/allEntitiesSelectors";
 import { activeWorkspaceIdSelector } from "~/modules/workspaces/workspacesSelectors";
 import { FetchStatus, ReduxState, RoutePath, ToolAction } from "~/typeDefs";
-import { capitalize } from "~/utils";
+import { capitalize } from "~/utilities";
 
 import ActiveWorkspaceSelect from "./ActiveWorkspaceSelect";
 import InclusionsPanelsAccordion from "./InclusionsPanelsAccordion";

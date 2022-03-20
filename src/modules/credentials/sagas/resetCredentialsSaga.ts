@@ -2,7 +2,7 @@ import type { SagaIterator } from "redux-saga";
 import { put } from "redux-saga/effects";
 
 import { flushCredentials } from "~/modules/credentials/credentialsActions";
-import { getIfDev } from "~/utils";
+import { getIfDev } from "~/utilities";
 
 /**
  * If the user changes the tool action or mapping, we don't want to keep the

@@ -13,7 +13,7 @@ import { credentialsSaga } from "~/modules/credentials/sagas/credentialsSaga";
 import { projectMonitoringSaga } from "~/modules/projects/sagas/projectsSagas";
 import { taskMonitoringSaga } from "~/modules/tasks/sagas/tasksSagas";
 import { workspacesSaga } from "~/modules/workspaces/sagas/workspacesSaga";
-import { getIfDev } from "~/utils";
+import { getIfDev } from "~/utilities";
 
 import { analyticsMiddleware } from "./analyticsMiddlewares";
 import { ReduxState, ReduxStore } from "./reduxTypes";

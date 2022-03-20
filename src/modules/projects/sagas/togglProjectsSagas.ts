@@ -13,7 +13,7 @@ import {
 import { fetchEntitiesForTool } from "~/entityOperations/fetchEntitiesForTool";
 import { clientIdToLinkedIdSelector } from "~/modules/clients/clientsSelectors";
 import { EntityGroup, ProjectModel, ToolName } from "~/typeDefs";
-import { validStringify } from "~/utils";
+import { validStringify } from "~/utilities";
 
 interface TogglProjectResponseModel {
   id: number;

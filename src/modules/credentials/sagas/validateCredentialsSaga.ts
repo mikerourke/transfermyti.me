@@ -7,7 +7,7 @@ import { validateCredentials } from "~/modules/credentials/credentialsActions";
 import { credentialsByMappingSelector } from "~/modules/credentials/credentialsSelectors";
 import { TogglWorkspaceResponseModel } from "~/modules/workspaces/sagas/togglWorkspacesSagas";
 import { ToolName, ValidationErrorsByMappingModel } from "~/typeDefs";
-import { validStringify } from "~/utils";
+import { validStringify } from "~/utilities";
 
 interface TogglMeResponseModel {
   since: number;

@@ -12,7 +12,7 @@ import {
 import { fetchEntitiesForTool } from "~/entityOperations/fetchEntitiesForTool";
 import { projectIdToLinkedIdSelector } from "~/modules/projects/projectsSelectors";
 import { EntityGroup, TaskModel, ToolName } from "~/typeDefs";
-import { validStringify } from "~/utils";
+import { validStringify } from "~/utilities";
 
 interface TogglTaskResponseModel {
   name: string;
