@@ -29,7 +29,6 @@ function getEnvironmentPlugin(env, argv) {
       TMT_LOCAL_API_TOGGL_EMPTY: false,
       TMT_LOCAL_API_PORT: 9009,
       TMT_USE_LOCAL_API: true,
-      GA_DEBUG: true,
     };
   } else {
     const contents = fs.readFileSync(envFilePath);

@@ -1,5 +1,4 @@
 import React from "react";
-import ReactGA from "react-ga";
 import { connect } from "react-redux";
 import { PayloadActionCreator } from "typesafe-actions";
 
@@ -9,7 +8,7 @@ import {
   targetToolTrackerUrlSelector,
 } from "~/modules/allEntities/allEntitiesSelectors";
 import { flushCredentials } from "~/modules/credentials/credentialsActions";
-import { AnalyticsEventCategory, ReduxState } from "~/typeDefs";
+import { ReduxState } from "~/typeDefs";
 
 import BuyMeACoffeeButton from "./BuyMeACoffeeButton";
 
@@ -66,14 +65,6 @@ export const ToolActionSuccessComponent: React.FC<Props> = (props) => {
     props.onFlushCredentials();
   }, []);
 
-  const handleGoToTargetClick = (): void => {
-    ReactGA.event({
-      category: AnalyticsEventCategory.UIInteraction,
-      action: "Go To Result",
-      label: `Target: ${props.targetToolDisplayName}`,
-    });
-  };
-
   const buttonColor =
     props.targetToolDisplayName.toLowerCase() === "toggl"
       ? "var(--color-toggl-red)"
@@ -101,7 +92,6 @@ export const ToolActionSuccessComponent: React.FC<Props> = (props) => {
           href={props.targetToolTrackerUrl}
           rel="noopener noreferrer"
           target="_blank"
-          onClick={handleGoToTargetClick}
           style={{ backgroundColor: buttonColor }}
         >
           <span>Go To {props.targetToolDisplayName}</span>

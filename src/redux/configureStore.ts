@@ -13,7 +13,6 @@ import { credentialsSaga } from "~/modules/credentials/sagas/credentialsSaga";
 import { projectMonitoringSaga } from "~/modules/projects/sagas/projectsSagas";
 import { taskMonitoringSaga } from "~/modules/tasks/sagas/tasksSagas";
 import { workspacesSaga } from "~/modules/workspaces/sagas/workspacesSaga";
-import { analyticsMiddleware } from "~/redux/analyticsMiddlewares";
 import { ReduxState, ReduxStore } from "~/redux/reduxTypes";
 import { createRootReducer, RouterReducer } from "~/redux/rootReducer";
 import { isDevelopmentMode, isUseLocalApi } from "~/utilities/environment";
@@ -39,11 +38,7 @@ export function configureStore(history: History): ReduxStore {
   const rootReducer = createRootReducer(routerReducer);
   const sagaMiddleware = createSagaMiddleware();
 
-  const middleware = [
-    sagaMiddleware,
-    routerMiddleware(history),
-    analyticsMiddleware,
-  ];
+  const middleware = [sagaMiddleware, routerMiddleware(history)];
 
   const store = createStore(
     rootReducer,
