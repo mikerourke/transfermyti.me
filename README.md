@@ -48,15 +48,15 @@ section.
 
 1. Install dependencies with `yarn install`
 2. Rename `.env.example` to `.env`
-3. Set `USE_LOCAL_API` to `true` in the `.env` file
-4. Set `LOCAL_API_<TOOL>_EMPTY` to `true` in the `.env` file if you want either of the mock APIs to return empty records (useful for testing transfer)
-5. Run `yarn start` (no data will be transferred from Toggl to Clockify)
-6. Navigate to `http://localhost:3000`
+3. Set `TMT_USE_LOCAL_API` to `true` in the `.env` file
+4. Set `TMT_LOCAL_API_<TOOL>_EMPTY` to `true` in the `.env` file if you want either of the mock APIs to return empty records (useful for testing transfer)
+5. Run `yarn start:server` (no data will be transferred from Toggl to Clockify)
+6. Run `yarn start:web` to start the web application
+7. Navigate to `http://localhost:9008`
 
 ### Development Without the Mock Server
 
 1. Install dependencies with `yarn install`
 2. Rename `.env.example` to `.env`
-3. Set `USE_LOCAL_API` to `false`
-4. Run `yarn start:web`
-5. Navigate to `http://localhost:3000`
+3. Run `yarn start:web --env TMT_USE_LOCAL_API=false`
+4. Navigate to `http://localhost:9008`

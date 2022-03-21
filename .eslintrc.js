@@ -120,6 +120,8 @@ module.exports = {
       rules: {
         "no-console": "off",
         "@typescript-eslint/explicit-function-return-type": "off",
+        "import/default": "off",
+        "import/no-default-export": "off",
       },
     },
     {

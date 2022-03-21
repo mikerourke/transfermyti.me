@@ -3,6 +3,7 @@
     "window": true
   },
   "collectCoverageFrom": ["src/**/*.{ts,tsx}"],
+  "coverageDirectory": "out/coverage",
   "coveragePathIgnorePatterns": [
     "/node_modules/",
     "__fixtures__",

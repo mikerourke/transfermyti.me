@@ -12,7 +12,7 @@ const dbPath = fileURLToPath(
 const db = fse.readJsonSync(dbPath);
 
 // noinspection EqualityComparisonWithCoercionJS
-const isEmpty = process.env.LOCAL_API_TOGGL_EMPTY == "true";
+const isEmpty = process.env.TMT_LOCAL_API_TOGGL_EMPTY == "true";
 
 export function assignTogglRoutes(router) {
   router

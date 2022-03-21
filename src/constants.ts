@@ -1,10 +1,12 @@
 // @ts-ignore
-const API_PORT = process.env.LOCAL_API_PORT;
+const API_PORT = process.env.TMT_LOCAL_API_PORT;
 export const LOCAL_API_URL = `http://localhost:${API_PORT}/api`;
+
+console.log(process.env);
 
 export const IS_USING_LOCAL_API =
   // @ts-ignore
-  process.env.USE_LOCAL_API === "true" || process.env.NODE_ENV === "test";
+  process.env.TMT_USE_LOCAL_API === "true" || process.env.NODE_ENV === "test";
 
 export const STORAGE_KEY = "transfermytime";
 
