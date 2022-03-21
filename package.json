@@ -26,7 +26,6 @@
   "dependencies": {
     "@emotion/react": "^11.4.0",
     "@emotion/styled": "^11.3.0",
-    "color": "^3.1.2",
     "connected-react-router": "^6.6.1",
     "cuid": "^2.1.8",
     "date-fns": "^2.8.1",
@@ -60,7 +59,6 @@
     "@emotion/jest": "^11.3.0",
     "@testing-library/jest-dom": "^5.1.0",
     "@testing-library/react": "^12.1.2",
-    "@types/color": "^3.0.1",
     "@types/jest": "^27.0.3",
     "@types/jest-in-case": "^1.0.1",
     "@types/qs": "^6.9.0",

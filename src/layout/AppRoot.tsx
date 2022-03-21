@@ -1,5 +1,4 @@
 import { ThemeProvider } from "@emotion/react";
-import Color from "color";
 import React from "react";
 import { Helmet } from "react-helmet";
 
@@ -13,9 +12,6 @@ const AppRoot: React.FC = (props) => {
   const description = "Transfer your data between time tracking tools.";
   const title = "transfermyti.me";
   const cardImageUrl = "https://transfermyti.me/logo-card.png";
-
-  const primaryColor = Color(customTheme.colors.primary).hex();
-  const secondaryColor = Color(customTheme.colors.secondary).hex();
 
   return (
     <ThemeProvider theme={customTheme}>
@@ -60,8 +56,8 @@ const AppRoot: React.FC = (props) => {
           href="/favicon-16x16.png"
         />
         <link rel="manifest" href="/site.webmanifest" />
-        <meta name="msapplication-TileColor" content={primaryColor} />
-        <meta name="theme-color" content={secondaryColor} />
+        <meta name="msapplication-TileColor" content="#1e78a1" />
+        <meta name="theme-color" content="#effde8" />
       </Helmet>
 
       <Header />
