@@ -29,16 +29,16 @@ jobs:
       - uses: actions/setup-node@v2
         with:
           node-version: '16'
-          cache: 'yarn'
+          cache: 'pnpm'
 
       - name: Install Dependencies
-        run: yarn install
+        run: pnpm install
 
       - name: Lint
-        run: yarn lint
+        run: pnpm lint
 
       - name: Check Types
-        run: yarn typecheck
+        run: pnpm typecheck
 
       - name: Test
-        run: yarn test
+        run: pnpm test
