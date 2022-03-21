@@ -1,7 +1,0 @@
-// Jest Snapshot v1, https://goo.gl/fbAQLP
-
-exports[`the <InclusionsTable> component matches its snapshot with valid props 1`] = `
-<table
-  role="grid"
-/>
-`;
