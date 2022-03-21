@@ -11,8 +11,7 @@ import PickToolActionStep from "~/pages/pickToolActionStep/PickToolActionStep";
 import SelectInclusionsStep from "~/pages/selectInclusionsStep/SelectInclusionsStep";
 import SelectSourceWorkspacesStep from "~/pages/selectSourceWorkspacesStep/SelectSourceWorkspacesStep";
 import ToolActionSuccess from "~/pages/toolActionSuccess/ToolActionSuccess";
-
-import { RoutePath } from "~/./typeDefs";
+import { RoutePath } from "~/typeDefs";
 
 interface Props {
   history: History;

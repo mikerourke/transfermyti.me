@@ -9,34 +9,28 @@ import {
 } from "~/modules/workspaces/workspacesSelectors";
 import { ReduxState, WorkspaceModel } from "~/typeDefs";
 
-const Base = styled.div(
-  {
-    display: "inline-block",
-    marginBottom: "1rem",
-    position: "relative",
-    width: "100%",
-  },
-  ({ theme }) => ({
-    "&:hover,&:focus": {
-      select: {
-        color: theme.colors.primary,
-      },
+const StyledField = styled.div`
+  position: relative;
+  display: inline-block;
+  width: 100%;
+  margin-bottom: 1rem;
 
-      span: {
-        borderTopColor: theme.colors.primary,
-      },
-    },
-  }),
-);
+  &:hover,
+  &:focus {
+    select {
+      color: var(--color-primary);
+    }
 
-const Label = styled.label(
-  {
-    fontSize: "1rem",
-  },
-  ({ theme }) => ({
-    fontWeight: theme.fontWeights.bold,
-  }),
-);
+    span {
+      border-top-color: var(--color-primary);
+    }
+  }
+
+  label {
+    font-size: 1rem;
+    font-weight: var(--font-weight-bold);
+  }
+`;
 
 interface ConnectStateProps {
   activeWorkspaceId: string;
@@ -55,8 +49,9 @@ export const ActiveWorkspaceSelectComponent: React.FC<Props> = (props) => {
   };
 
   return (
-    <Base>
-      <Label htmlFor="active-workspace-select">Active Workspace</Label>
+    <StyledField>
+      <label htmlFor="active-workspace-select">Active Workspace</label>
+
       <WorkspaceSelect
         id="active-workspace-select"
         name="active-workspace-select"
@@ -64,7 +59,7 @@ export const ActiveWorkspaceSelectComponent: React.FC<Props> = (props) => {
         value={props.activeWorkspaceId}
         onSelectWorkspace={handleSelectWorkspace}
       />
-    </Base>
+    </StyledField>
   );
 };
 

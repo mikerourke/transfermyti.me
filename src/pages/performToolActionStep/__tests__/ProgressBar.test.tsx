@@ -1,6 +1,7 @@
 import React from "react";
 
 import { render, RenderResult } from "~/jestHelpers";
+import { EntityGroup } from "~/modules/allEntities/allEntitiesTypes";
 
 import ProgressBar from "../ProgressBar";
 
@@ -10,7 +11,7 @@ const setup = (
   const props = {
     completedCount: 10,
     totalCount: 20,
-    title: "Test",
+    entityGroup: EntityGroup.Projects,
     ...propOverrides,
   };
 
@@ -23,13 +24,13 @@ describe("the <ProgressBar> component", () => {
   test("renders successfully with valid props", () => {
     const { wrapper } = setup();
 
-    expect(wrapper.getByText("Test")).toBeInTheDocument();
+    expect(wrapper.getByText("Projects")).toBeInTheDocument();
   });
 
   test("renders nothing if props.totalCount = 0", () => {
     const { wrapper } = setup({ totalCount: 0 });
 
-    expect(wrapper.queryByText("Test")).toBeNull();
+    expect(wrapper.queryByText("Projects")).toBeNull();
   });
 
   test("uses 0% for width percentage if percentage is NaN", () => {

@@ -3,7 +3,7 @@ import React from "react";
 import { connect } from "react-redux";
 import { PayloadActionCreator } from "typesafe-actions";
 
-import { Flex, HelpDetails, NavigationButtonsRow, Note } from "~/components";
+import { HelpDetails, NavigationButtonsRow } from "~/components";
 import {
   createAllEntities,
   deleteAllEntities,
@@ -23,7 +23,7 @@ import {
   RoutePath,
   ToolAction,
 } from "~/typeDefs";
-import { capitalize, getEntityGroupDisplay } from "~/utilities/textTransforms";
+import { capitalize } from "~/utilities/textTransforms";
 
 import ConfirmToolActionModal from "./ConfirmToolActionModal";
 import ProgressBar from "./ProgressBar";
@@ -109,32 +109,35 @@ export const PerformToolActionStepComponent: React.FC<Props> = (props) => {
   return (
     <section>
       <h1>Step 5: {title}</h1>
+
       <HelpDetails>
         <p>
           Press the <strong>Start</strong> button and confirm the action in the
           dialog.
         </p>
-        <Note>
+        <p className="note">
           Note: This could take several minutes due to API rate limiting.
-        </Note>
+        </p>
       </HelpDetails>
-      <Flex flexDirection="column">
+
+      <div style={{ display: "flex", flexDirection: "column" }}>
         {orderedEntityGroups.map((entityGroup) => (
           <ProgressBar
             key={entityGroup}
-            css={{ marginTop: 0 }}
-            title={getEntityGroupDisplay(entityGroup as EntityGroup)}
+            entityGroup={entityGroup as EntityGroup}
             completedCount={props.transferCountsByEntityGroup[entityGroup]}
             totalCount={totalCountsByEntityGroup[entityGroup]}
           />
         ))}
-      </Flex>
+      </div>
+
       <NavigationButtonsRow
         disabled={props.pushAllChangesFetchStatus === FetchStatus.InProcess}
         nextLabel="Start"
         onBackClick={handleBackClick}
         onNextClick={handleNextClick}
       />
+
       <ConfirmToolActionModal
         isOpen={isConfirmModalOpen}
         toolAction={props.toolAction}

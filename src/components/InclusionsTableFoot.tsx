@@ -16,11 +16,12 @@ const InclusionsTableFoot: React.FC<Props> = ({
   const totalLabel = totalsByTypeEntries.length === 1 ? "Total" : "Totals";
 
   return (
-    <tfoot css={{ "td:last-of-type": { textAlign: "center" } }} {...props}>
+    <tfoot {...props}>
       <tr>
-        <th css={{ textAlign: "right" }} colSpan={totalsColSpan}>
+        <th style={{ textAlign: "right" }} colSpan={totalsColSpan}>
           {totalLabel}
         </th>
+
         {totalsByTypeEntries.map(([type, totalCount]) => (
           <td key={type}>{totalCount}</td>
         ))}

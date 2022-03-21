@@ -3,29 +3,26 @@ import React from "react";
 import Button from "./Button";
 import { styled } from "./emotion";
 
-const Nav = styled.nav(
-  {
-    marginTop: "1rem",
+const StyledNav = styled.nav`
+  margin-top: 1rem;
 
-    button: {
-      minHeight: "3rem",
-      minWidth: "6.5rem",
+  button {
+    min-height: 3rem;
+    min-width: 6.5rem;
 
-      ":not(:last-of-type)": {
-        marginRight: "0.75rem",
-      },
-    },
-  },
-  ({ theme }) => ({
-    [theme.query.mobile]: {
-      button: {
-        minWidth: "unset",
-      },
-    },
-  }),
-);
+    &:not(:last-of-type) {
+      margin-right: 0.75rem;
+    }
+  }
 
-interface Props {
+  @media (max-width: 32rem) {
+    button {
+      min-width: unset;
+    }
+  }
+`;
+
+interface Props extends React.HTMLAttributes<HTMLElement> {
   disabled?: boolean;
   loading?: boolean;
   nextLabel?: string;
@@ -42,10 +39,11 @@ const NavigationButtonsRow: React.FC<Props> = ({
   onNextClick,
   ...props
 }) => (
-  <Nav {...props}>
+  <StyledNav {...props}>
     <Button variant="default" disabled={disabled} onClick={onBackClick}>
       Back
     </Button>
+
     <Button
       variant="primary"
       disabled={disabled}
@@ -54,8 +52,9 @@ const NavigationButtonsRow: React.FC<Props> = ({
     >
       {nextLabel}
     </Button>
+
     {children}
-  </Nav>
+  </StyledNav>
 );
 
 export default NavigationButtonsRow;

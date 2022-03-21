@@ -1,4 +1,3 @@
-import Color from "color";
 import cuid from "cuid";
 import React from "react";
 import { createPortal } from "react-dom";
@@ -6,65 +5,66 @@ import { Transition } from "react-transition-group";
 
 import Button from "./Button";
 import { styled } from "./emotion";
-import Flex from "./Flex";
 import { useModalAccessibility } from "./hooks";
 
-const Backdrop = styled(Flex)(
-  {
-    position: "fixed",
-    top: 0,
-    left: 0,
-    right: 0,
-    bottom: 0,
-    overflowY: "hidden",
-    transition: "opacity 100ms ease-in-out",
-    zIndex: 1,
-  },
-  ({ theme }) => ({
-    background: Color(theme.colors.midnight).alpha(0.9).hsl().string(),
-  }),
-);
+const StyledBackdrop = styled.div`
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  position: fixed;
+  top: 0;
+  right: 0;
+  bottom: 0;
+  left: 0;
+  overflow: hidden;
+  background-color: hsla(0deg 0% 24% / 60%);
+  z-index: var(--z-index-backdrop);
+`;
 
-const Container = styled.div(
-  {
-    borderRadius: "0.25rem",
-    marginTop: "20%",
-    maxWidth: "32rem",
-    minWidth: "24rem",
-    padding: "2rem",
-    zIndex: 2,
+const StyledDialog = styled.dialog`
+  appearance: none;
+  max-width: 32rem;
+  min-width: 24rem;
+  padding: 2rem;
+  border: none;
+  border-radius: 0.25rem;
+  background-color: var(--color-secondary);
+  color: var(--color-midnight);
+  box-shadow: var(--elevation-dp8);
+  z-index: var(--z-index-dialog);
 
-    h2: {
-      margin: "0 0 1.5rem",
-    },
-  },
-  ({ theme }) => ({
-    background: theme.colors.secondary,
-    boxShadow: theme.elevation.dp8,
-  }),
-);
+  h2 {
+    margin: 0 0 1.5rem;
+    font-size: 1.75rem;
+  }
 
-const Description = styled.div({
-  p: {
-    margin: "1rem 0",
-  },
-});
+  p {
+    margin: 1rem 0;
+  }
 
-const ActionsRow = styled(Flex)({
-  marginTop: "2rem",
+  ul {
+    display: flex;
+    justify-content: flex-end;
+    margin: 2rem 0 0;
+    padding: 0;
+  }
 
-  button: {
-    border: "none",
-    borderRadius: "0.25rem",
-    fontSize: "1rem",
-    padding: "0.5rem 0.75rem",
-    minWidth: "4rem",
+  li {
+    list-style: none;
+  }
 
-    "&:not(:last-of-type)": {
-      marginRight: "0.75rem",
-    },
-  },
-});
+  li:not(:last-of-type) {
+    margin-right: 0.75rem;
+  }
+
+  button {
+    border: none;
+    border-radius: 0.25rem;
+    font-size: 1rem;
+    padding: 0.5rem 0.75rem;
+    min-width: 6rem;
+  }
+`;
 
 interface Props {
   actions?: React.ReactNode;
@@ -99,33 +99,34 @@ const ModalDialog: React.FC<Props> = ({
     <ModalPortal>
       <Transition in={isOpen} timeout={100} unmountOnExit mountOnEnter>
         {(state) => (
-          <Backdrop
-            alignItems="flex-start"
-            justifyContent="center"
-            css={{ opacity: state === "entered" ? 1 : 0 }}
-          >
-            <Container
+          <StyledBackdrop style={{ opacity: state === "entered" ? 1 : 0 }}>
+            <StyledDialog
               role={role}
               id={modalId}
               aria-describedby={modalDescId}
               aria-labelledby={modalTitleId}
               aria-hidden={!isOpen}
               aria-modal
+              open={isOpen}
               {...props}
             >
               <div role="document">
                 <h2 id={modalTitleId}>{title}</h2>
-                <Description id={modalDescId}>{children}</Description>
-                <ActionsRow justifyContent="flex-end">
+
+                <div id={modalDescId}>{children}</div>
+
+                <ul>
                   {actions ?? (
-                    <Button variant="primary" onClick={onClose}>
-                      OK
-                    </Button>
+                    <li>
+                      <Button variant="primary" onClick={onClose}>
+                        OK
+                      </Button>
+                    </li>
                   )}
-                </ActionsRow>
+                </ul>
               </div>
-            </Container>
-          </Backdrop>
+            </StyledDialog>
+          </StyledBackdrop>
         )}
       </Transition>
     </ModalPortal>

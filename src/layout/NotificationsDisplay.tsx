@@ -1,7 +1,6 @@
 import React from "react";
 import { connect } from "react-redux";
 import { TransitionGroup, Transition } from "react-transition-group";
-import { TransitionStatus } from "react-transition-group/Transition";
 
 import { styled, useTheme } from "~/components";
 import NotificationToast from "~/layout/NotificationToast";
@@ -9,29 +8,24 @@ import { dismissNotification } from "~/modules/app/appActions";
 import { notificationsSelector } from "~/modules/app/appSelectors";
 import { NotificationModel, ReduxState } from "~/typeDefs";
 
-const Base = styled.div({
-  position: "absolute",
-  right: 0,
-  top: "4rem",
-  bottom: "6rem",
-  width: 0,
-});
+const StyledDiv = styled.div`
+  position: absolute;
+  top: 4rem;
+  right: 0;
+  bottom: 6rem;
+  width: 0;
+`;
 
-const CountIndicator = styled.div<{ transitionStatus: TransitionStatus }>(
-  {
-    position: "absolute",
-    left: 0,
-    right: 0,
-    transition: "opacity 300ms ease-in",
-    zIndex: 4,
-  },
-  ({ theme, transitionStatus }) => ({
-    background: theme.colors.secondary,
-    color: theme.colors.midnight,
-    fontWeight: theme.fontWeights.bold,
-    opacity: transitionStatus === "exiting" ? 0 : 1,
-  }),
-);
+const StyledCountIndicator = styled.div`
+  position: absolute;
+  left: 0;
+  right: 0;
+  transition: opacity 300ms ease-in;
+  z-index: 4;
+  background-color: var(--color-secondary);
+  color: var(--color-midnight);
+  font-weight: var(--font-weight-bold);
+`;
 
 export interface ConnectStateProps {
   notifications: NotificationModel[];
@@ -94,8 +88,8 @@ export const NotificationsDisplayComponent: React.FC<Props> = (props) => {
   const indicatorTopRems = (maxIndexAllowed + 1) * paddedNotificationHeight;
 
   return (
-    <Base ref={baseRef}>
-      <TransitionGroup css={{ height: "100%", position: "relative" }}>
+    <StyledDiv ref={baseRef}>
+      <TransitionGroup style={{ height: "100%", position: "relative" }}>
         {props.notifications.map((notification, index) => (
           <Transition
             key={notification.id}
@@ -114,20 +108,23 @@ export const NotificationsDisplayComponent: React.FC<Props> = (props) => {
             )}
           </Transition>
         ))}
+
         {showCounter && (
           <Transition key={currentMaxIndex} timeout={300}>
             {(transitionStatus) => (
-              <CountIndicator
-                css={{ top: `${indicatorTopRems}rem` }}
-                transitionStatus={transitionStatus}
+              <StyledCountIndicator
+                style={{
+                  top: `${indicatorTopRems}rem`,
+                  opacity: transitionStatus === "exiting" ? 0 : 1,
+                }}
               >
                 +{currentMaxIndex - maxIndexAllowed} notifications not shown
-              </CountIndicator>
+              </StyledCountIndicator>
             )}
           </Transition>
         )}
       </TransitionGroup>
-    </Base>
+    </StyledDiv>
   );
 };
 

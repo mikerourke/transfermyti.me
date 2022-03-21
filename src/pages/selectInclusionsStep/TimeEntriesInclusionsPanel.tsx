@@ -68,6 +68,7 @@ export const TimeEntriesInclusionsPanelComponent: React.FC<Props> = ({
           {props.toolAction === ToolAction.Transfer && (
             <>
               <TimeEntryComparisonDisclaimer />
+
               <DuplicateCheckToggle
                 onToggle={props.onFlipIsDuplicateCheckEnabled}
                 isToggled={props.isDuplicateCheckEnabled}

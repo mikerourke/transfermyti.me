@@ -2,7 +2,7 @@ import { push } from "connected-react-router";
 import React from "react";
 import { connect } from "react-redux";
 
-import { Flex, HelpDetails } from "~/components";
+import { HelpDetails, styled } from "~/components";
 import {
   updateToolAction,
   updateToolNameByMapping,
@@ -15,6 +15,13 @@ import {
 } from "~/typeDefs";
 
 import ToolActionCard from "./ToolActionCard";
+
+const StyledList = styled.ul`
+  display: flex;
+  justify-content: center;
+  flex-wrap: wrap;
+  padding: 0;
+`;
 
 interface ConnectDispatchProps {
   onPush: (path: RoutePath) => void;
@@ -40,28 +47,27 @@ export const PickToolActionStepComponent: React.FC<Props> = (props) => {
   return (
     <section>
       <h1>Step 1: Pick an Action</h1>
+
       <HelpDetails open>
         <p>
           Welcome to <strong>transfermyti.me</strong>! This tool can be used to
           transfer your content between time tracking tools like Toggl and
           Clockify.
         </p>
+
         <p>
           Each page has a help section that contains additional information
           about the step associated with that page. You can expand or collapse
           the help section by clicking on <strong>Show/Hide Help</strong>.
         </p>
+
         <p>
           Press the <strong>Select</strong> button for the action you wish to
           perform and you&apos;ll be guided through the appropriate steps.
         </p>
       </HelpDetails>
-      <Flex
-        as="ul"
-        css={{ listStyle: "none", padding: 0 }}
-        justifyContent="center"
-        flexWrap="wrap"
-      >
+
+      <StyledList>
         <ToolActionCard
           action={ToolAction.Transfer}
           source={ToolName.Toggl}
@@ -71,6 +77,7 @@ export const PickToolActionStepComponent: React.FC<Props> = (props) => {
         >
           Transfer your entries from Toggl to Clockify.me.
         </ToolActionCard>
+
         <ToolActionCard
           action={ToolAction.Transfer}
           source={ToolName.Clockify}
@@ -80,6 +87,7 @@ export const PickToolActionStepComponent: React.FC<Props> = (props) => {
         >
           Transfer your entries from Clockify.me to Toggl.
         </ToolActionCard>
+
         <ToolActionCard
           action={ToolAction.Delete}
           source={ToolName.Clockify}
@@ -89,6 +97,7 @@ export const PickToolActionStepComponent: React.FC<Props> = (props) => {
         >
           Bulk delete content from your Clockify.me account.
         </ToolActionCard>
+
         <ToolActionCard
           action={ToolAction.Delete}
           source={ToolName.Toggl}
@@ -98,7 +107,7 @@ export const PickToolActionStepComponent: React.FC<Props> = (props) => {
         >
           Bulk delete content from your Toggl account.
         </ToolActionCard>
-      </Flex>
+      </StyledList>
     </section>
   );
 };

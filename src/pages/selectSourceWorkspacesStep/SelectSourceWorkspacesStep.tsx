@@ -5,11 +5,10 @@ import { PayloadActionCreator } from "typesafe-actions";
 
 import {
   Button,
-  Flex,
   HelpDetails,
   Loader,
   NavigationButtonsRow,
-  Note,
+  styled,
 } from "~/components";
 import {
   fetchAllEntities,
@@ -51,6 +50,12 @@ import DuplicateTargetsModal from "./DuplicateTargetsModal";
 import MissingWorkspacesModal from "./MissingWorkspacesModal";
 import NoWorkspacesModal from "./NoWorkspacesModal";
 import SourceWorkspaceCard from "./SourceWorkspaceCard";
+
+const StyledList = styled.ul`
+  display: flex;
+  flex-wrap: wrap;
+  padding: 0;
+`;
 
 interface ConnectStateProps {
   areWorkspacesFetching: boolean;
@@ -142,6 +147,7 @@ export const SelectSourceWorkspacesStepComponent: React.FC<Props> = (props) => {
           deletion/transfer and press the <strong>Next</strong> button to move
           on to the inclusions selection step.
         </p>
+
         {props.toolAction === ToolAction.Transfer && (
           <p>
             Once a workspace is toggled, you must select a target workspace for
@@ -150,21 +156,24 @@ export const SelectSourceWorkspacesStepComponent: React.FC<Props> = (props) => {
             transferring to Toggl, you must create the workspaces first.
           </p>
         )}
+
         <p>
           If you decide you want to include additional workspaces, you&apos;ll
           need to come back to this page and select them, otherwise the
           corresponding data won&apos;t be fetched.
         </p>
-        <Note>
+
+        <p className="note">
           Only select the workspaces containing data you wish to update. The
           fetch process can take several minutes depending on the amount of data
           in each workspace.
-        </Note>
+        </p>
       </HelpDetails>
+
       {props.areWorkspacesFetching ? (
         <Loader>Loading workspaces, please wait...</Loader>
       ) : (
-        <Flex as="ul" css={{ listStyle: "none", padding: 0 }} flexWrap="wrap">
+        <StyledList>
           {props.sourceWorkspaces.map((workspace) => (
             <SourceWorkspaceCard
               key={workspace.id}
@@ -175,10 +184,11 @@ export const SelectSourceWorkspacesStepComponent: React.FC<Props> = (props) => {
               onToggleIncluded={props.onFlipIsWorkspaceIncluded}
             />
           ))}
-        </Flex>
+        </StyledList>
       )}
+
       <NavigationButtonsRow
-        css={{ marginTop: 0 }}
+        style={{ marginTop: 0 }}
         disabled={props.areWorkspacesFetching}
         onBackClick={handleBackClick}
         onNextClick={handleNextClick}
@@ -191,16 +201,19 @@ export const SelectSourceWorkspacesStepComponent: React.FC<Props> = (props) => {
           Refresh
         </Button>
       </NavigationButtonsRow>
+
       <NoWorkspacesModal
         isOpen={isNoSelectionsModalOpen}
         onClose={() => setIsNoSelectionsModalOpen(false)}
       />
+
       <MissingWorkspacesModal
         isOpen={isMissingWorkspacesModalOpen}
         targetToolDisplayName={props.targetToolDisplayName}
         workspaces={props.missingTargetWorkspaces}
         onClose={() => setIsMissingWorkspacesModalOpen(false)}
       />
+
       <DuplicateTargetsModal
         isOpen={isDuplicateTargetsModalOpen}
         onClose={() => setIsDuplicateTargetsModalOpen(false)}

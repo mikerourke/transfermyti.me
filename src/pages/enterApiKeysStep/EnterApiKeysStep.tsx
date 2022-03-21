@@ -139,25 +139,29 @@ const EnterApiKeysStepComponent: React.FC<Props> = (props) => {
   return (
     <section>
       <h1>Step 2: Enter API Keys</h1>
+
       <HelpDetails>
         <p>
           Enter your the API key for each tool in the input below. You can get
           the API key by clicking on the link above each input.
         </p>
+
         <p>
           These keys are needed to read and write data for the tools involved in
           the transfer. They are stored in global state while you use the tool.
           Once the transfer is complete, the values are cleared from state.
         </p>
+
         <p>
           Press the <strong>Next</strong> button to validate your keys and move
           on to the workspace selection step. If the key is invalid, an error
           message will be displayed below the invalid key.
         </p>
       </HelpDetails>
+
       <form
-        autoComplete="hidden"
-        css={{ margin: "0 1rem" }}
+        autoComplete="off"
+        style={{ margin: "0 1rem" }}
         onSubmit={(event) => event.preventDefault()}
       >
         <ApiKeyInputField
@@ -169,6 +173,7 @@ const EnterApiKeysStepComponent: React.FC<Props> = (props) => {
           value={inputValues.source ?? ""}
           errorMessage={inputErrors.source}
         />
+
         {target.toolName !== ToolName.None && (
           <ApiKeyInputField
             mapping={Mapping.Target}
@@ -181,6 +186,7 @@ const EnterApiKeysStepComponent: React.FC<Props> = (props) => {
           />
         )}
       </form>
+
       <NavigationButtonsRow
         loading={props.validationFetchStatus === FetchStatus.InProcess}
         onBackClick={handleBackClick}

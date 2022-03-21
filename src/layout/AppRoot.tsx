@@ -1,88 +1,17 @@
-import { Global, ThemeProvider } from "@emotion/react";
-import Color from "color";
+import { ThemeProvider } from "@emotion/react";
 import React from "react";
 import { Helmet } from "react-helmet";
 
-import { styled, theme as customTheme } from "~/components/emotion";
+import { theme as customTheme } from "~/components/emotion";
 import Footer from "~/layout/Footer";
 import Header from "~/layout/Header";
 import NotificationsDisplay from "~/layout/NotificationsDisplay";
-
-const Main = styled.main(
-  {
-    height: "calc(100vh - 10rem)",
-    margin: "0 auto",
-    maxWidth: "56rem",
-    overflowY: "auto",
-    padding: "0 1.5rem 1.5rem",
-    position: "relative",
-  },
-  ({ theme }) => ({
-    [theme.query.mobile]: {
-      padding: "0 0.375rem 1.5rem",
-    },
-  }),
-);
-
-const GlobalStyles: React.FC = () => (
-  <Global
-    styles={{
-      "*": {
-        boxSizing: "border-box",
-        fontFamily: customTheme.fonts.body,
-
-        "&:before, &:after": {
-          boxSizing: "border-box",
-        },
-      },
-
-      html: {
-        boxSizing: "border-box",
-        height: "100%",
-      },
-
-      body: {
-        backgroundColor: customTheme.colors.secondary,
-        color: customTheme.colors.primary,
-        lineHeight: customTheme.lineHeights.body,
-        margin: 0,
-        position: "relative",
-      },
-
-      "#app": {
-        margin: "0 auto",
-        minHeight: "100vh",
-      },
-
-      a: {
-        color: customTheme.colors.primary,
-        cursor: "pointer",
-        textDecoration: "none",
-
-        "&:hover,&:focus": {
-          textDecoration: "underline",
-        },
-      },
-
-      "h1,h2,h3,h4,h5,h6,p": {
-        margin: "1rem 0",
-      },
-
-      ul: {
-        margin: 0,
-      },
-    }}
-  />
-);
 
 const AppRoot: React.FC = (props) => {
   const author = "Mike Rourke";
   const description = "Transfer your data between time tracking tools.";
   const title = "transfermyti.me";
   const cardImageUrl = "https://transfermyti.me/logo-card.png";
-
-  const primaryColor = Color(customTheme.colors.primary).hex();
-  const secondaryColor = Color(customTheme.colors.secondary).hex();
 
   return (
     <ThemeProvider theme={customTheme}>
@@ -127,13 +56,16 @@ const AppRoot: React.FC = (props) => {
           href="/favicon-16x16.png"
         />
         <link rel="manifest" href="/site.webmanifest" />
-        <meta name="msapplication-TileColor" content={primaryColor} />
-        <meta name="theme-color" content={secondaryColor} />
+        <meta name="msapplication-TileColor" content="#1e78a1" />
+        <meta name="theme-color" content="#effde8" />
       </Helmet>
-      <GlobalStyles />
+
       <Header />
-      <Main role="main">{props.children}</Main>
+
+      <main>{props.children}</main>
+
       <NotificationsDisplay />
+
       <Footer />
     </ThemeProvider>
   );

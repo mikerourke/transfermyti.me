@@ -1,10 +1,9 @@
-import Color from "color";
 import React from "react";
 import ReactGA from "react-ga";
 import { connect } from "react-redux";
 import { PayloadActionCreator } from "typesafe-actions";
 
-import { Flex, getOpenInNewTabContent, styled } from "~/components";
+import { Icon, styled } from "~/components";
 import {
   targetToolDisplayNameSelector,
   targetToolTrackerUrlSelector,
@@ -14,47 +13,42 @@ import { AnalyticsEventCategory, ReduxState } from "~/typeDefs";
 
 import BuyMeACoffeeButton from "./BuyMeACoffeeButton";
 
-const Celebrate: React.FC = () => (
-  <span role="img" aria-label="Celebrate">
-    🎉
-  </span>
-);
+const StyledDiv = styled.div`
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
 
-const VideoIframe = styled.iframe(
-  {
-    height: 315,
-  },
-  ({ theme }) => ({
-    boxShadow: theme.elevation.dp8,
-  }),
-);
+  h1 {
+    font-size: 3rem;
+    margin: 2rem 0;
+  }
 
-const ViewDataLinkButton = styled.a(
-  {
-    alignItems: "center",
-    border: "1px solid transparent",
-    borderRadius: "0.375rem",
-    display: "inline-flex",
-    fontSize: "1.25rem",
-    height: "3.25rem",
-    justifyContent: "center",
-    marginRight: "2rem",
-    minWidth: "15rem",
-  },
-  ({ theme }) => ({
-    background: theme.colors.primary,
-    color: theme.colors.white,
+  iframe {
+    height: 315px;
+    box-shadow: var(--elevation-dp8);
+  }
 
-    "&:hover": {
-      background: Color(theme.colors.primary).darken(0.1).hex(),
-    },
+  div {
+    display: flex;
+    margin-top: 3rem;
+  }
 
-    "&:after": {
-      content: getOpenInNewTabContent(theme.colors.white),
-      margin: "0.25rem",
-    },
-  }),
-);
+  a {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    height: 3.25rem;
+    min-width: 16rem;
+    margin: 0 1rem;
+    border: 1px solid transparent;
+    border-radius: 0.375rem;
+    font-size: 1.25rem;
+    background-color: var(--color-primary);
+    color: var(--color-white);
+    box-shadow: var(--elevation-dp2);
+  }
+`;
 
 interface ConnectStateProps {
   targetToolDisplayName: string;
@@ -80,12 +74,19 @@ export const ToolActionSuccessComponent: React.FC<Props> = (props) => {
     });
   };
 
+  const buttonColor =
+    props.targetToolDisplayName.toLowerCase() === "toggl"
+      ? "var(--color-toggl-red)"
+      : "var(--color-clockify-blue)";
+
   return (
-    <Flex alignItems="center" justifyContent="center" flexDirection="column">
-      <h1 css={{ fontSize: "3rem", margin: "2rem 0" }}>
-        <Celebrate /> All Done! <Celebrate />
+    <StyledDiv>
+      {/* prettier-ignore */}
+      <h1>
+        <span role="img" aria-label="Celebrate">🎉</span> All Done! <span role="img" aria-label="Celebrate">🎉</span>
       </h1>
-      <VideoIframe
+
+      <iframe
         title="Thank you for being a friend"
         width={480}
         height={315}
@@ -94,18 +95,28 @@ export const ToolActionSuccessComponent: React.FC<Props> = (props) => {
         allow={["accelerometer", "encrypted-media"].join("; ")}
         allowFullScreen
       />
-      <Flex css={{ marginTop: "3rem" }}>
-        <ViewDataLinkButton
+
+      <div>
+        <a
           href={props.targetToolTrackerUrl}
           rel="noopener noreferrer"
           target="_blank"
           onClick={handleGoToTargetClick}
+          style={{ backgroundColor: buttonColor }}
         >
           <span>Go To {props.targetToolDisplayName}</span>
-        </ViewDataLinkButton>
+
+          <Icon
+            name="openExternal"
+            color="var(--color-white)"
+            size={16}
+            style={{ margin: "0 0.5rem" }}
+          />
+        </a>
+
         <BuyMeACoffeeButton />
-      </Flex>
-    </Flex>
+      </div>
+    </StyledDiv>
   );
 };
 

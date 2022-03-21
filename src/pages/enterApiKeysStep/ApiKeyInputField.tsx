@@ -4,41 +4,32 @@ import React from "react";
 import { ExternalLink, styled } from "~/components";
 import { ToolHelpDetailsModel } from "~/typeDefs";
 
-const ErrorMessage = styled.div(
-  {
-    marginTop: "-1.5rem",
-  },
-  ({ theme }) => ({
-    color: theme.colors.error,
-    fontWeight: theme.fontWeights.bold,
-  }),
-);
+const StyledField = styled.div`
+  label {
+    display: block;
+    margin: 0.5rem 0;
+    font-size: 1rem;
+    font-weight: var(--font-weight-bold);
+  }
 
-const Input = styled.input(
-  {
-    border: "none",
-    borderRadius: "0.25rem",
-    fontFamily: "monospace",
-    fontSize: "1.25rem",
-    marginBottom: "2rem",
-    padding: "0.5rem",
-    width: "100%",
-  },
-  ({ theme }) => ({
-    boxShadow: theme.elevation.dp2,
-  }),
-);
+  input {
+    width: 100%;
+    margin-bottom: 2rem;
+    padding: 0.5rem;
+    border: none;
+    border-radius: 0.25rem;
+    font-family: monospace;
+    font-size: 1.25rem;
+    box-shadow: var(--elevation-dp2);
+  }
 
-const Label = styled.label(
-  {
-    display: "block",
-    fontSize: "1rem",
-    margin: "0.5rem 0",
-  },
-  ({ theme }) => ({
-    fontWeight: theme.fontWeights.bold,
-  }),
-);
+  span {
+    display: block;
+    margin-top: -1.5rem;
+    color: var(--color-ruby);
+    font-weight: var(--font-weight-bold);
+  }
+`;
 
 interface Props extends React.InputHTMLAttributes<HTMLInputElement> {
   mapping: string;
@@ -56,26 +47,28 @@ const ApiKeyInputField: React.FC<Props> = ({
   const inputErrorId = `${inputId}-error`;
 
   return (
-    <>
-      <Label htmlFor={inputId}>
+    <StyledField>
+      <label htmlFor={inputId}>
         {toolHelpDetails.displayName} API Key (
-        <ExternalLink href={toolHelpDetails.toolLink}>
+        <ExternalLink color="var(--color-navy)" href={toolHelpDetails.toolLink}>
           find it on your {toolHelpDetails.displayName} profile page
         </ExternalLink>
         )
-      </Label>
-      <Input
+      </label>
+
+      <input
         id={inputId}
         name={mapping}
         type="text"
-        autoComplete="hidden"
+        autoComplete="off"
         aria-describedby={inputErrorId}
         aria-required={true}
         aria-invalid={errorMessage !== null}
         {...props}
       />
-      <ErrorMessage id={inputErrorId}>{errorMessage}</ErrorMessage>
-    </>
+
+      <span id={inputErrorId}>{errorMessage}</span>
+    </StyledField>
   );
 };
 

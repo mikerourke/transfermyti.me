@@ -1,16 +1,14 @@
 import React from "react";
 
-const NoRecordsFound: React.FC = () => (
-  <div
-    css={{
-      fontSize: "1.25rem",
-      fontWeight: 600,
-      padding: "3rem 0",
-      textAlign: "center",
-    }}
-  >
-    No records found!
-  </div>
-);
+import { styled } from "./emotion";
+
+const StyledDiv = styled.div`
+  font-size: 1.25rem;
+  font-weight: 600;
+  padding: 3rem 0;
+  text-align: center;
+`;
+
+const NoRecordsFound: React.FC = () => <StyledDiv>No records found!</StyledDiv>;
 
 export default NoRecordsFound;

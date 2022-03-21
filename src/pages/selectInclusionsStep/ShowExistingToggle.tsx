@@ -2,14 +2,19 @@ import React from "react";
 
 import { styled, Toggle } from "~/components";
 
-const Label = styled.div(
-  {
-    marginBottom: "0.75rem",
-  },
-  ({ theme }) => ({
-    fontWeight: theme.fontWeights.bold,
-  }),
-);
+const StyledField = styled.div`
+  margin-bottom: 0.75rem;
+
+  label {
+    display: block;
+    margin-bottom: 0.75rem;
+    font-weight: var(--font-weight-bold);
+  }
+
+  button {
+    background-color: var(--color-white);
+  }
+`;
 
 interface Props {
   isToggled: boolean;
@@ -21,18 +26,18 @@ const ShowExistingToggle: React.FC<Props> = ({
   onToggle,
   ...props
 }) => (
-  <div css={{ marginBottom: "0.75rem" }} {...props}>
-    <Label id="show-existing-toggle">
+  <StyledField {...props}>
+    <label htmlFor="show-existing-toggle">
       Show records that already exist in target?
-    </Label>
+    </label>
+
     <Toggle
+      id="show-existing-toggle"
       aria-label="Show records that already exist in target?"
-      aria-labelledby="show-existing-toggle"
-      css={(theme) => ({ background: theme.colors.white })}
       isToggled={isToggled}
       onToggle={onToggle}
     />
-  </div>
+  </StyledField>
 );
 
 export default ShowExistingToggle;
