@@ -38,7 +38,7 @@ jobs:
           key: ${{ runner.os }}-pnpm-${{ hashFiles(format('{0}{1}', github.workspace, '/pnpm-lock.yaml')) }}
           restore-keys: |
             ${{ runner.os }}-pnpm-
-            
+
       - name: Install Dependencies
         run: pnpm install
 
