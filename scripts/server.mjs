@@ -8,8 +8,6 @@ import { assignTogglRoutes } from "./routes/toggl.mjs";
 export function startServer() {
   const app = express();
 
-  console.log(process.env);
-
   const port = process.env.TMT_LOCAL_API_PORT || 9009;
 
   assignMiddleware(app);

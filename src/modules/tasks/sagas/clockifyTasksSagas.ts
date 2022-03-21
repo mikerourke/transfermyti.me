@@ -2,12 +2,12 @@ import * as R from "ramda";
 import type { SagaIterator } from "redux-saga";
 import { call, delay, select } from "redux-saga/effects";
 
-import { CLOCKIFY_API_DELAY } from "~/constants";
 import { createEntitiesForTool } from "~/entityOperations/createEntitiesForTool";
 import { deleteEntitiesForTool } from "~/entityOperations/deleteEntitiesForTool";
 import {
   fetchObject,
   fetchPaginatedFromClockify,
+  getApiDelayForTool,
 } from "~/entityOperations/fetchActions";
 import { fetchEntitiesForTool } from "~/entityOperations/fetchEntitiesForTool";
 import {
@@ -143,6 +143,8 @@ function* fetchClockifyTasksInWorkspace(
     projectsByWorkspaceIdByToolName,
   );
 
+  const clockifyApiDelay = yield call(getApiDelayForTool, ToolName.Clockify);
+
   const allClockifyTasks: ClockifyTaskResponseModel[] = [];
 
   for (const clockifyProject of clockifyProjects) {
@@ -153,7 +155,7 @@ function* fetchClockifyTasksInWorkspace(
     );
     allClockifyTasks.push(...clockifyTasks);
 
-    yield delay(CLOCKIFY_API_DELAY);
+    yield delay(clockifyApiDelay);
   }
 
   return allClockifyTasks.map((clockifyTask) =>

@@ -19,6 +19,7 @@ module.exports = {
         },
       },
     ],
+    "@babel/plugin-proposal-numeric-separator",
     [
       "transform-inline-environment-variables",
       {
@@ -48,9 +49,4 @@ module.exports = {
       },
     ],
   ],
-  env: {
-    test: {
-      plugins: ["@babel/plugin-proposal-numeric-separator"],
-    },
-  },
 };

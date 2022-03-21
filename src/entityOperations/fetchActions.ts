@@ -3,12 +3,10 @@ import * as R from "ramda";
 import type { SagaIterator } from "redux-saga";
 import { call, delay } from "redux-saga/effects";
 
-import {
-  CLOCKIFY_API_DELAY,
-  CLOCKIFY_API_PAGE_SIZE,
-  TOGGL_API_DELAY,
-} from "~/constants";
 import { ToolName } from "~/typeDefs";
+import { getToolFetchDelay } from "~/utilities/environment";
+
+const CLOCKIFY_API_PAGE_SIZE = 100;
 
 /**
  * Several Clockify endpoints support passing in a page size and page number
@@ -42,7 +40,10 @@ export function* fetchPaginatedFromClockify<TEntity>(
     // page and the record count is evenly divisible by the page size:
     keepFetching = entityRecords.length === CLOCKIFY_API_PAGE_SIZE;
 
-    yield delay(CLOCKIFY_API_DELAY);
+    const clockifyFetchDelay = yield call(getToolFetchDelay, ToolName.Clockify);
+
+    yield delay(clockifyFetchDelay);
+
     currentPage += 1;
   }
 
@@ -119,9 +120,5 @@ async function fetchWithRetries<TResponse>(
  * tool name.
  */
 export function getApiDelayForTool(toolName: ToolName): number {
-  if (toolName === ToolName.Clockify) {
-    return CLOCKIFY_API_DELAY;
-  }
-
-  return TOGGL_API_DELAY;
+  return getToolFetchDelay(toolName);
 }

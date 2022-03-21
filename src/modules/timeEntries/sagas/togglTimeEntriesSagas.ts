@@ -7,10 +7,13 @@ import * as R from "ramda";
 import type { SagaIterator } from "redux-saga";
 import { call, delay, select } from "redux-saga/effects";
 
-import { TOGGL_API_DELAY } from "~/constants";
 import { createEntitiesForTool } from "~/entityOperations/createEntitiesForTool";
 import { deleteEntitiesForTool } from "~/entityOperations/deleteEntitiesForTool";
-import { fetchEmpty, fetchObject } from "~/entityOperations/fetchActions";
+import {
+  fetchEmpty,
+  fetchObject,
+  getApiDelayForTool,
+} from "~/entityOperations/fetchActions";
 import { fetchEntitiesForTool } from "~/entityOperations/fetchEntitiesForTool";
 import { clientIdsByNameSelectorFactory } from "~/modules/clients/clientsSelectors";
 import { credentialsByToolNameSelector } from "~/modules/credentials/credentialsSelectors";
@@ -19,6 +22,8 @@ import { tagIdsByNameBySelectorFactory } from "~/modules/tags/tagsSelectors";
 import { taskIdToLinkedIdSelector } from "~/modules/tasks/tasksSelectors";
 import { EntityGroup, TimeEntryModel, ToolName } from "~/typeDefs";
 import { validStringify } from "~/utilities/textTransforms";
+
+const togglApiDelay = getApiDelayForTool(ToolName.Toggl);
 
 interface TogglTotalCurrencyModel {
   currency: string | null;
@@ -182,7 +187,7 @@ function* fetchTogglTimeEntriesInWorkspace(
       togglTimeEntries.push(...timeEntriesForYear);
     }
 
-    yield delay(TOGGL_API_DELAY);
+    yield delay(togglApiDelay);
   }
 
   return togglTimeEntries.reduce((acc, togglTimeEntry) => {
@@ -247,7 +252,7 @@ function* fetchAllTogglTimeEntriesForYear(
     );
     allTimeEntries.push(...data);
 
-    yield delay(TOGGL_API_DELAY);
+    yield delay(togglApiDelay);
   }
 
   return allTimeEntries;

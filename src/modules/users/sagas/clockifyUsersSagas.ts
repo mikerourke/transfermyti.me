@@ -1,11 +1,11 @@
 import type { SagaIterator } from "redux-saga";
 import { call, delay, put } from "redux-saga/effects";
 
-import { CLOCKIFY_API_DELAY } from "~/constants";
 import { deleteEntitiesForTool } from "~/entityOperations/deleteEntitiesForTool";
 import {
   fetchObject,
   fetchPaginatedFromClockify,
+  getApiDelayForTool,
 } from "~/entityOperations/fetchActions";
 import { fetchEntitiesForTool } from "~/entityOperations/fetchEntitiesForTool";
 import { incrementEntityGroupTransferCompletedCount } from "~/modules/allEntities/allEntitiesActions";
@@ -70,10 +70,14 @@ export interface ClockifyUserResponseModel {
 export function* createClockifyUsersSaga(
   emailsByWorkspaceId: Record<string, string[]>,
 ): SagaIterator {
+  const clockifyApiDelay = yield call(getApiDelayForTool, ToolName.Clockify);
+
   for (const [workspaceId, emails] of Object.entries(emailsByWorkspaceId)) {
     yield put(incrementEntityGroupTransferCompletedCount(EntityGroup.Users));
+
     yield call(inviteClockifyUsers, emails, workspaceId);
-    yield delay(CLOCKIFY_API_DELAY);
+
+    yield delay(clockifyApiDelay);
   }
 }
 
@@ -109,6 +113,8 @@ function* inviteClockifyUsers(
   sourceEmails: string[],
   targetWorkspaceId: string,
 ): SagaIterator {
+  const clockifyApiDelay = yield call(getApiDelayForTool, ToolName.Clockify);
+
   for (const email of sourceEmails) {
     const userRequest = { email };
     yield call(
@@ -120,7 +126,7 @@ function* inviteClockifyUsers(
       },
     );
 
-    yield delay(CLOCKIFY_API_DELAY);
+    yield delay(clockifyApiDelay);
   }
 }
 

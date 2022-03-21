@@ -2,7 +2,7 @@ import cuid from "cuid";
 import { createAction } from "typesafe-actions";
 
 import { NotificationModel } from "~/typeDefs";
-import { getIfDev } from "~/utilities/getIfDev";
+import { isDevelopmentMode } from "~/utilities/environment";
 
 export const dismissNotification = createAction(
   "@app/DISMISS_NOTIFICATION",
@@ -23,7 +23,7 @@ export const showErrorNotification = createAction(
   "@app/SHOW_ERROR_NOTIFICATION",
   (err: Error | Response) => {
     /* istanbul ignore if  */
-    if (getIfDev()) {
+    if (isDevelopmentMode()) {
       console.error(err);
     }
 

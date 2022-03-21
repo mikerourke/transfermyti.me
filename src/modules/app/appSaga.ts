@@ -15,7 +15,7 @@ import { updateValidationFetchStatus } from "~/modules/credentials/credentialsAc
 import { credentialsByMappingSelector } from "~/modules/credentials/credentialsSelectors";
 import { sourceWorkspacesSelector } from "~/modules/workspaces/workspacesSelectors";
 import { FetchStatus, Mapping, RoutePath, ToolName } from "~/typeDefs";
-import { getIfDev } from "~/utilities/getIfDev";
+import { isDevelopmentMode } from "~/utilities/environment";
 
 export function* appSaga(): SagaIterator {
   yield all([
@@ -55,7 +55,7 @@ function* validateRouteChangesSaga(action: LocationChangeAction): SagaIterator {
   // Disable the redirect for development. I originally had it turned on, but
   // I found myself disabling it more often than not:
   /* istanbul ignore next */
-  if (getIfDev()) {
+  if (isDevelopmentMode()) {
     return;
   }
 

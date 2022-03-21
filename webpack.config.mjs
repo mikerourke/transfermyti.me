@@ -18,18 +18,18 @@ const buildOutDirPath = path.resolve(thisDirPath, "out", "build");
 
 const sourceDirPath = path.resolve(thisDirPath, "src");
 
-export default function webpackConfiguration(env, argv) {
-  const isDevelopment = argv.mode === "development";
-
+function getEnvironmentPlugin(env, argv) {
   let envEntries;
 
   const envFilePath = path.resolve(thisDirPath, ".env");
+
   if (!fs.existsSync(envFilePath)) {
     envEntries = {
       TMT_LOCAL_API_CLOCKIFY_EMPTY: false,
       TMT_LOCAL_API_TOGGL_EMPTY: false,
       TMT_LOCAL_API_PORT: 9009,
-      TMT_USE_LOCAL_API: false,
+      TMT_USE_LOCAL_API: true,
+      GA_DEBUG: true,
     };
   } else {
     const contents = fs.readFileSync(envFilePath);
@@ -46,14 +46,25 @@ export default function webpackConfiguration(env, argv) {
     envEntries[key] = JSON.stringify(value);
   }
 
-  const plugins = [
-    new webpack.DefinePlugin({
-      "process.env": {
-        NODE_ENV: JSON.stringify(argv.mode),
-        ...envEntries,
-      },
-    }),
+  return new webpack.DefinePlugin({
+    "process.env": {
+      NODE_ENV: JSON.stringify(argv.mode),
+      ...envEntries,
+    },
+  });
+}
 
+// noinspection JSUnusedGlobalSymbols
+export default function webpackConfiguration(env, argv) {
+  const isDevelopment = argv.mode === "development";
+
+  const plugins = [];
+
+  if (isDevelopment) {
+    plugins.push(getEnvironmentPlugin(env, argv));
+  }
+
+  plugins.push(
     new HtmlWebpackPlugin({
       template: path.resolve(sourceDirPath, "index.html"),
     }),
@@ -78,7 +89,7 @@ export default function webpackConfiguration(env, argv) {
         },
       ],
     }),
-  ];
+  );
 
   if (!isDevelopment) {
     plugins.push(
@@ -88,7 +99,7 @@ export default function webpackConfiguration(env, argv) {
   }
 
   return {
-    devtool: isDevelopment ? "inline-source-map" : false,
+    devtool: isDevelopment ? "source-map" : false,
     mode: argv.mode,
     entry: path.join(sourceDirPath, "index.tsx"),
     module: {

@@ -44,6 +44,8 @@ If you'd like to use the mock server in development, follow the steps in the **D
 If you want to pull and transfer data between the time tracking tools, follow the steps in the **Development Without the Mock Server**
 section.
 
+**Note: By default I have the mock server enabled, so if you only start the application and get network request failures, it's because you forgot to disable it.**
+
 ### Development With the Mock Server
 
 1. Install dependencies with `yarn install`

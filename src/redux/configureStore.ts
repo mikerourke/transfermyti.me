@@ -4,7 +4,7 @@ import { AnyAction, applyMiddleware, compose, createStore } from "redux";
 import createSagaMiddleware from "redux-saga";
 import storage from "store";
 
-import { IS_USING_LOCAL_API, STORAGE_KEY } from "~/constants";
+import { STORAGE_KEY } from "~/constants";
 import { allEntitiesSaga } from "~/modules/allEntities/allEntitiesSaga";
 import { appSaga } from "~/modules/app/appSaga";
 import { validateCredentials } from "~/modules/credentials/credentialsActions";
@@ -16,7 +16,7 @@ import { workspacesSaga } from "~/modules/workspaces/sagas/workspacesSaga";
 import { analyticsMiddleware } from "~/redux/analyticsMiddlewares";
 import { ReduxState, ReduxStore } from "~/redux/reduxTypes";
 import { createRootReducer, RouterReducer } from "~/redux/rootReducer";
-import { getIfDev } from "~/utilities/getIfDev";
+import { isDevelopmentMode, isUseLocalApi } from "~/utilities/environment";
 
 const devTools = window.__REDUX_DEVTOOLS_EXTENSION_COMPOSE__;
 const composeEnhancers: AnyValid = devTools || compose;
@@ -25,7 +25,7 @@ export function configureStore(history: History): ReduxStore {
   let credentials = initialCredentialsState;
 
   // Only load the stored credentials from localStorage if in dev mode:
-  if (getIfDev()) {
+  if (isDevelopmentMode()) {
     const storedCredentials = storage.get(STORAGE_KEY);
     if (storedCredentials) {
       credentials = {
@@ -60,7 +60,7 @@ export function configureStore(history: History): ReduxStore {
   sagaMiddleware.run(taskMonitoringSaga);
   sagaMiddleware.run(workspacesSaga);
 
-  if (IS_USING_LOCAL_API) {
+  if (isUseLocalApi()) {
     store.dispatch(validateCredentials.request() as AnyAction);
   }
 

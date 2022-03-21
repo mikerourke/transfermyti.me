@@ -67,7 +67,7 @@ export function assignClockifyRoutes(router) {
 
       res.status(200).send(responseEntries);
     })
-    .get("/workspaces/:workspaceId/userGroups/", (req, res) =>
+    .get("/workspaces/:workspaceId/user-groups/", (req, res) =>
       res.status(200).send(isEmpty === true ? [] : db.userGroups),
     )
     .get("/workspaces/:workspaceId/users", (req, res) =>
