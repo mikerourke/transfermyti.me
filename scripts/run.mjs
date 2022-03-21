@@ -33,7 +33,28 @@ yargs(hideBin(process.argv))
   .command({
     command: RunAction.Serve,
     describe: "Start the mock server",
-    handler: startServer,
+    builder: {
+      emptyTools: {
+        alias: "e",
+        describe: "Tools that should return empty API responses",
+        type: "array",
+        choices: ["clockify", "toggl"],
+        default: [],
+        demandOption: false,
+      },
+    },
+    handler: async (argv) => {
+      const { emptyTools } = argv;
+      if (emptyTools.includes("clockify")) {
+        process.env.TMT_LOCAL_API_CLOCKIFY_EMPTY = "true";
+      }
+
+      if (emptyTools.includes("toggl")) {
+        process.env.TMT_LOCAL_API_TOGGL_EMPTY = "true";
+      }
+
+      await startServer();
+    },
   })
 
   .command({

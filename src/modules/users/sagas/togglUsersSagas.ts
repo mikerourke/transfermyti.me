@@ -1,11 +1,11 @@
 import type { SagaIterator } from "redux-saga";
 import { call, delay, put, select } from "redux-saga/effects";
 
-import { TOGGL_API_DELAY } from "~/constants";
 import {
   fetchArray,
   fetchEmpty,
   fetchObject,
+  getApiDelayForTool,
 } from "~/entityOperations/fetchActions";
 import { fetchEntitiesForTool } from "~/entityOperations/fetchEntitiesForTool";
 import { incrementEntityGroupTransferCompletedCount } from "~/modules/allEntities/allEntitiesActions";
@@ -55,10 +55,14 @@ interface TogglProjectUserResponseModel {
 export function* createTogglUsersSaga(
   emailsByWorkspaceId: Record<string, string[]>,
 ): SagaIterator {
+  const togglApiDelay = yield call(getApiDelayForTool, ToolName.Toggl);
+
   for (const [workspaceId, emails] of Object.entries(emailsByWorkspaceId)) {
     yield call(inviteTogglUsers, emails, workspaceId);
+
     yield put(incrementEntityGroupTransferCompletedCount(EntityGroup.Users));
-    yield delay(TOGGL_API_DELAY);
+
+    yield delay(togglApiDelay);
   }
 }
 
@@ -69,6 +73,8 @@ export function* createTogglUsersSaga(
 export function* removeTogglUsersSaga(sourceUsers: UserModel[]): SagaIterator {
   const includedWorkspaceIds = yield select(includedSourceWorkspaceIdsSelector);
   const includedProjectIds = yield select(includedSourceProjectIdsSelector);
+
+  const togglApiDelay = yield call(getApiDelayForTool, ToolName.Toggl);
 
   // We can't actually delete a user, we can only remove them from the
   // workspace/project. In this case we're going to remove the user from each
@@ -89,7 +95,7 @@ export function* removeTogglUsersSaga(sourceUsers: UserModel[]): SagaIterator {
       };
     }, {});
 
-    yield delay(TOGGL_API_DELAY);
+    yield delay(togglApiDelay);
 
     for (const sourceUser of sourceUsers) {
       // First, check if the source user to be deleted is associated with the
@@ -109,7 +115,7 @@ export function* removeTogglUsersSaga(sourceUsers: UserModel[]): SagaIterator {
             incrementEntityGroupTransferCompletedCount(EntityGroup.Users),
           );
 
-          yield delay(TOGGL_API_DELAY);
+          yield delay(togglApiDelay);
         }
       }
     }

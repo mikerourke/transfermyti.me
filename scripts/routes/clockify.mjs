@@ -11,7 +11,7 @@ const dbPath = fileURLToPath(
 const db = fse.readJsonSync(dbPath);
 
 // noinspection EqualityComparisonWithCoercionJS
-const isEmpty = process.env.LOCAL_API_CLOCKIFY_EMPTY == "true";
+const isEmpty = process.env.TMT_LOCAL_API_CLOCKIFY_EMPTY == "true";
 
 // TODO: Update routes to reflect V1 Clockify API only.
 export function assignClockifyRoutes(router) {
@@ -67,7 +67,7 @@ export function assignClockifyRoutes(router) {
 
       res.status(200).send(responseEntries);
     })
-    .get("/workspaces/:workspaceId/userGroups/", (req, res) =>
+    .get("/workspaces/:workspaceId/user-groups/", (req, res) =>
       res.status(200).send(isEmpty === true ? [] : db.userGroups),
     )
     .get("/workspaces/:workspaceId/users", (req, res) =>

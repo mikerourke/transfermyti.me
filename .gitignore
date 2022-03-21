@@ -61,9 +61,12 @@ typings/
 
 # next.js build output
 .next
+
 build
 .cache
 http-client.private.env.json
 dist
 .env
-public
+
+out/*
+!out/.gitkeep

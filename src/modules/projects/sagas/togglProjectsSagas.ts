@@ -2,13 +2,13 @@ import * as R from "ramda";
 import type { SagaIterator } from "redux-saga";
 import { call, delay, select } from "redux-saga/effects";
 
-import { TOGGL_API_DELAY } from "~/constants";
 import { createEntitiesForTool } from "~/entityOperations/createEntitiesForTool";
 import { deleteEntitiesForTool } from "~/entityOperations/deleteEntitiesForTool";
 import {
   fetchArray,
   fetchEmpty,
   fetchObject,
+  getApiDelayForTool,
 } from "~/entityOperations/fetchActions";
 import { fetchEntitiesForTool } from "~/entityOperations/fetchEntitiesForTool";
 import { clientIdToLinkedIdSelector } from "~/modules/clients/clientsSelectors";
@@ -139,6 +139,8 @@ function* fetchTogglProjectsInWorkspace(
 ): SagaIterator<ProjectModel[]> {
   const allTogglProjects: ProjectModel[] = [];
 
+  const togglApiDelay = yield call(getApiDelayForTool, ToolName.Toggl);
+
   const togglProjects: TogglProjectResponseModel[] = yield call(
     fetchArray,
     `/toggl/api/workspaces/${workspaceId}/projects?active=both`,
@@ -149,7 +151,7 @@ function* fetchTogglProjectsInWorkspace(
     const userIds: string[] = yield call(fetchUserIdsInProject, projectId);
     allTogglProjects.push(transformFromResponse(togglProject, userIds));
 
-    yield delay(TOGGL_API_DELAY);
+    yield delay(togglApiDelay);
   }
 
   return allTogglProjects;

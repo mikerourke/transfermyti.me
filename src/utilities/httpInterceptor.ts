@@ -1,20 +1,9 @@
 import fetchIntercept from "fetch-intercept";
 import { Store } from "redux";
 
-import {
-  CLOCKIFY_API_URL,
-  IS_USING_LOCAL_API,
-  LOCAL_API_URL,
-  TOGGL_API_URL,
-  TOGGL_REPORTS_URL,
-} from "~/constants";
 import { credentialsByToolNameSelector } from "~/modules/credentials/credentialsSelectors";
 import { ToolName } from "~/typeDefs";
-
-enum Context {
-  Api = "api",
-  Reports = "reports",
-}
+import { getApiUrl, TogglApiContext } from "~/utilities/environment";
 
 interface RequestConfig {
   body?: unknown;
@@ -101,7 +90,7 @@ function getHeaders(
  */
 function extrapolateFromUrl(url: string): {
   toolName: ToolName;
-  context: Context;
+  context: TogglApiContext;
   endpoint: string;
 } {
   const validUrl = url.startsWith("/") ? url.substring(1) : url;
@@ -109,23 +98,7 @@ function extrapolateFromUrl(url: string): {
 
   return {
     toolName: toolName as ToolName,
-    context: context as Context,
+    context: context as TogglApiContext,
     endpoint: rest.join("/"),
   };
-}
-
-/**
- * Returns the base URL to prefix the endpoint based on the specified tool
- * name and context (e.g. reports).
- */
-function getApiUrl(toolName: ToolName, context: Context): string {
-  if (IS_USING_LOCAL_API) {
-    return `${LOCAL_API_URL}/${toolName}`;
-  }
-
-  if (toolName === ToolName.Clockify) {
-    return CLOCKIFY_API_URL;
-  }
-
-  return context === Context.Reports ? TOGGL_REPORTS_URL : TOGGL_API_URL;
 }
