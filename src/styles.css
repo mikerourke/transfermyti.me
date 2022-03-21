@@ -223,6 +223,15 @@ tbody td {
   border-top: var(--border-style);
 }
 
+tbody td[data-null="true"] {
+  color: var(--color-manatee);
+  font-style: italic;
+}
+
+tbody td[data-disabled="true"] {
+  color: var(--color-manatee);
+}
+
 tr[data-disabled="true"] td {
   color: var(--color-manatee);
   text-decoration: line-through;

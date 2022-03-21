@@ -1,5 +1,4 @@
 export { styled, useTheme } from "./emotion";
-export { default as Accordion } from "./Accordion";
 export { default as AccordionPanel } from "./AccordionPanel";
 export { default as Button } from "./Button";
 export { default as Card } from "./Card";

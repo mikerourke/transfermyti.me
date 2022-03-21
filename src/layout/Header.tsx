@@ -13,18 +13,18 @@ const StyledHeader = styled.header`
   padding: 0 1rem;
   background-color: var(--color-primary);
   color: var(--color-secondary);
+
+  a {
+    color: var(--color-secondary);
+    font-size: 1.5rem;
+  }
 `;
 
 const Header: React.FC = () => (
   <StyledHeader>
     <Logo />
 
-    <Link
-      css={(theme) => ({ color: theme.colors.secondary, fontSize: "1.5rem" })}
-      to={RoutePath.PickToolAction}
-    >
-      transfermyti.me
-    </Link>
+    <Link to={RoutePath.PickToolAction}>transfermyti.me</Link>
   </StyledHeader>
 );
 

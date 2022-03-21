@@ -160,8 +160,8 @@ const EnterApiKeysStepComponent: React.FC<Props> = (props) => {
       </HelpDetails>
 
       <form
-        autoComplete="hidden"
-        css={{ margin: "0 1rem" }}
+        autoComplete="off"
+        style={{ margin: "0 1rem" }}
         onSubmit={(event) => event.preventDefault()}
       >
         <ApiKeyInputField

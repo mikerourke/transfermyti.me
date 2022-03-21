@@ -10,22 +10,6 @@ import {
 } from "~/components";
 import { TimeEntryTableViewModel } from "~/typeDefs";
 
-const NullValueCell: React.FC<{
-  disabled: boolean;
-  value: string | null;
-}> = ({ disabled, value, ...props }) => (
-  <td
-    css={({ colors }) => ({
-      color: (value === null || disabled
-        ? colors.manatee
-        : colors.midnight
-      ).concat(" !important"),
-      fontStyle: value === null ? "italic" : "normal",
-    })}
-    {...props}
-  />
-);
-
 interface Props {
   isDuplicateCheckEnabled: boolean;
   timeEntries: TimeEntryTableViewModel[];
@@ -45,6 +29,7 @@ const TimeEntriesInclusionsTable: React.FC<Props> = (props) => (
           Include?
         </th>
       </tr>
+
       <tr>
         <th scope="col" colSpan={3}>
           Description
@@ -52,30 +37,33 @@ const TimeEntriesInclusionsTable: React.FC<Props> = (props) => (
         <th scope="col">Tags</th>
       </tr>
     </thead>
+
     <tbody>
       {props.timeEntries.map((timeEntry) => (
         <React.Fragment key={timeEntry.id}>
           <InclusionsTableRow disabled={timeEntry.existsInTarget}>
             <td>{format(timeEntry.start, "Pp")}</td>
             <td>{format(timeEntry.end, "Pp")}</td>
-            <NullValueCell
-              disabled={timeEntry.existsInTarget}
-              value={timeEntry.taskName}
+            <td
+              data-disabled={timeEntry.existsInTarget}
+              data-null={timeEntry.taskName === null}
             >
               {timeEntry.taskName ?? "None"}
-            </NullValueCell>
-            <NullValueCell
-              disabled={timeEntry.existsInTarget}
-              value={timeEntry.projectName}
+            </td>
+            <td
+              data-disabled={timeEntry.existsInTarget}
+              data-null={timeEntry.projectName === null}
             >
               {timeEntry.projectName ?? "None"}
-            </NullValueCell>
+            </td>
+
             <InclusionsTableCheckboxCell
               rowSpan={2}
               entityRecord={timeEntry}
               onFlipIsIncluded={props.onFlipIsIncluded}
             />
           </InclusionsTableRow>
+
           <InclusionsTableRow disabled={timeEntry.existsInTarget}>
             <td colSpan={3}>{timeEntry.description}</td>
             <td>{timeEntry.tagNames.join(", ")}</td>
@@ -83,6 +71,7 @@ const TimeEntriesInclusionsTable: React.FC<Props> = (props) => (
         </React.Fragment>
       ))}
     </tbody>
+
     <InclusionsTableFoot
       fieldCount={4}
       totalCountsByType={props.totalCountsByType}

@@ -89,7 +89,7 @@ export const NotificationsDisplayComponent: React.FC<Props> = (props) => {
 
   return (
     <StyledDiv ref={baseRef}>
-      <TransitionGroup css={{ height: "100%", position: "relative" }}>
+      <TransitionGroup style={{ height: "100%", position: "relative" }}>
         {props.notifications.map((notification, index) => (
           <Transition
             key={notification.id}
