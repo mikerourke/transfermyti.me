@@ -16,12 +16,19 @@ refactoring the application to allow for two-way transfers.
 
 The tool is step-based, so you start by selecting the action you'd like to perform, then you enter your API keys, and so on. There are help details associated with each step on the [website](https://transfermyti.me).
 
-## Prerequisites
+## Production Requirements
 
 - Toggl account with API key
 - Clockify account with API key
 
-## Technologies Used
+## Development
+
+### Prerequisites
+
+- Node.js >= v16
+- pnpm
+
+### Technologies Used
 
 This is by no means an exhaustive list, but it makes up the core of the front-end code:
 
@@ -34,7 +41,7 @@ This is by no means an exhaustive list, but it makes up the core of the front-en
 - [Parcel](https://parceljs.org/)
 - [TypeScript](https://www.typescriptlang.org/)
 
-## Development
+### Mock Server
 
 To expedite development and get around API rate limiting, I created a development server that mocks the Toggl and Clockify APIs.
 The codebase checks whether the API server should be used based on an environment variable set in the `.env` file.
@@ -46,19 +53,19 @@ section.
 
 **Note: By default I have the mock server enabled, so if you only start the application and get network request failures, it's because you forgot to disable it.**
 
-### Development With the Mock Server
+#### Development With the Mock Server
 
-1. Install dependencies with `yarn install`
+1. Install dependencies with `pnpm install`
 2. Rename `.env.example` to `.env`
 3. Set `TMT_USE_LOCAL_API` to `true` in the `.env` file
 4. Set `TMT_LOCAL_API_<TOOL>_EMPTY` to `true` in the `.env` file if you want either of the mock APIs to return empty records (useful for testing transfer)
-5. Run `yarn start:server` (no data will be transferred from Toggl to Clockify)
-6. Run `yarn start:web` to start the web application
+5. Run `pnpm start:server` (no data will be transferred from Toggl to Clockify)
+6. Run `pnpm start:web` to start the web application
 7. Navigate to `http://localhost:9008`
 
-### Development Without the Mock Server
+#### Development Without the Mock Server
 
-1. Install dependencies with `yarn install`
+1. Install dependencies with `pnpm install`
 2. Rename `.env.example` to `.env`
-3. Run `yarn start:web --env TMT_USE_LOCAL_API=false`
+3. Run `pnpm start:web -- --env TMT_USE_LOCAL_API=false`
 4. Navigate to `http://localhost:9008`

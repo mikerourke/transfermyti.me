@@ -9,13 +9,11 @@ import "./styles.css";
 import { configureStore } from "~/redux/configureStore";
 import Routes from "~/Routes";
 import { initInterceptor } from "~/utilities/httpInterceptor";
-import { initAnalytics } from "~/utilities/initAnalytics";
 
 const history = createBrowserHistory();
 const store = configureStore(history);
 
 initInterceptor(store);
-initAnalytics();
 
 render(
   <Provider store={store}>

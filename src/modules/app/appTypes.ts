@@ -14,10 +14,3 @@ export enum RoutePath {
   PerformToolAction = "/perform-tool-action",
   ToolActionSuccess = "/tool-action-success",
 }
-
-export enum AnalyticsEventCategory {
-  ApiRequests = "API Requests",
-  ToolAction = "Tool Action",
-  ToolMapping = "Tool Mapping",
-  UIInteraction = "UI Interaction",
-}
