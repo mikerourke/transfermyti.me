@@ -2,14 +2,14 @@ import * as R from "ramda";
 import type { SagaIterator } from "redux-saga";
 import { call, delay, select } from "redux-saga/effects";
 
-import { createEntitiesForTool } from "~/entityOperations/createEntitiesForTool";
-import { deleteEntitiesForTool } from "~/entityOperations/deleteEntitiesForTool";
 import {
   fetchArray,
   fetchEmpty,
   fetchObject,
   getApiDelayForTool,
-} from "~/entityOperations/fetchActions";
+} from "~/entityOperations/apiRequests";
+import { createEntitiesForTool } from "~/entityOperations/createEntitiesForTool";
+import { deleteEntitiesForTool } from "~/entityOperations/deleteEntitiesForTool";
 import { fetchEntitiesForTool } from "~/entityOperations/fetchEntitiesForTool";
 import { clientIdToLinkedIdSelector } from "~/modules/clients/clientsSelectors";
 import { EntityGroup, ProjectModel, ToolName } from "~/typeDefs";

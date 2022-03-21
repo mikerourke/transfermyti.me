@@ -1,9 +1,9 @@
 import type { SagaIterator } from "redux-saga";
 import { call } from "redux-saga/effects";
 
+import { fetchArray, fetchObject } from "~/entityOperations/apiRequests";
 import { createEntitiesForTool } from "~/entityOperations/createEntitiesForTool";
 import { deleteEntitiesForTool } from "~/entityOperations/deleteEntitiesForTool";
-import { fetchArray, fetchObject } from "~/entityOperations/fetchActions";
 import { fetchEntitiesForTool } from "~/entityOperations/fetchEntitiesForTool";
 import { EntityGroup, TagModel, ToolName } from "~/typeDefs";
 import { validStringify } from "~/utilities/textTransforms";

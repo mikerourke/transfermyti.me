@@ -2,13 +2,13 @@ import * as R from "ramda";
 import type { SagaIterator } from "redux-saga";
 import { call, select } from "redux-saga/effects";
 
-import { createEntitiesForTool } from "~/entityOperations/createEntitiesForTool";
-import { deleteEntitiesForTool } from "~/entityOperations/deleteEntitiesForTool";
 import {
   fetchArray,
   fetchEmpty,
   fetchObject,
-} from "~/entityOperations/fetchActions";
+} from "~/entityOperations/apiRequests";
+import { createEntitiesForTool } from "~/entityOperations/createEntitiesForTool";
+import { deleteEntitiesForTool } from "~/entityOperations/deleteEntitiesForTool";
 import { fetchEntitiesForTool } from "~/entityOperations/fetchEntitiesForTool";
 import { projectIdToLinkedIdSelector } from "~/modules/projects/projectsSelectors";
 import { EntityGroup, TaskModel, ToolName } from "~/typeDefs";
