@@ -22,7 +22,7 @@ const StyledNav = styled.nav`
   }
 `;
 
-interface Props {
+interface Props extends React.HTMLAttributes<HTMLElement> {
   disabled?: boolean;
   loading?: boolean;
   nextLabel?: string;

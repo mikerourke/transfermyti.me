@@ -3,7 +3,7 @@ import React from "react";
 import { connect } from "react-redux";
 import { PayloadActionCreator } from "typesafe-actions";
 
-import { Flex, HelpDetails, NavigationButtonsRow } from "~/components";
+import { HelpDetails, NavigationButtonsRow } from "~/components";
 import {
   createAllEntities,
   deleteAllEntities,
@@ -120,7 +120,7 @@ export const PerformToolActionStepComponent: React.FC<Props> = (props) => {
         </p>
       </HelpDetails>
 
-      <Flex flexDirection="column">
+      <div style={{ display: "flex", flexDirection: "column" }}>
         {orderedEntityGroups.map((entityGroup) => (
           <ProgressBar
             key={entityGroup}
@@ -129,7 +129,7 @@ export const PerformToolActionStepComponent: React.FC<Props> = (props) => {
             totalCount={totalCountsByEntityGroup[entityGroup]}
           />
         ))}
-      </Flex>
+      </div>
 
       <NavigationButtonsRow
         disabled={props.pushAllChangesFetchStatus === FetchStatus.InProcess}
