@@ -1,4 +1,3 @@
-import { ThemeColors } from "@emotion/react";
 import React from "react";
 
 export type IconName =
@@ -7,6 +6,7 @@ export type IconName =
   | "github"
   | "heart"
   | "linkedIn"
+  | "openExternal"
   | "twitter";
 
 export const iconAttributes = {
@@ -82,10 +82,23 @@ export const iconAttributes = {
       "h63.7v29.2h.9c8.9-16.8 30.6-34.5 62.9-34.5 67.2 0 79.7 44.3 79.7 101.9V416z",
     ].join(" "),
   },
+  openExternal: {
+    viewBox: "0 0 512 512",
+    desc: "An arrow inside of a box pointing to the upper left.",
+    title: "Open External Icon",
+    path: [
+      "M432,320H400a16,16,0,0,0-16,16V448H64V128H208a16,16,0,0,0,16-16V80",
+      "a16,16,0,0,0-16-16H48A48,48,0,0,0,0,112V464a48,48,0,0,0,48,48H400",
+      "a48,48,0,0,0,48-48V336A16,16,0,0,0,432,320ZM488,0h-128",
+      "c-21.37,0-32.05,25.91-17,41l35.73,35.73L135,320.37a24,24,0,0,0,0,34",
+      "L157.67,377a24,24,0,0,0,34,0L435.28,133.32,471,169",
+      "c15,15,41,4.5,41-17V24A24,24,0,0,0,488,0Z",
+    ].join(" "),
+  },
   // Source: https://github.com/FortAwesome/Font-Awesome/blob/master/svgs/brands/twitter.svg
   twitter: {
     viewBox: "0 0 512 512",
-    desc: "The Twitter bird logo",
+    desc: "The Twitter bird logo.",
     title: "Twitter Icon",
     path: [
       "M459.37 151.716c.325 4.548.325 9.097.325 13.645 0 138.72-105.583",
@@ -105,7 +118,7 @@ export const iconAttributes = {
 
 interface Props extends React.SVGAttributes<Omit<SVGElement, "color">> {
   name: IconName;
-  color: keyof ThemeColors;
+  color: string;
   size?: number;
 }
 
@@ -133,7 +146,7 @@ const Icon: React.FC<Props> = ({ name, color, size = 24, ...props }) => {
       <desc id={svgDescId}>{iconAttributes[name].desc}</desc>
       <path
         data-testid="svg-icon-path"
-        css={(theme) => ({ fill: theme.colors[color] })}
+        fill={color}
         d={iconAttributes[name].path}
       />
     </svg>

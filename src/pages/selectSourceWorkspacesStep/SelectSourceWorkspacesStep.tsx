@@ -9,7 +9,6 @@ import {
   HelpDetails,
   Loader,
   NavigationButtonsRow,
-  Note,
 } from "~/components";
 import {
   fetchAllEntities,
@@ -155,11 +154,11 @@ export const SelectSourceWorkspacesStepComponent: React.FC<Props> = (props) => {
           need to come back to this page and select them, otherwise the
           corresponding data won&apos;t be fetched.
         </p>
-        <Note>
+        <p className="note">
           Only select the workspaces containing data you wish to update. The
           fetch process can take several minutes depending on the amount of data
           in each workspace.
-        </Note>
+        </p>
       </HelpDetails>
       {props.areWorkspacesFetching ? (
         <Loader>Loading workspaces, please wait...</Loader>

@@ -2,14 +2,19 @@ import React from "react";
 
 import { styled, Toggle } from "~/components";
 
-const Label = styled.div(
-  {
-    marginBottom: "0.75rem",
-  },
-  ({ theme }) => ({
-    fontWeight: theme.fontWeights.bold,
-  }),
-);
+const StyledField = styled.div`
+  margin-bottom: 0.75rem;
+
+  label {
+    display: block;
+    margin-bottom: 0.75rem;
+    font-weight: var(--font-weight-bold);
+  }
+
+  button {
+    background-color: var(--color-white);
+  }
+`;
 
 interface Props {
   isToggled: boolean;
@@ -21,18 +26,18 @@ const DuplicateCheckToggle: React.FC<Props> = ({
   onToggle,
   ...props
 }) => (
-  <div css={{ marginBottom: "0.75rem" }} {...props}>
-    <Label id="use-duplicate-check-toggle">
+  <StyledField {...props}>
+    <label htmlFor="use-duplicate-check-toggle">
       Use the time entry duplication check?
-    </Label>
+    </label>
+
     <Toggle
+      id="use-duplicate-check-toggle"
       aria-label="Use the time entry duplication check?"
-      aria-labelledby="use-duplicate-check-toggle"
-      css={(theme) => ({ background: theme.colors.white })}
       isToggled={isToggled}
       onToggle={onToggle}
     />
-  </div>
+  </StyledField>
 );
 
 export default DuplicateCheckToggle;

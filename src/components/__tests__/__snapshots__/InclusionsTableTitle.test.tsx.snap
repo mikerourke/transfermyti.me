@@ -10,45 +10,45 @@ exports[`the <InclusionsTableTitle> component matches its snapshot with valid pr
   -webkit-box-align: center;
   -ms-flex-align: center;
   align-items: center;
-  -webkit-box-pack: justify;
-  -webkit-justify-content: space-between;
-  justify-content: space-between;
+  -webkit-box-pack: center;
+  -ms-flex-pack: center;
+  -webkit-justify-content: center;
+  justify-content: center;
 }
 
 .emotion-0 button {
+  padding: 0.25rem 0.5rem;
   border-radius: 0.25rem;
   font-size: 0.875rem;
-  padding: 0.25rem 0.5rem;
-}
-
-.emotion-0 button {
-  font-weight: 600;
+  font-weight: var(--font-weight-bold);
 }
 
 .emotion-1 {
+  padding: 0.5rem 0.75rem;
+  vertical-align: middle;
   border-radius: 0.375rem;
+  text-align: center;
   font-size: 1.25rem;
   font-weight: 400;
-  padding: 0.5rem 0.75rem;
-  text-align: center;
-  -webkit-transition: 0.3s all linear;
-  transition: 0.3s all linear;
-  vertical-align: middle;
-  box-shadow: 0 1px 3px 0 rgba(0, 0, 0, 0.2),0 1px 1px 0 rgba(0, 0, 0, 0.14),0 2px 1px -1px rgba(0, 0, 0, 0.12);
-  background: #EFFDE8;
-  border: 3px solid #1E78A1;
-  color: #1E78A1;
+  background-color: var(--color-midnight);
+  color: var(--color-secondary);
+  box-shadow: var(--elevation-dp1);
   opacity: 1;
+  -webkit-transition: all 250ms linear;
+  transition: all 250ms linear;
+  background-color: var(--color-secondary);
+  color: var(--color-primary);
+  border: 3px solid var(--color-primary);
 }
 
-.emotion-1:hover {
-  background: #EFFDE8;
+.emotion-1:hover:not(:disabled) {
+  opacity: 0.6;
   -webkit-text-decoration: underline;
   text-decoration: underline;
 }
 
 .emotion-1:focus {
-  outline-color: rgb(30,120,161);
+  outline-color: var(--color-primary);
 }
 
 <div

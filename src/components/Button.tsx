@@ -1,80 +1,101 @@
-import { keyframes } from "@emotion/react";
-import Color from "color";
 import React from "react";
 
-import { styled, useTheme } from "./emotion";
-import Flex from "./Flex";
+import { styled } from "./emotion";
 
-const spinAnimation = keyframes({
-  "0%": {
-    transform: "rotate(0deg)",
-  },
+const Wrapper = styled.div`
+  display: flex;
+  align-items: center;
+  justify-content: center;
+`;
 
-  "100%": {
-    transform: "rotate(360deg)",
-  },
-});
+const Loading = styled.span`
+  display: block;
+  position: relative;
+  height: 1.5rem;
+  width: 1.5rem;
+  border-radius: 50%;
+  font-size: 0.75rem;
+  animation: loading-spin 1.4s infinite linear;
+  transform: translateZ(0);
+  background: linear-gradient(
+    to right,
+    var(--color-primary) 10%,
+    var(--color-secondary) 40%
+  );
 
-const Base = styled.button(
-  {
-    borderRadius: "0.375rem",
-    fontSize: "1.25rem",
-    fontWeight: 400,
-    padding: "0.5rem 0.75rem",
-    textAlign: "center",
-    transition: "0.3s all linear",
-    verticalAlign: "middle",
-  },
-  ({ theme }) => ({
-    boxShadow: theme.elevation.dp1,
-  }),
-);
+  &::before {
+    position: absolute;
+    top: 0;
+    left: 0;
+    height: 50%;
+    width: 50%;
+    border-radius: 100% 0 0 0;
+    content: "";
+    background-color: var(--color-secondary);
+  }
 
-const Loading = styled.div<{ bgColor: string; fgColor: string }>(
-  {
-    animation: `${spinAnimation} 1.4s infinite linear`,
-    borderRadius: "50%",
-    fontSize: "0.75rem",
-    height: "1.5rem",
-    position: "relative",
-    transform: "translateZ(0)",
-    width: "1.5rem",
+  &::after {
+    position: absolute;
+    top: 0;
+    left: 0;
+    bottom: 0;
+    right: 0;
+    height: 75%;
+    width: 75%;
+    margin: auto;
+    border-radius: 50%;
+    content: "";
+    background-color: var(--color-primary);
+  }
+`;
 
-    "&:before": {
-      borderRadius: "100% 0 0 0",
-      content: "''",
-      height: "50%",
-      width: "50%",
-      position: "absolute",
-      top: 0,
-      left: 0,
-    },
+const DefaultButton = styled.button`
+  padding: 0.5rem 0.75rem;
+  vertical-align: middle;
+  border-radius: 0.375rem;
+  text-align: center;
+  font-size: 1.25rem;
+  font-weight: 400;
+  background-color: var(--color-midnight);
+  color: var(--color-secondary);
+  box-shadow: var(--elevation-dp1);
+  opacity: 1;
+  transition: all 250ms linear;
 
-    "&:after": {
-      borderRadius: "50%",
-      content: "''",
-      height: "75%",
-      width: "75%",
-      margin: "auto",
-      position: "absolute",
-      top: 0,
-      left: 0,
-      bottom: 0,
-      right: 0,
-    },
-  },
-  ({ bgColor, fgColor }) => ({
-    background: `linear-gradient(to right, ${fgColor} 10%, ${bgColor} 40%)`,
+  &:disabled {
+    cursor: default;
+    opacity: 0.5;
+  }
 
-    "&:before": {
-      background: fgColor,
-    },
+  &:hover:not(:disabled) {
+    opacity: 0.8;
+    text-decoration: underline;
+  }
 
-    "&:after": {
-      background: bgColor,
-    },
-  }),
-);
+  &:focus {
+    outline-color: var(--color-primary);
+  }
+`;
+
+const EggplantButton = styled(DefaultButton)`
+  background-color: var(--color-eggplant);
+`;
+
+const OutlineButton = styled(DefaultButton)`
+  background-color: var(--color-secondary);
+  color: var(--color-primary);
+  border: 3px solid var(--color-primary);
+`;
+
+const PrimaryButton = styled(DefaultButton)`
+  background-color: var(--color-primary);
+  color: var(--color-secondary);
+`;
+
+const SecondaryButton = styled(DefaultButton)`
+  background-color: var(--color-secondary);
+  color: var(--color-primary);
+`;
 
 type Variant = "default" | "eggplant" | "outline" | "primary" | "secondary";
 
@@ -94,68 +115,34 @@ const Button: React.FC<ButtonProps> = ({
   onClick,
   ...props
 }) => {
-  const { colors } = useTheme();
-  const mainColorByVariant = {
-    default: colors.midnight,
-    eggplant: colors.eggplant,
-    outline: colors.secondary,
-    primary: colors.primary,
-    secondary: colors.secondary,
-  }[variant];
+  let Button = DefaultButton;
 
-  const altColorByVariant = {
-    default: colors.secondary,
-    eggplant: colors.secondary,
-    outline: colors.primary,
-    primary: colors.secondary,
-    secondary: colors.primary,
-  }[variant];
-
-  const mainColor = Color(mainColorByVariant);
-  const altColor = Color(altColorByVariant);
-
-  const isOutline = variant === "outline";
-  // Don't change the background color on hover if these conditions are met:
-  const isHoverInitial = isOutline || disabled || variant === "secondary";
+  if (variant === "eggplant") {
+    Button = EggplantButton;
+  } else if (variant === "outline") {
+    Button = OutlineButton;
+  } else if (variant === "primary") {
+    Button = PrimaryButton;
+  } else if (variant === "secondary") {
+    Button = SecondaryButton;
+  }
 
   return (
-    <Base
+    <Button
       aria-disabled={disabled}
-      css={{
-        background: mainColor.hex(),
-        border: isOutline ? `3px solid ${altColor.hex()}` : "none",
-        color: altColor.hex(),
-        opacity: disabled ? 0.5 : 1,
-
-        "&:hover": {
-          background: isHoverInitial
-            ? mainColor.hex()
-            : mainColor.darken(0.2).hex(),
-          textDecoration: disabled ? "none" : "underline",
-        },
-
-        "&:focus": {
-          outlineColor:
-            variant === "secondary" ? colors.secondary : colors.primary,
-        },
-      }}
       disabled={disabled}
       onClick={disabled || loading ? undefined : onClick}
       type="button"
       {...props}
     >
       {loading ? (
-        <Flex
-          alignItems="center"
-          justifyContent="center"
-          data-testid="button-loading"
-        >
-          <Loading bgColor={mainColor.hex()} fgColor={altColor.hex()} />
-        </Flex>
+        <Wrapper data-testid="button-loading">
+          <Loading />
+        </Wrapper>
       ) : (
         children
       )}
-    </Base>
+    </Button>
   );
 };
 

@@ -4,20 +4,35 @@ import React from "react";
 import { Card, styled, Toggle, WorkspaceSelect } from "~/components";
 import { ToolAction, WorkspaceModel } from "~/typeDefs";
 
-const WorkspaceToggle = styled(Toggle)({}, ({ theme }) => ({
-  marginBottom: "0.5rem",
-  marginTop: "0.5rem",
-  background: theme.colors.secondary,
+const StyledCard = styled(Card)`
+  h2 {
+    margin: 0;
+  }
 
-  "&:focus": {
-    outlineColor: theme.colors.secondary,
-  },
-}));
+  hr {
+    width: 100%;
+  }
 
-const SectionHeader = styled.h3({
-  marginBottom: "0.25rem",
-  marginTop: "0.5rem",
-});
+  h3 {
+    margin-bottom: 0.25rem;
+    margin-top: 0.5rem;
+  }
+
+  [role="switch"] {
+    margin-bottom: 0.5rem;
+    margin-top: 0.5rem;
+    background-color: var(--color-secondary);
+  }
+
+  [role="switch"]:focus {
+    outline-color: var(--color-secondary);
+  }
+
+  div {
+    position: relative;
+    margin-bottom: 0.5rem;
+  }
+`;
 
 interface Props {
   sourceWorkspace: WorkspaceModel;
@@ -74,24 +89,28 @@ const SourceWorkspaceCard: React.FC<Props> = ({
   };
 
   return (
-    <Card title={sourceWorkspace.name} css={{ h2: { margin: 0 } }}>
-      <hr css={{ width: "100%" }} />
-      <SectionHeader id={titleId}>{actionTitle}</SectionHeader>
-      <WorkspaceToggle
+    <StyledCard title={sourceWorkspace.name}>
+      <hr />
+
+      <h3 id={titleId}>{actionTitle}</h3>
+
+      <Toggle
         aria-label={actionTitle}
         aria-labelledby={titleId}
         isToggled={sourceWorkspace.isIncluded}
         onToggle={handleToggleIncludeWorkspace}
       />
+
       {sourceWorkspace.isIncluded && targetWorkspaces.length !== 0 && (
         <>
-          <SectionHeader>Target Workspace</SectionHeader>
-          <div css={{ marginBottom: "0.5rem", position: "relative" }}>
+          <h3>Target Workspace</h3>
+
+          <div>
             <WorkspaceSelect
-              css={(theme) => ({
-                background: theme.colors.secondary,
+              style={{
+                backgroundColor: "var(--color-secondary)",
                 fontSize: "1.125rem",
-              })}
+              }}
               workspaces={workspacesForSelect}
               value={targetSelectValue}
               onSelectWorkspace={handleSelectWorkspace}
@@ -99,7 +118,7 @@ const SourceWorkspaceCard: React.FC<Props> = ({
           </div>
         </>
       )}
-    </Card>
+    </StyledCard>
   );
 };
 

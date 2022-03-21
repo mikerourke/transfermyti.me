@@ -2,32 +2,33 @@ import React from "react";
 
 import { styled } from "./emotion";
 
-const Details = styled.details(
-  {
-    marginBottom: "1rem",
-    width: "100%",
+const StyledDetails = styled.details`
+  width: 100%;
+  margin-bottom: 1rem;
+  color: var(--color-primary);
 
-    "div,summary": {
-      margin: 0,
-      padding: "0.5rem 0.25rem",
-    },
+  div,
+  summary {
+    margin: 0;
+    padding: 0.5rem 0.25rem;
+  }
 
-    p: {
-      "&:not(first-of-type)": {
-        marginTop: 0,
-      },
+  summary {
+    font-weight: var(--font-weight-bold);
+    user-select: none;
+  }
 
-      "&:last-of-type": {
-        marginBottom: 0,
-      },
-    },
-  },
-  ({ theme }) => ({
-    color: theme.colors.primary,
-  }),
-);
+  div > p:first-of-type {
+    margin-top: 0;
+  }
 
-interface Props extends React.HTMLProps<HTMLDetailsElement> {
+  div > p:last-of-type {
+    margin-bottom: 0;
+  }
+`;
+
+interface Props extends React.HTMLAttributes<HTMLDetailsElement> {
+  open?: boolean;
   title?: string;
 }
 
@@ -36,13 +37,13 @@ const HelpDetails: React.FC<Props> = ({
   title = "Show/Hide Help",
   ...props
 }) => (
-  <Details {...props} as={undefined}>
-    <summary css={(theme) => ({ fontWeight: theme.fontWeights.bold })}>
-      {title}
-    </summary>
+  <StyledDetails {...props}>
+    <summary>{title}</summary>
+
     <div>{children}</div>
+
     <hr />
-  </Details>
+  </StyledDetails>
 );
 
 export default HelpDetails;

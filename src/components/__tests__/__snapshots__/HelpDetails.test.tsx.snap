@@ -2,9 +2,9 @@
 
 exports[`the <HelpDetails> component matches its snapshot with valid props 1`] = `
 .emotion-0 {
-  margin-bottom: 1rem;
   width: 100%;
-  color: rgb(30,120,161);
+  margin-bottom: 1rem;
+  color: var(--color-primary);
 }
 
 .emotion-0 div,
@@ -13,7 +13,7 @@ exports[`the <HelpDetails> component matches its snapshot with valid props 1`] =
   padding: 0.5rem 0.25rem;
 }
 
-.emotion-0 p:not(first-of-type) {
+.emotion-0 p:not(:first-of-type) {
   margin-top: 0;
 }
 

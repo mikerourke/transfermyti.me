@@ -1,0 +1,329 @@
+:root {
+  --color-primary: #1e78a1;
+  --color-secondary: #effde8;
+  --color-ruby: #a51323;
+  --color-navy: #1f3a93;
+  --color-eggplant: #505;
+  --color-green: #218003;
+  --color-black: #383838;
+  --color-midnight: #484848;
+  --color-silver: #585858;
+  --color-manatee: #888;
+  --color-alto: #e0e0e0;
+  --color-alabaster: #f8f8f8;
+  --color-white: #fff;
+  --color-honeydew: #d4fb79;
+  --color-clockify-blue: #4ca6ee;
+  --color-toggl-red: #cf4846;
+  --font-family: "Apple-System", arial, helvetica, sans-serif;
+  --font-weight-body: 400;
+  --font-weight-medium: 500;
+  --font-weight-bold: 600;
+  --font-weight-heading: 700;
+  --line-height-body: 1.5;
+  --line-height-heading: 1.25;
+  --height-header: 48px;
+  --height-footer: 112px;
+  --height-notification: 96px;
+  --gap-notification: 16px;
+  /* prettier-ignore */
+  --elevation-dp1:
+    0 1px 3px 0 rgba(0, 0, 0, 0.2),
+    0 1px 1px 0 rgba(0, 0, 0, 0.14),
+    0 2px 1px -1px rgba(0, 0, 0, 0.12);
+  /* prettier-ignore */
+  --elevation-dp2:
+    0 1px 5px 0 rgba(0, 0, 0, 0.2),
+    0 2px 2px 0 rgba(0, 0, 0, 0.14),
+    0 3px 1px -2px rgba(0, 0, 0, 0.12);
+  /* prettier-ignore */
+  --elevation-dp4:
+    0 2px 4px -1px rgba(0, 0, 0, 0.2),
+    0 4px 5px 0 rgba(0, 0, 0, 0.14),
+    0 1px 10px 0 rgba(0, 0, 0, 0.12);
+  /* prettier-ignore */
+  --elevation-dp8:
+    0 5px 5px -3px rgba(0, 0, 0, 0.2),
+    0 8px 10px 1px rgba(0, 0, 0, 0.14),
+    0 3px 14px 2px rgba(0, 0, 0, 0.12);
+  --z-index-backdrop: 4;
+  --z-index-drawer: 5;
+  --z-index-dialog: 7;
+  --z-index-menu: 8;
+  --z-index-logo: 9;
+  --z-index-notification: 10;
+}
+
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+  scroll-behavior: smooth;
+}
+
+html {
+  height: 100%;
+}
+
+body {
+  background-color: var(--color-secondary);
+  color: var(--color-primary);
+  line-height: var(--line-height-body);
+  margin: 0;
+  position: relative;
+  font-family: var(--font-family);
+}
+
+#app {
+  margin: 0 auto;
+  min-height: 100vh;
+}
+
+main {
+  position: relative;
+  height: calc(100vh - var(--height-header) - var(--height-footer));
+  max-width: 56rem;
+  margin: 0 auto;
+  padding: 0 1.5rem 1.5rem;
+  overflow-y: auto;
+}
+
+@media (max-width: 32rem) {
+  main {
+    padding: 0 0.375rem 1.5rem;
+  }
+}
+
+a {
+  color: var(--color-primary);
+  cursor: pointer;
+  text-decoration: none;
+}
+
+a:hover,
+a:focus {
+  text-decoration: underline;
+}
+
+button {
+  appearance: none;
+  border: none;
+  box-shadow: unset;
+  border-radius: 0;
+  cursor: pointer;
+  font-size: 1rem;
+  text-align: center;
+}
+
+h1,
+h2,
+h3,
+h4,
+h5,
+h6 {
+  line-height: var(--line-height-heading);
+}
+
+h1,
+h2,
+h3,
+h4,
+h5,
+h6,
+p {
+  margin: 1rem 0;
+}
+
+ul {
+  margin: 0;
+}
+
+menu {
+  appearance: none;
+  display: flex;
+  justify-content: flex-start;
+  margin: 0;
+  padding: 0;
+}
+
+menu li {
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+menu.alignRight {
+  justify-content: flex-end;
+}
+
+svg,
+path,
+circle {
+  user-select: none;
+}
+
+summary:active,
+summary:focus,
+a:active,
+a:focus,
+input:active,
+input:focus,
+select:active,
+select:focus {
+  outline: 2px solid var(--color-navy);
+}
+
+table {
+  --border-style: 1px solid var(--color-primary);
+
+  width: 100%;
+  table-layout: fixed;
+  border-spacing: 0;
+  border: var(--border-style);
+}
+
+tr {
+  color: var(--color-midnight);
+  text-decoration: none;
+}
+
+td {
+  text-align: left;
+}
+
+td,
+th {
+  padding: 0.5rem;
+}
+
+th,
+tfoot td {
+  background-color: var(--color-primary);
+  color: var(--color-white);
+  font-weight: var(--font-weight-bold);
+  border-right: 1px solid var(--color-white);
+}
+
+thead th {
+  text-align: left;
+  border-bottom: var(--border-style);
+}
+
+tfoot th {
+  text-align: right;
+}
+
+thead tr:first-of-type th {
+  border-top: none;
+}
+
+tbody td {
+  background-color: var(--color-white);
+  border-right: var(--border-style);
+  border-top: var(--border-style);
+}
+
+tr[data-disabled="true"] td {
+  color: var(--color-manatee);
+  text-decoration: line-through;
+}
+
+tfoot td:last-of-type {
+  border-right: none;
+  text-align: center;
+}
+
+tbody tr:first-of-type td {
+  border-top: none;
+}
+
+tbody tr:last-of-type td {
+  border-bottom: 1px solid var(--color-white);
+}
+
+[data-include] {
+  width: 6rem;
+  text-align: center;
+  border-right: none;
+}
+
+@media (max-width: 32rem) {
+  td,
+  th {
+    padding: 0.375rem;
+    font-size: 0.875rem;
+  }
+
+  [data-include] {
+    width: 4.25rem;
+  }
+}
+
+.note {
+  color: var(--color-eggplant);
+  font-weight: var(--font-weight-bold);
+}
+
+/*
+ * Used for hiding input labels while maintaining a11y requirements.
+ * See https://www.a11ywithlindsey.com/blog/introduction-accessible-labeling
+*/
+.visuallyHidden {
+  position: absolute !important;
+  height: 1px;
+  width: 1px;
+  overflow: hidden;
+  clip: rect(1px, 1px, 1px, 1px);
+}
+
+@keyframes loading-spin {
+  0% {
+    transform: rotate(0deg);
+  }
+
+  100% {
+    transform: rotate(360deg);
+  }
+}
+
+@keyframes cube-folding {
+  0%,
+  10% {
+    transform: perspective(140px) rotateX(-180deg);
+    opacity: 0;
+  }
+
+  25%,
+  75% {
+    transform: perspective(140px) rotateX(0deg);
+    opacity: 1;
+  }
+
+  90%,
+  100% {
+    transform: perspective(140px) rotateY(180deg);
+    opacity: 0;
+  }
+}
+
+@keyframes slide-in-right {
+  from {
+    transform: translate3d(100%, 0, 0);
+  }
+
+  to {
+    transform: translate3d(0, 0, 0);
+  }
+}
+
+@keyframes slide-out-left {
+  from {
+    opacity: 1;
+    transform: translate3d(0, 0, 0);
+  }
+
+  to {
+    opacity: 0;
+    transform: translate3d(100%, 0, 0);
+  }
+}

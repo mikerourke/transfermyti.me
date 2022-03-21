@@ -1,107 +1,88 @@
 import React from "react";
 
-import {
-  ExternalLink,
-  Flex,
-  Icon,
-  IconLink,
-  styled,
-  VisuallyHidden,
-} from "~/components";
+import { ExternalLink, Icon, IconLink, styled } from "~/components";
 
-const Base = styled.footer(
-  {
-    display: "flex",
-    height: "7rem",
-    justifyContent: "space-between",
-    padding: "2rem",
-    position: "fixed",
-    bottom: 0,
-    left: 0,
-    right: 0,
+const StyledFooter = styled.footer`
+  position: fixed;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  display: flex;
+  justify-content: space-between;
+  height: var(--height-footer);
+  padding: 2rem;
+  background-color: var(--color-primary);
+  color: var(--color-secondary);
 
-    a: {
-      textDecoration: "underline",
-    },
+  a {
+    text-decoration: underline;
+  }
 
-    p: {
-      margin: 0,
-    },
-  },
-  ({ theme }) => ({
-    background: theme.colors.primary,
-    color: theme.colors.secondary,
+  a:focus {
+    outline-color: var(--color-secondary);
+  }
 
-    [theme.query.mobile]: {
-      justifyContent: "center",
-    },
+  p {
+    margin: 0;
+  }
 
-    [theme.query.small]: {
-      fontSize: 14,
-    },
+  nav {
+    margin-top: 0.25rem;
+  }
 
-    "a:focus": {
-      outlineColor: theme.colors.secondary,
-    },
-  }),
-);
+  ul {
+    display: flex;
+    padding: 0;
+  }
 
-const RightColumn = styled.div({
-  fontWeight: 500,
-  textAlign: "right",
+  li {
+    margin: 0;
+    padding: 0;
+    list-style: none;
+  }
 
-  "@media (max-width: 32rem)": {
-    display: "none",
-  },
-});
+  ul li:not(:last-of-type) {
+    margin-right: 1rem;
+  }
 
-const SocialLinksNav = styled.nav(
-  {
-    marginTop: "0.25rem",
-  },
-  ({ theme }) => ({
-    [theme.query.mobile]: {
-      display: "flex",
-      justifyContent: "center",
-    },
-  }),
-);
+  > div:last-of-type {
+    text-align: right;
+    font-weight: var(--font-weight-medium);
+  }
 
-const Love: React.FC = () => <Icon name="heart" color="ruby" height={12} />;
+  @media (max-width: 32rem) {
+    justify-content: center;
 
-const LinkToMe: React.FC = () => (
-  <ExternalLink color="white" href="https://mikerourke.dev">
-    Mike Rourke
-  </ExternalLink>
-);
+    nav {
+      display: flex;
+      justify-content: center;
+    }
 
-const LinkToIssues: React.FC = () => (
-  <ExternalLink
-    color="white"
-    href="https://github.com/mikerourke/transfermyti.me/issues"
-  >
-    in the GitHub repository
-  </ExternalLink>
-);
+    > div:last-of-type {
+      display: none;
+    }
+  }
+
+  @media (min-width: 33rem) and (max-width: 52rem) {
+    font-size: 14px;
+  }
+`;
 
 const Footer: React.FC = () => (
-  <Base>
+  <StyledFooter>
     <div>
+      {/* prettier-ignore */}
       <p>
-        Made with
-        <Love />
-        by <LinkToMe /> © {new Date().getFullYear()}
+        Made with <Icon name="heart" color="var(--color-ruby)" size={12} /> by <ExternalLink color="white" href="https://mikerourke.dev">Mike Rourke</ExternalLink> © {new Date().getFullYear()}
       </p>
-      <SocialLinksNav aria-labelledby="footer-social-links">
-        <VisuallyHidden id="footer-social-links">
+
+      <nav aria-labelledby="footer-social-links">
+        <h2 id="footer-social-links" className="visuallyHidden">
           Social Media Links
-        </VisuallyHidden>
-        <Flex
-          as="ul"
-          id="footer-social-links"
-          css={{ listStyle: "none", padding: 0 }}
-        >
-          <li css={{ marginRight: "1rem" }}>
+        </h2>
+
+        <ul id="footer-social-links">
+          <li>
             <IconLink
               href="https://github.com/mikerourke"
               iconName="github"
@@ -110,7 +91,8 @@ const Footer: React.FC = () => (
               GitHub
             </IconLink>
           </li>
-          <li css={{ marginRight: "1rem" }}>
+
+          <li>
             <IconLink
               href="https://www.linkedin.com/in/michaelwrourke"
               iconName="linkedIn"
@@ -119,6 +101,7 @@ const Footer: React.FC = () => (
               LinkedIn
             </IconLink>
           </li>
+
           <li>
             <IconLink
               href="https://twitter.com/codelikeawolf"
@@ -128,16 +111,19 @@ const Footer: React.FC = () => (
               Twitter
             </IconLink>
           </li>
-        </Flex>
-      </SocialLinksNav>
+        </ul>
+      </nav>
     </div>
-    <RightColumn>
+
+    <div>
       <p>The time tracking tool companies are not responsible for this tool.</p>
+
+      {/* prettier-ignore */}
       <p>
-        Please file any issues <LinkToIssues />.
+        Please file any issues <ExternalLink color="white" href="https://github.com/mikerourke/transfermyti.me/issues">in the GitHub repository</ExternalLink>.
       </p>
-    </RightColumn>
-  </Base>
+    </div>
+  </StyledFooter>
 );
 
 export default Footer;

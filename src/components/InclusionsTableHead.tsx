@@ -14,6 +14,7 @@ const InclusionsTableHead: React.FC<Props> = ({ labels, ...props }) => (
           {label}
         </th>
       ))}
+
       <th data-include={true} scope="col">
         Include?
       </th>

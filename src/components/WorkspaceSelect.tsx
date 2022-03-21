@@ -4,43 +4,36 @@ import { WorkspaceModel } from "~/typeDefs";
 
 import { styled } from "./emotion";
 
-const Select = styled.select(
-  {
-    appearance: "none",
-    border: "none",
-    borderRadius: "0.375rem",
-    cursor: "pointer",
-    display: "inline-block",
-    fontSize: "1rem",
-    marginTop: "0.5rem",
-    padding: "0.75rem 1rem",
-    width: "100%",
-  },
-  ({ theme }) => ({
-    background: theme.colors.white,
-    boxShadow: theme.elevation.dp2,
-    color: theme.colors.primary,
-  }),
-);
+const StyledDiv = styled.div`
+  position: relative;
 
-const Arrow = styled.span(
-  {
-    borderBottomColor: "transparent",
-    borderLeftColor: "transparent",
-    borderRightColor: "transparent",
-    borderStyle: "solid",
-    borderWidth: "0.5rem 0.5rem 0",
-    bottom: "1.125rem",
-    height: 0,
-    pointerEvents: "none",
-    position: "absolute",
-    right: "1.5rem",
-    width: 0,
-  },
-  ({ theme }) => ({
-    borderTopColor: theme.colors.midnight,
-  }),
-);
+  select {
+    display: inline-block;
+    width: 100%;
+    margin-top: 0.5rem;
+    padding: 0.75rem 1rem;
+    appearance: none;
+    font-size: 1rem;
+    border: none;
+    border-radius: 0.375rem;
+    background-color: var(--color-white);
+    box-shadow: var(--elevation-dp2);
+    color: var(--color-primary);
+    cursor: pointer;
+  }
+
+  span {
+    position: absolute;
+    bottom: 1.125rem;
+    right: 1.5rem;
+    height: 0;
+    width: 0;
+    border-color: var(--color-midnight) transparent transparent;
+    border-style: solid;
+    border-width: 0.5rem 0.5rem 0;
+    pointer-events: none;
+  }
+`;
 
 interface Props extends React.HTMLProps<HTMLSelectElement> {
   workspaces: WorkspaceModel[];
@@ -61,13 +54,12 @@ const WorkspaceSelect: React.FC<Props> = ({
   };
 
   return (
-    <>
-      <Select
+    <StyledDiv>
+      <select
         data-testid="workspace-select"
         value={value}
         onChange={handleSelectChange}
         {...props}
-        as={undefined}
       >
         {workspaces.map((workspace) => (
           <option
@@ -78,9 +70,10 @@ const WorkspaceSelect: React.FC<Props> = ({
             {workspace.name}
           </option>
         ))}
-      </Select>
-      <Arrow />
-    </>
+      </select>
+
+      <span />
+    </StyledDiv>
   );
 };
 

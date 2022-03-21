@@ -5,30 +5,27 @@ import { styled } from "~/components";
 import Logo from "~/layout/Logo";
 import { RoutePath } from "~/typeDefs";
 
-const Base = styled.header(
-  {
-    alignItems: "center",
-    display: "flex",
-    height: "3rem",
-    padding: "0 1rem",
-    width: "100%",
-  },
-  ({ theme }) => ({
-    background: theme.colors.primary,
-    color: theme.colors.secondary,
-  }),
-);
+const StyledHeader = styled.header`
+  display: flex;
+  align-items: center;
+  height: 3rem;
+  width: 100%;
+  padding: 0 1rem;
+  background-color: var(--color-primary);
+  color: var(--color-secondary);
+`;
 
 const Header: React.FC = () => (
-  <Base>
+  <StyledHeader>
     <Logo />
+
     <Link
       css={(theme) => ({ color: theme.colors.secondary, fontSize: "1.5rem" })}
       to={RoutePath.PickToolAction}
     >
       transfermyti.me
     </Link>
-  </Base>
+  </StyledHeader>
 );
 
 export default Header;

@@ -2,20 +2,25 @@ import React from "react";
 
 import { HelpDetails, styled } from "~/components";
 
-const Details = styled(HelpDetails)({
-  marginBottom: 0,
+const StyledHelpDetails = styled(HelpDetails)`
+  margin-bottom: 0;
 
-  ul: {
-    marginTop: "0.75rem",
-  },
+  ul {
+    margin-top: 0.75rem;
+  }
 
-  li: {
-    padding: "0.25rem 0",
-  },
-});
+  li {
+    padding: 0.25rem 0;
+  }
+
+  p:last-of-type {
+    margin-top: 1rem;
+    font-weight: var(--font-weight-bold);
+  }
+`;
 
 const TimeEntryComparisonDisclaimer: React.FC = () => (
-  <Details title="Show/Hide Disclaimer">
+  <StyledHelpDetails title="Show/Hide Disclaimer">
     <p>
       The time tracking tools prevent duplicate records from being created by
       comparing the <strong>Name</strong> value (for clients, tags, projects,
@@ -23,12 +28,14 @@ const TimeEntryComparisonDisclaimer: React.FC = () => (
       with the same name, the API returns an error. However, there is no
       mechanism for preventing duplicate time entries.
     </p>
+
     <p>
       In an effort to prevent time entries from being duplicated, I check for
       certain conditions that are likely to match for duplicate entries. If all
       of the conditions in the list below are true, the time entry is marked as
       existing on the target tool and it is disabled from inclusion.
     </p>
+
     <ul>
       <li>
         Do the <strong>description</strong> fields <i>exactly</i> match?
@@ -46,10 +53,9 @@ const TimeEntryComparisonDisclaimer: React.FC = () => (
         <strong> end date and time</strong> of the source and target entry?
       </li>
     </ul>
-    <p style={{ marginTop: "1rem", fontWeight: "bold" }}>
-      You can disable this check by toggling the switch below.
-    </p>
-  </Details>
+
+    <p>You can disable this check by toggling the switch below.</p>
+  </StyledHelpDetails>
 );
 
 export default TimeEntryComparisonDisclaimer;

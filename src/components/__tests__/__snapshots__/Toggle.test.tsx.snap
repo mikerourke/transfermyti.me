@@ -2,51 +2,47 @@
 
 exports[`the <Toggle> component matches its snapshot when props.isToggled = false 1`] = `
 .emotion-0 {
-  border: none;
-  border-radius: 2rem;
   display: inline-block;
+  position: relative;
   height: 2rem;
   width: 4.5rem;
   overflow: hidden;
-  position: relative;
+  border: none;
+  border-radius: 2rem;
+  box-shadow: var(--elevation-dp2);
   -webkit-transition: background 0.1s ease-in-out;
   transition: background 0.1s ease-in-out;
-  box-shadow: 0 1px 5px 0 rgba(0, 0, 0, 0.2),0 2px 2px 0 rgba(0, 0, 0, 0.14),0 3px 1px -2px rgba(0, 0, 0, 0.12);
 }
 
 .emotion-1 {
-  border-radius: 50%;
   display: inline-block;
-  pointer-events: none;
   position: absolute;
-  text-transform: uppercase;
-  -webkit-transition: 0.4s;
-  transition: 0.4s;
-  background: rgb(88, 88, 88);
-  box-shadow: 0 1px 5px 0 rgba(0, 0, 0, 0.2),0 2px 2px 0 rgba(0, 0, 0, 0.14),0 3px 1px -2px rgba(0, 0, 0, 0.12);
-  font-size: 1rem;
-  font-weight: 600;
-  left: 0.225rem;
   top: 0.2rem;
   height: 1.6rem;
   width: 1.6rem;
+  font-size: 1rem;
+  font-weight: var(--font-weight-bold);
+  border-radius: 50%;
+  box-shadow: var(--elevation-dp2);
+  pointer-events: none;
+  text-transform: uppercase;
+  -webkit-transition: 250ms;
+  transition: 250ms;
+  background-color: var(--color-silver);
+  left: 0.225rem;
 }
 
 .emotion-1::before,
 .emotion-1::after {
-  display: block;
   position: absolute;
-}
-
-.emotion-1::before,
-.emotion-1::after {
-  color: rgb(30,120,161);
+  display: block;
+  color: var(--color-primary);
   line-height: 1.7rem;
 }
 
 .emotion-1::after {
   content: "NO";
-  right: -2.1375rem;
+  left: -2.1375rem;
 }
 
 <button
@@ -62,45 +58,41 @@ exports[`the <Toggle> component matches its snapshot when props.isToggled = fals
 
 exports[`the <Toggle> component matches its snapshot when props.isToggled = true 1`] = `
 .emotion-0 {
-  border: none;
-  border-radius: 2rem;
   display: inline-block;
+  position: relative;
   height: 2rem;
   width: 4.5rem;
   overflow: hidden;
-  position: relative;
+  border: none;
+  border-radius: 2rem;
+  box-shadow: var(--elevation-dp2);
   -webkit-transition: background 0.1s ease-in-out;
   transition: background 0.1s ease-in-out;
-  box-shadow: 0 1px 5px 0 rgba(0, 0, 0, 0.2),0 2px 2px 0 rgba(0, 0, 0, 0.14),0 3px 1px -2px rgba(0, 0, 0, 0.12);
 }
 
 .emotion-1 {
-  border-radius: 50%;
   display: inline-block;
-  pointer-events: none;
   position: absolute;
-  text-transform: uppercase;
-  -webkit-transition: 0.4s;
-  transition: 0.4s;
-  background: rgb(30,120,161);
-  box-shadow: 0 1px 5px 0 rgba(0, 0, 0, 0.2),0 2px 2px 0 rgba(0, 0, 0, 0.14),0 3px 1px -2px rgba(0, 0, 0, 0.12);
-  font-size: 1rem;
-  font-weight: 600;
-  left: 2.75rem;
   top: 0.2rem;
   height: 1.6rem;
   width: 1.6rem;
+  font-size: 1rem;
+  font-weight: var(--font-weight-bold);
+  border-radius: 50%;
+  box-shadow: var(--elevation-dp2);
+  pointer-events: none;
+  text-transform: uppercase;
+  -webkit-transition: 250ms;
+  transition: 250ms;
+  background-color: var(--color-primary);
+  left: 2.75rem;
 }
 
 .emotion-1::before,
 .emotion-1::after {
-  display: block;
   position: absolute;
-}
-
-.emotion-1::before,
-.emotion-1::after {
-  color: rgb(30,120,161);
+  display: block;
+  color: var(--color-primary);
   line-height: 1.7rem;
 }
 

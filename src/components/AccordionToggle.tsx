@@ -3,36 +3,30 @@ import React from "react";
 import { styled } from "./emotion";
 import Icon from "./Icon";
 
-const ToggleButton = styled.button(
-  {
-    alignItems: "center",
-    appearance: "none",
-    border: "none",
-    display: "flex",
-    fontSize: "1.25rem",
-    justifyContent: "space-between",
-    marginBottom: "1rem",
-    padding: "0.75rem 1rem",
-    textAlign: "left",
-    width: "100%",
-  },
-  ({ theme }) => ({
-    backgroundColor: theme.colors.white,
-    borderRadius: "0.375rem",
-    boxShadow: theme.elevation.dp2,
-    color: theme.colors.primary,
+const StyledButton = styled.button`
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  width: 100%;
+  margin-bottom: 1rem;
+  padding: 0.75rem 1rem;
+  background-color: var(--color-white);
+  border-radius: 0.375rem;
+  box-shadow: var(--elevation-dp2);
+  color: var(--color-primary);
+  font-size: 1.25rem;
+  text-align: left;
 
-    "&:hover": {
-      backgroundColor: theme.colors.primary,
-      color: theme.colors.white,
-      textDecoration: "underline",
+  &:hover {
+    background-color: var(--color-primary);
+    color: var(--color-white);
+    text-decoration: underline;
 
-      path: {
-        fill: theme.colors.white,
-      },
-    },
-  }),
-);
+    path {
+      fill: var(--color-white);
+    }
+  }
+`;
 
 interface Props extends React.ButtonHTMLAttributes<HTMLButtonElement> {
   children: string;
@@ -46,19 +40,19 @@ const AccordionToggle: React.FC<Props> = ({
   onToggle,
   ...props
 }) => (
-  <h3 css={{ margin: 0 }}>
-    <ToggleButton
+  <h3 style={{ margin: 0 }}>
+    <StyledButton
       aria-expanded={isExpanded}
       onClick={() => onToggle(!isExpanded)}
       {...props}
     >
       {children}
       <Icon
-        color="primary"
+        color="var(--color-primary)"
         name={isExpanded ? "circleRemove" : "circleAdd"}
         size={32}
       />
-    </ToggleButton>
+    </StyledButton>
   </h3>
 );
 

@@ -1,15 +1,9 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
 exports[`the <InclusionsTableBody> component matches its snapshot with valid props 1`] = `
-.emotion-0 td {
-  color: rgb(136, 136, 136);
-  -webkit-text-decoration: line-through;
-  text-decoration: line-through;
-}
-
 <tbody>
   <tr
-    class="emotion-0"
+    data-disabled="true"
   >
     <td>
       Test Client A
@@ -30,7 +24,7 @@ exports[`the <InclusionsTableBody> component matches its snapshot with valid pro
     </td>
   </tr>
   <tr
-    class="emotion-0"
+    data-disabled="true"
   >
     <td>
       Test Client B

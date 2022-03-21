@@ -1,79 +1,86 @@
-import { keyframes } from "@emotion/react";
 import * as R from "ramda";
 import React from "react";
 
 import { styled } from "./emotion";
-import Flex from "./Flex";
 import LoadingMessage from "./LoadingMessage";
 
-const cubeFoldingAnimation = keyframes({
-  "0%, 10%": {
-    transform: "perspective(140px) rotateX(-180deg)",
-    opacity: 0,
-  },
+const StyledDiv = styled.div`
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
 
-  "25%, 75%": {
-    transform: "perspective(140px) rotateX(0deg)",
-    opacity: 1,
-  },
+  > div {
+    width: 6rem;
+    height: 6rem;
+    margin: 2rem auto;
+    transform: rotateZ(45deg);
+  }
 
-  "90%, 100%": {
-    transform: "perspective(140px) rotateY(180deg)",
-    opacity: 0,
-  },
-});
+  span {
+    display: block;
+    position: relative;
+    height: 50%;
+    width: 50%;
+    float: left;
+  }
 
-const CubesContainer = styled.div({
-  transform: "rotateZ(45deg)",
-  margin: "2rem auto",
-  width: "6rem",
-  height: "6rem",
-});
+  span::before {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    transform-origin: 100% 100%;
+    content: "";
+    animation: cube-folding 2.4s infinite linear both;
+    background-color: var(--color-primary);
+  }
 
-const Cube = styled.div<{ rotation: number; delay: number }>(
-  {
-    float: "left",
-    width: "50%",
-    height: "50%",
-    position: "relative",
-    transform: "scale(1.1)",
+  > div span:first-of-type {
+    transform: scale(1.1) rotateZ(0deg);
+  }
 
-    "&:before": {
-      content: `""`,
-      position: "absolute",
-      top: 0,
-      left: 0,
-      width: "100%",
-      height: "100%",
-      animation: `${cubeFoldingAnimation} 2.4s infinite linear both`,
-      transformOrigin: "100% 100%",
-    },
-  },
-  ({ rotation, delay, theme }) => ({
-    transform: `scale(1.1) rotateZ(${rotation}deg)`,
+  > div span:first-of-type::before {
+    animation-delay: 0ms;
+  }
 
-    "&:before": {
-      backgroundColor: theme.colors.primary,
-      animationDelay: `${delay}s`,
-    },
-  }),
-);
+  > div span:nth-of-type(2) {
+    transform: scale(1.1) rotateZ(90deg);
+  }
+
+  > div span:nth-of-type(2)::before {
+    animation-delay: 300ms;
+  }
+
+  > div span:nth-of-type(3) {
+    transform: scale(1.1) rotateZ(270deg);
+  }
+
+  > div span:nth-of-type(3)::before {
+    animation-delay: 900ms;
+  }
+
+  > div span:last-of-type {
+    transform: scale(1.1) rotateZ(180deg);
+  }
+
+  > div span:last-of-type::before {
+    animation-delay: 600ms;
+  }
+`;
 
 const Loader: React.FC = ({ children, ...props }) => (
-  <Flex
-    alignItems="center"
-    justifyContent="center"
-    flexDirection="column"
-    {...props}
-  >
-    <CubesContainer>
-      <Cube rotation={0} delay={0} />
-      <Cube rotation={90} delay={0.3} />
-      <Cube rotation={270} delay={0.9} />
-      <Cube rotation={180} delay={0.6} />
-    </CubesContainer>
+  <StyledDiv {...props}>
+    <div role="status">
+      <span />
+      <span />
+      <span />
+      <span />
+    </div>
+
     {!R.isNil(children) && <LoadingMessage>{children}</LoadingMessage>}
-  </Flex>
+  </StyledDiv>
 );
 
 export default Loader;

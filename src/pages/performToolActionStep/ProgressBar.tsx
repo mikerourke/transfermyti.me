@@ -1,53 +1,53 @@
 import React from "react";
 
 import { styled } from "~/components";
+import { EntityGroup } from "~/modules/allEntities/allEntitiesTypes";
+import { getEntityGroupDisplay } from "~/utilities/textTransforms";
 
-const Title = styled.h2({
-  fontSize: "1.25rem",
-  fontWeight: 400,
-  margin: "0 0 0.5rem 0.5rem",
-});
+const StyledDiv = styled.div`
+  margin-bottom: 1rem;
+  margin-top: 0.5rem;
 
-const Bar = styled.div(
-  {
-    borderRadius: "3rem",
-    height: "1.5rem",
-    position: "relative",
-    width: "100%",
-  },
-  ({ theme }) => ({
-    background: theme.colors.white,
-    boxShadow: theme.elevation.dp2,
-  }),
-);
+  h2 {
+    font-size: 1.25rem;
+    font-weight: var(--font-weight-body);
+    margin: 0 0 0.5rem 0.5rem;
+  }
 
-const Filler = styled.div(
-  {
-    borderRadius: "inherit",
-    height: "100%",
-    transition: "width 0.5s ease-in",
-  },
-  ({ theme }) => ({
-    background: theme.colors.success,
-    boxShadow: theme.elevation.dp2,
-  }),
-);
+  [role="progressbar"] {
+    position: relative;
+    height: 1.5rem;
+    width: 100%;
+    border-radius: 3rem;
+    background-color: var(--color-white);
+    box-shadow: var(--elevation-dp2);
+  }
 
-const CountsLabel = styled.div({
-  fontSize: "1.125rem",
-  margin: "0.5rem 0 0 0.75rem",
-});
+  span {
+    display: block;
+    height: 100%;
+    border-radius: inherit;
+    background-color: var(--color-green);
+    box-shadow: var(--elevation-dp2);
+    transition: width 0.5s ease-in;
+  }
 
-interface Props extends React.HTMLProps<HTMLDivElement> {
+  h3 {
+    font-size: 1.125rem;
+    margin: 0.5rem 0 0 0.75rem;
+  }
+`;
+
+interface Props extends React.HTMLAttributes<HTMLDivElement> {
   completedCount: number;
   totalCount: number;
-  title: string;
+  entityGroup: EntityGroup;
 }
 
 const ProgressBar: React.FC<Props> = ({
   completedCount,
   totalCount,
-  title,
+  entityGroup,
   ...props
 }) => {
   if (totalCount === 0) {
@@ -59,18 +59,28 @@ const ProgressBar: React.FC<Props> = ({
     percentage = 0;
   }
   return (
-    <div css={{ marginBottom: "1rem", marginTop: "0.5rem" }} {...props}>
-      <Title>{title}</Title>
-      <Bar>
-        <Filler
+    <StyledDiv {...props}>
+      <h2 id={`${entityGroup}-progress`}>
+        {getEntityGroupDisplay(entityGroup)}
+      </h2>
+
+      <div
+        role="progressbar"
+        aria-valuenow={percentage}
+        aria-valuemin={0}
+        aria-valuemax={100}
+        aria-labelledby={`${entityGroup}-progress`}
+      >
+        <span
           data-testid="progress-bar-filler"
           style={{ width: `${percentage}%` }}
         />
-      </Bar>
-      <CountsLabel>
+      </div>
+
+      <h3>
         {completedCount} / {totalCount}
-      </CountsLabel>
-    </div>
+      </h3>
+    </StyledDiv>
   );
 };
 

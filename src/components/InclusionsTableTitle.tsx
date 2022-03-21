@@ -2,22 +2,19 @@ import React from "react";
 
 import Button from "./Button";
 import { styled } from "./emotion";
-import Flex from "./Flex";
 
-const Base = styled(Flex)(
-  {
-    button: {
-      borderRadius: "0.25rem",
-      fontSize: "0.875rem",
-      padding: "0.25rem 0.5rem",
-    },
-  },
-  ({ theme }) => ({
-    button: {
-      fontWeight: theme.fontWeights.bold,
-    },
-  }),
-);
+const StyledDiv = styled.div`
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+
+  button {
+    padding: 0.25rem 0.5rem;
+    border-radius: 0.25rem;
+    font-size: 0.875rem;
+    font-weight: var(--font-weight-bold);
+  }
+`;
 
 interface Props extends React.HTMLProps<HTMLHeadingElement> {
   flipDisabled?: boolean;
@@ -35,8 +32,9 @@ const InclusionsTableTitle: React.FC<Props> = ({
   };
 
   return (
-    <Base alignItems="center" justifyContent="space-between">
+    <StyledDiv>
       <h4 {...props}>{children}</h4>
+
       <Button
         disabled={flipDisabled}
         variant="outline"
@@ -44,7 +42,7 @@ const InclusionsTableTitle: React.FC<Props> = ({
       >
         Include All/None
       </Button>
-    </Base>
+    </StyledDiv>
   );
 };
 
