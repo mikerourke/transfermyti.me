@@ -52,7 +52,7 @@ export function getApiUrl(
   }
 
   return togglApiContext === "reports"
-    ? "https://api.clockify.me/api/v1"
+    ? "https://api.track.toggl.com/reports/api/v2"
     : "https://api.track.toggl.com/api/v8";
 }
 

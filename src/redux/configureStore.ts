@@ -19,6 +19,12 @@ import { isDevelopmentMode, isUseLocalApi } from "~/utilities/environment";
 const devTools = window.__REDUX_DEVTOOLS_EXTENSION_COMPOSE__;
 const composeEnhancers: AnyValid = devTools || compose;
 
+let currentStore: ReduxStore;
+
+export function getStore(): ReduxStore {
+  return currentStore;
+}
+
 export function configureStore(history: History): ReduxStore {
   let credentials = initialCredentialsState;
 
@@ -58,6 +64,8 @@ export function configureStore(history: History): ReduxStore {
   if (isUseLocalApi()) {
     store.dispatch(validateCredentials.request() as AnyAction);
   }
+
+  currentStore = store;
 
   return store;
 }

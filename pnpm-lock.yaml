@@ -45,7 +45,6 @@ specifiers:
   eslint-plugin-react: ^7.29.4
   eslint-plugin-unicorn: ^41.0.1
   express: ^4.17.3
-  fetch-intercept: ^2.4.0
   fs-extra: ^10.0.1
   history: 4.10.1
   html-webpack-plugin: ^5.5.0
@@ -82,7 +81,6 @@ specifiers:
   webpack: ^5.70.0
   webpack-cli: ^4.9.2
   webpack-dev-server: ^4.7.4
-  whatwg-fetch: ^3.6.2
   yargs: ^17.4.0
 
 dependencies:
@@ -91,7 +89,6 @@ dependencies:
   connected-react-router: 6.9.2_25bc22e3bb86ac1c689dc6fb75ba678e
   cuid: 2.1.8
   date-fns: 2.28.0
-  fetch-intercept: 2.4.0
   history: 4.10.1
   qs: 6.10.3
   ramda: 0.28.0
@@ -105,7 +102,6 @@ dependencies:
   redux-saga: 1.1.3
   reselect: 4.1.5
   typesafe-actions: 5.1.0
-  whatwg-fetch: 3.6.2
 
 devDependencies:
   '@babel/core': 7.17.8
@@ -4220,10 +4216,6 @@ packages:
       web-streams-polyfill: 3.2.0
     dev: true
 
-  /fetch-intercept/2.4.0:
-    resolution: {integrity: sha512-BPZ2LM9Dh1ua2ovQf03N6rhWg1qxdVD5qK/G4llvcemt6M+jjxCuIDxJ+6IiG+uz//3UQmgfKEv0gOGvYIxZ7g==}
-    dev: false
-
   /file-entry-cache/6.0.1:
     resolution: {integrity: sha512-7Gps/XWymbLk2QLYK4NzpMOrYjMhdIxXuIvy2QBsLE6ljuodKvdkWs/cpyJJ3CVIVpH0Oi1Hvg1ovbMzLdFBBg==}
     engines: {node: ^10.12.0 || >=12.0.0}
@@ -8098,10 +8090,6 @@ packages:
     dependencies:
       iconv-lite: 0.4.24
     dev: true
-
-  /whatwg-fetch/3.6.2:
-    resolution: {integrity: sha512-bJlen0FcuU/0EMLrdbJ7zOnW6ITZLrZMIarMUVmdKtsGvZna8vxKYaexICWPfZ8qwf9fzNq+UEIZrnSaApt6RA==}
-    dev: false
 
   /whatwg-mimetype/2.3.0:
     resolution: {integrity: sha512-M4yMwr6mAnQz76TbJm914+gPpB/nCwvZbJU28cUD6dR004SAxDLOOSUaB1JDRqLtaOV/vi0IC5lEAGFgrjGv/g==}

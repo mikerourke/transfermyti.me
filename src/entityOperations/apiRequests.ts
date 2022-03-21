@@ -3,8 +3,14 @@ import * as R from "ramda";
 import type { SagaIterator } from "redux-saga";
 import { call, delay } from "redux-saga/effects";
 
+import { credentialsByToolNameSelector } from "~/modules/credentials/credentialsSelectors";
+import { getStore } from "~/redux/configureStore";
 import { ToolName } from "~/typeDefs";
-import { getToolFetchDelay } from "~/utilities/environment";
+import {
+  getApiUrl,
+  getToolFetchDelay,
+  TogglApiContext,
+} from "~/utilities/environment";
 
 const CLOCKIFY_API_PAGE_SIZE = 100;
 
@@ -96,7 +102,7 @@ async function fetchWithRetries<TResponse>(
   attempt: number = 5,
 ): Promise<TResponse> {
   try {
-    return await fetch(endpoint, fetchOptions as RequestInit);
+    return await fetchFromApi(endpoint, fetchOptions as RequestInit);
   } catch (err: AnyValid) {
     if (err.status === 429) {
       if (attempt <= 0) {
@@ -121,4 +127,93 @@ async function fetchWithRetries<TResponse>(
  */
 export function getApiDelayForTool(toolName: ToolName): number {
   return getToolFetchDelay(toolName);
+}
+
+async function fetchFromApi<T>(url: string, config: RequestInit): Promise<T> {
+  const { toolName, context, endpoint } = extrapolateFromUrl(url);
+
+  const state = getStore().getState();
+
+  const credentialsByToolName = credentialsByToolNameSelector(state);
+
+  const apiKey = credentialsByToolName[toolName]?.apiKey ?? "";
+
+  if (config.body) {
+    config.body = JSON.stringify(config.body);
+  }
+
+  const baseHeaders = getHeaders(toolName, apiKey);
+  if (config.headers) {
+    config.headers = {
+      ...config.headers,
+      ...baseHeaders,
+    };
+  } else {
+    config.headers = baseHeaders;
+  }
+
+  const fullUrl = getApiUrl(toolName, context).concat("/", endpoint);
+
+  const response = await fetch(fullUrl, config);
+
+  if (!response.ok) {
+    return Promise.reject(response);
+  }
+
+  const type = response.headers.get("content-type") ?? null;
+
+  if (type === null) {
+    return response as unknown as T;
+  }
+
+  if (type.includes("json")) {
+    return await response.json();
+  }
+
+  return (await response.text()) as unknown as T;
+}
+
+/**
+ * Returns the headers with correct authentication based on the specified
+ * tool name.
+ */
+function getHeaders(
+  toolName: ToolName,
+  apiKey: string,
+): Record<string, string> {
+  if (toolName === ToolName.Clockify) {
+    return {
+      "Content-Type": "application/json",
+      "X-Api-Key": apiKey,
+    };
+  }
+
+  const authString = `${apiKey}:api_token`;
+
+  const encodedAuth = window.btoa(authString);
+
+  return {
+    "Content-Type": "application/json",
+    Authorization: `Basic ${encodedAuth}`,
+  };
+}
+
+/**
+ * Extrapolates the tool name, context, and endpoint from the specified URL.
+ * This allows us to specify a simpler URL for fetch requests and get the
+ * tool information based on the path.
+ */
+function extrapolateFromUrl(url: string): {
+  toolName: ToolName;
+  context: TogglApiContext;
+  endpoint: string;
+} {
+  const validUrl = url.startsWith("/") ? url.substring(1) : url;
+  const [toolName, context, ...rest] = validUrl.split("/");
+
+  return {
+    toolName: toolName as ToolName,
+    context: context as TogglApiContext,
+    endpoint: rest.join("/"),
+  };
 }
