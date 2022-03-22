@@ -27,17 +27,14 @@ jobs:
     steps:
       - uses: actions/checkout@v2
 
-      - uses: pnpm/action-setup@v2.0.1
+      - uses: pnpm/action-setup@646cdf48217256a3d0b80361c5a50727664284f2
         with:
           version: 6.30.1
 
-      - name: Cache node_modules
-        uses: actions/cache@v1
+      - uses: actions/setup-node@v2
         with:
-          path: ~/.cache/pnpm
-          key: ${{ runner.os }}-pnpm-${{ hashFiles(format('{0}{1}', github.workspace, '/pnpm-lock.yaml')) }}
-          restore-keys: |
-            ${{ runner.os }}-pnpm-
+          node-version: '16'
+          cache: 'pnpm'
 
       - name: Install Dependencies
         run: pnpm install
