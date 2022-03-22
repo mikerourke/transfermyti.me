@@ -12,6 +12,8 @@ import { EntityGroup } from "~/typeDefs";
 
 import { allEntitiesSaga } from "../allEntitiesSaga";
 
+jest.mock("~/modules/app/navigateToRoute");
+
 describe("within allEntitiesSaga", () => {
   test("the createAllEntitiesSaga dispatches the correct actions", () => {
     return expectSaga(allEntitiesSaga)
