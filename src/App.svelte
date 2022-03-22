@@ -10,6 +10,7 @@
   import Notifications from "~/layout/Notifications.svelte";
   import EnterApiKeysStep from "~/steps/enterApiKeysStep/EnterApiKeysStep.svelte";
   import PickToolActionStep from "~/steps/pickToolActionStep/PickToolActionStep.svelte";
+  import SelectWorkspacesStep from "~/steps/selectWorkspacesStep/SelectWorkspacesStep.svelte";
 
   onMount(() => {
     navigateToRoute(RoutePath.PickToolAction, { replace: true });
@@ -33,7 +34,7 @@
   </Route>
 
   <Route path={RoutePath.SelectWorkspaces}>
-    <div>Yo</div>
+    <SelectWorkspacesStep />
   </Route>
 
   <Route path={RoutePath.SelectInclusions}>

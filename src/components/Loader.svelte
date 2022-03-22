@@ -33,54 +33,65 @@
     height: 6rem;
   }
 
-  [data-cube] {
+  span {
     display: block;
-    float: left;
-    width: 50%;
-    height: 50%;
     position: relative;
-    transform: scale(1.1);
+    height: 50%;
+    width: 50%;
+    float: left;
   }
 
-  [data-cube]::before {
+  span::before {
     position: absolute;
     top: 0;
     left: 0;
     width: 100%;
     height: 100%;
+    transform-origin: 100% 100%;
     content: "";
     animation: cube-folding 2.4s infinite linear both;
-    transform-origin: 100% 100%;
     background-color: var(--color-primary);
   }
 
-  [data-cube="1"] {
+  [data-cubes] span:first-of-type {
     transform: scale(1.1) rotateZ(0deg);
-    animation-delay: 0s;
   }
 
-  [data-cube="2"] {
+  [data-cubes] span:first-of-type::before {
+    animation-delay: 0ms;
+  }
+
+  [data-cubes] span:nth-of-type(2) {
     transform: scale(1.1) rotateZ(90deg);
-    animation-delay: 0.3s;
   }
 
-  [data-cube="3"] {
+  [data-cubes] span:nth-of-type(2)::before {
+    animation-delay: 300ms;
+  }
+
+  [data-cubes] span:nth-of-type(3) {
     transform: scale(1.1) rotateZ(270deg);
-    animation-delay: 0.9s;
   }
 
-  [data-cube="4"] {
+  [data-cubes] span:nth-of-type(3)::before {
+    animation-delay: 900ms;
+  }
+
+  [data-cubes] span:last-of-type {
     transform: scale(1.1) rotateZ(180deg);
-    animation-delay: 0.6s;
+  }
+
+  [data-cubes] span:last-of-type::before {
+    animation-delay: 600ms;
   }
 </style>
 
 <div data-wrapper>
   <div data-cubes>
-    <span data-cube="1" />
-    <span data-cube="2" />
-    <span data-cube="3" />
-    <span data-cube="4" />
+    <span />
+    <span />
+    <span />
+    <span />
   </div>
 
   {#if $$slots.default}

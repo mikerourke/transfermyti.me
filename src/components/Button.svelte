@@ -57,7 +57,7 @@
     width: 1.5rem;
     border-radius: 50%;
     transform: translateZ(0);
-    animation: spin 1.4s infinite linear;
+    animation: loading-spinner 1.4s infinite linear;
   }
 
   span::before {
@@ -83,7 +83,7 @@
     content: "";
   }
 
-  @keyframes spin {
+  @keyframes loading-spinner {
     0% {
       transform: rotate(0deg);
     }
