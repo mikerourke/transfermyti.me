@@ -1,8 +1,5 @@
 {
-  "globals": {
-    "window": true
-  },
-  "collectCoverageFrom": ["src/**/*.{ts,tsx}"],
+  "collectCoverageFrom": ["src/**/*.{ts,tsx,svelte}"],
   "coverageDirectory": "out/coverage",
   "coveragePathIgnorePatterns": [
     "/node_modules/",
@@ -27,7 +24,10 @@
     "components/index.tsx"
   ],
   "coverageReporters": ["lcov"],
-  "moduleFileExtensions": ["js", "json", "jsx", "ts", "tsx"],
+  "globals": {
+    "window": true
+  },
+  "moduleFileExtensions": ["js", "json", "jsx", "ts", "tsx", "svelte"],
   "moduleNameMapper": {
     "^~/(.*)$": "<rootDir>/src/$1"
   },
@@ -39,6 +39,10 @@
     "<rootDir>/src/**/__tests__/**/*.ts?(x)",
     "<rootDir>/src/**/?(*.)(spec|test).ts?(x)"
   ],
-  "testPathIgnorePatterns": ["<rootDir>/scripts/runTests.js"],
-  "testURL": "http://localhost"
+  "testPathIgnorePatterns": ["<rootDir>/scripts/tests.mjs"],
+  "testURL": "http://localhost",
+  "transform": {
+    "^.+\\.svelte$": ["svelte-jester", { "preprocess": true }],
+    "^.+\\.[jt]s$": "babel-jest"
+  }
 }

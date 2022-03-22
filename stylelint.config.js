@@ -17,7 +17,7 @@ module.exports = {
   plugins: ["stylelint-a11y"],
   overrides: [
     {
-      files: ["**/*.html"],
+      files: ["**/*.html", "**/*.svelte"],
       customSyntax: "postcss-html",
       rules: {
         ...rules,

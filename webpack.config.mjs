@@ -9,6 +9,7 @@ import MiniCssExtractPlugin from "mini-css-extract-plugin";
 import webpack from "webpack";
 
 import babelConfig from "./babel.config.js";
+import svelteConfig from "./svelte.config.js";
 
 export const thisDirPath = path.dirname(fileURLToPath(import.meta.url));
 
@@ -17,6 +18,69 @@ const assetsDirPath = path.resolve(thisDirPath, "assets");
 const buildOutDirPath = path.resolve(thisDirPath, "out", "build");
 
 const sourceDirPath = path.resolve(thisDirPath, "src");
+
+const htmlTemplate = `
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta name="author" content="Mike Rourke" />
+    <meta
+      name="description"
+      content="Transfer your data between time tracking tools."
+    />
+    <meta property="og:title" content="transfermyti.me" />
+    <meta
+      name="og:description"
+      content="Transfer your data between time tracking tools."
+    />
+    <meta
+      name="og:image"
+      content="https://transfermyti.me/images/logo-card.png"
+    />
+    <meta name="og:type" content="website" />
+    <meta name="twitter:card" content="summary" />
+    <meta name="twitter:url" content="https://transfermyti.me" />
+    <meta name="twitter:title" content="transfermyti.me" />
+    <meta
+      name="twitter:description"
+      content="Transfer your data between time tracking tools."
+    />
+    <meta
+      name="twitter:image"
+      content="https://transfermyti.me/images/logo-card.png"
+    />
+    <meta name="twitter:image:width" content="600" />
+    <meta name="twitter:image:height" content="600" />
+    <meta name="twitter:site" content="@codelikeawolf" />
+    <meta name="twitter:creator" content="@codelikeawolf" />
+    <meta name="keywords" content="toggl,clockify,transfer" />
+    <link
+      rel="apple-touch-icon"
+      sizes="180x180"
+      href="/images/apple-touch-icon.png"
+    />
+    <link
+      rel="icon"
+      type="image/png"
+      sizes="32x32"
+      href="/images/favicon-32x32.png"
+    />
+    <link
+      rel="icon"
+      type="image/png"
+      sizes="16x16"
+      href="/images/favicon-16x16.png"
+    />
+    <link rel="manifest" href="/site.webmanifest" />
+    <meta name="msapplication-TileColor" content="#1e78a1" />
+    <meta name="theme-color" content="#effde8" />
+    <title>transfermyti.me</title>
+  </head>
+  <body></body>
+</html>
+`;
 
 function getEnvironmentPlugin(env, argv) {
   let envEntries;
@@ -65,7 +129,7 @@ export default function webpackConfiguration(env, argv) {
 
   plugins.push(
     new HtmlWebpackPlugin({
-      template: path.resolve(sourceDirPath, "index.html"),
+      templateContent: htmlTemplate,
     }),
 
     new CopyPlugin({
@@ -105,13 +169,34 @@ export default function webpackConfiguration(env, argv) {
       rules: [
         {
           test: /\.(js|ts|tsx)$/i,
-          exclude: /node_modules/,
+          exclude: /node_modules|\.svelte/,
           use: {
             loader: "babel-loader",
             options: {
               cacheDirectory: true,
               ...babelConfig,
             },
+          },
+        },
+        {
+          test: /\.(html|svelte)$/,
+          use: {
+            loader: "svelte-loader",
+            options: {
+              compilerOptions: {
+                dev: isDevelopment,
+              },
+              emitCss: !isDevelopment,
+              hotReload: isDevelopment,
+              preprocess: svelteConfig.preprocess,
+            },
+          },
+        },
+        {
+          // Required to prevent errors from Svelte on Webpack 5+:
+          test: /node_modules\/svelte\/.*\.mjs$/,
+          resolve: {
+            fullySpecified: false,
           },
         },
         {
@@ -150,9 +235,11 @@ export default function webpackConfiguration(env, argv) {
     plugins,
     resolve: {
       alias: {
+        svelte: path.resolve("node_modules", "svelte"),
         "~": path.resolve(thisDirPath, "src/"),
       },
-      extensions: [".mjs", ".js", ".ts", ".tsx"],
+      extensions: [".mjs", ".js", ".ts", ".tsx", ".svelte"],
+      mainFields: ["svelte", "browser", "module", "main"],
     },
     stats: "errors-only",
     devServer: {
