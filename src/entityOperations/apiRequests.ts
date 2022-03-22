@@ -3,8 +3,14 @@ import * as R from "ramda";
 import type { SagaIterator } from "redux-saga";
 import { call, delay } from "redux-saga/effects";
 
+import { credentialsByToolNameSelector } from "~/modules/credentials/credentialsSelectors";
+import { getStore } from "~/redux/configureStore";
 import { ToolName } from "~/typeDefs";
-import { getToolFetchDelay } from "~/utilities/environment";
+import {
+  getApiUrl,
+  isUseLocalApi,
+  TogglApiContext,
+} from "~/utilities/environment";
 
 const CLOCKIFY_API_PAGE_SIZE = 100;
 
@@ -40,7 +46,10 @@ export function* fetchPaginatedFromClockify<TEntity>(
     // page and the record count is evenly divisible by the page size:
     keepFetching = entityRecords.length === CLOCKIFY_API_PAGE_SIZE;
 
-    const clockifyFetchDelay = yield call(getToolFetchDelay, ToolName.Clockify);
+    const clockifyFetchDelay = yield call(
+      getApiDelayForTool,
+      ToolName.Clockify,
+    );
 
     yield delay(clockifyFetchDelay);
 
@@ -96,7 +105,7 @@ async function fetchWithRetries<TResponse>(
   attempt: number = 5,
 ): Promise<TResponse> {
   try {
-    return await fetch(endpoint, fetchOptions as RequestInit);
+    return await fetchFromApi(endpoint, fetchOptions as RequestInit);
   } catch (err: AnyValid) {
     if (err.status === 429) {
       if (attempt <= 0) {
@@ -116,9 +125,113 @@ async function fetchWithRetries<TResponse>(
 }
 
 /**
- * Returns the delay to use for making API requests based on the specified
- * tool name.
+ * Delay time for requests to ensure rate limits are not exceeded.
+ * For Clockify, the documentation limits requests to 10 per second, but we're
+ * using a higher delay to accommodate for differences between the working API
+ * and stable API.
  */
 export function getApiDelayForTool(toolName: ToolName): number {
-  return getToolFetchDelay(toolName);
+  if (process?.env?.NODE_ENV?.toString() === "test") {
+    return 0;
+  }
+
+  switch (toolName) {
+    case ToolName.Clockify:
+      return isUseLocalApi() ? 0 : 1000 / 8;
+
+    case ToolName.Toggl:
+      return isUseLocalApi() ? 0 : 1000 / 4;
+
+    default:
+      return 0;
+  }
+}
+
+async function fetchFromApi<T>(url: string, config: RequestInit): Promise<T> {
+  const { toolName, context, endpoint } = extrapolateFromUrl(url);
+
+  const state = getStore().getState();
+
+  const credentialsByToolName = credentialsByToolNameSelector(state);
+
+  const apiKey = credentialsByToolName[toolName]?.apiKey ?? "";
+
+  if (config.body) {
+    config.body = JSON.stringify(config.body);
+  }
+
+  const baseHeaders = getHeaders(toolName, apiKey);
+  if (config.headers) {
+    config.headers = {
+      ...config.headers,
+      ...baseHeaders,
+    };
+  } else {
+    config.headers = baseHeaders;
+  }
+
+  const fullUrl = getApiUrl(toolName, context).concat("/", endpoint);
+
+  const response = await fetch(fullUrl, config);
+
+  if (!response.ok) {
+    return Promise.reject(response);
+  }
+
+  const type = response.headers.get("content-type") ?? null;
+
+  if (type === null) {
+    return response as unknown as T;
+  }
+
+  if (type.includes("json")) {
+    return await response.json();
+  }
+
+  return (await response.text()) as unknown as T;
+}
+
+/**
+ * Returns the headers with correct authentication based on the specified
+ * tool name.
+ */
+function getHeaders(
+  toolName: ToolName,
+  apiKey: string,
+): Record<string, string> {
+  if (toolName === ToolName.Clockify) {
+    return {
+      "Content-Type": "application/json",
+      "X-Api-Key": apiKey,
+    };
+  }
+
+  const authString = `${apiKey}:api_token`;
+
+  const encodedAuth = window.btoa(authString);
+
+  return {
+    "Content-Type": "application/json",
+    Authorization: `Basic ${encodedAuth}`,
+  };
+}
+
+/**
+ * Extrapolates the tool name, context, and endpoint from the specified URL.
+ * This allows us to specify a simpler URL for fetch requests and get the
+ * tool information based on the path.
+ */
+function extrapolateFromUrl(url: string): {
+  toolName: ToolName;
+  context: TogglApiContext;
+  endpoint: string;
+} {
+  const validUrl = url.startsWith("/") ? url.substring(1) : url;
+  const [toolName, context, ...rest] = validUrl.split("/");
+
+  return {
+    toolName: toolName as ToolName,
+    context: context as TogglApiContext,
+    endpoint: rest.join("/"),
+  };
 }

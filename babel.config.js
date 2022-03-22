@@ -20,12 +20,7 @@ module.exports = {
       },
     ],
     "@babel/plugin-proposal-numeric-separator",
-    [
-      "transform-inline-environment-variables",
-      {
-        exclude: ["USE_LOCAL_API", "PARCEL_SERVE"],
-      },
-    ],
+    "transform-inline-environment-variables",
     [
       "jsx-pragmatic",
       {

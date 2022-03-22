@@ -1,7 +1,7 @@
 import type { SagaIterator } from "redux-saga";
 import { call, put, select } from "redux-saga/effects";
 
-import { fetchObject } from "~/entityOperations/fetchActions";
+import { fetchObject } from "~/entityOperations/apiRequests";
 import { mappingByToolNameSelector } from "~/modules/allEntities/allEntitiesSelectors";
 import { validateCredentials } from "~/modules/credentials/credentialsActions";
 import { credentialsByMappingSelector } from "~/modules/credentials/credentialsSelectors";

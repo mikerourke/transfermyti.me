@@ -1,12 +1,12 @@
 import type { SagaIterator } from "redux-saga";
 import { call, delay, put } from "redux-saga/effects";
 
-import { deleteEntitiesForTool } from "~/entityOperations/deleteEntitiesForTool";
 import {
   fetchObject,
   fetchPaginatedFromClockify,
   getApiDelayForTool,
-} from "~/entityOperations/fetchActions";
+} from "~/entityOperations/apiRequests";
+import { deleteEntitiesForTool } from "~/entityOperations/deleteEntitiesForTool";
 import { fetchEntitiesForTool } from "~/entityOperations/fetchEntitiesForTool";
 import { incrementEntityGroupTransferCompletedCount } from "~/modules/allEntities/allEntitiesActions";
 import { EntityGroup, ToolName, UserModel } from "~/typeDefs";

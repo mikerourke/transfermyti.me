@@ -61,7 +61,7 @@ export const TimeEntriesInclusionsPanelComponent: React.FC<Props> = ({
 
   return (
     <AccordionPanel rowNumber={5} title="Time Entries">
-      {recordCount === 0 ? (
+      {timeEntries.length === 0 ? (
         <NoRecordsFound />
       ) : (
         <>

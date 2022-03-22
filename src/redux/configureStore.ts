@@ -2,13 +2,12 @@ import { connectRouter, routerMiddleware } from "connected-react-router";
 import { History } from "history";
 import { AnyAction, applyMiddleware, compose, createStore } from "redux";
 import createSagaMiddleware from "redux-saga";
-import storage from "store";
 
-import { STORAGE_KEY } from "~/constants";
 import { allEntitiesSaga } from "~/modules/allEntities/allEntitiesSaga";
 import { appSaga } from "~/modules/app/appSaga";
 import { validateCredentials } from "~/modules/credentials/credentialsActions";
 import { initialState as initialCredentialsState } from "~/modules/credentials/credentialsReducer";
+import { getCredentialsFromStorage } from "~/modules/credentials/credentialsStorage";
 import { credentialsSaga } from "~/modules/credentials/sagas/credentialsSaga";
 import { projectMonitoringSaga } from "~/modules/projects/sagas/projectsSagas";
 import { taskMonitoringSaga } from "~/modules/tasks/sagas/tasksSagas";
@@ -20,13 +19,20 @@ import { isDevelopmentMode, isUseLocalApi } from "~/utilities/environment";
 const devTools = window.__REDUX_DEVTOOLS_EXTENSION_COMPOSE__;
 const composeEnhancers: AnyValid = devTools || compose;
 
+let currentStore: ReduxStore;
+
+export function getStore(): ReduxStore {
+  return currentStore;
+}
+
 export function configureStore(history: History): ReduxStore {
   let credentials = initialCredentialsState;
 
   // Only load the stored credentials from localStorage if in dev mode:
   if (isDevelopmentMode()) {
-    const storedCredentials = storage.get(STORAGE_KEY);
-    if (storedCredentials) {
+    const storedCredentials = getCredentialsFromStorage();
+
+    if (storedCredentials !== null) {
       credentials = {
         ...initialCredentialsState,
         ...storedCredentials,
@@ -58,6 +64,8 @@ export function configureStore(history: History): ReduxStore {
   if (isUseLocalApi()) {
     store.dispatch(validateCredentials.request() as AnyAction);
   }
+
+  currentStore = store;
 
   return store;
 }
