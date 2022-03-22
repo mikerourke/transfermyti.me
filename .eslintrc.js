@@ -153,7 +153,7 @@ module.exports = {
       },
     },
     {
-      files: ["*.tsx"],
+      files: ["*.tsx", "src/main.ts"],
       rules: {
         "@typescript-eslint/member-ordering": "off",
         "import/no-default-export": "off",

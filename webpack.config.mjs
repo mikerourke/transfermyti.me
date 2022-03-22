@@ -164,7 +164,7 @@ export default function webpackConfiguration(env, argv) {
   return {
     devtool: isDevelopment ? "source-map" : false,
     mode: argv.mode,
-    entry: path.join(sourceDirPath, "index.tsx"),
+    entry: path.join(sourceDirPath, "main.ts"),
     module: {
       rules: [
         {
