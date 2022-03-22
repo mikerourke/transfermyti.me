@@ -12,25 +12,6 @@ export function isDevelopmentMode(): boolean {
   }
 }
 
-/**
- * Delay time for requests to ensure rate limits are not exceeded.
- * For Clockify, the documentation limits requests to 10 per second, but we're
- * using a higher delay to accommodate for differences between the working API
- * and stable API.
- */
-export function getToolFetchDelay(toolName: ToolName): number {
-  switch (toolName) {
-    case ToolName.Clockify:
-      return isUseLocalApi() ? 0 : 1000 / 8;
-
-    case ToolName.Toggl:
-      return isUseLocalApi() ? 0 : 1000 / 4;
-
-    default:
-      return 0;
-  }
-}
-
 export type TogglApiContext = "api" | "reports";
 
 /**

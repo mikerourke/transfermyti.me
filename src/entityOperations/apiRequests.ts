@@ -8,7 +8,7 @@ import { getStore } from "~/redux/configureStore";
 import { ToolName } from "~/typeDefs";
 import {
   getApiUrl,
-  getToolFetchDelay,
+  isUseLocalApi,
   TogglApiContext,
 } from "~/utilities/environment";
 
@@ -46,7 +46,10 @@ export function* fetchPaginatedFromClockify<TEntity>(
     // page and the record count is evenly divisible by the page size:
     keepFetching = entityRecords.length === CLOCKIFY_API_PAGE_SIZE;
 
-    const clockifyFetchDelay = yield call(getToolFetchDelay, ToolName.Clockify);
+    const clockifyFetchDelay = yield call(
+      getApiDelayForTool,
+      ToolName.Clockify,
+    );
 
     yield delay(clockifyFetchDelay);
 
@@ -122,11 +125,26 @@ async function fetchWithRetries<TResponse>(
 }
 
 /**
- * Returns the delay to use for making API requests based on the specified
- * tool name.
+ * Delay time for requests to ensure rate limits are not exceeded.
+ * For Clockify, the documentation limits requests to 10 per second, but we're
+ * using a higher delay to accommodate for differences between the working API
+ * and stable API.
  */
 export function getApiDelayForTool(toolName: ToolName): number {
-  return getToolFetchDelay(toolName);
+  if (process?.env?.NODE_ENV?.toString() === "test") {
+    return 0;
+  }
+
+  switch (toolName) {
+    case ToolName.Clockify:
+      return isUseLocalApi() ? 0 : 1000 / 8;
+
+    case ToolName.Toggl:
+      return isUseLocalApi() ? 0 : 1000 / 4;
+
+    default:
+      return 0;
+  }
 }
 
 async function fetchFromApi<T>(url: string, config: RequestInit): Promise<T> {
