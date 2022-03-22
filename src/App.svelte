@@ -8,6 +8,7 @@
   import Footer from "~/layout/Footer.svelte";
   import Header from "~/layout/Header.svelte";
   import Notifications from "~/layout/Notifications.svelte";
+  import EnterApiKeysStep from "~/steps/enterApiKeysStep/EnterApiKeysStep.svelte";
   import PickToolActionStep from "~/steps/pickToolActionStep/PickToolActionStep.svelte";
 
   onMount(() => {
@@ -28,7 +29,7 @@
   </Route>
 
   <Route path={RoutePath.EnterApiKeys}>
-    <div>Yo</div>
+    <EnterApiKeysStep />
   </Route>
 
   <Route path={RoutePath.SelectWorkspaces}>

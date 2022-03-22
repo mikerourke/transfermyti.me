@@ -75,11 +75,6 @@ body {
   font-family: var(--font-family);
 }
 
-#app {
-  margin: 0 auto;
-  min-height: 100vh;
-}
-
 main {
   position: relative;
   height: calc(100vh - var(--height-header) - var(--height-footer));
@@ -133,6 +128,10 @@ h5,
 h6,
 p {
   margin: 1rem 0;
+}
+
+h1 {
+  font-size: 1.75rem;
 }
 
 ul {
