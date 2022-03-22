@@ -91,8 +91,13 @@ module.exports = {
         ],
         pathGroups: [
           {
-            pattern: "~/**",
+            pattern: "~/**/!(*.svelte|components)",
             group: "internal",
+          },
+          {
+            pattern: "~/**/*.svelte",
+            group: "internal",
+            position: "after",
           },
         ],
         "newlines-between": "always-and-inside-groups",

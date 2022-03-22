@@ -32,6 +32,7 @@ specifiers:
   babel-plugin-module-resolver: ^4.1.0
   babel-plugin-transform-inline-environment-variables: ^0.4.3
   body-parser: ^1.19.2
+  clsx: ^1.1.1
   connected-react-router: ^6.9.2
   copy-webpack-plugin: ^10.2.4
   css-loader: ^6.7.1
@@ -47,6 +48,7 @@ specifiers:
   eslint-plugin-unicorn: ^41.0.1
   express: ^4.17.3
   fs-extra: ^10.0.1
+  goober: ^2.1.8
   history: 4.10.1
   html-webpack-plugin: ^5.5.0
   jest: ^27.5.1
@@ -93,9 +95,11 @@ specifiers:
 dependencies:
   '@emotion/react': 11.8.2_ac8e640ee2ebe4fcb4080b2762e3254a
   '@emotion/styled': 11.8.1_0bd19656468de1d4aa39379bbff84910
+  clsx: 1.1.1
   connected-react-router: 6.9.2_25bc22e3bb86ac1c689dc6fb75ba678e
   cuid: 2.1.8
   date-fns: 2.28.0
+  goober: 2.1.8
   history: 4.10.1
   qs: 6.10.3
   ramda: 0.28.0
@@ -3192,6 +3196,11 @@ packages:
       is-regexp: 2.1.0
     dev: true
 
+  /clsx/1.1.1:
+    resolution: {integrity: sha512-6/bPho624p3S2pMyvP5kKBPXnI3ufHLObBFCfgx+LkeR5lg2XYy2hqZqUf45ypD8COn2bhgGJSUE+l5dhNBieA==}
+    engines: {node: '>=6'}
+    dev: false
+
   /co/4.6.0:
     resolution: {integrity: sha1-bqa989hTrlTMuOR7+gvz+QMfsYQ=}
     engines: {iojs: '>= 1.0.0', node: '>= 0.12.0'}
@@ -4541,6 +4550,12 @@ packages:
   /globjoin/0.1.4:
     resolution: {integrity: sha1-L0SUrIkZ43Z8XLtpHp9GMyQoXUM=}
     dev: true
+
+  /goober/2.1.8:
+    resolution: {integrity: sha512-S0C85gCzcfFCMSdjD/CxyQMt1rbf2qEg6hmDzxk2FfD7+7Ogk55m8ZFUMtqNaZM4VVX/qaU9AzSORG+Gf4ZpAQ==}
+    peerDependencies:
+      csstype: ^3.0.10
+    dev: false
 
   /graceful-fs/4.2.9:
     resolution: {integrity: sha512-NtNxqUcXgpW2iMrfqSfR73Glt39K+BLwWsPs94yR63v45T0Wbej7eRmL5cWfwEgqXnmjQp3zaJTshdRW/qC2ZQ==}

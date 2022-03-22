@@ -273,6 +273,13 @@ tbody tr:last-of-type td {
   font-weight: var(--font-weight-bold);
 }
 
+.loadingMessage {
+  margin: 1rem 0 3rem;
+  font-weight: var(--font-weight-bold);
+  font-size: 1rem;
+  text-align: center;
+}
+
 /*
  * Used for hiding input labels while maintaining a11y requirements.
  * See https://www.a11ywithlindsey.com/blog/introduction-accessible-labeling
