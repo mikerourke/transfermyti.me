@@ -5,11 +5,11 @@ import { Provider } from "react-redux";
 
 import "./styles.css";
 
-import { configureStore } from "~/redux/configureStore";
+import { getStore } from "~/redux/configureStore";
 import Routes from "~/Routes";
 
 const history = createBrowserHistory();
-const store = configureStore(history);
+const store = getStore();
 
 render(
   <Provider store={store}>

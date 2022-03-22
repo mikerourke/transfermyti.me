@@ -1,7 +1,8 @@
-import { push, type LocationChangeAction } from "connected-react-router";
 import * as R from "ramda";
 import type { SagaIterator } from "redux-saga";
-import { all, put, select, takeEvery } from "redux-saga/effects";
+import { all, call, put, select, takeEvery } from "redux-saga/effects";
+
+import type { ActionType } from "typesafe-actions";
 
 import {
   flushAllEntities,
@@ -11,6 +12,8 @@ import {
   toolNameByMappingSelector,
   totalIncludedRecordsCountSelector,
 } from "~/modules/allEntities/allEntitiesSelectors";
+import { routePathChanged } from "~/modules/app/appActions";
+import { navigateToRoute } from "~/modules/app/navigateToRoute";
 import { updateValidationFetchStatus } from "~/modules/credentials/credentialsActions";
 import { credentialsByMappingSelector } from "~/modules/credentials/credentialsSelectors";
 import { sourceWorkspacesSelector } from "~/modules/workspaces/workspacesSelectors";
@@ -19,8 +22,8 @@ import { isDevelopmentMode } from "~/utilities/environment";
 
 export function* appSaga(): SagaIterator {
   yield all([
-    takeEvery("@@router/LOCATION_CHANGE", respondToRouteChangesSaga),
-    takeEvery("@@router/LOCATION_CHANGE", validateRouteChangesSaga),
+    takeEvery(routePathChanged, respondToRouteChangesSaga),
+    takeEvery(routePathChanged, validateRouteChangesSaga),
   ]);
 }
 
@@ -29,29 +32,28 @@ export function* appSaga(): SagaIterator {
  * appropriate route path if certain conditions aren't met. Details for each
  * condition are documented within the saga.
  */
-function* respondToRouteChangesSaga(
-  action: LocationChangeAction,
-): SagaIterator {
-  const currentPath = action.payload.location.pathname as RoutePath;
+function* respondToRouteChangesSaga({
+  payload: routePath,
+}: ActionType<typeof routePathChanged>): SagaIterator {
   if (
-    [RoutePath.PickToolAction, RoutePath.ToolActionSuccess].includes(
-      currentPath,
-    )
+    [RoutePath.PickToolAction, RoutePath.ToolActionSuccess].includes(routePath)
   ) {
     yield put(flushAllEntities());
   }
 
-  if (currentPath !== RoutePath.EnterApiKeys) {
+  if (routePath !== RoutePath.EnterApiKeys) {
     yield put(updateValidationFetchStatus(FetchStatus.Pending));
   }
 
   /* istanbul ignore else: since this is a route change, we don't care about the else condition */
-  if (currentPath !== RoutePath.PerformToolAction) {
+  if (routePath !== RoutePath.PerformToolAction) {
     yield put(updatePushAllChangesFetchStatus(FetchStatus.Pending));
   }
 }
 
-function* validateRouteChangesSaga(action: LocationChangeAction): SagaIterator {
+function* validateRouteChangesSaga({
+  payload: routePath,
+}: ActionType<typeof routePathChanged>): SagaIterator {
   // Disable the redirect for development. I originally had it turned on, but
   // I found myself disabling it more often than not:
   /* istanbul ignore next */
@@ -59,7 +61,6 @@ function* validateRouteChangesSaga(action: LocationChangeAction): SagaIterator {
     return;
   }
 
-  const currentPath = action.payload.location.pathname as RoutePath;
   const mapping = yield select(toolNameByMappingSelector);
 
   /**
@@ -68,7 +69,9 @@ function* validateRouteChangesSaga(action: LocationChangeAction): SagaIterator {
    */
   const isPathPastStep = (stepPath: RoutePath): boolean => {
     const routePathValues = Object.values(RoutePath);
-    const currentStepNumber = routePathValues.indexOf(currentPath);
+
+    const currentStepNumber = routePathValues.indexOf(routePath);
+
     return currentStepNumber > routePathValues.indexOf(stepPath);
   };
 
@@ -78,7 +81,8 @@ function* validateRouteChangesSaga(action: LocationChangeAction): SagaIterator {
   /* istanbul ignore else */
   if (isPathPastStep(RoutePath.PickToolAction)) {
     if (Object.values(mapping).every((mapping) => mapping === ToolName.None)) {
-      yield put(push(RoutePath.PickToolAction));
+      yield call(navigateToRoute, RoutePath.PickToolAction);
+
       return;
     }
   }
@@ -88,6 +92,7 @@ function* validateRouteChangesSaga(action: LocationChangeAction): SagaIterator {
   /* istanbul ignore else */
   if (isPathPastStep(RoutePath.EnterApiKeys)) {
     const credentials = yield select(credentialsByMappingSelector);
+
     const areSourceInvalid = [
       credentials.source.apiKey,
       credentials.source.email,
@@ -108,7 +113,8 @@ function* validateRouteChangesSaga(action: LocationChangeAction): SagaIterator {
     }
 
     if (areSourceInvalid || areTargetInvalid) {
-      yield put(push(RoutePath.EnterApiKeys));
+      yield call(navigateToRoute, RoutePath.EnterApiKeys);
+
       return;
     }
   }
@@ -120,7 +126,8 @@ function* validateRouteChangesSaga(action: LocationChangeAction): SagaIterator {
   if (isPathPastStep(RoutePath.SelectWorkspaces)) {
     const sourceWorkspaces = yield select(sourceWorkspacesSelector);
     if (sourceWorkspaces.length === 0) {
-      yield put(push(RoutePath.SelectWorkspaces));
+      yield call(navigateToRoute, RoutePath.SelectWorkspaces);
+
       return;
     }
   }
@@ -130,7 +137,8 @@ function* validateRouteChangesSaga(action: LocationChangeAction): SagaIterator {
     const totalIncludedCount = yield select(totalIncludedRecordsCountSelector);
     /* istanbul ignore else: since this is a route change, we don't care about the else condition */
     if (totalIncludedCount === 0) {
-      yield put(push(RoutePath.SelectInclusions));
+      yield call(navigateToRoute, RoutePath.SelectInclusions);
+
       return;
     }
   }

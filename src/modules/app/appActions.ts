@@ -1,8 +1,12 @@
 import cuid from "cuid";
 import { createAction } from "typesafe-actions";
 
-import type { NotificationModel } from "~/typeDefs";
+import type { NotificationModel, RoutePath } from "~/typeDefs";
 import { isDevelopmentMode } from "~/utilities/environment";
+
+export const routePathChanged = createAction(
+  "@app/routePathChanged",
+)<RoutePath>();
 
 export const dismissNotification = createAction(
   "@app/DISMISS_NOTIFICATION",

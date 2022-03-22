@@ -13,6 +13,7 @@
   --color-alabaster: #f8f8f8;
   --color-white: #fff;
   --color-honeydew: #d4fb79;
+  --color-active: #ff2f92;
   --color-clockify-blue: #4ca6ee;
   --color-toggl-red: #cf4846;
   --font-family: "Apple-System", arial, helvetica, sans-serif;
@@ -23,7 +24,7 @@
   --line-height-body: 1.5;
   --line-height-heading: 1.25;
   --height-header: 48px;
-  --height-footer: 112px;
+  --height-footer: 72px;
   --height-notification: 96px;
   --gap-notification: 16px;
   /* prettier-ignore */
@@ -170,7 +171,7 @@ input:active,
 input:focus,
 select:active,
 select:focus {
-  outline: 2px solid var(--color-navy);
+  outline: 2px solid var(--color-active);
 }
 
 table {

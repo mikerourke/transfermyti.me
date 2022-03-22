@@ -1,4 +1,3 @@
-import { push } from "connected-react-router";
 import cases from "jest-in-case";
 import { expectSaga } from "redux-saga-test-plan";
 import { select } from "redux-saga/effects";
@@ -11,6 +10,8 @@ import {
   toolNameByMappingSelector,
   totalIncludedRecordsCountSelector,
 } from "~/modules/allEntities/allEntitiesSelectors";
+import { routePathChanged } from "~/modules/app/appActions";
+import { navigateToRoute } from "~/modules/app/navigateToRoute";
 import { updateValidationFetchStatus } from "~/modules/credentials/credentialsActions";
 import { credentialsByMappingSelector } from "~/modules/credentials/credentialsSelectors";
 import { sourceWorkspacesSelector } from "~/modules/workspaces/workspacesSelectors";
@@ -18,6 +19,8 @@ import { state } from "~/redux/__mocks__/mockStoreWithState";
 import { RoutePath, FetchStatus, ToolName } from "~/typeDefs";
 
 import { appSaga } from "../appSaga";
+
+jest.mock("~/modules/app/navigateToRoute");
 
 describe("within appSaga", () => {
   const providers = [
@@ -37,21 +40,6 @@ describe("within appSaga", () => {
     [select(totalIncludedRecordsCountSelector), 0],
   ];
 
-  const getRoutePathChangeAction = (routePath: RoutePath) =>
-    ({
-      type: "@@router/LOCATION_CHANGE",
-      payload: {
-        location: {
-          pathname: routePath,
-          search: "",
-          hash: "",
-          key: "detfl8",
-        },
-        action: "PUSH",
-        isFirstRendering: false,
-      },
-    } as any);
-
   cases(
     "dispatches the appropriate actions when route path = PickToolAction or ToolActionSuccess",
     (options) => {
@@ -60,7 +48,7 @@ describe("within appSaga", () => {
         .put(options.expectedAction)
         .put(updateValidationFetchStatus(FetchStatus.Pending))
         .put(updatePushAllChangesFetchStatus(FetchStatus.Pending))
-        .dispatch(getRoutePathChangeAction(options.routePath))
+        .dispatch(routePathChanged(options.routePath))
         .silentRun();
     },
     [
@@ -78,16 +66,14 @@ describe("within appSaga", () => {
   );
 
   test(`redirects user to PickToolAction route if both of the tool names are "none"`, () => {
-    const action = getRoutePathChangeAction(RoutePath.EnterApiKeys);
     return expectSaga(appSaga)
       .provide([[select(toolNameByMappingSelector), { source: "none", target: "none" }]])
-      .put(push(RoutePath.PickToolAction))
-      .dispatch(action)
+      .call(navigateToRoute, RoutePath.PickToolAction)
+      .dispatch(routePathChanged(RoutePath.EnterApiKeys))
       .silentRun();
   });
 
   test("redirects user to EnterApiKeys route if the credentials in state are invalid", () => {
-    const action = getRoutePathChangeAction(RoutePath.SelectWorkspaces);
     return expectSaga(appSaga)
       .provide([
         [select(toolNameByMappingSelector), { source: ToolName.Toggl, target: ToolName.None }],
@@ -99,13 +85,12 @@ describe("within appSaga", () => {
           },
         ],
       ])
-      .put(push(RoutePath.EnterApiKeys))
-      .dispatch(action)
+      .call(navigateToRoute, RoutePath.EnterApiKeys)
+      .dispatch(routePathChanged(RoutePath.SelectWorkspaces))
       .silentRun();
   });
 
   test("redirects user to SelectWorkspaces route if no source workspaces are found in state", () => {
-    const action = getRoutePathChangeAction(RoutePath.SelectInclusions);
     return expectSaga(appSaga)
       .provide([
         [select(toolNameByMappingSelector), { source: ToolName.Toggl, target: ToolName.None }],
@@ -122,13 +107,12 @@ describe("within appSaga", () => {
         ],
         [select(sourceWorkspacesSelector), []],
       ])
-      .put(push(RoutePath.SelectWorkspaces))
-      .dispatch(action)
+      .call(navigateToRoute, RoutePath.SelectWorkspaces)
+      .dispatch(routePathChanged(RoutePath.SelectInclusions))
       .silentRun();
   });
 
   test("redirects user to SelectInclusions route if the total inclusions count in state = 0", () => {
-    const action = getRoutePathChangeAction(RoutePath.ToolActionSuccess);
     return expectSaga(appSaga)
       .provide([
         [select(toolNameByMappingSelector), { source: ToolName.Toggl, target: ToolName.None }],
@@ -146,8 +130,8 @@ describe("within appSaga", () => {
         [select(sourceWorkspacesSelector), Object.values(state.workspaces.source)],
         [select(totalIncludedRecordsCountSelector), 0],
       ])
-      .put(push(RoutePath.SelectInclusions))
-      .dispatch(action)
+      .call(navigateToRoute, RoutePath.SelectInclusions)
+      .dispatch(routePathChanged(RoutePath.ToolActionSuccess))
       .silentRun();
   });
 });

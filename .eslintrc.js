@@ -62,6 +62,7 @@ module.exports = {
     "@typescript-eslint/indent": "off",
     "@typescript-eslint/member-ordering": "error",
     "@typescript-eslint/no-inferrable-types": "off",
+    "@typescript-eslint/no-non-null-assertion": "off",
     "@typescript-eslint/no-parameter-properties": "off",
     "@typescript-eslint/no-unused-vars": [
       "error",
