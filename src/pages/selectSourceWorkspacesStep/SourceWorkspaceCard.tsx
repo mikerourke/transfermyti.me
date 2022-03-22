@@ -2,7 +2,7 @@ import * as R from "ramda";
 import React from "react";
 
 import { Card, styled, Toggle, WorkspaceSelect } from "~/components";
-import { ToolAction, WorkspaceModel } from "~/typeDefs";
+import { ToolAction, type WorkspaceModel } from "~/typeDefs";
 
 const StyledCard = styled(Card)`
   h2 {

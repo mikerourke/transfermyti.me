@@ -11,7 +11,7 @@ import { createEntitiesForTool } from "~/entityOperations/createEntitiesForTool"
 import { deleteEntitiesForTool } from "~/entityOperations/deleteEntitiesForTool";
 import { fetchEntitiesForTool } from "~/entityOperations/fetchEntitiesForTool";
 import { projectIdToLinkedIdSelector } from "~/modules/projects/projectsSelectors";
-import { EntityGroup, TaskModel, ToolName } from "~/typeDefs";
+import { EntityGroup, ToolName, type TaskModel } from "~/typeDefs";
 import { validStringify } from "~/utilities/textTransforms";
 
 interface TogglTaskResponseModel {

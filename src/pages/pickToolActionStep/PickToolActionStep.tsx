@@ -11,7 +11,7 @@ import {
   RoutePath,
   ToolAction,
   ToolName,
-  ToolNameByMappingModel,
+  type ToolNameByMappingModel,
 } from "~/typeDefs";
 
 import ToolActionCard from "./ToolActionCard";

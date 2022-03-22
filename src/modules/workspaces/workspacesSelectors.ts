@@ -2,7 +2,7 @@ import * as R from "ramda";
 import { createSelector, createStructuredSelector } from "reselect";
 
 import { selectIdToLinkedId } from "~/entityOperations/selectIdToLinkedId";
-import {
+import type {
   Mapping,
   ReduxState,
   WorkspaceModel,

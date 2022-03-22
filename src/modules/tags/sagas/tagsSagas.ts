@@ -15,7 +15,7 @@ import {
   includedSourceTagsSelector,
   sourceTagsForTransferSelector,
 } from "~/modules/tags/tagsSelectors";
-import { Mapping, TagsByIdModel, ToolAction, ToolName } from "~/typeDefs";
+import { Mapping, ToolAction, ToolName, type TagsByIdModel } from "~/typeDefs";
 
 /**
  * Creates tags in the target tool based on the included tags from the

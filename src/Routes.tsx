@@ -1,6 +1,6 @@
 /* eslint-disable import/no-unresolved */
 import { ConnectedRouter } from "connected-react-router";
-import { History } from "history";
+import type { History } from "history";
 import React from "react";
 import { Redirect, Route, Switch } from "react-router";
 

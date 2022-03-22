@@ -1,10 +1,14 @@
 import * as R from "ramda";
-import { createSelector, createStructuredSelector, Selector } from "reselect";
+import {
+  createSelector,
+  createStructuredSelector,
+  type Selector,
+} from "reselect";
 
 import { mappingByToolNameSelector } from "~/modules/allEntities/allEntitiesSelectors";
 import { sourceTimeEntryCountByTagIdSelector } from "~/modules/timeEntries/timeEntriesSelectors";
 import { activeWorkspaceIdSelector } from "~/modules/workspaces/workspacesSelectors";
-import {
+import type {
   Mapping,
   ReduxState,
   TableViewModel,

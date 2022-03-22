@@ -1,10 +1,10 @@
 import * as R from "ramda";
-import { ActionType, createReducer } from "typesafe-actions";
+import { type ActionType, createReducer } from "typesafe-actions";
 
 import { updateAreAllRecordsIncluded } from "~/entityOperations/updateAreAllRecordsIncluded";
 import { flushAllEntities } from "~/modules/allEntities/allEntitiesActions";
 import * as tasksActions from "~/modules/tasks/tasksActions";
-import { Mapping, TasksByIdModel } from "~/typeDefs";
+import { Mapping, type TasksByIdModel } from "~/typeDefs";
 
 type TasksAction = ActionType<typeof tasksActions | typeof flushAllEntities>;
 

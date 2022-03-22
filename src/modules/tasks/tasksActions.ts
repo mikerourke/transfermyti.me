@@ -1,6 +1,6 @@
 import { createAction, createAsyncAction } from "typesafe-actions";
 
-import { Mapping, TasksByIdModel } from "~/typeDefs";
+import type { Mapping, TasksByIdModel } from "~/typeDefs";
 
 export const createTasks = createAsyncAction(
   "@tasks/CREATE_TASKS_REQUEST",

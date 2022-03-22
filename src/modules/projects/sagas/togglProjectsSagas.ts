@@ -12,7 +12,7 @@ import { createEntitiesForTool } from "~/entityOperations/createEntitiesForTool"
 import { deleteEntitiesForTool } from "~/entityOperations/deleteEntitiesForTool";
 import { fetchEntitiesForTool } from "~/entityOperations/fetchEntitiesForTool";
 import { clientIdToLinkedIdSelector } from "~/modules/clients/clientsSelectors";
-import { EntityGroup, ProjectModel, ToolName } from "~/typeDefs";
+import { EntityGroup, ToolName, type ProjectModel } from "~/typeDefs";
 import { validStringify } from "~/utilities/textTransforms";
 
 interface TogglProjectResponseModel {

@@ -1,7 +1,7 @@
 import { push } from "connected-react-router";
 import React from "react";
 import { connect } from "react-redux";
-import { PayloadActionCreator } from "typesafe-actions";
+import type { PayloadActionCreator } from "typesafe-actions";
 
 import { HelpDetails, NavigationButtonsRow } from "~/components";
 import {
@@ -16,12 +16,12 @@ import {
   transferCountsByEntityGroupSelector,
 } from "~/modules/allEntities/allEntitiesSelectors";
 import {
-  CountsByEntityGroupModel,
   EntityGroup,
   FetchStatus,
-  ReduxState,
   RoutePath,
   ToolAction,
+  type CountsByEntityGroupModel,
+  type ReduxState,
 } from "~/typeDefs";
 import { capitalize } from "~/utilities/textTransforms";
 

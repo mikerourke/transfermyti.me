@@ -20,7 +20,7 @@ import { credentialsByToolNameSelector } from "~/modules/credentials/credentials
 import { projectIdToLinkedIdSelector } from "~/modules/projects/projectsSelectors";
 import { tagIdsByNameBySelectorFactory } from "~/modules/tags/tagsSelectors";
 import { taskIdToLinkedIdSelector } from "~/modules/tasks/tasksSelectors";
-import { EntityGroup, TimeEntryModel, ToolName } from "~/typeDefs";
+import { EntityGroup, ToolName, type TimeEntryModel } from "~/typeDefs";
 import { validStringify } from "~/utilities/textTransforms";
 
 const togglApiDelay = getApiDelayForTool(ToolName.Toggl);

@@ -1,7 +1,7 @@
 import React from "react";
 
 import { Button, ModalDialog } from "~/components";
-import { ToolAction } from "~/typeDefs";
+import type { ToolAction } from "~/typeDefs";
 
 interface Props {
   isOpen: boolean;

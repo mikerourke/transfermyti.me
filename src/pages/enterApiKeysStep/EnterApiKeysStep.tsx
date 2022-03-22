@@ -1,7 +1,7 @@
 import { push } from "connected-react-router";
 import React from "react";
 import { connect } from "react-redux";
-import { PayloadActionCreator } from "typesafe-actions";
+import type { PayloadActionCreator } from "typesafe-actions";
 
 import { Button, HelpDetails, NavigationButtonsRow } from "~/components";
 import { useDeepCompareEffect } from "~/components/hooks";
@@ -14,15 +14,15 @@ import {
   validationFetchStatusSelector,
 } from "~/modules/credentials/credentialsSelectors";
 import {
-  CredentialsModel,
   FetchStatus,
   Mapping,
-  PartialCredentialsUpdateModel,
-  ReduxState,
   RoutePath,
-  ToolHelpDetailsModel,
   ToolName,
-  ValidationErrorsByMappingModel,
+  type CredentialsModel,
+  type PartialCredentialsUpdateModel,
+  type ReduxState,
+  type ToolHelpDetailsModel,
+  type ValidationErrorsByMappingModel,
 } from "~/typeDefs";
 
 import ApiKeyInputField from "./ApiKeyInputField";

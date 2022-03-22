@@ -1,6 +1,6 @@
-import { Store } from "redux";
+import type { Store } from "redux";
 
-import { State } from "./rootReducer";
+import type { State } from "./rootReducer";
 
 export type ReduxStore = Store;
 export type ReduxState = State;

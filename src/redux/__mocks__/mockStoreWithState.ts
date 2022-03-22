@@ -1,10 +1,10 @@
-import { Middleware } from "redux";
+import type { Middleware } from "redux";
 import configureStore, { MockStore } from "redux-mock-store";
 import createSagaMiddleware from "redux-saga";
 
 import { default as stateFixture } from "../__fixtures__/state";
 
-export { MockStoreCreator, MockStore } from "redux-mock-store";
+export type { MockStoreCreator, MockStore } from "redux-mock-store";
 
 // This is the same as ReduxAction, but the type was changed to `any`, otherwise
 // we'd have to explicitly specify every action `type` name when using jest-in-case:

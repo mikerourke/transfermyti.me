@@ -55,7 +55,7 @@ export function* linkEntitiesByIdByMapping<TEntity>(
   const [{ memberOf }] = sourceRecords as unknown as BaseEntityModel[];
   if (memberOf === EntityGroup.TimeEntries) {
     // TypeScript freaks out on this one, but I don't want to add 400 type
-    // assertions. I know they're time entries and I know the function is going
+    // assertions. I know they're time entries, and I know the function is going
     // to return the correct values!
     return yield call(
       // @ts-ignore
@@ -112,7 +112,7 @@ function linkForMappingByField<TEntity>(
     const matchingLinkedRecord = (linkFromRecords as LinkableRecord[]).find(
       (linkFromRecord) => {
         // For workspaces, we only want to check if the names match (since
-        // workspaces are the top-level entity and it's impossible to have 2
+        // workspaces are the top-level entity, and it's impossible to have 2
         // workspaces with the same name):
         const fieldsMatch = recordToUpdate[field] === linkFromRecord[field];
         if (recordToUpdate.memberOf === EntityGroup.Workspaces) {

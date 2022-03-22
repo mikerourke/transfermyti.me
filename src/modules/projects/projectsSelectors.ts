@@ -8,7 +8,7 @@ import {
 } from "~/modules/allEntities/allEntitiesSelectors";
 import { sourceTimeEntryCountByIdFieldSelectorFactory } from "~/modules/timeEntries/timeEntriesSelectors";
 import { activeWorkspaceIdSelector } from "~/modules/workspaces/workspacesSelectors";
-import {
+import type {
   ReduxState,
   ProjectModel,
   ProjectsByIdModel,

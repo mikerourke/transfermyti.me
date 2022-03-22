@@ -5,7 +5,7 @@ import { selectIdToLinkedId } from "~/entityOperations/selectIdToLinkedId";
 import { sourceProjectsByIdSelector } from "~/modules/projects/projectsSelectors";
 import { sourceTimeEntryCountByIdFieldSelectorFactory } from "~/modules/timeEntries/timeEntriesSelectors";
 import { activeWorkspaceIdSelector } from "~/modules/workspaces/workspacesSelectors";
-import {
+import type {
   ReduxState,
   TaskModel,
   TasksByIdModel,

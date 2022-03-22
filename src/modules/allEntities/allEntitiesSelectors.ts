@@ -2,16 +2,16 @@ import * as R from "ramda";
 import { createSelector } from "reselect";
 
 import {
-  BaseEntityModel,
-  CountsByEntityGroupModel,
   EntityGroup,
   FetchStatus,
   Mapping,
-  ReduxState,
   ToolAction,
-  ToolHelpDetailsModel,
   ToolName,
-  ToolNameByMappingModel,
+  type BaseEntityModel,
+  type CountsByEntityGroupModel,
+  type ReduxState,
+  type ToolHelpDetailsModel,
+  type ToolNameByMappingModel,
 } from "~/typeDefs";
 import { capitalize, getEntityGroupDisplay } from "~/utilities/textTransforms";
 

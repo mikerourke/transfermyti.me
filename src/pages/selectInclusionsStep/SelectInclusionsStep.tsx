@@ -1,7 +1,7 @@
 import { push } from "connected-react-router";
 import React from "react";
 import { connect } from "react-redux";
-import { PayloadActionCreator } from "typesafe-actions";
+import type { PayloadActionCreator } from "typesafe-actions";
 
 import {
   Button,
@@ -21,7 +21,12 @@ import {
   totalIncludedRecordsCountSelector,
 } from "~/modules/allEntities/allEntitiesSelectors";
 import { activeWorkspaceIdSelector } from "~/modules/workspaces/workspacesSelectors";
-import { FetchStatus, ReduxState, RoutePath, ToolAction } from "~/typeDefs";
+import {
+  FetchStatus,
+  RoutePath,
+  ToolAction,
+  type ReduxState,
+} from "~/typeDefs";
 import { capitalize } from "~/utilities/textTransforms";
 
 import ActiveWorkspaceSelect from "./ActiveWorkspaceSelect";

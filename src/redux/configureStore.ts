@@ -1,5 +1,5 @@
 import { connectRouter, routerMiddleware } from "connected-react-router";
-import { History } from "history";
+import type { History } from "history";
 import { AnyAction, applyMiddleware, compose, createStore } from "redux";
 import createSagaMiddleware from "redux-saga";
 
@@ -12,7 +12,7 @@ import { credentialsSaga } from "~/modules/credentials/sagas/credentialsSaga";
 import { projectMonitoringSaga } from "~/modules/projects/sagas/projectsSagas";
 import { taskMonitoringSaga } from "~/modules/tasks/sagas/tasksSagas";
 import { workspacesSaga } from "~/modules/workspaces/sagas/workspacesSaga";
-import { ReduxState, ReduxStore } from "~/redux/reduxTypes";
+import type { ReduxState, ReduxStore } from "~/redux/reduxTypes";
 import { createRootReducer, RouterReducer } from "~/redux/rootReducer";
 import { isDevelopmentMode, isUseLocalApi } from "~/utilities/environment";
 

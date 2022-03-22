@@ -1,7 +1,7 @@
 import * as R from "ramda";
 import React from "react";
 import { connect } from "react-redux";
-import { PayloadActionCreator } from "typesafe-actions";
+import type { PayloadActionCreator } from "typesafe-actions";
 
 import { EntityGroupInclusionsPanel } from "~/components";
 import { toolActionSelector } from "~/modules/allEntities/allEntitiesSelectors";
@@ -15,10 +15,10 @@ import {
 } from "~/modules/tasks/tasksSelectors";
 import {
   EntityGroup,
-  ReduxState,
-  TableViewModel,
-  TaskModel,
   ToolAction,
+  type ReduxState,
+  type TableViewModel,
+  type TaskModel,
 } from "~/typeDefs";
 
 interface ConnectStateProps {

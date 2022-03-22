@@ -5,7 +5,7 @@ import { selectIdToLinkedId } from "~/entityOperations/selectIdToLinkedId";
 import { mappingByToolNameSelector } from "~/modules/allEntities/allEntitiesSelectors";
 import { sourceTimeEntryCountByIdFieldSelectorFactory } from "~/modules/timeEntries/timeEntriesSelectors";
 import { activeWorkspaceIdSelector } from "~/modules/workspaces/workspacesSelectors";
-import {
+import type {
   ClientModel,
   ClientsByIdModel,
   ClientTableViewModel,

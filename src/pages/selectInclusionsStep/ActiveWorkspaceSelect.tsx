@@ -7,7 +7,7 @@ import {
   activeWorkspaceIdSelector,
   includedSourceWorkspacesSelector,
 } from "~/modules/workspaces/workspacesSelectors";
-import { ReduxState, WorkspaceModel } from "~/typeDefs";
+import type { ReduxState, WorkspaceModel } from "~/typeDefs";
 
 const StyledField = styled.div`
   position: relative;

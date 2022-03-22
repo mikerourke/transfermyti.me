@@ -11,7 +11,7 @@ import { fetchEntitiesForTool } from "~/entityOperations/fetchEntitiesForTool";
 import { incrementEntityGroupTransferCompletedCount } from "~/modules/allEntities/allEntitiesActions";
 import { includedSourceProjectIdsSelector } from "~/modules/projects/projectsSelectors";
 import { includedSourceWorkspaceIdsSelector } from "~/modules/workspaces/workspacesSelectors";
-import { EntityGroup, ToolName, UserModel } from "~/typeDefs";
+import { EntityGroup, ToolName, type UserModel } from "~/typeDefs";
 import { validStringify } from "~/utilities/textTransforms";
 
 interface TogglUserResponseModel {

@@ -1,6 +1,6 @@
 import React from "react";
 
-import { WorkspaceModel } from "~/typeDefs";
+import type { WorkspaceModel } from "~/typeDefs";
 
 import { styled } from "./emotion";
 

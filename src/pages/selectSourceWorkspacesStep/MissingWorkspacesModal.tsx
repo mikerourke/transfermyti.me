@@ -1,7 +1,7 @@
 import React from "react";
 
 import { ModalDialog, styled } from "~/components";
-import { WorkspaceModel } from "~/typeDefs";
+import type { WorkspaceModel } from "~/typeDefs";
 
 const StyledList = styled.ul`
   li {

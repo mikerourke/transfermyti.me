@@ -17,10 +17,10 @@ import {
 } from "~/modules/timeEntries/timeEntriesSelectors";
 import {
   Mapping,
-  TimeEntriesByIdModel,
-  TimeEntryModel,
   ToolAction,
   ToolName,
+  type TimeEntriesByIdModel,
+  type TimeEntryModel,
 } from "~/typeDefs";
 
 /**

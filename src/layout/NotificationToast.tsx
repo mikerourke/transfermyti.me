@@ -1,8 +1,8 @@
 import React from "react";
-import { TransitionStatus } from "react-transition-group/Transition";
+import type { TransitionStatus } from "react-transition-group/Transition";
 
 import { styled, useTheme } from "~/components";
-import { NotificationModel } from "~/typeDefs";
+import type { NotificationModel } from "~/typeDefs";
 
 const StyledDiv = styled.div`
   position: absolute;

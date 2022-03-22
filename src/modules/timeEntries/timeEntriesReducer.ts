@@ -1,9 +1,9 @@
 import * as R from "ramda";
-import { ActionType, createReducer } from "typesafe-actions";
+import { type ActionType, createReducer } from "typesafe-actions";
 
 import { flushAllEntities } from "~/modules/allEntities/allEntitiesActions";
 import * as timeEntriesActions from "~/modules/timeEntries/timeEntriesActions";
-import { Mapping, TimeEntriesByIdModel } from "~/typeDefs";
+import { Mapping, type TimeEntriesByIdModel } from "~/typeDefs";
 
 type TimeEntriesAction = ActionType<
   typeof timeEntriesActions | typeof flushAllEntities

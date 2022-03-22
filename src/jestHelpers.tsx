@@ -9,14 +9,18 @@ import React from "react";
 
 import { theme } from "./components/emotion";
 
-// These are exported for convenience (so we don't have to add an additional import
+// These are exported for convenience (so we don't have to add an import
 // to the test file).
-export { createEvent, fireEvent, RenderResult } from "@testing-library/react";
+export {
+  createEvent,
+  fireEvent,
+  type RenderResult,
+} from "@testing-library/react";
 export { theme } from "./components/emotion";
 
 /**
  * Renders the specified component with react-testing-library wrapped in a theme
- * provider so we don't have to do it explicitly for each component.
+ * provider, so we don't have to do it explicitly for each component.
  */
 export function render(
   ui: React.ReactElement,

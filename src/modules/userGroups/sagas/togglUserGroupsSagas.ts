@@ -9,7 +9,7 @@ import {
 import { createEntitiesForTool } from "~/entityOperations/createEntitiesForTool";
 import { deleteEntitiesForTool } from "~/entityOperations/deleteEntitiesForTool";
 import { fetchEntitiesForTool } from "~/entityOperations/fetchEntitiesForTool";
-import { EntityGroup, ToolName, UserGroupModel } from "~/typeDefs";
+import { EntityGroup, ToolName, type UserGroupModel } from "~/typeDefs";
 import { validStringify } from "~/utilities/textTransforms";
 
 interface TogglUserGroupResponseModel {

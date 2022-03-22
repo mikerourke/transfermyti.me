@@ -2,7 +2,7 @@ import type { SagaIterator } from "redux-saga";
 import { call } from "redux-saga/effects";
 
 import { fetchArray } from "~/entityOperations/apiRequests";
-import { EntityGroup, WorkspaceModel } from "~/typeDefs";
+import { EntityGroup, type WorkspaceModel } from "~/typeDefs";
 
 export interface TogglWorkspaceResponseModel {
   id: number;

@@ -1,6 +1,6 @@
 import * as R from "ramda";
 
-import { ValidEntity } from "~/typeDefs";
+import type { ValidEntity } from "~/typeDefs";
 
 /**
  * Loops through the specified entity records and updates the `isIncluded`

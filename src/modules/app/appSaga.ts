@@ -1,4 +1,4 @@
-import { push, LocationChangeAction } from "connected-react-router";
+import { push, type LocationChangeAction } from "connected-react-router";
 import * as R from "ramda";
 import type { SagaIterator } from "redux-saga";
 import { all, put, select, takeEvery } from "redux-saga/effects";

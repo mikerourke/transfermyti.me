@@ -1,6 +1,6 @@
 import React from "react";
 import { connect } from "react-redux";
-import { PayloadActionCreator } from "typesafe-actions";
+import type { PayloadActionCreator } from "typesafe-actions";
 
 import { EntityGroupInclusionsPanel } from "~/components";
 import {
@@ -11,7 +11,12 @@ import {
   tagsForInclusionsTableSelector,
   tagsTotalCountsByTypeSelector,
 } from "~/modules/tags/tagsSelectors";
-import { EntityGroup, ReduxState, TableViewModel, TagModel } from "~/typeDefs";
+import {
+  EntityGroup,
+  type ReduxState,
+  type TableViewModel,
+  type TagModel,
+} from "~/typeDefs";
 
 interface ConnectStateProps {
   tags: TableViewModel<TagModel>[];

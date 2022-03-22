@@ -5,8 +5,8 @@ import { fetchObject } from "~/entityOperations/apiRequests";
 import { mappingByToolNameSelector } from "~/modules/allEntities/allEntitiesSelectors";
 import { validateCredentials } from "~/modules/credentials/credentialsActions";
 import { credentialsByMappingSelector } from "~/modules/credentials/credentialsSelectors";
-import { TogglWorkspaceResponseModel } from "~/modules/workspaces/sagas/togglWorkspacesSagas";
-import { ToolName, ValidationErrorsByMappingModel } from "~/typeDefs";
+import type { TogglWorkspaceResponseModel } from "~/modules/workspaces/sagas/togglWorkspacesSagas";
+import { ToolName, type ValidationErrorsByMappingModel } from "~/typeDefs";
 import { validStringify } from "~/utilities/textTransforms";
 
 interface TogglMeResponseModel {

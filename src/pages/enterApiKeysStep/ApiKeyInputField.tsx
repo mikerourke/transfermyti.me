@@ -2,7 +2,7 @@ import cuid from "cuid";
 import React from "react";
 
 import { ExternalLink, styled } from "~/components";
-import { ToolHelpDetailsModel } from "~/typeDefs";
+import type { ToolHelpDetailsModel } from "~/typeDefs";
 
 const StyledField = styled.div`
   label {

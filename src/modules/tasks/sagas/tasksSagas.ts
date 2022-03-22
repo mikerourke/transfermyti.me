@@ -22,11 +22,11 @@ import {
 } from "~/modules/tasks/tasksSelectors";
 import {
   Mapping,
-  ProjectModel,
-  ReduxAction,
-  TasksByIdModel,
   ToolAction,
   ToolName,
+  type ProjectModel,
+  type ReduxAction,
+  type TasksByIdModel,
 } from "~/typeDefs";
 
 export function* taskMonitoringSaga(): SagaIterator {

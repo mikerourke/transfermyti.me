@@ -1,6 +1,6 @@
 import { createAction, createAsyncAction } from "typesafe-actions";
 
-import { Mapping, UserGroupsByIdModel } from "~/typeDefs";
+import type { Mapping, UserGroupsByIdModel } from "~/typeDefs";
 
 export const createUserGroups = createAsyncAction(
   "@userGroups/CREATE_USER_GROUPS_REQUEST",

@@ -1,6 +1,6 @@
 import format from "date-fns/format";
 import React from "react";
-import { PayloadActionCreator } from "typesafe-actions";
+import type { PayloadActionCreator } from "typesafe-actions";
 
 import {
   InclusionsTable,
@@ -8,7 +8,7 @@ import {
   InclusionsTableFoot,
   InclusionsTableRow,
 } from "~/components";
-import { TimeEntryTableViewModel } from "~/typeDefs";
+import type { TimeEntryTableViewModel } from "~/typeDefs";
 
 interface Props {
   isDuplicateCheckEnabled: boolean;

@@ -1,10 +1,10 @@
 import * as R from "ramda";
 import React from "react";
 import { connect } from "react-redux";
-import { PayloadActionCreator } from "typesafe-actions";
+import type { PayloadActionCreator } from "typesafe-actions";
 
 import { replaceMappingWithToolNameSelector } from "~/modules/allEntities/allEntitiesSelectors";
-import {
+import type {
   BaseEntityModel,
   EntityGroup,
   ReduxState,

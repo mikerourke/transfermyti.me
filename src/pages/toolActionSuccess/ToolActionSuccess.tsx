@@ -1,6 +1,6 @@
 import React from "react";
 import { connect } from "react-redux";
-import { PayloadActionCreator } from "typesafe-actions";
+import type { PayloadActionCreator } from "typesafe-actions";
 
 import { Icon, styled } from "~/components";
 import {
@@ -8,7 +8,7 @@ import {
   targetToolTrackerUrlSelector,
 } from "~/modules/allEntities/allEntitiesSelectors";
 import { flushCredentials } from "~/modules/credentials/credentialsActions";
-import { ReduxState } from "~/typeDefs";
+import type { ReduxState } from "~/typeDefs";
 
 import BuyMeACoffeeButton from "./BuyMeACoffeeButton";
 

@@ -1,7 +1,7 @@
 import { push } from "connected-react-router";
 import React from "react";
 import { connect } from "react-redux";
-import { PayloadActionCreator } from "typesafe-actions";
+import type { PayloadActionCreator } from "typesafe-actions";
 
 import {
   Button,
@@ -39,11 +39,11 @@ import {
 } from "~/modules/workspaces/workspacesSelectors";
 import {
   FetchStatus,
-  NotificationModel,
-  ReduxState,
   RoutePath,
   ToolAction,
-  WorkspaceModel,
+  type NotificationModel,
+  type ReduxState,
+  type WorkspaceModel,
 } from "~/typeDefs";
 
 import DuplicateTargetsModal from "./DuplicateTargetsModal";

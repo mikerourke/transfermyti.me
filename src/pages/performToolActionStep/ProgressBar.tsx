@@ -1,7 +1,7 @@
 import React from "react";
 
 import { styled } from "~/components";
-import { EntityGroup } from "~/modules/allEntities/allEntitiesTypes";
+import type { EntityGroup } from "~/modules/allEntities/allEntitiesTypes";
 import { getEntityGroupDisplay } from "~/utilities/textTransforms";
 
 const StyledDiv = styled.div`

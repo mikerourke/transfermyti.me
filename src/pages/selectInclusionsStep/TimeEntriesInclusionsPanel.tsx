@@ -1,6 +1,9 @@
 import React from "react";
 import { connect } from "react-redux";
-import { PayloadActionCreator, EmptyActionCreator } from "typesafe-actions";
+import type {
+  PayloadActionCreator,
+  EmptyActionCreator,
+} from "typesafe-actions";
 
 import {
   AccordionPanel,
@@ -21,7 +24,11 @@ import {
   timeEntriesTotalCountsByTypeSelector,
   isDuplicateCheckEnabledSelector,
 } from "~/modules/timeEntries/timeEntriesSelectors";
-import { ReduxState, TimeEntryTableViewModel, ToolAction } from "~/typeDefs";
+import {
+  ToolAction,
+  type ReduxState,
+  type TimeEntryTableViewModel,
+} from "~/typeDefs";
 
 import DuplicateCheckToggle from "./DuplicateCheckToggle";
 import TimeEntriesInclusionsTable from "./TimeEntriesInclusionsTable";

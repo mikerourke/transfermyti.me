@@ -1,7 +1,7 @@
 import cuid from "cuid";
 import { createAction } from "typesafe-actions";
 
-import { NotificationModel } from "~/typeDefs";
+import type { NotificationModel } from "~/typeDefs";
 import { isDevelopmentMode } from "~/utilities/environment";
 
 export const dismissNotification = createAction(

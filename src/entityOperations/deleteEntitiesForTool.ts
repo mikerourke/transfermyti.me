@@ -3,7 +3,7 @@ import { call, delay, put } from "redux-saga/effects";
 
 import { getApiDelayForTool } from "~/entityOperations/apiRequests";
 import { incrementEntityGroupTransferCompletedCount } from "~/modules/allEntities/allEntitiesActions";
-import { EntityGroup, ToolName, ValidEntity } from "~/typeDefs";
+import type { EntityGroup, ToolName, ValidEntity } from "~/typeDefs";
 
 /**
  * Loops through specified source records and calls the specified apiDeleteFunc

@@ -1,7 +1,7 @@
 import React from "react";
-import { PayloadActionCreator } from "typesafe-actions";
+import type { PayloadActionCreator } from "typesafe-actions";
 
-import { BaseEntityModel, TableViewModel } from "~/typeDefs";
+import type { BaseEntityModel, TableViewModel } from "~/typeDefs";
 import { booleanToYesNo } from "~/utilities/textTransforms";
 
 import InclusionsTableCheckboxCell from "./InclusionsTableCheckboxCell";

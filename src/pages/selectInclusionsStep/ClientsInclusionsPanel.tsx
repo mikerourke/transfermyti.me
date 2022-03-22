@@ -1,6 +1,6 @@
 import React from "react";
 import { connect } from "react-redux";
-import { PayloadActionCreator } from "typesafe-actions";
+import type { PayloadActionCreator } from "typesafe-actions";
 
 import { EntityGroupInclusionsPanel } from "~/components";
 import {
@@ -11,7 +11,11 @@ import {
   clientsForInclusionsTableSelector,
   clientsTotalCountsByTypeSelector,
 } from "~/modules/clients/clientsSelectors";
-import { ClientTableViewModel, EntityGroup, ReduxState } from "~/typeDefs";
+import {
+  EntityGroup,
+  type ClientTableViewModel,
+  type ReduxState,
+} from "~/typeDefs";
 
 interface ConnectStateProps {
   clients: ClientTableViewModel[];
