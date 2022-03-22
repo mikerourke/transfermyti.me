@@ -35,9 +35,8 @@ export function* appSaga(): SagaIterator {
 function* respondToRouteChangesSaga({
   payload: routePath,
 }: ActionType<typeof routePathChanged>): SagaIterator {
-  if (
-    [RoutePath.PickToolAction, RoutePath.ToolActionSuccess].includes(routePath)
-  ) {
+  // prettier-ignore
+  if ([RoutePath.PickToolAction, RoutePath.ToolActionSuccess].includes(routePath)) {
     yield put(flushAllEntities());
   }
 
