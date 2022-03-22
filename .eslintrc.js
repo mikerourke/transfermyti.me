@@ -8,18 +8,26 @@ module.exports = {
     "plugin:import/typescript",
     "plugin:jsx-a11y/recommended",
   ],
-  plugins: ["@typescript-eslint", "react", "unicorn", "import", "jsx-a11y"],
+  plugins: [
+    "@typescript-eslint",
+    "react",
+    "unicorn",
+    "import",
+    "jsx-a11y",
+    "svelte3",
+  ],
   settings: {
+    "svelte3/typescript": () => require("typescript"),
     react: {
       version: "detect",
     },
     "import/resolver": {
       alias: {
         map: [["~", "./src/"]],
-        extensions: [".ts", ".mjs", ".js", ".tsx"],
+        extensions: [".ts", ".mjs", ".js", ".tsx", ".svelte"],
       },
       node: {
-        extensions: [".js", ".jsx", ".ts", ".tsx"],
+        extensions: [".js", ".jsx", ".ts", ".tsx", ".svelte"],
       },
     },
   },
@@ -30,12 +38,12 @@ module.exports = {
     jest: true,
   },
   parserOptions: {
-    ecmaVersion: 2018,
+    ecmaVersion: 2020,
     sourceType: "module",
     ecmaFeatures: {
       jsx: true,
     },
-    extraFileExtensions: [".ts", ".tsx"],
+    extraFileExtensions: [".ts", ".tsx", ".svelte"],
   },
   rules: {
     curly: ["error", "all"],
@@ -115,6 +123,17 @@ module.exports = {
     "unicorn/throw-new-error": "error",
   },
   overrides: [
+    {
+      files: ["*.svelte", "*.ts"],
+      parserOptions: {
+        tsconfigRootDir: __dirname,
+        project: ["./tsconfig.json"],
+      },
+    },
+    {
+      files: ["*.svelte"],
+      processor: "svelte3/svelte3",
+    },
     {
       files: ["*.mjs"],
       rules: {
