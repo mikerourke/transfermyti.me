@@ -7,19 +7,17 @@
     flipIfExistsInTargetShown,
   } from "~/modules/allEntities/allEntitiesActions";
   import * as allEntitiesSelectors from "~/modules/allEntities/allEntitiesSelectors";
-  import { navigateToRoute } from "~/modules/app/navigateToRoute";
+  import {
+    navigateToWorkflowStep,
+    WorkflowStep,
+  } from "~/modules/app/workflowStep";
   import { updateActiveWorkspaceId } from "~/modules/workspaces/workspacesActions";
   import {
     activeWorkspaceIdSelector,
     includedSourceWorkspacesSelector,
   } from "~/modules/workspaces/workspacesSelectors";
   import { dispatchAction, selectorToStore } from "~/redux/reduxToStore";
-  import {
-    FetchStatus,
-    RoutePath,
-    ToolAction,
-    type WorkspaceModel,
-  } from "~/typeDefs";
+  import { FetchStatus, ToolAction, type WorkspaceModel } from "~/typeDefs";
   import { capitalize } from "~/utilities/textTransforms";
 
   import Loader from "~/components/Loader.svelte";
@@ -82,14 +80,14 @@
   }
 
   function handleBackClick(): void {
-    navigateToRoute(RoutePath.SelectWorkspaces);
+    navigateToWorkflowStep(WorkflowStep.SelectWorkspaces);
   }
 
   function handleNextClick(): void {
     if ($totalIncludedRecordsCount === 0) {
       isNoSelectionsDialogOpen = true;
     } else {
-      navigateToRoute(RoutePath.PerformToolAction);
+      navigateToWorkflowStep(WorkflowStep.PerformToolAction);
     }
   }
 

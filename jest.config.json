@@ -29,8 +29,7 @@
   },
   "moduleFileExtensions": ["js", "json", "jsx", "ts", "tsx", "svelte"],
   "moduleNameMapper": {
-    "^~/(.*)$": "<rootDir>/src/$1",
-    "svelte-routing$": "<rootDir>/src/__mocks__/svelte-routing.js"
+    "^~/(.*)$": "<rootDir>/src/$1"
   },
   "roots": ["<rootDir>/src/"],
   "setupFilesAfterEnv": ["<rootDir>/src/setupJest.ts"],

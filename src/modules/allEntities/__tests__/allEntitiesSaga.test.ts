@@ -12,7 +12,7 @@ import { EntityGroup } from "~/typeDefs";
 
 import { allEntitiesSaga } from "../allEntitiesSaga";
 
-jest.mock("~/modules/app/navigateToRoute");
+jest.mock("~/modules/app/workflowStep");
 
 describe("within allEntitiesSaga", () => {
   test("the createAllEntitiesSaga dispatches the correct actions", () => {

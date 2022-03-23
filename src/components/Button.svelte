@@ -20,22 +20,7 @@
 
 <style>
   button {
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    margin: 0;
-    padding: 0.5rem 0.75rem;
-    border-radius: 0.375rem;
-    font-size: 1.25rem;
-    font-weight: 400;
-    border: none;
-    box-shadow: var(--elevation-dp1);
-    opacity: 1;
     transition: all 250ms linear;
-  }
-
-  button:disabled {
-    opacity: 0.5;
   }
 
   button:active:not([aria-busy="true"]),
@@ -45,10 +30,6 @@
     outline: 2px solid var(--color-secondary);
     transform: scale(1.05);
     box-shadow: var(--elevation-dp8);
-  }
-
-  button:hover:not(:disabled) {
-    text-decoration: underline;
   }
 
   span {

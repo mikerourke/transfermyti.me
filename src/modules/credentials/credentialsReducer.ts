@@ -75,6 +75,23 @@ export const credentialsReducer = createReducer<
       },
     };
   })
+  .handleAction(credentialsActions.apiKeysUpdated, (state, { payload }) => {
+    const source = {
+      ...state.source,
+      apiKey: payload.source ?? state.source.apiKey,
+    };
+
+    const target = {
+      ...state.target,
+      apiKey: payload.target ?? state.target.apiKey,
+    };
+
+    return {
+      ...state,
+      source,
+      target,
+    };
+  })
   .handleAction(
     credentialsActions.updateValidationFetchStatus,
     (state, { payload }) => {

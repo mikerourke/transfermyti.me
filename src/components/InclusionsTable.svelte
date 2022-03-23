@@ -46,7 +46,7 @@
   {title}
 </InclusionsTableTitle>
 
-<table {id} role="grid" aria-labelledby="{id}-title">
+<table {id} aria-labelledby="{id}-title">
   <thead>
     <tr>
       {#each fieldLabels as label}

@@ -1,12 +1,13 @@
 <script lang="ts">
-  import { Link } from "svelte-routing";
-
-  import { RoutePath } from "~/typeDefs";
+  import {
+    navigateToWorkflowStep,
+    WorkflowStep,
+  } from "~/modules/app/workflowStep";
 
   import Logo from "~/layout/Logo.svelte";
 
-  function getProps(): Dictionary<unknown> {
-    return { style: "color: var(--color-secondary); font-size: 1.5rem;" };
+  function handleClick(): void {
+    navigateToWorkflowStep(WorkflowStep.PickToolAction);
   }
 </script>
 
@@ -19,11 +20,30 @@
     width: 100%;
     background-color: var(--color-primary);
     color: var(--color-secondary);
+    box-shadow: var(--elevation-dp1);
+  }
+
+  button {
+    appearance: none;
+    margin: 0;
+    padding: 0.25rem;
+    background-color: transparent;
+    color: var(--color-secondary);
+    font-size: 1.5rem;
+  }
+
+  button:active,
+  button:focus {
+    outline: 2px solid var(--color-active);
+  }
+
+  button:hover {
+    text-decoration: underline;
   }
 </style>
 
 <header>
   <Logo />
 
-  <Link to={RoutePath.PickToolAction} {getProps}>transfermyti.me</Link>
+  <button on:click={handleClick}>transfermyti.me</button>
 </header>

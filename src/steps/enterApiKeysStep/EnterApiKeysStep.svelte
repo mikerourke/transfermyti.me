@@ -1,11 +1,14 @@
 <script lang="ts">
-  import { onDestroy, onMount, tick } from "svelte";
+  import { onMount, tick } from "svelte";
 
   import { toolHelpDetailsByMappingSelector } from "~/modules/allEntities/allEntitiesSelectors";
-  import { navigateToRoute } from "~/modules/app/navigateToRoute";
   import {
+    navigateToWorkflowStep,
+    WorkflowStep,
+  } from "~/modules/app/workflowStep";
+  import {
+    apiKeysUpdated,
     storeCredentials,
-    updateCredentials,
     updateValidationFetchStatus,
     validateCredentials,
   } from "~/modules/credentials/credentialsActions";
@@ -16,7 +19,9 @@
     validationFetchStatusSelector,
   } from "~/modules/credentials/credentialsSelectors";
   import { dispatchAction, selectorToStore } from "~/redux/reduxToStore";
-  import { FetchStatus, Mapping, RoutePath, ToolName } from "~/typeDefs";
+  import { FetchStatus, Mapping, ToolName } from "~/typeDefs";
+
+  import { setFocusTo } from "~/utilities/domElements";
 
   import HelpDetails from "~/components/HelpDetails.svelte";
   import NavigationButtonsRow from "~/components/NavigationButtonsRow.svelte";
@@ -24,13 +29,17 @@
   import ApiKeyInputField from "./ApiKeyInputField.svelte";
 
   const credentialsByMapping = selectorToStore(credentialsByMappingSelector);
+
   const hasValidationErrors = selectorToStore(hasValidationErrorsSelector);
+
   const toolHelpDetailsByMapping = selectorToStore(
     toolHelpDetailsByMappingSelector,
   );
+
   const validationErrorsByMapping = selectorToStore(
     validationErrorsByMappingSelector,
   );
+
   const validationFetchStatus = selectorToStore(validationFetchStatusSelector);
 
   let values: Dictionary<string> = {
@@ -43,9 +52,13 @@
     target: null,
   };
 
+  // Used to ensure the page doesn't immediately navigate to the
+  // "Select Workspaces" step if the API keys are present in state:
+  let wasMounted: boolean = false;
+
   const unsubscribers = [
-    hasValidationErrors.subscribe((value) => {
-      if (value) {
+    hasValidationErrors.subscribe((hasErrors) => {
+      if (hasErrors) {
         errors = {
           ...errors,
           ...$validationErrorsByMapping,
@@ -53,9 +66,13 @@
       }
     }),
 
-    validationFetchStatus.subscribe((value) => {
-      if (value === FetchStatus.Success) {
-        navigateToRoute(RoutePath.SelectWorkspaces);
+    validationFetchStatus.subscribe((fetchStatus) => {
+      if (
+        fetchStatus === FetchStatus.Success &&
+        values.source !== "" &&
+        wasMounted
+      ) {
+        navigateToWorkflowStep(WorkflowStep.SelectWorkspaces);
       }
     }),
   ];
@@ -63,33 +80,33 @@
   onMount(() => {
     dispatchAction(storeCredentials());
 
-    document.querySelector<HTMLInputElement>("input:first-of-type")?.focus();
-  });
+    setFocusTo("input:first-of-type");
 
-  onDestroy(() => {
-    unsubscribers.forEach((unsubscribe) => unsubscribe());
+    wasMounted = true;
+
+    return () => {
+      unsubscribers.forEach((unsubscribe) => unsubscribe());
+    };
   });
 
   function handleBackClick(): void {
-    navigateToRoute(RoutePath.PickToolAction);
+    navigateToWorkflowStep(WorkflowStep.PickToolAction);
   }
 
-  // TODO: Change this to a single action.
   async function handleNextClick(): Promise<void> {
-    const source = { mapping: Mapping.Source, apiKey: values.source };
-    const target = { mapping: Mapping.Target, apiKey: values.target };
+    const apiKeys = {
+      source: values.source,
+      target: values.target,
+    };
 
-    dispatchAction(updateCredentials(source));
-    await tick();
+    dispatchAction(apiKeysUpdated(apiKeys));
 
-    dispatchAction(updateCredentials(target));
     await tick();
 
     validateForm();
   }
 
   function handleResetClick(): void {
-    console.log("WOO");
     dispatchAction(updateValidationFetchStatus(FetchStatus.Pending));
 
     values = { source: "", target: "" };

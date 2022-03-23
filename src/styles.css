@@ -102,13 +102,28 @@ a:focus {
 }
 
 button {
-  appearance: none;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin: 0;
+  padding: 0.5rem 0.75rem;
+  border-radius: 0.375rem;
+  font-size: 1.25rem;
+  font-weight: 400;
   border: none;
-  box-shadow: unset;
-  border-radius: 0;
+  box-shadow: var(--elevation-dp1);
+  opacity: 1;
+  appearance: none;
   cursor: pointer;
-  font-size: 1rem;
   text-align: center;
+}
+
+button:disabled {
+  opacity: 0.5;
+}
+
+button:hover:not(:disabled) {
+  text-decoration: underline;
 }
 
 h1,
@@ -162,6 +177,8 @@ circle {
   user-select: none;
 }
 
+button:active:not([aria-busy="true"]),
+button:focus:not([aria-busy="true"]),
 summary:active,
 summary:focus,
 a:active,

@@ -1,49 +1,36 @@
 <script lang="ts">
-  import { onMount } from "svelte";
-  import { Route, Router } from "svelte-routing";
-
-  import { navigateToRoute } from "~/modules/app/navigateToRoute";
-  import { RoutePath } from "~/typeDefs";
+  import {
+    WorkflowStep,
+    currentWorkflowStep,
+  } from "~/modules/app/workflowStep";
 
   import Footer from "~/layout/Footer.svelte";
   import Header from "~/layout/Header.svelte";
   import Notifications from "~/layout/Notifications.svelte";
   import EnterApiKeysStep from "~/steps/enterApiKeysStep/EnterApiKeysStep.svelte";
   import PickToolActionStep from "~/steps/pickToolActionStep/PickToolActionStep.svelte";
+  import SelectInclusionsStep from "~/steps/selectInclusionsStep/SelectInclusionsStep.svelte";
   import SelectWorkspacesStep from "~/steps/selectWorkspacesStep/SelectWorkspacesStep.svelte";
-
-  onMount(() => {
-    navigateToRoute(RoutePath.PickToolAction, { replace: true });
-  });
-
-  // Used for SSR. A falsy value is ignored by the Router.
-  export let url = "";
 </script>
 
-<Router {url}>
-  <Notifications />
+<Notifications />
 
-  <Header />
+<Header />
 
-  <Route path={RoutePath.PickToolAction}>
-    <PickToolActionStep />
-  </Route>
+{#if $currentWorkflowStep === WorkflowStep.PickToolAction}
+  <PickToolActionStep />
+{:else if $currentWorkflowStep === WorkflowStep.EnterApiKeys}
+  <EnterApiKeysStep />
+{:else if $currentWorkflowStep === WorkflowStep.SelectWorkspaces}
+  <SelectWorkspacesStep />
+{:else if $currentWorkflowStep === WorkflowStep.SelectInclusions}
+  <SelectInclusionsStep />
+{:else if $currentWorkflowStep === WorkflowStep.PerformToolAction}
+  <div>Yo</div>
+{:else if $currentWorkflowStep === WorkflowStep.ToolActionSuccess}
+  <div>Yo</div>
+{:else}
+  <div>Unknown Page!</div>
+{/if}
 
-  <Route path={RoutePath.EnterApiKeys}>
-    <EnterApiKeysStep />
-  </Route>
-
-  <Route path={RoutePath.SelectWorkspaces}>
-    <SelectWorkspacesStep />
-  </Route>
-
-  <Route path={RoutePath.SelectInclusions}>
-    <div>Yo</div>
-  </Route>
-
-  <Route path={RoutePath.ToolActionSuccess}>
-    <div>Yo</div>
-  </Route>
-
-  <Footer />
-</Router>
+<Footer />

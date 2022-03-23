@@ -3,9 +3,12 @@
     updateToolAction,
     updateToolNameByMapping,
   } from "~/modules/allEntities/allEntitiesActions";
-  import { navigateToRoute } from "~/modules/app/navigateToRoute";
+  import {
+    navigateToWorkflowStep,
+    WorkflowStep,
+  } from "~/modules/app/workflowStep";
   import { dispatchAction } from "~/redux/reduxToStore";
-  import { RoutePath, ToolAction, ToolName } from "~/typeDefs";
+  import { ToolAction, ToolName } from "~/typeDefs";
 
   import HelpDetails from "~/components/HelpDetails.svelte";
 
@@ -24,7 +27,7 @@
 
     dispatchAction(updateToolNameByMapping({ source, target }));
 
-    navigateToRoute(RoutePath.EnterApiKeys);
+    navigateToWorkflowStep(WorkflowStep.EnterApiKeys);
   }
 </script>
 

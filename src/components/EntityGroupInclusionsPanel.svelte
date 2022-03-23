@@ -35,6 +35,9 @@
   let sortedRecords: TableRecord[];
   $: sortedRecords = sortTableRecords(tableRecords);
 
+  let entityGroupDisplay: string;
+  $: entityGroupDisplay = getEntityGroupDisplay(entityGroup);
+
   function getFieldLabels(fields: TableField[]): string[] {
     return fields.map((tableField) =>
       replaceMappingWithToolName(tableField.label),
@@ -68,13 +71,14 @@
   }
 </script>
 
-<AccordionPanel {rowNumber} title={getEntityGroupDisplay(entityGroup)}>
+<AccordionPanel {rowNumber} title={entityGroupDisplay}>
   {#if tableRecords.length === 0}
     <NoRecordsFound />
   {:else}
+    <!-- prettier-ignore -->
     <InclusionsTable
       id="{entityGroup}-inclusions"
-      title="Entity"
+      title={replaceMappingWithToolName(`${entityGroupDisplay} Records in Source`)}
       {fieldNames}
       {fieldLabels}
       tableRecords={sortedRecords}

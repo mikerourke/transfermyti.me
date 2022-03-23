@@ -6,16 +6,14 @@
     targetToolDisplayNameSelector,
     toolActionSelector,
   } from "~/modules/allEntities/allEntitiesSelectors";
-  import { navigateToRoute } from "~/modules/app/navigateToRoute";
+  import {
+    navigateToWorkflowStep,
+    WorkflowStep,
+  } from "~/modules/app/workflowStep";
   import * as workspacesActions from "~/modules/workspaces/workspacesActions";
   import * as workspacesSelectors from "~/modules/workspaces/workspacesSelectors";
   import { dispatchAction, selectorToStore } from "~/redux/reduxToStore";
-  import {
-    FetchStatus,
-    RoutePath,
-    ToolAction,
-    type WorkspaceModel,
-  } from "~/typeDefs";
+  import { FetchStatus, ToolAction, type WorkspaceModel } from "~/typeDefs";
 
   import HelpDetails from "~/components/HelpDetails.svelte";
   import Loader from "~/components/Loader.svelte";
@@ -89,7 +87,7 @@
   }
 
   function handleBackClick(): void {
-    navigateToRoute(RoutePath.EnterApiKeys);
+    navigateToWorkflowStep(WorkflowStep.EnterApiKeys);
   }
 
   function handleNextClick(): void {
@@ -117,7 +115,7 @@
 
     dispatchAction(updateFetchAllFetchStatus(FetchStatus.Pending));
 
-    navigateToRoute(RoutePath.SelectInclusions);
+    navigateToWorkflowStep(WorkflowStep.SelectInclusions);
   }
 
   function handleRefreshClick(): void {
