@@ -33,7 +33,7 @@
   );
 
   let recordCount: number;
-  $: recordCount = $timeEntries.length === 0 ? $timeEntries.length : 1;
+  $: recordCount = $timeEntries.length !== 0 ? $timeEntries.length : 1;
 
   let areAllToggled: boolean;
   $: areAllToggled =
@@ -96,7 +96,7 @@
 
     <TimeEntriesInclusionsTable
       timeEntries={$timeEntries}
-      totalCountsByType={$totalCountsByType}
+      totalIncludedCount={$totalCountsByType.isIncluded}
       on:toggle={handleToggleOne}
     />
   {/if}

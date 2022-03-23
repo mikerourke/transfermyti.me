@@ -163,7 +163,7 @@
 
   <NavigationButtonsRow
     disabled={$fetchAllFetchStatus === FetchStatus.InProcess}
-    refreshLabel="refresh"
+    refreshLabel="Refresh"
     on:back={handleBackClick}
     on:next={handleNextClick}
     on:refresh={handleRefreshClick}

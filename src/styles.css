@@ -191,12 +191,13 @@ select:focus {
 }
 
 table {
-  --border-style: 1px solid var(--color-primary);
+  --border-style-primary: 1px solid var(--color-primary);
+  --border-style-white: 1px solid var(--color-white);
 
   width: 100%;
   table-layout: fixed;
   border-spacing: 0;
-  border: var(--border-style);
+  border: var(--border-style-primary);
 }
 
 tr {
@@ -218,12 +219,12 @@ tfoot td {
   background-color: var(--color-primary);
   color: var(--color-white);
   font-weight: var(--font-weight-bold);
-  border-right: 1px solid var(--color-white);
+  border-right: var(--border-style-white);
 }
 
 thead th {
   text-align: left;
-  border-bottom: var(--border-style);
+  border-bottom: var(--border-style-white);
 }
 
 tfoot th {
@@ -236,8 +237,8 @@ thead tr:first-of-type th {
 
 tbody td {
   background-color: var(--color-white);
-  border-right: var(--border-style);
-  border-top: var(--border-style);
+  border-right: var(--border-style-primary);
+  border-top: var(--border-style-primary);
 }
 
 tbody td[data-null="true"] {
@@ -264,7 +265,7 @@ tbody tr:first-of-type td {
 }
 
 tbody tr:last-of-type td {
-  border-bottom: 1px solid var(--color-white);
+  border-bottom: var(--border-style-white);
 }
 
 [data-include] {

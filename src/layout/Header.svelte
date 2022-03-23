@@ -30,6 +30,7 @@
     background-color: transparent;
     color: var(--color-secondary);
     font-size: 1.5rem;
+    box-shadow: none;
   }
 
   button:active,
