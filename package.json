@@ -16,6 +16,7 @@
     "start:web": "webpack serve --port 8080 --mode development",
     "start:server": "node scripts/run.mjs serve",
     "stylelint": "stylelint \"src/**/*.{css,html,svelte}\"",
+    "svelte-check": "svelte-check",
     "test": "NODE_ENV=test node scripts/run.mjs tests --config jest.config.json",
     "typecheck": "tsc -p tsconfig.json"
   },

@@ -144,7 +144,7 @@
   }
 </style>
 
-<main>
+<main data-step={WorkflowStep.EnterApiKeys}>
   <h1>Step 2: Enter API Keys</h1>
 
   <HelpDetails>

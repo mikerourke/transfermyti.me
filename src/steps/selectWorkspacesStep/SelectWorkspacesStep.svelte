@@ -1,5 +1,5 @@
 <script lang="ts">
-  import { onMount } from "svelte";
+  import { onMount, tick } from "svelte";
 
   import { updateFetchAllFetchStatus } from "~/modules/allEntities/allEntitiesActions";
   import {
@@ -90,7 +90,7 @@
     navigateToWorkflowStep(WorkflowStep.EnterApiKeys);
   }
 
-  function handleNextClick(): void {
+  async function handleNextClick(): Promise<void> {
     if (
       $missingTargetWorkspaces.length !== 0 &&
       $toolAction === ToolAction.Transfer
@@ -115,6 +115,8 @@
 
     dispatchAction(updateFetchAllFetchStatus(FetchStatus.Pending));
 
+    await tick();
+
     navigateToWorkflowStep(WorkflowStep.SelectInclusions);
   }
 
@@ -132,7 +134,7 @@
   }
 </style>
 
-<main>
+<main data-step={WorkflowStep.SelectWorkspaces}>
   <h1>Step 3: Select Workspaces</h1>
 
   <HelpDetails>

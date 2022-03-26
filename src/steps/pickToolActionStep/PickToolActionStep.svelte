@@ -39,7 +39,7 @@
   }
 </style>
 
-<main>
+<main data-step={WorkflowStep.PickToolAction}>
   <h1>Step 1: Pick an Action</h1>
 
   <HelpDetails open>

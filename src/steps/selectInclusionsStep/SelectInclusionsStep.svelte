@@ -67,6 +67,16 @@
     if (!$areExistsInTargetShown) {
       dispatchAction(flipIfExistsInTargetShown());
     }
+
+    // I have no idea why I have to do this, but for some reason the "Select
+    // Workspaces" component sticks around after navigating to this step:
+    try {
+      document
+        .querySelector(`[data-step=${WorkflowStep.SelectWorkspaces}]`)
+        ?.remove();
+    } catch {
+      // Do nothing.
+    }
   });
 
   function handleSelectActiveWorkspace(
@@ -119,7 +129,7 @@
   `;
 </script>
 
-<main>
+<main data-step={WorkflowStep.SelectInclusions}>
   <h1>Step 4: Select Records to {capitalize($toolAction)}</h1>
 
   <HelpForToolAction toolAction={$toolAction} />
@@ -136,7 +146,7 @@
     </div>
 
     {#if $toolAction === ToolAction.Transfer}
-      <div>
+      <div class="toggleRow">
         <label for="show-existing-toggle">
           Show records that already exist in target?
         </label>
