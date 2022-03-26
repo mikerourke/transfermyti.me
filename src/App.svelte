@@ -8,6 +8,7 @@
   import Header from "~/layout/Header.svelte";
   import Notifications from "~/layout/Notifications.svelte";
   import EnterApiKeysStep from "~/steps/enterApiKeysStep/EnterApiKeysStep.svelte";
+  import PerformToolActionStep from "~/steps/performToolActionStep/PerformToolActionStep.svelte";
   import PickToolActionStep from "~/steps/pickToolActionStep/PickToolActionStep.svelte";
   import SelectInclusionsStep from "~/steps/selectInclusionsStep/SelectInclusionsStep.svelte";
   import SelectWorkspacesStep from "~/steps/selectWorkspacesStep/SelectWorkspacesStep.svelte";
@@ -26,7 +27,7 @@
 {:else if $currentWorkflowStep === WorkflowStep.SelectInclusions}
   <SelectInclusionsStep />
 {:else if $currentWorkflowStep === WorkflowStep.PerformToolAction}
-  <div>Yo</div>
+  <PerformToolActionStep />
 {:else if $currentWorkflowStep === WorkflowStep.ToolActionSuccess}
   <div>Yo</div>
 {:else}
