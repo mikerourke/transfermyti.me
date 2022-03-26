@@ -13,6 +13,7 @@
   --color-alabaster: #f8f8f8;
   --color-white: #fff;
   --color-honeydew: #d4fb79;
+  --color-active: #ff2f92;
   --color-clockify-blue: #4ca6ee;
   --color-toggl-red: #cf4846;
   --font-family: "Apple-System", arial, helvetica, sans-serif;
@@ -23,7 +24,7 @@
   --line-height-body: 1.5;
   --line-height-heading: 1.25;
   --height-header: 48px;
-  --height-footer: 112px;
+  --height-footer: 72px;
   --height-notification: 96px;
   --gap-notification: 16px;
   /* prettier-ignore */
@@ -74,11 +75,6 @@ body {
   font-family: var(--font-family);
 }
 
-#app {
-  margin: 0 auto;
-  min-height: 100vh;
-}
-
 main {
   position: relative;
   height: calc(100vh - var(--height-header) - var(--height-footer));
@@ -106,13 +102,32 @@ a:focus {
 }
 
 button {
-  appearance: none;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin: 0;
+  padding: 0.5rem 0.75rem;
+  border-radius: 0.375rem;
+  font-size: 1.25rem;
+  font-weight: 400;
   border: none;
-  box-shadow: unset;
-  border-radius: 0;
+  box-shadow: var(--elevation-dp1);
+  opacity: 1;
+  appearance: none;
   cursor: pointer;
-  font-size: 1rem;
   text-align: center;
+}
+
+menu li button {
+  width: 100%;
+}
+
+button:disabled {
+  opacity: 0.5;
+}
+
+button:hover:not(:disabled) {
+  text-decoration: underline;
 }
 
 h1,
@@ -134,25 +149,71 @@ p {
   margin: 1rem 0;
 }
 
+h1 {
+  font-size: 1.75rem;
+}
+
 ul {
   margin: 0;
 }
 
-menu {
+[data-backdrop] {
+  position: fixed;
+  top: 0;
+  right: 0;
+  bottom: 0;
+  left: 0;
+  overflow: hidden;
+  background-color: hsla(0deg 0% 24% / 60%);
+  z-index: var(--z-index-backdrop);
+}
+
+dialog {
+  position: absolute;
+  top: 0;
+  right: 0;
+  bottom: 0;
+  left: 0;
+  height: fit-content;
+  max-width: 36rem;
+  min-width: 24rem;
+  margin: auto;
+  padding: 1rem 2rem;
+  background-color: var(--color-secondary);
+  color: var(--color-midnight);
+  border: none;
+  border-radius: 0.5rem;
+  box-shadow: var(--elevation-dp8);
+  z-index: var(--z-index-dialog);
+}
+
+dialog h2 {
+  margin: 0.5rem 0 1.25rem;
+  padding-bottom: 0.5rem;
+  font-size: 1.75rem;
+  font-weight: var(--font-weight-medium);
+  border-bottom: 2px solid var(--color-midnight);
+}
+
+dialog menu {
   appearance: none;
   display: flex;
   justify-content: flex-start;
-  margin: 0;
+  margin: 2rem 0 0.5rem;
   padding: 0;
 }
 
-menu li {
+dialog menu li {
   margin: 0;
   padding: 0;
   list-style: none;
 }
 
-menu.alignRight {
+dialog menu li:not(:last-of-type) {
+  margin-right: 1rem;
+}
+
+dialog menu.alignRight {
   justify-content: flex-end;
 }
 
@@ -162,6 +223,8 @@ circle {
   user-select: none;
 }
 
+button:active:not([aria-busy="true"]),
+button:focus:not([aria-busy="true"]),
 summary:active,
 summary:focus,
 a:active,
@@ -170,16 +233,17 @@ input:active,
 input:focus,
 select:active,
 select:focus {
-  outline: 2px solid var(--color-navy);
+  outline: 2px solid var(--color-active);
 }
 
 table {
-  --border-style: 1px solid var(--color-primary);
+  --border-style-primary: 1px solid var(--color-primary);
+  --border-style-white: 1px solid var(--color-white);
 
   width: 100%;
   table-layout: fixed;
   border-spacing: 0;
-  border: var(--border-style);
+  border: var(--border-style-primary);
 }
 
 tr {
@@ -201,12 +265,12 @@ tfoot td {
   background-color: var(--color-primary);
   color: var(--color-white);
   font-weight: var(--font-weight-bold);
-  border-right: 1px solid var(--color-white);
+  border-right: var(--border-style-white);
 }
 
 thead th {
   text-align: left;
-  border-bottom: var(--border-style);
+  border-bottom: var(--border-style-white);
 }
 
 tfoot th {
@@ -219,8 +283,8 @@ thead tr:first-of-type th {
 
 tbody td {
   background-color: var(--color-white);
-  border-right: var(--border-style);
-  border-top: var(--border-style);
+  border-right: var(--border-style-primary);
+  border-top: var(--border-style-primary);
 }
 
 tbody td[data-null="true"] {
@@ -247,7 +311,7 @@ tbody tr:first-of-type td {
 }
 
 tbody tr:last-of-type td {
-  border-bottom: 1px solid var(--color-white);
+  border-bottom: var(--border-style-white);
 }
 
 [data-include] {
@@ -273,6 +337,48 @@ tbody tr:last-of-type td {
   font-weight: var(--font-weight-bold);
 }
 
+.loadingMessage {
+  margin: 1rem 0 3rem;
+  text-align: center;
+  font-size: 1rem;
+  font-weight: var(--font-weight-bold);
+}
+
+.noRecordsFound {
+  margin: 0;
+  padding: 3rem 0;
+  text-align: center;
+  font-size: 1.25rem;
+  font-weight: var(--font-weight-bold);
+}
+
+.toggleRow label {
+  display: block;
+  margin-bottom: 0.75rem;
+  font-weight: var(--font-weight-bold);
+}
+
+.successButtonLink {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  height: 3.25rem;
+  min-width: 14rem;
+  margin: 0 0.5rem;
+  padding: 0.5rem 0.75rem;
+  border: 1px solid transparent;
+  border-radius: 0.375rem;
+  font-size: 1.25rem;
+  text-decoration: none;
+  box-shadow: var(--elevation-dp1);
+  transition: background-color 250ms ease-in-out;
+}
+
+.successButtonLink:active,
+.successButtonLink:focus {
+  background-color: var(--color-active);
+}
+
 /*
  * Used for hiding input labels while maintaining a11y requirements.
  * See https://www.a11ywithlindsey.com/blog/introduction-accessible-labeling
@@ -283,56 +389,4 @@ tbody tr:last-of-type td {
   width: 1px;
   overflow: hidden;
   clip: rect(1px, 1px, 1px, 1px);
-}
-
-@keyframes loading-spin {
-  0% {
-    transform: rotate(0deg);
-  }
-
-  100% {
-    transform: rotate(360deg);
-  }
-}
-
-@keyframes cube-folding {
-  0%,
-  10% {
-    transform: perspective(140px) rotateX(-180deg);
-    opacity: 0;
-  }
-
-  25%,
-  75% {
-    transform: perspective(140px) rotateX(0deg);
-    opacity: 1;
-  }
-
-  90%,
-  100% {
-    transform: perspective(140px) rotateY(180deg);
-    opacity: 0;
-  }
-}
-
-@keyframes slide-in-right {
-  from {
-    transform: translate3d(100%, 0, 0);
-  }
-
-  to {
-    transform: translate3d(0, 0, 0);
-  }
-}
-
-@keyframes slide-out-left {
-  from {
-    opacity: 1;
-    transform: translate3d(0, 0, 0);
-  }
-
-  to {
-    opacity: 0;
-    transform: translate3d(100%, 0, 0);
-  }
 }

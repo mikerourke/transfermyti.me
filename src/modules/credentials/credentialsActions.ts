@@ -1,8 +1,9 @@
 import { createAction, createAsyncAction } from "typesafe-actions";
 
-import {
+import type {
   CredentialsByMappingModel,
   FetchStatus,
+  Mapping,
   PartialCredentialsUpdateModel,
   ValidationErrorsByMappingModel,
 } from "~/typeDefs";
@@ -24,6 +25,10 @@ export const flushCredentials = createAction(
 export const updateCredentials = createAction(
   "@credentials/UPDATE_CREDENTIALS",
 )<PartialCredentialsUpdateModel>();
+
+export const apiKeysUpdated = createAction("@credentials/apiKeysUpdated")<
+  Record<Mapping, string>
+>();
 
 export const updateValidationFetchStatus = createAction(
   "@credentials/UPDATE_VALIDATION_FETCH_STATUS",

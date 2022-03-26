@@ -3,7 +3,7 @@ import { createSelector } from "reselect";
 
 import { selectIdToLinkedId } from "~/entityOperations/selectIdToLinkedId";
 import { workspaceIdToLinkedIdSelector } from "~/modules/workspaces/workspacesSelectors";
-import { ReduxState, UserModel, UsersByIdModel } from "~/typeDefs";
+import type { ReduxState, UserModel, UsersByIdModel } from "~/typeDefs";
 
 const sourceUsersByIdSelector = createSelector(
   (state: ReduxState) => state.users.source,

@@ -1,14 +1,14 @@
 import * as R from "ramda";
-import { ActionType, createReducer } from "typesafe-actions";
+import { type ActionType, createReducer } from "typesafe-actions";
 
 import * as allEntitiesActions from "~/modules/allEntities/allEntitiesActions";
 import {
-  CountsByEntityGroupModel,
   EntityGroup,
   FetchStatus,
   ToolAction,
   ToolName,
-  ToolNameByMappingModel,
+  type CountsByEntityGroupModel,
+  type ToolNameByMappingModel,
 } from "~/typeDefs";
 
 type AllEntitiesAction = ActionType<typeof allEntitiesActions>;

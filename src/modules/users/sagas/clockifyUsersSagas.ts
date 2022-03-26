@@ -9,7 +9,7 @@ import {
 import { deleteEntitiesForTool } from "~/entityOperations/deleteEntitiesForTool";
 import { fetchEntitiesForTool } from "~/entityOperations/fetchEntitiesForTool";
 import { incrementEntityGroupTransferCompletedCount } from "~/modules/allEntities/allEntitiesActions";
-import { EntityGroup, ToolName, UserModel } from "~/typeDefs";
+import { EntityGroup, ToolName, type UserModel } from "~/typeDefs";
 
 export interface ClockifyHourlyRateResponseModel {
   amount: number;

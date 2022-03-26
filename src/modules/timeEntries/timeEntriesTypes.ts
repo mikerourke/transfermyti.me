@@ -1,4 +1,4 @@
-import {
+import type {
   BaseEntityModel,
   TableViewModel,
 } from "~/modules/allEntities/allEntitiesTypes";

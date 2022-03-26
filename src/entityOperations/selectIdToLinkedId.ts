@@ -1,6 +1,6 @@
 import * as R from "ramda";
 
-import { ValidEntity } from "~/typeDefs";
+import type { ValidEntity } from "~/typeDefs";
 
 /**
  * Returns an object with a key of the source record's `id` field and a value

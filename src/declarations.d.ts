@@ -1,12 +1,20 @@
-declare type AnyFixMe = any;
-
 // Used to avoid the no-explicit-any ESLint rule explicitly. In some cases, it
 // is totally OK to just say it's `any`:
 declare type AnyValid = any;
 
+declare type Dictionary<T> = Record<string, T>;
+
 declare interface Window {
   __REDUX_DEVTOOLS_EXTENSION_COMPOSE__: AnyValid;
 }
+
+declare type InputChangeEvent = Event & {
+  currentTarget: EventTarget & HTMLInputElement;
+};
+
+declare type SelectChangeEvent = Event & {
+  currentTarget: EventTarget & HTMLSelectElement;
+};
 
 declare namespace jest {
   // @ts-ignore

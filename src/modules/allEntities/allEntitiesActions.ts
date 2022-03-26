@@ -1,6 +1,6 @@
 import { createAction, createAsyncAction } from "typesafe-actions";
 
-import {
+import type {
   EntityGroup,
   FetchStatus,
   ToolAction,

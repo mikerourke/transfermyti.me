@@ -2,7 +2,7 @@ import * as R from "ramda";
 import { createSelector } from "reselect";
 
 import { activeWorkspaceIdSelector } from "~/modules/workspaces/workspacesSelectors";
-import { ReduxState, UserGroupModel } from "~/typeDefs";
+import type { ReduxState, UserGroupModel } from "~/typeDefs";
 
 export const sourceUserGroupsSelector = createSelector(
   (state: ReduxState) => state.userGroups.source,

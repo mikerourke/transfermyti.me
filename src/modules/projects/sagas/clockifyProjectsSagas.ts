@@ -11,11 +11,16 @@ import { createEntitiesForTool } from "~/entityOperations/createEntitiesForTool"
 import { deleteEntitiesForTool } from "~/entityOperations/deleteEntitiesForTool";
 import { fetchEntitiesForTool } from "~/entityOperations/fetchEntitiesForTool";
 import { clientIdToLinkedIdSelector } from "~/modules/clients/clientsSelectors";
-import {
+import type {
   ClockifyHourlyRateResponseModel,
   ClockifyMembershipResponseModel,
 } from "~/modules/users/sagas/clockifyUsersSagas";
-import { EntityGroup, EstimateModel, ProjectModel, ToolName } from "~/typeDefs";
+import {
+  EntityGroup,
+  ToolName,
+  type EstimateModel,
+  type ProjectModel,
+} from "~/typeDefs";
 
 export interface ClockifyProjectResponseModel {
   archived: boolean;

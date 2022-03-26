@@ -11,12 +11,12 @@ import { deleteEntitiesForTool } from "~/entityOperations/deleteEntitiesForTool"
 import { fetchEntitiesForTool } from "~/entityOperations/fetchEntitiesForTool";
 import { credentialsByToolNameSelector } from "~/modules/credentials/credentialsSelectors";
 import { projectIdToLinkedIdSelector } from "~/modules/projects/projectsSelectors";
-import { ClockifyProjectResponseModel } from "~/modules/projects/sagas/clockifyProjectsSagas";
-import { ClockifyTagResponseModel } from "~/modules/tags/sagas/clockifyTagsSagas";
+import type { ClockifyProjectResponseModel } from "~/modules/projects/sagas/clockifyProjectsSagas";
+import type { ClockifyTagResponseModel } from "~/modules/tags/sagas/clockifyTagsSagas";
 import { targetTagIdsSelectorFactory } from "~/modules/tags/tagsSelectors";
-import { ClockifyTaskResponseModel } from "~/modules/tasks/sagas/clockifyTasksSagas";
+import type { ClockifyTaskResponseModel } from "~/modules/tasks/sagas/clockifyTasksSagas";
 import { taskIdToLinkedIdSelector } from "~/modules/tasks/tasksSelectors";
-import { EntityGroup, TimeEntryModel, ToolName } from "~/typeDefs";
+import { EntityGroup, ToolName, type TimeEntryModel } from "~/typeDefs";
 
 interface ClockifyTimeIntervalModel {
   duration: string;

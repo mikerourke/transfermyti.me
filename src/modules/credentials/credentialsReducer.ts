@@ -1,10 +1,10 @@
-import { ActionType, createReducer } from "typesafe-actions";
+import { type ActionType, createReducer } from "typesafe-actions";
 
 import * as credentialsActions from "~/modules/credentials/credentialsActions";
 import {
-  CredentialsModel,
   FetchStatus,
-  ValidationErrorsByMappingModel,
+  type CredentialsModel,
+  type ValidationErrorsByMappingModel,
 } from "~/typeDefs";
 
 type CredentialsAction = ActionType<typeof credentialsActions>;
@@ -73,6 +73,23 @@ export const credentialsReducer = createReducer<
         ...state[mapping],
         ...credentials,
       },
+    };
+  })
+  .handleAction(credentialsActions.apiKeysUpdated, (state, { payload }) => {
+    const source = {
+      ...state.source,
+      apiKey: payload.source ?? state.source.apiKey,
+    };
+
+    const target = {
+      ...state.target,
+      apiKey: payload.target ?? state.target.apiKey,
+    };
+
+    return {
+      ...state,
+      source,
+      target,
     };
   })
   .handleAction(

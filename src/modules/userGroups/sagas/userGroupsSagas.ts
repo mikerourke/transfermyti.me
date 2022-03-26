@@ -15,7 +15,12 @@ import {
   includedSourceUserGroupsSelector,
   sourceUserGroupsForTransferSelector,
 } from "~/modules/userGroups/userGroupsSelectors";
-import { Mapping, ToolAction, ToolName, UserGroupsByIdModel } from "~/typeDefs";
+import {
+  Mapping,
+  ToolAction,
+  ToolName,
+  type UserGroupsByIdModel,
+} from "~/typeDefs";
 
 /**
  * Creates user groups in the target tool based on the included user groups from

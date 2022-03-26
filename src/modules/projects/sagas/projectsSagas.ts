@@ -21,10 +21,10 @@ import { updateIsTaskIncluded } from "~/modules/tasks/tasksActions";
 import { sourceTasksSelector } from "~/modules/tasks/tasksSelectors";
 import {
   Mapping,
-  ProjectsByIdModel,
-  ReduxAction,
   ToolAction,
   ToolName,
+  type ProjectsByIdModel,
+  type ReduxAction,
 } from "~/typeDefs";
 
 export function* projectMonitoringSaga(): SagaIterator {

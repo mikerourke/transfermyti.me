@@ -11,7 +11,12 @@ import { showErrorNotification } from "~/modules/app/appActions";
 import * as clockifySagas from "~/modules/workspaces/sagas/clockifyWorkspacesSagas";
 import * as togglSagas from "~/modules/workspaces/sagas/togglWorkspacesSagas";
 import * as workspacesActions from "~/modules/workspaces/workspacesActions";
-import { Mapping, ToolAction, ToolName, WorkspacesByIdModel } from "~/typeDefs";
+import {
+  Mapping,
+  ToolAction,
+  ToolName,
+  type WorkspacesByIdModel,
+} from "~/typeDefs";
 
 export function* workspacesSaga(): SagaIterator {
   yield all([

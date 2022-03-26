@@ -17,12 +17,6 @@ const state = {
 } as any;
 
 describe("within appSelectors", () => {
-  test("the currentPathSelector returns state.router.location.pathname", () => {
-    const result = appSelectors.currentPathSelector(state);
-
-    expect(result).toBe("/select-inclusions");
-  });
-
   test("the notificationsSelector returns state.app.notifications", () => {
     const result = appSelectors.notificationsSelector(state);
 

@@ -5,7 +5,7 @@ import { call, delay, put, select } from "redux-saga/effects";
 import { getApiDelayForTool } from "~/entityOperations/apiRequests";
 import { incrementEntityGroupTransferCompletedCount } from "~/modules/allEntities/allEntitiesActions";
 import { workspaceIdToLinkedIdSelector } from "~/modules/workspaces/workspacesSelectors";
-import { EntityGroup, ToolName, ValidEntity } from "~/typeDefs";
+import type { EntityGroup, ToolName, ValidEntity } from "~/typeDefs";
 
 /**
  * Loops through specified source records and calls the specified apiCreateFunc

@@ -1,9 +1,6 @@
 import { createSelector } from "reselect";
 
-import { NotificationModel, ReduxState, RoutePath } from "~/typeDefs";
-
-export const currentPathSelector = (state: ReduxState): RoutePath =>
-  state.router.location.pathname as RoutePath;
+import type { NotificationModel, ReduxState } from "~/typeDefs";
 
 export const notificationsSelector = createSelector(
   (state: ReduxState) => state.app.notifications,

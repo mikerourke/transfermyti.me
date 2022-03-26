@@ -15,7 +15,7 @@ import {
   includedSourceUsersSelector,
   sourceUserEmailsByWorkspaceIdSelector,
 } from "~/modules/users/usersSelectors";
-import { Mapping, ToolAction, ToolName, UsersByIdModel } from "~/typeDefs";
+import { Mapping, ToolAction, ToolName, type UsersByIdModel } from "~/typeDefs";
 
 /**
  * Invites users to the target tool based on the source users.

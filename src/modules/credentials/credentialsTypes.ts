@@ -1,4 +1,4 @@
-import { Mapping } from "~/modules/allEntities/allEntitiesTypes";
+import type { Mapping } from "~/modules/allEntities/allEntitiesTypes";
 
 export interface CredentialsModel {
   apiKey: string | null;

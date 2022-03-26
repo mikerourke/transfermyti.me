@@ -1,7 +1,7 @@
 import { ActionType, createReducer } from "typesafe-actions";
 
 import * as appActions from "~/modules/app/appActions";
-import { NotificationModel } from "~/typeDefs";
+import type { NotificationModel } from "~/typeDefs";
 
 type AppAction = ActionType<typeof appActions>;
 

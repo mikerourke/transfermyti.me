@@ -1,9 +1,8 @@
-import { Store } from "redux";
+import type { Store } from "redux";
 
-import { State } from "./rootReducer";
+export type { ReduxState } from "./rootReducer";
 
 export type ReduxStore = Store;
-export type ReduxState = State;
 
 export interface ReduxDispatch {
   <TAction>(action: TAction & { type: AnyValid }): TAction & { type: AnyValid };

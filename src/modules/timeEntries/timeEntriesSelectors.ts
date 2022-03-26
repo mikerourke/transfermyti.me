@@ -1,8 +1,8 @@
 import * as R from "ramda";
-import { createSelector, Selector } from "reselect";
+import { createSelector, type Selector } from "reselect";
 
 import { activeWorkspaceIdSelector } from "~/modules/workspaces/workspacesSelectors";
-import {
+import type {
   ReduxState,
   TimeEntryModel,
   TimeEntryTableViewModel,

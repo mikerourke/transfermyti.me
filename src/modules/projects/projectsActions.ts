@@ -1,6 +1,6 @@
 import { createAction, createAsyncAction } from "typesafe-actions";
 
-import { Mapping, ProjectsByIdModel } from "~/typeDefs";
+import type { Mapping, ProjectsByIdModel } from "~/typeDefs";
 
 export const createProjects = createAsyncAction(
   "@projects/CREATE_PROJECTS_REQUEST",
