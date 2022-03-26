@@ -1,11 +1,13 @@
 <script lang="ts">
   import { css } from "goober";
+  import { slide } from "svelte/transition";
 
   import Icon from "~/components/Icon.svelte";
 
   export let rowNumber: number;
   export let title: string;
   export let expanded: boolean = false;
+  export let slideDuration: number = 250;
 
   const titleId = `accordion-title-${rowNumber}`;
   const contentId = `accordion-content-${rowNumber}`;
@@ -52,13 +54,8 @@
   }
 
   [role="region"] {
-    display: none;
     margin-bottom: 2rem;
     padding: 0 1rem;
-  }
-
-  [role="region"].expanded {
-    display: block;
   }
 </style>
 
@@ -82,13 +79,15 @@
     </button>
   </h3>
 
-  <div
-    id={contentId}
-    aria-labelledby={titleId}
-    role="region"
-    aria-hidden={!expanded}
-    class:expanded
-  >
-    <slot />
-  </div>
+  {#if expanded}
+    <div
+      id={contentId}
+      aria-labelledby={titleId}
+      role="region"
+      aria-hidden={!expanded}
+      transition:slide={{ duration: slideDuration }}
+    >
+      <slot />
+    </div>
+  {/if}
 </div>

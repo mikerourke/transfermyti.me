@@ -2,7 +2,7 @@
   import { css } from "goober";
 
   export let title: string = "Show/Hide Help";
-  export let open: boolean = true;
+  export let open: boolean = false;
 
   const styleClass = css`
     p {

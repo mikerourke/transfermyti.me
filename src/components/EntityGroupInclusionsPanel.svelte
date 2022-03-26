@@ -12,7 +12,6 @@
 
   import AccordionPanel from "~/components/AccordionPanel.svelte";
   import InclusionsTable from "~/components/InclusionsTable.svelte";
-  import NoRecordsFound from "~/components/NoRecordsFound.svelte";
 
   type TableRecord = TableViewModel<BaseEntityModel>;
 
@@ -73,7 +72,7 @@
 
 <AccordionPanel {rowNumber} title={entityGroupDisplay}>
   {#if tableRecords.length === 0}
-    <NoRecordsFound />
+    <p class="noRecordsFound">No records found!</p>
   {:else}
     <!-- prettier-ignore -->
     <InclusionsTable

@@ -293,9 +293,22 @@ tbody tr:last-of-type td {
 
 .loadingMessage {
   margin: 1rem 0 3rem;
-  font-weight: var(--font-weight-bold);
-  font-size: 1rem;
   text-align: center;
+  font-size: 1rem;
+  font-weight: var(--font-weight-bold);
+}
+
+.noRecordsFound {
+  padding: 3rem 0;
+  text-align: center;
+  font-size: 1.25rem;
+  font-weight: var(--font-weight-bold);
+}
+
+.toggleRow label {
+  display: block;
+  margin-bottom: 0.75rem;
+  font-weight: var(--font-weight-bold);
 }
 
 /*

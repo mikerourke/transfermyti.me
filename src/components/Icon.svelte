@@ -5,6 +5,7 @@
     | "close"
     | "github"
     | "heart"
+    | "openExternal"
     | "linkedIn"
     | "twitter";
 </script>

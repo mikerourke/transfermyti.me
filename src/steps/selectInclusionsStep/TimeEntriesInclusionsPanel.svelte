@@ -16,7 +16,6 @@
 
   import AccordionPanel from "~/components/AccordionPanel.svelte";
   import InclusionsTableTitle from "~/components/InclusionsTableTitle.svelte";
-  import NoRecordsFound from "~/components/NoRecordsFound.svelte";
   import Toggle from "~/components/Toggle.svelte";
 
   import TimeEntriesInclusionsTable from "./TimeEntriesInclusionsTable.svelte";
@@ -45,6 +44,9 @@
     ({ existsInTarget }) => !existsInTarget,
   );
 
+  let slideDuration: number;
+  $: slideDuration = Math.min(750, recordCount * 25);
+
   function handleToggleAll(): void {
     dispatchAction(updateAreAllTimeEntriesIncluded(!areAllToggled));
   }
@@ -58,24 +60,17 @@
   }
 </script>
 
-<style>
-  label {
-    margin-bottom: 0.75rem;
-    font-weight: var(--font-weight-bold);
-  }
-</style>
-
-<AccordionPanel rowNumber={5} title="Time Entries">
+<AccordionPanel rowNumber={5} title="Time Entries" {slideDuration}>
   {#if recordCount === 0}
-    <NoRecordsFound />
+    <p class="noRecordsFound">No records found!</p>
   {:else}
     {#if $toolAction === ToolAction.Transfer}
       <TimeEntryComparisonDisclaimer />
 
-      <div style="margin-bottom: 0.75rem;">
-        <label for="use-duplicate-check-toggle"
-          >Use the time entry duplication check?</label
-        >
+      <div class="toggleRow" style="margin: 0.75rem 0;">
+        <label for="use-duplicate-check-toggle">
+          Use the time entry duplication check?
+        </label>
 
         <Toggle
           id="use-duplicate-check-toggle"
