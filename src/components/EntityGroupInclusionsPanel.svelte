@@ -49,8 +49,8 @@
 
   function sortTableRecords(records: TableRecord[]): TableRecord[] {
     try {
-      const sortByName = R.sortBy<AnyFixMe>(
-        R.compose(R.toLower, R.prop<AnyFixMe, AnyFixMe>("name")),
+      const sortByName = R.sortBy<AnyValid>(
+        R.compose(R.toLower, R.prop<AnyValid, AnyValid>("name")),
       );
 
       return sortByName(records);

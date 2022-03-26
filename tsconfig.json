@@ -9,7 +9,6 @@
     "forceConsistentCasingInFileNames": true,
     "importsNotUsedAsValues": "error",
     "isolatedModules": true,
-    "jsx": "preserve",
     "lib": ["DOM", "ESNext"],
     "module": "ESNext",
     "moduleResolution": "Node",
@@ -29,7 +28,7 @@
     "strict": true,
     "suppressImplicitAnyIndexErrors": true,
     "target": "ES2015",
-    "types": ["@emotion/react", "jest", "svelte"]
+    "types": ["jest", "svelte"]
   },
   "include": ["src/**/*"],
   "exclude": ["node_modules/*", "scripts/*"]

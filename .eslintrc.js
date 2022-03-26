@@ -1,33 +1,21 @@
 module.exports = {
   parser: "@typescript-eslint/parser",
   extends: [
-    "plugin:react/recommended",
     "plugin:@typescript-eslint/recommended",
     "plugin:import/errors",
     "plugin:import/warnings",
     "plugin:import/typescript",
-    "plugin:jsx-a11y/recommended",
   ],
-  plugins: [
-    "@typescript-eslint",
-    "react",
-    "unicorn",
-    "import",
-    "jsx-a11y",
-    "svelte3",
-  ],
+  plugins: ["@typescript-eslint", "unicorn", "import", "svelte3"],
   settings: {
     "svelte3/typescript": () => require("typescript"),
-    react: {
-      version: "detect",
-    },
     "import/resolver": {
       alias: {
         map: [["~", "./src/"]],
-        extensions: [".ts", ".mjs", ".js", ".tsx", ".svelte"],
+        extensions: [".ts", ".mjs", ".js", ".svelte"],
       },
       node: {
-        extensions: [".js", ".jsx", ".ts", ".tsx", ".svelte"],
+        extensions: [".js", ".jsx", ".ts", ".svelte"],
       },
     },
   },
@@ -40,10 +28,7 @@ module.exports = {
   parserOptions: {
     ecmaVersion: 2020,
     sourceType: "module",
-    ecmaFeatures: {
-      jsx: true,
-    },
-    extraFileExtensions: [".ts", ".tsx", ".svelte"],
+    extraFileExtensions: [".ts", ".svelte"],
   },
   rules: {
     curly: ["error", "all"],
@@ -104,13 +89,6 @@ module.exports = {
         "newlines-between": "always-and-inside-groups",
       },
     ],
-    "react/jsx-curly-spacing": [
-      "error",
-      {
-        when: "never",
-      },
-    ],
-    "react/prop-types": "off",
     "unicorn/catch-error-name": [
       "error",
       {
@@ -159,7 +137,7 @@ module.exports = {
       },
     },
     {
-      files: ["*.tsx", "src/main.ts"],
+      files: ["src/main.ts"],
       rules: {
         "@typescript-eslint/member-ordering": "off",
         "import/no-default-export": "off",

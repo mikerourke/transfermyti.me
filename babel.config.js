@@ -19,29 +19,6 @@ module.exports = {
         },
       },
     ],
-    "@babel/plugin-proposal-numeric-separator",
     "transform-inline-environment-variables",
-    [
-      "jsx-pragmatic",
-      {
-        export: "jsx",
-        module: "@emotion/react",
-        import: "___EmotionJSX",
-      },
-    ],
-    [
-      "@babel/plugin-transform-react-jsx",
-      {
-        pragma: "___EmotionJSX",
-        pragmaFrag: "React.Fragment",
-      },
-    ],
-    [
-      "@emotion/babel-plugin",
-      {
-        autoLabel: "dev-only",
-        labelFormat: "[local]",
-      },
-    ],
   ],
 };

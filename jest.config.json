@@ -1,12 +1,11 @@
 {
-  "collectCoverageFrom": ["src/**/*.{ts,tsx,svelte}"],
+  "collectCoverageFrom": ["src/**/*.{ts,svelte}"],
   "coverageDirectory": "out/coverage",
   "coveragePathIgnorePatterns": [
     "/node_modules/",
     "__fixtures__",
     "constants.ts",
     "declarations.d.ts",
-    "jestHelpers.ts",
     "state.ts",
     "typeDefs.ts",
     "allEntitiesTypes.ts",
@@ -20,24 +19,22 @@
     "timeEntriesTypes.ts",
     "userGroupsTypes.ts",
     "usersTypes.ts",
-    "workspacesTypes.ts",
-    "components/index.tsx"
+    "workspacesTypes.ts"
   ],
   "coverageReporters": ["lcov"],
   "globals": {
     "window": true
   },
-  "moduleFileExtensions": ["js", "json", "jsx", "ts", "tsx", "svelte"],
+  "moduleFileExtensions": ["js", "json", "ts", "svelte"],
   "moduleNameMapper": {
     "^~/(.*)$": "<rootDir>/src/$1"
   },
   "roots": ["<rootDir>/src/"],
   "setupFilesAfterEnv": ["<rootDir>/src/setupJest.ts"],
-  "snapshotSerializers": ["@emotion/jest/serializer"],
   "testEnvironment": "jsdom",
   "testMatch": [
-    "<rootDir>/src/**/__tests__/**/*.ts?(x)",
-    "<rootDir>/src/**/?(*.)(spec|test).ts?(x)"
+    "<rootDir>/src/**/__tests__/**/*.ts",
+    "<rootDir>/src/**/?(*.)(spec|test).ts"
   ],
   "testPathIgnorePatterns": ["<rootDir>/scripts/tests.mjs"],
   "testURL": "http://localhost",

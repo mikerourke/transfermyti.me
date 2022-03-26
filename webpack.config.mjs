@@ -168,7 +168,7 @@ export default function webpackConfiguration(env, argv) {
     module: {
       rules: [
         {
-          test: /\.(js|ts|tsx)$/i,
+          test: /\.(js|ts)$/i,
           exclude: /node_modules|\.svelte/,
           use: {
             loader: "babel-loader",
@@ -238,7 +238,7 @@ export default function webpackConfiguration(env, argv) {
         svelte: path.resolve("node_modules", "svelte"),
         "~": path.resolve(thisDirPath, "src/"),
       },
-      extensions: [".mjs", ".js", ".ts", ".tsx", ".svelte"],
+      extensions: [".mjs", ".js", ".ts", ".svelte"],
       mainFields: ["svelte", "browser", "module", "main"],
     },
     stats: "errors-only",
