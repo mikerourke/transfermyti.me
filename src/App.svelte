@@ -12,6 +12,7 @@
   import PickToolActionStep from "~/steps/pickToolActionStep/PickToolActionStep.svelte";
   import SelectInclusionsStep from "~/steps/selectInclusionsStep/SelectInclusionsStep.svelte";
   import SelectWorkspacesStep from "~/steps/selectWorkspacesStep/SelectWorkspacesStep.svelte";
+  import SuccessStep from "~/steps/successStep/SuccessStep.svelte";
 </script>
 
 <Notifications />
@@ -29,7 +30,7 @@
 {:else if $currentWorkflowStep === WorkflowStep.PerformToolAction}
   <PerformToolActionStep />
 {:else if $currentWorkflowStep === WorkflowStep.ToolActionSuccess}
-  <div>Yo</div>
+  <SuccessStep />
 {:else}
   <div>Unknown Page!</div>
 {/if}
