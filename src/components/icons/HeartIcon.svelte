@@ -2,6 +2,7 @@
   export let color: string;
   export let height: number | undefined = undefined;
   export let width: number | undefined = undefined;
+  export let style: string | undefined = undefined;
 </script>
 
 <svg
@@ -10,6 +11,7 @@
   {width}
   aria-describedby="heart-icon-desc"
   aria-labelledby="heart-icon-title"
+  {style}
 >
   <title id="heart-icon-title">Heart Icon</title>
   <desc id="heart-icon-desc">

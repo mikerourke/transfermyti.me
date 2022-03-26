@@ -2,6 +2,7 @@
   export let color: string;
   export let height: number | undefined = undefined;
   export let width: number | undefined = undefined;
+  export let style: string | undefined = undefined;
 </script>
 
 <svg
@@ -10,6 +11,7 @@
   {width}
   aria-describedby="circle-remove-icon-desc"
   aria-labelledby="circle-remove-icon-title"
+  {style}
 >
   <title id="circle-remove-icon-title">Circle with Minus Sign Icon</title>
   <desc id="circle-remove-icon-desc">

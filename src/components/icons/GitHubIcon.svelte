@@ -2,6 +2,7 @@
   export let color: string;
   export let height: number | undefined = undefined;
   export let width: number | undefined = undefined;
+  export let style: string | undefined = undefined;
 </script>
 
 <svg
@@ -10,6 +11,7 @@
   {width}
   aria-describedby="github-icon-desc"
   aria-labelledby="github-icon-title"
+  {style}
 >
   <title id="github-icon-title">GitHub Octocat Icon</title>
   <desc id="github-icon-desc">

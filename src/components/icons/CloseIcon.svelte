@@ -2,6 +2,7 @@
   export let color: string;
   export let height: number | undefined = undefined;
   export let width: number | undefined = undefined;
+  export let style: string | undefined = undefined;
 </script>
 
 <svg
@@ -10,6 +11,7 @@
   viewBox="0 0 24 24"
   aria-describedby="close-icon-desc"
   aria-labelledby="close-icon-title"
+  {style}
 >
   <title id="close-icon-title">Close Icon</title>
   <desc id="close-icon-desc">The letter X.</desc>

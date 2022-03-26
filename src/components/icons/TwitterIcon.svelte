@@ -2,6 +2,7 @@
   export let color: string;
   export let height: number | undefined = undefined;
   export let width: number | undefined = undefined;
+  export let style: string | undefined = undefined;
 </script>
 
 <svg
@@ -10,6 +11,7 @@
   {width}
   aria-describedby="twitter-icon-desc"
   aria-labelledby="twitter-icon-title"
+  {style}
 >
   <title id="twitter-icon-title">Twitter Icon</title>
   <desc id="twitter-icon-desc">

@@ -2,6 +2,7 @@
   export let color: string;
   export let height: number | undefined = undefined;
   export let width: number | undefined = undefined;
+  export let style: string | undefined = undefined;
 </script>
 
 <svg
@@ -10,6 +11,7 @@
   {width}
   aria-describedby="linkedin-icon-desc"
   aria-labelledby="linkedin-icon-title"
+  {style}
 >
   <title id="linkedin-icon-title">LinkedIn Icon</title>
   <desc id="linkedin-icon-desc">

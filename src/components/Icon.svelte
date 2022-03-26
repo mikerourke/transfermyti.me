@@ -24,22 +24,23 @@
   export let color: string;
   export let height: number | undefined = undefined;
   export let width: number | undefined = undefined;
+  export let style: string | undefined = undefined;
 </script>
 
 {#if name === "circleAdd"}
-  <CircleAddIcon {color} {height} {width} />
+  <CircleAddIcon {color} {height} {width} {style} />
 {:else if name === "circleRemove"}
-  <CircleRemoveIcon {color} {height} {width} />
+  <CircleRemoveIcon {color} {height} {width} {style} />
 {:else if name === "close"}
-  <CloseIcon {color} {height} {width} />
+  <CloseIcon {color} {height} {width} {style} />
 {:else if name === "github"}
-  <GitHubIcon {color} {height} {width} />
+  <GitHubIcon {color} {height} {width} {style} />
 {:else if name === "heart"}
-  <HeartIcon {color} {height} {width} />
+  <HeartIcon {color} {height} {width} {style} />
 {:else if name === "linkedIn"}
-  <LinkedInIcon {color} {height} {width} />
+  <LinkedInIcon {color} {height} {width} {style} />
 {:else if name === "openExternal"}
-  <OpenExternalIcon {color} {height} {width} />
+  <OpenExternalIcon {color} {height} {width} {style} />
 {:else if name === "twitter"}
-  <TwitterIcon {color} {height} {width} />
+  <TwitterIcon {color} {height} {width} {style} />
 {/if}

@@ -2,6 +2,7 @@
   export let color: string;
   export let height: number | undefined = undefined;
   export let width: number | undefined = undefined;
+  export let style: string | undefined = undefined;
 </script>
 
 <svg
@@ -10,6 +11,7 @@
   {width}
   aria-describedby="open-external-icon-desc"
   aria-labelledby="open-external-icon-title"
+  {style}
 >
   <title id="open-external-icon-title">Open External Icon</title>
   <desc id="open-external-icon-desc">
