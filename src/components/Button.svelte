@@ -37,6 +37,7 @@
     height: 1.5rem;
     width: 1.5rem;
     border-radius: 50%;
+    background-color: inherit;
     transform: translateZ(0);
     animation: loading-spinner 1.4s infinite linear;
   }
@@ -79,41 +80,33 @@
     color: var(--color-secondary);
   }
 
-  .default span {
-    background: linear-gradient(
-      to right,
-      var(--color-secondary) 10%,
-      var(--color-midnight) 40%
-    );
-  }
-
-  .default span::before {
-    background-color: var(--color-secondary);
-  }
-
-  .default span::after {
-    background-color: var(--color-midnight);
-  }
-
   .eggplant {
     background-color: var(--color-eggplant);
     color: var(--color-secondary);
   }
 
-  .eggplant span {
-    background: linear-gradient(
-      to right,
-      var(--color-secondary) 10%,
-      var(--color-eggplant) 40%
-    );
-  }
-
-  .eggplant span::before {
+  .default span::before,
+  .eggplant span::before,
+  .primary span::before,
+  .secondary span::before {
     background-color: var(--color-secondary);
   }
 
-  .eggplant span::after {
-    background-color: var(--color-eggplant);
+  .default span::after,
+  .eggplant span::after,
+  .primary span::after,
+  .secondary span::after {
+    background-color: inherit;
+  }
+
+  .primary {
+    background-color: var(--color-primary);
+    color: var(--color-secondary);
+  }
+
+  .secondary {
+    background-color: var(--color-secondary);
+    color: var(--color-primary);
   }
 
   .outline {
@@ -122,61 +115,11 @@
     border: 3px solid var(--color-primary);
   }
 
-  .outline span {
-    background: linear-gradient(
-      to right,
-      var(--color-primary) 10%,
-      var(--color-secondary) 40%
-    );
-  }
-
   .outline span::before {
     background-color: var(--color-primary);
   }
 
   .outline span::after {
-    background-color: var(--color-secondary);
-  }
-
-  .primary {
-    background-color: var(--color-primary);
-    color: var(--color-secondary);
-  }
-
-  .primary span {
-    background: linear-gradient(
-      to right,
-      var(--color-secondary) 10%,
-      var(--color-primary) 40%
-    );
-  }
-
-  .primary span::before {
-    background-color: var(--color-secondary);
-  }
-
-  .primary span::after {
-    background-color: var(--color-primary);
-  }
-
-  .secondary {
-    background-color: var(--color-secondary);
-    color: var(--color-primary);
-  }
-
-  .secondary span {
-    background: linear-gradient(
-      to right,
-      var(--color-primary) 10%,
-      var(--color-secondary) 40%
-    );
-  }
-
-  .secondary span::before {
-    background-color: var(--color-primary);
-  }
-
-  .secondary span::after {
     background-color: var(--color-secondary);
   }
 </style>

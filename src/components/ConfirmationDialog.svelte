@@ -1,6 +1,4 @@
 <script lang="ts">
-  import clsx from "clsx";
-  import { css } from "goober";
   import { createEventDispatcher } from "svelte";
   import { fade } from "svelte/transition";
 
@@ -35,18 +33,6 @@
       handleConfirmClick();
     }
   }
-
-  const styleClass = css`
-    h2 {
-      margin-bottom: 1rem;
-      font-size: 1.75rem;
-      font-weight: var(--font-weight-medium);
-    }
-
-    menu li button {
-      width: 100%;
-    }
-  `;
 </script>
 
 <svelte:window on:keydown={handleWindowKeyDown} />
@@ -56,7 +42,7 @@
 <dialog
   bind:this={dialogElement}
   aria-modal={true}
-  class={clsx(styleClass, className)}
+  class={className}
   open={true}
   {...$$restProps}
   transition:fade={{ duration: 250 }}
@@ -69,7 +55,7 @@
         <li>
           <Button
             aria-label="Cancel and close the dialog"
-            variant="secondary"
+            variant="eggplant"
             on:click={handleCancelClick}
           >
             Cancel
@@ -79,7 +65,7 @@
         <li>
           <Button
             aria-label="Perform the action and close the dialog"
-            variant="eggplant"
+            variant="primary"
             on:click={handleConfirmClick}
           >
             Confirm
