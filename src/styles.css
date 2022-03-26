@@ -343,6 +343,7 @@ tbody tr:last-of-type td {
 }
 
 .noRecordsFound {
+  margin: 0;
   padding: 3rem 0;
   text-align: center;
   font-size: 1.25rem;

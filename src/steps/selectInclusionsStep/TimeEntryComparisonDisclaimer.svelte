@@ -12,7 +12,10 @@
   }
 </style>
 
-<HelpDetails title="Show/Hide Disclaimer" style="margin-bottom: 0;">
+<HelpDetails
+  title="Show/Hide Time Entry Duplication Check Disclaimer"
+  style="margin-bottom: 0;"
+>
   <p>
     The time tracking tools prevent duplicate records from being created by
     comparing the <strong>Name</strong> value (for clients, tags, projects, etc.)

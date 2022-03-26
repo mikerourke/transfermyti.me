@@ -85,7 +85,7 @@
       aria-labelledby={titleId}
       role="region"
       aria-hidden={!expanded}
-      transition:slide={{ duration: slideDuration }}
+      transition:slide|local={{ duration: slideDuration }}
     >
       <slot />
     </div>
