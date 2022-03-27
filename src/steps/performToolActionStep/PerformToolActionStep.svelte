@@ -169,6 +169,7 @@
   <NavigationButtonsRow
     disabled={$pushAllChangesFetchStatus === FetchStatus.InProcess}
     nextLabel="Start"
+    style="margin-top: 2rem;"
     on:back={handleBackClick}
     on:next={handleNextClick}
   />

@@ -17,7 +17,9 @@ export enum WorkflowStep {
   ToolActionSuccess = "tool-action-success",
 }
 
-export const currentWorkflowStep = writable(WorkflowStep.PickToolAction);
+export const currentWorkflowStep = writable<WorkflowStep>(
+  WorkflowStep.PickToolAction,
+);
 
 export function navigateToWorkflowStep(workflowStep: WorkflowStep): void {
   // prettier-ignore
