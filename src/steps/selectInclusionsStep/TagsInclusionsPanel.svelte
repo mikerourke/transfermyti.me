@@ -1,7 +1,7 @@
 <script lang="ts">
   import {
-    updateAreAllTagsIncluded,
-    flipIsTagIncluded,
+    areAllTagsIncludedUpdated,
+    isTagIncludedToggled,
   } from "~/modules/tags/tagsActions";
   import {
     tagsForInclusionsTableSelector,
@@ -17,11 +17,11 @@
   const totalCountsByType = selectorToStore(tagsTotalCountsByTypeSelector);
 
   function handleToggleAll(event: CustomEvent<boolean>): void {
-    dispatchAction(updateAreAllTagsIncluded(event.detail));
+    dispatchAction(areAllTagsIncludedUpdated(event.detail));
   }
 
   function handleToggleOne(event: CustomEvent<string>): void {
-    dispatchAction(flipIsTagIncluded(event.detail));
+    dispatchAction(isTagIncludedToggled(event.detail));
   }
 </script>
 

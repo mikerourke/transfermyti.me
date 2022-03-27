@@ -58,13 +58,16 @@ export const tagsReducer = createReducer<TagsState, TagsAction>(initialState)
       isFetching: false,
     }),
   )
-  .handleAction(tagsActions.flipIsTagIncluded, (state, { payload }) =>
+  .handleAction(tagsActions.isTagIncludedToggled, (state, { payload }) =>
     R.over(R.lensPath([Mapping.Source, payload, "isIncluded"]), R.not, state),
   )
-  .handleAction(tagsActions.updateAreAllTagsIncluded, (state, { payload }) => ({
-    ...state,
-    source: updateAreAllRecordsIncluded(state.source, payload),
-  }))
+  .handleAction(
+    tagsActions.areAllTagsIncludedUpdated,
+    (state, { payload }) => ({
+      ...state,
+      source: updateAreAllRecordsIncluded(state.source, payload),
+    }),
+  )
   .handleAction([tagsActions.deleteTags.success, allEntitiesFlushed], () => ({
     ...initialState,
   }));

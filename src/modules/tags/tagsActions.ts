@@ -3,27 +3,27 @@ import { createAction, createAsyncAction } from "typesafe-actions";
 import type { Mapping, Tag } from "~/typeDefs";
 
 export const createTags = createAsyncAction(
-  "@tags/CREATE_TAGS_REQUEST",
-  "@tags/CREATE_TAGS_SUCCESS",
-  "@tags/CREATE_TAGS_FAILURE",
-)<void, Record<Mapping, Dictionary<Tag>>, void>();
+  "@tags/createTagsRequest",
+  "@tags/createTagsSuccess",
+  "@tags/createTagsFailure",
+)<undefined, Record<Mapping, Dictionary<Tag>>, undefined>();
 
 export const deleteTags = createAsyncAction(
-  "@tags/DELETE_TAGS_REQUEST",
-  "@tags/DELETE_TAGS_SUCCESS",
-  "@tags/DELETE_TAGS_FAILURE",
-)<void, void, void>();
+  "@tags/deleteTagsRequest",
+  "@tags/deleteTagsSuccess",
+  "@tags/deleteTagsFailure",
+)<undefined, undefined, undefined>();
 
 export const fetchTags = createAsyncAction(
-  "@tags/FETCH_TAGS_REQUEST",
-  "@tags/FETCH_TAGS_SUCCESS",
-  "@tags/FETCH_TAGS_FAILURE",
-)<void, Record<Mapping, Dictionary<Tag>>, void>();
+  "@tags/fetchTagsRequest",
+  "@tags/fetchTagsSuccess",
+  "@tags/fetchTagsFailure",
+)<undefined, Record<Mapping, Dictionary<Tag>>, undefined>();
 
-export const flipIsTagIncluded = createAction(
-  "@tags/FLIP_IS_INCLUDED",
+export const isTagIncludedToggled = createAction(
+  "@tags/isTagIncludedToggled",
 )<string>();
 
-export const updateAreAllTagsIncluded = createAction(
-  "@tags/UPDATE_ARE_ALL_INCLUDED",
+export const areAllTagsIncludedUpdated = createAction(
+  "@tags/areAllTagsIncludedUpdated",
 )<boolean>();
