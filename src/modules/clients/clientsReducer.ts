@@ -62,11 +62,11 @@ export const clientsReducer = createReducer<ClientsState, ClientsAction>(
       isFetching: false,
     }),
   )
-  .handleAction(clientsActions.flipIsClientIncluded, (state, { payload }) =>
+  .handleAction(clientsActions.isClientIncludedToggled, (state, { payload }) =>
     R.over(R.lensPath([Mapping.Source, payload, "isIncluded"]), R.not, state),
   )
   .handleAction(
-    clientsActions.updateAreAllClientsIncluded,
+    clientsActions.areAllClientsIncludedChanged,
     (state, { payload }) => ({
       ...state,
       source: updateAreAllRecordsIncluded(state.source, payload),

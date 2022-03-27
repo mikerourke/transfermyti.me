@@ -1,4 +1,4 @@
-import * as R from "ramda";
+import { isNil } from "ramda";
 
 import type { ValidEntity } from "~/typeDefs";
 
@@ -7,21 +7,21 @@ import type { ValidEntity } from "~/typeDefs";
  * field for each one to the value of the specified `areIncluded` arg.
  */
 export function updateAreAllRecordsIncluded<TEntity>(
-  entityRecordsById: Record<string, ValidEntity<TEntity>>,
+  entityRecordsById: Dictionary<ValidEntity<TEntity>>,
   areIncluded: boolean,
-): Record<string, TEntity> {
-  const updatedRecordsById: Record<string, TEntity> = {};
+): Dictionary<TEntity> {
+  const updatedRecordsById: Dictionary<TEntity> = {};
 
   for (const [id, entityRecord] of Object.entries(entityRecordsById)) {
-    let newIsIncluded = areIncluded;
+    let isIncluded = areIncluded;
 
     // We need to make sure we don't set records that have a matching record
     // on the target tool as included!
-    if (newIsIncluded) {
-      newIsIncluded = R.isNil(entityRecord.linkedId);
+    if (isIncluded) {
+      isIncluded = isNil(entityRecord.linkedId);
     }
 
-    updatedRecordsById[id] = { ...entityRecord, isIncluded: newIsIncluded };
+    updatedRecordsById[id] = { ...entityRecord, isIncluded };
   }
 
   return updatedRecordsById;
