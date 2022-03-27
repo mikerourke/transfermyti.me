@@ -2,12 +2,12 @@ import * as R from "ramda";
 import { type ActionType, createReducer } from "typesafe-actions";
 
 import { updateAreAllRecordsIncluded } from "~/entityOperations/updateAreAllRecordsIncluded";
-import { flushAllEntities } from "~/modules/allEntities/allEntitiesActions";
+import { allEntitiesFlushed } from "~/modules/allEntities/allEntitiesActions";
 import * as clientsActions from "~/modules/clients/clientsActions";
 import { type Client, Mapping } from "~/typeDefs";
 
 type ClientsAction = ActionType<
-  typeof clientsActions | typeof flushAllEntities
+  typeof clientsActions | typeof allEntitiesFlushed
 >;
 
 export interface ClientsState {
@@ -62,17 +62,17 @@ export const clientsReducer = createReducer<ClientsState, ClientsAction>(
       isFetching: false,
     }),
   )
-  .handleAction(clientsActions.flipIsClientIncluded, (state, { payload }) =>
+  .handleAction(clientsActions.isClientIncludedToggled, (state, { payload }) =>
     R.over(R.lensPath([Mapping.Source, payload, "isIncluded"]), R.not, state),
   )
   .handleAction(
-    clientsActions.updateAreAllClientsIncluded,
+    clientsActions.areAllClientsIncludedUpdated,
     (state, { payload }) => ({
       ...state,
       source: updateAreAllRecordsIncluded(state.source, payload),
     }),
   )
   .handleAction(
-    [clientsActions.deleteClients.success, flushAllEntities],
+    [clientsActions.deleteClients.success, allEntitiesFlushed],
     () => ({ ...initialState }),
   );

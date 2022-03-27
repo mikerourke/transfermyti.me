@@ -2,11 +2,11 @@ import * as R from "ramda";
 import { type ActionType, createReducer } from "typesafe-actions";
 
 import { updateAreAllRecordsIncluded } from "~/entityOperations/updateAreAllRecordsIncluded";
-import { flushAllEntities } from "~/modules/allEntities/allEntitiesActions";
+import { allEntitiesFlushed } from "~/modules/allEntities/allEntitiesActions";
 import * as tasksActions from "~/modules/tasks/tasksActions";
 import { Mapping, type Task } from "~/typeDefs";
 
-type TasksAction = ActionType<typeof tasksActions | typeof flushAllEntities>;
+type TasksAction = ActionType<typeof tasksActions | typeof allEntitiesFlushed>;
 
 export interface TasksState {
   readonly source: Dictionary<Task>;
@@ -58,10 +58,10 @@ export const tasksReducer = createReducer<TasksState, TasksAction>(initialState)
       isFetching: false,
     }),
   )
-  .handleAction(tasksActions.flipIsTaskIncluded, (state, { payload }) =>
+  .handleAction(tasksActions.isTaskIncludedToggled, (state, { payload }) =>
     R.over(R.lensPath([Mapping.Source, payload, "isIncluded"]), R.not, state),
   )
-  .handleAction(tasksActions.updateIsTaskIncluded, (state, { payload }) =>
+  .handleAction(tasksActions.isTaskIncludedUpdated, (state, { payload }) =>
     R.set(
       R.lensPath([Mapping.Source, payload.id, "isIncluded"]),
       payload.isIncluded,
@@ -69,12 +69,12 @@ export const tasksReducer = createReducer<TasksState, TasksAction>(initialState)
     ),
   )
   .handleAction(
-    tasksActions.updateAreAllTasksIncluded,
+    tasksActions.areAllTasksIncludedUpdated,
     (state, { payload }) => ({
       ...state,
       source: updateAreAllRecordsIncluded(state.source, payload),
     }),
   )
-  .handleAction([tasksActions.deleteTasks.success, flushAllEntities], () => ({
+  .handleAction([tasksActions.deleteTasks.success, allEntitiesFlushed], () => ({
     ...initialState,
   }));

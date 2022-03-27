@@ -2,7 +2,7 @@ import type { SagaIterator } from "redux-saga";
 import { call, delay, put } from "redux-saga/effects";
 
 import { getApiDelayForTool } from "~/entityOperations/apiRequests";
-import { incrementEntityGroupTransferCompletedCount } from "~/modules/allEntities/allEntitiesActions";
+import { entityGroupTransferCompletedCountIncremented } from "~/modules/allEntities/allEntitiesActions";
 import type { EntityGroup, ToolName, ValidEntity } from "~/typeDefs";
 
 /**
@@ -25,7 +25,7 @@ export function* deleteEntitiesForTool<TEntity>({
     yield call(apiDeleteFunc, sourceRecord);
 
     const entityGroup = sourceRecord.memberOf as EntityGroup;
-    yield put(incrementEntityGroupTransferCompletedCount(entityGroup));
+    yield put(entityGroupTransferCompletedCountIncremented(entityGroup));
 
     yield delay(apiDelay);
   }

@@ -8,7 +8,7 @@ import {
 } from "~/entityOperations/apiRequests";
 import { deleteEntitiesForTool } from "~/entityOperations/deleteEntitiesForTool";
 import { fetchEntitiesForTool } from "~/entityOperations/fetchEntitiesForTool";
-import { incrementEntityGroupTransferCompletedCount } from "~/modules/allEntities/allEntitiesActions";
+import { entityGroupTransferCompletedCountIncremented } from "~/modules/allEntities/allEntitiesActions";
 import { EntityGroup, ToolName, type User } from "~/typeDefs";
 
 export interface ClockifyHourlyRateResponseModel {
@@ -73,7 +73,7 @@ export function* createClockifyUsersSaga(
   const clockifyApiDelay = yield call(getApiDelayForTool, ToolName.Clockify);
 
   for (const [workspaceId, emails] of Object.entries(emailsByWorkspaceId)) {
-    yield put(incrementEntityGroupTransferCompletedCount(EntityGroup.Users));
+    yield put(entityGroupTransferCompletedCountIncremented(EntityGroup.Users));
 
     yield call(inviteClockifyUsers, emails, workspaceId);
 

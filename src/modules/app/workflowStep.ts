@@ -1,10 +1,10 @@
 import { writable } from "svelte/store";
 
 import {
-  flushAllEntities,
-  updatePushAllChangesFetchStatus,
+  allEntitiesFlushed,
+  pushAllChangesFetchStatusUpdated,
 } from "~/modules/allEntities/allEntitiesActions";
-import { updateValidationFetchStatus } from "~/modules/credentials/credentialsActions";
+import { validationFetchStatusUpdated } from "~/modules/credentials/credentialsActions";
 import { dispatchAction } from "~/redux/reduxToStore";
 import { FetchStatus } from "~/typeDefs";
 
@@ -22,15 +22,15 @@ export const currentWorkflowStep = writable(WorkflowStep.PickToolAction);
 export function navigateToWorkflowStep(workflowStep: WorkflowStep): void {
   // prettier-ignore
   if ([WorkflowStep.PickToolAction, WorkflowStep.ToolActionSuccess].includes(workflowStep)) {
-    dispatchAction(flushAllEntities());
+    dispatchAction(allEntitiesFlushed());
   }
 
   if (workflowStep !== WorkflowStep.EnterApiKeys) {
-    dispatchAction(updateValidationFetchStatus(FetchStatus.Pending));
+    dispatchAction(validationFetchStatusUpdated(FetchStatus.Pending));
   }
 
   if (workflowStep !== WorkflowStep.PerformToolAction) {
-    dispatchAction(updatePushAllChangesFetchStatus(FetchStatus.Pending));
+    dispatchAction(pushAllChangesFetchStatusUpdated(FetchStatus.Pending));
   }
 
   setTimeout(() => {

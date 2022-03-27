@@ -8,7 +8,7 @@ import {
   toolActionSelector,
   toolNameByMappingSelector,
 } from "~/modules/allEntities/allEntitiesSelectors";
-import { showErrorNotification } from "~/modules/app/appActions";
+import { errorNotificationShown } from "~/modules/app/appActions";
 import * as projectActions from "~/modules/projects/projectsActions";
 import {
   includedSourceProjectsSelector,
@@ -17,7 +17,7 @@ import {
 } from "~/modules/projects/projectsSelectors";
 import * as clockifySagas from "~/modules/projects/sagas/clockifyProjectsSagas";
 import * as togglSagas from "~/modules/projects/sagas/togglProjectsSagas";
-import { updateIsTaskIncluded } from "~/modules/tasks/tasksActions";
+import { isTaskIncludedUpdated } from "~/modules/tasks/tasksActions";
 import { sourceTasksSelector } from "~/modules/tasks/tasksSelectors";
 import { Mapping, ToolAction, ToolName, type Project } from "~/typeDefs";
 
@@ -25,8 +25,8 @@ export function* projectMonitoringSaga(): SagaIterator {
   yield all([
     takeEvery(
       [
-        projectActions.flipIsProjectIncluded,
-        projectActions.updateAreAllProjectsIncluded,
+        projectActions.isProjectIncludedToggled,
+        projectActions.areAllProjectsIncludedUpdated,
       ],
       pushProjectInclusionChangesToTasks,
     ),
@@ -65,18 +65,18 @@ function* pushProjectInclusionChangesToTasks(
       isIncluded: isProjectIncluded,
     };
 
-    if (isActionOf(projectActions.updateAreAllProjectsIncluded, action)) {
-      yield put(updateIsTaskIncluded(updatePayload));
+    if (isActionOf(projectActions.areAllProjectsIncludedUpdated, action)) {
+      yield put(isTaskIncludedUpdated(updatePayload));
 
       return;
     }
 
-    if (isActionOf(projectActions.flipIsProjectIncluded, action)) {
+    if (isActionOf(projectActions.isProjectIncludedToggled, action)) {
       if (sourceTask.projectId !== action.payload) {
         return;
       }
 
-      yield put(updateIsTaskIncluded(updatePayload));
+      yield put(isTaskIncludedUpdated(updatePayload));
     }
   }
 }
@@ -105,7 +105,7 @@ export function* createProjectsSaga(): SagaIterator {
 
     yield put(projectActions.createProjects.success(projectsByIdByMapping));
   } catch (err: AnyValid) {
-    yield put(showErrorNotification(err));
+    yield put(errorNotificationShown(err));
     yield put(projectActions.createProjects.failure());
   }
 }
@@ -128,7 +128,7 @@ export function* deleteProjectsSaga(): SagaIterator {
 
     yield put(projectActions.deleteProjects.success());
   } catch (err: AnyValid) {
-    yield put(showErrorNotification(err));
+    yield put(errorNotificationShown(err));
     yield put(projectActions.deleteProjects.failure());
   }
 }
@@ -167,7 +167,7 @@ export function* fetchProjectsSaga(): SagaIterator {
 
     yield put(projectActions.fetchProjects.success(projectsByIdByMapping));
   } catch (err: AnyValid) {
-    yield put(showErrorNotification(err));
+    yield put(errorNotificationShown(err));
     yield put(projectActions.fetchProjects.failure());
   }
 }

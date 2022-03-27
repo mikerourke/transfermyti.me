@@ -1,12 +1,12 @@
 import * as R from "ramda";
 import { type ActionType, createReducer } from "typesafe-actions";
 
-import { flushAllEntities } from "~/modules/allEntities/allEntitiesActions";
+import { allEntitiesFlushed } from "~/modules/allEntities/allEntitiesActions";
 import * as workspacesActions from "~/modules/workspaces/workspacesActions";
 import type { Workspace } from "~/typeDefs";
 
 type WorkspacesAction = ActionType<
-  typeof workspacesActions | typeof flushAllEntities
+  typeof workspacesActions | typeof allEntitiesFlushed
 >;
 
 export interface WorkspacesState {
@@ -66,14 +66,14 @@ export const workspacesReducer = createReducer<
     }),
   )
   .handleAction(
-    workspacesActions.updateActiveWorkspaceId,
+    workspacesActions.activeWorkspaceIdUpdated,
     (state, { payload }) => ({
       ...state,
       activeWorkspaceId: payload,
     }),
   )
   .handleAction(
-    workspacesActions.updateWorkspaceLinking,
+    workspacesActions.workspaceLinkingUpdated,
     (state, { payload }) => {
       const { sourceId, targetId } = payload;
 
@@ -109,14 +109,14 @@ export const workspacesReducer = createReducer<
     },
   )
   .handleAction(
-    workspacesActions.resetContentsForMapping,
+    workspacesActions.contentsForMappingReset,
     (state, { payload }) => ({
       ...state,
       [payload]: initialState[payload],
     }),
   )
   .handleAction(
-    workspacesActions.appendUserIdsToWorkspace,
+    workspacesActions.userIdsAppendedToWorkspace,
     (state, { payload }) => {
       const { mapping, workspaceId, userIds } = payload;
       const userIdLens = R.lensPath([mapping, workspaceId, "userIds"]);
@@ -128,7 +128,7 @@ export const workspacesReducer = createReducer<
     },
   )
   .handleAction(
-    workspacesActions.flipIsWorkspaceIncluded,
+    workspacesActions.isWorkspaceIncludedToggled,
     (state, { payload }) => {
       const { id, linkedId } = payload;
       const isIncluded = !state.source[id].isIncluded;
@@ -156,4 +156,4 @@ export const workspacesReducer = createReducer<
       return { ...state, source, target };
     },
   )
-  .handleAction(flushAllEntities, () => ({ ...initialState }));
+  .handleAction(allEntitiesFlushed, () => ({ ...initialState }));

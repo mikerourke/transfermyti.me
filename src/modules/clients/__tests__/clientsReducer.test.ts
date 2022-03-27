@@ -17,13 +17,13 @@ const TEST_PAYLOAD = {
 
 describe("within clientsReducer", () => {
   test("returns input state if an invalid action type is passed to the reducer", () => {
-    const result = clientsReducer(initialState, invalidAction as any);
+    const result = clientsReducer(initialState, invalidAction as AnyValid);
 
     expect(result).toEqual(initialState);
   });
 
   test("returns input state if no state is passed to the reducer", () => {
-    const result = clientsReducer(undefined as any, invalidAction as any);
+    const result = clientsReducer(undefined as AnyValid, invalidAction as AnyValid);
 
     expect(result).toEqual(initialState);
   });
@@ -91,7 +91,7 @@ describe("within clientsReducer", () => {
     ],
   );
 
-  test(`the flipIsClientIncluded action flips the "isIncluded" value of the client with id = payload`, () => {
+  test(`the isClientIncludedToggled action flips the "isIncluded" value of the client with id = payload`, () => {
     const updatedState = R.set(
       R.lensProp("source"),
       {
@@ -104,13 +104,13 @@ describe("within clientsReducer", () => {
     );
     const result = clientsReducer(
       updatedState,
-      clientsActions.flipIsClientIncluded(TEST_CLIENT_ID),
+      clientsActions.isClientIncludedToggled(TEST_CLIENT_ID),
     );
 
     expect(result.source[TEST_CLIENT_ID].isIncluded).toBe(true);
   });
 
-  test(`the updateAreAllClientsIncluded action sets the "isIncluded" value of all records to payload`, () => {
+  test(`the areAllClientsIncludedUpdated action sets the "isIncluded" value of all records to payload`, () => {
     const updatedState = {
       ...TEST_CLIENTS_STATE,
       source: {
@@ -135,7 +135,7 @@ describe("within clientsReducer", () => {
       },
       target: {},
     };
-    const result = clientsReducer(updatedState, clientsActions.updateAreAllClientsIncluded(true));
+    const result = clientsReducer(updatedState, clientsActions.areAllClientsIncludedUpdated(true));
 
     expect(result.source["3001"].isIncluded).toEqual(true);
     expect(result.source["3002"].isIncluded).toEqual(true);

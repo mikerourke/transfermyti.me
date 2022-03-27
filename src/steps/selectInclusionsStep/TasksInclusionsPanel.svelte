@@ -3,8 +3,8 @@
 
   import { toolActionSelector } from "~/modules/allEntities/allEntitiesSelectors";
   import {
-    updateAreAllTasksIncluded,
-    flipIsTaskIncluded,
+    areAllTasksIncludedUpdated,
+    isTaskIncludedToggled,
   } from "~/modules/tasks/tasksActions";
   import {
     tasksForInclusionsTableSelector,
@@ -43,11 +43,11 @@
       : R.omit(["isActiveInTarget"], $totalCountsByType);
 
   function handleToggleAll(event: CustomEvent<boolean>): void {
-    dispatchAction(updateAreAllTasksIncluded(event.detail));
+    dispatchAction(areAllTasksIncludedUpdated(event.detail));
   }
 
   function handleToggleOne(event: CustomEvent<string>): void {
-    dispatchAction(flipIsTaskIncluded(event.detail));
+    dispatchAction(isTaskIncludedToggled(event.detail));
   }
 </script>
 

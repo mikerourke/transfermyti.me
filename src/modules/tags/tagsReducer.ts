@@ -2,11 +2,11 @@ import * as R from "ramda";
 import { type ActionType, createReducer } from "typesafe-actions";
 
 import { updateAreAllRecordsIncluded } from "~/entityOperations/updateAreAllRecordsIncluded";
-import { flushAllEntities } from "~/modules/allEntities/allEntitiesActions";
+import { allEntitiesFlushed } from "~/modules/allEntities/allEntitiesActions";
 import * as tagsActions from "~/modules/tags/tagsActions";
 import { Mapping, type Tag } from "~/typeDefs";
 
-type TagsAction = ActionType<typeof tagsActions | typeof flushAllEntities>;
+type TagsAction = ActionType<typeof tagsActions | typeof allEntitiesFlushed>;
 
 export interface TagsState {
   readonly source: Dictionary<Tag>;
@@ -58,13 +58,16 @@ export const tagsReducer = createReducer<TagsState, TagsAction>(initialState)
       isFetching: false,
     }),
   )
-  .handleAction(tagsActions.flipIsTagIncluded, (state, { payload }) =>
+  .handleAction(tagsActions.isTagIncludedToggled, (state, { payload }) =>
     R.over(R.lensPath([Mapping.Source, payload, "isIncluded"]), R.not, state),
   )
-  .handleAction(tagsActions.updateAreAllTagsIncluded, (state, { payload }) => ({
-    ...state,
-    source: updateAreAllRecordsIncluded(state.source, payload),
-  }))
-  .handleAction([tagsActions.deleteTags.success, flushAllEntities], () => ({
+  .handleAction(
+    tagsActions.areAllTagsIncludedUpdated,
+    (state, { payload }) => ({
+      ...state,
+      source: updateAreAllRecordsIncluded(state.source, payload),
+    }),
+  )
+  .handleAction([tagsActions.deleteTags.success, allEntitiesFlushed], () => ({
     ...initialState,
   }));

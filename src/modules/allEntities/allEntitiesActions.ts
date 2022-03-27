@@ -8,55 +8,55 @@ import type {
 } from "~/typeDefs";
 
 export const createAllEntities = createAsyncAction(
-  "@allEntities/CREATE_ALL_ENTITIES_REQUEST",
-  "@allEntities/CREATE_ALL_ENTITIES_SUCCESS",
-  "@allEntities/CREATE_ALL_ENTITIES_FAILURE",
-)<void, void, void>();
+  "@allEntities/createAllEntitiesRequest",
+  "@allEntities/createAllEntitiesSuccess",
+  "@allEntities/createAllEntitiesFailure",
+)<undefined, undefined, undefined>();
 
 export const deleteAllEntities = createAsyncAction(
-  "@allEntities/DELETE_ALL_ENTITIES_REQUEST",
-  "@allEntities/DELETE_ALL_ENTITIES_SUCCESS",
-  "@allEntities/DELETE_ALL_ENTITIES_FAILURE",
-)<void, void, void>();
+  "@allEntities/deleteAllEntitiesRequest",
+  "@allEntities/deleteAllEntitiesSuccess",
+  "@allEntities/deleteAllEntitiesFailure",
+)<undefined, undefined, undefined>();
 
 export const fetchAllEntities = createAsyncAction(
-  "@allEntities/FETCH_ALL_ENTITIES_REQUEST",
-  "@allEntities/FETCH_ALL_ENTITIES_SUCCESS",
-  "@allEntities/FETCH_ALL_ENTITIES_FAILURE",
-)<void, void, void>();
+  "@allEntities/fetchAllEntitiesRequest",
+  "@allEntities/fetchAllEntitiesSuccess",
+  "@allEntities/fetchAllEntitiesFailure",
+)<undefined, undefined, undefined>();
 
-export const updateToolAction = createAction(
-  "@allEntities/UPDATE_TOOL_ACTION",
+export const toolActionUpdated = createAction(
+  "@allEntities/toolActionUpdated",
 )<ToolAction>();
 
-export const updateToolNameByMapping = createAction(
-  "@allEntities/UPDATE_TOOL_NAME_BY_MAPPING",
+export const toolNameByMappingUpdated = createAction(
+  "@allEntities/toolNameByMappingUpdated",
 )<ToolNameByMapping>();
 
-export const flushAllEntities = createAction(
-  "@allEntities/FLUSH_ALL_ENTITIES",
-)<void>();
+export const allEntitiesFlushed = createAction(
+  "@allEntities/allEntitiesFlushed",
+)<undefined>();
 
-export const flipIfExistsInTargetShown = createAction(
-  "@allEntities/FLIP_IF_EXISTS_IN_TARGET_SHOWN",
-)<void>();
+export const isExistsInTargetShownToggled = createAction(
+  "@allEntities/isExistsInTargetShownToggled",
+)<undefined>();
 
-export const updateFetchAllFetchStatus = createAction(
-  "@allEntities/UPDATE_FETCH_ALL_FETCH_STATUS",
+export const fetchAllFetchStatusUpdated = createAction(
+  "@allEntities/fetchAllFetchStatusUpdated",
 )<FetchStatus>();
 
-export const updatePushAllChangesFetchStatus = createAction(
-  "@allEntities/UPDATE_PUSH_ALL_CHANGES_FETCH_STATUS",
+export const pushAllChangesFetchStatusUpdated = createAction(
+  "@allEntities/pushAllChangesFetchStatusUpdated",
 )<FetchStatus>();
 
-export const updateEntityGroupInProcess = createAction(
-  "@allEntities/UPDATE_ENTITY_GROUP_IN_PROCESS",
+export const entityGroupInProcessUpdated = createAction(
+  "@allEntities/entityGroupInProcessUpdated",
 )<EntityGroup | null>();
 
-export const resetTransferCountsByEntityGroup = createAction(
-  "@allEntities/RESET_TRANSFER_COUNTS_BY_ENTITY_GROUP",
-)<void>();
+export const transferCountsByEntityGroupReset = createAction(
+  "@allEntities/transferCountsByEntityGroupReset",
+)<undefined>();
 
-export const incrementEntityGroupTransferCompletedCount = createAction(
-  "@allEntities/INCREMENT_ENTITY_GROUP_TRANSFER_COMPLETED_COUNT",
+export const entityGroupTransferCompletedCountIncremented = createAction(
+  "@allEntities/entityGroupTransferCompletedCountIncremented",
 )<EntityGroup>();

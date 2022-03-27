@@ -17,13 +17,13 @@ const TEST_PAYLOAD = {
 
 describe("within usersReducer", () => {
   test("returns input state if an invalid action type is passed to the reducer", () => {
-    const result = usersReducer(initialState, invalidAction as any);
+    const result = usersReducer(initialState, invalidAction as AnyValid);
 
     expect(result).toEqual(initialState);
   });
 
   test("returns input state if no state is passed to the reducer", () => {
-    const result = usersReducer(undefined as any, invalidAction as any);
+    const result = usersReducer(undefined as AnyValid, invalidAction as AnyValid);
 
     expect(result).toEqual(initialState);
   });
@@ -91,7 +91,7 @@ describe("within usersReducer", () => {
     ],
   );
 
-  test(`the flipIsUserIncluded action flips the "isIncluded" value of the user with id = payload`, () => {
+  test(`the isUserIncludedToggled action flips the "isIncluded" value of the user with id = payload`, () => {
     const updatedState = R.set(
       R.lensProp("source"),
       {
@@ -102,7 +102,7 @@ describe("within usersReducer", () => {
       },
       TEST_USERS_STATE,
     );
-    const result = usersReducer(updatedState, usersActions.flipIsUserIncluded(TEST_USER_ID));
+    const result = usersReducer(updatedState, usersActions.isUserIncludedToggled(TEST_USER_ID));
 
     expect(result.source[TEST_USER_ID].isIncluded).toBe(true);
   });

@@ -17,13 +17,13 @@ const TEST_PAYLOAD = {
 
 describe("within tagsReducer", () => {
   test("returns input state if an invalid action type is passed to the reducer", () => {
-    const result = tagsReducer(initialState, invalidAction as any);
+    const result = tagsReducer(initialState, invalidAction as AnyValid);
 
     expect(result).toEqual(initialState);
   });
 
   test("returns input state if no state is passed to the reducer", () => {
-    const result = tagsReducer(undefined as any, invalidAction as any);
+    const result = tagsReducer(undefined as AnyValid, invalidAction as AnyValid);
 
     expect(result).toEqual(initialState);
   });
@@ -91,7 +91,7 @@ describe("within tagsReducer", () => {
     ],
   );
 
-  test(`the flipIsTagIncluded action flips the "isIncluded" value of the tag with id = payload`, () => {
+  test(`the isTagIncludedToggled action flips the "isIncluded" value of the tag with id = payload`, () => {
     const updatedState = R.set(
       R.lensProp("source"),
       {
@@ -102,12 +102,12 @@ describe("within tagsReducer", () => {
       },
       TEST_TAGS_STATE,
     );
-    const result = tagsReducer(updatedState, tagsActions.flipIsTagIncluded(TEST_TAG_ID));
+    const result = tagsReducer(updatedState, tagsActions.isTagIncludedToggled(TEST_TAG_ID));
 
     expect(result.source[TEST_TAG_ID].isIncluded).toBe(true);
   });
 
-  test(`the updateAreAllTagsIncluded action sets the "isIncluded" value of all records to payload`, () => {
+  test(`the areAllTagsIncludedUpdated action sets the "isIncluded" value of all records to payload`, () => {
     const updatedState = {
       ...TEST_TAGS_STATE,
       source: {
@@ -132,7 +132,7 @@ describe("within tagsReducer", () => {
       },
       target: {},
     };
-    const result = tagsReducer(updatedState, tagsActions.updateAreAllTagsIncluded(true));
+    const result = tagsReducer(updatedState, tagsActions.areAllTagsIncludedUpdated(true));
 
     expect(result.source["4001"].isIncluded).toEqual(true);
     expect(result.source["4002"].isIncluded).toEqual(true);

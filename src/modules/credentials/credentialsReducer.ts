@@ -62,10 +62,10 @@ export const credentialsReducer = createReducer<
       validationErrorsByMapping: { ...DEFAULT_VALIDATION_ERRORS },
     }),
   )
-  .handleAction(credentialsActions.flushCredentials, () => ({
+  .handleAction(credentialsActions.credentialsFlushed, () => ({
     ...initialState,
   }))
-  .handleAction(credentialsActions.updateCredentials, (state, { payload }) => {
+  .handleAction(credentialsActions.credentialsUpdated, (state, { payload }) => {
     const { mapping, ...credentials } = payload;
     return {
       ...state,
@@ -93,7 +93,7 @@ export const credentialsReducer = createReducer<
     };
   })
   .handleAction(
-    credentialsActions.updateValidationFetchStatus,
+    credentialsActions.validationFetchStatusUpdated,
     (state, { payload }) => {
       let newValidationErrors = { ...state.validationErrorsByMapping };
       if (payload === FetchStatus.Pending) {

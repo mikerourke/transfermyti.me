@@ -3,27 +3,27 @@ import { createAction, createAsyncAction } from "typesafe-actions";
 import type { Client, Mapping } from "~/typeDefs";
 
 export const createClients = createAsyncAction(
-  "@clients/CREATE_CLIENTS_REQUEST",
-  "@clients/CREATE_CLIENTS_SUCCESS",
-  "@clients/CREATE_CLIENTS_FAILURE",
-)<void, Record<Mapping, Dictionary<Client>>, void>();
+  "@clients/createClientsRequest",
+  "@clients/createClientsSuccess",
+  "@clients/createClientsFailure",
+)<undefined, Record<Mapping, Dictionary<Client>>, undefined>();
 
 export const deleteClients = createAsyncAction(
-  "@clients/DELETE_CLIENTS_REQUEST",
-  "@clients/DELETE_CLIENTS_SUCCESS",
-  "@clients/DELETE_CLIENTS_FAILURE",
-)<void, void, void>();
+  "@clients/deleteClientsRequest",
+  "@clients/deleteClientsSuccess",
+  "@clients/deleteClientsFailure",
+)<undefined, undefined, undefined>();
 
 export const fetchClients = createAsyncAction(
-  "@clients/FETCH_CLIENTS_REQUEST",
-  "@clients/FETCH_CLIENTS_SUCCESS",
-  "@clients/FETCH_CLIENTS_FAILURE",
-)<void, Record<Mapping, Dictionary<Client>>, void>();
+  "@clients/fetchClientsRequest",
+  "@clients/fetchClientsSuccess",
+  "@clients/fetchClientsFailure",
+)<undefined, Record<Mapping, Dictionary<Client>>, undefined>();
 
-export const flipIsClientIncluded = createAction(
-  "@clients/FLIP_IS_INCLUDED",
+export const isClientIncludedToggled = createAction(
+  "@clients/isClientIncludedToggled",
 )<string>();
 
-export const updateAreAllClientsIncluded = createAction(
-  "@clients/UPDATE_ARE_ALL_INCLUDED",
+export const areAllClientsIncludedUpdated = createAction(
+  "@clients/areAllClientsIncludedUpdated",
 )<boolean>();

@@ -17,13 +17,13 @@ const TEST_PAYLOAD = {
 
 describe("within tasksReducer", () => {
   test("returns input state if an invalid action type is passed to the reducer", () => {
-    const result = tasksReducer(initialState, invalidAction as any);
+    const result = tasksReducer(initialState, invalidAction as AnyValid);
 
     expect(result).toEqual(initialState);
   });
 
   test("returns input state if no state is passed to the reducer", () => {
-    const result = tasksReducer(undefined as any, invalidAction as any);
+    const result = tasksReducer(undefined as AnyValid, invalidAction as AnyValid);
 
     expect(result).toEqual(initialState);
   });
@@ -91,7 +91,7 @@ describe("within tasksReducer", () => {
     ],
   );
 
-  test(`the flipIsTaskIncluded action flips the "isIncluded" value of the task with id = payload`, () => {
+  test(`the isTaskIncludedToggled action flips the "isIncluded" value of the task with id = payload`, () => {
     const updatedState = R.set(
       R.lensProp("source"),
       {
@@ -102,12 +102,12 @@ describe("within tasksReducer", () => {
       },
       TEST_TASKS_STATE,
     );
-    const result = tasksReducer(updatedState, tasksActions.flipIsTaskIncluded(TEST_TASK_ID));
+    const result = tasksReducer(updatedState, tasksActions.isTaskIncludedToggled(TEST_TASK_ID));
 
     expect(result.source[TEST_TASK_ID].isIncluded).toBe(true);
   });
 
-  test(`the updateIsTaskIncluded action sets the "isIncluded" value based on payload`, () => {
+  test(`the isTaskIncludedUpdated action sets the "isIncluded" value based on payload`, () => {
     const updatedState = R.set(
       R.lensProp("source"),
       {
@@ -120,7 +120,7 @@ describe("within tasksReducer", () => {
     );
     const result = tasksReducer(
       updatedState,
-      tasksActions.updateIsTaskIncluded({
+      tasksActions.isTaskIncludedUpdated({
         id: TEST_TASK_ID,
         isIncluded: false,
       }),
@@ -129,7 +129,7 @@ describe("within tasksReducer", () => {
     expect(result.source[TEST_TASK_ID].isIncluded).toBe(false);
   });
 
-  test(`the updateAreAllTasksIncluded action sets the "isIncluded" value of all records to payload`, () => {
+  test(`the areAllTasksIncludedUpdated action sets the "isIncluded" value of all records to payload`, () => {
     const updatedState = {
       ...TEST_TASKS_STATE,
       source: {
@@ -162,7 +162,7 @@ describe("within tasksReducer", () => {
       },
       target: {},
     };
-    const result = tasksReducer(updatedState, tasksActions.updateAreAllTasksIncluded(true));
+    const result = tasksReducer(updatedState, tasksActions.areAllTasksIncludedUpdated(true));
 
     expect(result.source["7001"].isIncluded).toEqual(true);
     expect(result.source["7001"].isIncluded).toEqual(true);

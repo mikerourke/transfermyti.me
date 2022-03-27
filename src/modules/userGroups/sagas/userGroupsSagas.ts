@@ -7,7 +7,7 @@ import {
   toolActionSelector,
   toolNameByMappingSelector,
 } from "~/modules/allEntities/allEntitiesSelectors";
-import { showErrorNotification } from "~/modules/app/appActions";
+import { errorNotificationShown } from "~/modules/app/appActions";
 import * as clockifySagas from "~/modules/userGroups/sagas/clockifyUserGroupsSagas";
 import * as togglSagas from "~/modules/userGroups/sagas/togglUserGroupsSagas";
 import * as userGroupsActions from "~/modules/userGroups/userGroupsActions";
@@ -43,7 +43,7 @@ export function* createUserGroupsSaga(): SagaIterator {
       userGroupsActions.createUserGroups.success(userGroupsByIdByMapping),
     );
   } catch (err: AnyValid) {
-    yield put(showErrorNotification(err));
+    yield put(errorNotificationShown(err));
     yield put(userGroupsActions.createUserGroups.failure());
   }
 }
@@ -66,7 +66,7 @@ export function* deleteUserGroupsSaga(): SagaIterator {
 
     yield put(userGroupsActions.deleteUserGroups.success());
   } catch (err: AnyValid) {
-    yield put(showErrorNotification(err));
+    yield put(errorNotificationShown(err));
     yield put(userGroupsActions.deleteUserGroups.failure());
   }
 }
@@ -107,7 +107,7 @@ export function* fetchUserGroupsSaga(): SagaIterator {
       userGroupsActions.fetchUserGroups.success(userGroupsByIdByMapping),
     );
   } catch (err: AnyValid) {
-    yield put(showErrorNotification(err));
+    yield put(errorNotificationShown(err));
     yield put(userGroupsActions.fetchUserGroups.failure());
   }
 }

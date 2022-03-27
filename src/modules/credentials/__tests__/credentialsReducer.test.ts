@@ -21,13 +21,13 @@ const TEST_CREDENTIALS_STATE = { ...state.credentials, ...TEST_CREDENTIALS };
 
 describe("within credentialsReducer", () => {
   test("returns input state if an invalid action type is passed to the reducer", () => {
-    const result = credentialsReducer(initialState, invalidAction as any);
+    const result = credentialsReducer(initialState, invalidAction as AnyValid);
 
     expect(result).toEqual(initialState);
   });
 
   test("returns input state if no state is passed to the reducer", () => {
-    const result = credentialsReducer(undefined as any, invalidAction as any);
+    const result = credentialsReducer(undefined as AnyValid, invalidAction as AnyValid);
 
     expect(result).toEqual(initialState);
   });
@@ -74,16 +74,16 @@ describe("within credentialsReducer", () => {
     });
   });
 
-  test("the flushCredentials action resets state to initial state when dispatched", () => {
+  test("the credentialsFlushed action resets state to initial state when dispatched", () => {
     const result = credentialsReducer(
       TEST_CREDENTIALS_STATE,
-      credentialsActions.flushCredentials(),
+      credentialsActions.credentialsFlushed(),
     );
 
     expect(result).toEqual({ ...initialState });
   });
 
-  test("the updateCredentials action updates the mapping from payload with credentials from payload", () => {
+  test("the credentialsUpdated action updates the mapping from payload with credentials from payload", () => {
     const newCredentials = {
       apiKey: "NEW",
       email: "NEW",
@@ -92,7 +92,7 @@ describe("within credentialsReducer", () => {
 
     const result = credentialsReducer(
       TEST_CREDENTIALS_STATE,
-      credentialsActions.updateCredentials({
+      credentialsActions.credentialsUpdated({
         mapping: Mapping.Source,
         ...newCredentials,
       }),
@@ -104,11 +104,11 @@ describe("within credentialsReducer", () => {
     });
   });
 
-  describe("the updateValidationFetchStatus action", () => {
+  describe("the validationFetchStatusUpdated action", () => {
     test("updates state.validationFetchStatus only if payload is not Pending", () => {
       const result = credentialsReducer(
         TEST_CREDENTIALS_STATE,
-        credentialsActions.updateValidationFetchStatus(FetchStatus.InProcess),
+        credentialsActions.validationFetchStatusUpdated(FetchStatus.InProcess),
       );
 
       expect(result).toEqual({
@@ -120,7 +120,7 @@ describe("within credentialsReducer", () => {
     test("updates state.validationFetchStatus and resets state.validationErrorsByMapping if payload = Pending", () => {
       const result = credentialsReducer(
         TEST_CREDENTIALS_STATE,
-        credentialsActions.updateValidationFetchStatus(FetchStatus.Pending),
+        credentialsActions.validationFetchStatusUpdated(FetchStatus.Pending),
       );
 
       expect(result).toEqual({

@@ -3,8 +3,8 @@
 
   import { toolActionSelector } from "~/modules/allEntities/allEntitiesSelectors";
   import {
-    updateAreAllProjectsIncluded,
-    flipIsProjectIncluded,
+    areAllProjectsIncludedUpdated,
+    isProjectIncludedToggled,
   } from "~/modules/projects/projectsActions";
   import {
     projectsForInclusionsTableSelector,
@@ -42,11 +42,11 @@
       : R.omit(["isActiveInTarget"], $totalCountsByType);
 
   function handleToggleAll(event: CustomEvent<boolean>): void {
-    dispatchAction(updateAreAllProjectsIncluded(event.detail));
+    dispatchAction(areAllProjectsIncludedUpdated(event.detail));
   }
 
   function handleToggleOne(event: CustomEvent<string>): void {
-    dispatchAction(flipIsProjectIncluded(event.detail));
+    dispatchAction(isProjectIncludedToggled(event.detail));
   }
 </script>
 

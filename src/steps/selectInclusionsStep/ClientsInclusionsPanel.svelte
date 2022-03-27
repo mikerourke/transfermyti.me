@@ -1,7 +1,7 @@
 <script lang="ts">
   import {
-    updateAreAllClientsIncluded,
-    flipIsClientIncluded,
+    areAllClientsIncludedUpdated,
+    isClientIncludedToggled,
   } from "~/modules/clients/clientsActions";
   import {
     clientsForInclusionsTableSelector,
@@ -17,11 +17,11 @@
   const totalCountsByType = selectorToStore(clientsTotalCountsByTypeSelector);
 
   function handleToggleAll(event: CustomEvent<boolean>): void {
-    dispatchAction(updateAreAllClientsIncluded(event.detail));
+    dispatchAction(areAllClientsIncludedUpdated(event.detail));
   }
 
   function handleToggleOne(event: CustomEvent<string>): void {
-    dispatchAction(flipIsClientIncluded(event.detail));
+    dispatchAction(isClientIncludedToggled(event.detail));
   }
 </script>
 

@@ -1,12 +1,12 @@
 import * as R from "ramda";
 import { type ActionType, createReducer } from "typesafe-actions";
 
-import { flushAllEntities } from "~/modules/allEntities/allEntitiesActions";
+import { allEntitiesFlushed } from "~/modules/allEntities/allEntitiesActions";
 import * as timeEntriesActions from "~/modules/timeEntries/timeEntriesActions";
 import { Mapping, type TimeEntry } from "~/typeDefs";
 
 type TimeEntriesAction = ActionType<
-  typeof timeEntriesActions | typeof flushAllEntities
+  typeof timeEntriesActions | typeof allEntitiesFlushed
 >;
 
 export interface TimeEntriesState {
@@ -68,11 +68,11 @@ export const timeEntriesReducer = createReducer<
     }),
   )
   .handleAction(
-    timeEntriesActions.flipIsTimeEntryIncluded,
+    timeEntriesActions.isTimeEntryIncludedToggled,
     (state, { payload }) =>
       R.over(R.lensPath([Mapping.Source, payload, "isIncluded"]), R.not, state),
   )
-  .handleAction(timeEntriesActions.flipIsDuplicateCheckEnabled, (state) => {
+  .handleAction(timeEntriesActions.isDuplicateCheckEnabledToggled, (state) => {
     const newIsDuplicateCheckEnabled = !state.isDuplicateCheckEnabled;
     const newSource = Object.entries({ ...state.source }).reduce(
       (acc, [id, timeEntry]) => ({
@@ -94,7 +94,7 @@ export const timeEntriesReducer = createReducer<
     };
   })
   .handleAction(
-    timeEntriesActions.updateAreAllTimeEntriesIncluded,
+    timeEntriesActions.areAllTimeEntriesIncludedUpdated,
     (state, { payload }) => ({
       ...state,
       source: Object.entries(state.source).reduce(
@@ -110,6 +110,6 @@ export const timeEntriesReducer = createReducer<
     }),
   )
   .handleAction(
-    [timeEntriesActions.deleteTimeEntries.success, flushAllEntities],
+    [timeEntriesActions.deleteTimeEntries.success, allEntitiesFlushed],
     () => ({ ...initialState }),
   );

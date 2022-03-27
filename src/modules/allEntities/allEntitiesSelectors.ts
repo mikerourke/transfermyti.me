@@ -1,4 +1,4 @@
-import * as R from "ramda";
+import { invertObj } from "ramda";
 import { createSelector } from "reselect";
 
 import {
@@ -15,22 +15,30 @@ import {
 } from "~/typeDefs";
 import { capitalize, getEntityGroupDisplay } from "~/utilities/textTransforms";
 
-export const areExistsInTargetShownSelector = (state: ReduxState): boolean =>
-  state.allEntities.areExistsInTargetShown;
+export const areExistsInTargetShownSelector = createSelector(
+  (state: ReduxState) => state.allEntities.areExistsInTargetShown,
+  (areExistsInTargetShown): boolean => areExistsInTargetShown,
+);
 
-export const fetchAllFetchStatusSelector = (state: ReduxState): FetchStatus =>
-  state.allEntities.fetchAllFetchStatus;
+export const fetchAllFetchStatusSelector = createSelector(
+  (state: ReduxState) => state.allEntities.fetchAllFetchStatus,
+  (fetchAllFetchStatus): FetchStatus => fetchAllFetchStatus,
+);
 
-export const pushAllChangesFetchStatusSelector = (
-  state: ReduxState,
-): FetchStatus => state.allEntities.pushAllChangesFetchStatus;
+export const pushAllChangesFetchStatusSelector = createSelector(
+  (state: ReduxState) => state.allEntities.pushAllChangesFetchStatus,
+  (pushAllChangesFetchStatus): FetchStatus => pushAllChangesFetchStatus,
+);
 
-export const toolActionSelector = (state: ReduxState): ToolAction =>
-  state.allEntities.toolAction;
+export const toolActionSelector = createSelector(
+  (state: ReduxState) => state.allEntities.toolAction,
+  (toolAction): ToolAction => toolAction,
+);
 
-export const toolNameByMappingSelector = (
-  state: ReduxState,
-): ToolNameByMapping => state.allEntities.toolNameByMapping;
+export const toolNameByMappingSelector = createSelector(
+  (state: ReduxState) => state.allEntities.toolNameByMapping,
+  (toolNameByMapping): ToolNameByMapping => toolNameByMapping,
+);
 
 export const entityGroupInProcessDisplaySelector = createSelector(
   (state: ReduxState) => state.allEntities.entityGroupInProcess,
@@ -92,7 +100,7 @@ export const toolForTargetMappingSelector = createSelector(
 export const mappingByToolNameSelector = createSelector(
   toolNameByMappingSelector,
   (toolNameByMapping): Record<ToolName, Mapping> =>
-    R.invertObj(
+    invertObj(
       toolNameByMapping as unknown as { [mapping: string]: string },
     ) as Record<ToolName, Mapping>,
 );

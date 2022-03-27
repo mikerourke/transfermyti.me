@@ -7,7 +7,7 @@ import {
   toolActionSelector,
   toolNameByMappingSelector,
 } from "~/modules/allEntities/allEntitiesSelectors";
-import { showErrorNotification } from "~/modules/app/appActions";
+import { errorNotificationShown } from "~/modules/app/appActions";
 import * as clockifySagas from "~/modules/tags/sagas/clockifyTagsSagas";
 import * as togglSagas from "~/modules/tags/sagas/togglTagsSagas";
 import * as tagsActions from "~/modules/tags/tagsActions";
@@ -41,7 +41,7 @@ export function* createTagsSaga(): SagaIterator {
 
     yield put(tagsActions.createTags.success(tagsByIdByMapping));
   } catch (err: AnyValid) {
-    yield put(showErrorNotification(err));
+    yield put(errorNotificationShown(err));
     yield put(tagsActions.createTags.failure());
   }
 }
@@ -64,7 +64,7 @@ export function* deleteTagsSaga(): SagaIterator {
 
     yield put(tagsActions.deleteTags.success());
   } catch (err: AnyValid) {
-    yield put(showErrorNotification(err));
+    yield put(errorNotificationShown(err));
     yield put(tagsActions.deleteTags.failure());
   }
 }
@@ -103,7 +103,7 @@ export function* fetchTagsSaga(): SagaIterator {
 
     yield put(tagsActions.fetchTags.success(tagsByIdByMapping));
   } catch (err: AnyValid) {
-    yield put(showErrorNotification(err));
+    yield put(errorNotificationShown(err));
     yield put(tagsActions.fetchTags.failure());
   }
 }

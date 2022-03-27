@@ -2,7 +2,7 @@
   import { css } from "goober";
   import { onMount } from "svelte";
 
-  import { dismissNotification } from "~/modules/app/appActions";
+  import { notificationDismissed } from "~/modules/app/appActions";
   import { dispatchAction } from "~/redux/reduxToStore";
   import type { Notification } from "~/typeDefs";
 
@@ -15,7 +15,7 @@
   });
 
   function dismiss(): void {
-    dispatchAction(dismissNotification(notification.id));
+    dispatchAction(notificationDismissed(notification.id));
   }
 
   const buttonStyleClass = css`

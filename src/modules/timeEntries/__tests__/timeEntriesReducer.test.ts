@@ -17,13 +17,13 @@ const TEST_PAYLOAD = {
 
 describe("within timeEntriesReducer", () => {
   test("returns input state if an invalid action type is passed to the reducer", () => {
-    const result = timeEntriesReducer(initialState, invalidAction as any);
+    const result = timeEntriesReducer(initialState, invalidAction as AnyValid);
 
     expect(result).toEqual(initialState);
   });
 
   test("returns input state if no state is passed to the reducer", () => {
-    const result = timeEntriesReducer(undefined as any, invalidAction as any);
+    const result = timeEntriesReducer(undefined as AnyValid, invalidAction as AnyValid);
 
     expect(result).toEqual(initialState);
   });
@@ -91,13 +91,13 @@ describe("within timeEntriesReducer", () => {
     ],
   );
 
-  test("the flipIsDuplicateCheckEnabled action flips the isDuplicateCheckEnabled value in state", () => {
-    const result = timeEntriesReducer(state, timeEntriesActions.flipIsDuplicateCheckEnabled());
+  test("the isDuplicateCheckEnabledToggled action flips the isDuplicateCheckEnabled value in state", () => {
+    const result = timeEntriesReducer(state, timeEntriesActions.isDuplicateCheckEnabledToggled());
 
     expect(result.isDuplicateCheckEnabled).toBe(true);
   });
 
-  test(`the flipIsTimeEntryIncluded action flips the "isIncluded" value of the timeEntry with id = payload`, () => {
+  test(`the isTimeEntryIncludedToggled action flips the "isIncluded" value of the timeEntry with id = payload`, () => {
     const updatedState = R.set(
       R.lensProp("source"),
       {
@@ -110,13 +110,13 @@ describe("within timeEntriesReducer", () => {
     );
     const result = timeEntriesReducer(
       updatedState,
-      timeEntriesActions.flipIsTimeEntryIncluded(TEST_TIME_ENTRY_ID),
+      timeEntriesActions.isTimeEntryIncludedToggled(TEST_TIME_ENTRY_ID),
     );
 
     expect(result.source[TEST_TIME_ENTRY_ID].isIncluded).toBe(true);
   });
 
-  test(`the updateAreAllTimeEntriesIncluded action sets the "isIncluded" value of all records to payload`, () => {
+  test(`the areAllTimeEntriesIncludedUpdated action sets the "isIncluded" value of all records to payload`, () => {
     const updatedState = {
       ...TEST_TIME_ENTRIES_STATE,
       source: {
@@ -167,7 +167,7 @@ describe("within timeEntriesReducer", () => {
     };
     const result = timeEntriesReducer(
       updatedState,
-      timeEntriesActions.updateAreAllTimeEntriesIncluded(true),
+      timeEntriesActions.areAllTimeEntriesIncludedUpdated(true),
     );
 
     expect(result.source["8001"].isIncluded).toEqual(true);

@@ -1,7 +1,7 @@
 import type { SagaIterator } from "redux-saga";
 import { put } from "redux-saga/effects";
 
-import { flushCredentials } from "~/modules/credentials/credentialsActions";
+import { credentialsFlushed } from "~/modules/credentials/credentialsActions";
 import { isDevelopmentMode } from "~/utilities/environment";
 
 /**
@@ -14,5 +14,5 @@ export function* resetCredentialsSaga(): SagaIterator {
     return;
   }
 
-  yield put(flushCredentials());
+  yield put(credentialsFlushed());
 }

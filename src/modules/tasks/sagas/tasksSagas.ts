@@ -8,8 +8,8 @@ import {
   toolActionSelector,
   toolNameByMappingSelector,
 } from "~/modules/allEntities/allEntitiesSelectors";
-import { showErrorNotification } from "~/modules/app/appActions";
-import { updateIsProjectIncluded } from "~/modules/projects/projectsActions";
+import { errorNotificationShown } from "~/modules/app/appActions";
+import { isProjectIncludedUpdated } from "~/modules/projects/projectsActions";
 import { sourceProjectsSelector } from "~/modules/projects/projectsSelectors";
 import * as clockifySagas from "~/modules/tasks/sagas/clockifyTasksSagas";
 import * as togglSagas from "~/modules/tasks/sagas/togglTasksSagas";
@@ -31,7 +31,10 @@ import {
 export function* taskMonitoringSaga(): SagaIterator {
   yield all([
     takeEvery(
-      [tasksActions.flipIsTaskIncluded, tasksActions.updateAreAllTasksIncluded],
+      [
+        tasksActions.isTaskIncludedToggled,
+        tasksActions.areAllTasksIncludedUpdated,
+      ],
       pushTaskInclusionChangesToProject,
     ),
   ]);
@@ -58,7 +61,7 @@ function* pushTaskInclusionChangesToProject(
   );
   const sourceTasksById = yield select(sourceTasksByIdSelector);
 
-  if (isActionOf(tasksActions.flipIsTaskIncluded, action)) {
+  if (isActionOf(tasksActions.isTaskIncludedToggled, action)) {
     const sourceProjectId = R.pathOr<string>(
       "",
       [action.payload, "projectId"],
@@ -66,7 +69,7 @@ function* pushTaskInclusionChangesToProject(
     );
 
     yield put(
-      updateIsProjectIncluded({
+      isProjectIncludedUpdated({
         id: sourceProjectId,
         isIncluded: includedSourceTasksCount > 0,
       }),
@@ -75,14 +78,14 @@ function* pushTaskInclusionChangesToProject(
     return;
   }
 
-  if (isActionOf(tasksActions.updateAreAllTasksIncluded, action)) {
+  if (isActionOf(tasksActions.areAllTasksIncludedUpdated, action)) {
     if (includedSourceTasksCount === 0) {
       return;
     }
 
     for (const sourceProject of sourceProjects) {
       yield put(
-        updateIsProjectIncluded({
+        isProjectIncludedUpdated({
           id: sourceProject.id,
           isIncluded: true,
         }),
@@ -115,7 +118,7 @@ export function* createTasksSaga(): SagaIterator {
 
     yield put(tasksActions.createTasks.success(tasksByIdByMapping));
   } catch (err: AnyValid) {
-    yield put(showErrorNotification(err));
+    yield put(errorNotificationShown(err));
     yield put(tasksActions.createTasks.failure());
   }
 }
@@ -138,7 +141,7 @@ export function* deleteTasksSaga(): SagaIterator {
 
     yield put(tasksActions.deleteTasks.success());
   } catch (err: AnyValid) {
-    yield put(showErrorNotification(err));
+    yield put(errorNotificationShown(err));
     yield put(tasksActions.deleteTasks.failure());
   }
 }
@@ -177,7 +180,7 @@ export function* fetchTasksSaga(): SagaIterator {
 
     yield put(tasksActions.fetchTasks.success(tasksByIdByMapping));
   } catch (err: AnyValid) {
-    yield put(showErrorNotification(err));
+    yield put(errorNotificationShown(err));
     yield put(tasksActions.fetchTasks.failure());
   }
 }
