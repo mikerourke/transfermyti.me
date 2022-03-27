@@ -1,5 +1,5 @@
-import * as R from "ramda";
-import { type ActionType, createReducer } from "typesafe-actions";
+import { lensPath, not, over } from "ramda";
+import { createReducer, type ActionType } from "typesafe-actions";
 
 import { allEntitiesFlushed } from "~/modules/allEntities/allEntitiesActions";
 import * as usersActions from "~/modules/users/usersActions";
@@ -56,7 +56,7 @@ export const usersReducer = createReducer<UsersState, UsersAction>(initialState)
     }),
   )
   .handleAction(usersActions.isUserIncludedToggled, (state, { payload }) =>
-    R.over(R.lensPath([Mapping.Source, payload, "isIncluded"]), R.not, state),
+    over(lensPath([Mapping.Source, payload, "isIncluded"]), not, state),
   )
   .handleAction([usersActions.deleteUsers.success, allEntitiesFlushed], () => ({
     ...initialState,

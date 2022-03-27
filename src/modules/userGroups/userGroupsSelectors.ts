@@ -1,4 +1,4 @@
-import * as R from "ramda";
+import { isNil } from "ramda";
 import { createSelector } from "reselect";
 
 import { activeWorkspaceIdSelector } from "~/modules/workspaces/workspacesSelectors";
@@ -20,7 +20,7 @@ export const sourceUserGroupsForTransferSelector = createSelector(
   sourceUserGroupsSelector,
   (sourceUserGroups): UserGroup[] =>
     sourceUserGroups.filter((sourceUserGroup) =>
-      R.isNil(sourceUserGroup.linkedId),
+      isNil(sourceUserGroup.linkedId),
     ),
 );
 

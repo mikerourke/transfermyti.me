@@ -1,7 +1,7 @@
-import * as R from "ramda";
+import { and, indexBy, pathOr, prop } from "ramda";
 import type { SagaIterator } from "redux-saga";
 import { all, call, put, select, takeEvery } from "redux-saga/effects";
-import { type ActionType, isActionOf } from "typesafe-actions";
+import { isActionOf, type ActionType } from "typesafe-actions";
 
 import { linkEntitiesByIdByMapping } from "~/entityOperations/linkEntitiesByIdByMapping";
 import {
@@ -41,7 +41,7 @@ function* pushProjectInclusionChangesToTasks(
   const sourceTasks = yield select(sourceTasksSelector);
 
   for (const sourceTask of sourceTasks) {
-    const isProjectIncluded = R.pathOr(
+    const isProjectIncluded = pathOr(
       false,
       [sourceTask.projectId, "isIncluded"],
       sourceProjectsById,
@@ -56,7 +56,7 @@ function* pushProjectInclusionChangesToTasks(
     // including the project, they're automatically including the tasks.
     // We _do_ want to include the tasks associated with a project if that
     // project is included in the deletion process:
-    if (R.and(isProjectIncluded, toolAction === ToolAction.Transfer)) {
+    if (and(isProjectIncluded, toolAction === ToolAction.Transfer)) {
       continue;
     }
 
@@ -160,7 +160,7 @@ export function* fetchProjectsSaga(): SagaIterator {
       );
     } else {
       projectsByIdByMapping = {
-        source: R.indexBy(R.prop("id"), sourceProjects),
+        source: indexBy(prop("id"), sourceProjects),
         target: {},
       };
     }

@@ -1,5 +1,5 @@
 import cases from "jest-in-case";
-import * as R from "ramda";
+import { lensProp, set } from "ramda";
 
 import * as clientsActions from "~/modules/clients/clientsActions";
 import { state, invalidAction } from "~/redux/__mocks__/mockStoreWithState";
@@ -92,8 +92,8 @@ describe("within clientsReducer", () => {
   );
 
   test(`the isClientIncludedToggled action flips the "isIncluded" value of the client with id = payload`, () => {
-    const updatedState = R.set(
-      R.lensProp("source"),
+    const updatedState = set(
+      lensProp("source"),
       {
         [TEST_CLIENT_ID]: {
           ...TEST_CLIENTS_STATE.source[TEST_CLIENT_ID],

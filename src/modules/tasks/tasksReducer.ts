@@ -1,5 +1,5 @@
-import * as R from "ramda";
-import { type ActionType, createReducer } from "typesafe-actions";
+import { lensPath, not, over, set } from "ramda";
+import { createReducer, type ActionType } from "typesafe-actions";
 
 import { updateAreAllRecordsIncluded } from "~/entityOperations/updateAreAllRecordsIncluded";
 import { allEntitiesFlushed } from "~/modules/allEntities/allEntitiesActions";
@@ -59,11 +59,11 @@ export const tasksReducer = createReducer<TasksState, TasksAction>(initialState)
     }),
   )
   .handleAction(tasksActions.isTaskIncludedToggled, (state, { payload }) =>
-    R.over(R.lensPath([Mapping.Source, payload, "isIncluded"]), R.not, state),
+    over(lensPath([Mapping.Source, payload, "isIncluded"]), not, state),
   )
   .handleAction(tasksActions.isTaskIncludedUpdated, (state, { payload }) =>
-    R.set(
-      R.lensPath([Mapping.Source, payload.id, "isIncluded"]),
+    set(
+      lensPath([Mapping.Source, payload.id, "isIncluded"]),
       payload.isIncluded,
       state,
     ),

@@ -1,5 +1,5 @@
 <script lang="ts">
-  import * as R from "ramda";
+  import { omit } from "ramda";
 
   import { toolActionSelector } from "~/modules/allEntities/allEntitiesSelectors";
   import {
@@ -40,7 +40,7 @@
   $: totalCountsByTypeToUse =
     $toolAction === ToolAction.Transfer
       ? $totalCountsByType
-      : R.omit(["isActiveInTarget"], $totalCountsByType);
+      : omit(["isActiveInTarget"], $totalCountsByType);
 
   function handleToggleAll(event: CustomEvent<boolean>): void {
     dispatchAction(areAllTasksIncludedUpdated(event.detail));

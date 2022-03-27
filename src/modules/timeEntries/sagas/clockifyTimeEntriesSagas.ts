@@ -1,4 +1,4 @@
-import * as R from "ramda";
+import { isNil, pathOr, prop, propOr } from "ramda";
 import type { SagaIterator } from "redux-saga";
 import { call, select } from "redux-saga/effects";
 
@@ -93,7 +93,7 @@ function* createClockifyTimeEntry(
 
   try {
     if (sourceTimeEntry.projectId) {
-      targetProjectId = R.prop(sourceTimeEntry.projectId, projectIdToLinkedId);
+      targetProjectId = prop(sourceTimeEntry.projectId, projectIdToLinkedId);
     }
 
     targetTagIds = yield select(
@@ -101,7 +101,7 @@ function* createClockifyTimeEntry(
     );
 
     if (sourceTimeEntry.taskId) {
-      targetTaskId = R.prop(sourceTimeEntry.taskId, taskIdToLinkedId);
+      targetTaskId = prop(sourceTimeEntry.taskId, taskIdToLinkedId);
     }
   } catch {
     // Ignore any errors here. We set default values for target properties,
@@ -170,7 +170,7 @@ function transformFromResponse(
   timeEntry: ClockifyTimeEntryResponseModel,
 ): TimeEntry {
   const startTime = getTime(timeEntry, "start");
-  const clockifyTags = R.propOr<
+  const clockifyTags = propOr<
     ClockifyTagResponseModel[],
     ClockifyTimeEntryResponseModel,
     ClockifyTagResponseModel[]
@@ -203,6 +203,7 @@ function getTime(
   timeEntry: ClockifyTimeEntryResponseModel,
   field: "start" | "end",
 ): Date {
-  const value = R.pathOr(null, ["timeInterval", field], timeEntry);
-  return R.isNil(value) ? new Date() : new Date(value);
+  const value = pathOr(null, ["timeInterval", field], timeEntry);
+
+  return isNil(value) ? new Date() : new Date(value);
 }

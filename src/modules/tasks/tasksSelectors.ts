@@ -1,4 +1,4 @@
-import * as R from "ramda";
+import { isNil, propOr } from "ramda";
 import { createSelector } from "reselect";
 
 import { selectIdToLinkedId } from "~/entityOperations/selectIdToLinkedId";
@@ -36,7 +36,7 @@ export const includedSourceTasksCountSelector = createSelector(
 export const sourceTasksForTransferSelector = createSelector(
   includedSourceTasksSelector,
   (sourceTasks) =>
-    sourceTasks.filter((sourceTask) => R.isNil(sourceTask.linkedId)),
+    sourceTasks.filter((sourceTask) => isNil(sourceTask.linkedId)),
 );
 
 export const sourceTasksInActiveWorkspaceSelector = createSelector(
@@ -77,7 +77,7 @@ export const tasksForInclusionsTableSelector = createSelector(
         isActiveInTarget = targetTasksById[targetId].isActive;
       }
 
-      const entryCount = R.propOr<number, Record<string, number>, number>(
+      const entryCount = propOr<number, Record<string, number>, number>(
         0,
         sourceTask.id,
         timeEntryCountByTaskId,

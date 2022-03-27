@@ -1,4 +1,4 @@
-import * as R from "ramda";
+import { isNil, pathOr, propOr } from "ramda";
 import type { SagaIterator } from "redux-saga";
 import { call, delay, select } from "redux-saga/effects";
 
@@ -82,18 +82,18 @@ function* createClockifyProject(
   targetWorkspaceId: string,
 ): SagaIterator<Project> {
   const clientIdToLinkedId = yield select(clientIdToLinkedIdSelector);
-  const targetClientId = R.propOr<
-    string | null,
-    Record<string, string>,
-    string
-  >(null, sourceProject.clientId ?? "", clientIdToLinkedId);
+  const targetClientId = propOr<string | null, Record<string, string>, string>(
+    null,
+    sourceProject.clientId ?? "",
+    clientIdToLinkedId,
+  );
 
-  const estimateHours = R.pathOr(0, ["estimate", "estimate"], sourceProject);
-  const estimateType = R.pathOr("AUTO", ["estimate", "type"], sourceProject);
+  const estimateHours = pathOr(0, ["estimate", "estimate"], sourceProject);
+  const estimateType = pathOr("AUTO", ["estimate", "type"], sourceProject);
 
   const projectRequest = {
     name: sourceProject.name,
-    clientId: R.isNil(targetClientId) ? undefined : targetClientId,
+    clientId: isNil(targetClientId) ? undefined : targetClientId,
     isPublic: sourceProject.isPublic,
     estimate: {
       estimate: +estimateHours,

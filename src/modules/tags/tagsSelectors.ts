@@ -1,4 +1,4 @@
-import * as R from "ramda";
+import { isNil, propOr } from "ramda";
 import {
   createSelector,
   createStructuredSelector,
@@ -52,7 +52,7 @@ export const includedSourceTagsSelector = createSelector(
 export const sourceTagsForTransferSelector = createSelector(
   includedSourceTagsSelector,
   (sourceTags): Tag[] =>
-    sourceTags.filter((sourceTag) => R.isNil(sourceTag.linkedId)),
+    sourceTags.filter((sourceTag) => isNil(sourceTag.linkedId)),
 );
 
 const sourceTagsInActiveWorkspaceSelector = createSelector(
@@ -77,7 +77,7 @@ export const tagsForInclusionsTableSelector = createSelector(
         return acc;
       }
 
-      const entryCount = R.propOr<number, Record<string, number>, number>(
+      const entryCount = propOr<number, Record<string, number>, number>(
         0,
         sourceTag.id,
         timeEntryCountByTagId,

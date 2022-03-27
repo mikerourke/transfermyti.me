@@ -1,6 +1,6 @@
 <script lang="ts">
   import { css } from "goober";
-  import * as R from "ramda";
+  import { isNil } from "ramda";
   import { createEventDispatcher } from "svelte";
   import { slide } from "svelte/transition";
 
@@ -20,7 +20,7 @@
     ({ id }) => id === sourceWorkspace.linkedId,
   );
 
-  const targetSelectValue = R.isNil(targetWorkspace) ? "" : targetWorkspace.id;
+  const targetSelectValue = isNil(targetWorkspace) ? "" : targetWorkspace.id;
 
   const workspacesForSelect = [...targetWorkspaces];
 

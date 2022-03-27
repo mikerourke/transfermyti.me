@@ -1,4 +1,4 @@
-import * as R from "ramda";
+import { indexBy, pathOr, prop } from "ramda";
 import type { SagaIterator } from "redux-saga";
 import { all, call, put, select, takeEvery } from "redux-saga/effects";
 import { ActionType, isActionOf } from "typesafe-actions";
@@ -62,7 +62,7 @@ function* pushTaskInclusionChangesToProject(
   const sourceTasksById = yield select(sourceTasksByIdSelector);
 
   if (isActionOf(tasksActions.isTaskIncludedToggled, action)) {
-    const sourceProjectId = R.pathOr<string>(
+    const sourceProjectId = pathOr<string>(
       "",
       [action.payload, "projectId"],
       sourceTasksById,
@@ -173,7 +173,7 @@ export function* fetchTasksSaga(): SagaIterator {
       );
     } else {
       tasksByIdByMapping = {
-        source: R.indexBy(R.prop("id"), sourceTasks),
+        source: indexBy(prop("id"), sourceTasks),
         target: {},
       };
     }

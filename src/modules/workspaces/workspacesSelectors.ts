@@ -1,4 +1,4 @@
-import * as R from "ramda";
+import { compose, isNil, prop, sortBy, toLower } from "ramda";
 import { createSelector, createStructuredSelector } from "reselect";
 
 import { selectIdToLinkedId } from "~/entityOperations/selectIdToLinkedId";
@@ -19,7 +19,7 @@ export const sourceWorkspacesSelector = createSelector(
   sourceWorkspacesByIdSelector,
   (workspacesById): Workspace[] => {
     const workspaces = Object.values(workspacesById);
-    return R.sortBy(R.compose(R.toLower, R.prop("name")), workspaces);
+    return sortBy(compose(toLower, prop("name")), workspaces);
   },
 );
 
@@ -57,7 +57,7 @@ export const sourceIncludedWorkspacesCountSelector = createSelector(
 export const sourceWorkspacesForTransferSelector = createSelector(
   includedSourceWorkspacesSelector,
   (includedWorkspaces): Workspace[] =>
-    includedWorkspaces.filter((workspace) => R.isNil(workspace.linkedId)),
+    includedWorkspaces.filter((workspace) => isNil(workspace.linkedId)),
 );
 
 export const workspaceIdToLinkedIdSelector = createSelector(
@@ -70,7 +70,7 @@ export const targetWorkspacesSelector = createSelector(
   targetWorkspacesByIdSelector,
   (workspacesById): Workspace[] => {
     const workspaces = Object.values(workspacesById);
-    return R.sortBy(R.compose(R.toLower, R.prop("name")), workspaces);
+    return sortBy(compose(toLower, prop("name")), workspaces);
   },
 );
 

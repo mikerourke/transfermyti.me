@@ -1,4 +1,4 @@
-import * as R from "ramda";
+import { isNil, propOr } from "ramda";
 import type { SagaIterator } from "redux-saga";
 import { call, delay, select } from "redux-saga/effects";
 
@@ -97,17 +97,17 @@ function* createTogglProject(
   targetWorkspaceId: string,
 ): SagaIterator<Project> {
   const clientIdToLinkedId = yield select(clientIdToLinkedIdSelector);
-  const targetClientId = R.propOr<
-    string | null,
-    Record<string, string>,
-    string
-  >(null, sourceProject.clientId ?? "", clientIdToLinkedId);
+  const targetClientId = propOr<string | null, Record<string, string>, string>(
+    null,
+    sourceProject.clientId ?? "",
+    clientIdToLinkedId,
+  );
 
   const projectRequest = {
     project: {
       name: sourceProject.name,
       wid: +targetWorkspaceId,
-      cid: R.isNil(targetClientId) ? undefined : +targetClientId,
+      cid: isNil(targetClientId) ? undefined : +targetClientId,
       is_private: !sourceProject.isPublic,
     },
   };

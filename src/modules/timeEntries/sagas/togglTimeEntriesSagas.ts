@@ -3,7 +3,7 @@ import endOfYear from "date-fns/endOfYear";
 import format from "date-fns/format";
 import startOfYear from "date-fns/startOfYear";
 import qs from "qs";
-import * as R from "ramda";
+import { isNil, propOr } from "ramda";
 import type { SagaIterator } from "redux-saga";
 import { call, delay, select } from "redux-saga/effects";
 
@@ -109,14 +109,14 @@ function* createTogglTimeEntry(
   targetWorkspaceId: string,
 ): SagaIterator {
   const projectIdToLinkedId = yield select(projectIdToLinkedIdSelector);
-  const targetProjectId = R.propOr<
-    string | null,
-    Record<string, string>,
-    string
-  >(null, sourceTimeEntry.projectId ?? "", projectIdToLinkedId);
+  const targetProjectId = propOr<string | null, Record<string, string>, string>(
+    null,
+    sourceTimeEntry.projectId ?? "",
+    projectIdToLinkedId,
+  );
 
   const taskIdToLinkedId = yield select(taskIdToLinkedIdSelector);
-  const targetTaskId = R.propOr<string | null, Record<string, string>, string>(
+  const targetTaskId = propOr<string | null, Record<string, string>, string>(
     null,
     sourceTimeEntry.taskId ?? "",
     taskIdToLinkedId,
@@ -129,8 +129,8 @@ function* createTogglTimeEntry(
       duration: differenceInSeconds(sourceTimeEntry.end, sourceTimeEntry.start),
       start: sourceTimeEntry.start.toISOString(),
       wid: +targetWorkspaceId,
-      pid: R.isNil(targetProjectId) ? undefined : +targetProjectId,
-      tid: R.isNil(targetTaskId) ? undefined : +targetTaskId,
+      pid: isNil(targetProjectId) ? undefined : +targetProjectId,
+      tid: isNil(targetTaskId) ? undefined : +targetTaskId,
       billable: sourceTimeEntry.isBillable,
       created_with: "transfermyti.me",
     },
@@ -198,7 +198,7 @@ function* fetchTogglTimeEntriesInWorkspace(
       return acc;
     }
 
-    const clientId = R.propOr<null, string, string>(
+    const clientId = propOr<null, string, string>(
       null,
       togglTimeEntry.client,
       clientIdsByName,
@@ -318,10 +318,10 @@ function getTime(
   timeEntry: TogglTimeEntryResponseModel,
   field: "start" | "end",
 ): Date {
-  const value = R.propOr<null, TogglTimeEntryResponseModel, string>(
+  const value = propOr<null, TogglTimeEntryResponseModel, string>(
     null,
     field,
     timeEntry,
   );
-  return R.isNil(value) ? new Date() : new Date(value);
+  return isNil(value) ? new Date() : new Date(value);
 }

@@ -1,4 +1,4 @@
-import * as R from "ramda";
+import { isEmpty, isNil } from "ramda";
 
 import { EntityGroup } from "~/typeDefs";
 
@@ -10,7 +10,7 @@ export function booleanToYesNo(value: boolean | string): string {
 }
 
 export function capitalize(value: string | null): string {
-  if (R.isNil(value) || R.isEmpty(value)) {
+  if (isNil(value) || isEmpty(value)) {
     return "";
   }
 
@@ -46,7 +46,7 @@ export function validStringify<TDefault>(
   value: string | number | null | undefined,
   defaultIfNil: TDefault,
 ): TDefault {
-  if (R.isNil(value)) {
+  if (isNil(value)) {
     return defaultIfNil;
   }
 

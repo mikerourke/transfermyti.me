@@ -1,4 +1,4 @@
-import * as R from "ramda";
+import { isNil, pathOr, propOr } from "ramda";
 import { createSelector, type Selector } from "reselect";
 
 import { activeWorkspaceIdSelector } from "~/modules/workspaces/workspacesSelectors";
@@ -26,7 +26,7 @@ export const sourceTimeEntriesForTransferSelector = createSelector(
   (sourceTimeEntries, isDuplicateCheckEnabled) =>
     isDuplicateCheckEnabled
       ? sourceTimeEntries.filter((sourceTimeEntry) =>
-          R.isNil(sourceTimeEntry.linkedId),
+          isNil(sourceTimeEntry.linkedId),
         )
       : sourceTimeEntries,
 );
@@ -59,7 +59,7 @@ export const timeEntriesForInclusionsTableSelector = createSelector(
         return acc;
       }
 
-      const projectName = R.pathOr(
+      const projectName = pathOr(
         null,
         [sourceTimeEntry.projectId ?? "", "name"],
         sourceProjectsById,
@@ -67,7 +67,7 @@ export const timeEntriesForInclusionsTableSelector = createSelector(
 
       let taskName = null;
       if (sourceTimeEntry.taskId !== null) {
-        taskName = R.pathOr(
+        taskName = pathOr(
           null,
           [sourceTimeEntry.taskId, "name"],
           sourceTasksById,
@@ -110,7 +110,7 @@ export const sourceTimeEntryCountByTagIdSelector = createSelector(
 
     for (const timeEntry of sourceTimeEntries) {
       for (const tagId of timeEntry.tagIds) {
-        const currentValue = R.propOr<number, Record<string, number>, number>(
+        const currentValue = propOr<number, Record<string, number>, number>(
           0,
           tagId,
           timeEntryCountByTagIdField,
@@ -132,7 +132,7 @@ export const sourceTimeEntryCountByIdFieldSelectorFactory = (
     for (const timeEntry of sourceTimeEntries) {
       const parentId = timeEntry[idField];
       if (parentId) {
-        const currentCountForId = R.propOr<
+        const currentCountForId = propOr<
           number,
           Record<string, number>,
           number

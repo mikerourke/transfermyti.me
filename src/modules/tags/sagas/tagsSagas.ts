@@ -1,4 +1,4 @@
-import * as R from "ramda";
+import { indexBy, prop } from "ramda";
 import type { SagaIterator } from "redux-saga";
 import { call, put, select } from "redux-saga/effects";
 
@@ -96,7 +96,7 @@ export function* fetchTagsSaga(): SagaIterator {
       );
     } else {
       tagsByIdByMapping = {
-        source: R.indexBy(R.prop("id"), sourceTags),
+        source: indexBy(prop("id"), sourceTags),
         target: {},
       };
     }

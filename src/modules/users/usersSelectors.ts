@@ -1,4 +1,4 @@
-import * as R from "ramda";
+import { isNil, propOr } from "ramda";
 import { createSelector } from "reselect";
 
 import { selectIdToLinkedId } from "~/entityOperations/selectIdToLinkedId";
@@ -30,7 +30,7 @@ export const userIdToLinkedIdSelector = createSelector(
 export const sourceUsersForTransferSelector = createSelector(
   includedSourceUsersSelector,
   (sourceUsers): User[] =>
-    sourceUsers.filter((sourceUser) => R.isNil(sourceUser.linkedId)),
+    sourceUsers.filter((sourceUser) => isNil(sourceUser.linkedId)),
 );
 
 export const sourceUserEmailsByWorkspaceIdSelector = createSelector(
@@ -40,13 +40,13 @@ export const sourceUserEmailsByWorkspaceIdSelector = createSelector(
     const emailsByWorkspaceId: Record<string, string[]> = {};
 
     for (const sourceUser of sourceUsers) {
-      const targetWorkspaceId = R.propOr<null, Record<string, string>, string>(
+      const targetWorkspaceId = propOr<null, Record<string, string>, string>(
         null,
-        R.propOr("", "workspaceId", sourceUser) as string,
+        propOr("", "workspaceId", sourceUser) as string,
         workspaceIdToLinkedId,
       );
 
-      if (!R.isNil(targetWorkspaceId)) {
+      if (!isNil(targetWorkspaceId)) {
         const emailsInWorkspace = emailsByWorkspaceId[targetWorkspaceId] ?? [];
         emailsByWorkspaceId[targetWorkspaceId] = [
           ...emailsInWorkspace,

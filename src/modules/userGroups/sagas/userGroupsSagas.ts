@@ -1,4 +1,4 @@
-import * as R from "ramda";
+import { indexBy, prop } from "ramda";
 import type { SagaIterator } from "redux-saga";
 import { call, put, select } from "redux-saga/effects";
 
@@ -67,6 +67,7 @@ export function* deleteUserGroupsSaga(): SagaIterator {
     yield put(userGroupsActions.deleteUserGroups.success());
   } catch (err: AnyValid) {
     yield put(errorNotificationShown(err));
+
     yield put(userGroupsActions.deleteUserGroups.failure());
   }
 }
@@ -98,7 +99,7 @@ export function* fetchUserGroupsSaga(): SagaIterator {
       );
     } else {
       userGroupsByIdByMapping = {
-        source: R.indexBy(R.prop("id"), sourceUserGroups),
+        source: indexBy(prop("id"), sourceUserGroups),
         target: {},
       };
     }
@@ -108,6 +109,7 @@ export function* fetchUserGroupsSaga(): SagaIterator {
     );
   } catch (err: AnyValid) {
     yield put(errorNotificationShown(err));
+
     yield put(userGroupsActions.fetchUserGroups.failure());
   }
 }

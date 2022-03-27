@@ -1,5 +1,5 @@
 <script lang="ts">
-  import * as R from "ramda";
+  import { compose, prop, sortBy, toLower } from "ramda";
   import { createEventDispatcher } from "svelte";
 
   import { replaceMappingWithToolName } from "~/entityOperations/replaceMappingWithToolName";
@@ -45,8 +45,8 @@
 
   function sortTableRecords(records: TableRecord[]): TableRecord[] {
     try {
-      const sortByName = R.sortBy<AnyValid>(
-        R.compose(R.toLower, R.prop<AnyValid, AnyValid>("name")),
+      const sortByName = sortBy<AnyValid>(
+        compose(toLower, prop<AnyValid, AnyValid>("name")),
       );
 
       return sortByName(records);

@@ -1,4 +1,4 @@
-import * as R from "ramda";
+import { indexBy, prop } from "ramda";
 import type { SagaIterator } from "redux-saga";
 import { all, call, put, select, takeEvery } from "redux-saga/effects";
 
@@ -41,7 +41,7 @@ function* fetchWorkspacesSaga(): SagaIterator {
       );
     } else {
       workspaceByIdByMapping = {
-        source: R.indexBy(R.prop("id"), sourceWorkspaces),
+        source: indexBy(prop("id"), sourceWorkspaces),
         target: {},
       };
     }

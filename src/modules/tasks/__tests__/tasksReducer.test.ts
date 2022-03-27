@@ -1,5 +1,5 @@
 import cases from "jest-in-case";
-import * as R from "ramda";
+import { lensProp, set } from "ramda";
 
 import * as tasksActions from "~/modules/tasks/tasksActions";
 import { state, invalidAction } from "~/redux/__mocks__/mockStoreWithState";
@@ -92,8 +92,8 @@ describe("within tasksReducer", () => {
   );
 
   test(`the isTaskIncludedToggled action flips the "isIncluded" value of the task with id = payload`, () => {
-    const updatedState = R.set(
-      R.lensProp("source"),
+    const updatedState = set(
+      lensProp("source"),
       {
         [TEST_TASK_ID]: {
           ...TEST_TASKS_STATE.source[TEST_TASK_ID],
@@ -108,8 +108,8 @@ describe("within tasksReducer", () => {
   });
 
   test(`the isTaskIncludedUpdated action sets the "isIncluded" value based on payload`, () => {
-    const updatedState = R.set(
-      R.lensProp("source"),
+    const updatedState = set(
+      lensProp("source"),
       {
         [TEST_TASK_ID]: {
           ...TEST_TASKS_STATE.source[TEST_TASK_ID],

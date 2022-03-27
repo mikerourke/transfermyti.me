@@ -1,4 +1,4 @@
-import * as R from "ramda";
+import { lensPath, not, over, set } from "ramda";
 import { type ActionType, createReducer } from "typesafe-actions";
 
 import { updateAreAllRecordsIncluded } from "~/entityOperations/updateAreAllRecordsIncluded";
@@ -68,13 +68,13 @@ export const projectsReducer = createReducer<ProjectsState, ProjectsAction>(
   .handleAction(
     projectsActions.isProjectIncludedToggled,
     (state, { payload }) =>
-      R.over(R.lensPath([Mapping.Source, payload, "isIncluded"]), R.not, state),
+      over(lensPath([Mapping.Source, payload, "isIncluded"]), not, state),
   )
   .handleAction(
     projectsActions.isProjectIncludedUpdated,
     (state, { payload }) =>
-      R.set(
-        R.lensPath([Mapping.Source, payload.id, "isIncluded"]),
+      set(
+        lensPath([Mapping.Source, payload.id, "isIncluded"]),
         payload.isIncluded,
         state,
       ),

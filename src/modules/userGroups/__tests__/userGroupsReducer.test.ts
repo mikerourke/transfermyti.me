@@ -1,5 +1,5 @@
 import cases from "jest-in-case";
-import * as R from "ramda";
+import { lensProp, set } from "ramda";
 
 import * as userGroupsActions from "~/modules/userGroups/userGroupsActions";
 import { state, invalidAction } from "~/redux/__mocks__/mockStoreWithState";
@@ -92,8 +92,8 @@ describe("within userGroupsReducer", () => {
   );
 
   test(`the isUserGroupIncludedToggled action flips the "isIncluded" value of the userGroup with id = payload`, () => {
-    const updatedState = R.set(
-      R.lensProp("source"),
+    const updatedState = set(
+      lensProp("source"),
       {
         [TEST_USER_GROUP_ID]: {
           ...TEST_USER_GROUPS_STATE.source[TEST_USER_GROUP_ID],

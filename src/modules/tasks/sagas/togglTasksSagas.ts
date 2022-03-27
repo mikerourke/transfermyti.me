@@ -1,4 +1,4 @@
-import * as R from "ramda";
+import { isNil, propOr } from "ramda";
 import type { SagaIterator } from "redux-saga";
 import { call, select } from "redux-saga/effects";
 
@@ -64,13 +64,13 @@ export function* fetchTogglTasksSaga(): SagaIterator<Task[]> {
  */
 function* createTogglTask(sourceTask: Task): SagaIterator<Task> {
   const projectIdToLinkedId = yield select(projectIdToLinkedIdSelector);
-  const targetProjectId = R.propOr<
-    string | null,
-    Record<string, string>,
-    string
-  >(null, sourceTask.projectId, projectIdToLinkedId);
+  const targetProjectId = propOr<string | null, Record<string, string>, string>(
+    null,
+    sourceTask.projectId,
+    projectIdToLinkedId,
+  );
 
-  if (R.isNil(targetProjectId)) {
+  if (isNil(targetProjectId)) {
     throw new Error(
       `Could not find target project ID for Toggl task ${sourceTask.name}`,
     );
