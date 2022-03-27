@@ -5,7 +5,7 @@ import { fetchArray, fetchObject } from "~/entityOperations/apiRequests";
 import { createEntitiesForTool } from "~/entityOperations/createEntitiesForTool";
 import { deleteEntitiesForTool } from "~/entityOperations/deleteEntitiesForTool";
 import { fetchEntitiesForTool } from "~/entityOperations/fetchEntitiesForTool";
-import { EntityGroup, ToolName, type TagModel } from "~/typeDefs";
+import { EntityGroup, ToolName, type Tag } from "~/typeDefs";
 import { validStringify } from "~/utilities/textTransforms";
 
 interface TogglTagResponseModel {
@@ -19,9 +19,7 @@ interface TogglTagResponseModel {
  * Creates new Toggl tags that correspond to source and returns array of
  * transformed tags.
  */
-export function* createTogglTagsSaga(
-  sourceTags: TagModel[],
-): SagaIterator<TagModel[]> {
+export function* createTogglTagsSaga(sourceTags: Tag[]): SagaIterator<Tag[]> {
   return yield call(createEntitiesForTool, {
     toolName: ToolName.Toggl,
     sourceRecords: sourceTags,
@@ -32,7 +30,7 @@ export function* createTogglTagsSaga(
 /**
  * Deletes all specified source tags from Toggl.
  */
-export function* deleteTogglTagsSaga(sourceTags: TagModel[]): SagaIterator {
+export function* deleteTogglTagsSaga(sourceTags: Tag[]): SagaIterator {
   yield call(deleteEntitiesForTool, {
     toolName: ToolName.Toggl,
     sourceRecords: sourceTags,
@@ -43,7 +41,7 @@ export function* deleteTogglTagsSaga(sourceTags: TagModel[]): SagaIterator {
 /**
  * Fetches all tags in Toggl workspaces and returns array of transformed tags.
  */
-export function* fetchTogglTagsSaga(): SagaIterator<TagModel[]> {
+export function* fetchTogglTagsSaga(): SagaIterator<Tag[]> {
   return yield call(fetchEntitiesForTool, {
     toolName: ToolName.Toggl,
     apiFetchFunc: fetchTogglTagsInWorkspace,
@@ -55,9 +53,9 @@ export function* fetchTogglTagsSaga(): SagaIterator<TagModel[]> {
  * @see https://github.com/toggl/toggl_api_docs/blob/master/chapters/tags.md#create-a-tag
  */
 function* createTogglTag(
-  sourceTag: TagModel,
+  sourceTag: Tag,
   targetWorkspaceId: string,
-): SagaIterator<TagModel> {
+): SagaIterator<Tag> {
   const tagRequest = {
     tag: {
       name: sourceTag.name,
@@ -76,7 +74,7 @@ function* createTogglTag(
  * Deletes the specified Toggl tag.
  * @see https://github.com/toggl/toggl_api_docs/blob/master/chapters/tags.md#delete-a-tag
  */
-function* deleteTogglTag(sourceTag: TagModel): SagaIterator {
+function* deleteTogglTag(sourceTag: Tag): SagaIterator {
   yield call(fetchObject, `/toggl/api/tags/${sourceTag.id}`, {
     method: "DELETE",
   });
@@ -86,9 +84,7 @@ function* deleteTogglTag(sourceTag: TagModel): SagaIterator {
  * Fetches Toggl tags in the specified workspace.
  * @see https://github.com/toggl/toggl_api_docs/blob/master/chapters/workspaces.md#get-workspace-tags
  */
-function* fetchTogglTagsInWorkspace(
-  workspaceId: string,
-): SagaIterator<TagModel[]> {
+function* fetchTogglTagsInWorkspace(workspaceId: string): SagaIterator<Tag[]> {
   const togglTags: TogglTagResponseModel[] = yield call(
     fetchArray,
     `/toggl/api/workspaces/${workspaceId}/tags`,
@@ -97,7 +93,7 @@ function* fetchTogglTagsInWorkspace(
   return togglTags.map(transformFromResponse);
 }
 
-function transformFromResponse(tag: TogglTagResponseModel): TagModel {
+function transformFromResponse(tag: TogglTagResponseModel): Tag {
   return {
     id: tag.id.toString(),
     name: tag.name,

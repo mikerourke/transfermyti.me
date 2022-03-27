@@ -1,4 +1,4 @@
-import type { CredentialsByMappingModel } from "~/typeDefs";
+import type { CredentialsByMapping } from "~/typeDefs";
 
 const STORAGE_KEY = "transfermytime";
 
@@ -15,7 +15,7 @@ const DEFAULT_CREDENTIALS = {
   },
 };
 
-export function getCredentialsFromStorage(): CredentialsByMappingModel | null {
+export function getCredentialsFromStorage(): CredentialsByMapping | null {
   const contents = localStorage.getItem(STORAGE_KEY);
 
   if (contents !== null) {
@@ -26,7 +26,7 @@ export function getCredentialsFromStorage(): CredentialsByMappingModel | null {
 }
 
 export function mergeCredentialsInStorage(
-  credentials: CredentialsByMappingModel,
+  credentials: CredentialsByMapping,
 ): void {
   let existingCredentials = getCredentialsFromStorage();
   if (existingCredentials === null) {

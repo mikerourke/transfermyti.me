@@ -4,14 +4,14 @@
   import { createEventDispatcher } from "svelte";
   import { slide } from "svelte/transition";
 
-  import { ToolAction, WorkspaceModel } from "~/typeDefs";
+  import { ToolAction, Workspace } from "~/typeDefs";
 
   import Card from "~/components/Card.svelte";
   import Toggle from "~/components/Toggle.svelte";
   import WorkspaceSelect from "~/components/WorkspaceSelect.svelte";
 
-  export let sourceWorkspace: WorkspaceModel;
-  export let targetWorkspaces: WorkspaceModel[];
+  export let sourceWorkspace: Workspace;
+  export let targetWorkspaces: Workspace[];
   export let toolAction: ToolAction;
 
   const dispatchEvent = createEventDispatcher();
@@ -34,7 +34,7 @@
     workspacesForSelect.unshift({
       id: "",
       name: "None (Create New)",
-    } as WorkspaceModel);
+    } as Workspace);
   }
 
   const actionTitle =
@@ -53,7 +53,7 @@
     }
   }
 
-  function handleSelectWorkspace(event: CustomEvent<WorkspaceModel>): void {
+  function handleSelectWorkspace(event: CustomEvent<Workspace>): void {
     dispatchEvent("select-target", {
       sourceWorkspace,
       targetWorkspace: event.detail,

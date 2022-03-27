@@ -9,7 +9,7 @@ import {
 import { createEntitiesForTool } from "~/entityOperations/createEntitiesForTool";
 import { deleteEntitiesForTool } from "~/entityOperations/deleteEntitiesForTool";
 import { fetchEntitiesForTool } from "~/entityOperations/fetchEntitiesForTool";
-import { type ClientModel, EntityGroup, ToolName } from "~/typeDefs";
+import { type Client, EntityGroup, ToolName } from "~/typeDefs";
 import { validStringify } from "~/utilities/textTransforms";
 
 interface TogglClientResponseModel {
@@ -24,8 +24,8 @@ interface TogglClientResponseModel {
  * transformed clients.
  */
 export function* createTogglClientsSaga(
-  sourceClients: ClientModel[],
-): SagaIterator<ClientModel[]> {
+  sourceClients: Client[],
+): SagaIterator<Client[]> {
   return yield call(createEntitiesForTool, {
     toolName: ToolName.Toggl,
     sourceRecords: sourceClients,
@@ -36,9 +36,7 @@ export function* createTogglClientsSaga(
 /**
  * Deletes all specified source clients from Toggl.
  */
-export function* deleteTogglClientsSaga(
-  sourceClients: ClientModel[],
-): SagaIterator {
+export function* deleteTogglClientsSaga(sourceClients: Client[]): SagaIterator {
   yield call(deleteEntitiesForTool, {
     toolName: ToolName.Toggl,
     sourceRecords: sourceClients,
@@ -50,7 +48,7 @@ export function* deleteTogglClientsSaga(
  * Fetches all clients in Toggl workspaces and returns array of transformed
  * clients.
  */
-export function* fetchTogglClientsSaga(): SagaIterator<ClientModel[]> {
+export function* fetchTogglClientsSaga(): SagaIterator<Client[]> {
   return yield call(fetchEntitiesForTool, {
     toolName: ToolName.Toggl,
     apiFetchFunc: fetchTogglClientsInWorkspace,
@@ -62,9 +60,9 @@ export function* fetchTogglClientsSaga(): SagaIterator<ClientModel[]> {
  * @see https://github.com/toggl/toggl_api_docs/blob/master/chapters/clients.md#create-a-client
  */
 function* createTogglClient(
-  sourceClient: ClientModel,
+  sourceClient: Client,
   targetWorkspaceId: string,
-): SagaIterator<ClientModel> {
+): SagaIterator<Client> {
   const clientRequest = {
     client: {
       name: sourceClient.name,
@@ -84,7 +82,7 @@ function* createTogglClient(
  * Deletes the specified Toggl client.
  * @see https://github.com/toggl/toggl_api_docs/blob/master/chapters/clients.md#delete-a-client
  */
-function* deleteTogglClient(sourceClient: ClientModel): SagaIterator {
+function* deleteTogglClient(sourceClient: Client): SagaIterator {
   yield call(fetchEmpty, `/toggl/api/clients/${sourceClient.id}`, {
     method: "DELETE",
   });
@@ -96,7 +94,7 @@ function* deleteTogglClient(sourceClient: ClientModel): SagaIterator {
  */
 function* fetchTogglClientsInWorkspace(
   workspaceId: string,
-): SagaIterator<ClientModel[]> {
+): SagaIterator<Client[]> {
   const togglClients: TogglClientResponseModel[] = yield call(
     fetchArray,
     `/toggl/api/workspaces/${workspaceId}/clients`,
@@ -105,7 +103,7 @@ function* fetchTogglClientsInWorkspace(
   return togglClients.map(transformFromResponse);
 }
 
-function transformFromResponse(client: TogglClientResponseModel): ClientModel {
+function transformFromResponse(client: TogglClientResponseModel): Client {
   return {
     id: client.id.toString(),
     name: client.name,

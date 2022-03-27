@@ -11,7 +11,7 @@ import { fetchEntitiesForTool } from "~/entityOperations/fetchEntitiesForTool";
 import { incrementEntityGroupTransferCompletedCount } from "~/modules/allEntities/allEntitiesActions";
 import { includedSourceProjectIdsSelector } from "~/modules/projects/projectsSelectors";
 import { includedSourceWorkspaceIdsSelector } from "~/modules/workspaces/workspacesSelectors";
-import { EntityGroup, ToolName, type UserModel } from "~/typeDefs";
+import { EntityGroup, ToolName, type User } from "~/typeDefs";
 import { validStringify } from "~/utilities/textTransforms";
 
 interface TogglUserResponseModel {
@@ -70,7 +70,7 @@ export function* createTogglUsersSaga(
  * Removes all specified source users from Toggl projects that are included
  * for deletion.
  */
-export function* removeTogglUsersSaga(sourceUsers: UserModel[]): SagaIterator {
+export function* removeTogglUsersSaga(sourceUsers: User[]): SagaIterator {
   const includedWorkspaceIds = yield select(includedSourceWorkspaceIdsSelector);
   const includedProjectIds = yield select(includedSourceProjectIdsSelector);
 
@@ -125,7 +125,7 @@ export function* removeTogglUsersSaga(sourceUsers: UserModel[]): SagaIterator {
 /**
  * Fetches all users in Toggl workspaces and returns array of transformed users.
  */
-export function* fetchTogglUsersSaga(): SagaIterator<UserModel[]> {
+export function* fetchTogglUsersSaga(): SagaIterator<User[]> {
   return yield call(fetchEntitiesForTool, {
     toolName: ToolName.Toggl,
     apiFetchFunc: fetchTogglUsersInWorkspace,
@@ -177,7 +177,7 @@ function* fetchProjectUsersInSourceWorkspace(
  */
 function* fetchTogglUsersInWorkspace(
   workspaceId: string,
-): SagaIterator<UserModel[]> {
+): SagaIterator<User[]> {
   const togglUsers: TogglUserResponseModel[] = yield call(
     fetchArray,
     `/toggl/api/workspaces/${workspaceId}/users`,
@@ -191,7 +191,7 @@ function* fetchTogglUsersInWorkspace(
 function transformFromResponse(
   user: TogglUserResponseModel,
   workspaceId: string,
-): UserModel {
+): User {
   return {
     id: user.id.toString(),
     name: user.fullname,

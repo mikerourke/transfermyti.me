@@ -7,8 +7,8 @@ import {
   FetchStatus,
   ToolAction,
   ToolName,
-  type CountsByEntityGroupModel,
-  type ToolNameByMappingModel,
+  type CountsByEntityGroup,
+  type ToolNameByMapping,
 } from "~/typeDefs";
 
 type AllEntitiesAction = ActionType<typeof allEntitiesActions>;
@@ -19,8 +19,8 @@ export interface AllEntitiesState {
   readonly fetchAllFetchStatus: FetchStatus;
   readonly pushAllChangesFetchStatus: FetchStatus;
   readonly toolAction: ToolAction;
-  readonly toolNameByMapping: ToolNameByMappingModel;
-  readonly transferCountsByEntityGroup: CountsByEntityGroupModel;
+  readonly toolNameByMapping: ToolNameByMapping;
+  readonly transferCountsByEntityGroup: CountsByEntityGroup;
 }
 
 const DEFAULT_TRANSFER_COUNTS = {
@@ -31,7 +31,7 @@ const DEFAULT_TRANSFER_COUNTS = {
   [EntityGroup.TimeEntries]: 0,
   [EntityGroup.UserGroups]: 0,
   [EntityGroup.Users]: 0,
-} as CountsByEntityGroupModel;
+} as CountsByEntityGroup;
 
 export const initialState: AllEntitiesState = {
   areExistsInTargetShown: true,

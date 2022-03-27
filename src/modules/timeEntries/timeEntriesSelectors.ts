@@ -2,11 +2,7 @@ import * as R from "ramda";
 import { createSelector, type Selector } from "reselect";
 
 import { activeWorkspaceIdSelector } from "~/modules/workspaces/workspacesSelectors";
-import type {
-  ReduxState,
-  TimeEntryModel,
-  TimeEntryTableViewModel,
-} from "~/typeDefs";
+import type { ReduxState, TimeEntry, TimeEntryTableRecord } from "~/typeDefs";
 
 export const isDuplicateCheckEnabledSelector = createSelector(
   (state: ReduxState) => state.timeEntries.isDuplicateCheckEnabled,
@@ -15,12 +11,12 @@ export const isDuplicateCheckEnabledSelector = createSelector(
 
 export const sourceTimeEntriesSelector = createSelector(
   (state: ReduxState) => state.timeEntries.source,
-  (timeEntriesById): TimeEntryModel[] => Object.values(timeEntriesById),
+  (timeEntriesById): TimeEntry[] => Object.values(timeEntriesById),
 );
 
 export const includedSourceTimeEntriesSelector = createSelector(
   sourceTimeEntriesSelector,
-  (sourceTimeEntries): TimeEntryModel[] =>
+  (sourceTimeEntries): TimeEntry[] =>
     sourceTimeEntries.filter((sourceTimeEntry) => sourceTimeEntry.isIncluded),
 );
 
@@ -56,7 +52,7 @@ export const timeEntriesForInclusionsTableSelector = createSelector(
     sourceProjectsById,
     sourceTasksById,
     isDuplicateCheckEnabled,
-  ): TimeEntryTableViewModel[] =>
+  ): TimeEntryTableRecord[] =>
     sourceTimeEntries.reduce((acc, sourceTimeEntry) => {
       const existsInTarget = sourceTimeEntry.linkedId !== null;
       if (existsInTarget && !areExistsInTargetShown) {
@@ -89,14 +85,14 @@ export const timeEntriesForInclusionsTableSelector = createSelector(
           isActiveInTarget: existsInTarget,
         },
       ];
-    }, [] as TimeEntryTableViewModel[]),
+    }, [] as TimeEntryTableRecord[]),
 );
 
 export const timeEntriesTotalCountsByTypeSelector = createSelector(
   timeEntriesForInclusionsTableSelector,
   (timeEntriesForInclusionsTable) =>
     timeEntriesForInclusionsTable.reduce(
-      (acc, { existsInTarget, isIncluded }: TimeEntryTableViewModel) => ({
+      (acc, { existsInTarget, isIncluded }: TimeEntryTableRecord) => ({
         existsInTarget: acc.existsInTarget + (existsInTarget ? 1 : 0),
         isIncluded: acc.isIncluded + (isIncluded ? 1 : 0),
       }),

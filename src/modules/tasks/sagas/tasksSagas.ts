@@ -24,7 +24,7 @@ import {
   Mapping,
   ToolAction,
   ToolName,
-  type ProjectModel,
+  type Project,
   type TasksByIdModel,
 } from "~/typeDefs";
 
@@ -52,7 +52,7 @@ function* pushTaskInclusionChangesToProject(
     return;
   }
 
-  const sourceProjects: ProjectModel[] = yield select(sourceProjectsSelector);
+  const sourceProjects: Project[] = yield select(sourceProjectsSelector);
   const includedSourceTasksCount = yield select(
     includedSourceTasksCountSelector,
   );

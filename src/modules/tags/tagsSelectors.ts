@@ -11,8 +11,8 @@ import { activeWorkspaceIdSelector } from "~/modules/workspaces/workspacesSelect
 import type {
   Mapping,
   ReduxState,
-  TableViewModel,
-  TagModel,
+  EntityTableRecord,
+  Tag,
   TagsByIdModel,
   ToolName,
 } from "~/typeDefs";
@@ -24,7 +24,7 @@ const sourceTagsByIdSelector = createSelector(
 
 const sourceTagsSelector = createSelector(
   sourceTagsByIdSelector,
-  (sourceTagsById): TagModel[] => Object.values(sourceTagsById),
+  (sourceTagsById): Tag[] => Object.values(sourceTagsById),
 );
 
 const targetTagsByIdSelector = createSelector(
@@ -34,12 +34,12 @@ const targetTagsByIdSelector = createSelector(
 
 const targetTagsSelector = createSelector(
   targetTagsByIdSelector,
-  (targetTagsById): TagModel[] => Object.values(targetTagsById),
+  (targetTagsById): Tag[] => Object.values(targetTagsById),
 );
 
 const tagsByMappingSelector = createStructuredSelector<
   ReduxState,
-  Record<Mapping, TagModel[]>
+  Record<Mapping, Tag[]>
 >({
   source: sourceTagsSelector,
   target: targetTagsSelector,
@@ -47,20 +47,19 @@ const tagsByMappingSelector = createStructuredSelector<
 
 export const includedSourceTagsSelector = createSelector(
   sourceTagsSelector,
-  (sourceTags): TagModel[] =>
-    sourceTags.filter((sourceTag) => sourceTag.isIncluded),
+  (sourceTags): Tag[] => sourceTags.filter((sourceTag) => sourceTag.isIncluded),
 );
 
 export const sourceTagsForTransferSelector = createSelector(
   includedSourceTagsSelector,
-  (sourceTags): TagModel[] =>
+  (sourceTags): Tag[] =>
     sourceTags.filter((sourceTag) => R.isNil(sourceTag.linkedId)),
 );
 
 const sourceTagsInActiveWorkspaceSelector = createSelector(
   sourceTagsSelector,
   activeWorkspaceIdSelector,
-  (sourceTags, workspaceId): TagModel[] =>
+  (sourceTags, workspaceId): Tag[] =>
     sourceTags.filter((tag) => tag.workspaceId === workspaceId),
 );
 
@@ -72,7 +71,7 @@ export const tagsForInclusionsTableSelector = createSelector(
     areExistsInTargetShown,
     sourceTags,
     timeEntryCountByTagId,
-  ): TableViewModel<TagModel>[] =>
+  ): EntityTableRecord<Tag>[] =>
     sourceTags.reduce((acc, sourceTag) => {
       const existsInTarget = sourceTag.linkedId !== null;
       if (existsInTarget && !areExistsInTargetShown) {
@@ -95,7 +94,7 @@ export const tagsForInclusionsTableSelector = createSelector(
           isActiveInTarget: existsInTarget,
         },
       ];
-    }, [] as TableViewModel<TagModel>[]),
+    }, [] as EntityTableRecord<Tag>[]),
 );
 
 export const tagsTotalCountsByTypeSelector = createSelector(
@@ -104,7 +103,7 @@ export const tagsTotalCountsByTypeSelector = createSelector(
     tagsForInclusionTable.reduce(
       (
         acc,
-        { entryCount, existsInTarget, isIncluded }: TableViewModel<TagModel>,
+        { entryCount, existsInTarget, isIncluded }: EntityTableRecord<Tag>,
       ) => ({
         entryCount: acc.entryCount + entryCount,
         existsInTarget: acc.existsInTarget + (existsInTarget ? 1 : 0),

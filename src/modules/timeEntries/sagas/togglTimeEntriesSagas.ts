@@ -20,7 +20,7 @@ import { credentialsByToolNameSelector } from "~/modules/credentials/credentials
 import { projectIdToLinkedIdSelector } from "~/modules/projects/projectsSelectors";
 import { tagIdsByNameBySelectorFactory } from "~/modules/tags/tagsSelectors";
 import { taskIdToLinkedIdSelector } from "~/modules/tasks/tasksSelectors";
-import { EntityGroup, ToolName, type TimeEntryModel } from "~/typeDefs";
+import { EntityGroup, ToolName, type TimeEntry } from "~/typeDefs";
 import { validStringify } from "~/utilities/textTransforms";
 
 const togglApiDelay = getApiDelayForTool(ToolName.Toggl);
@@ -67,8 +67,8 @@ interface TogglTimeEntriesFetchResponseModel {
  * time entries.
  */
 export function* createTogglTimeEntriesSaga(
-  sourceTimeEntries: TimeEntryModel[],
-): SagaIterator<TimeEntryModel[]> {
+  sourceTimeEntries: TimeEntry[],
+): SagaIterator<TimeEntry[]> {
   return yield call(createEntitiesForTool, {
     toolName: ToolName.Toggl,
     sourceRecords: sourceTimeEntries,
@@ -80,7 +80,7 @@ export function* createTogglTimeEntriesSaga(
  * Deletes all specified source time entries from Toggl.
  */
 export function* deleteTogglTimeEntriesSaga(
-  sourceTimeEntries: TimeEntryModel[],
+  sourceTimeEntries: TimeEntry[],
 ): SagaIterator {
   yield call(deleteEntitiesForTool, {
     toolName: ToolName.Toggl,
@@ -93,7 +93,7 @@ export function* deleteTogglTimeEntriesSaga(
  * Fetches all time entries in Toggl workspaces and returns array of
  * transformed time entries.
  */
-export function* fetchTogglTimeEntriesSaga(): SagaIterator<TimeEntryModel[]> {
+export function* fetchTogglTimeEntriesSaga(): SagaIterator<TimeEntry[]> {
   return yield call(fetchEntitiesForTool, {
     toolName: ToolName.Toggl,
     apiFetchFunc: fetchTogglTimeEntriesInWorkspace,
@@ -105,7 +105,7 @@ export function* fetchTogglTimeEntriesSaga(): SagaIterator<TimeEntryModel[]> {
  * @see https://github.com/toggl/toggl_api_docs/blob/master/chapters/time_entries.md#create-a-time-entry
  */
 function* createTogglTimeEntry(
-  sourceTimeEntry: TimeEntryModel,
+  sourceTimeEntry: TimeEntry,
   targetWorkspaceId: string,
 ): SagaIterator {
   const projectIdToLinkedId = yield select(projectIdToLinkedIdSelector);
@@ -146,7 +146,7 @@ function* createTogglTimeEntry(
  * Deletes the specified Toggl time entry.
  * @see https://github.com/toggl/toggl_api_docs/blob/master/chapters/time_entries.md#delete-a-time-entry
  */
-function* deleteTogglTimeEntry(sourceTimeEntry: TimeEntryModel): SagaIterator {
+function* deleteTogglTimeEntry(sourceTimeEntry: TimeEntry): SagaIterator {
   yield call(fetchEmpty, `/toggl/api/time_entries/${sourceTimeEntry.id}`, {
     method: "DELETE",
   });
@@ -158,7 +158,7 @@ function* deleteTogglTimeEntry(sourceTimeEntry: TimeEntryModel): SagaIterator {
  */
 function* fetchTogglTimeEntriesInWorkspace(
   workspaceId: string,
-): SagaIterator<TimeEntryModel[]> {
+): SagaIterator<TimeEntry[]> {
   const credentialsByToolName = yield select(credentialsByToolNameSelector);
   const togglUserId = credentialsByToolName?.toggl?.userId;
   if (!togglUserId) {
@@ -211,7 +211,7 @@ function* fetchTogglTimeEntriesInWorkspace(
       tagIdsByName,
     );
     return [...acc, transformedEntry];
-  }, [] as TimeEntryModel[]);
+  }, [] as TimeEntry[]);
 }
 
 function* fetchAllTogglTimeEntriesForYear(
@@ -287,7 +287,7 @@ function transformFromResponse(
   workspaceId: string,
   clientId: string | null,
   tagIdsByName: Record<string, string>,
-): TimeEntryModel {
+): TimeEntry {
   const startTime = getTime(timeEntry, "start");
   const tagNames = timeEntry.tags ?? [];
   const tagIds = tagNames.map((tagName) => tagIdsByName[tagName]);

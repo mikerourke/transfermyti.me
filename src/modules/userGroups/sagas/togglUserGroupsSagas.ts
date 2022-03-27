@@ -9,7 +9,7 @@ import {
 import { createEntitiesForTool } from "~/entityOperations/createEntitiesForTool";
 import { deleteEntitiesForTool } from "~/entityOperations/deleteEntitiesForTool";
 import { fetchEntitiesForTool } from "~/entityOperations/fetchEntitiesForTool";
-import { EntityGroup, ToolName, type UserGroupModel } from "~/typeDefs";
+import { EntityGroup, ToolName, type UserGroup } from "~/typeDefs";
 import { validStringify } from "~/utilities/textTransforms";
 
 interface TogglUserGroupResponseModel {
@@ -24,8 +24,8 @@ interface TogglUserGroupResponseModel {
  * transformed user groups.
  */
 export function* createTogglUserGroupsSaga(
-  sourceUserGroups: UserGroupModel[],
-): SagaIterator<UserGroupModel[]> {
+  sourceUserGroups: UserGroup[],
+): SagaIterator<UserGroup[]> {
   return yield call(createEntitiesForTool, {
     toolName: ToolName.Toggl,
     sourceRecords: sourceUserGroups,
@@ -37,7 +37,7 @@ export function* createTogglUserGroupsSaga(
  * Deletes all specified source user groups from Toggl.
  */
 export function* deleteTogglUserGroupsSaga(
-  sourceUserGroups: UserGroupModel[],
+  sourceUserGroups: UserGroup[],
 ): SagaIterator {
   yield call(deleteEntitiesForTool, {
     toolName: ToolName.Toggl,
@@ -62,9 +62,9 @@ export function* fetchTogglUserGroupsSaga(): SagaIterator {
  * @see https://github.com/toggl/toggl_api_docs/blob/master/chapters/groups.md#create-a-group
  */
 function* createTogglUserGroup(
-  sourceUserGroup: UserGroupModel,
+  sourceUserGroup: UserGroup,
   targetWorkspaceId: string,
-): SagaIterator<UserGroupModel> {
+): SagaIterator<UserGroup> {
   const userGroupRequest = {
     name: sourceUserGroup.name,
     wid: +targetWorkspaceId,
@@ -81,7 +81,7 @@ function* createTogglUserGroup(
  * Deletes the specified Toggl user group.
  * @see https://github.com/toggl/toggl_api_docs/blob/master/chapters/groups.md#delete-a-group
  */
-function* deleteTogglUserGroup(sourceUserGroup: UserGroupModel): SagaIterator {
+function* deleteTogglUserGroup(sourceUserGroup: UserGroup): SagaIterator {
   yield call(fetchEmpty, `/toggl/api/groups/${sourceUserGroup.id}`, {
     method: "DELETE",
   });
@@ -93,7 +93,7 @@ function* deleteTogglUserGroup(sourceUserGroup: UserGroupModel): SagaIterator {
  */
 function* fetchTogglUserGroupsInWorkspace(
   workspaceId: string,
-): SagaIterator<UserGroupModel[]> {
+): SagaIterator<UserGroup[]> {
   const togglUserGroups: TogglUserGroupResponseModel[] = yield call(
     fetchArray,
     `/toggl/api/workspaces/${workspaceId}/groups`,
@@ -104,7 +104,7 @@ function* fetchTogglUserGroupsInWorkspace(
 
 function transformFromResponse(
   userGroup: TogglUserGroupResponseModel,
-): UserGroupModel {
+): UserGroup {
   return {
     id: userGroup.id.toString(),
     name: userGroup.name,

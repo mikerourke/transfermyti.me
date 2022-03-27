@@ -13,7 +13,7 @@
   import * as workspacesActions from "~/modules/workspaces/workspacesActions";
   import * as workspacesSelectors from "~/modules/workspaces/workspacesSelectors";
   import { dispatchAction, selectorToStore } from "~/redux/reduxToStore";
-  import { FetchStatus, ToolAction, type WorkspaceModel } from "~/typeDefs";
+  import { FetchStatus, ToolAction, type Workspace } from "~/typeDefs";
 
   import HelpDetails from "~/components/HelpDetails.svelte";
   import Loader from "~/components/Loader.svelte";
@@ -68,8 +68,8 @@
 
   function handleSelectTargetForSource(
     event: CustomEvent<{
-      sourceWorkspace: WorkspaceModel;
-      targetWorkspace: WorkspaceModel;
+      sourceWorkspace: Workspace;
+      targetWorkspace: Workspace;
     }>,
   ): void {
     const { sourceWorkspace, targetWorkspace } = event.detail;
@@ -82,7 +82,7 @@
     );
   }
 
-  function handleToggleForSource(event: CustomEvent<WorkspaceModel>): void {
+  function handleToggleForSource(event: CustomEvent<Workspace>): void {
     dispatchAction(workspacesActions.flipIsWorkspaceIncluded(event.detail));
   }
 

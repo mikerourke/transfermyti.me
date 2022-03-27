@@ -7,11 +7,11 @@ import {
   Mapping,
   ToolAction,
   ToolName,
-  type BaseEntityModel,
-  type CountsByEntityGroupModel,
+  type AnyEntity,
+  type CountsByEntityGroup,
   type ReduxState,
-  type ToolHelpDetailsModel,
-  type ToolNameByMappingModel,
+  type ToolHelpDetails,
+  type ToolNameByMapping,
 } from "~/typeDefs";
 import { capitalize, getEntityGroupDisplay } from "~/utilities/textTransforms";
 
@@ -30,7 +30,7 @@ export const toolActionSelector = (state: ReduxState): ToolAction =>
 
 export const toolNameByMappingSelector = (
   state: ReduxState,
-): ToolNameByMappingModel => state.allEntities.toolNameByMapping;
+): ToolNameByMapping => state.allEntities.toolNameByMapping;
 
 export const entityGroupInProcessDisplaySelector = createSelector(
   (state: ReduxState) => state.allEntities.entityGroupInProcess,
@@ -40,12 +40,12 @@ export const entityGroupInProcessDisplaySelector = createSelector(
 
 export const transferCountsByEntityGroupSelector = createSelector(
   (state: ReduxState) => state.allEntities.transferCountsByEntityGroup,
-  (transferCountsByEntityGroup): CountsByEntityGroupModel =>
+  (transferCountsByEntityGroup): CountsByEntityGroup =>
     transferCountsByEntityGroup,
 );
 
 const findLengthOfIncluded = (
-  entityRecordsById: Record<string, BaseEntityModel>,
+  entityRecordsById: Record<string, AnyEntity>,
 ): number =>
   Object.values(entityRecordsById).filter(
     (entityRecord) => entityRecord.isIncluded,
@@ -63,7 +63,7 @@ export const includedCountsByEntityGroupSelector = createSelector(
     sourceProjectsById,
     sourceTasksById,
     sourceTimeEntriesById,
-  ): CountsByEntityGroupModel =>
+  ): CountsByEntityGroup =>
     ({
       [EntityGroup.Clients]: findLengthOfIncluded(sourceClientsById),
       [EntityGroup.Tags]: findLengthOfIncluded(sourceTagsById),
@@ -72,7 +72,7 @@ export const includedCountsByEntityGroupSelector = createSelector(
       [EntityGroup.TimeEntries]: findLengthOfIncluded(sourceTimeEntriesById),
       [EntityGroup.UserGroups]: 0,
       [EntityGroup.Users]: 0,
-    } as CountsByEntityGroupModel),
+    } as CountsByEntityGroup),
 );
 
 export const totalIncludedRecordsCountSelector = createSelector(
@@ -130,7 +130,7 @@ export const toolHelpDetailsByMappingSelector = createSelector(
   (
     toolNameByMapping,
     displayNameByMapping,
-  ): Record<Mapping, ToolHelpDetailsModel> => {
+  ): Record<Mapping, ToolHelpDetails> => {
     const findToolLink = (toolName: ToolName): string => {
       if (toolName === ToolName.Clockify) {
         return "https://clockify.me/user/settings";
@@ -138,9 +138,9 @@ export const toolHelpDetailsByMappingSelector = createSelector(
       return "https://toggl.com/app/profile";
     };
 
-    const toolHelpDetailsByMapping: Record<Mapping, ToolHelpDetailsModel> = {
-      [Mapping.Source]: {} as ToolHelpDetailsModel,
-      [Mapping.Target]: {} as ToolHelpDetailsModel,
+    const toolHelpDetailsByMapping: Record<Mapping, ToolHelpDetails> = {
+      [Mapping.Source]: {} as ToolHelpDetails,
+      [Mapping.Target]: {} as ToolHelpDetails,
     };
 
     for (const [mapping, toolName] of Object.entries(toolNameByMapping)) {

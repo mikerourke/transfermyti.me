@@ -1,11 +1,11 @@
 <script lang="ts">
   import { createEventDispatcher } from "svelte";
 
-  import type { WorkspaceModel } from "~/typeDefs";
+  import type { Workspace } from "~/typeDefs";
 
   export let id: string;
   export let value: string;
-  export let workspaces: WorkspaceModel[];
+  export let workspaces: Workspace[];
 
   const dispatchEvent = createEventDispatcher();
 

@@ -7,9 +7,9 @@ import { sourceTimeEntryCountByIdFieldSelectorFactory } from "~/modules/timeEntr
 import { activeWorkspaceIdSelector } from "~/modules/workspaces/workspacesSelectors";
 import type {
   ReduxState,
-  TaskModel,
+  Task,
   TasksByIdModel,
-  TaskTableViewModel,
+  TaskTableRecord,
 } from "~/typeDefs";
 
 export const sourceTasksByIdSelector = createSelector(
@@ -24,12 +24,12 @@ const targetTasksByIdSelector = createSelector(
 
 export const sourceTasksSelector = createSelector(
   sourceTasksByIdSelector,
-  (sourceTasksById): TaskModel[] => Object.values(sourceTasksById),
+  (sourceTasksById): Task[] => Object.values(sourceTasksById),
 );
 
 export const includedSourceTasksSelector = createSelector(
   sourceTasksSelector,
-  (sourceTasks): TaskModel[] =>
+  (sourceTasks): Task[] =>
     sourceTasks.filter((sourceTask) => sourceTask.isIncluded),
 );
 
@@ -47,7 +47,7 @@ export const sourceTasksForTransferSelector = createSelector(
 export const sourceTasksInActiveWorkspaceSelector = createSelector(
   activeWorkspaceIdSelector,
   sourceTasksSelector,
-  (workspaceId, sourceTasks): TaskModel[] =>
+  (workspaceId, sourceTasks): Task[] =>
     sourceTasks.filter((task) => task.workspaceId === workspaceId),
 );
 
@@ -69,7 +69,7 @@ export const tasksForInclusionsTableSelector = createSelector(
     targetTasksById,
     sourceProjectsById,
     timeEntryCountByTaskId,
-  ): TaskTableViewModel[] =>
+  ): TaskTableRecord[] =>
     sourceTasks.reduce((acc, sourceTask) => {
       const existsInTarget = sourceTask.linkedId !== null;
       if (existsInTarget && !areExistsInTargetShown) {
@@ -99,7 +99,7 @@ export const tasksForInclusionsTableSelector = createSelector(
           projectName: sourceProjectsById[sourceTask.projectId].name,
         },
       ];
-    }, [] as TaskTableViewModel[]),
+    }, [] as TaskTableRecord[]),
 );
 
 export const tasksTotalCountsByTypeSelector = createSelector(
@@ -114,7 +114,7 @@ export const tasksTotalCountsByTypeSelector = createSelector(
           isIncluded,
           isActiveInSource,
           isActiveInTarget,
-        }: TaskTableViewModel,
+        }: TaskTableRecord,
       ) => ({
         entryCount: acc.entryCount + entryCount,
         existsInTarget: acc.existsInTarget + (existsInTarget ? 1 : 0),

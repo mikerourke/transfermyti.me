@@ -11,7 +11,7 @@ import { createEntitiesForTool } from "~/entityOperations/createEntitiesForTool"
 import { deleteEntitiesForTool } from "~/entityOperations/deleteEntitiesForTool";
 import { fetchEntitiesForTool } from "~/entityOperations/fetchEntitiesForTool";
 import { projectIdToLinkedIdSelector } from "~/modules/projects/projectsSelectors";
-import { EntityGroup, ToolName, type TaskModel } from "~/typeDefs";
+import { EntityGroup, ToolName, type Task } from "~/typeDefs";
 import { validStringify } from "~/utilities/textTransforms";
 
 interface TogglTaskResponseModel {
@@ -29,7 +29,7 @@ interface TogglTaskResponseModel {
  * Creates new Toggl tasks that correspond to source and returns array of
  * transformed tasks.
  */
-export function* createTogglTasksSaga(sourceTasks: TaskModel[]): SagaIterator {
+export function* createTogglTasksSaga(sourceTasks: Task[]): SagaIterator {
   return yield call(createEntitiesForTool, {
     toolName: ToolName.Toggl,
     sourceRecords: sourceTasks,
@@ -40,7 +40,7 @@ export function* createTogglTasksSaga(sourceTasks: TaskModel[]): SagaIterator {
 /**
  * Deletes all specified source tasks from Toggl.
  */
-export function* deleteTogglTasksSaga(sourceTasks: TaskModel[]): SagaIterator {
+export function* deleteTogglTasksSaga(sourceTasks: Task[]): SagaIterator {
   yield call(deleteEntitiesForTool, {
     toolName: ToolName.Toggl,
     sourceRecords: sourceTasks,
@@ -51,7 +51,7 @@ export function* deleteTogglTasksSaga(sourceTasks: TaskModel[]): SagaIterator {
 /**
  * Fetches all tasks in Toggl workspaces and returns the result.
  */
-export function* fetchTogglTasksSaga(): SagaIterator<TaskModel[]> {
+export function* fetchTogglTasksSaga(): SagaIterator<Task[]> {
   return yield call(fetchEntitiesForTool, {
     toolName: ToolName.Toggl,
     apiFetchFunc: fetchTogglTasksInWorkspace,
@@ -62,7 +62,7 @@ export function* fetchTogglTasksSaga(): SagaIterator<TaskModel[]> {
  * Creates a new Toggl task.
  * @see https://github.com/toggl/toggl_api_docs/blob/master/chapters/tasks.md#create-a-task
  */
-function* createTogglTask(sourceTask: TaskModel): SagaIterator<TaskModel> {
+function* createTogglTask(sourceTask: Task): SagaIterator<Task> {
   const projectIdToLinkedId = yield select(projectIdToLinkedIdSelector);
   const targetProjectId = R.propOr<
     string | null,
@@ -95,7 +95,7 @@ function* createTogglTask(sourceTask: TaskModel): SagaIterator<TaskModel> {
  * Deletes the specified Toggl task.
  * @see https://github.com/toggl/toggl_api_docs/blob/master/chapters/tasks.md#delete-a-task
  */
-function* deleteTogglTask(sourceTask: TaskModel): SagaIterator {
+function* deleteTogglTask(sourceTask: Task): SagaIterator {
   yield call(fetchEmpty, `/toggl/api/tasks/${sourceTask.id}`, {
     method: "DELETE",
   });
@@ -107,7 +107,7 @@ function* deleteTogglTask(sourceTask: TaskModel): SagaIterator {
  */
 function* fetchTogglTasksInWorkspace(
   workspaceId: string,
-): SagaIterator<TaskModel[]> {
+): SagaIterator<Task[]> {
   const togglTasks: TogglTaskResponseModel[] = yield call(
     fetchArray,
     `/toggl/api/workspaces/${workspaceId}/tasks`,
@@ -116,7 +116,7 @@ function* fetchTogglTasksInWorkspace(
   return togglTasks.map(transformFromResponse);
 }
 
-function transformFromResponse(task: TogglTaskResponseModel): TaskModel {
+function transformFromResponse(task: TogglTaskResponseModel): Task {
   return {
     id: task.id.toString(),
     name: task.name,

@@ -17,7 +17,7 @@
     includedSourceWorkspacesSelector,
   } from "~/modules/workspaces/workspacesSelectors";
   import { dispatchAction, selectorToStore } from "~/redux/reduxToStore";
-  import { FetchStatus, ToolAction, type WorkspaceModel } from "~/typeDefs";
+  import { FetchStatus, ToolAction, type Workspace } from "~/typeDefs";
   import { capitalize } from "~/utilities/textTransforms";
 
   import Loader from "~/components/Loader.svelte";
@@ -79,9 +79,7 @@
     }
   });
 
-  function handleSelectActiveWorkspace(
-    event: CustomEvent<WorkspaceModel>,
-  ): void {
+  function handleSelectActiveWorkspace(event: CustomEvent<Workspace>): void {
     dispatchAction(updateActiveWorkspaceId(event.detail.id));
   }
 

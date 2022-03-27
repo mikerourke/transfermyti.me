@@ -2,7 +2,7 @@ export type { ReduxState } from "~/redux/rootReducer";
 
 type NotificationType = "error" | "info" | "success";
 
-export interface NotificationModel {
+export interface Notification {
   id: string;
   message: string;
   type: NotificationType;
@@ -25,7 +25,7 @@ export enum ToolAction {
   Transfer = "transfer",
 }
 
-export interface ToolHelpDetailsModel {
+export interface ToolHelpDetails {
   toolName: ToolName;
   displayName: string;
   toolLink: string;
@@ -49,7 +49,7 @@ export enum FetchStatus {
   Error = "ERROR",
 }
 
-export interface BaseEntityModel {
+export interface AnyEntity {
   id: string;
   workspaceId: string;
   linkedId: string | null;
@@ -58,78 +58,78 @@ export interface BaseEntityModel {
   memberOf?: EntityGroup;
 }
 
-export type ValidEntity<TEntity> = TEntity & BaseEntityModel;
+export type ValidEntity<TEntity> = TEntity & AnyEntity;
 
-export type TableViewModel<TEntity> = TEntity & {
+export type EntityTableRecord<TEntity> = TEntity & {
   existsInTarget: boolean;
   isActiveInSource: boolean;
   isActiveInTarget: boolean;
 };
 
-export type CountsByEntityGroupModel = Record<EntityGroup, number>;
+export type CountsByEntityGroup = Record<EntityGroup, number>;
 
-export interface ToolNameByMappingModel {
+export interface ToolNameByMapping {
   [Mapping.Source]: ToolName;
   [Mapping.Target]: ToolName;
 }
 
-export interface ClientModel extends BaseEntityModel {
+export interface Client extends AnyEntity {
   id: string;
   name: string;
   workspaceId: string;
 }
 
-export type ClientsByIdModel = Record<string, ClientModel>;
+export type ClientsByIdModel = Record<string, Client>;
 
-export type ClientTableViewModel = TableViewModel<ClientModel> & {
+export type ClientTableRecord = EntityTableRecord<Client> & {
   projectCount: number;
 };
 
-export interface CredentialsModel {
+export interface Credentials {
   apiKey: string | null;
   email: string | null;
   userId: string | null;
 }
 
-export type CredentialsByMappingModel = Record<Mapping, CredentialsModel>;
+export type CredentialsByMapping = Record<Mapping, Credentials>;
 
-export type ValidationErrorsByMappingModel = Record<Mapping, string | null>;
+export type ValidationErrorsByMapping = Record<Mapping, string | null>;
 
-export interface PartialCredentialsUpdateModel {
+export interface PartialCredentialsUpdate {
   mapping: Mapping;
   apiKey?: string | null;
   email?: string | null;
   userId?: string | null;
 }
 
-export interface EstimateModel {
+export interface Estimate {
   estimate: number;
   type: "AUTO" | "MANUAL";
 }
 
-export interface ProjectModel extends BaseEntityModel {
+export interface Project extends AnyEntity {
   id: string;
   name: string;
   clientId: string | null;
   isBillable: boolean;
   isPublic: boolean;
   isActive: boolean;
-  estimate: EstimateModel;
+  estimate: Estimate;
   color: string;
   userIds: string[];
 }
 
-export type ProjectsByIdModel = Record<string, ProjectModel>;
+export type ProjectsByIdModel = Record<string, Project>;
 
-export interface TagModel extends BaseEntityModel {
+export interface Tag extends AnyEntity {
   id: string;
   name: string;
   workspaceId: string;
 }
 
-export type TagsByIdModel = Record<string, TagModel>;
+export type TagsByIdModel = Record<string, Tag>;
 
-export interface TaskModel extends BaseEntityModel {
+export interface Task extends AnyEntity {
   id: string;
   name: string;
   estimate: string;
@@ -138,13 +138,13 @@ export interface TaskModel extends BaseEntityModel {
   isActive: boolean;
 }
 
-export type TasksByIdModel = Record<string, TaskModel>;
+export type TasksByIdModel = Record<string, Task>;
 
-export type TaskTableViewModel = TableViewModel<TaskModel> & {
+export type TaskTableRecord = EntityTableRecord<Task> & {
   projectName: string;
 };
 
-export interface TimeEntryModel extends BaseEntityModel {
+export interface TimeEntry extends AnyEntity {
   id: string;
   description: string;
   isBillable: boolean;
@@ -161,23 +161,22 @@ export interface TimeEntryModel extends BaseEntityModel {
   userGroupIds: string[];
 }
 
-export type TimeEntriesByIdModel = Record<string, TimeEntryModel>;
+export type TimeEntriesByIdModel = Record<string, TimeEntry>;
 
-export interface TimeEntryTableViewModel
-  extends TableViewModel<TimeEntryModel> {
+export interface TimeEntryTableRecord extends EntityTableRecord<TimeEntry> {
   taskName: string | null;
   projectName: string | null;
 }
 
-export interface UserGroupModel extends BaseEntityModel {
+export interface UserGroup extends AnyEntity {
   id: string;
   name: string;
   userIds: string[];
 }
 
-export type UserGroupsByIdModel = Record<string, UserGroupModel>;
+export type UserGroupsByIdModel = Record<string, UserGroup>;
 
-export interface UserModel extends BaseEntityModel {
+export interface User extends AnyEntity {
   id: string;
   name: string;
   email: string;
@@ -186,13 +185,13 @@ export interface UserModel extends BaseEntityModel {
   userGroupIds: string[] | null;
 }
 
-export type UsersByIdModel = Record<string, UserModel>;
+export type UsersByIdModel = Record<string, User>;
 
-export interface WorkspaceModel extends BaseEntityModel {
+export interface Workspace extends AnyEntity {
   id: string;
   name: string;
   userIds: string[];
   isAdmin: boolean | null;
 }
 
-export type WorkspacesByIdModel = Record<string, WorkspaceModel>;
+export type WorkspacesByIdModel = Record<string, Workspace>;

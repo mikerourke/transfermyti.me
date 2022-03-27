@@ -6,9 +6,9 @@ import { mappingByToolNameSelector } from "~/modules/allEntities/allEntitiesSele
 import { sourceTimeEntryCountByIdFieldSelectorFactory } from "~/modules/timeEntries/timeEntriesSelectors";
 import { activeWorkspaceIdSelector } from "~/modules/workspaces/workspacesSelectors";
 import type {
-  ClientModel,
+  Client,
   ClientsByIdModel,
-  ClientTableViewModel,
+  ClientTableRecord,
   Mapping,
   ReduxState,
   ToolName,
@@ -26,30 +26,30 @@ const targetClientsByIdSelector = createSelector(
 
 const sourceClientsSelector = createSelector(
   sourceClientsByIdSelector,
-  (sourceClients): ClientModel[] => Object.values(sourceClients),
+  (sourceClients): Client[] => Object.values(sourceClients),
 );
 
 const targetClientsSelector = createSelector(
   targetClientsByIdSelector,
-  (targetClientsById): ClientModel[] => Object.values(targetClientsById),
+  (targetClientsById): Client[] => Object.values(targetClientsById),
 );
 
 export const includedSourceClientsSelector = createSelector(
   sourceClientsSelector,
-  (sourceClients): ClientModel[] =>
+  (sourceClients): Client[] =>
     sourceClients.filter((sourceClient) => sourceClient.isIncluded),
 );
 
 export const sourceClientsForTransferSelector = createSelector(
   includedSourceClientsSelector,
-  (sourceClients): ClientModel[] =>
+  (sourceClients): Client[] =>
     sourceClients.filter((sourceClient) => R.isNil(sourceClient.linkedId)),
 );
 
 export const sourceClientsInActiveWorkspaceSelector = createSelector(
   sourceClientsSelector,
   activeWorkspaceIdSelector,
-  (sourceClients, activeWorkspaceId): ClientModel[] =>
+  (sourceClients, activeWorkspaceId): Client[] =>
     sourceClients.filter(
       (sourceClient) => sourceClient.workspaceId === activeWorkspaceId,
     ),
@@ -89,7 +89,7 @@ export const clientsForInclusionsTableSelector = createSelector(
     sourceClients,
     projectCountByClientId,
     timeEntryCountByClientId,
-  ): ClientTableViewModel[] =>
+  ): ClientTableRecord[] =>
     sourceClients.reduce((acc, sourceClient) => {
       const existsInTarget = sourceClient.linkedId !== null;
       if (existsInTarget && !areExistsInTargetShown) {
@@ -118,7 +118,7 @@ export const clientsForInclusionsTableSelector = createSelector(
           isActiveInTarget: existsInTarget,
         },
       ];
-    }, [] as ClientTableViewModel[]),
+    }, [] as ClientTableRecord[]),
 );
 
 export const clientsTotalCountsByTypeSelector = createSelector(
@@ -132,7 +132,7 @@ export const clientsTotalCountsByTypeSelector = createSelector(
           existsInTarget,
           projectCount,
           isIncluded,
-        }: ClientTableViewModel,
+        }: ClientTableRecord,
       ) => ({
         entryCount: acc.entryCount + entryCount,
         existsInTarget: acc.existsInTarget + (existsInTarget ? 1 : 0),
@@ -150,7 +150,7 @@ export const clientsTotalCountsByTypeSelector = createSelector(
 
 const clientsByMappingSelector = createStructuredSelector<
   ReduxState,
-  Record<Mapping, ClientModel[]>
+  Record<Mapping, Client[]>
 >({
   source: sourceClientsSelector,
   target: targetClientsSelector,

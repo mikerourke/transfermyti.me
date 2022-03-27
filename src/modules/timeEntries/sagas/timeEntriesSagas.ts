@@ -20,7 +20,7 @@ import {
   ToolAction,
   ToolName,
   type TimeEntriesByIdModel,
-  type TimeEntryModel,
+  type TimeEntry,
 } from "~/typeDefs";
 
 /**
@@ -127,6 +127,6 @@ export function* fetchTimeEntriesSaga(): SagaIterator {
   }
 }
 
-function sortTimeEntries(timeEntries: TimeEntryModel[]): TimeEntryModel[] {
+function sortTimeEntries(timeEntries: TimeEntry[]): TimeEntry[] {
   return timeEntries.sort((a, b) => a.start.getTime() - b.start.getTime());
 }

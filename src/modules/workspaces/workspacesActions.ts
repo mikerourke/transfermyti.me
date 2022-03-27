@@ -1,6 +1,6 @@
 import { createAction, createAsyncAction } from "typesafe-actions";
 
-import type { Mapping, WorkspaceModel, WorkspacesByIdModel } from "~/typeDefs";
+import type { Mapping, Workspace, WorkspacesByIdModel } from "~/typeDefs";
 
 export const createWorkspaces = createAsyncAction(
   "@workspaces/CREATE_WORKSPACES_REQUEST",
@@ -28,7 +28,7 @@ export const appendUserIdsToWorkspace = createAction(
 
 export const flipIsWorkspaceIncluded = createAction(
   "@workspaces/FLIP_IS_INCLUDED",
-)<WorkspaceModel>();
+)<Workspace>();
 
 export const resetContentsForMapping = createAction(
   "@workspaces/RESET_CONTENTS_FOR_MAPPING",

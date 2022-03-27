@@ -6,7 +6,7 @@ import { mappingByToolNameSelector } from "~/modules/allEntities/allEntitiesSele
 import { validateCredentials } from "~/modules/credentials/credentialsActions";
 import { credentialsByMappingSelector } from "~/modules/credentials/credentialsSelectors";
 import type { TogglWorkspaceResponseModel } from "~/modules/workspaces/sagas/togglWorkspacesSagas";
-import { ToolName, type ValidationErrorsByMappingModel } from "~/typeDefs";
+import { ToolName, type ValidationErrorsByMapping } from "~/typeDefs";
 import { validStringify } from "~/utilities/textTransforms";
 
 interface TogglMeResponseModel {
@@ -26,7 +26,7 @@ interface TogglMeResponseModel {
 export function* validateCredentialsSaga(): SagaIterator {
   const credentialsByMapping = yield select(credentialsByMappingSelector);
   const mappingByToolName = yield select(mappingByToolNameSelector);
-  const validationErrorsByMapping: ValidationErrorsByMappingModel = {
+  const validationErrorsByMapping: ValidationErrorsByMapping = {
     source: null,
     target: null,
   };
