@@ -17,13 +17,13 @@ const TEST_PAYLOAD = {
 
 describe("within tasksReducer", () => {
   test("returns input state if an invalid action type is passed to the reducer", () => {
-    const result = tasksReducer(initialState, invalidAction as any);
+    const result = tasksReducer(initialState, invalidAction as AnyValid);
 
     expect(result).toEqual(initialState);
   });
 
   test("returns input state if no state is passed to the reducer", () => {
-    const result = tasksReducer(undefined as any, invalidAction as any);
+    const result = tasksReducer(undefined as AnyValid, invalidAction as AnyValid);
 
     expect(result).toEqual(initialState);
   });

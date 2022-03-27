@@ -17,13 +17,13 @@ const TEST_PAYLOAD = {
 
 describe("within clientsReducer", () => {
   test("returns input state if an invalid action type is passed to the reducer", () => {
-    const result = clientsReducer(initialState, invalidAction as any);
+    const result = clientsReducer(initialState, invalidAction as AnyValid);
 
     expect(result).toEqual(initialState);
   });
 
   test("returns input state if no state is passed to the reducer", () => {
-    const result = clientsReducer(undefined as any, invalidAction as any);
+    const result = clientsReducer(undefined as AnyValid, invalidAction as AnyValid);
 
     expect(result).toEqual(initialState);
   });

@@ -13,7 +13,7 @@ describe("within appReducer", () => {
   });
 
   test("returns input state if no state is passed to the reducer", () => {
-    const result = appReducer(undefined as any, invalidAction);
+    const result = appReducer(undefined as AnyValid, invalidAction);
 
     expect(result).toEqual(initialState);
   });

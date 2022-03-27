@@ -14,7 +14,7 @@ const state = {
     },
     action: "PUSH",
   },
-} as any;
+} as AnyValid;
 
 describe("within appSelectors", () => {
   test("the notificationsSelector returns state.app.notifications", () => {
