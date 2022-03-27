@@ -1,12 +1,12 @@
 import * as R from "ramda";
 import { type ActionType, createReducer } from "typesafe-actions";
 
-import { flushAllEntities } from "~/modules/allEntities/allEntitiesActions";
+import { allEntitiesFlushed } from "~/modules/allEntities/allEntitiesActions";
 import * as timeEntriesActions from "~/modules/timeEntries/timeEntriesActions";
 import { Mapping, type TimeEntry } from "~/typeDefs";
 
 type TimeEntriesAction = ActionType<
-  typeof timeEntriesActions | typeof flushAllEntities
+  typeof timeEntriesActions | typeof allEntitiesFlushed
 >;
 
 export interface TimeEntriesState {
@@ -110,6 +110,6 @@ export const timeEntriesReducer = createReducer<
     }),
   )
   .handleAction(
-    [timeEntriesActions.deleteTimeEntries.success, flushAllEntities],
+    [timeEntriesActions.deleteTimeEntries.success, allEntitiesFlushed],
     () => ({ ...initialState }),
   );

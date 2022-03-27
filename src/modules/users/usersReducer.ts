@@ -1,11 +1,11 @@
 import * as R from "ramda";
 import { type ActionType, createReducer } from "typesafe-actions";
 
-import { flushAllEntities } from "~/modules/allEntities/allEntitiesActions";
+import { allEntitiesFlushed } from "~/modules/allEntities/allEntitiesActions";
 import * as usersActions from "~/modules/users/usersActions";
 import { Mapping, type User } from "~/typeDefs";
 
-type UsersAction = ActionType<typeof usersActions | typeof flushAllEntities>;
+type UsersAction = ActionType<typeof usersActions | typeof allEntitiesFlushed>;
 
 export interface UsersState {
   readonly source: Dictionary<User>;
@@ -58,6 +58,6 @@ export const usersReducer = createReducer<UsersState, UsersAction>(initialState)
   .handleAction(usersActions.flipIsUserIncluded, (state, { payload }) =>
     R.over(R.lensPath([Mapping.Source, payload, "isIncluded"]), R.not, state),
   )
-  .handleAction([usersActions.deleteUsers.success, flushAllEntities], () => ({
+  .handleAction([usersActions.deleteUsers.success, allEntitiesFlushed], () => ({
     ...initialState,
   }));

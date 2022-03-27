@@ -1,6 +1,6 @@
 import cases from "jest-in-case";
 
-import { flushAllEntities } from "~/modules/allEntities/allEntitiesActions";
+import { allEntitiesFlushed } from "~/modules/allEntities/allEntitiesActions";
 import * as workspacesActions from "~/modules/workspaces/workspacesActions";
 import { state, invalidAction } from "~/redux/__mocks__/mockStoreWithState";
 import { Mapping } from "~/typeDefs";
@@ -39,8 +39,8 @@ describe("within workspacesReducer", () => {
     expect(result).toEqual(initialState);
   });
 
-  test("returns initial state when flushAllEntities is dispatched", () => {
-    const result = workspacesReducer(TEST_WORKSPACES_STATE, flushAllEntities());
+  test("returns initial state when allEntitiesFlushed is dispatched", () => {
+    const result = workspacesReducer(TEST_WORKSPACES_STATE, allEntitiesFlushed());
 
     expect(result).toEqual(initialState);
   });

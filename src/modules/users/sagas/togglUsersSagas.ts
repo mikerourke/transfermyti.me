@@ -8,7 +8,7 @@ import {
   getApiDelayForTool,
 } from "~/entityOperations/apiRequests";
 import { fetchEntitiesForTool } from "~/entityOperations/fetchEntitiesForTool";
-import { incrementEntityGroupTransferCompletedCount } from "~/modules/allEntities/allEntitiesActions";
+import { entityGroupTransferCompletedCountIncremented } from "~/modules/allEntities/allEntitiesActions";
 import { includedSourceProjectIdsSelector } from "~/modules/projects/projectsSelectors";
 import { includedSourceWorkspaceIdsSelector } from "~/modules/workspaces/workspacesSelectors";
 import { EntityGroup, ToolName, type User } from "~/typeDefs";
@@ -60,7 +60,7 @@ export function* createTogglUsersSaga(
   for (const [workspaceId, emails] of Object.entries(emailsByWorkspaceId)) {
     yield call(inviteTogglUsers, emails, workspaceId);
 
-    yield put(incrementEntityGroupTransferCompletedCount(EntityGroup.Users));
+    yield put(entityGroupTransferCompletedCountIncremented(EntityGroup.Users));
 
     yield delay(togglApiDelay);
   }
@@ -112,7 +112,7 @@ export function* removeTogglUsersSaga(sourceUsers: User[]): SagaIterator {
           yield call(removeTogglUserFromProject, matchingProjectUser.id);
 
           yield put(
-            incrementEntityGroupTransferCompletedCount(EntityGroup.Users),
+            entityGroupTransferCompletedCountIncremented(EntityGroup.Users),
           );
 
           yield delay(togglApiDelay);

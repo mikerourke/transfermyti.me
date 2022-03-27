@@ -1,12 +1,12 @@
 import * as R from "ramda";
 import { type ActionType, createReducer } from "typesafe-actions";
 
-import { flushAllEntities } from "~/modules/allEntities/allEntitiesActions";
+import { allEntitiesFlushed } from "~/modules/allEntities/allEntitiesActions";
 import * as userGroupsActions from "~/modules/userGroups/userGroupsActions";
 import { Mapping, type UserGroup } from "~/typeDefs";
 
 type UserGroupsAction = ActionType<
-  typeof userGroupsActions | typeof flushAllEntities
+  typeof userGroupsActions | typeof allEntitiesFlushed
 >;
 
 export interface UserGroupsState {
@@ -71,6 +71,6 @@ export const userGroupsReducer = createReducer<
       R.over(R.lensPath([Mapping.Source, payload, "isIncluded"]), R.not, state),
   )
   .handleAction(
-    [userGroupsActions.deleteUserGroups.success, flushAllEntities],
+    [userGroupsActions.deleteUserGroups.success, allEntitiesFlushed],
     () => ({ ...initialState }),
   );

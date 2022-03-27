@@ -12,13 +12,13 @@ const DEFAULT_TRANSFER_COUNTS = {
 
 describe("within allEntitiesReducer", () => {
   test("returns input state if an invalid action type is passed to the reducer", () => {
-    const result = allEntitiesReducer(initialState, invalidAction as any);
+    const result = allEntitiesReducer(initialState, invalidAction as AnyValid);
 
     expect(result).toEqual(initialState);
   });
 
   test("returns input state if no state is passed to the reducer", () => {
-    const result = allEntitiesReducer(undefined as any, invalidAction as any);
+    const result = allEntitiesReducer(undefined as AnyValid, invalidAction as AnyValid);
 
     expect(result).toEqual(initialState);
   });
@@ -73,15 +73,15 @@ describe("within allEntitiesReducer", () => {
         expectedStatus: FetchStatus.Error,
       },
       {
-        name: "when the updatePushAllChangesFetchStatus action is dispatched",
+        name: "when the pushAllChangesFetchStatusChanged action is dispatched",
         initialStatus: FetchStatus.InProcess,
-        action: allEntitiesActions.updatePushAllChangesFetchStatus(FetchStatus.Pending),
+        action: allEntitiesActions.pushAllChangesFetchStatusChanged(FetchStatus.Pending),
         expectedStatus: FetchStatus.Pending,
       },
       {
-        name: "when the flushAllEntities action is dispatched",
+        name: "when the allEntitiesFlushed action is dispatched",
         initialStatus: FetchStatus.InProcess,
-        action: allEntitiesActions.flushAllEntities(),
+        action: allEntitiesActions.allEntitiesFlushed(),
         expectedStatus: FetchStatus.Pending,
       },
     ],
@@ -121,13 +121,13 @@ describe("within allEntitiesReducer", () => {
       {
         name: "when the updateFetchAllFetchStatus action is dispatched",
         initialStatus: FetchStatus.InProcess,
-        action: allEntitiesActions.updateFetchAllFetchStatus(FetchStatus.Pending),
+        action: allEntitiesActions.fetchAllFetchStatusChanged(FetchStatus.Pending),
         expectedStatus: FetchStatus.Pending,
       },
       {
-        name: "when the flushAllEntities action is dispatched",
+        name: "when the allEntitiesFlushed action is dispatched",
         initialStatus: FetchStatus.InProcess,
-        action: allEntitiesActions.flushAllEntities(),
+        action: allEntitiesActions.allEntitiesFlushed(),
         expectedStatus: FetchStatus.Pending,
       },
     ],
@@ -150,17 +150,17 @@ describe("within allEntitiesReducer", () => {
     },
     [
       {
-        name: "the updateToolAction action updates state.toolAction",
+        name: "the toolActionChanged action updates state.toolAction",
         initialStateChange: { toolAction: ToolAction.None },
-        action: allEntitiesActions.updateToolAction(ToolAction.Delete),
+        action: allEntitiesActions.toolActionChanged(ToolAction.Delete),
         expectedStateChange: { toolAction: ToolAction.Delete },
       },
       {
-        name: "the updateToolNameByMapping action updates state.toolNameByMapping",
+        name: "the toolNameByMappingChanged action updates state.toolNameByMapping",
         initialStateChange: {
           toolNameByMapping: initialState.toolNameByMapping,
         },
-        action: allEntitiesActions.updateToolNameByMapping({
+        action: allEntitiesActions.toolNameByMappingChanged({
           source: ToolName.Toggl,
           target: ToolName.Clockify,
         }),
@@ -172,19 +172,19 @@ describe("within allEntitiesReducer", () => {
         },
       },
       {
-        name: "the flipIfExistsInTargetShown action updates state.areExistsInTargetShown",
+        name: "the isExistsInTargetShownToggled action updates state.areExistsInTargetShown",
         initialStateChange: { areExistsInTargetShown: true },
-        action: allEntitiesActions.flipIfExistsInTargetShown(),
+        action: allEntitiesActions.isExistsInTargetShownToggled(),
         expectedStateChange: { areExistsInTargetShown: false },
       },
       {
-        name: "the updateEntityGroupInProcess action updates state.entityGroupInProcess",
+        name: "the entityGroupInProcessChanged action updates state.entityGroupInProcess",
         initialStateChange: { entityGroupInProcess: null },
-        action: allEntitiesActions.updateEntityGroupInProcess(EntityGroup.Clients),
+        action: allEntitiesActions.entityGroupInProcessChanged(EntityGroup.Clients),
         expectedStateChange: { entityGroupInProcess: EntityGroup.Clients },
       },
       {
-        name: "the resetTransferCountsByEntityGroup action sets state.transferCountsByEntityGroup to default",
+        name: "the transferCountsByEntityGroupReset action sets state.transferCountsByEntityGroup to default",
         initialStateChange: {
           transferCountsByEntityGroup: {
             ...DEFAULT_TRANSFER_COUNTS,
@@ -192,17 +192,19 @@ describe("within allEntitiesReducer", () => {
             projects: 20,
           },
         },
-        action: allEntitiesActions.resetTransferCountsByEntityGroup(),
+        action: allEntitiesActions.transferCountsByEntityGroupReset(),
         expectedStateChange: {
           transferCountsByEntityGroup: { ...DEFAULT_TRANSFER_COUNTS },
         },
       },
       {
-        name: "the incrementEntityGroupTransferCompletedCount action increments state.transferCountsByEntityGroup for specified group",
+        name: "the entityGroupTransferCompletedCountIncremented action increments state.transferCountsByEntityGroup for specified group",
         initialStateChange: {
           transferCountsByEntityGroup: { ...DEFAULT_TRANSFER_COUNTS },
         },
-        action: allEntitiesActions.incrementEntityGroupTransferCompletedCount(EntityGroup.Clients),
+        action: allEntitiesActions.entityGroupTransferCompletedCountIncremented(
+          EntityGroup.Clients,
+        ),
         expectedStateChange: {
           transferCountsByEntityGroup: {
             ...DEFAULT_TRANSFER_COUNTS,

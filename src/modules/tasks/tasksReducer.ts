@@ -2,11 +2,11 @@ import * as R from "ramda";
 import { type ActionType, createReducer } from "typesafe-actions";
 
 import { updateAreAllRecordsIncluded } from "~/entityOperations/updateAreAllRecordsIncluded";
-import { flushAllEntities } from "~/modules/allEntities/allEntitiesActions";
+import { allEntitiesFlushed } from "~/modules/allEntities/allEntitiesActions";
 import * as tasksActions from "~/modules/tasks/tasksActions";
 import { Mapping, type Task } from "~/typeDefs";
 
-type TasksAction = ActionType<typeof tasksActions | typeof flushAllEntities>;
+type TasksAction = ActionType<typeof tasksActions | typeof allEntitiesFlushed>;
 
 export interface TasksState {
   readonly source: Dictionary<Task>;
@@ -75,6 +75,6 @@ export const tasksReducer = createReducer<TasksState, TasksAction>(initialState)
       source: updateAreAllRecordsIncluded(state.source, payload),
     }),
   )
-  .handleAction([tasksActions.deleteTasks.success, flushAllEntities], () => ({
+  .handleAction([tasksActions.deleteTasks.success, allEntitiesFlushed], () => ({
     ...initialState,
   }));

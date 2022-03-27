@@ -4,7 +4,7 @@
 
   import {
     fetchAllEntities,
-    flipIfExistsInTargetShown,
+    isExistsInTargetShownToggled,
   } from "~/modules/allEntities/allEntitiesActions";
   import * as allEntitiesSelectors from "~/modules/allEntities/allEntitiesSelectors";
   import {
@@ -65,7 +65,7 @@
     }
 
     if (!$areExistsInTargetShown) {
-      dispatchAction(flipIfExistsInTargetShown());
+      dispatchAction(isExistsInTargetShownToggled());
     }
 
     // I have no idea why I have to do this, but for some reason the "Select
@@ -84,7 +84,7 @@
   }
 
   function handleShowExistingToggle(): void {
-    dispatchAction(flipIfExistsInTargetShown());
+    dispatchAction(isExistsInTargetShownToggled());
   }
 
   function handleBackClick(): void {

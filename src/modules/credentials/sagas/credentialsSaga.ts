@@ -2,8 +2,8 @@ import type { SagaIterator } from "redux-saga";
 import { all, takeEvery } from "redux-saga/effects";
 
 import {
-  updateToolAction,
-  updateToolNameByMapping,
+  toolActionChanged,
+  toolNameByMappingChanged,
 } from "~/modules/allEntities/allEntitiesActions";
 import {
   storeCredentials,
@@ -17,7 +17,7 @@ export function* credentialsSaga(): SagaIterator {
   yield all([
     takeEvery(storeCredentials, storeCredentialsSaga),
     takeEvery(validateCredentials.request, validateCredentialsSaga),
-    takeEvery(updateToolNameByMapping, resetCredentialsSaga),
-    takeEvery(updateToolAction, resetCredentialsSaga),
+    takeEvery(toolNameByMappingChanged, resetCredentialsSaga),
+    takeEvery(toolActionChanged, resetCredentialsSaga),
   ]);
 }

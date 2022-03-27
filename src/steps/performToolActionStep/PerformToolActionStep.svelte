@@ -5,7 +5,7 @@
   import {
     createAllEntities,
     deleteAllEntities,
-    resetTransferCountsByEntityGroup,
+    transferCountsByEntityGroupReset,
   } from "~/modules/allEntities/allEntitiesActions";
   import {
     includedCountsByEntityGroupSelector,
@@ -58,7 +58,7 @@
   });
 
   onMount(() => {
-    dispatchAction(resetTransferCountsByEntityGroup());
+    dispatchAction(transferCountsByEntityGroupReset());
 
     return () => {
       unsubscribe();

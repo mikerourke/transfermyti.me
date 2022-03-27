@@ -3,7 +3,7 @@ import type { SagaIterator } from "redux-saga";
 import { call, delay, put, select } from "redux-saga/effects";
 
 import { getApiDelayForTool } from "~/entityOperations/apiRequests";
-import { incrementEntityGroupTransferCompletedCount } from "~/modules/allEntities/allEntitiesActions";
+import { entityGroupTransferCompletedCountIncremented } from "~/modules/allEntities/allEntitiesActions";
 import { workspaceIdToLinkedIdSelector } from "~/modules/workspaces/workspacesSelectors";
 import type { EntityGroup, ToolName, ValidEntity } from "~/typeDefs";
 
@@ -46,7 +46,7 @@ export function* createEntitiesForTool<TEntity>({
     }
 
     const entityGroup = sourceRecord.memberOf as EntityGroup;
-    yield put(incrementEntityGroupTransferCompletedCount(entityGroup));
+    yield put(entityGroupTransferCompletedCountIncremented(entityGroup));
 
     yield delay(apiDelay);
   }

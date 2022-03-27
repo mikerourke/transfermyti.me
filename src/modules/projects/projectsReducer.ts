@@ -2,12 +2,12 @@ import * as R from "ramda";
 import { type ActionType, createReducer } from "typesafe-actions";
 
 import { updateAreAllRecordsIncluded } from "~/entityOperations/updateAreAllRecordsIncluded";
-import { flushAllEntities } from "~/modules/allEntities/allEntitiesActions";
+import { allEntitiesFlushed } from "~/modules/allEntities/allEntitiesActions";
 import * as projectsActions from "~/modules/projects/projectsActions";
 import { Mapping, type Project } from "~/typeDefs";
 
 type ProjectsAction = ActionType<
-  typeof projectsActions | typeof flushAllEntities
+  typeof projectsActions | typeof allEntitiesFlushed
 >;
 
 export interface ProjectsState {
@@ -83,6 +83,6 @@ export const projectsReducer = createReducer<ProjectsState, ProjectsAction>(
     }),
   )
   .handleAction(
-    [projectsActions.deleteProjects.success, flushAllEntities],
+    [projectsActions.deleteProjects.success, allEntitiesFlushed],
     () => ({ ...initialState }),
   );

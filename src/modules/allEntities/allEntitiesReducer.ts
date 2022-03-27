@@ -1,4 +1,4 @@
-import * as R from "ramda";
+import { inc, lensPath, over } from "ramda";
 import { type ActionType, createReducer } from "typesafe-actions";
 
 import * as allEntitiesActions from "~/modules/allEntities/allEntitiesActions";
@@ -101,30 +101,30 @@ export const allEntitiesReducer = createReducer<
     entityGroupInProcess: null,
   }))
   .handleAction(
-    allEntitiesActions.updatePushAllChangesFetchStatus,
+    allEntitiesActions.pushAllChangesFetchStatusChanged,
     (state, { payload }) => ({
       ...state,
       pushAllChangesFetchStatus: payload,
     }),
   )
   .handleAction(
-    allEntitiesActions.updateFetchAllFetchStatus,
+    allEntitiesActions.fetchAllFetchStatusChanged,
     (state, { payload }) => ({
       ...state,
       fetchAllFetchStatus: payload,
     }),
   )
-  .handleAction(allEntitiesActions.flushAllEntities, (state) => ({
+  .handleAction(allEntitiesActions.allEntitiesFlushed, (state) => ({
     ...state,
     pushAllChangesFetchStatus: FetchStatus.Pending,
     fetchAllFetchStatus: FetchStatus.Pending,
   }))
-  .handleAction(allEntitiesActions.updateToolAction, (state, { payload }) => ({
+  .handleAction(allEntitiesActions.toolActionChanged, (state, { payload }) => ({
     ...state,
     toolAction: payload,
   }))
   .handleAction(
-    allEntitiesActions.updateToolNameByMapping,
+    allEntitiesActions.toolNameByMappingChanged,
     (state, { payload }) => ({
       ...state,
       toolNameByMapping: {
@@ -133,30 +133,30 @@ export const allEntitiesReducer = createReducer<
       },
     }),
   )
-  .handleAction(allEntitiesActions.flipIfExistsInTargetShown, (state) => ({
+  .handleAction(allEntitiesActions.isExistsInTargetShownToggled, (state) => ({
     ...state,
     areExistsInTargetShown: !state.areExistsInTargetShown,
   }))
   .handleAction(
-    allEntitiesActions.updateEntityGroupInProcess,
+    allEntitiesActions.entityGroupInProcessChanged,
     (state, { payload }) => ({
       ...state,
       entityGroupInProcess: payload,
     }),
   )
   .handleAction(
-    allEntitiesActions.resetTransferCountsByEntityGroup,
+    allEntitiesActions.transferCountsByEntityGroupReset,
     (state) => ({
       ...state,
       transferCountsByEntityGroup: { ...DEFAULT_TRANSFER_COUNTS },
     }),
   )
   .handleAction(
-    allEntitiesActions.incrementEntityGroupTransferCompletedCount,
+    allEntitiesActions.entityGroupTransferCompletedCountIncremented,
     (state, { payload }) =>
-      R.over<AllEntitiesState, number>(
-        R.lensPath(["transferCountsByEntityGroup", payload]),
-        R.inc,
+      over<AllEntitiesState, number>(
+        lensPath(["transferCountsByEntityGroup", payload]),
+        inc,
         state,
       ),
   );
