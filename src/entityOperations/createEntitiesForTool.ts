@@ -1,4 +1,4 @@
-import * as R from "ramda";
+import { isNil, propOr } from "ramda";
 import type { SagaIterator } from "redux-saga";
 import { call, delay, put, select } from "redux-saga/effects";
 
@@ -23,7 +23,9 @@ export function* createEntitiesForTool<TEntity>({
   const apiDelay = getApiDelayForTool(toolName);
 
   const validSourceRecords = sourceRecords as ValidEntity<TEntity>[];
+
   const targetRecords: TEntity[] = [];
+
   for (const sourceRecord of validSourceRecords) {
     // If the target workspace isn't in state, move to the next record. This
     // _shouldn't_ normally happen, but we're doing it here just to hedge
@@ -32,7 +34,8 @@ export function* createEntitiesForTool<TEntity>({
       findTargetWorkspaceId,
       sourceRecord.workspaceId,
     );
-    if (R.isNil(targetWorkspaceId)) {
+
+    if (isNil(targetWorkspaceId)) {
       continue;
     }
 
@@ -41,7 +44,8 @@ export function* createEntitiesForTool<TEntity>({
       sourceRecord,
       targetWorkspaceId,
     );
-    if (!R.isNil(targetRecord)) {
+
+    if (!isNil(targetRecord)) {
       targetRecords.push(targetRecord);
     }
 
@@ -63,7 +67,7 @@ function* findTargetWorkspaceId(
 ): SagaIterator<string | null> {
   const workspaceIdToLinkedId = yield select(workspaceIdToLinkedIdSelector);
 
-  return R.propOr<null, Record<string, string>, string>(
+  return propOr<null, Record<string, string>, string>(
     null,
     sourceWorkspaceId,
     workspaceIdToLinkedId,

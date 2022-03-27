@@ -1,5 +1,5 @@
 import qs from "qs";
-import * as R from "ramda";
+import { isNil } from "ramda";
 import type { SagaIterator } from "redux-saga";
 import { call, delay } from "redux-saga/effects";
 
@@ -68,7 +68,7 @@ export function* fetchArray<TResponse>(
 ): SagaIterator<TResponse> {
   const response = yield call(fetchWithRetries, endpoint, fetchOptions);
 
-  return R.isNil(response) ? [] : response;
+  return isNil(response) ? [] : response;
 }
 
 /**
@@ -90,7 +90,7 @@ export function* fetchObject<TResponse>(
 ): SagaIterator<TResponse> {
   const response = yield call(fetchWithRetries, endpoint, fetchOptions);
 
-  return R.isNil(response) ? {} : response;
+  return isNil(response) ? {} : response;
 }
 
 /**

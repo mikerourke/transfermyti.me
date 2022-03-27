@@ -1,5 +1,5 @@
 import differenceInMinutes from "date-fns/differenceInMinutes";
-import * as R from "ramda";
+import { isNil, prop, sortBy } from "ramda";
 import type { SagaIterator } from "redux-saga";
 import { call, select } from "redux-saga/effects";
 
@@ -114,6 +114,7 @@ function linkForMappingByField<TEntity>(
         // workspaces are the top-level entity, and it's impossible to have 2
         // workspaces with the same name):
         const fieldsMatch = recordToUpdate[field] === linkFromRecord[field];
+
         if (recordToUpdate.memberOf === EntityGroup.Workspaces) {
           return fieldsMatch;
         }
@@ -128,14 +129,16 @@ function linkForMappingByField<TEntity>(
         // See this issue: https://github.com/mikerourke/transfermyti.me/issues/32
         const linkedWorkspaceId =
           workspaceIdToLinkedId[linkFromRecord.workspaceId];
+
         return fieldsMatch && recordToUpdate.workspaceId === linkedWorkspaceId;
       },
     );
 
-    const linkedId = R.isNil(matchingLinkedRecord)
+    const linkedId = isNil(matchingLinkedRecord)
       ? null
       : matchingLinkedRecord.id;
-    const isIncluded = R.isNil(linkedId)
+
+    const isIncluded = isNil(linkedId)
       ? recordToUpdate.memberOf !== EntityGroup.Workspaces
       : false;
 
@@ -169,19 +172,16 @@ function* linkForMappingForTimeEntries(
 
   // Expedite the matching process by sorting by start date (since the start
   // and end date/time are compared against each other):
-  const sortByDate = R.sortBy(R.prop("start"));
+  const sortByDate = sortBy(prop("start"));
+
   const sortedSourceEntries = sortByDate(sourceTimeEntries);
   const sortedTargetEntries = sortByDate(targetTimeEntries);
 
-  const sourceById: Record<string, TimeEntry> = {};
-  const targetById: Record<string, TimeEntry> = {};
+  const sourceById: Dictionary<TimeEntry> = {};
+  const targetById: Dictionary<TimeEntry> = {};
 
   for (const sourceEntry of sortedSourceEntries) {
-    sourceById[sourceEntry.id] = sourceEntry;
-
     for (const targetEntry of sortedTargetEntries) {
-      targetById[targetEntry.id] = targetEntry;
-
       // Even if the times are similar and the descriptions match, we still
       // want to make sure they're in the same project:
       const projectsMatch = doProjectsMatch(
@@ -189,17 +189,20 @@ function* linkForMappingForTimeEntries(
         sourceEntry,
         targetEntry,
       );
+
       const timeEntriesMatch = doTimeEntriesMatch(sourceEntry, targetEntry);
 
       if (projectsMatch && timeEntriesMatch) {
-        sourceById[sourceEntry.id].linkedId = targetEntry.id;
-        targetById[targetEntry.id].linkedId = sourceEntry.id;
+        sourceEntry.linkedId = targetEntry.id;
+        targetEntry.linkedId = sourceEntry.id;
       }
+
+      targetById[targetEntry.id] = targetEntry;
     }
 
-    sourceById[sourceEntry.id].isIncluded = R.isNil(
-      sourceById[sourceEntry.id].linkedId,
-    );
+    sourceEntry.isIncluded = isNil(sourceEntry.linkedId);
+
+    sourceById[sourceEntry.id] = sourceEntry;
   }
 
   return {

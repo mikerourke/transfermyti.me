@@ -1,4 +1,4 @@
-import * as R from "ramda";
+import { propOr } from "ramda";
 import type { SagaIterator } from "redux-saga";
 import { call, delay, select } from "redux-saga/effects";
 
@@ -48,7 +48,7 @@ function* findWorkspaceIdsForTool(toolName: ToolName): SagaIterator<string[]> {
   const mappingByToolName = yield select(mappingByToolNameSelector);
   const toolMapping = mappingByToolName[toolName];
 
-  return R.propOr<string[], Record<string, string>, string[]>(
+  return propOr<string[], Record<string, string>, string[]>(
     [],
     toolMapping,
     workspaceIdsByMapping,
