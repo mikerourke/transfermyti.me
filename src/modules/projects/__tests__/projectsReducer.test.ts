@@ -2,9 +2,9 @@ import cases from "jest-in-case";
 import { lensProp, set } from "ramda";
 
 import * as projectsActions from "~/modules/projects/projectsActions";
-import { state, invalidAction } from "~/redux/__mocks__/mockStoreWithState";
+import { invalidAction, state } from "~/redux/__mocks__/mockStoreWithState";
 
-import { projectsReducer, initialState } from "../projectsReducer";
+import { initialState, projectsReducer } from "../projectsReducer";
 
 const TEST_PROJECTS_STATE = { ...state.projects };
 

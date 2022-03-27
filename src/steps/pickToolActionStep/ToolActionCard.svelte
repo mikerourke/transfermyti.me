@@ -6,15 +6,15 @@
   import Button from "~/components/Button.svelte";
   import Card from "~/components/Card.svelte";
 
-  export let action: ToolAction;
   export let title: string;
-  export let source: ToolName;
-  export let target: ToolName;
+  export let toolAction: ToolAction;
+  export let sourceTool: ToolName;
+  export let targetTool: ToolName;
 
   const dispatchEvent = createEventDispatcher();
 
   function handleClick(): void {
-    dispatchEvent("select", { action, source, target });
+    dispatchEvent("select", { toolAction, sourceTool, targetTool });
   }
 </script>
 

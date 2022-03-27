@@ -2,9 +2,9 @@ import cases from "jest-in-case";
 import { lensProp, set } from "ramda";
 
 import * as userGroupsActions from "~/modules/userGroups/userGroupsActions";
-import { state, invalidAction } from "~/redux/__mocks__/mockStoreWithState";
+import { invalidAction, state } from "~/redux/__mocks__/mockStoreWithState";
 
-import { userGroupsReducer, initialState } from "../userGroupsReducer";
+import { initialState, userGroupsReducer } from "../userGroupsReducer";
 
 const TEST_USER_GROUPS_STATE = { ...state.userGroups };
 

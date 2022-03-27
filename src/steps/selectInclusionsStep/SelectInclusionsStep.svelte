@@ -135,6 +135,7 @@
   {#if $fetchAllFetchStatus === FetchStatus.Success}
     <div class={workspacesFieldStyleClass}>
       <label for="active-workspace">Active Workspace</label>
+
       <WorkspaceSelect
         id="active-workspace"
         workspaces={$includedSourceWorkspaces}
@@ -148,6 +149,7 @@
         <label for="show-existing-toggle">
           Show records that already exist in target?
         </label>
+
         <Toggle
           id="show-existing-toggle"
           style="background-color: var(--color-white);"

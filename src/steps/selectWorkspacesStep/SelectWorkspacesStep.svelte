@@ -96,22 +96,24 @@
       $toolAction === ToolAction.Transfer
     ) {
       isMissingWorkspacesDialogOpen = true;
+
       return;
     }
 
     if ($includedWorkspacesCount === 0) {
       isNoWorkspacesDialogOpen = true;
+
       return;
     }
 
     if ($hasDuplicateTargetWorkspaces) {
       isDuplicateTargetsDialogOpen = true;
+
       return;
     }
 
-    dispatchAction(
-      workspacesActions.activeWorkspaceIdUpdated($firstIncludedWorkspaceId),
-    );
+    // prettier-ignore
+    dispatchAction(workspacesActions.activeWorkspaceIdUpdated($firstIncludedWorkspaceId));
 
     dispatchAction(fetchAllFetchStatusUpdated(FetchStatus.Pending));
 
@@ -126,11 +128,9 @@
 </script>
 
 <style>
-  ul {
+  div {
     display: flex;
     flex-wrap: wrap;
-    list-style: none;
-    padding: 0;
   }
 </style>
 
@@ -169,7 +169,7 @@
   {#if $areWorkspacesFetching}
     <Loader>Loading workspaces, please wait...</Loader>
   {:else}
-    <ul>
+    <div>
       {#each $sourceWorkspaces as sourceWorkspace}
         <WorkspaceCard
           {sourceWorkspace}
@@ -179,7 +179,7 @@
           on:toggle={handleToggleForSource}
         />
       {/each}
-    </ul>
+    </div>
   {/if}
 
   <NavigationButtonsRow

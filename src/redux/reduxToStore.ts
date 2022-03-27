@@ -1,5 +1,5 @@
 import type { Selector } from "reselect";
-import { Readable, readable } from "svelte/store";
+import { readable, type Readable } from "svelte/store";
 
 import { getStore } from "~/redux/configureStore";
 import type { ReduxState } from "~/typeDefs";

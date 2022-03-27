@@ -2,9 +2,9 @@ import cases from "jest-in-case";
 import { lensProp, set } from "ramda";
 
 import * as timeEntriesActions from "~/modules/timeEntries/timeEntriesActions";
-import { state, invalidAction } from "~/redux/__mocks__/mockStoreWithState";
+import { invalidAction, state } from "~/redux/__mocks__/mockStoreWithState";
 
-import { timeEntriesReducer, initialState } from "../timeEntriesReducer";
+import { initialState, timeEntriesReducer } from "../timeEntriesReducer";
 
 const TEST_TIME_ENTRIES_STATE = { ...state.timeEntries };
 

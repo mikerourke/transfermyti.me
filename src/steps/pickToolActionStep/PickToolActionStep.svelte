@@ -16,14 +16,14 @@
 
   function handleCardSelect(
     event: CustomEvent<{
-      action: ToolAction;
-      source: ToolName;
-      target: ToolName;
+      toolAction: ToolAction;
+      sourceTool: ToolName;
+      targetTool: ToolName;
     }>,
   ): void {
-    const { action, source, target } = event.detail;
+    const { toolAction, sourceTool: source, targetTool: target } = event.detail;
 
-    dispatchAction(toolActionUpdated(action));
+    dispatchAction(toolActionUpdated(toolAction));
 
     dispatchAction(toolNameByMappingUpdated({ source, target }));
 
@@ -42,7 +42,7 @@
 <main data-step={WorkflowStep.PickToolAction}>
   <h1>Step 1: Pick an Action</h1>
 
-  <HelpDetails open>
+  <HelpDetails open={true}>
     <p>
       Welcome to <strong>transfermyti.me</strong>! This tool can be used to
       transfer your content between time tracking tools like Toggl and Clockify.
@@ -62,40 +62,40 @@
 
   <div>
     <ToolActionCard
-      action={ToolAction.Transfer}
-      source={ToolName.Toggl}
-      target={ToolName.Clockify}
       title="Transfer from Toggl to Clockify"
+      toolAction={ToolAction.Transfer}
+      sourceTool={ToolName.Toggl}
+      targetTool={ToolName.Clockify}
       on:select={handleCardSelect}
     >
       Transfer your entries from Toggl to Clockify.me.
     </ToolActionCard>
 
     <ToolActionCard
-      action={ToolAction.Transfer}
-      source={ToolName.Clockify}
-      target={ToolName.Toggl}
       title="Transfer from Clockify to Toggl"
+      toolAction={ToolAction.Transfer}
+      sourceTool={ToolName.Clockify}
+      targetTool={ToolName.Toggl}
       on:select={handleCardSelect}
     >
       Transfer your entries from Clockify.me to Toggl.
     </ToolActionCard>
 
     <ToolActionCard
-      action={ToolAction.Delete}
-      source={ToolName.Clockify}
-      target={ToolName.None}
       title="Delete Clockify Records"
+      toolAction={ToolAction.Delete}
+      sourceTool={ToolName.Clockify}
+      targetTool={ToolName.None}
       on:select={handleCardSelect}
     >
       Bulk delete content from your Clockify.me account.
     </ToolActionCard>
 
     <ToolActionCard
-      action={ToolAction.Delete}
-      source={ToolName.Toggl}
-      target={ToolName.None}
       title="Delete Toggl Records"
+      toolAction={ToolAction.Delete}
+      sourceTool={ToolName.Toggl}
+      targetTool={ToolName.None}
       on:select={handleCardSelect}
     >
       Bulk delete content from your Toggl account.

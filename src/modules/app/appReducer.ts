@@ -1,5 +1,5 @@
 import cuid from "cuid";
-import { type ActionType, createReducer } from "typesafe-actions";
+import { createReducer, type ActionType } from "typesafe-actions";
 
 import * as appActions from "~/modules/app/appActions";
 import type { Notification } from "~/typeDefs";

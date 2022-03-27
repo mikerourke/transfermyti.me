@@ -13,6 +13,7 @@
   import BuyMeACoffeeButton from "./BuyMeACoffeeButton.svelte";
 
   const targetToolDisplayName = selectorToStore(targetToolDisplayNameSelector);
+
   const targetToolTrackerUrl = selectorToStore(targetToolTrackerUrlSelector);
 
   onMount(() => {

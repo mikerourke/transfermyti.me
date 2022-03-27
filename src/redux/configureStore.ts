@@ -25,6 +25,7 @@ export function configureStore(): void {
   // Only load the stored credentials from localStorage if in dev mode:
   if (isDevelopmentMode()) {
     const storedCredentials = getCredentialsFromStorage();
+
     if (storedCredentials !== null) {
       credentials = {
         ...initialCredentialsState,

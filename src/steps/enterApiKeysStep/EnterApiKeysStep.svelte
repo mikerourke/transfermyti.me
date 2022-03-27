@@ -9,8 +9,8 @@
   import {
     apiKeysUpdated,
     credentialsStored,
-    validationFetchStatusUpdated,
     validateCredentials,
+    validationFetchStatusUpdated,
   } from "~/modules/credentials/credentialsActions";
   import {
     credentialsByMappingSelector,

@@ -2,7 +2,7 @@ import cases from "jest-in-case";
 import { lensProp, set } from "ramda";
 
 import * as clientsActions from "~/modules/clients/clientsActions";
-import { state, invalidAction } from "~/redux/__mocks__/mockStoreWithState";
+import { invalidAction, state } from "~/redux/__mocks__/mockStoreWithState";
 
 import { clientsReducer, initialState } from "../clientsReducer";
 

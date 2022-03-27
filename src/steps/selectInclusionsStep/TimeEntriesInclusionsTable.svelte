@@ -32,28 +32,32 @@
       <th scope="col">End Time</th>
       <th scope="col">Task</th>
       <th scope="col">Project</th>
-      <th scope="col" rowSpan={2} data-include={true}> Include? </th>
+      <th scope="col" rowSpan={2} data-include>Include?</th>
     </tr>
+
     <tr>
-      <th scope="col" colSpan={3}> Description </th>
+      <th scope="col" colSpan={3}>Description</th>
       <th scope="col">Tags</th>
     </tr>
   </thead>
 
   <tbody>
-    {#each timeEntries as timeEntry}
+    {#each timeEntries as { existsInTarget, ...timeEntry }}
       <tr>
         <td>{format(timeEntry.start, "Pp")}</td>
+
         <td>{format(timeEntry.end, "Pp")}</td>
+
         <td
           data-null={timeEntry.taskName === null}
-          data-disabled={timeEntry.existsInTarget}
+          data-disabled={existsInTarget}
         >
           {timeEntry.taskName ?? "None"}
         </td>
+
         <td
           data-null={timeEntry.projectName === null}
-          data-disabled={timeEntry.existsInTarget}
+          data-disabled={existsInTarget}
         >
           {timeEntry.projectName ?? "None"}
         </td>
@@ -61,14 +65,14 @@
         <td data-include rowspan={2}>
           <input
             type="checkbox"
-            checked={timeEntry.existsInTarget ? false : timeEntry.isIncluded}
-            disabled={timeEntry.existsInTarget}
+            checked={existsInTarget ? false : timeEntry.isIncluded}
+            disabled={existsInTarget}
             on:input={() => handleIncludeToggle(timeEntry.id)}
           />
         </td>
       </tr>
 
-      <tr data-disabled={timeEntry.existsInTarget}>
+      <tr data-disabled={existsInTarget}>
         <td colspan={3}>{timeEntry.description}</td>
         <td>{timeEntry.tagNames.join(", ")}</td>
       </tr>

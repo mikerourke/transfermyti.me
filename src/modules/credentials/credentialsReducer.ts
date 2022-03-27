@@ -1,4 +1,4 @@
-import { type ActionType, createReducer } from "typesafe-actions";
+import { createReducer, type ActionType } from "typesafe-actions";
 
 import * as credentialsActions from "~/modules/credentials/credentialsActions";
 import {

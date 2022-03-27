@@ -2,9 +2,9 @@ import cases from "jest-in-case";
 import { lensProp, set } from "ramda";
 
 import * as tagsActions from "~/modules/tags/tagsActions";
-import { state, invalidAction } from "~/redux/__mocks__/mockStoreWithState";
+import { invalidAction, state } from "~/redux/__mocks__/mockStoreWithState";
 
-import { tagsReducer, initialState } from "../tagsReducer";
+import { initialState, tagsReducer } from "../tagsReducer";
 
 const TEST_TAGS_STATE = { ...state.tags };
 
