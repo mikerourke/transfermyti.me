@@ -3,15 +3,15 @@ import { type ActionType, createReducer } from "typesafe-actions";
 
 import { flushAllEntities } from "~/modules/allEntities/allEntitiesActions";
 import * as userGroupsActions from "~/modules/userGroups/userGroupsActions";
-import { Mapping, type UserGroupsByIdModel } from "~/typeDefs";
+import { Mapping, type UserGroup } from "~/typeDefs";
 
 type UserGroupsAction = ActionType<
   typeof userGroupsActions | typeof flushAllEntities
 >;
 
 export interface UserGroupsState {
-  readonly source: UserGroupsByIdModel;
-  readonly target: UserGroupsByIdModel;
+  readonly source: Dictionary<UserGroup>;
+  readonly target: Dictionary<UserGroup>;
   readonly isFetching: boolean;
 }
 

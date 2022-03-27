@@ -8,16 +8,11 @@ import {
 } from "~/modules/allEntities/allEntitiesSelectors";
 import { sourceTimeEntryCountByIdFieldSelectorFactory } from "~/modules/timeEntries/timeEntriesSelectors";
 import { activeWorkspaceIdSelector } from "~/modules/workspaces/workspacesSelectors";
-import type {
-  ReduxState,
-  Project,
-  ProjectsByIdModel,
-  EntityTableRecord,
-} from "~/typeDefs";
+import type { ReduxState, Project, EntityTableRecord } from "~/typeDefs";
 
 export const sourceProjectsByIdSelector = createSelector(
   (state: ReduxState) => state.projects.source,
-  (sourceProjectsById): ProjectsByIdModel => sourceProjectsById,
+  (sourceProjectsById): Dictionary<Project> => sourceProjectsById,
 );
 
 export const sourceProjectsSelector = createSelector(
@@ -27,7 +22,7 @@ export const sourceProjectsSelector = createSelector(
 
 export const targetProjectsByIdSelector = createSelector(
   (state: ReduxState) => state.projects.target,
-  (targetProjectsById): ProjectsByIdModel => targetProjectsById,
+  (targetProjectsById): Dictionary<Project> => targetProjectsById,
 );
 
 const targetProjectsSelector = createSelector(

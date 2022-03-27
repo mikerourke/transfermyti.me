@@ -13,13 +13,12 @@ import type {
   ReduxState,
   EntityTableRecord,
   Tag,
-  TagsByIdModel,
   ToolName,
 } from "~/typeDefs";
 
 const sourceTagsByIdSelector = createSelector(
   (state: ReduxState) => state.tags.source,
-  (sourceTagsById): TagsByIdModel => sourceTagsById,
+  (sourceTagsById): Dictionary<Tag> => sourceTagsById,
 );
 
 const sourceTagsSelector = createSelector(
@@ -29,7 +28,7 @@ const sourceTagsSelector = createSelector(
 
 const targetTagsByIdSelector = createSelector(
   (state: ReduxState) => state.tags.target,
-  (targetTagsById): TagsByIdModel => targetTagsById,
+  (targetTagsById): Dictionary<Tag> => targetTagsById,
 );
 
 const targetTagsSelector = createSelector(

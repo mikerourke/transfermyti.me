@@ -15,13 +15,7 @@ import {
   includedSourceTimeEntriesSelector,
   sourceTimeEntriesForTransferSelector,
 } from "~/modules/timeEntries/timeEntriesSelectors";
-import {
-  Mapping,
-  ToolAction,
-  ToolName,
-  type TimeEntriesByIdModel,
-  type TimeEntry,
-} from "~/typeDefs";
+import { Mapping, ToolAction, ToolName, type TimeEntry } from "~/typeDefs";
 
 /**
  * Creates time entries in the target tool based on the included time entries
@@ -100,7 +94,7 @@ export function* fetchTimeEntriesSaga(): SagaIterator {
     sourceTimeEntries = sortTimeEntries(sourceTimeEntries);
 
     const toolAction = yield select(toolActionSelector);
-    let timeEntriesByIdByMapping: Record<Mapping, TimeEntriesByIdModel>;
+    let timeEntriesByIdByMapping: Record<Mapping, Dictionary<TimeEntry>>;
 
     if (toolAction === ToolAction.Transfer) {
       let targetTimeEntries = yield call(fetchSagaByToolName[target]);

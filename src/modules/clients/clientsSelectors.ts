@@ -7,7 +7,6 @@ import { sourceTimeEntryCountByIdFieldSelectorFactory } from "~/modules/timeEntr
 import { activeWorkspaceIdSelector } from "~/modules/workspaces/workspacesSelectors";
 import type {
   Client,
-  ClientsByIdModel,
   ClientTableRecord,
   Mapping,
   ReduxState,
@@ -16,12 +15,12 @@ import type {
 
 export const sourceClientsByIdSelector = createSelector(
   (state: ReduxState) => state.clients.source,
-  (sourceClientsById): ClientsByIdModel => sourceClientsById,
+  (sourceClientsById): Dictionary<Client> => sourceClientsById,
 );
 
 const targetClientsByIdSelector = createSelector(
   (state: ReduxState) => state.clients.target,
-  (targetClientsById): ClientsByIdModel => targetClientsById,
+  (targetClientsById): Dictionary<Client> => targetClientsById,
 );
 
 const sourceClientsSelector = createSelector(

@@ -2,12 +2,7 @@ import * as R from "ramda";
 import { createSelector, createStructuredSelector } from "reselect";
 
 import { selectIdToLinkedId } from "~/entityOperations/selectIdToLinkedId";
-import type {
-  Mapping,
-  ReduxState,
-  Workspace,
-  WorkspacesByIdModel,
-} from "~/typeDefs";
+import type { Mapping, ReduxState, Workspace } from "~/typeDefs";
 
 export const areWorkspacesFetchingSelector = (state: ReduxState): boolean =>
   state.workspaces.isFetching;
@@ -16,8 +11,8 @@ export const activeWorkspaceIdSelector = (state: ReduxState): string =>
   state.workspaces.activeWorkspaceId;
 
 export const sourceWorkspacesByIdSelector = createSelector(
-  (state: ReduxState): WorkspacesByIdModel => state.workspaces.source,
-  (workspacesById): WorkspacesByIdModel => workspacesById,
+  (state: ReduxState): Dictionary<Workspace> => state.workspaces.source,
+  (workspacesById): Dictionary<Workspace> => workspacesById,
 );
 
 export const sourceWorkspacesSelector = createSelector(
@@ -44,8 +39,8 @@ export const firstIncludedWorkspaceIdSelector = createSelector(
 );
 
 export const targetWorkspacesByIdSelector = createSelector(
-  (state: ReduxState): WorkspacesByIdModel => state.workspaces.target,
-  (workspacesById): WorkspacesByIdModel => workspacesById,
+  (state: ReduxState): Dictionary<Workspace> => state.workspaces.target,
+  (workspacesById): Dictionary<Workspace> => workspacesById,
 );
 
 export const includedSourceWorkspacesSelector = createSelector(

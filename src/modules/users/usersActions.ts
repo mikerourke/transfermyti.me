@@ -1,6 +1,6 @@
 import { createAction, createAsyncAction } from "typesafe-actions";
 
-import type { Mapping, UsersByIdModel } from "~/typeDefs";
+import type { Mapping, User } from "~/typeDefs";
 
 export const createUsers = createAsyncAction(
   "@users/CREATE_USERS_REQUEST",
@@ -18,7 +18,7 @@ export const fetchUsers = createAsyncAction(
   "@users/FETCH_USERS_REQUEST",
   "@users/FETCH_USERS_SUCCESS",
   "@users/FETCH_USERS_FAILURE",
-)<void, Record<Mapping, UsersByIdModel>, void>();
+)<void, Record<Mapping, Dictionary<User>>, void>();
 
 export const flipIsUserIncluded = createAction(
   "@users/FLIP_IS_INCLUDED",

@@ -5,21 +5,16 @@ import { selectIdToLinkedId } from "~/entityOperations/selectIdToLinkedId";
 import { sourceProjectsByIdSelector } from "~/modules/projects/projectsSelectors";
 import { sourceTimeEntryCountByIdFieldSelectorFactory } from "~/modules/timeEntries/timeEntriesSelectors";
 import { activeWorkspaceIdSelector } from "~/modules/workspaces/workspacesSelectors";
-import type {
-  ReduxState,
-  Task,
-  TasksByIdModel,
-  TaskTableRecord,
-} from "~/typeDefs";
+import type { ReduxState, Task, TaskTableRecord } from "~/typeDefs";
 
 export const sourceTasksByIdSelector = createSelector(
   (state: ReduxState) => state.tasks.source,
-  (sourceTasksById): TasksByIdModel => sourceTasksById,
+  (sourceTasksById): Dictionary<Task> => sourceTasksById,
 );
 
 const targetTasksByIdSelector = createSelector(
   (state: ReduxState) => state.tasks.target,
-  (targetTasksById): TasksByIdModel => targetTasksById,
+  (targetTasksById): Dictionary<Task> => targetTasksById,
 );
 
 export const sourceTasksSelector = createSelector(

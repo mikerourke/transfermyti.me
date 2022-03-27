@@ -1,18 +1,18 @@
 import { createAction, createAsyncAction } from "typesafe-actions";
 
-import type { Mapping, Workspace, WorkspacesByIdModel } from "~/typeDefs";
+import type { Mapping, Workspace } from "~/typeDefs";
 
 export const createWorkspaces = createAsyncAction(
   "@workspaces/CREATE_WORKSPACES_REQUEST",
   "@workspaces/CREATE_WORKSPACES_SUCCESS",
   "@workspaces/CREATE_WORKSPACES_FAILURE",
-)<void, Record<Mapping, WorkspacesByIdModel>, void>();
+)<void, Record<Mapping, Dictionary<Workspace>>, void>();
 
 export const fetchWorkspaces = createAsyncAction(
   "@workspaces/FETCH_WORKSPACES_REQUEST",
   "@workspaces/FETCH_WORKSPACES_SUCCESS",
   "@workspaces/FETCH_WORKSPACES_FAILURE",
-)<void, Record<Mapping, WorkspacesByIdModel>, void>();
+)<void, Record<Mapping, Dictionary<Workspace>>, void>();
 
 export const updateActiveWorkspaceId = createAction(
   "@workspaces/UPDATE_ACTIVE_WORKSPACE_ID",

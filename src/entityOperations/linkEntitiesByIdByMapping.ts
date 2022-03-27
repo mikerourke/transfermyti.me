@@ -5,13 +5,12 @@ import { call, select } from "redux-saga/effects";
 
 import { workspaceIdToLinkedIdSelector } from "~/modules/workspaces/workspacesSelectors";
 import {
-  AnyEntity,
   EntityGroup,
   Mapping,
-  ProjectsByIdModel,
-  ReduxState,
-  TimeEntriesByIdModel,
-  TimeEntry,
+  type AnyEntity,
+  type Project,
+  type ReduxState,
+  type TimeEntry,
 } from "~/typeDefs";
 
 enum LinkFromType {
@@ -159,7 +158,7 @@ function linkForMappingByField<TEntity>(
 function* linkForMappingForTimeEntries(
   sourceTimeEntries: TimeEntry[],
   targetTimeEntries: TimeEntry[],
-): SagaIterator<Record<Mapping, TimeEntriesByIdModel>> {
+): SagaIterator<Record<Mapping, Dictionary<TimeEntry>>> {
   // I can't use the `sourceProjectsById` selector here because I get a reselect
   // error. Since the linking process only happens when the time entries are
   // initially fetched/created, it shouldn't cause a performance hit due to
@@ -214,7 +213,7 @@ function* linkForMappingForTimeEntries(
  * project ID. If they match, return true.
  */
 function doProjectsMatch(
-  sourceProjectsById: ProjectsByIdModel,
+  sourceProjectsById: Dictionary<Project>,
   sourceEntry: TimeEntry,
   targetEntry: TimeEntry,
 ): boolean {

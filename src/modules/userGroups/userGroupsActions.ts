@@ -1,12 +1,12 @@
 import { createAction, createAsyncAction } from "typesafe-actions";
 
-import type { Mapping, UserGroupsByIdModel } from "~/typeDefs";
+import type { Mapping, UserGroup } from "~/typeDefs";
 
 export const createUserGroups = createAsyncAction(
   "@userGroups/CREATE_USER_GROUPS_REQUEST",
   "@userGroups/CREATE_USER_GROUPS_SUCCESS",
   "@userGroups/CREATE_USER_GROUPS_FAILURE",
-)<void, Record<Mapping, UserGroupsByIdModel>, void>();
+)<void, Record<Mapping, Dictionary<UserGroup>>, void>();
 
 export const deleteUserGroups = createAsyncAction(
   "@userGroups/DELETE_USER_GROUPS_REQUEST",
@@ -18,7 +18,7 @@ export const fetchUserGroups = createAsyncAction(
   "@userGroups/FETCH_USER_GROUPS_REQUEST",
   "@userGroups/FETCH_USER_GROUPS_SUCCESS",
   "@userGroups/FETCH_USER_GROUPS_FAILURE",
-)<void, Record<Mapping, UserGroupsByIdModel>, void>();
+)<void, Record<Mapping, Dictionary<UserGroup>>, void>();
 
 export const flipIsUserGroupIncluded = createAction(
   "@userGroups/FLIP_IS_INCLUDED",

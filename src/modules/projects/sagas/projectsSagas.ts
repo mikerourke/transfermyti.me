@@ -19,12 +19,7 @@ import * as clockifySagas from "~/modules/projects/sagas/clockifyProjectsSagas";
 import * as togglSagas from "~/modules/projects/sagas/togglProjectsSagas";
 import { updateIsTaskIncluded } from "~/modules/tasks/tasksActions";
 import { sourceTasksSelector } from "~/modules/tasks/tasksSelectors";
-import {
-  Mapping,
-  ToolAction,
-  ToolName,
-  type ProjectsByIdModel,
-} from "~/typeDefs";
+import { Mapping, ToolAction, ToolName, type Project } from "~/typeDefs";
 
 export function* projectMonitoringSaga(): SagaIterator {
   yield all([
@@ -153,7 +148,7 @@ export function* fetchProjectsSaga(): SagaIterator {
     const sourceProjects = yield call(fetchSagaByToolName[source]);
 
     const toolAction = yield select(toolActionSelector);
-    let projectsByIdByMapping: Record<Mapping, ProjectsByIdModel>;
+    let projectsByIdByMapping: Record<Mapping, Dictionary<Project>>;
 
     if (toolAction === ToolAction.Transfer) {
       const targetProjects = yield call(fetchSagaByToolName[target]);

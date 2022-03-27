@@ -15,7 +15,7 @@ import {
   includedSourceUsersSelector,
   sourceUserEmailsByWorkspaceIdSelector,
 } from "~/modules/users/usersSelectors";
-import { Mapping, ToolAction, ToolName, type UsersByIdModel } from "~/typeDefs";
+import { Mapping, ToolAction, ToolName, type User } from "~/typeDefs";
 
 /**
  * Invites users to the target tool based on the source users.
@@ -82,7 +82,7 @@ export function* fetchUsersSaga(): SagaIterator {
     const sourceUsers = yield call(fetchSagaByToolName[source]);
 
     const toolAction = yield select(toolActionSelector);
-    let usersByIdByMapping: Record<Mapping, UsersByIdModel>;
+    let usersByIdByMapping: Record<Mapping, Dictionary<User>>;
 
     if (toolAction === ToolAction.Transfer) {
       const targetUsers = yield call(fetchSagaByToolName[target]);

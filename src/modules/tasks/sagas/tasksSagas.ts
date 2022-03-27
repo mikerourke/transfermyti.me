@@ -25,7 +25,7 @@ import {
   ToolAction,
   ToolName,
   type Project,
-  type TasksByIdModel,
+  type Task,
 } from "~/typeDefs";
 
 export function* taskMonitoringSaga(): SagaIterator {
@@ -158,7 +158,7 @@ export function* fetchTasksSaga(): SagaIterator {
     const sourceTasks = yield call(fetchSagaByToolName[source]);
 
     const toolAction = yield select(toolActionSelector);
-    let tasksByIdByMapping: Record<Mapping, TasksByIdModel>;
+    let tasksByIdByMapping: Record<Mapping, Dictionary<Task>>;
 
     if (toolAction === ToolAction.Transfer) {
       const targetTasks = yield call(fetchSagaByToolName[target]);

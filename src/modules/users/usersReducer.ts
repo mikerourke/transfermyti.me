@@ -3,13 +3,13 @@ import { type ActionType, createReducer } from "typesafe-actions";
 
 import { flushAllEntities } from "~/modules/allEntities/allEntitiesActions";
 import * as usersActions from "~/modules/users/usersActions";
-import { Mapping, type UsersByIdModel } from "~/typeDefs";
+import { Mapping, type User } from "~/typeDefs";
 
 type UsersAction = ActionType<typeof usersActions | typeof flushAllEntities>;
 
 export interface UsersState {
-  readonly source: UsersByIdModel;
-  readonly target: UsersByIdModel;
+  readonly source: Dictionary<User>;
+  readonly target: Dictionary<User>;
   readonly isFetching: boolean;
 }
 

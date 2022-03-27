@@ -79,8 +79,6 @@ export interface Client extends AnyEntity {
   workspaceId: string;
 }
 
-export type ClientsByIdModel = Record<string, Client>;
-
 export type ClientTableRecord = EntityTableRecord<Client> & {
   projectCount: number;
 };
@@ -119,15 +117,11 @@ export interface Project extends AnyEntity {
   userIds: string[];
 }
 
-export type ProjectsByIdModel = Record<string, Project>;
-
 export interface Tag extends AnyEntity {
   id: string;
   name: string;
   workspaceId: string;
 }
-
-export type TagsByIdModel = Record<string, Tag>;
 
 export interface Task extends AnyEntity {
   id: string;
@@ -137,8 +131,6 @@ export interface Task extends AnyEntity {
   assigneeIds: string[];
   isActive: boolean;
 }
-
-export type TasksByIdModel = Record<string, Task>;
 
 export type TaskTableRecord = EntityTableRecord<Task> & {
   projectName: string;
@@ -161,8 +153,6 @@ export interface TimeEntry extends AnyEntity {
   userGroupIds: string[];
 }
 
-export type TimeEntriesByIdModel = Record<string, TimeEntry>;
-
 export interface TimeEntryTableRecord extends EntityTableRecord<TimeEntry> {
   taskName: string | null;
   projectName: string | null;
@@ -174,8 +164,6 @@ export interface UserGroup extends AnyEntity {
   userIds: string[];
 }
 
-export type UserGroupsByIdModel = Record<string, UserGroup>;
-
 export interface User extends AnyEntity {
   id: string;
   name: string;
@@ -185,13 +173,9 @@ export interface User extends AnyEntity {
   userGroupIds: string[] | null;
 }
 
-export type UsersByIdModel = Record<string, User>;
-
 export interface Workspace extends AnyEntity {
   id: string;
   name: string;
   userIds: string[];
   isAdmin: boolean | null;
 }
-
-export type WorkspacesByIdModel = Record<string, Workspace>;

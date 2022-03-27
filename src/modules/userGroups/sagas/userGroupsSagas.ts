@@ -15,12 +15,7 @@ import {
   includedSourceUserGroupsSelector,
   sourceUserGroupsForTransferSelector,
 } from "~/modules/userGroups/userGroupsSelectors";
-import {
-  Mapping,
-  ToolAction,
-  ToolName,
-  type UserGroupsByIdModel,
-} from "~/typeDefs";
+import { Mapping, ToolAction, ToolName, type UserGroup } from "~/typeDefs";
 
 /**
  * Creates user groups in the target tool based on the included user groups from
@@ -91,7 +86,7 @@ export function* fetchUserGroupsSaga(): SagaIterator {
     const sourceUserGroups = yield call(fetchSagaByToolName[source]);
 
     const toolAction = yield select(toolActionSelector);
-    let userGroupsByIdByMapping: Record<Mapping, UserGroupsByIdModel>;
+    let userGroupsByIdByMapping: Record<Mapping, Dictionary<UserGroup>>;
 
     if (toolAction === ToolAction.Transfer) {
       const targetUserGroups = yield call(fetchSagaByToolName[target]);
