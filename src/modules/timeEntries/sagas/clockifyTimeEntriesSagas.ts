@@ -85,6 +85,7 @@ function* createClockifyTimeEntry(
   targetWorkspaceId: string,
 ): SagaIterator<TimeEntry> {
   const projectIdToLinkedId = yield select(projectIdToLinkedIdSelector);
+
   const taskIdToLinkedId = yield select(taskIdToLinkedIdSelector);
 
   let targetProjectId;
@@ -137,6 +138,7 @@ function* createClockifyTimeEntry(
  */
 function* deleteClockifyTimeEntry(sourceTimeEntry: TimeEntry): SagaIterator {
   const { workspaceId, id } = sourceTimeEntry;
+
   yield call(
     fetchObject,
     `/clockify/api/workspaces/${workspaceId}/time-entries/${id}`,
@@ -152,8 +154,9 @@ function* fetchClockifyTimeEntriesInWorkspace(
   workspaceId: string,
 ): SagaIterator<TimeEntry[]> {
   const credentialsByToolName = yield select(credentialsByToolNameSelector);
+
   const clockifyUserId = credentialsByToolName?.clockify?.userId;
-  if (!clockifyUserId) {
+  if (isNil(clockifyUserId)) {
     throw new Error("Invalid or missing Clockify user ID");
   }
 
@@ -170,6 +173,7 @@ function transformFromResponse(
   timeEntry: ClockifyTimeEntryResponse,
 ): TimeEntry {
   const startTime = getTime(timeEntry, "start");
+
   const clockifyTags = propOr<
     ClockifyTagResponse[],
     ClockifyTimeEntryResponse,

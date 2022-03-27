@@ -72,16 +72,20 @@ export const projectsForInclusionsTableSelector = createSelector(
     sourceProjects,
     targetProjectsById,
     timeEntryCountByProjectId,
-  ): EntityTableRecord<Project>[] =>
-    sourceProjects.reduce((acc, sourceProject) => {
+  ): EntityTableRecord<Project>[] => {
+    const projectTableRecords: EntityTableRecord<Project>[] = [];
+
+    for (const sourceProject of sourceProjects) {
       const existsInTarget = sourceProject.linkedId !== null;
+
       if (existsInTarget && !areExistsInTargetShown) {
-        return acc;
+        continue;
       }
 
       let isActiveInTarget = false;
       if (existsInTarget) {
         const targetId = sourceProject.linkedId as string;
+
         isActiveInTarget = targetProjectsById[targetId].isActive;
       }
 
@@ -91,17 +95,17 @@ export const projectsForInclusionsTableSelector = createSelector(
         timeEntryCountByProjectId,
       );
 
-      return [
-        ...acc,
-        {
-          ...sourceProject,
-          entryCount,
-          existsInTarget,
-          isActiveInSource: sourceProject.isActive,
-          isActiveInTarget,
-        },
-      ];
-    }, [] as EntityTableRecord<Project>[]),
+      projectTableRecords.push({
+        ...sourceProject,
+        entryCount,
+        existsInTarget,
+        isActiveInSource: sourceProject.isActive,
+        isActiveInTarget,
+      });
+    }
+
+    return projectTableRecords;
+  },
 );
 
 export const projectsTotalCountsByTypeSelector = createSelector(

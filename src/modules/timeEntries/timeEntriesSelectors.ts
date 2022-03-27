@@ -24,10 +24,9 @@ export const sourceTimeEntriesForTransferSelector = createSelector(
   includedSourceTimeEntriesSelector,
   isDuplicateCheckEnabledSelector,
   (sourceTimeEntries, isDuplicateCheckEnabled) =>
+    // prettier-ignore
     isDuplicateCheckEnabled
-      ? sourceTimeEntries.filter((sourceTimeEntry) =>
-          isNil(sourceTimeEntry.linkedId),
-        )
+      ? sourceTimeEntries.filter((sourceTimeEntry) => isNil(sourceTimeEntry.linkedId))
       : sourceTimeEntries,
 );
 
@@ -52,11 +51,14 @@ export const timeEntriesForInclusionsTableSelector = createSelector(
     sourceProjectsById,
     sourceTasksById,
     isDuplicateCheckEnabled,
-  ): TimeEntryTableRecord[] =>
-    sourceTimeEntries.reduce((acc, sourceTimeEntry) => {
+  ): TimeEntryTableRecord[] => {
+    const timeEntryTableRecords: TimeEntryTableRecord[] = [];
+
+    for (const sourceTimeEntry of sourceTimeEntries) {
       const existsInTarget = sourceTimeEntry.linkedId !== null;
+
       if (existsInTarget && !areExistsInTargetShown) {
-        return acc;
+        continue;
       }
 
       const projectName = pathOr(
@@ -74,18 +76,18 @@ export const timeEntriesForInclusionsTableSelector = createSelector(
         );
       }
 
-      return [
-        ...acc,
-        {
-          ...sourceTimeEntry,
-          projectName,
-          taskName,
-          existsInTarget: isDuplicateCheckEnabled ? existsInTarget : false,
-          isActiveInSource: true,
-          isActiveInTarget: existsInTarget,
-        },
-      ];
-    }, [] as TimeEntryTableRecord[]),
+      timeEntryTableRecords.push({
+        ...sourceTimeEntry,
+        projectName,
+        taskName,
+        existsInTarget: isDuplicateCheckEnabled ? existsInTarget : false,
+        isActiveInSource: true,
+        isActiveInTarget: existsInTarget,
+      });
+    }
+
+    return timeEntryTableRecords;
+  },
 );
 
 export const timeEntriesTotalCountsByTypeSelector = createSelector(
@@ -131,12 +133,14 @@ export const sourceTimeEntryCountByIdFieldSelectorFactory = (
 
     for (const timeEntry of sourceTimeEntries) {
       const parentId = timeEntry[idField];
-      if (parentId) {
+
+      if (!isNil(parentId)) {
         const currentCountForId = propOr<
           number,
           Record<string, number>,
           number
         >(0, parentId, timeEntryCountByIdField);
+
         timeEntryCountByIdField[parentId] = currentCountForId + 1;
       }
     }

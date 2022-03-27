@@ -4,11 +4,15 @@ import { createSelector, createStructuredSelector } from "reselect";
 import { selectIdToLinkedId } from "~/entityOperations/selectIdToLinkedId";
 import type { Mapping, ReduxState, Workspace } from "~/typeDefs";
 
-export const areWorkspacesFetchingSelector = (state: ReduxState): boolean =>
-  state.workspaces.isFetching;
+export const areWorkspacesFetchingSelector = createSelector(
+  (state: ReduxState) => state.workspaces.isFetching,
+  (isFetching): boolean => isFetching,
+);
 
-export const activeWorkspaceIdSelector = (state: ReduxState): string =>
-  state.workspaces.activeWorkspaceId;
+export const activeWorkspaceIdSelector = createSelector(
+  (state: ReduxState) => state.workspaces.activeWorkspaceId,
+  (activeWorkspaceId): string => activeWorkspaceId,
+);
 
 export const sourceWorkspacesByIdSelector = createSelector(
   (state: ReduxState): Dictionary<Workspace> => state.workspaces.source,
@@ -19,6 +23,7 @@ export const sourceWorkspacesSelector = createSelector(
   sourceWorkspacesByIdSelector,
   (workspacesById): Workspace[] => {
     const workspaces = Object.values(workspacesById);
+
     return sortBy(compose(toLower, prop("name")), workspaces);
   },
 );
@@ -30,7 +35,7 @@ export const firstIncludedWorkspaceIdSelector = createSelector(
       (sourceWorkspace) => sourceWorkspace.isIncluded,
     );
 
-    if (!firstIncluded) {
+    if (firstIncluded === undefined) {
       return "";
     }
 
@@ -70,6 +75,7 @@ export const targetWorkspacesSelector = createSelector(
   targetWorkspacesByIdSelector,
   (workspacesById): Workspace[] => {
     const workspaces = Object.values(workspacesById);
+
     return sortBy(compose(toLower, prop("name")), workspaces);
   },
 );
@@ -86,7 +92,7 @@ export const hasDuplicateTargetWorkspacesSelector = createSelector(
     const countByLinkedId: Record<string, number> = {};
 
     for (const { linkedId } of includedSourceWorkspaces) {
-      if (!linkedId) {
+      if (linkedId === null) {
         continue;
       }
 
@@ -101,13 +107,17 @@ export const hasDuplicateTargetWorkspacesSelector = createSelector(
   },
 );
 
-const limitIdsToIncluded = (workspaces: Workspace[]): string[] =>
-  workspaces.reduce((acc, workspace) => {
-    if (!workspace.isIncluded) {
-      return acc;
+const limitIdsToIncluded = (workspaces: Workspace[]): string[] => {
+  const includedIds: string[] = [];
+
+  for (const workspace of workspaces) {
+    if (workspace.isIncluded) {
+      includedIds.push(workspace.id);
     }
-    return [...acc, workspace.id];
-  }, [] as string[]);
+  }
+
+  return includedIds;
+};
 
 export const includedSourceWorkspaceIdsSelector = createSelector(
   sourceWorkspacesSelector,

@@ -64,6 +64,7 @@ export function* fetchTogglTasksSaga(): SagaIterator<Task[]> {
  */
 function* createTogglTask(sourceTask: Task): SagaIterator<Task> {
   const projectIdToLinkedId = yield select(projectIdToLinkedIdSelector);
+
   const targetProjectId = propOr<string | null, Record<string, string>, string>(
     null,
     sourceTask.projectId,
@@ -71,9 +72,8 @@ function* createTogglTask(sourceTask: Task): SagaIterator<Task> {
   );
 
   if (isNil(targetProjectId)) {
-    throw new Error(
-      `Could not find target project ID for Toggl task ${sourceTask.name}`,
-    );
+    // prettier-ignore
+    throw new Error(`Could not find target project ID for Toggl task ${sourceTask.name}`);
   }
 
   const taskRequest = {
@@ -134,10 +134,12 @@ function transformFromResponse(task: TogglTaskResponse): Task {
 
 function convertSecondsToClockifyEstimate(seconds: number): string {
   const minutes = seconds / 60;
+
   if (minutes < 60) {
     return `PT${minutes}M`;
   }
 
   const hours = minutes / 60;
+
   return `PT${hours}H`;
 }

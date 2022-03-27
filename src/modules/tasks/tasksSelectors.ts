@@ -64,16 +64,19 @@ export const tasksForInclusionsTableSelector = createSelector(
     targetTasksById,
     sourceProjectsById,
     timeEntryCountByTaskId,
-  ): TaskTableRecord[] =>
-    sourceTasks.reduce((acc, sourceTask) => {
+  ): TaskTableRecord[] => {
+    const taskTableRecords: TaskTableRecord[] = [];
+
+    for (const sourceTask of sourceTasks) {
       const existsInTarget = sourceTask.linkedId !== null;
       if (existsInTarget && !areExistsInTargetShown) {
-        return acc;
+        continue;
       }
 
       let isActiveInTarget = false;
       if (existsInTarget) {
         const targetId = sourceTask.linkedId as string;
+
         isActiveInTarget = targetTasksById[targetId].isActive;
       }
 
@@ -83,18 +86,18 @@ export const tasksForInclusionsTableSelector = createSelector(
         timeEntryCountByTaskId,
       );
 
-      return [
-        ...acc,
-        {
-          ...sourceTask,
-          entryCount,
-          existsInTarget,
-          isActiveInSource: sourceTask.isActive,
-          isActiveInTarget,
-          projectName: sourceProjectsById[sourceTask.projectId].name,
-        },
-      ];
-    }, [] as TaskTableRecord[]),
+      taskTableRecords.push({
+        ...sourceTask,
+        entryCount,
+        existsInTarget,
+        isActiveInSource: sourceTask.isActive,
+        isActiveInTarget,
+        projectName: sourceProjectsById[sourceTask.projectId].name,
+      });
+    }
+
+    return taskTableRecords;
+  },
 );
 
 export const tasksTotalCountsByTypeSelector = createSelector(

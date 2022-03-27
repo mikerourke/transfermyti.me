@@ -69,6 +69,7 @@ function* createTogglUserGroup(
     name: sourceUserGroup.name,
     wid: +targetWorkspaceId,
   };
+
   const { data } = yield call(fetchObject, "/toggl/api/groups", {
     method: "POST",
     body: userGroupRequest,

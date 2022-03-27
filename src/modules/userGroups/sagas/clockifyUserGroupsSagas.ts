@@ -63,6 +63,7 @@ function* createClockifyUserGroup(
   targetWorkspaceId: string,
 ): SagaIterator {
   const userGroupRequest = { name: sourceUserGroup.name };
+
   const clockifyUserGroup = yield call(
     fetchObject,
     `/clockify/api/workspaces/${targetWorkspaceId}/user-groups`,
@@ -78,6 +79,7 @@ function* createClockifyUserGroup(
  */
 function* deleteClockifyUserGroup(sourceUserGroup: UserGroup): SagaIterator {
   const { workspaceId, id } = sourceUserGroup;
+
   yield call(
     fetchObject,
     `/clockify/api/workspaces/${workspaceId}/user-groups/${id}`,

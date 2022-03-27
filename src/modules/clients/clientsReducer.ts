@@ -1,10 +1,10 @@
 import { lensPath, not, over } from "ramda";
-import { type ActionType, createReducer } from "typesafe-actions";
+import { createReducer, type ActionType } from "typesafe-actions";
 
 import { updateAreAllRecordsIncluded } from "~/entityOperations/updateAreAllRecordsIncluded";
 import { allEntitiesFlushed } from "~/modules/allEntities/allEntitiesActions";
 import * as clientsActions from "~/modules/clients/clientsActions";
-import { type Client, Mapping } from "~/typeDefs";
+import { Mapping, type Client } from "~/typeDefs";
 
 type ClientsAction = ActionType<
   typeof clientsActions | typeof allEntitiesFlushed

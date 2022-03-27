@@ -75,6 +75,7 @@ const projectCountBySourceClientIdSelector = createSelector(
         sourceClient.id,
         projectCountBySourceClientId,
       );
+
       projectCountBySourceClientId[sourceClient.id] = currentCount + 1;
     }
 
@@ -92,11 +93,14 @@ export const clientsForInclusionsTableSelector = createSelector(
     sourceClients,
     projectCountByClientId,
     timeEntryCountByClientId,
-  ): ClientTableRecord[] =>
-    sourceClients.reduce((acc, sourceClient) => {
+  ): ClientTableRecord[] => {
+    const clientTableRecords: ClientTableRecord[] = [];
+
+    for (const sourceClient of sourceClients) {
       const existsInTarget = sourceClient.linkedId !== null;
+
       if (existsInTarget && !areExistsInTargetShown) {
-        return acc;
+        continue;
       }
 
       const entryCount = propOr<number, Dictionary<number>, number>(
@@ -104,24 +108,25 @@ export const clientsForInclusionsTableSelector = createSelector(
         sourceClient.id,
         timeEntryCountByClientId,
       );
+
       const projectCount = propOr<number, Dictionary<number>, number>(
         0,
         sourceClient.id,
         projectCountByClientId,
       );
 
-      return [
-        ...acc,
-        {
-          ...sourceClient,
-          entryCount,
-          projectCount,
-          existsInTarget,
-          isActiveInSource: true,
-          isActiveInTarget: existsInTarget,
-        },
-      ];
-    }, [] as ClientTableRecord[]),
+      clientTableRecords.push({
+        ...sourceClient,
+        entryCount,
+        projectCount,
+        existsInTarget,
+        isActiveInSource: true,
+        isActiveInTarget: existsInTarget,
+      });
+    }
+
+    return clientTableRecords;
+  },
 );
 
 export const clientsTotalCountsByTypeSelector = createSelector(
@@ -167,6 +172,7 @@ export const clientIdsByNameSelectorFactory = (
     clientsByMappingSelector,
     (mappingByToolName, clientsByMapping) => {
       const toolMapping = mappingByToolName[toolName];
+
       const clients = clientsByMapping[toolMapping];
 
       const clientIdsByName: Dictionary<string> = {};

@@ -64,6 +64,7 @@ function messageFromErrorOrResponse(err: Error | Response): string {
 
 function extrapolateApiErrorMessage(response: Response): string {
   const { status, statusText, url } = response;
+
   let toolName;
   if (/clockify/gi.test(url)) {
     toolName = "Clockify";

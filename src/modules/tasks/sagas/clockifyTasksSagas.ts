@@ -73,6 +73,7 @@ function* createClockifyTask(
   targetWorkspaceId: string,
 ): SagaIterator<Task> {
   const projectIdToLinkedId = yield select(projectIdToLinkedIdSelector);
+
   const targetProjectId = propOr<string | null, Record<string, string>, string>(
     null,
     sourceTask.projectId,
@@ -80,15 +81,17 @@ function* createClockifyTask(
   );
 
   if (isNil(targetProjectId)) {
-    throw new Error(
-      `Could not find target project ID for Clockify task ${sourceTask.name}`,
-    );
+    // prettier-ignore
+    throw new Error(`Could not find target project ID for Clockify task ${sourceTask.name}`);
   }
 
   const userIdToLinkedId = yield select(userIdToLinkedIdSelector);
+
   const targetAssigneeIds: string[] = [];
+
   for (const sourceAssigneeId of sourceTask.assigneeIds) {
     const assigneeLinkedId = userIdToLinkedId[sourceAssigneeId];
+
     if (assigneeLinkedId) {
       targetAssigneeIds.push(assigneeLinkedId);
     }
@@ -117,6 +120,7 @@ function* createClockifyTask(
  */
 function* deleteClockifyTask(sourceTask: Task): SagaIterator {
   const { workspaceId, projectId, id } = sourceTask;
+
   yield call(
     fetchObject,
     `/clockify/api/workspaces/${workspaceId}/projects/${projectId}/tasks/${id}`,
@@ -147,10 +151,12 @@ function* fetchClockifyTasksInWorkspace(
 
   for (const clockifyProject of clockifyProjects) {
     const { id: projectId } = clockifyProject;
+
     const clockifyTasks: ClockifyTaskResponse[] = yield call(
       fetchPaginatedFromClockify,
       `/clockify/api/workspaces/${workspaceId}/projects/${projectId}/tasks`,
     );
+
     allClockifyTasks.push(...clockifyTasks);
 
     yield delay(clockifyApiDelay);

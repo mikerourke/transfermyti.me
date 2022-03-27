@@ -109,6 +109,7 @@ function* createTogglTimeEntry(
   targetWorkspaceId: string,
 ): SagaIterator {
   const projectIdToLinkedId = yield select(projectIdToLinkedIdSelector);
+
   const targetProjectId = propOr<string | null, Record<string, string>, string>(
     null,
     sourceTimeEntry.projectId ?? "",
@@ -116,6 +117,7 @@ function* createTogglTimeEntry(
   );
 
   const taskIdToLinkedId = yield select(taskIdToLinkedIdSelector);
+
   const targetTaskId = propOr<string | null, Record<string, string>, string>(
     null,
     sourceTimeEntry.taskId ?? "",
@@ -160,13 +162,16 @@ function* fetchTogglTimeEntriesInWorkspace(
   workspaceId: string,
 ): SagaIterator<TimeEntry[]> {
   const credentialsByToolName = yield select(credentialsByToolNameSelector);
-  const togglUserId = credentialsByToolName?.toggl?.userId;
-  if (!togglUserId) {
+
+  const togglUserId = credentialsByToolName?.toggl?.userId ?? null;
+  if (togglUserId === null) {
     throw new Error("Invalid or missing Toggl user ID");
   }
 
   const togglTimeEntries: TogglTimeEntryResponse[] = [];
+
   const currentYear = new Date().getFullYear();
+
   const clientIdsByName = yield select(
     clientIdsByNameSelectorFactory(ToolName.Toggl),
   );
@@ -192,6 +197,7 @@ function* fetchTogglTimeEntriesInWorkspace(
 
   return togglTimeEntries.reduce((acc, togglTimeEntry) => {
     const validUserId = togglTimeEntry?.uid ?? 0;
+
     // Extra check to ensure we only transfer time entries for the user
     // associated with the API key:
     if (validUserId.toString() !== togglUserId) {
@@ -240,6 +246,7 @@ function* fetchAllTogglTimeEntriesForYear(
   }
 
   const allTimeEntries = firstPageEntries;
+
   const totalPages = Math.ceil(totalCount / perPage);
 
   for (let page = 2; page <= totalPages; page += 1) {
@@ -265,8 +272,11 @@ function* fetchTogglTimeEntriesForYearAndPage(
   page: number,
 ): SagaIterator<TogglTimeEntriesFetchResponse> {
   const currentDate = new Date();
+
   currentDate.setFullYear(year);
+
   const DATE_FORMAT = "yyyy-MM-dd'T'HH:mm:ss";
+
   const firstDay = format(startOfYear(currentDate), DATE_FORMAT);
   const lastDay = format(endOfYear(currentDate), DATE_FORMAT);
 
@@ -289,8 +299,11 @@ function transformFromResponse(
   tagIdsByName: Record<string, string>,
 ): TimeEntry {
   const startTime = getTime(timeEntry, "start");
+
   const tagNames = timeEntry.tags ?? [];
+
   const tagIds = tagNames.map((tagName) => tagIdsByName[tagName]);
+
   return {
     id: timeEntry.id.toString(),
     description: timeEntry.description,
@@ -323,5 +336,6 @@ function getTime(
     field,
     timeEntry,
   );
+
   return isNil(value) ? new Date() : new Date(value);
 }

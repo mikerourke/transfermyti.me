@@ -9,9 +9,9 @@ import { mappingByToolNameSelector } from "~/modules/allEntities/allEntitiesSele
 import { sourceTimeEntryCountByTagIdSelector } from "~/modules/timeEntries/timeEntriesSelectors";
 import { activeWorkspaceIdSelector } from "~/modules/workspaces/workspacesSelectors";
 import type {
+  EntityTableRecord,
   Mapping,
   ReduxState,
-  EntityTableRecord,
   Tag,
   ToolName,
 } from "~/typeDefs";
@@ -70,11 +70,13 @@ export const tagsForInclusionsTableSelector = createSelector(
     areExistsInTargetShown,
     sourceTags,
     timeEntryCountByTagId,
-  ): EntityTableRecord<Tag>[] =>
-    sourceTags.reduce((acc, sourceTag) => {
+  ): EntityTableRecord<Tag>[] => {
+    const tagTableRecords: EntityTableRecord<Tag>[] = [];
+
+    for (const sourceTag of sourceTags) {
       const existsInTarget = sourceTag.linkedId !== null;
       if (existsInTarget && !areExistsInTargetShown) {
-        return acc;
+        continue;
       }
 
       const entryCount = propOr<number, Record<string, number>, number>(
@@ -83,17 +85,17 @@ export const tagsForInclusionsTableSelector = createSelector(
         timeEntryCountByTagId,
       );
 
-      return [
-        ...acc,
-        {
-          ...sourceTag,
-          entryCount,
-          existsInTarget,
-          isActiveInSource: true,
-          isActiveInTarget: existsInTarget,
-        },
-      ];
-    }, [] as EntityTableRecord<Tag>[]),
+      tagTableRecords.push({
+        ...sourceTag,
+        entryCount,
+        existsInTarget,
+        isActiveInSource: true,
+        isActiveInTarget: existsInTarget,
+      });
+    }
+
+    return tagTableRecords;
+  },
 );
 
 export const tagsTotalCountsByTypeSelector = createSelector(
@@ -124,6 +126,7 @@ export const tagIdsByNameBySelectorFactory = (
     tagsByMappingSelector,
     (mappingByToolName, tagsByMapping): Record<string, string> => {
       const toolMapping = mappingByToolName[toolName];
+
       const tags = tagsByMapping[toolMapping];
 
       const tagIdsByName: Record<string, string> = {};
@@ -143,6 +146,7 @@ export const targetTagIdsSelectorFactory = (
 
     for (const sourceTagId of sourceTagIds) {
       const sourceTag = sourceTagsById[sourceTagId];
+
       if (sourceTag && sourceTag.linkedId) {
         targetTagIds.push(sourceTag.linkedId);
       }

@@ -8,7 +8,7 @@ import {
 import { createEntitiesForTool } from "~/entityOperations/createEntitiesForTool";
 import { deleteEntitiesForTool } from "~/entityOperations/deleteEntitiesForTool";
 import { fetchEntitiesForTool } from "~/entityOperations/fetchEntitiesForTool";
-import { type Client, EntityGroup, ToolName } from "~/typeDefs";
+import { EntityGroup, ToolName, type Client } from "~/typeDefs";
 
 interface ClockifyClientResponse {
   id: string;
@@ -63,6 +63,7 @@ function* createClockifyClient(
   targetWorkspaceId: string,
 ): SagaIterator<Client> {
   const clientRequest = { name: sourceClient.name };
+
   const clockifyClient = yield call(
     fetchObject,
     `/clockify/api/workspaces/${targetWorkspaceId}/clients`,
@@ -78,6 +79,7 @@ function* createClockifyClient(
  */
 function* deleteClockifyClient(sourceClient: Client): SagaIterator {
   const { workspaceId, id } = sourceClient;
+
   yield call(
     fetchObject,
     `/clockify/api/workspaces/${workspaceId}/clients/${id}`,

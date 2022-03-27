@@ -56,9 +56,11 @@ function* pushTaskInclusionChangesToProject(
   }
 
   const sourceProjects: Project[] = yield select(sourceProjectsSelector);
+
   const includedSourceTasksCount = yield select(
     includedSourceTasksCountSelector,
   );
+
   const sourceTasksById = yield select(sourceTasksByIdSelector);
 
   if (isActionOf(tasksActions.isTaskIncludedToggled, action)) {
@@ -103,13 +105,16 @@ export function* createTasksSaga(): SagaIterator {
 
   try {
     const toolNameByMapping = yield select(toolNameByMappingSelector);
+
     const createSagaByToolName = {
       [ToolName.Clockify]: clockifySagas.createClockifyTasksSaga,
       [ToolName.Toggl]: togglSagas.createTogglTasksSaga,
     }[toolNameByMapping.target];
 
     const sourceTasks = yield select(sourceTasksForTransferSelector);
+
     const targetTasks = yield call(createSagaByToolName, sourceTasks);
+
     const tasksByIdByMapping = yield call(
       linkEntitiesByIdByMapping,
       sourceTasks,
@@ -119,6 +124,7 @@ export function* createTasksSaga(): SagaIterator {
     yield put(tasksActions.createTasks.success(tasksByIdByMapping));
   } catch (err: AnyValid) {
     yield put(errorNotificationShown(err));
+
     yield put(tasksActions.createTasks.failure());
   }
 }
@@ -131,17 +137,20 @@ export function* deleteTasksSaga(): SagaIterator {
 
   try {
     const toolNameByMapping = yield select(toolNameByMappingSelector);
+
     const deleteSagaByToolName = {
       [ToolName.Clockify]: clockifySagas.deleteClockifyTasksSaga,
       [ToolName.Toggl]: togglSagas.deleteTogglTasksSaga,
     }[toolNameByMapping.source];
 
     const sourceTasks = yield select(includedSourceTasksSelector);
+
     yield call(deleteSagaByToolName, sourceTasks);
 
     yield put(tasksActions.deleteTasks.success());
   } catch (err: AnyValid) {
     yield put(errorNotificationShown(err));
+
     yield put(tasksActions.deleteTasks.failure());
   }
 }
@@ -157,10 +166,13 @@ export function* fetchTasksSaga(): SagaIterator {
       [ToolName.Clockify]: clockifySagas.fetchClockifyTasksSaga,
       [ToolName.Toggl]: togglSagas.fetchTogglTasksSaga,
     };
+
     const { source, target } = yield select(toolNameByMappingSelector);
+
     const sourceTasks = yield call(fetchSagaByToolName[source]);
 
     const toolAction = yield select(toolActionSelector);
+
     let tasksByIdByMapping: Record<Mapping, Dictionary<Task>>;
 
     if (toolAction === ToolAction.Transfer) {
@@ -181,6 +193,7 @@ export function* fetchTasksSaga(): SagaIterator {
     yield put(tasksActions.fetchTasks.success(tasksByIdByMapping));
   } catch (err: AnyValid) {
     yield put(errorNotificationShown(err));
+
     yield put(tasksActions.fetchTasks.failure());
   }
 }

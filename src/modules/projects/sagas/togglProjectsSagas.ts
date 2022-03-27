@@ -97,6 +97,7 @@ function* createTogglProject(
   targetWorkspaceId: string,
 ): SagaIterator<Project> {
   const clientIdToLinkedId = yield select(clientIdToLinkedIdSelector);
+
   const targetClientId = propOr<string | null, Record<string, string>, string>(
     null,
     sourceProject.clientId ?? "",
@@ -148,7 +149,9 @@ function* fetchTogglProjectsInWorkspace(
 
   for (const togglProject of togglProjects) {
     const projectId = validStringify(togglProject?.id, "");
+
     const userIds: string[] = yield call(fetchUserIdsInProject, projectId);
+
     allTogglProjects.push(transformFromResponse(togglProject, userIds));
 
     yield delay(togglApiDelay);
@@ -168,6 +171,7 @@ function* fetchUserIdsInProject(projectId: string): SagaIterator<string[]> {
     fetchArray,
     `/toggl/api/projects/${projectId}/project_users`,
   );
+
   return projectUsers.map(({ uid }) => validStringify(uid, ""));
 }
 

@@ -62,6 +62,7 @@ function* createTogglTag(
       wid: +targetWorkspaceId,
     },
   };
+
   const { data } = yield call(fetchObject, "/toggl/api/tags", {
     method: "POST",
     body: tagRequest,

@@ -1,5 +1,5 @@
 import { lensPath, not, over } from "ramda";
-import { type ActionType, createReducer } from "typesafe-actions";
+import { createReducer, type ActionType } from "typesafe-actions";
 
 import { updateAreAllRecordsIncluded } from "~/entityOperations/updateAreAllRecordsIncluded";
 import { allEntitiesFlushed } from "~/modules/allEntities/allEntitiesActions";

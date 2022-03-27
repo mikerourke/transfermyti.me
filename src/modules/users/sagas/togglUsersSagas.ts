@@ -72,6 +72,7 @@ export function* createTogglUsersSaga(
  */
 export function* removeTogglUsersSaga(sourceUsers: User[]): SagaIterator {
   const includedWorkspaceIds = yield select(includedSourceWorkspaceIdsSelector);
+
   const includedProjectIds = yield select(includedSourceProjectIdsSelector);
 
   const togglApiDelay = yield call(getApiDelayForTool, ToolName.Toggl);
@@ -84,36 +85,38 @@ export function* removeTogglUsersSaga(sourceUsers: User[]): SagaIterator {
       fetchProjectUsersInSourceWorkspace,
       workspaceId,
     );
-    const projectUsersById = projectUsers.reduce((acc, projectUser) => {
-      if (!projectUser?.id) {
-        return acc;
+
+    const projectUsersById: Dictionary<TogglProjectUserResponse> = {};
+
+    for (const projectUser of projectUsers) {
+      if ((projectUser?.id ?? null) === null) {
+        continue;
       }
 
-      return {
-        ...acc,
-        [projectUser.id.toString()]: projectUser,
-      };
-    }, {});
+      projectUsersById[projectUser.id.toString()] = projectUser;
+    }
 
     yield delay(togglApiDelay);
 
     for (const sourceUser of sourceUsers) {
       // First, check if the source user to be deleted is associated with the
       // workspace projects:
-      const matchingProjectUser = projectUsersById[sourceUser.id];
-      if (matchingProjectUser) {
+      const matchingProjectUser = projectUsersById[sourceUser.id] ?? null;
+
+      if (matchingProjectUser !== null) {
         // If they are, make sure that the project that the user is associated
         // with is going to be deleted:
         const isProjectIncluded = includedProjectIds.includes(
           validStringify(matchingProjectUser.pid, ""),
         );
 
-        if (isProjectIncluded && matchingProjectUser.id) {
-          yield call(removeTogglUserFromProject, matchingProjectUser.id);
+        const projectUserId = matchingProjectUser.id ?? null;
 
-          yield put(
-            entityGroupTransferCompletedCountIncremented(EntityGroup.Users),
-          );
+        if (isProjectIncluded && projectUserId !== null) {
+          yield call(removeTogglUserFromProject, projectUserId.toString());
+
+          // prettier-ignore
+          yield put(entityGroupTransferCompletedCountIncremented(EntityGroup.Users));
 
           yield delay(togglApiDelay);
         }
@@ -141,6 +144,7 @@ function* inviteTogglUsers(
   workspaceId: string,
 ): SagaIterator {
   const userRequest = { emails: sourceEmails };
+
   yield call(fetchObject, `/toggl/api/workspaces/${workspaceId}/invite`, {
     method: "POST",
     body: userRequest,
@@ -168,6 +172,7 @@ function* fetchProjectUsersInSourceWorkspace(
     fetchObject,
     `/toggl/api/workspaces/${workspaceId}/project_users`,
   );
+
   return data;
 }
 

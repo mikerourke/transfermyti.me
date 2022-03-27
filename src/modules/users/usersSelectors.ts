@@ -48,6 +48,7 @@ export const sourceUserEmailsByWorkspaceIdSelector = createSelector(
 
       if (!isNil(targetWorkspaceId)) {
         const emailsInWorkspace = emailsByWorkspaceId[targetWorkspaceId] ?? [];
+
         emailsByWorkspaceId[targetWorkspaceId] = [
           ...emailsInWorkspace,
           sourceUser.email,

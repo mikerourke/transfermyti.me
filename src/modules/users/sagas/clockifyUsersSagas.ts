@@ -115,6 +115,7 @@ function* inviteClockifyUsers(
 
   for (const email of sourceEmails) {
     const userRequest = { email };
+
     yield call(
       fetchObject,
       `/clockify/api/workspaces/${targetWorkspaceId}/users`,
@@ -134,6 +135,7 @@ function* inviteClockifyUsers(
  */
 function* removeClockifyUserFromWorkspace(sourceUser: User): SagaIterator {
   const { workspaceId, id } = sourceUser;
+
   yield call(
     fetchObject,
     `/clockify/api/workspaces/${workspaceId}/users/${id}`,

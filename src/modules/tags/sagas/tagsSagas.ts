@@ -26,13 +26,16 @@ export function* createTagsSaga(): SagaIterator {
 
   try {
     const toolNameByMapping = yield select(toolNameByMappingSelector);
+
     const createSagaByToolName = {
       [ToolName.Clockify]: clockifySagas.createClockifyTagsSaga,
       [ToolName.Toggl]: togglSagas.createTogglTagsSaga,
     }[toolNameByMapping.target];
 
     const sourceTags = yield select(sourceTagsForTransferSelector);
+
     const targetTags = yield call(createSagaByToolName, sourceTags);
+
     const tagsByIdByMapping = yield call(
       linkEntitiesByIdByMapping,
       sourceTags,
@@ -42,6 +45,7 @@ export function* createTagsSaga(): SagaIterator {
     yield put(tagsActions.createTags.success(tagsByIdByMapping));
   } catch (err: AnyValid) {
     yield put(errorNotificationShown(err));
+
     yield put(tagsActions.createTags.failure());
   }
 }
@@ -54,17 +58,20 @@ export function* deleteTagsSaga(): SagaIterator {
 
   try {
     const toolNameByMapping = yield select(toolNameByMappingSelector);
+
     const deleteSagaByToolName = {
       [ToolName.Clockify]: clockifySagas.deleteClockifyTagsSaga,
       [ToolName.Toggl]: togglSagas.deleteTogglTagsSaga,
     }[toolNameByMapping.source];
 
     const sourceTags = yield select(includedSourceTagsSelector);
+
     yield call(deleteSagaByToolName, sourceTags);
 
     yield put(tagsActions.deleteTags.success());
   } catch (err: AnyValid) {
     yield put(errorNotificationShown(err));
+
     yield put(tagsActions.deleteTags.failure());
   }
 }
@@ -80,10 +87,13 @@ export function* fetchTagsSaga(): SagaIterator {
       [ToolName.Clockify]: clockifySagas.fetchClockifyTagsSaga,
       [ToolName.Toggl]: togglSagas.fetchTogglTagsSaga,
     };
+
     const { source, target } = yield select(toolNameByMappingSelector);
+
     const sourceTags = yield call(fetchSagaByToolName[source]);
 
     const toolAction = yield select(toolActionSelector);
+
     let tagsByIdByMapping: Record<Mapping, Dictionary<Tag>>;
 
     if (toolAction === ToolAction.Transfer) {
@@ -104,6 +114,7 @@ export function* fetchTagsSaga(): SagaIterator {
     yield put(tagsActions.fetchTags.success(tagsByIdByMapping));
   } catch (err: AnyValid) {
     yield put(errorNotificationShown(err));
+
     yield put(tagsActions.fetchTags.failure());
   }
 }

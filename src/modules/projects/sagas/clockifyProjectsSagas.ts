@@ -82,6 +82,7 @@ function* createClockifyProject(
   targetWorkspaceId: string,
 ): SagaIterator<Project> {
   const clientIdToLinkedId = yield select(clientIdToLinkedIdSelector);
+
   const targetClientId = propOr<string | null, Record<string, string>, string>(
     null,
     sourceProject.clientId ?? "",
@@ -89,6 +90,7 @@ function* createClockifyProject(
   );
 
   const estimateHours = pathOr(0, ["estimate", "estimate"], sourceProject);
+
   const estimateType = pathOr("AUTO", ["estimate", "type"], sourceProject);
 
   const projectRequest = {
@@ -154,8 +156,10 @@ function* fetchClockifyProjectsInWorkspace(
     fetchPaginatedFromClockify,
     `/clockify/api/workspaces/${workspaceId}/projects`,
   );
+
   for (const clockifyProject of clockifyProjects) {
     const memberships = clockifyProject?.memberships ?? [];
+
     const userIds: string[] = memberships
       .map((membership) => {
         if (
@@ -163,9 +167,9 @@ function* fetchClockifyProjectsInWorkspace(
           membership.membershipStatus === "ACTIVE"
         ) {
           return membership.userId;
+        } else {
+          return "";
         }
-
-        return "";
       })
       .filter(Boolean);
 
