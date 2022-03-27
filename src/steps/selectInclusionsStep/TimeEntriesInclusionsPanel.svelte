@@ -2,9 +2,9 @@
   import { replaceMappingWithToolName } from "~/entityOperations/replaceMappingWithToolName";
   import { toolActionSelector } from "~/modules/allEntities/allEntitiesSelectors";
   import {
-    flipIsTimeEntryIncluded,
-    updateAreAllTimeEntriesIncluded,
-    flipIsDuplicateCheckEnabled,
+    isTimeEntryIncludedToggled,
+    areAllTimeEntriesIncludedUpdated,
+    isDuplicateCheckEnabledToggled,
   } from "~/modules/timeEntries/timeEntriesActions";
   import {
     isDuplicateCheckEnabledSelector,
@@ -48,15 +48,15 @@
   $: slideDuration = Math.min(750, recordCount * 25);
 
   function handleToggleAll(): void {
-    dispatchAction(updateAreAllTimeEntriesIncluded(!areAllToggled));
+    dispatchAction(areAllTimeEntriesIncludedUpdated(!areAllToggled));
   }
 
   function handleToggleOne(event: CustomEvent<string>): void {
-    dispatchAction(flipIsTimeEntryIncluded(event.detail));
+    dispatchAction(isTimeEntryIncludedToggled(event.detail));
   }
 
   function handleToggleUseDuplicate(): void {
-    dispatchAction(flipIsDuplicateCheckEnabled());
+    dispatchAction(isDuplicateCheckEnabledToggled());
   }
 </script>
 

@@ -68,11 +68,11 @@ export const timeEntriesReducer = createReducer<
     }),
   )
   .handleAction(
-    timeEntriesActions.flipIsTimeEntryIncluded,
+    timeEntriesActions.isTimeEntryIncludedToggled,
     (state, { payload }) =>
       R.over(R.lensPath([Mapping.Source, payload, "isIncluded"]), R.not, state),
   )
-  .handleAction(timeEntriesActions.flipIsDuplicateCheckEnabled, (state) => {
+  .handleAction(timeEntriesActions.isDuplicateCheckEnabledToggled, (state) => {
     const newIsDuplicateCheckEnabled = !state.isDuplicateCheckEnabled;
     const newSource = Object.entries({ ...state.source }).reduce(
       (acc, [id, timeEntry]) => ({
@@ -94,7 +94,7 @@ export const timeEntriesReducer = createReducer<
     };
   })
   .handleAction(
-    timeEntriesActions.updateAreAllTimeEntriesIncluded,
+    timeEntriesActions.areAllTimeEntriesIncludedUpdated,
     (state, { payload }) => ({
       ...state,
       source: Object.entries(state.source).reduce(

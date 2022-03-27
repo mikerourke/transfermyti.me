@@ -3,31 +3,31 @@ import { createAction, createAsyncAction } from "typesafe-actions";
 import type { Mapping, TimeEntry } from "~/typeDefs";
 
 export const createTimeEntries = createAsyncAction(
-  "@timeEntries/CREATE_TIME_ENTRIES_REQUEST",
-  "@timeEntries/CREATE_TIME_ENTRIES_SUCCESS",
-  "@timeEntries/CREATE_TIME_ENTRIES_FAILURE",
-)<void, Record<Mapping, Dictionary<TimeEntry>>, void>();
+  "@timeEntries/createTimeEntriesRequest",
+  "@timeEntries/createTimeEntriesSuccess",
+  "@timeEntries/createTimeEntriesFailure",
+)<undefined, Record<Mapping, Dictionary<TimeEntry>>, undefined>();
 
 export const deleteTimeEntries = createAsyncAction(
-  "@timeEntries/DELETE_TIME_ENTRIES_REQUEST",
-  "@timeEntries/DELETE_TIME_ENTRIES_SUCCESS",
-  "@timeEntries/DELETE_TIME_ENTRIES_FAILURE",
-)<void, void, void>();
+  "@timeEntries/deleteTimeEntriesRequest",
+  "@timeEntries/deleteTimeEntriesSuccess",
+  "@timeEntries/deleteTimeEntriesFailure",
+)<undefined, undefined, undefined>();
 
 export const fetchTimeEntries = createAsyncAction(
-  "@timeEntries/FETCH_TIME_ENTRIES_REQUEST",
-  "@timeEntries/FETCH_TIME_ENTRIES_SUCCESS",
-  "@timeEntries/FETCH_TIME_ENTRIES_FAILURE",
-)<void, Record<Mapping, Dictionary<TimeEntry>>, void>();
+  "@timeEntries/fetchTimeEntriesRequest",
+  "@timeEntries/fetchTimeEntriesSuccess",
+  "@timeEntries/fetchTimeEntriesFailure",
+)<undefined, Record<Mapping, Dictionary<TimeEntry>>, undefined>();
 
-export const flipIsTimeEntryIncluded = createAction(
-  "@timeEntries/FLIP_IS_INCLUDED",
+export const isTimeEntryIncludedToggled = createAction(
+  "@timeEntries/isTimeEntryIncludedToggled",
 )<string>();
 
-export const flipIsDuplicateCheckEnabled = createAction(
-  "@timeEntries/FLIP_IS_DUPLICATE_CHECK_ENABLED",
-)();
+export const isDuplicateCheckEnabledToggled = createAction(
+  "@timeEntries/isDuplicateCheckEnabledToggled",
+)<undefined>();
 
-export const updateAreAllTimeEntriesIncluded = createAction(
-  "@timeEntries/UPDATE_ARE_ALL_INCLUDED",
+export const areAllTimeEntriesIncludedUpdated = createAction(
+  "@timeEntries/areAllTimeEntriesIncludedUpdated",
 )<boolean>();
