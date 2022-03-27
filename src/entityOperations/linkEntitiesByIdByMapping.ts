@@ -66,6 +66,7 @@ export function* linkEntitiesByIdByMapping<TEntity>(
 
   // Users may have the same name, but they should never have the same email:
   const field = memberOf === EntityGroup.Users ? "email" : "name";
+
   const workspaceIdToLinkedId = yield select(workspaceIdToLinkedIdSelector);
 
   const source = linkForMappingByField(
@@ -75,6 +76,7 @@ export function* linkEntitiesByIdByMapping<TEntity>(
     targetRecords,
     sourceRecords,
   );
+
   const target = linkForMappingByField(
     field,
     workspaceIdToLinkedId,

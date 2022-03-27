@@ -26,6 +26,7 @@ export function* fetchPaginatedFromClockify<TEntity>(
   queryParams: Record<string, unknown> = {},
 ): SagaIterator<TEntity[]> {
   let keepFetching = true;
+
   let currentPage = 1;
 
   const allEntityRecords: TEntity[] = [];
@@ -36,9 +37,11 @@ export function* fetchPaginatedFromClockify<TEntity>(
       "page-size": CLOCKIFY_API_PAGE_SIZE,
       ...queryParams,
     });
+
     const endpoint = `${apiUrl}?${query}`;
 
     const entityRecords: TEntity[] = yield call(fetchArray, endpoint);
+
     allEntityRecords.push(...entityRecords);
 
     // The record count = maximum page size, which means there are either
@@ -227,6 +230,7 @@ function extrapolateFromUrl(url: string): {
   endpoint: string;
 } {
   const validUrl = url.startsWith("/") ? url.substring(1) : url;
+
   const [toolName, context, ...rest] = validUrl.split("/");
 
   return {

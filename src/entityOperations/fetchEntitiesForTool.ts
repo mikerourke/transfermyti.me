@@ -26,9 +26,12 @@ export function* fetchEntitiesForTool<TEntity>({
   }
 
   const apiDelay = getApiDelayForTool(toolName);
+
   const allRecords: TEntity[] = [];
+
   for (const workspaceId of workspaceIds) {
     const recordsInWorkspace: TEntity[] = yield call(apiFetchFunc, workspaceId);
+
     allRecords.push(...recordsInWorkspace);
 
     yield delay(apiDelay);
@@ -45,7 +48,9 @@ function* findWorkspaceIdsForTool(toolName: ToolName): SagaIterator<string[]> {
   const workspaceIdsByMapping = yield select(
     includedWorkspaceIdsByMappingSelector,
   );
+
   const mappingByToolName = yield select(mappingByToolNameSelector);
+
   const toolMapping = mappingByToolName[toolName];
 
   return propOr<string[], Record<string, string>, string[]>(
