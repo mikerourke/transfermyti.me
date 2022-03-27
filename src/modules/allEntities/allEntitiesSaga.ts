@@ -36,23 +36,18 @@ export function* allEntitiesSaga(): SagaIterator {
  * cannot be created.
  */
 function* createAllEntitiesSaga(): SagaIterator {
+  // prettier-ignore
   try {
-    yield put(
-      allEntitiesActions.entityGroupInProcessChanged(EntityGroup.Clients),
-    );
+    yield put(allEntitiesActions.entityGroupInProcessChanged(EntityGroup.Clients));
     yield call(clientsSagas.createClientsSaga);
 
     yield put(allEntitiesActions.entityGroupInProcessChanged(EntityGroup.Tags));
     yield call(tagsSagas.createTagsSaga);
 
-    yield put(
-      allEntitiesActions.entityGroupInProcessChanged(EntityGroup.Projects),
-    );
+    yield put(allEntitiesActions.entityGroupInProcessChanged(EntityGroup.Projects));
     yield call(projectsSagas.createProjectsSaga);
 
-    yield put(
-      allEntitiesActions.entityGroupInProcessChanged(EntityGroup.Tasks),
-    );
+    yield put(allEntitiesActions.entityGroupInProcessChanged(EntityGroup.Tasks));
     yield call(tasksSagas.createTasksSaga);
 
     // TODO: Add this back in once you hash out multi-user transfers.
@@ -62,9 +57,7 @@ function* createAllEntitiesSaga(): SagaIterator {
     // yield put(allEntitiesActions.entityGroupInProcessChanged(EntityGroup.Users));
     // yield call(usersSagas.createUsersSaga);
 
-    yield put(
-      allEntitiesActions.entityGroupInProcessChanged(EntityGroup.TimeEntries),
-    );
+    yield put(allEntitiesActions.entityGroupInProcessChanged(EntityGroup.TimeEntries));
     yield call(timeEntriesSagas.createTimeEntriesSaga);
 
     yield put(allEntitiesActions.createAllEntities.success());
@@ -79,28 +72,21 @@ function* createAllEntitiesSaga(): SagaIterator {
  * the item impacted first (time entries).
  */
 function* deleteAllEntitiesSaga(): SagaIterator {
+  // prettier-ignore
   try {
-    yield put(
-      allEntitiesActions.entityGroupInProcessChanged(EntityGroup.TimeEntries),
-    );
+    yield put(allEntitiesActions.entityGroupInProcessChanged(EntityGroup.TimeEntries));
     yield call(timeEntriesSagas.deleteTimeEntriesSaga);
 
-    yield put(
-      allEntitiesActions.entityGroupInProcessChanged(EntityGroup.Tasks),
-    );
+    yield put(allEntitiesActions.entityGroupInProcessChanged(EntityGroup.Tasks));
     yield call(tasksSagas.deleteTasksSaga);
 
-    yield put(
-      allEntitiesActions.entityGroupInProcessChanged(EntityGroup.Projects),
-    );
+    yield put(allEntitiesActions.entityGroupInProcessChanged(EntityGroup.Projects));
     yield call(projectsSagas.deleteProjectsSaga);
 
     yield put(allEntitiesActions.entityGroupInProcessChanged(EntityGroup.Tags));
     yield call(tagsSagas.deleteTagsSaga);
 
-    yield put(
-      allEntitiesActions.entityGroupInProcessChanged(EntityGroup.Clients),
-    );
+    yield put(allEntitiesActions.entityGroupInProcessChanged(EntityGroup.Clients));
     yield call(clientsSagas.deleteClientsSaga);
 
     // TODO: Add this back in once you hash out multi-user transfers.
@@ -123,38 +109,27 @@ function* deleteAllEntitiesSaga(): SagaIterator {
  * haven't been fetched yet, the tasks cannot be fetched.
  */
 function* fetchAllEntitiesSaga(): SagaIterator {
+  // prettier-ignore
   try {
-    yield put(
-      allEntitiesActions.entityGroupInProcessChanged(EntityGroup.Users),
-    );
+    yield put(allEntitiesActions.entityGroupInProcessChanged(EntityGroup.Users));
     yield call(usersSagas.fetchUsersSaga);
 
-    yield put(
-      allEntitiesActions.entityGroupInProcessChanged(EntityGroup.UserGroups),
-    );
+    yield put(allEntitiesActions.entityGroupInProcessChanged(EntityGroup.UserGroups));
     yield call(userGroupsSagas.fetchUserGroupsSaga);
 
-    yield put(
-      allEntitiesActions.entityGroupInProcessChanged(EntityGroup.Clients),
-    );
+    yield put(allEntitiesActions.entityGroupInProcessChanged(EntityGroup.Clients));
     yield call(clientsSagas.fetchClientsSaga);
 
     yield put(allEntitiesActions.entityGroupInProcessChanged(EntityGroup.Tags));
     yield call(tagsSagas.fetchTagsSaga);
 
-    yield put(
-      allEntitiesActions.entityGroupInProcessChanged(EntityGroup.Projects),
-    );
+    yield put(allEntitiesActions.entityGroupInProcessChanged(EntityGroup.Projects));
     yield call(projectsSagas.fetchProjectsSaga);
 
-    yield put(
-      allEntitiesActions.entityGroupInProcessChanged(EntityGroup.Tasks),
-    );
+    yield put(allEntitiesActions.entityGroupInProcessChanged(EntityGroup.Tasks));
     yield call(tasksSagas.fetchTasksSaga);
 
-    yield put(
-      allEntitiesActions.entityGroupInProcessChanged(EntityGroup.TimeEntries),
-    );
+    yield put(allEntitiesActions.entityGroupInProcessChanged(EntityGroup.TimeEntries));
     yield call(timeEntriesSagas.fetchTimeEntriesSaga);
 
     yield put(allEntitiesActions.fetchAllEntities.success());
