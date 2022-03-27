@@ -12,12 +12,12 @@ import { deleteEntitiesForTool } from "~/entityOperations/deleteEntitiesForTool"
 import { fetchEntitiesForTool } from "~/entityOperations/fetchEntitiesForTool";
 import { clientIdToLinkedIdSelector } from "~/modules/clients/clientsSelectors";
 import type {
-  ClockifyHourlyRateResponseModel,
-  ClockifyMembershipResponseModel,
+  ClockifyHourlyRateResponse,
+  ClockifyMembershipResponse,
 } from "~/modules/users/sagas/clockifyUsersSagas";
 import { EntityGroup, ToolName, type Estimate, type Project } from "~/typeDefs";
 
-export interface ClockifyProjectResponseModel {
+export interface ClockifyProjectResponse {
   archived: boolean;
   billable: boolean;
   clientId: string;
@@ -25,9 +25,9 @@ export interface ClockifyProjectResponseModel {
   color: string;
   duration: string;
   estimate: Estimate;
-  hourlyRate: ClockifyHourlyRateResponseModel;
+  hourlyRate: ClockifyHourlyRateResponse;
   id: string;
-  memberships?: ClockifyMembershipResponseModel[];
+  memberships?: ClockifyMembershipResponse[];
   name: string;
   note: string;
   public: boolean;
@@ -150,7 +150,7 @@ function* fetchClockifyProjectsInWorkspace(
 
   const clockifyApiDelay = yield call(getApiDelayForTool, ToolName.Clockify);
 
-  const clockifyProjects: ClockifyProjectResponseModel[] = yield call(
+  const clockifyProjects: ClockifyProjectResponse[] = yield call(
     fetchPaginatedFromClockify,
     `/clockify/api/workspaces/${workspaceId}/projects`,
   );
@@ -178,7 +178,7 @@ function* fetchClockifyProjectsInWorkspace(
 }
 
 function transformFromResponse(
-  project: ClockifyProjectResponseModel,
+  project: ClockifyProjectResponse,
   userIds: string[],
 ): Project {
   return {

@@ -19,7 +19,7 @@ import { EntityGroup, ToolName, type Task } from "~/typeDefs";
 
 type ClockifyTaskStatus = "ACTIVE" | "DONE";
 
-export interface ClockifyTaskResponseModel {
+export interface ClockifyTaskResponse {
   assigneeIds: string[] | null;
   estimate: string;
   id: string;
@@ -143,11 +143,11 @@ function* fetchClockifyTasksInWorkspace(
 
   const clockifyApiDelay = yield call(getApiDelayForTool, ToolName.Clockify);
 
-  const allClockifyTasks: ClockifyTaskResponseModel[] = [];
+  const allClockifyTasks: ClockifyTaskResponse[] = [];
 
   for (const clockifyProject of clockifyProjects) {
     const { id: projectId } = clockifyProject;
-    const clockifyTasks: ClockifyTaskResponseModel[] = yield call(
+    const clockifyTasks: ClockifyTaskResponse[] = yield call(
       fetchPaginatedFromClockify,
       `/clockify/api/workspaces/${workspaceId}/projects/${projectId}/tasks`,
     );
@@ -162,7 +162,7 @@ function* fetchClockifyTasksInWorkspace(
 }
 
 function transformFromResponse(
-  task: ClockifyTaskResponseModel,
+  task: ClockifyTaskResponse,
   workspaceId: string,
 ): Task {
   return {

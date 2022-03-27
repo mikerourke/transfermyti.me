@@ -12,7 +12,7 @@ import { fetchEntitiesForTool } from "~/entityOperations/fetchEntitiesForTool";
 import { type Client, EntityGroup, ToolName } from "~/typeDefs";
 import { validStringify } from "~/utilities/textTransforms";
 
-interface TogglClientResponseModel {
+interface TogglClientResponse {
   id: number;
   wid: number;
   name: string;
@@ -95,7 +95,7 @@ function* deleteTogglClient(sourceClient: Client): SagaIterator {
 function* fetchTogglClientsInWorkspace(
   workspaceId: string,
 ): SagaIterator<Client[]> {
-  const togglClients: TogglClientResponseModel[] = yield call(
+  const togglClients: TogglClientResponse[] = yield call(
     fetchArray,
     `/toggl/api/workspaces/${workspaceId}/clients`,
   );
@@ -103,7 +103,7 @@ function* fetchTogglClientsInWorkspace(
   return togglClients.map(transformFromResponse);
 }
 
-function transformFromResponse(client: TogglClientResponseModel): Client {
+function transformFromResponse(client: TogglClientResponse): Client {
   return {
     id: client.id.toString(),
     name: client.name,

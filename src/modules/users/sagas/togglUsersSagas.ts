@@ -14,7 +14,7 @@ import { includedSourceWorkspaceIdsSelector } from "~/modules/workspaces/workspa
 import { EntityGroup, ToolName, type User } from "~/typeDefs";
 import { validStringify } from "~/utilities/textTransforms";
 
-interface TogglUserResponseModel {
+interface TogglUserResponse {
   id: number;
   default_wid: number;
   email: string;
@@ -40,7 +40,7 @@ interface TogglUserResponseModel {
   userGroupIds?: string[];
 }
 
-interface TogglProjectUserResponseModel {
+interface TogglProjectUserResponse {
   id: number;
   pid: number;
   uid: number;
@@ -80,7 +80,7 @@ export function* removeTogglUsersSaga(sourceUsers: User[]): SagaIterator {
   // workspace/project. In this case we're going to remove the user from each
   // included project that's being deleted.
   for (const workspaceId of includedWorkspaceIds) {
-    const projectUsers: TogglProjectUserResponseModel[] = yield call(
+    const projectUsers: TogglProjectUserResponse[] = yield call(
       fetchProjectUsersInSourceWorkspace,
       workspaceId,
     );
@@ -163,7 +163,7 @@ function* removeTogglUserFromProject(projectUserId: string): SagaIterator {
  */
 function* fetchProjectUsersInSourceWorkspace(
   workspaceId: string,
-): SagaIterator<TogglProjectUserResponseModel[]> {
+): SagaIterator<TogglProjectUserResponse[]> {
   const { data } = yield call(
     fetchObject,
     `/toggl/api/workspaces/${workspaceId}/project_users`,
@@ -178,7 +178,7 @@ function* fetchProjectUsersInSourceWorkspace(
 function* fetchTogglUsersInWorkspace(
   workspaceId: string,
 ): SagaIterator<User[]> {
-  const togglUsers: TogglUserResponseModel[] = yield call(
+  const togglUsers: TogglUserResponse[] = yield call(
     fetchArray,
     `/toggl/api/workspaces/${workspaceId}/users`,
   );
@@ -189,7 +189,7 @@ function* fetchTogglUsersInWorkspace(
 }
 
 function transformFromResponse(
-  user: TogglUserResponseModel,
+  user: TogglUserResponse,
   workspaceId: string,
 ): User {
   return {

@@ -11,28 +11,28 @@ import { deleteEntitiesForTool } from "~/entityOperations/deleteEntitiesForTool"
 import { fetchEntitiesForTool } from "~/entityOperations/fetchEntitiesForTool";
 import { credentialsByToolNameSelector } from "~/modules/credentials/credentialsSelectors";
 import { projectIdToLinkedIdSelector } from "~/modules/projects/projectsSelectors";
-import type { ClockifyProjectResponseModel } from "~/modules/projects/sagas/clockifyProjectsSagas";
-import type { ClockifyTagResponseModel } from "~/modules/tags/sagas/clockifyTagsSagas";
+import type { ClockifyProjectResponse } from "~/modules/projects/sagas/clockifyProjectsSagas";
+import type { ClockifyTagResponse } from "~/modules/tags/sagas/clockifyTagsSagas";
 import { targetTagIdsSelectorFactory } from "~/modules/tags/tagsSelectors";
-import type { ClockifyTaskResponseModel } from "~/modules/tasks/sagas/clockifyTasksSagas";
+import type { ClockifyTaskResponse } from "~/modules/tasks/sagas/clockifyTasksSagas";
 import { taskIdToLinkedIdSelector } from "~/modules/tasks/tasksSelectors";
 import { EntityGroup, ToolName, type TimeEntry } from "~/typeDefs";
 
-interface ClockifyTimeIntervalModel {
+interface ClockifyTimeInterval {
   duration: string;
   end: string;
   start: string;
 }
 
-interface ClockifyTimeEntryResponseModel {
+interface ClockifyTimeEntryResponse {
   billable: boolean;
   description: string;
   id: string;
   isLocked: boolean;
-  project: ClockifyProjectResponseModel;
-  tags: ClockifyTagResponseModel[];
-  task: ClockifyTaskResponseModel | null;
-  timeInterval: ClockifyTimeIntervalModel;
+  project: ClockifyProjectResponse;
+  tags: ClockifyTagResponse[];
+  task: ClockifyTaskResponse | null;
+  timeInterval: ClockifyTimeInterval;
   totalBillable: number | null;
   userId: string;
   workspaceId: string;
@@ -157,7 +157,7 @@ function* fetchClockifyTimeEntriesInWorkspace(
     throw new Error("Invalid or missing Clockify user ID");
   }
 
-  const clockifyTimeEntries: ClockifyTimeEntryResponseModel[] = yield call(
+  const clockifyTimeEntries: ClockifyTimeEntryResponse[] = yield call(
     fetchPaginatedFromClockify,
     `/clockify/api/workspaces/${workspaceId}/user/${clockifyUserId}/time-entries`,
     { hydrated: true },
@@ -167,13 +167,13 @@ function* fetchClockifyTimeEntriesInWorkspace(
 }
 
 function transformFromResponse(
-  timeEntry: ClockifyTimeEntryResponseModel,
+  timeEntry: ClockifyTimeEntryResponse,
 ): TimeEntry {
   const startTime = getTime(timeEntry, "start");
   const clockifyTags = propOr<
-    ClockifyTagResponseModel[],
-    ClockifyTimeEntryResponseModel,
-    ClockifyTagResponseModel[]
+    ClockifyTagResponse[],
+    ClockifyTimeEntryResponse,
+    ClockifyTagResponse[]
   >([], "tags", timeEntry);
 
   return {
@@ -200,7 +200,7 @@ function transformFromResponse(
 }
 
 function getTime(
-  timeEntry: ClockifyTimeEntryResponseModel,
+  timeEntry: ClockifyTimeEntryResponse,
   field: "start" | "end",
 ): Date {
   const value = pathOr(null, ["timeInterval", field], timeEntry);

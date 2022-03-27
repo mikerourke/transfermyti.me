@@ -5,11 +5,11 @@ import { fetchObject } from "~/entityOperations/apiRequests";
 import { mappingByToolNameSelector } from "~/modules/allEntities/allEntitiesSelectors";
 import { validateCredentials } from "~/modules/credentials/credentialsActions";
 import { credentialsByMappingSelector } from "~/modules/credentials/credentialsSelectors";
-import type { TogglWorkspaceResponseModel } from "~/modules/workspaces/sagas/togglWorkspacesSagas";
+import type { TogglWorkspaceResponse } from "~/modules/workspaces/sagas/togglWorkspacesSagas";
 import { ToolName, type ValidationErrorsByMapping } from "~/typeDefs";
 import { validStringify } from "~/utilities/textTransforms";
 
-interface TogglMeResponseModel {
+interface TogglMeResponse {
   since: number;
   data: {
     id: number;
@@ -19,7 +19,7 @@ interface TogglMeResponseModel {
     at: string;
     created_at: string;
     timezone: string;
-    workspaces: TogglWorkspaceResponseModel[];
+    workspaces: TogglWorkspaceResponse[];
   };
 }
 
@@ -49,7 +49,7 @@ export function* validateCredentialsSaga(): SagaIterator {
   const togglMapping = mappingByToolName[ToolName.Toggl];
   if (togglMapping) {
     try {
-      const { data }: TogglMeResponseModel = yield call(
+      const { data }: TogglMeResponse = yield call(
         fetchObject,
         "/toggl/api/me",
       );

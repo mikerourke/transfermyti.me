@@ -10,7 +10,7 @@ import { deleteEntitiesForTool } from "~/entityOperations/deleteEntitiesForTool"
 import { fetchEntitiesForTool } from "~/entityOperations/fetchEntitiesForTool";
 import { EntityGroup, ToolName, type Tag } from "~/typeDefs";
 
-export interface ClockifyTagResponseModel {
+export interface ClockifyTagResponse {
   id: string;
   name: string;
   workspaceId: string;
@@ -88,7 +88,7 @@ function* deleteClockifyTag(sourceTag: Tag): SagaIterator {
 function* fetchClockifyTagsInWorkspace(
   workspaceId: string,
 ): SagaIterator<Tag[]> {
-  const clockifyTags: ClockifyTagResponseModel[] = yield call(
+  const clockifyTags: ClockifyTagResponse[] = yield call(
     fetchPaginatedFromClockify,
     `/clockify/api/workspaces/${workspaceId}/tags`,
   );
@@ -96,7 +96,7 @@ function* fetchClockifyTagsInWorkspace(
   return clockifyTags.map(transformFromResponse);
 }
 
-function transformFromResponse(tag: ClockifyTagResponseModel): Tag {
+function transformFromResponse(tag: ClockifyTagResponse): Tag {
   return {
     id: tag.id,
     name: tag.name,

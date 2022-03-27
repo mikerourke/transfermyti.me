@@ -14,7 +14,7 @@ import { projectIdToLinkedIdSelector } from "~/modules/projects/projectsSelector
 import { EntityGroup, ToolName, type Task } from "~/typeDefs";
 import { validStringify } from "~/utilities/textTransforms";
 
-interface TogglTaskResponseModel {
+interface TogglTaskResponse {
   name: string;
   id: number;
   wid: number;
@@ -108,7 +108,7 @@ function* deleteTogglTask(sourceTask: Task): SagaIterator {
 function* fetchTogglTasksInWorkspace(
   workspaceId: string,
 ): SagaIterator<Task[]> {
-  const togglTasks: TogglTaskResponseModel[] = yield call(
+  const togglTasks: TogglTaskResponse[] = yield call(
     fetchArray,
     `/toggl/api/workspaces/${workspaceId}/tasks`,
   );
@@ -116,7 +116,7 @@ function* fetchTogglTasksInWorkspace(
   return togglTasks.map(transformFromResponse);
 }
 
-function transformFromResponse(task: TogglTaskResponseModel): Task {
+function transformFromResponse(task: TogglTaskResponse): Task {
   return {
     id: task.id.toString(),
     name: task.name,

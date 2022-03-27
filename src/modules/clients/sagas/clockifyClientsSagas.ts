@@ -10,7 +10,7 @@ import { deleteEntitiesForTool } from "~/entityOperations/deleteEntitiesForTool"
 import { fetchEntitiesForTool } from "~/entityOperations/fetchEntitiesForTool";
 import { type Client, EntityGroup, ToolName } from "~/typeDefs";
 
-interface ClockifyClientResponseModel {
+interface ClockifyClientResponse {
   id: string;
   name: string;
   workspaceId: string;
@@ -92,7 +92,7 @@ function* deleteClockifyClient(sourceClient: Client): SagaIterator {
 function* fetchClockifyClientsInWorkspace(
   workspaceId: string,
 ): SagaIterator<Client[]> {
-  const clockifyClients: ClockifyClientResponseModel[] = yield call(
+  const clockifyClients: ClockifyClientResponse[] = yield call(
     fetchPaginatedFromClockify,
     `/clockify/api/workspaces/${workspaceId}/clients`,
   );
@@ -100,7 +100,7 @@ function* fetchClockifyClientsInWorkspace(
   return clockifyClients.map(transformFromResponse);
 }
 
-function transformFromResponse(client: ClockifyClientResponseModel): Client {
+function transformFromResponse(client: ClockifyClientResponse): Client {
   return {
     id: client.id,
     name: client.name,

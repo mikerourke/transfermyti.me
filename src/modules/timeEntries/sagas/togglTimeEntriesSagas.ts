@@ -25,12 +25,12 @@ import { validStringify } from "~/utilities/textTransforms";
 
 const togglApiDelay = getApiDelayForTool(ToolName.Toggl);
 
-interface TogglTotalCurrencyModel {
+interface TogglTotalCurrency {
   currency: string | null;
   amount: number | null;
 }
 
-interface TogglTimeEntryResponseModel {
+interface TogglTimeEntryResponse {
   id: number;
   pid: number;
   tid: number | null;
@@ -53,13 +53,13 @@ interface TogglTimeEntryResponseModel {
   tags: string[];
 }
 
-interface TogglTimeEntriesFetchResponseModel {
+interface TogglTimeEntriesFetchResponse {
   total_grand: number;
   total_billable: number | null;
-  total_currencies: TogglTotalCurrencyModel[];
+  total_currencies: TogglTotalCurrency[];
   total_count: number;
   per_page: number;
-  data: TogglTimeEntryResponseModel[];
+  data: TogglTimeEntryResponse[];
 }
 
 /**
@@ -165,7 +165,7 @@ function* fetchTogglTimeEntriesInWorkspace(
     throw new Error("Invalid or missing Toggl user ID");
   }
 
-  const togglTimeEntries: TogglTimeEntryResponseModel[] = [];
+  const togglTimeEntries: TogglTimeEntryResponse[] = [];
   const currentYear = new Date().getFullYear();
   const clientIdsByName = yield select(
     clientIdsByNameSelectorFactory(ToolName.Toggl),
@@ -218,7 +218,7 @@ function* fetchAllTogglTimeEntriesForYear(
   userId: string,
   workspaceId: string,
   year: number,
-): SagaIterator<TogglTimeEntryResponseModel[]> {
+): SagaIterator<TogglTimeEntryResponse[]> {
   const {
     total_count: totalCount,
     per_page: perPage,
@@ -263,7 +263,7 @@ function* fetchTogglTimeEntriesForYearAndPage(
   workspaceId: string,
   year: number,
   page: number,
-): SagaIterator<TogglTimeEntriesFetchResponseModel> {
+): SagaIterator<TogglTimeEntriesFetchResponse> {
   const currentDate = new Date();
   currentDate.setFullYear(year);
   const DATE_FORMAT = "yyyy-MM-dd'T'HH:mm:ss";
@@ -283,7 +283,7 @@ function* fetchTogglTimeEntriesForYearAndPage(
 }
 
 function transformFromResponse(
-  timeEntry: TogglTimeEntryResponseModel,
+  timeEntry: TogglTimeEntryResponse,
   workspaceId: string,
   clientId: string | null,
   tagIdsByName: Record<string, string>,
@@ -315,10 +315,10 @@ function transformFromResponse(
 }
 
 function getTime(
-  timeEntry: TogglTimeEntryResponseModel,
+  timeEntry: TogglTimeEntryResponse,
   field: "start" | "end",
 ): Date {
-  const value = propOr<null, TogglTimeEntryResponseModel, string>(
+  const value = propOr<null, TogglTimeEntryResponse, string>(
     null,
     field,
     timeEntry,

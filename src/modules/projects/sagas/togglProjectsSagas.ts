@@ -15,7 +15,7 @@ import { clientIdToLinkedIdSelector } from "~/modules/clients/clientsSelectors";
 import { EntityGroup, ToolName, type Project } from "~/typeDefs";
 import { validStringify } from "~/utilities/textTransforms";
 
-interface TogglProjectResponseModel {
+interface TogglProjectResponse {
   id: number;
   wid: number;
   cid: number;
@@ -41,7 +41,7 @@ interface TogglProjectResponseModel {
   template_id?: number;
 }
 
-interface TogglProjectUserResponseModel {
+interface TogglProjectUserResponse {
   id: number;
   pid: number;
   uid: number;
@@ -141,7 +141,7 @@ function* fetchTogglProjectsInWorkspace(
 
   const togglApiDelay = yield call(getApiDelayForTool, ToolName.Toggl);
 
-  const togglProjects: TogglProjectResponseModel[] = yield call(
+  const togglProjects: TogglProjectResponse[] = yield call(
     fetchArray,
     `/toggl/api/workspaces/${workspaceId}/projects?active=both`,
   );
@@ -164,7 +164,7 @@ function* fetchTogglProjectsInWorkspace(
  * @see https://github.com/toggl/toggl_api_docs/blob/master/chapters/project_users.md
  */
 function* fetchUserIdsInProject(projectId: string): SagaIterator<string[]> {
-  const projectUsers: TogglProjectUserResponseModel[] = yield call(
+  const projectUsers: TogglProjectUserResponse[] = yield call(
     fetchArray,
     `/toggl/api/projects/${projectId}/project_users`,
   );
@@ -172,7 +172,7 @@ function* fetchUserIdsInProject(projectId: string): SagaIterator<string[]> {
 }
 
 function transformFromResponse(
-  project: TogglProjectResponseModel,
+  project: TogglProjectResponse,
   userIds: string[],
 ): Project {
   return {
