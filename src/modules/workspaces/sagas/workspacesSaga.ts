@@ -7,7 +7,7 @@ import {
   toolActionSelector,
   toolNameByMappingSelector,
 } from "~/modules/allEntities/allEntitiesSelectors";
-import { showErrorNotification } from "~/modules/app/appActions";
+import { errorNotificationShown } from "~/modules/app/appActions";
 import * as clockifySagas from "~/modules/workspaces/sagas/clockifyWorkspacesSagas";
 import * as togglSagas from "~/modules/workspaces/sagas/togglWorkspacesSagas";
 import * as workspacesActions from "~/modules/workspaces/workspacesActions";
@@ -50,7 +50,7 @@ function* fetchWorkspacesSaga(): SagaIterator {
       workspacesActions.fetchWorkspaces.success(workspaceByIdByMapping),
     );
   } catch (err: AnyValid) {
-    yield put(showErrorNotification(err));
+    yield put(errorNotificationShown(err));
     yield put(workspacesActions.fetchWorkspaces.failure());
   }
 }

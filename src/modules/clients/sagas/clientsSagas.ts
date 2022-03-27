@@ -7,7 +7,7 @@ import {
   toolActionSelector,
   toolNameByMappingSelector,
 } from "~/modules/allEntities/allEntitiesSelectors";
-import { showErrorNotification } from "~/modules/app/appActions";
+import { errorNotificationShown } from "~/modules/app/appActions";
 import * as clientsActions from "~/modules/clients/clientsActions";
 import {
   includedSourceClientsSelector,
@@ -41,7 +41,7 @@ export function* createClientsSaga(): SagaIterator {
 
     yield put(clientsActions.createClients.success(clientsByIdByMapping));
   } catch (err: AnyValid) {
-    yield put(showErrorNotification(err));
+    yield put(errorNotificationShown(err));
     yield put(clientsActions.createClients.failure());
   }
 }
@@ -64,7 +64,7 @@ export function* deleteClientsSaga(): SagaIterator {
 
     yield put(clientsActions.deleteClients.success());
   } catch (err: AnyValid) {
-    yield put(showErrorNotification(err));
+    yield put(errorNotificationShown(err));
     yield put(clientsActions.deleteClients.failure());
   }
 }
@@ -103,7 +103,7 @@ export function* fetchClientsSaga(): SagaIterator {
 
     yield put(clientsActions.fetchClients.success(clientsByIdByMapping));
   } catch (err: AnyValid) {
-    yield put(showErrorNotification(err));
+    yield put(errorNotificationShown(err));
     yield put(clientsActions.fetchClients.failure());
   }
 }

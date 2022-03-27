@@ -7,7 +7,7 @@ import {
   toolActionSelector,
   toolNameByMappingSelector,
 } from "~/modules/allEntities/allEntitiesSelectors";
-import { showErrorNotification } from "~/modules/app/appActions";
+import { errorNotificationShown } from "~/modules/app/appActions";
 import * as clockifySagas from "~/modules/users/sagas/clockifyUsersSagas";
 import * as togglSagas from "~/modules/users/sagas/togglUsersSagas";
 import * as usersActions from "~/modules/users/usersActions";
@@ -40,7 +40,7 @@ export function* createUsersSaga(): SagaIterator {
     // target only _invites_ them to the workspace.
     yield call(fetchUsersSaga);
   } catch (err: AnyValid) {
-    yield put(showErrorNotification(err));
+    yield put(errorNotificationShown(err));
     yield put(usersActions.createUsers.failure());
   }
 }
@@ -63,7 +63,7 @@ export function* deleteUsersSaga(): SagaIterator {
 
     yield put(usersActions.deleteUsers.success());
   } catch (err: AnyValid) {
-    yield put(showErrorNotification(err));
+    yield put(errorNotificationShown(err));
     yield put(usersActions.deleteUsers.failure());
   }
 }
@@ -101,7 +101,7 @@ export function* fetchUsersSaga(): SagaIterator {
 
     yield put(usersActions.fetchUsers.success(usersByIdByMapping));
   } catch (err: AnyValid) {
-    yield put(showErrorNotification(err));
+    yield put(errorNotificationShown(err));
     yield put(usersActions.fetchUsers.failure());
   }
 }

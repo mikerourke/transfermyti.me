@@ -18,17 +18,17 @@ describe("within appReducer", () => {
     expect(result).toEqual(initialState);
   });
 
-  test("dismissNotification action removes the notification with id = payload from state when dispatched", () => {
+  test("the notificationDismissed action removes the notification with id = payload from state when dispatched", () => {
     const testState = {
       ...initialState,
       notifications: [{ id: "ntf1", type: "info", message: "Test Error" } as const],
     };
-    const result = appReducer(testState, appActions.dismissNotification("ntf1"));
+    const result = appReducer(testState, appActions.notificationDismissed("ntf1"));
 
     expect(result.notifications).toHaveLength(0);
   });
 
-  test("dismissAllNotifications action removes all notifications from state when dispatched", () => {
+  test("the allNotificationsDismissed action removes all notifications from state when dispatched", () => {
     const testState = {
       ...initialState,
       notifications: [
@@ -36,15 +36,15 @@ describe("within appReducer", () => {
         { id: "ntf2", type: "info", message: "Test Error 2" } as const,
       ],
     };
-    const result = appReducer(testState, appActions.dismissAllNotifications());
+    const result = appReducer(testState, appActions.allNotificationsDismissed());
 
     expect(result.notifications).toHaveLength(0);
   });
 
-  test("showNotification action creates a new notification = payload when dispatched", () => {
+  test("the notificationShown action creates a new notification = payload when dispatched", () => {
     const result = appReducer(
       initialState,
-      appActions.showNotification({ message: "Test Message", type: "info" }),
+      appActions.notificationShown({ message: "Test Message", type: "info" }),
     );
     const [firstNotification] = result.notifications;
 
@@ -54,15 +54,16 @@ describe("within appReducer", () => {
   });
 
   cases(
-    "sets the correct error message when showFetchErrorNotification is dispatched",
+    "sets the correct error message when the errorNotificationShown action is dispatched",
     (options) => {
-      const result = appReducer(initialState, appActions.showErrorNotification(options.payload));
+      const result = appReducer(initialState, appActions.errorNotificationShown(options.payload));
       const [firstNotification] = result.notifications;
 
       expect(firstNotification.message).toBe(options.expected);
       expect(firstNotification.type).toBe("error");
       expect(firstNotification.id).toBeDefined();
     },
+    // prettier-ignore
     [
       {
         name: "when the error payload is an Error",
@@ -82,8 +83,7 @@ describe("within appReducer", () => {
           statusText: "Error",
           url: "/api/clockify/me",
         } as Response,
-        expected:
-          "The following error occurred: Error code 404 when fetching from Clockify API. Status: Error",
+        expected: "The following error occurred: Error code 404 when fetching from Clockify API. Status: Error",
       },
       {
         name: "when the error is a Toggl API response",
@@ -93,8 +93,7 @@ describe("within appReducer", () => {
           statusText: "Error",
           url: "/api/toggle/me",
         } as Response,
-        expected:
-          "The following error occurred: Error code 400 when fetching from Toggl API. Status: Error",
+        expected: "The following error occurred: Error code 400 when fetching from Toggl API. Status: Error",
       },
       {
         name: "when the error is an unknown API response with no status",

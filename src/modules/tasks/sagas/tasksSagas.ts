@@ -8,7 +8,7 @@ import {
   toolActionSelector,
   toolNameByMappingSelector,
 } from "~/modules/allEntities/allEntitiesSelectors";
-import { showErrorNotification } from "~/modules/app/appActions";
+import { errorNotificationShown } from "~/modules/app/appActions";
 import { updateIsProjectIncluded } from "~/modules/projects/projectsActions";
 import { sourceProjectsSelector } from "~/modules/projects/projectsSelectors";
 import * as clockifySagas from "~/modules/tasks/sagas/clockifyTasksSagas";
@@ -115,7 +115,7 @@ export function* createTasksSaga(): SagaIterator {
 
     yield put(tasksActions.createTasks.success(tasksByIdByMapping));
   } catch (err: AnyValid) {
-    yield put(showErrorNotification(err));
+    yield put(errorNotificationShown(err));
     yield put(tasksActions.createTasks.failure());
   }
 }
@@ -138,7 +138,7 @@ export function* deleteTasksSaga(): SagaIterator {
 
     yield put(tasksActions.deleteTasks.success());
   } catch (err: AnyValid) {
-    yield put(showErrorNotification(err));
+    yield put(errorNotificationShown(err));
     yield put(tasksActions.deleteTasks.failure());
   }
 }
@@ -177,7 +177,7 @@ export function* fetchTasksSaga(): SagaIterator {
 
     yield put(tasksActions.fetchTasks.success(tasksByIdByMapping));
   } catch (err: AnyValid) {
-    yield put(showErrorNotification(err));
+    yield put(errorNotificationShown(err));
     yield put(tasksActions.fetchTasks.failure());
   }
 }
