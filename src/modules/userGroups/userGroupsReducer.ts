@@ -66,7 +66,7 @@ export const userGroupsReducer = createReducer<
     }),
   )
   .handleAction(
-    userGroupsActions.flipIsUserGroupIncluded,
+    userGroupsActions.isUserGroupIncludedToggled,
     (state, { payload }) =>
       R.over(R.lensPath([Mapping.Source, payload, "isIncluded"]), R.not, state),
   )

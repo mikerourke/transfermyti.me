@@ -91,7 +91,7 @@ describe("within userGroupsReducer", () => {
     ],
   );
 
-  test(`the flipIsUserGroupIncluded action flips the "isIncluded" value of the userGroup with id = payload`, () => {
+  test(`the isUserGroupIncludedToggled action flips the "isIncluded" value of the userGroup with id = payload`, () => {
     const updatedState = R.set(
       R.lensProp("source"),
       {
@@ -104,7 +104,7 @@ describe("within userGroupsReducer", () => {
     );
     const result = userGroupsReducer(
       updatedState,
-      userGroupsActions.flipIsUserGroupIncluded(TEST_USER_GROUP_ID),
+      userGroupsActions.isUserGroupIncludedToggled(TEST_USER_GROUP_ID),
     );
 
     expect(result.source[TEST_USER_GROUP_ID].isIncluded).toBe(true);
