@@ -55,7 +55,7 @@ export const usersReducer = createReducer<UsersState, UsersAction>(initialState)
       isFetching: false,
     }),
   )
-  .handleAction(usersActions.flipIsUserIncluded, (state, { payload }) =>
+  .handleAction(usersActions.isUserIncludedToggled, (state, { payload }) =>
     R.over(R.lensPath([Mapping.Source, payload, "isIncluded"]), R.not, state),
   )
   .handleAction([usersActions.deleteUsers.success, allEntitiesFlushed], () => ({

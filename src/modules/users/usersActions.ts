@@ -3,23 +3,23 @@ import { createAction, createAsyncAction } from "typesafe-actions";
 import type { Mapping, User } from "~/typeDefs";
 
 export const createUsers = createAsyncAction(
-  "@users/CREATE_USERS_REQUEST",
-  "@users/CREATE_USERS_SUCCESS",
-  "@users/CREATE_USERS_FAILURE",
-)<void, void, void>();
+  "@users/createUsersRequest",
+  "@users/createUsersSuccess",
+  "@users/createUsersFailure",
+)<undefined, undefined, undefined>();
 
 export const deleteUsers = createAsyncAction(
-  "@users/DELETE_USERS_REQUEST",
-  "@users/DELETE_USERS_SUCCESS",
-  "@users/DELETE_USERS_FAILURE",
-)<void, void, void>();
+  "@users/deleteUsersRequest",
+  "@users/deleteUsersSuccess",
+  "@users/deleteUsersFailure",
+)<undefined, undefined, undefined>();
 
 export const fetchUsers = createAsyncAction(
-  "@users/FETCH_USERS_REQUEST",
-  "@users/FETCH_USERS_SUCCESS",
-  "@users/FETCH_USERS_FAILURE",
-)<void, Record<Mapping, Dictionary<User>>, void>();
+  "@users/fetchUsersRequest",
+  "@users/fetchUsersSuccess",
+  "@users/fetchUsersFailure",
+)<undefined, Record<Mapping, Dictionary<User>>, undefined>();
 
-export const flipIsUserIncluded = createAction(
-  "@users/FLIP_IS_INCLUDED",
+export const isUserIncludedToggled = createAction(
+  "@users/isUserIncludedToggled",
 )<string>();
