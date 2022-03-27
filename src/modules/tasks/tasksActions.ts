@@ -3,32 +3,34 @@ import { createAction, createAsyncAction } from "typesafe-actions";
 import type { Mapping, Task } from "~/typeDefs";
 
 export const createTasks = createAsyncAction(
-  "@tasks/CREATE_TASKS_REQUEST",
-  "@tasks/CREATE_TASKS_SUCCESS",
-  "@tasks/CREATE_TASKS_FAILURE",
-)<void, Record<Mapping, Dictionary<Task>>, void>();
+  "@tasks/createTasksRequest",
+  "@tasks/createTasksSuccess",
+  "@tasks/createTasksFailure",
+)<undefined, Record<Mapping, Dictionary<Task>>, undefined>();
 
 export const deleteTasks = createAsyncAction(
-  "@tasks/DELETE_TASKS_REQUEST",
-  "@tasks/DELETE_TASKS_SUCCESS",
-  "@tasks/DELETE_TASKS_FAILURE",
-)<void, void, void>();
+  "@tasks/deleteTasksRequest",
+  "@tasks/deleteTasksSuccess",
+  "@tasks/deleteTasksFailure",
+)<undefined, undefined, undefined>();
 
 export const fetchTasks = createAsyncAction(
-  "@tasks/FETCH_TASKS_REQUEST",
-  "@tasks/FETCH_TASKS_SUCCESS",
-  "@tasks/FETCH_TASKS_FAILURE",
-)<void, Record<Mapping, Dictionary<Task>>, void>();
+  "@tasks/fetchTasksRequest",
+  "@tasks/fetchTasksSuccess",
+  "@tasks/fetchTasksFailure",
+)<undefined, Record<Mapping, Dictionary<Task>>, undefined>();
 
-export const flipIsTaskIncluded = createAction(
-  "@tasks/FLIP_IS_INCLUDED",
+export const isTaskIncludedToggled = createAction(
+  "@tasks/isTaskIncludedToggled",
 )<string>();
 
-export const updateIsTaskIncluded = createAction("@tasks/UPDATE_IS_INCLUDED")<{
+export const isTaskIncludedUpdated = createAction(
+  "@tasks/isTaskIncludedUpdated",
+)<{
   id: string;
   isIncluded: boolean;
 }>();
 
-export const updateAreAllTasksIncluded = createAction(
-  "@tasks/UPDATE_ARE_ALL_INCLUDED",
+export const areAllTasksIncludedUpdated = createAction(
+  "@tasks/areAllTasksIncludedUpdated",
 )<boolean>();

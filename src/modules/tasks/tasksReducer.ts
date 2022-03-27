@@ -58,10 +58,10 @@ export const tasksReducer = createReducer<TasksState, TasksAction>(initialState)
       isFetching: false,
     }),
   )
-  .handleAction(tasksActions.flipIsTaskIncluded, (state, { payload }) =>
+  .handleAction(tasksActions.isTaskIncludedToggled, (state, { payload }) =>
     R.over(R.lensPath([Mapping.Source, payload, "isIncluded"]), R.not, state),
   )
-  .handleAction(tasksActions.updateIsTaskIncluded, (state, { payload }) =>
+  .handleAction(tasksActions.isTaskIncludedUpdated, (state, { payload }) =>
     R.set(
       R.lensPath([Mapping.Source, payload.id, "isIncluded"]),
       payload.isIncluded,
@@ -69,7 +69,7 @@ export const tasksReducer = createReducer<TasksState, TasksAction>(initialState)
     ),
   )
   .handleAction(
-    tasksActions.updateAreAllTasksIncluded,
+    tasksActions.areAllTasksIncludedUpdated,
     (state, { payload }) => ({
       ...state,
       source: updateAreAllRecordsIncluded(state.source, payload),

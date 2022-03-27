@@ -31,7 +31,10 @@ import {
 export function* taskMonitoringSaga(): SagaIterator {
   yield all([
     takeEvery(
-      [tasksActions.flipIsTaskIncluded, tasksActions.updateAreAllTasksIncluded],
+      [
+        tasksActions.isTaskIncludedToggled,
+        tasksActions.areAllTasksIncludedUpdated,
+      ],
       pushTaskInclusionChangesToProject,
     ),
   ]);
@@ -58,7 +61,7 @@ function* pushTaskInclusionChangesToProject(
   );
   const sourceTasksById = yield select(sourceTasksByIdSelector);
 
-  if (isActionOf(tasksActions.flipIsTaskIncluded, action)) {
+  if (isActionOf(tasksActions.isTaskIncludedToggled, action)) {
     const sourceProjectId = R.pathOr<string>(
       "",
       [action.payload, "projectId"],
@@ -75,7 +78,7 @@ function* pushTaskInclusionChangesToProject(
     return;
   }
 
-  if (isActionOf(tasksActions.updateAreAllTasksIncluded, action)) {
+  if (isActionOf(tasksActions.areAllTasksIncludedUpdated, action)) {
     if (includedSourceTasksCount === 0) {
       return;
     }

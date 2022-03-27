@@ -17,7 +17,7 @@ import {
 } from "~/modules/projects/projectsSelectors";
 import * as clockifySagas from "~/modules/projects/sagas/clockifyProjectsSagas";
 import * as togglSagas from "~/modules/projects/sagas/togglProjectsSagas";
-import { updateIsTaskIncluded } from "~/modules/tasks/tasksActions";
+import { isTaskIncludedUpdated } from "~/modules/tasks/tasksActions";
 import { sourceTasksSelector } from "~/modules/tasks/tasksSelectors";
 import { Mapping, ToolAction, ToolName, type Project } from "~/typeDefs";
 
@@ -66,7 +66,7 @@ function* pushProjectInclusionChangesToTasks(
     };
 
     if (isActionOf(projectActions.areAllProjectsIncludedUpdated, action)) {
-      yield put(updateIsTaskIncluded(updatePayload));
+      yield put(isTaskIncludedUpdated(updatePayload));
 
       return;
     }
@@ -76,7 +76,7 @@ function* pushProjectInclusionChangesToTasks(
         return;
       }
 
-      yield put(updateIsTaskIncluded(updatePayload));
+      yield put(isTaskIncludedUpdated(updatePayload));
     }
   }
 }
