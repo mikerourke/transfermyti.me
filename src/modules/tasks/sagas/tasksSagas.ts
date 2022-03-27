@@ -9,7 +9,7 @@ import {
   toolNameByMappingSelector,
 } from "~/modules/allEntities/allEntitiesSelectors";
 import { errorNotificationShown } from "~/modules/app/appActions";
-import { updateIsProjectIncluded } from "~/modules/projects/projectsActions";
+import { isProjectIncludedUpdated } from "~/modules/projects/projectsActions";
 import { sourceProjectsSelector } from "~/modules/projects/projectsSelectors";
 import * as clockifySagas from "~/modules/tasks/sagas/clockifyTasksSagas";
 import * as togglSagas from "~/modules/tasks/sagas/togglTasksSagas";
@@ -66,7 +66,7 @@ function* pushTaskInclusionChangesToProject(
     );
 
     yield put(
-      updateIsProjectIncluded({
+      isProjectIncludedUpdated({
         id: sourceProjectId,
         isIncluded: includedSourceTasksCount > 0,
       }),
@@ -82,7 +82,7 @@ function* pushTaskInclusionChangesToProject(
 
     for (const sourceProject of sourceProjects) {
       yield put(
-        updateIsProjectIncluded({
+        isProjectIncludedUpdated({
           id: sourceProject.id,
           isIncluded: true,
         }),

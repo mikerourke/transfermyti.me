@@ -25,8 +25,8 @@ export function* projectMonitoringSaga(): SagaIterator {
   yield all([
     takeEvery(
       [
-        projectActions.flipIsProjectIncluded,
-        projectActions.updateAreAllProjectsIncluded,
+        projectActions.isProjectIncludedToggled,
+        projectActions.areAllProjectsIncludedUpdated,
       ],
       pushProjectInclusionChangesToTasks,
     ),
@@ -65,13 +65,13 @@ function* pushProjectInclusionChangesToTasks(
       isIncluded: isProjectIncluded,
     };
 
-    if (isActionOf(projectActions.updateAreAllProjectsIncluded, action)) {
+    if (isActionOf(projectActions.areAllProjectsIncludedUpdated, action)) {
       yield put(updateIsTaskIncluded(updatePayload));
 
       return;
     }
 
-    if (isActionOf(projectActions.flipIsProjectIncluded, action)) {
+    if (isActionOf(projectActions.isProjectIncludedToggled, action)) {
       if (sourceTask.projectId !== action.payload) {
         return;
       }

@@ -12,15 +12,15 @@ export const validateCredentials = createAsyncAction(
   "@credentials/validateCredentialsRequest",
   "@credentials/validateCredentialsSuccess",
   "@credentials/validateCredentialsFailure",
-)<void, CredentialsByMapping, ValidationErrorsByMapping>();
+)<undefined, CredentialsByMapping, ValidationErrorsByMapping>();
 
 export const credentialsStored = createAction(
   "@credentials/credentialsStored",
-)<void>();
+)<undefined>();
 
 export const credentialsFlushed = createAction(
   "@credentials/credentialsFlushed",
-)<void>();
+)<undefined>();
 
 export const credentialsUpdated = createAction(
   "@credentials/credentialsUpdated",

@@ -17,13 +17,13 @@ const TEST_PAYLOAD = {
 
 describe("within projectsReducer", () => {
   test("returns input state if an invalid action type is passed to the reducer", () => {
-    const result = projectsReducer(initialState, invalidAction as any);
+    const result = projectsReducer(initialState, invalidAction as AnyValid);
 
     expect(result).toEqual(initialState);
   });
 
   test("returns input state if no state is passed to the reducer", () => {
-    const result = projectsReducer(undefined as any, invalidAction as any);
+    const result = projectsReducer(undefined as AnyValid, invalidAction as AnyValid);
 
     expect(result).toEqual(initialState);
   });
@@ -91,7 +91,7 @@ describe("within projectsReducer", () => {
     ],
   );
 
-  test(`the flipIsProjectIncluded action flips the "isIncluded" value of the project with id = payload`, () => {
+  test(`the isProjectIncludedToggled action flips the "isIncluded" value of the project with id = payload`, () => {
     const updatedState = R.set(
       R.lensProp("source"),
       {
@@ -104,13 +104,13 @@ describe("within projectsReducer", () => {
     );
     const result = projectsReducer(
       updatedState,
-      projectsActions.flipIsProjectIncluded(TEST_PROJECT_ID),
+      projectsActions.isProjectIncludedToggled(TEST_PROJECT_ID),
     );
 
     expect(result.source[TEST_PROJECT_ID].isIncluded).toBe(true);
   });
 
-  test(`the updateIsProjectIncluded action sets the "isIncluded" value based on payload`, () => {
+  test(`the isProjectIncludedUpdated action sets the "isIncluded" value based on payload`, () => {
     const updatedState = R.set(
       R.lensProp("source"),
       {
@@ -123,7 +123,7 @@ describe("within projectsReducer", () => {
     );
     const result = projectsReducer(
       updatedState,
-      projectsActions.updateIsProjectIncluded({
+      projectsActions.isProjectIncludedUpdated({
         id: TEST_PROJECT_ID,
         isIncluded: false,
       }),
@@ -132,7 +132,7 @@ describe("within projectsReducer", () => {
     expect(result.source[TEST_PROJECT_ID].isIncluded).toBe(false);
   });
 
-  test(`the updateAreAllProjectsIncluded action sets the "isIncluded" value of all records to payload`, () => {
+  test(`the areAllProjectsIncludedUpdated action sets the "isIncluded" value of all records to payload`, () => {
     const updatedState = {
       ...TEST_PROJECTS_STATE,
       source: {
@@ -173,7 +173,7 @@ describe("within projectsReducer", () => {
     };
     const result = projectsReducer(
       updatedState,
-      projectsActions.updateAreAllProjectsIncluded(true),
+      projectsActions.areAllProjectsIncludedUpdated(true),
     );
 
     expect(result.source["2001"].isIncluded).toEqual(true);
