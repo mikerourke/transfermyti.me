@@ -1,7 +1,7 @@
 import * as R from "ramda";
 import type { SagaIterator } from "redux-saga";
 import { all, call, put, select, takeEvery } from "redux-saga/effects";
-import { isActionOf } from "typesafe-actions";
+import { type ActionType, isActionOf } from "typesafe-actions";
 
 import { linkEntitiesByIdByMapping } from "~/entityOperations/linkEntitiesByIdByMapping";
 import {
@@ -24,24 +24,22 @@ import {
   ToolAction,
   ToolName,
   type ProjectsByIdModel,
-  type ReduxAction,
 } from "~/typeDefs";
 
 export function* projectMonitoringSaga(): SagaIterator {
   yield all([
     takeEvery(
-      projectActions.flipIsProjectIncluded,
-      pushProjectInclusionChangesToTasks,
-    ),
-    takeEvery(
-      projectActions.updateAreAllProjectsIncluded,
+      [
+        projectActions.flipIsProjectIncluded,
+        projectActions.updateAreAllProjectsIncluded,
+      ],
       pushProjectInclusionChangesToTasks,
     ),
   ]);
 }
 
 function* pushProjectInclusionChangesToTasks(
-  action: ReduxAction<string | boolean>,
+  action: ActionType<typeof projectActions>,
 ): SagaIterator {
   const toolAction = yield select(toolActionSelector);
   const sourceProjectsById = yield select(sourceProjectsByIdSelector);
@@ -72,21 +70,18 @@ function* pushProjectInclusionChangesToTasks(
       isIncluded: isProjectIncluded,
     };
 
-    switch (true) {
-      case isActionOf(projectActions.updateAreAllProjectsIncluded, action):
-        yield put(updateIsTaskIncluded(updatePayload));
-        break;
+    if (isActionOf(projectActions.updateAreAllProjectsIncluded, action)) {
+      yield put(updateIsTaskIncluded(updatePayload));
 
-      case isActionOf(projectActions.flipIsProjectIncluded, action):
-        if (sourceTask.projectId !== action.payload) {
-          break;
-        }
+      return;
+    }
 
-        yield put(updateIsTaskIncluded(updatePayload));
-        break;
+    if (isActionOf(projectActions.flipIsProjectIncluded, action)) {
+      if (sourceTask.projectId !== action.payload) {
+        return;
+      }
 
-      default:
-        break;
+      yield put(updateIsTaskIncluded(updatePayload));
     }
   }
 }

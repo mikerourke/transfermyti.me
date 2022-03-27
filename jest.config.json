@@ -4,22 +4,9 @@
   "coveragePathIgnorePatterns": [
     "/node_modules/",
     "__fixtures__",
-    "constants.ts",
     "declarations.d.ts",
     "state.ts",
-    "typeDefs.ts",
-    "allEntitiesTypes.ts",
-    "appTypes.ts",
-    "clientsTypes.ts",
-    "credentialsTypes.ts",
-    "projectsTypes.ts",
-    "reduxTypes.ts",
-    "tagsTypes.ts",
-    "tasksTypes.ts",
-    "timeEntriesTypes.ts",
-    "userGroupsTypes.ts",
-    "usersTypes.ts",
-    "workspacesTypes.ts"
+    "typeDefs.ts"
   ],
   "coverageReporters": ["lcov"],
   "globals": {

@@ -6,7 +6,7 @@ import { default as stateFixture } from "../__fixtures__/state";
 
 export type { MockStoreCreator, MockStore } from "redux-mock-store";
 
-// This is the same as ReduxAction, but the type was changed to `any`, otherwise
+// This is the same as Redux action, but the type was changed to `any`, otherwise
 // we'd have to explicitly specify every action `type` name when using jest-in-case:
 export interface ReduxTestAction<TPayload = Record<string, unknown>> {
   type: AnyValid;
