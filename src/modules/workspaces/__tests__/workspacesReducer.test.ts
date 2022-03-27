@@ -28,13 +28,13 @@ const TEST_ALT_WORKSPACE = {
 
 describe("within workspacesReducer", () => {
   test("returns input state if an invalid action type is passed to the reducer", () => {
-    const result = workspacesReducer(initialState, invalidAction as any);
+    const result = workspacesReducer(initialState, invalidAction as AnyValid);
 
     expect(result).toEqual(initialState);
   });
 
   test("returns input state if no state is passed to the reducer", () => {
-    const result = workspacesReducer(undefined as any, invalidAction as any);
+    const result = workspacesReducer(undefined as AnyValid, invalidAction as AnyValid);
 
     expect(result).toEqual(initialState);
   });
@@ -96,7 +96,7 @@ describe("within workspacesReducer", () => {
     ],
   );
 
-  test("the appendUserIdsToWorkspace action sets state mapping value to initial state", () => {
+  test("the userIdsAppendedToWorkspace action sets state mapping value to initial state", () => {
     const updatedState = {
       ...TEST_WORKSPACES_STATE,
       source: {
@@ -107,7 +107,7 @@ describe("within workspacesReducer", () => {
 
     const result = workspacesReducer(
       updatedState,
-      workspacesActions.appendUserIdsToWorkspace({
+      workspacesActions.userIdsAppendedToWorkspace({
         workspaceId: TEST_ALT_WORKSPACE.id,
         mapping: Mapping.Source,
         userIds: ["6002"],
@@ -120,7 +120,7 @@ describe("within workspacesReducer", () => {
     });
   });
 
-  describe("the workspacesActions.updateWorkspaceLinking action", () => {
+  describe("the workspaceLinkingUpdated action", () => {
     const TEST_TARGET_ID = "clockify-workspace-01";
 
     test(`updates the "isIncluded" and "linkedId" values when payload.targetId is not null`, () => {
@@ -144,7 +144,7 @@ describe("within workspacesReducer", () => {
 
       const result = workspacesReducer(
         updatedState,
-        workspacesActions.updateWorkspaceLinking({
+        workspacesActions.workspaceLinkingUpdated({
           sourceId: TEST_WORKSPACE_ID,
           targetId: TEST_TARGET_ID,
         }),
@@ -188,7 +188,7 @@ describe("within workspacesReducer", () => {
 
       const result = workspacesReducer(
         updatedState,
-        workspacesActions.updateWorkspaceLinking({
+        workspacesActions.workspaceLinkingUpdated({
           sourceId: TEST_WORKSPACE_ID,
           targetId: null,
         }),
@@ -201,7 +201,7 @@ describe("within workspacesReducer", () => {
     });
   });
 
-  describe("the flipIsWorkspaceIncluded action", () => {
+  describe("the isWorkspaceIncludedToggled action", () => {
     const TARGET_ID = "clock-workspace-01";
 
     test(`flips the source and target "isIncluded" value if linked`, () => {
@@ -225,7 +225,9 @@ describe("within workspacesReducer", () => {
 
       const result = workspacesReducer(
         updatedState,
-        workspacesActions.flipIsWorkspaceIncluded(TEST_WORKSPACES_STATE.source[TEST_WORKSPACE_ID]),
+        workspacesActions.isWorkspaceIncludedToggled(
+          TEST_WORKSPACES_STATE.source[TEST_WORKSPACE_ID],
+        ),
       );
 
       expect(result.source[TEST_WORKSPACE_ID].isIncluded).toBe(true);
@@ -243,7 +245,7 @@ describe("within workspacesReducer", () => {
         linkedId: TEST_WORKSPACE_ID,
         isIncluded: true,
         memberOf: "workspaces",
-      } as any;
+      } as AnyValid;
 
       const updatedState = {
         ...TEST_WORKSPACES_STATE,
@@ -258,26 +260,26 @@ describe("within workspacesReducer", () => {
 
       const result = workspacesReducer(
         updatedState,
-        workspacesActions.flipIsWorkspaceIncluded(TEST_ALT_WORKSPACE),
+        workspacesActions.isWorkspaceIncludedToggled(TEST_ALT_WORKSPACE),
       );
 
       expect(result.source[TEST_WORKSPACE_ID].isIncluded).toBe(true);
     });
   });
 
-  test("the updateActiveWorkspaceId action sets state.activeWorkspaceId to the payload", () => {
+  test("the activeWorkspaceIdUpdated action sets state.activeWorkspaceId to the payload", () => {
     const result = workspacesReducer(
       initialState,
-      workspacesActions.updateActiveWorkspaceId(TEST_WORKSPACE_ID),
+      workspacesActions.activeWorkspaceIdUpdated(TEST_WORKSPACE_ID),
     );
 
     expect(result.activeWorkspaceId).toBe(TEST_WORKSPACE_ID);
   });
 
-  test("the resetContentsForMapping action sets state mapping value to initial state", () => {
+  test("the contentsForMappingReset action sets state mapping value to initial state", () => {
     const result = workspacesReducer(
       TEST_WORKSPACES_STATE,
-      workspacesActions.resetContentsForMapping(Mapping.Source),
+      workspacesActions.contentsForMappingReset(Mapping.Source),
     );
 
     expect(result.source).toEqual(initialState.source);

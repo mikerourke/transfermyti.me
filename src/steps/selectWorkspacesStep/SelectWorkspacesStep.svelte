@@ -75,7 +75,7 @@
     const { sourceWorkspace, targetWorkspace } = event.detail;
 
     dispatchAction(
-      workspacesActions.updateWorkspaceLinking({
+      workspacesActions.workspaceLinkingUpdated({
         sourceId: sourceWorkspace.id,
         targetId: targetWorkspace?.id || null,
       }),
@@ -83,7 +83,7 @@
   }
 
   function handleToggleForSource(event: CustomEvent<Workspace>): void {
-    dispatchAction(workspacesActions.flipIsWorkspaceIncluded(event.detail));
+    dispatchAction(workspacesActions.isWorkspaceIncludedToggled(event.detail));
   }
 
   function handleBackClick(): void {
@@ -110,7 +110,7 @@
     }
 
     dispatchAction(
-      workspacesActions.updateActiveWorkspaceId($firstIncludedWorkspaceId),
+      workspacesActions.activeWorkspaceIdUpdated($firstIncludedWorkspaceId),
     );
 
     dispatchAction(fetchAllFetchStatusUpdated(FetchStatus.Pending));

@@ -11,7 +11,7 @@
     navigateToWorkflowStep,
     WorkflowStep,
   } from "~/modules/app/workflowStep";
-  import { updateActiveWorkspaceId } from "~/modules/workspaces/workspacesActions";
+  import { activeWorkspaceIdUpdated } from "~/modules/workspaces/workspacesActions";
   import {
     activeWorkspaceIdSelector,
     includedSourceWorkspacesSelector,
@@ -80,7 +80,7 @@
   });
 
   function handleSelectActiveWorkspace(event: CustomEvent<Workspace>): void {
-    dispatchAction(updateActiveWorkspaceId(event.detail.id));
+    dispatchAction(activeWorkspaceIdUpdated(event.detail.id));
   }
 
   function handleShowExistingToggle(): void {
