@@ -1,14 +1,18 @@
-import * as R from "ramda";
+import { compose, isNil, prop, sortBy, toLower } from "ramda";
 import { createSelector, createStructuredSelector } from "reselect";
 
 import { selectIdToLinkedId } from "~/entityOperations/selectIdToLinkedId";
 import type { Mapping, ReduxState, Workspace } from "~/typeDefs";
 
-export const areWorkspacesFetchingSelector = (state: ReduxState): boolean =>
-  state.workspaces.isFetching;
+export const areWorkspacesFetchingSelector = createSelector(
+  (state: ReduxState) => state.workspaces.isFetching,
+  (isFetching): boolean => isFetching,
+);
 
-export const activeWorkspaceIdSelector = (state: ReduxState): string =>
-  state.workspaces.activeWorkspaceId;
+export const activeWorkspaceIdSelector = createSelector(
+  (state: ReduxState) => state.workspaces.activeWorkspaceId,
+  (activeWorkspaceId): string => activeWorkspaceId,
+);
 
 export const sourceWorkspacesByIdSelector = createSelector(
   (state: ReduxState): Dictionary<Workspace> => state.workspaces.source,
@@ -19,7 +23,8 @@ export const sourceWorkspacesSelector = createSelector(
   sourceWorkspacesByIdSelector,
   (workspacesById): Workspace[] => {
     const workspaces = Object.values(workspacesById);
-    return R.sortBy(R.compose(R.toLower, R.prop("name")), workspaces);
+
+    return sortBy(compose(toLower, prop("name")), workspaces);
   },
 );
 
@@ -30,7 +35,7 @@ export const firstIncludedWorkspaceIdSelector = createSelector(
       (sourceWorkspace) => sourceWorkspace.isIncluded,
     );
 
-    if (!firstIncluded) {
+    if (firstIncluded === undefined) {
       return "";
     }
 
@@ -57,12 +62,12 @@ export const sourceIncludedWorkspacesCountSelector = createSelector(
 export const sourceWorkspacesForTransferSelector = createSelector(
   includedSourceWorkspacesSelector,
   (includedWorkspaces): Workspace[] =>
-    includedWorkspaces.filter((workspace) => R.isNil(workspace.linkedId)),
+    includedWorkspaces.filter((workspace) => isNil(workspace.linkedId)),
 );
 
 export const workspaceIdToLinkedIdSelector = createSelector(
   sourceWorkspacesByIdSelector,
-  (sourceWorkspacesById): Record<string, string> =>
+  (sourceWorkspacesById): Dictionary<string> =>
     selectIdToLinkedId(sourceWorkspacesById),
 );
 
@@ -70,7 +75,8 @@ export const targetWorkspacesSelector = createSelector(
   targetWorkspacesByIdSelector,
   (workspacesById): Workspace[] => {
     const workspaces = Object.values(workspacesById);
-    return R.sortBy(R.compose(R.toLower, R.prop("name")), workspaces);
+
+    return sortBy(compose(toLower, prop("name")), workspaces);
   },
 );
 
@@ -83,10 +89,10 @@ export const missingTargetWorkspacesSelector = createSelector(
 export const hasDuplicateTargetWorkspacesSelector = createSelector(
   includedSourceWorkspacesSelector,
   (includedSourceWorkspaces): boolean => {
-    const countByLinkedId: Record<string, number> = {};
+    const countByLinkedId: Dictionary<number> = {};
 
     for (const { linkedId } of includedSourceWorkspaces) {
-      if (!linkedId) {
+      if (linkedId === null) {
         continue;
       }
 
@@ -101,13 +107,17 @@ export const hasDuplicateTargetWorkspacesSelector = createSelector(
   },
 );
 
-const limitIdsToIncluded = (workspaces: Workspace[]): string[] =>
-  workspaces.reduce((acc, workspace) => {
-    if (!workspace.isIncluded) {
-      return acc;
+const limitIdsToIncluded = (workspaces: Workspace[]): string[] => {
+  const includedIds: string[] = [];
+
+  for (const workspace of workspaces) {
+    if (workspace.isIncluded) {
+      includedIds.push(workspace.id);
     }
-    return [...acc, workspace.id];
-  }, [] as string[]);
+  }
+
+  return includedIds;
+};
 
 export const includedSourceWorkspaceIdsSelector = createSelector(
   sourceWorkspacesSelector,

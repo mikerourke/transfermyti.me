@@ -1,4 +1,4 @@
-import * as R from "ramda";
+import { isNil, propOr } from "ramda";
 import {
   createSelector,
   createStructuredSelector,
@@ -9,9 +9,9 @@ import { mappingByToolNameSelector } from "~/modules/allEntities/allEntitiesSele
 import { sourceTimeEntryCountByTagIdSelector } from "~/modules/timeEntries/timeEntriesSelectors";
 import { activeWorkspaceIdSelector } from "~/modules/workspaces/workspacesSelectors";
 import type {
+  EntityTableRecord,
   Mapping,
   ReduxState,
-  EntityTableRecord,
   Tag,
   ToolName,
 } from "~/typeDefs";
@@ -52,7 +52,7 @@ export const includedSourceTagsSelector = createSelector(
 export const sourceTagsForTransferSelector = createSelector(
   includedSourceTagsSelector,
   (sourceTags): Tag[] =>
-    sourceTags.filter((sourceTag) => R.isNil(sourceTag.linkedId)),
+    sourceTags.filter((sourceTag) => isNil(sourceTag.linkedId)),
 );
 
 const sourceTagsInActiveWorkspaceSelector = createSelector(
@@ -70,30 +70,32 @@ export const tagsForInclusionsTableSelector = createSelector(
     areExistsInTargetShown,
     sourceTags,
     timeEntryCountByTagId,
-  ): EntityTableRecord<Tag>[] =>
-    sourceTags.reduce((acc, sourceTag) => {
+  ): EntityTableRecord<Tag>[] => {
+    const tagTableRecords: EntityTableRecord<Tag>[] = [];
+
+    for (const sourceTag of sourceTags) {
       const existsInTarget = sourceTag.linkedId !== null;
       if (existsInTarget && !areExistsInTargetShown) {
-        return acc;
+        continue;
       }
 
-      const entryCount = R.propOr<number, Record<string, number>, number>(
+      const entryCount = propOr<number, Dictionary<number>, number>(
         0,
         sourceTag.id,
         timeEntryCountByTagId,
       );
 
-      return [
-        ...acc,
-        {
-          ...sourceTag,
-          entryCount,
-          existsInTarget,
-          isActiveInSource: true,
-          isActiveInTarget: existsInTarget,
-        },
-      ];
-    }, [] as EntityTableRecord<Tag>[]),
+      tagTableRecords.push({
+        ...sourceTag,
+        entryCount,
+        existsInTarget,
+        isActiveInSource: true,
+        isActiveInTarget: existsInTarget,
+      });
+    }
+
+    return tagTableRecords;
+  },
 );
 
 export const tagsTotalCountsByTypeSelector = createSelector(
@@ -118,15 +120,16 @@ export const tagsTotalCountsByTypeSelector = createSelector(
 
 export const tagIdsByNameBySelectorFactory = (
   toolName: ToolName,
-): Selector<ReduxState, Record<string, string>> =>
+): Selector<ReduxState, Dictionary<string>> =>
   createSelector(
     mappingByToolNameSelector,
     tagsByMappingSelector,
-    (mappingByToolName, tagsByMapping): Record<string, string> => {
+    (mappingByToolName, tagsByMapping): Dictionary<string> => {
       const toolMapping = mappingByToolName[toolName];
+
       const tags = tagsByMapping[toolMapping];
 
-      const tagIdsByName: Record<string, string> = {};
+      const tagIdsByName: Dictionary<string> = {};
       for (const tag of tags) {
         tagIdsByName[tag.name] = tag.id;
       }
@@ -143,6 +146,7 @@ export const targetTagIdsSelectorFactory = (
 
     for (const sourceTagId of sourceTagIds) {
       const sourceTag = sourceTagsById[sourceTagId];
+
       if (sourceTag && sourceTag.linkedId) {
         targetTagIds.push(sourceTag.linkedId);
       }

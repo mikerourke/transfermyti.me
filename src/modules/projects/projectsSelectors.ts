@@ -1,4 +1,4 @@
-import * as R from "ramda";
+import { isNil, pluck, propOr } from "ramda";
 import { createSelector } from "reselect";
 
 import { selectIdToLinkedId } from "~/entityOperations/selectIdToLinkedId";
@@ -8,7 +8,7 @@ import {
 } from "~/modules/allEntities/allEntitiesSelectors";
 import { sourceTimeEntryCountByIdFieldSelectorFactory } from "~/modules/timeEntries/timeEntriesSelectors";
 import { activeWorkspaceIdSelector } from "~/modules/workspaces/workspacesSelectors";
-import type { ReduxState, Project, EntityTableRecord } from "~/typeDefs";
+import type { EntityTableRecord, Project, ReduxState } from "~/typeDefs";
 
 export const sourceProjectsByIdSelector = createSelector(
   (state: ReduxState) => state.projects.source,
@@ -38,13 +38,13 @@ export const includedSourceProjectsSelector = createSelector(
 
 export const includedSourceProjectIdsSelector = createSelector(
   includedSourceProjectsSelector,
-  (sourceProjects): string[] => R.pluck("id", sourceProjects),
+  (sourceProjects): string[] => pluck("id", sourceProjects),
 );
 
 export const sourceProjectsForTransferSelector = createSelector(
   includedSourceProjectsSelector,
   (sourceProjects): Project[] =>
-    sourceProjects.filter((sourceProject) => R.isNil(sourceProject.linkedId)),
+    sourceProjects.filter((sourceProject) => isNil(sourceProject.linkedId)),
 );
 
 export const sourceProjectsInActiveWorkspaceSelector = createSelector(
@@ -58,7 +58,7 @@ export const sourceProjectsInActiveWorkspaceSelector = createSelector(
 
 export const projectIdToLinkedIdSelector = createSelector(
   sourceProjectsByIdSelector,
-  (sourceProjectsById): Record<string, string> =>
+  (sourceProjectsById): Dictionary<string> =>
     selectIdToLinkedId(sourceProjectsById),
 );
 
@@ -72,36 +72,40 @@ export const projectsForInclusionsTableSelector = createSelector(
     sourceProjects,
     targetProjectsById,
     timeEntryCountByProjectId,
-  ): EntityTableRecord<Project>[] =>
-    sourceProjects.reduce((acc, sourceProject) => {
+  ): EntityTableRecord<Project>[] => {
+    const projectTableRecords: EntityTableRecord<Project>[] = [];
+
+    for (const sourceProject of sourceProjects) {
       const existsInTarget = sourceProject.linkedId !== null;
+
       if (existsInTarget && !areExistsInTargetShown) {
-        return acc;
+        continue;
       }
 
       let isActiveInTarget = false;
       if (existsInTarget) {
         const targetId = sourceProject.linkedId as string;
+
         isActiveInTarget = targetProjectsById[targetId].isActive;
       }
 
-      const entryCount = R.propOr<number, Record<string, number>, number>(
+      const entryCount = propOr<number, Dictionary<number>, number>(
         0,
         sourceProject.id,
         timeEntryCountByProjectId,
       );
 
-      return [
-        ...acc,
-        {
-          ...sourceProject,
-          entryCount,
-          existsInTarget,
-          isActiveInSource: sourceProject.isActive,
-          isActiveInTarget,
-        },
-      ];
-    }, [] as EntityTableRecord<Project>[]),
+      projectTableRecords.push({
+        ...sourceProject,
+        entryCount,
+        existsInTarget,
+        isActiveInSource: sourceProject.isActive,
+        isActiveInTarget,
+      });
+    }
+
+    return projectTableRecords;
+  },
 );
 
 export const projectsTotalCountsByTypeSelector = createSelector(
@@ -146,13 +150,13 @@ export const projectsByWorkspaceIdByToolNameSelector = createSelector(
 
 function groupProjectsByWorkspaceId(
   projects: Project[],
-): Record<string, Project[]> {
-  const projectsByWorkspaceId: Record<string, Project[]> = {};
+): Dictionary<Project[]> {
+  const projectsByWorkspaceId: Dictionary<Project[]> = {};
 
   for (const project of projects) {
-    const workspaceProjects = R.propOr<
+    const workspaceProjects = propOr<
       Project[],
-      Record<string, Project[]>,
+      Dictionary<Project[]>,
       Project[]
     >([], project.workspaceId, projectsByWorkspaceId);
 

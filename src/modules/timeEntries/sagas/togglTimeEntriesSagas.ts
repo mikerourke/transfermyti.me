@@ -3,7 +3,7 @@ import endOfYear from "date-fns/endOfYear";
 import format from "date-fns/format";
 import startOfYear from "date-fns/startOfYear";
 import qs from "qs";
-import * as R from "ramda";
+import { isNil, propOr } from "ramda";
 import type { SagaIterator } from "redux-saga";
 import { call, delay, select } from "redux-saga/effects";
 
@@ -25,12 +25,12 @@ import { validStringify } from "~/utilities/textTransforms";
 
 const togglApiDelay = getApiDelayForTool(ToolName.Toggl);
 
-interface TogglTotalCurrencyModel {
+interface TogglTotalCurrency {
   currency: string | null;
   amount: number | null;
 }
 
-interface TogglTimeEntryResponseModel {
+interface TogglTimeEntryResponse {
   id: number;
   pid: number;
   tid: number | null;
@@ -53,13 +53,13 @@ interface TogglTimeEntryResponseModel {
   tags: string[];
 }
 
-interface TogglTimeEntriesFetchResponseModel {
+interface TogglTimeEntriesFetchResponse {
   total_grand: number;
   total_billable: number | null;
-  total_currencies: TogglTotalCurrencyModel[];
+  total_currencies: TogglTotalCurrency[];
   total_count: number;
   per_page: number;
-  data: TogglTimeEntryResponseModel[];
+  data: TogglTimeEntryResponse[];
 }
 
 /**
@@ -109,14 +109,16 @@ function* createTogglTimeEntry(
   targetWorkspaceId: string,
 ): SagaIterator {
   const projectIdToLinkedId = yield select(projectIdToLinkedIdSelector);
-  const targetProjectId = R.propOr<
-    string | null,
-    Record<string, string>,
-    string
-  >(null, sourceTimeEntry.projectId ?? "", projectIdToLinkedId);
+
+  const targetProjectId = propOr<string | null, Dictionary<string>, string>(
+    null,
+    sourceTimeEntry.projectId ?? "",
+    projectIdToLinkedId,
+  );
 
   const taskIdToLinkedId = yield select(taskIdToLinkedIdSelector);
-  const targetTaskId = R.propOr<string | null, Record<string, string>, string>(
+
+  const targetTaskId = propOr<string | null, Dictionary<string>, string>(
     null,
     sourceTimeEntry.taskId ?? "",
     taskIdToLinkedId,
@@ -129,8 +131,8 @@ function* createTogglTimeEntry(
       duration: differenceInSeconds(sourceTimeEntry.end, sourceTimeEntry.start),
       start: sourceTimeEntry.start.toISOString(),
       wid: +targetWorkspaceId,
-      pid: R.isNil(targetProjectId) ? undefined : +targetProjectId,
-      tid: R.isNil(targetTaskId) ? undefined : +targetTaskId,
+      pid: isNil(targetProjectId) ? undefined : +targetProjectId,
+      tid: isNil(targetTaskId) ? undefined : +targetTaskId,
       billable: sourceTimeEntry.isBillable,
       created_with: "transfermyti.me",
     },
@@ -160,13 +162,16 @@ function* fetchTogglTimeEntriesInWorkspace(
   workspaceId: string,
 ): SagaIterator<TimeEntry[]> {
   const credentialsByToolName = yield select(credentialsByToolNameSelector);
-  const togglUserId = credentialsByToolName?.toggl?.userId;
-  if (!togglUserId) {
+
+  const togglUserId = credentialsByToolName?.toggl?.userId ?? null;
+  if (togglUserId === null) {
     throw new Error("Invalid or missing Toggl user ID");
   }
 
-  const togglTimeEntries: TogglTimeEntryResponseModel[] = [];
+  const togglTimeEntries: TogglTimeEntryResponse[] = [];
+
   const currentYear = new Date().getFullYear();
+
   const clientIdsByName = yield select(
     clientIdsByNameSelectorFactory(ToolName.Toggl),
   );
@@ -192,13 +197,14 @@ function* fetchTogglTimeEntriesInWorkspace(
 
   return togglTimeEntries.reduce((acc, togglTimeEntry) => {
     const validUserId = togglTimeEntry?.uid ?? 0;
+
     // Extra check to ensure we only transfer time entries for the user
     // associated with the API key:
     if (validUserId.toString() !== togglUserId) {
       return acc;
     }
 
-    const clientId = R.propOr<null, string, string>(
+    const clientId = propOr<null, string, string>(
       null,
       togglTimeEntry.client,
       clientIdsByName,
@@ -218,7 +224,7 @@ function* fetchAllTogglTimeEntriesForYear(
   userId: string,
   workspaceId: string,
   year: number,
-): SagaIterator<TogglTimeEntryResponseModel[]> {
+): SagaIterator<TogglTimeEntryResponse[]> {
   const {
     total_count: totalCount,
     per_page: perPage,
@@ -240,6 +246,7 @@ function* fetchAllTogglTimeEntriesForYear(
   }
 
   const allTimeEntries = firstPageEntries;
+
   const totalPages = Math.ceil(totalCount / perPage);
 
   for (let page = 2; page <= totalPages; page += 1) {
@@ -263,10 +270,13 @@ function* fetchTogglTimeEntriesForYearAndPage(
   workspaceId: string,
   year: number,
   page: number,
-): SagaIterator<TogglTimeEntriesFetchResponseModel> {
+): SagaIterator<TogglTimeEntriesFetchResponse> {
   const currentDate = new Date();
+
   currentDate.setFullYear(year);
+
   const DATE_FORMAT = "yyyy-MM-dd'T'HH:mm:ss";
+
   const firstDay = format(startOfYear(currentDate), DATE_FORMAT);
   const lastDay = format(endOfYear(currentDate), DATE_FORMAT);
 
@@ -283,14 +293,17 @@ function* fetchTogglTimeEntriesForYearAndPage(
 }
 
 function transformFromResponse(
-  timeEntry: TogglTimeEntryResponseModel,
+  timeEntry: TogglTimeEntryResponse,
   workspaceId: string,
   clientId: string | null,
-  tagIdsByName: Record<string, string>,
+  tagIdsByName: Dictionary<string>,
 ): TimeEntry {
   const startTime = getTime(timeEntry, "start");
+
   const tagNames = timeEntry.tags ?? [];
+
   const tagIds = tagNames.map((tagName) => tagIdsByName[tagName]);
+
   return {
     id: timeEntry.id.toString(),
     description: timeEntry.description,
@@ -315,13 +328,14 @@ function transformFromResponse(
 }
 
 function getTime(
-  timeEntry: TogglTimeEntryResponseModel,
+  timeEntry: TogglTimeEntryResponse,
   field: "start" | "end",
 ): Date {
-  const value = R.propOr<null, TogglTimeEntryResponseModel, string>(
+  const value = propOr<null, TogglTimeEntryResponse, string>(
     null,
     field,
     timeEntry,
   );
-  return R.isNil(value) ? new Date() : new Date(value);
+
+  return isNil(value) ? new Date() : new Date(value);
 }

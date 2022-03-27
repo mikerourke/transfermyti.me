@@ -1,5 +1,9 @@
-import * as R from "ramda";
-import { createSelector, createStructuredSelector, Selector } from "reselect";
+import { isNil, propOr } from "ramda";
+import {
+  createSelector,
+  createStructuredSelector,
+  type Selector,
+} from "reselect";
 
 import { selectIdToLinkedId } from "~/entityOperations/selectIdToLinkedId";
 import { mappingByToolNameSelector } from "~/modules/allEntities/allEntitiesSelectors";
@@ -42,7 +46,7 @@ export const includedSourceClientsSelector = createSelector(
 export const sourceClientsForTransferSelector = createSelector(
   includedSourceClientsSelector,
   (sourceClients): Client[] =>
-    sourceClients.filter((sourceClient) => R.isNil(sourceClient.linkedId)),
+    sourceClients.filter((sourceClient) => isNil(sourceClient.linkedId)),
 );
 
 export const sourceClientsInActiveWorkspaceSelector = createSelector(
@@ -56,21 +60,22 @@ export const sourceClientsInActiveWorkspaceSelector = createSelector(
 
 export const clientIdToLinkedIdSelector = createSelector(
   sourceClientsByIdSelector,
-  (sourceClientsById): Record<string, string> =>
+  (sourceClientsById): Dictionary<string> =>
     selectIdToLinkedId(sourceClientsById),
 );
 
 const projectCountBySourceClientIdSelector = createSelector(
   sourceClientsSelector,
-  (sourceClients): Record<string, number> => {
-    const projectCountBySourceClientId: Record<string, number> = {};
+  (sourceClients): Dictionary<number> => {
+    const projectCountBySourceClientId: Dictionary<number> = {};
 
     for (const sourceClient of sourceClients) {
-      const currentCount = R.propOr<number, Record<string, number>, number>(
+      const currentCount = propOr<number, Dictionary<number>, number>(
         0,
         sourceClient.id,
         projectCountBySourceClientId,
       );
+
       projectCountBySourceClientId[sourceClient.id] = currentCount + 1;
     }
 
@@ -88,41 +93,45 @@ export const clientsForInclusionsTableSelector = createSelector(
     sourceClients,
     projectCountByClientId,
     timeEntryCountByClientId,
-  ): ClientTableRecord[] =>
-    sourceClients.reduce((acc, sourceClient) => {
+  ): ClientTableRecord[] => {
+    const clientTableRecords: ClientTableRecord[] = [];
+
+    for (const sourceClient of sourceClients) {
       const existsInTarget = sourceClient.linkedId !== null;
+
       if (existsInTarget && !areExistsInTargetShown) {
-        return acc;
+        continue;
       }
 
-      const entryCount = R.propOr<number, Record<string, number>, number>(
+      const entryCount = propOr<number, Dictionary<number>, number>(
         0,
         sourceClient.id,
         timeEntryCountByClientId,
       );
-      const projectCount = R.propOr<number, Record<string, number>, number>(
+
+      const projectCount = propOr<number, Dictionary<number>, number>(
         0,
         sourceClient.id,
         projectCountByClientId,
       );
 
-      return [
-        ...acc,
-        {
-          ...sourceClient,
-          entryCount,
-          projectCount,
-          existsInTarget,
-          isActiveInSource: true,
-          isActiveInTarget: existsInTarget,
-        },
-      ];
-    }, [] as ClientTableRecord[]),
+      clientTableRecords.push({
+        ...sourceClient,
+        entryCount,
+        projectCount,
+        existsInTarget,
+        isActiveInSource: true,
+        isActiveInTarget: existsInTarget,
+      });
+    }
+
+    return clientTableRecords;
+  },
 );
 
 export const clientsTotalCountsByTypeSelector = createSelector(
   clientsForInclusionsTableSelector,
-  (clientsForInclusionsTable): Record<string, number> =>
+  (clientsForInclusionsTable): Dictionary<number> =>
     clientsForInclusionsTable.reduce(
       (
         acc,
@@ -157,15 +166,16 @@ const clientsByMappingSelector = createStructuredSelector<
 
 export const clientIdsByNameSelectorFactory = (
   toolName: ToolName,
-): Selector<ReduxState, Record<string, string>> =>
+): Selector<ReduxState, Dictionary<string>> =>
   createSelector(
     mappingByToolNameSelector,
     clientsByMappingSelector,
     (mappingByToolName, clientsByMapping) => {
       const toolMapping = mappingByToolName[toolName];
+
       const clients = clientsByMapping[toolMapping];
 
-      const clientIdsByName: Record<string, string> = {};
+      const clientIdsByName: Dictionary<string> = {};
       for (const client of clients) {
         clientIdsByName[client.name] = client.id;
       }

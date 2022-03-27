@@ -1,4 +1,4 @@
-import * as R from "ramda";
+import { indexBy, prop } from "ramda";
 import type { SagaIterator } from "redux-saga";
 import { all, call, put, select, takeEvery } from "redux-saga/effects";
 
@@ -10,13 +10,11 @@ import {
 import { errorNotificationShown } from "~/modules/app/appActions";
 import * as clockifySagas from "~/modules/workspaces/sagas/clockifyWorkspacesSagas";
 import * as togglSagas from "~/modules/workspaces/sagas/togglWorkspacesSagas";
-import * as workspacesActions from "~/modules/workspaces/workspacesActions";
+import { fetchWorkspaces } from "~/modules/workspaces/workspacesActions";
 import { Mapping, ToolAction, ToolName, type Workspace } from "~/typeDefs";
 
 export function* workspacesSaga(): SagaIterator {
-  yield all([
-    takeEvery(workspacesActions.fetchWorkspaces.request, fetchWorkspacesSaga),
-  ]);
+  yield all([takeEvery(fetchWorkspaces.request, fetchWorkspacesSaga)]);
 }
 
 function* fetchWorkspacesSaga(): SagaIterator {
@@ -25,10 +23,13 @@ function* fetchWorkspacesSaga(): SagaIterator {
       [ToolName.Clockify]: clockifySagas.fetchClockifyWorkspacesSaga,
       [ToolName.Toggl]: togglSagas.fetchTogglWorkspacesSaga,
     };
+
     const { source, target } = yield select(toolNameByMappingSelector);
+
     const sourceWorkspaces = yield call(fetchSagaByToolName[source]);
 
     const toolAction = yield select(toolActionSelector);
+
     let workspaceByIdByMapping: Record<Mapping, Dictionary<Workspace>>;
 
     if (toolAction === ToolAction.Transfer) {
@@ -41,16 +42,15 @@ function* fetchWorkspacesSaga(): SagaIterator {
       );
     } else {
       workspaceByIdByMapping = {
-        source: R.indexBy(R.prop("id"), sourceWorkspaces),
+        source: indexBy(prop("id"), sourceWorkspaces),
         target: {},
       };
     }
 
-    yield put(
-      workspacesActions.fetchWorkspaces.success(workspaceByIdByMapping),
-    );
+    yield put(fetchWorkspaces.success(workspaceByIdByMapping));
   } catch (err: AnyValid) {
     yield put(errorNotificationShown(err));
-    yield put(workspacesActions.fetchWorkspaces.failure());
+
+    yield put(fetchWorkspaces.failure());
   }
 }

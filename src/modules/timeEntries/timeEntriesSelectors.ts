@@ -1,4 +1,4 @@
-import * as R from "ramda";
+import { isNil, pathOr, propOr } from "ramda";
 import { createSelector, type Selector } from "reselect";
 
 import { activeWorkspaceIdSelector } from "~/modules/workspaces/workspacesSelectors";
@@ -24,10 +24,9 @@ export const sourceTimeEntriesForTransferSelector = createSelector(
   includedSourceTimeEntriesSelector,
   isDuplicateCheckEnabledSelector,
   (sourceTimeEntries, isDuplicateCheckEnabled) =>
+    // prettier-ignore
     isDuplicateCheckEnabled
-      ? sourceTimeEntries.filter((sourceTimeEntry) =>
-          R.isNil(sourceTimeEntry.linkedId),
-        )
+      ? sourceTimeEntries.filter((sourceTimeEntry) => isNil(sourceTimeEntry.linkedId))
       : sourceTimeEntries,
 );
 
@@ -52,14 +51,17 @@ export const timeEntriesForInclusionsTableSelector = createSelector(
     sourceProjectsById,
     sourceTasksById,
     isDuplicateCheckEnabled,
-  ): TimeEntryTableRecord[] =>
-    sourceTimeEntries.reduce((acc, sourceTimeEntry) => {
+  ): TimeEntryTableRecord[] => {
+    const timeEntryTableRecords: TimeEntryTableRecord[] = [];
+
+    for (const sourceTimeEntry of sourceTimeEntries) {
       const existsInTarget = sourceTimeEntry.linkedId !== null;
+
       if (existsInTarget && !areExistsInTargetShown) {
-        return acc;
+        continue;
       }
 
-      const projectName = R.pathOr(
+      const projectName = pathOr(
         null,
         [sourceTimeEntry.projectId ?? "", "name"],
         sourceProjectsById,
@@ -67,25 +69,25 @@ export const timeEntriesForInclusionsTableSelector = createSelector(
 
       let taskName = null;
       if (sourceTimeEntry.taskId !== null) {
-        taskName = R.pathOr(
+        taskName = pathOr(
           null,
           [sourceTimeEntry.taskId, "name"],
           sourceTasksById,
         );
       }
 
-      return [
-        ...acc,
-        {
-          ...sourceTimeEntry,
-          projectName,
-          taskName,
-          existsInTarget: isDuplicateCheckEnabled ? existsInTarget : false,
-          isActiveInSource: true,
-          isActiveInTarget: existsInTarget,
-        },
-      ];
-    }, [] as TimeEntryTableRecord[]),
+      timeEntryTableRecords.push({
+        ...sourceTimeEntry,
+        projectName,
+        taskName,
+        existsInTarget: isDuplicateCheckEnabled ? existsInTarget : false,
+        isActiveInSource: true,
+        isActiveInTarget: existsInTarget,
+      });
+    }
+
+    return timeEntryTableRecords;
+  },
 );
 
 export const timeEntriesTotalCountsByTypeSelector = createSelector(
@@ -106,15 +108,16 @@ export const timeEntriesTotalCountsByTypeSelector = createSelector(
 export const sourceTimeEntryCountByTagIdSelector = createSelector(
   sourceTimeEntriesSelector,
   (sourceTimeEntries) => {
-    const timeEntryCountByTagIdField: Record<string, number> = {};
+    const timeEntryCountByTagIdField: Dictionary<number> = {};
 
     for (const timeEntry of sourceTimeEntries) {
       for (const tagId of timeEntry.tagIds) {
-        const currentValue = R.propOr<number, Record<string, number>, number>(
+        const currentValue = propOr<number, Dictionary<number>, number>(
           0,
           tagId,
           timeEntryCountByTagIdField,
         );
+
         timeEntryCountByTagIdField[tagId] = currentValue + 1;
       }
     }
@@ -125,18 +128,20 @@ export const sourceTimeEntryCountByTagIdSelector = createSelector(
 
 export const sourceTimeEntryCountByIdFieldSelectorFactory = (
   idField: string,
-): Selector<ReduxState, Record<string, number>> =>
+): Selector<ReduxState, Dictionary<number>> =>
   createSelector(sourceTimeEntriesSelector, (sourceTimeEntries) => {
-    const timeEntryCountByIdField: Record<string, number> = {};
+    const timeEntryCountByIdField: Dictionary<number> = {};
 
     for (const timeEntry of sourceTimeEntries) {
       const parentId = timeEntry[idField];
-      if (parentId) {
-        const currentCountForId = R.propOr<
-          number,
-          Record<string, number>,
-          number
-        >(0, parentId, timeEntryCountByIdField);
+
+      if (!isNil(parentId)) {
+        const currentCountForId = propOr<number, Dictionary<number>, number>(
+          0,
+          parentId,
+          timeEntryCountByIdField,
+        );
+
         timeEntryCountByIdField[parentId] = currentCountForId + 1;
       }
     }

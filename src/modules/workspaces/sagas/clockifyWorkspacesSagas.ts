@@ -2,10 +2,10 @@ import type { SagaIterator } from "redux-saga";
 import { call } from "redux-saga/effects";
 
 import { fetchArray } from "~/entityOperations/apiRequests";
-import type { ClockifyMembershipResponseModel } from "~/modules/users/sagas/clockifyUsersSagas";
+import type { ClockifyMembershipResponse } from "~/modules/users/sagas/clockifyUsersSagas";
 import { EntityGroup, type Workspace } from "~/typeDefs";
 
-interface ClockifyWorkspaceSettingsResponseModel {
+interface ClockifyWorkspaceSettingsResponse {
   timeRoundingInReports: boolean;
   onlyAdminsSeeBillableRates: boolean;
   onlyAdminsCreateProject: boolean;
@@ -29,15 +29,15 @@ interface ClockifyWorkspaceSettingsResponseModel {
   projectGroupingLabel: string;
 }
 
-interface ClockifyWorkspaceResponseModel {
+interface ClockifyWorkspaceResponse {
   id: string;
   name: string;
   hourlyRate: {
     amount: number;
     currency: string;
   };
-  memberships: ClockifyMembershipResponseModel[];
-  workspaceSettings: ClockifyWorkspaceSettingsResponseModel;
+  memberships: ClockifyMembershipResponse[];
+  workspaceSettings: ClockifyWorkspaceSettingsResponse;
   imageUrl: string;
 }
 
@@ -47,7 +47,7 @@ interface ClockifyWorkspaceResponseModel {
  * @see https://clockify.me/developers-api#operation--v1-workspaces-get
  */
 export function* fetchClockifyWorkspacesSaga(): SagaIterator<Workspace[]> {
-  const clockifyWorkspaces: ClockifyWorkspaceResponseModel[] = yield call(
+  const clockifyWorkspaces: ClockifyWorkspaceResponse[] = yield call(
     fetchArray,
     "/clockify/api/workspaces",
   );
@@ -56,7 +56,7 @@ export function* fetchClockifyWorkspacesSaga(): SagaIterator<Workspace[]> {
 }
 
 function transformFromResponse(
-  workspace: ClockifyWorkspaceResponseModel,
+  workspace: ClockifyWorkspaceResponse,
 ): Workspace {
   return {
     id: workspace.id,

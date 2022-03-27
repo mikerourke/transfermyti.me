@@ -1,6 +1,6 @@
 <script lang="ts">
   import { css } from "goober";
-  import * as R from "ramda";
+  import { isNil } from "ramda";
   import { createEventDispatcher } from "svelte";
   import { slide } from "svelte/transition";
 
@@ -20,7 +20,7 @@
     ({ id }) => id === sourceWorkspace.linkedId,
   );
 
-  const targetSelectValue = R.isNil(targetWorkspace) ? "" : targetWorkspace.id;
+  const targetSelectValue = isNil(targetWorkspace) ? "" : targetWorkspace.id;
 
   const workspacesForSelect = [...targetWorkspaces];
 
@@ -30,7 +30,7 @@
 
   // Don't allow the user to pick the "Create New" option if a workspace with
   // a matching name exists on the target:
-  if (!matchingNameWorkspace) {
+  if (isNil(matchingNameWorkspace)) {
     workspacesForSelect.unshift({
       id: "",
       name: "None (Create New)",
@@ -45,7 +45,7 @@
   function handleToggleIncludeWorkspace(): void {
     dispatchEvent("toggle", sourceWorkspace);
 
-    if (matchingNameWorkspace && !sourceWorkspace.isIncluded) {
+    if (!isNil(matchingNameWorkspace) && !sourceWorkspace.isIncluded) {
       dispatchEvent("select-target", {
         sourceWorkspace,
         targetWorkspace: matchingNameWorkspace,

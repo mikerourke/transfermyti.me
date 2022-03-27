@@ -8,7 +8,7 @@ import { fetchEntitiesForTool } from "~/entityOperations/fetchEntitiesForTool";
 import { EntityGroup, ToolName, type Tag } from "~/typeDefs";
 import { validStringify } from "~/utilities/textTransforms";
 
-interface TogglTagResponseModel {
+interface TogglTagResponse {
   id: number;
   wid: number;
   name: string;
@@ -62,6 +62,7 @@ function* createTogglTag(
       wid: +targetWorkspaceId,
     },
   };
+
   const { data } = yield call(fetchObject, "/toggl/api/tags", {
     method: "POST",
     body: tagRequest,
@@ -85,7 +86,7 @@ function* deleteTogglTag(sourceTag: Tag): SagaIterator {
  * @see https://github.com/toggl/toggl_api_docs/blob/master/chapters/workspaces.md#get-workspace-tags
  */
 function* fetchTogglTagsInWorkspace(workspaceId: string): SagaIterator<Tag[]> {
-  const togglTags: TogglTagResponseModel[] = yield call(
+  const togglTags: TogglTagResponse[] = yield call(
     fetchArray,
     `/toggl/api/workspaces/${workspaceId}/tags`,
   );
@@ -93,7 +94,7 @@ function* fetchTogglTagsInWorkspace(workspaceId: string): SagaIterator<Tag[]> {
   return togglTags.map(transformFromResponse);
 }
 
-function transformFromResponse(tag: TogglTagResponseModel): Tag {
+function transformFromResponse(tag: TogglTagResponse): Tag {
   return {
     id: tag.id.toString(),
     name: tag.name,

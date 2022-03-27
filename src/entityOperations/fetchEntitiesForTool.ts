@@ -1,4 +1,4 @@
-import * as R from "ramda";
+import { propOr } from "ramda";
 import type { SagaIterator } from "redux-saga";
 import { call, delay, select } from "redux-saga/effects";
 
@@ -26,9 +26,12 @@ export function* fetchEntitiesForTool<TEntity>({
   }
 
   const apiDelay = getApiDelayForTool(toolName);
+
   const allRecords: TEntity[] = [];
+
   for (const workspaceId of workspaceIds) {
     const recordsInWorkspace: TEntity[] = yield call(apiFetchFunc, workspaceId);
+
     allRecords.push(...recordsInWorkspace);
 
     yield delay(apiDelay);
@@ -45,10 +48,12 @@ function* findWorkspaceIdsForTool(toolName: ToolName): SagaIterator<string[]> {
   const workspaceIdsByMapping = yield select(
     includedWorkspaceIdsByMappingSelector,
   );
+
   const mappingByToolName = yield select(mappingByToolNameSelector);
+
   const toolMapping = mappingByToolName[toolName];
 
-  return R.propOr<string[], Record<string, string>, string[]>(
+  return propOr<string[], Dictionary<string>, string[]>(
     [],
     toolMapping,
     workspaceIdsByMapping,

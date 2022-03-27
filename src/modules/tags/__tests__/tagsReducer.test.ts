@@ -1,10 +1,10 @@
 import cases from "jest-in-case";
-import * as R from "ramda";
+import { lensProp, set } from "ramda";
 
 import * as tagsActions from "~/modules/tags/tagsActions";
-import { state, invalidAction } from "~/redux/__mocks__/mockStoreWithState";
+import { invalidAction, state } from "~/redux/__mocks__/mockStoreWithState";
 
-import { tagsReducer, initialState } from "../tagsReducer";
+import { initialState, tagsReducer } from "../tagsReducer";
 
 const TEST_TAGS_STATE = { ...state.tags };
 
@@ -92,8 +92,8 @@ describe("within tagsReducer", () => {
   );
 
   test(`the isTagIncludedToggled action flips the "isIncluded" value of the tag with id = payload`, () => {
-    const updatedState = R.set(
-      R.lensProp("source"),
+    const updatedState = set(
+      lensProp("source"),
       {
         [TEST_TAG_ID]: {
           ...TEST_TAGS_STATE.source[TEST_TAG_ID],

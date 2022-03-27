@@ -1,4 +1,4 @@
-import * as R from "ramda";
+import { isNil, propOr } from "ramda";
 import type { SagaIterator } from "redux-saga";
 import { call, select } from "redux-saga/effects";
 
@@ -14,7 +14,7 @@ import { projectIdToLinkedIdSelector } from "~/modules/projects/projectsSelector
 import { EntityGroup, ToolName, type Task } from "~/typeDefs";
 import { validStringify } from "~/utilities/textTransforms";
 
-interface TogglTaskResponseModel {
+interface TogglTaskResponse {
   name: string;
   id: number;
   wid: number;
@@ -64,16 +64,16 @@ export function* fetchTogglTasksSaga(): SagaIterator<Task[]> {
  */
 function* createTogglTask(sourceTask: Task): SagaIterator<Task> {
   const projectIdToLinkedId = yield select(projectIdToLinkedIdSelector);
-  const targetProjectId = R.propOr<
-    string | null,
-    Record<string, string>,
-    string
-  >(null, sourceTask.projectId, projectIdToLinkedId);
 
-  if (R.isNil(targetProjectId)) {
-    throw new Error(
-      `Could not find target project ID for Toggl task ${sourceTask.name}`,
-    );
+  const targetProjectId = propOr<string | null, Dictionary<string>, string>(
+    null,
+    sourceTask.projectId,
+    projectIdToLinkedId,
+  );
+
+  if (isNil(targetProjectId)) {
+    // prettier-ignore
+    throw new Error(`Could not find target project ID for Toggl task ${sourceTask.name}`);
   }
 
   const taskRequest = {
@@ -108,7 +108,7 @@ function* deleteTogglTask(sourceTask: Task): SagaIterator {
 function* fetchTogglTasksInWorkspace(
   workspaceId: string,
 ): SagaIterator<Task[]> {
-  const togglTasks: TogglTaskResponseModel[] = yield call(
+  const togglTasks: TogglTaskResponse[] = yield call(
     fetchArray,
     `/toggl/api/workspaces/${workspaceId}/tasks`,
   );
@@ -116,7 +116,7 @@ function* fetchTogglTasksInWorkspace(
   return togglTasks.map(transformFromResponse);
 }
 
-function transformFromResponse(task: TogglTaskResponseModel): Task {
+function transformFromResponse(task: TogglTaskResponse): Task {
   return {
     id: task.id.toString(),
     name: task.name,
@@ -134,10 +134,12 @@ function transformFromResponse(task: TogglTaskResponseModel): Task {
 
 function convertSecondsToClockifyEstimate(seconds: number): string {
   const minutes = seconds / 60;
+
   if (minutes < 60) {
     return `PT${minutes}M`;
   }
 
   const hours = minutes / 60;
+
   return `PT${hours}H`;
 }

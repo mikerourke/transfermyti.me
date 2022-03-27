@@ -1,5 +1,5 @@
 import { inc, lensPath, over } from "ramda";
-import { type ActionType, createReducer } from "typesafe-actions";
+import { createReducer, type ActionType } from "typesafe-actions";
 
 import * as allEntitiesActions from "~/modules/allEntities/allEntitiesActions";
 import {

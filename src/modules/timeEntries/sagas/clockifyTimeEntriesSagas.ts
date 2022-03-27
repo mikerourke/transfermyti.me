@@ -1,4 +1,4 @@
-import * as R from "ramda";
+import { isNil, pathOr, prop, propOr } from "ramda";
 import type { SagaIterator } from "redux-saga";
 import { call, select } from "redux-saga/effects";
 
@@ -11,28 +11,28 @@ import { deleteEntitiesForTool } from "~/entityOperations/deleteEntitiesForTool"
 import { fetchEntitiesForTool } from "~/entityOperations/fetchEntitiesForTool";
 import { credentialsByToolNameSelector } from "~/modules/credentials/credentialsSelectors";
 import { projectIdToLinkedIdSelector } from "~/modules/projects/projectsSelectors";
-import type { ClockifyProjectResponseModel } from "~/modules/projects/sagas/clockifyProjectsSagas";
-import type { ClockifyTagResponseModel } from "~/modules/tags/sagas/clockifyTagsSagas";
+import type { ClockifyProjectResponse } from "~/modules/projects/sagas/clockifyProjectsSagas";
+import type { ClockifyTagResponse } from "~/modules/tags/sagas/clockifyTagsSagas";
 import { targetTagIdsSelectorFactory } from "~/modules/tags/tagsSelectors";
-import type { ClockifyTaskResponseModel } from "~/modules/tasks/sagas/clockifyTasksSagas";
+import type { ClockifyTaskResponse } from "~/modules/tasks/sagas/clockifyTasksSagas";
 import { taskIdToLinkedIdSelector } from "~/modules/tasks/tasksSelectors";
 import { EntityGroup, ToolName, type TimeEntry } from "~/typeDefs";
 
-interface ClockifyTimeIntervalModel {
+interface ClockifyTimeInterval {
   duration: string;
   end: string;
   start: string;
 }
 
-interface ClockifyTimeEntryResponseModel {
+interface ClockifyTimeEntryResponse {
   billable: boolean;
   description: string;
   id: string;
   isLocked: boolean;
-  project: ClockifyProjectResponseModel;
-  tags: ClockifyTagResponseModel[];
-  task: ClockifyTaskResponseModel | null;
-  timeInterval: ClockifyTimeIntervalModel;
+  project: ClockifyProjectResponse;
+  tags: ClockifyTagResponse[];
+  task: ClockifyTaskResponse | null;
+  timeInterval: ClockifyTimeInterval;
   totalBillable: number | null;
   userId: string;
   workspaceId: string;
@@ -85,6 +85,7 @@ function* createClockifyTimeEntry(
   targetWorkspaceId: string,
 ): SagaIterator<TimeEntry> {
   const projectIdToLinkedId = yield select(projectIdToLinkedIdSelector);
+
   const taskIdToLinkedId = yield select(taskIdToLinkedIdSelector);
 
   let targetProjectId;
@@ -93,7 +94,7 @@ function* createClockifyTimeEntry(
 
   try {
     if (sourceTimeEntry.projectId) {
-      targetProjectId = R.prop(sourceTimeEntry.projectId, projectIdToLinkedId);
+      targetProjectId = prop(sourceTimeEntry.projectId, projectIdToLinkedId);
     }
 
     targetTagIds = yield select(
@@ -101,7 +102,7 @@ function* createClockifyTimeEntry(
     );
 
     if (sourceTimeEntry.taskId) {
-      targetTaskId = R.prop(sourceTimeEntry.taskId, taskIdToLinkedId);
+      targetTaskId = prop(sourceTimeEntry.taskId, taskIdToLinkedId);
     }
   } catch {
     // Ignore any errors here. We set default values for target properties,
@@ -137,6 +138,7 @@ function* createClockifyTimeEntry(
  */
 function* deleteClockifyTimeEntry(sourceTimeEntry: TimeEntry): SagaIterator {
   const { workspaceId, id } = sourceTimeEntry;
+
   yield call(
     fetchObject,
     `/clockify/api/workspaces/${workspaceId}/time-entries/${id}`,
@@ -152,12 +154,13 @@ function* fetchClockifyTimeEntriesInWorkspace(
   workspaceId: string,
 ): SagaIterator<TimeEntry[]> {
   const credentialsByToolName = yield select(credentialsByToolNameSelector);
+
   const clockifyUserId = credentialsByToolName?.clockify?.userId;
-  if (!clockifyUserId) {
+  if (isNil(clockifyUserId)) {
     throw new Error("Invalid or missing Clockify user ID");
   }
 
-  const clockifyTimeEntries: ClockifyTimeEntryResponseModel[] = yield call(
+  const clockifyTimeEntries: ClockifyTimeEntryResponse[] = yield call(
     fetchPaginatedFromClockify,
     `/clockify/api/workspaces/${workspaceId}/user/${clockifyUserId}/time-entries`,
     { hydrated: true },
@@ -167,13 +170,14 @@ function* fetchClockifyTimeEntriesInWorkspace(
 }
 
 function transformFromResponse(
-  timeEntry: ClockifyTimeEntryResponseModel,
+  timeEntry: ClockifyTimeEntryResponse,
 ): TimeEntry {
   const startTime = getTime(timeEntry, "start");
-  const clockifyTags = R.propOr<
-    ClockifyTagResponseModel[],
-    ClockifyTimeEntryResponseModel,
-    ClockifyTagResponseModel[]
+
+  const clockifyTags = propOr<
+    ClockifyTagResponse[],
+    ClockifyTimeEntryResponse,
+    ClockifyTagResponse[]
   >([], "tags", timeEntry);
 
   return {
@@ -200,9 +204,10 @@ function transformFromResponse(
 }
 
 function getTime(
-  timeEntry: ClockifyTimeEntryResponseModel,
+  timeEntry: ClockifyTimeEntryResponse,
   field: "start" | "end",
 ): Date {
-  const value = R.pathOr(null, ["timeInterval", field], timeEntry);
-  return R.isNil(value) ? new Date() : new Date(value);
+  const value = pathOr(null, ["timeInterval", field], timeEntry);
+
+  return isNil(value) ? new Date() : new Date(value);
 }

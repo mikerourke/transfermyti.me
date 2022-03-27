@@ -14,7 +14,7 @@ import { includedSourceWorkspaceIdsSelector } from "~/modules/workspaces/workspa
 import { EntityGroup, ToolName, type User } from "~/typeDefs";
 import { validStringify } from "~/utilities/textTransforms";
 
-interface TogglUserResponseModel {
+interface TogglUserResponse {
   id: number;
   default_wid: number;
   email: string;
@@ -40,7 +40,7 @@ interface TogglUserResponseModel {
   userGroupIds?: string[];
 }
 
-interface TogglProjectUserResponseModel {
+interface TogglProjectUserResponse {
   id: number;
   pid: number;
   uid: number;
@@ -53,7 +53,7 @@ interface TogglProjectUserResponseModel {
  * Sends invites to the array of specified emails.
  */
 export function* createTogglUsersSaga(
-  emailsByWorkspaceId: Record<string, string[]>,
+  emailsByWorkspaceId: Dictionary<string[]>,
 ): SagaIterator {
   const togglApiDelay = yield call(getApiDelayForTool, ToolName.Toggl);
 
@@ -72,6 +72,7 @@ export function* createTogglUsersSaga(
  */
 export function* removeTogglUsersSaga(sourceUsers: User[]): SagaIterator {
   const includedWorkspaceIds = yield select(includedSourceWorkspaceIdsSelector);
+
   const includedProjectIds = yield select(includedSourceProjectIdsSelector);
 
   const togglApiDelay = yield call(getApiDelayForTool, ToolName.Toggl);
@@ -80,40 +81,42 @@ export function* removeTogglUsersSaga(sourceUsers: User[]): SagaIterator {
   // workspace/project. In this case we're going to remove the user from each
   // included project that's being deleted.
   for (const workspaceId of includedWorkspaceIds) {
-    const projectUsers: TogglProjectUserResponseModel[] = yield call(
+    const projectUsers: TogglProjectUserResponse[] = yield call(
       fetchProjectUsersInSourceWorkspace,
       workspaceId,
     );
-    const projectUsersById = projectUsers.reduce((acc, projectUser) => {
-      if (!projectUser?.id) {
-        return acc;
+
+    const projectUsersById: Dictionary<TogglProjectUserResponse> = {};
+
+    for (const projectUser of projectUsers) {
+      if ((projectUser?.id ?? null) === null) {
+        continue;
       }
 
-      return {
-        ...acc,
-        [projectUser.id.toString()]: projectUser,
-      };
-    }, {});
+      projectUsersById[projectUser.id.toString()] = projectUser;
+    }
 
     yield delay(togglApiDelay);
 
     for (const sourceUser of sourceUsers) {
       // First, check if the source user to be deleted is associated with the
       // workspace projects:
-      const matchingProjectUser = projectUsersById[sourceUser.id];
-      if (matchingProjectUser) {
+      const matchingProjectUser = projectUsersById[sourceUser.id] ?? null;
+
+      if (matchingProjectUser !== null) {
         // If they are, make sure that the project that the user is associated
         // with is going to be deleted:
         const isProjectIncluded = includedProjectIds.includes(
           validStringify(matchingProjectUser.pid, ""),
         );
 
-        if (isProjectIncluded && matchingProjectUser.id) {
-          yield call(removeTogglUserFromProject, matchingProjectUser.id);
+        const projectUserId = matchingProjectUser.id ?? null;
 
-          yield put(
-            entityGroupTransferCompletedCountIncremented(EntityGroup.Users),
-          );
+        if (isProjectIncluded && projectUserId !== null) {
+          yield call(removeTogglUserFromProject, projectUserId.toString());
+
+          // prettier-ignore
+          yield put(entityGroupTransferCompletedCountIncremented(EntityGroup.Users));
 
           yield delay(togglApiDelay);
         }
@@ -141,6 +144,7 @@ function* inviteTogglUsers(
   workspaceId: string,
 ): SagaIterator {
   const userRequest = { emails: sourceEmails };
+
   yield call(fetchObject, `/toggl/api/workspaces/${workspaceId}/invite`, {
     method: "POST",
     body: userRequest,
@@ -163,11 +167,12 @@ function* removeTogglUserFromProject(projectUserId: string): SagaIterator {
  */
 function* fetchProjectUsersInSourceWorkspace(
   workspaceId: string,
-): SagaIterator<TogglProjectUserResponseModel[]> {
+): SagaIterator<TogglProjectUserResponse[]> {
   const { data } = yield call(
     fetchObject,
     `/toggl/api/workspaces/${workspaceId}/project_users`,
   );
+
   return data;
 }
 
@@ -178,7 +183,7 @@ function* fetchProjectUsersInSourceWorkspace(
 function* fetchTogglUsersInWorkspace(
   workspaceId: string,
 ): SagaIterator<User[]> {
-  const togglUsers: TogglUserResponseModel[] = yield call(
+  const togglUsers: TogglUserResponse[] = yield call(
     fetchArray,
     `/toggl/api/workspaces/${workspaceId}/users`,
   );
@@ -189,7 +194,7 @@ function* fetchTogglUsersInWorkspace(
 }
 
 function transformFromResponse(
-  user: TogglUserResponseModel,
+  user: TogglUserResponse,
   workspaceId: string,
 ): User {
   return {

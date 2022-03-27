@@ -1,5 +1,5 @@
 import qs from "qs";
-import * as R from "ramda";
+import { isNil } from "ramda";
 import type { SagaIterator } from "redux-saga";
 import { call, delay } from "redux-saga/effects";
 
@@ -23,9 +23,10 @@ const CLOCKIFY_API_PAGE_SIZE = 100;
  */
 export function* fetchPaginatedFromClockify<TEntity>(
   apiUrl: string,
-  queryParams: Record<string, unknown> = {},
+  queryParams: Dictionary<unknown> = {},
 ): SagaIterator<TEntity[]> {
   let keepFetching = true;
+
   let currentPage = 1;
 
   const allEntityRecords: TEntity[] = [];
@@ -36,9 +37,11 @@ export function* fetchPaginatedFromClockify<TEntity>(
       "page-size": CLOCKIFY_API_PAGE_SIZE,
       ...queryParams,
     });
+
     const endpoint = `${apiUrl}?${query}`;
 
     const entityRecords: TEntity[] = yield call(fetchArray, endpoint);
+
     allEntityRecords.push(...entityRecords);
 
     // The record count = maximum page size, which means there are either
@@ -68,7 +71,7 @@ export function* fetchArray<TResponse>(
 ): SagaIterator<TResponse> {
   const response = yield call(fetchWithRetries, endpoint, fetchOptions);
 
-  return R.isNil(response) ? [] : response;
+  return isNil(response) ? [] : response;
 }
 
 /**
@@ -90,7 +93,7 @@ export function* fetchObject<TResponse>(
 ): SagaIterator<TResponse> {
   const response = yield call(fetchWithRetries, endpoint, fetchOptions);
 
-  return R.isNil(response) ? {} : response;
+  return isNil(response) ? {} : response;
 }
 
 /**
@@ -195,10 +198,7 @@ async function fetchFromApi<T>(url: string, config: RequestInit): Promise<T> {
  * Returns the headers with correct authentication based on the specified
  * tool name.
  */
-function getHeaders(
-  toolName: ToolName,
-  apiKey: string,
-): Record<string, string> {
+function getHeaders(toolName: ToolName, apiKey: string): Dictionary<string> {
   if (toolName === ToolName.Clockify) {
     return {
       "Content-Type": "application/json",
@@ -227,6 +227,7 @@ function extrapolateFromUrl(url: string): {
   endpoint: string;
 } {
   const validUrl = url.startsWith("/") ? url.substring(1) : url;
+
   const [toolName, context, ...rest] = validUrl.split("/");
 
   return {

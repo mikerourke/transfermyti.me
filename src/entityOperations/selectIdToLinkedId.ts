@@ -1,4 +1,4 @@
-import * as R from "ramda";
+import { isNil } from "ramda";
 
 import type { ValidEntity } from "~/typeDefs";
 
@@ -22,18 +22,19 @@ import type { ValidEntity } from "~/typeDefs";
  *  }
  */
 export function selectIdToLinkedId<TEntity>(
-  sourceRecordsById: Record<string, TEntity>,
-): Record<string, string> {
-  const sourceRecordEntries = Object.entries(sourceRecordsById) as [
-    string,
-    ValidEntity<TEntity>,
-  ][];
+  sourceRecordsById: Dictionary<TEntity>,
+): Dictionary<string> {
+  type ValidEntityTupleArray = [string, ValidEntity<TEntity>][];
 
-  const idToLinkedId: Record<string, string> = {};
+  // prettier-ignore
+  const sourceRecordEntries = Object.entries(sourceRecordsById) as ValidEntityTupleArray;
+
+  const idToLinkedId: Dictionary<string> = {};
 
   for (const [id, sourceRecord] of sourceRecordEntries) {
-    if (!R.isNil(sourceRecord.linkedId)) {
+    if (!isNil(sourceRecord.linkedId)) {
       idToLinkedId[id] = sourceRecord.linkedId;
+
       idToLinkedId[sourceRecord.linkedId] = sourceRecord.id;
     }
   }

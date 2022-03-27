@@ -1,4 +1,4 @@
-import * as R from "ramda";
+import { indexBy, prop } from "ramda";
 import type { SagaIterator } from "redux-saga";
 import { call, put, select } from "redux-saga/effects";
 
@@ -26,12 +26,14 @@ export function* createUsersSaga(): SagaIterator {
 
   try {
     const toolNameByMapping = yield select(toolNameByMappingSelector);
+
     const createSagaByToolName = {
       [ToolName.Clockify]: clockifySagas.createClockifyUsersSaga,
       [ToolName.Toggl]: togglSagas.createTogglUsersSaga,
     }[toolNameByMapping.target];
 
     const emailsByUserId = yield select(sourceUserEmailsByWorkspaceIdSelector);
+
     yield call(createSagaByToolName, emailsByUserId);
 
     yield put(usersActions.createUsers.success());
@@ -41,6 +43,7 @@ export function* createUsersSaga(): SagaIterator {
     yield call(fetchUsersSaga);
   } catch (err: AnyValid) {
     yield put(errorNotificationShown(err));
+
     yield put(usersActions.createUsers.failure());
   }
 }
@@ -53,17 +56,20 @@ export function* deleteUsersSaga(): SagaIterator {
 
   try {
     const toolNameByMapping = yield select(toolNameByMappingSelector);
+
     const deleteSagaByToolName = {
       [ToolName.Clockify]: clockifySagas.removeClockifyUsersSaga,
       [ToolName.Toggl]: togglSagas.removeTogglUsersSaga,
     }[toolNameByMapping.source];
 
     const sourceUsers = yield select(includedSourceUsersSelector);
+
     yield call(deleteSagaByToolName, sourceUsers);
 
     yield put(usersActions.deleteUsers.success());
   } catch (err: AnyValid) {
     yield put(errorNotificationShown(err));
+
     yield put(usersActions.deleteUsers.failure());
   }
 }
@@ -78,10 +84,13 @@ export function* fetchUsersSaga(): SagaIterator {
       [ToolName.Clockify]: clockifySagas.fetchClockifyUsersSaga,
       [ToolName.Toggl]: togglSagas.fetchTogglUsersSaga,
     };
+
     const { source, target } = yield select(toolNameByMappingSelector);
+
     const sourceUsers = yield call(fetchSagaByToolName[source]);
 
     const toolAction = yield select(toolActionSelector);
+
     let usersByIdByMapping: Record<Mapping, Dictionary<User>>;
 
     if (toolAction === ToolAction.Transfer) {
@@ -94,7 +103,7 @@ export function* fetchUsersSaga(): SagaIterator {
       );
     } else {
       usersByIdByMapping = {
-        source: R.indexBy(R.prop("id"), sourceUsers),
+        source: indexBy(prop("id"), sourceUsers),
         target: {},
       };
     }
@@ -102,6 +111,7 @@ export function* fetchUsersSaga(): SagaIterator {
     yield put(usersActions.fetchUsers.success(usersByIdByMapping));
   } catch (err: AnyValid) {
     yield put(errorNotificationShown(err));
+
     yield put(usersActions.fetchUsers.failure());
   }
 }

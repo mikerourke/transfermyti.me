@@ -1,4 +1,4 @@
-import * as R from "ramda";
+import { isNil, propOr } from "ramda";
 import type { SagaIterator } from "redux-saga";
 import { call, delay, select } from "redux-saga/effects";
 
@@ -15,7 +15,7 @@ import { clientIdToLinkedIdSelector } from "~/modules/clients/clientsSelectors";
 import { EntityGroup, ToolName, type Project } from "~/typeDefs";
 import { validStringify } from "~/utilities/textTransforms";
 
-interface TogglProjectResponseModel {
+interface TogglProjectResponse {
   id: number;
   wid: number;
   cid: number;
@@ -41,7 +41,7 @@ interface TogglProjectResponseModel {
   template_id?: number;
 }
 
-interface TogglProjectUserResponseModel {
+interface TogglProjectUserResponse {
   id: number;
   pid: number;
   uid: number;
@@ -97,17 +97,18 @@ function* createTogglProject(
   targetWorkspaceId: string,
 ): SagaIterator<Project> {
   const clientIdToLinkedId = yield select(clientIdToLinkedIdSelector);
-  const targetClientId = R.propOr<
-    string | null,
-    Record<string, string>,
-    string
-  >(null, sourceProject.clientId ?? "", clientIdToLinkedId);
+
+  const targetClientId = propOr<string | null, Dictionary<string>, string>(
+    null,
+    sourceProject.clientId ?? "",
+    clientIdToLinkedId,
+  );
 
   const projectRequest = {
     project: {
       name: sourceProject.name,
       wid: +targetWorkspaceId,
-      cid: R.isNil(targetClientId) ? undefined : +targetClientId,
+      cid: isNil(targetClientId) ? undefined : +targetClientId,
       is_private: !sourceProject.isPublic,
     },
   };
@@ -141,14 +142,16 @@ function* fetchTogglProjectsInWorkspace(
 
   const togglApiDelay = yield call(getApiDelayForTool, ToolName.Toggl);
 
-  const togglProjects: TogglProjectResponseModel[] = yield call(
+  const togglProjects: TogglProjectResponse[] = yield call(
     fetchArray,
     `/toggl/api/workspaces/${workspaceId}/projects?active=both`,
   );
 
   for (const togglProject of togglProjects) {
     const projectId = validStringify(togglProject?.id, "");
+
     const userIds: string[] = yield call(fetchUserIdsInProject, projectId);
+
     allTogglProjects.push(transformFromResponse(togglProject, userIds));
 
     yield delay(togglApiDelay);
@@ -164,15 +167,16 @@ function* fetchTogglProjectsInWorkspace(
  * @see https://github.com/toggl/toggl_api_docs/blob/master/chapters/project_users.md
  */
 function* fetchUserIdsInProject(projectId: string): SagaIterator<string[]> {
-  const projectUsers: TogglProjectUserResponseModel[] = yield call(
+  const projectUsers: TogglProjectUserResponse[] = yield call(
     fetchArray,
     `/toggl/api/projects/${projectId}/project_users`,
   );
+
   return projectUsers.map(({ uid }) => validStringify(uid, ""));
 }
 
 function transformFromResponse(
-  project: TogglProjectResponseModel,
+  project: TogglProjectResponse,
   userIds: string[],
 ): Project {
   return {

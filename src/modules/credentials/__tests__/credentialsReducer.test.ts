@@ -1,5 +1,5 @@
 import * as credentialsActions from "~/modules/credentials/credentialsActions";
-import { state, invalidAction } from "~/redux/__mocks__/mockStoreWithState";
+import { invalidAction, state } from "~/redux/__mocks__/mockStoreWithState";
 import { FetchStatus, Mapping } from "~/typeDefs";
 
 import { credentialsReducer, initialState } from "../credentialsReducer";

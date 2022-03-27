@@ -1,5 +1,5 @@
 import cases from "jest-in-case";
-import * as R from "ramda";
+import { lensPath, set } from "ramda";
 
 import { state } from "~/redux/__mocks__/mockStoreWithState";
 import { EntityGroup, ToolName } from "~/typeDefs";
@@ -54,8 +54,8 @@ describe("within allEntitiesSelectors", () => {
   );
 
   test("the entityGroupInProcessDisplaySelector returns state.entityGroupInProcess display value", () => {
-    const updatedState = R.set(
-      R.lensPath(["allEntities", "entityGroupInProcess"]),
+    const updatedState = set(
+      lensPath(["allEntities", "entityGroupInProcess"]),
       EntityGroup.TimeEntries,
       state,
     );
@@ -95,8 +95,8 @@ describe("within allEntitiesSelectors", () => {
   });
 
   test("the toolHelpDetailsByMappingSelector returns details pertaining to the toolNameByMapping", () => {
-    const updatedState = R.set(
-      R.lensPath(["allEntities", "toolNameByMapping"]),
+    const updatedState = set(
+      lensPath(["allEntities", "toolNameByMapping"]),
       { source: ToolName.Clockify, target: ToolName.Toggl },
       state,
     );
@@ -117,8 +117,8 @@ describe("within allEntitiesSelectors", () => {
   });
 
   describe("the replaceMappingWithToolNameSelector", () => {
-    const updatedState = R.set(
-      R.lensPath(["allEntities", "toolNameByMapping"]),
+    const updatedState = set(
+      lensPath(["allEntities", "toolNameByMapping"]),
       { source: ToolName.Clockify, target: ToolName.Toggl },
       state,
     );
@@ -139,8 +139,8 @@ describe("within allEntitiesSelectors", () => {
 
   describe("the targetToolDisplayNameSelector", () => {
     test("returns the source display name if target tool = None", () => {
-      const updatedState = R.set(
-        R.lensPath(["allEntities", "toolNameByMapping"]),
+      const updatedState = set(
+        lensPath(["allEntities", "toolNameByMapping"]),
         { source: ToolName.Clockify, target: ToolName.None },
         state,
       );
@@ -150,8 +150,8 @@ describe("within allEntitiesSelectors", () => {
     });
 
     test("returns the target display name if target tool is not None", () => {
-      const updatedState = R.set(
-        R.lensPath(["allEntities", "toolNameByMapping"]),
+      const updatedState = set(
+        lensPath(["allEntities", "toolNameByMapping"]),
         { source: ToolName.Clockify, target: ToolName.Toggl },
         state,
       );
@@ -163,8 +163,8 @@ describe("within allEntitiesSelectors", () => {
 
   describe("the targetToolTrackerUrlSelector", () => {
     test("returns the source URL if target tool = None", () => {
-      const updatedState = R.set(
-        R.lensPath(["allEntities", "toolNameByMapping"]),
+      const updatedState = set(
+        lensPath(["allEntities", "toolNameByMapping"]),
         { source: ToolName.Clockify, target: ToolName.None },
         state,
       );
@@ -174,8 +174,8 @@ describe("within allEntitiesSelectors", () => {
     });
 
     test("returns the target URL if target tool is not None", () => {
-      const updatedState = R.set(
-        R.lensPath(["allEntities", "toolNameByMapping"]),
+      const updatedState = set(
+        lensPath(["allEntities", "toolNameByMapping"]),
         { source: ToolName.Clockify, target: ToolName.Toggl },
         state,
       );

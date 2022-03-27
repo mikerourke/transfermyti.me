@@ -11,13 +11,13 @@ import { fetchEntitiesForTool } from "~/entityOperations/fetchEntitiesForTool";
 import { entityGroupTransferCompletedCountIncremented } from "~/modules/allEntities/allEntitiesActions";
 import { EntityGroup, ToolName, type User } from "~/typeDefs";
 
-export interface ClockifyHourlyRateResponseModel {
+export interface ClockifyHourlyRateResponse {
   amount: number;
   currency: string;
 }
 
-export interface ClockifyMembershipResponseModel {
-  hourlyRate: ClockifyHourlyRateResponseModel;
+export interface ClockifyMembershipResponse {
+  hourlyRate: ClockifyHourlyRateResponse;
   membershipStatus: string;
   membershipType: string;
   targetId: string;
@@ -33,12 +33,12 @@ type WeekStart =
   | "SATURDAY"
   | "SUNDAY";
 
-export interface ClockifyUserResponseModel {
+export interface ClockifyUserResponse {
   activeWorkspace: string;
   defaultWorkspace: string;
   email: string;
   id: string;
-  memberships: ClockifyMembershipResponseModel[];
+  memberships: ClockifyMembershipResponse[];
   name: string;
   profilePicture: string;
   settings: {
@@ -68,7 +68,7 @@ export interface ClockifyUserResponseModel {
  * Sends invites to the array of specified emails.
  */
 export function* createClockifyUsersSaga(
-  emailsByWorkspaceId: Record<string, string[]>,
+  emailsByWorkspaceId: Dictionary<string[]>,
 ): SagaIterator {
   const clockifyApiDelay = yield call(getApiDelayForTool, ToolName.Clockify);
 
@@ -115,6 +115,7 @@ function* inviteClockifyUsers(
 
   for (const email of sourceEmails) {
     const userRequest = { email };
+
     yield call(
       fetchObject,
       `/clockify/api/workspaces/${targetWorkspaceId}/users`,
@@ -134,6 +135,7 @@ function* inviteClockifyUsers(
  */
 function* removeClockifyUserFromWorkspace(sourceUser: User): SagaIterator {
   const { workspaceId, id } = sourceUser;
+
   yield call(
     fetchObject,
     `/clockify/api/workspaces/${workspaceId}/users/${id}`,
@@ -148,7 +150,7 @@ function* removeClockifyUserFromWorkspace(sourceUser: User): SagaIterator {
 function* fetchClockifyUsersInWorkspace(
   workspaceId: string,
 ): SagaIterator<User[]> {
-  const clockifyUsers: ClockifyUserResponseModel[] = yield call(
+  const clockifyUsers: ClockifyUserResponse[] = yield call(
     fetchPaginatedFromClockify,
     `/clockify/api/workspaces/${workspaceId}/users`,
   );
@@ -159,7 +161,7 @@ function* fetchClockifyUsersInWorkspace(
 }
 
 function transformFromResponse(
-  user: ClockifyUserResponseModel,
+  user: ClockifyUserResponse,
   workspaceId: string,
 ): User {
   return {

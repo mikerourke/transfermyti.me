@@ -9,8 +9,8 @@
   import {
     apiKeysUpdated,
     credentialsStored,
-    validationFetchStatusUpdated,
     validateCredentials,
+    validationFetchStatusUpdated,
   } from "~/modules/credentials/credentialsActions";
   import {
     credentialsByMappingSelector,
@@ -42,7 +42,7 @@
 
   const validationFetchStatus = selectorToStore(validationFetchStatusSelector);
 
-  let values: Dictionary<string> = {
+  let values: Record<Mapping, string> = {
     source: $credentialsByMapping.source.apiKey ?? "",
     target: $credentialsByMapping.target.apiKey ?? "",
   };
@@ -94,12 +94,7 @@
   }
 
   async function handleNextClick(): Promise<void> {
-    const apiKeys = {
-      source: values.source,
-      target: values.target,
-    };
-
-    dispatchAction(apiKeysUpdated(apiKeys));
+    dispatchAction(apiKeysUpdated(values));
 
     await tick();
 
@@ -116,6 +111,11 @@
 
   function validateForm(): void {
     let isValid = true;
+
+    errors = {
+      source: null,
+      target: null,
+    };
 
     for (const [mapping, value] of Object.entries(values)) {
       const { toolName } = $toolHelpDetailsByMapping[mapping];

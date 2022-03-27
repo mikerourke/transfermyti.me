@@ -1,5 +1,5 @@
-import * as R from "ramda";
-import { type ActionType, createReducer } from "typesafe-actions";
+import { concat, lensPath, set, uniq, view } from "ramda";
+import { createReducer, type ActionType } from "typesafe-actions";
 
 import { allEntitiesFlushed } from "~/modules/allEntities/allEntitiesActions";
 import * as workspacesActions from "~/modules/workspaces/workspacesActions";
@@ -86,24 +86,21 @@ export const workspacesReducer = createReducer<
         },
       };
 
-      const target = Object.entries({ ...state.target }).reduce(
-        (acc, [workspaceId, workspace]) => {
-          const idMatchesTarget = workspaceId === targetId;
-          if (workspace.linkedId === sourceId || idMatchesTarget) {
-            return {
-              ...acc,
-              [workspaceId]: {
-                ...workspace,
-                isIncluded: idMatchesTarget,
-                linkedId: idMatchesTarget ? sourceId : null,
-              },
-            };
-          }
+      const target: Dictionary<Workspace> = {};
 
-          return { ...acc, [workspaceId]: workspace };
-        },
-        {},
-      );
+      for (const [workspaceId, workspace] of Object.entries(state.target)) {
+        const idMatchesTarget = workspaceId === targetId;
+
+        if (workspace.linkedId === sourceId || idMatchesTarget) {
+          target[workspaceId] = {
+            ...workspace,
+            isIncluded: idMatchesTarget,
+            linkedId: idMatchesTarget ? sourceId : null,
+          };
+        } else {
+          target[workspaceId] = { ...workspace };
+        }
+      }
 
       return { ...state, source, target };
     },
@@ -119,19 +116,23 @@ export const workspacesReducer = createReducer<
     workspacesActions.userIdsAppendedToWorkspace,
     (state, { payload }) => {
       const { mapping, workspaceId, userIds } = payload;
-      const userIdLens = R.lensPath([mapping, workspaceId, "userIds"]);
-      const newUserIds = R.uniq(
-        R.concat(R.view(userIdLens, state) as string[], userIds),
+
+      const userIdLens = lensPath([mapping, workspaceId, "userIds"]);
+
+      const newUserIds = uniq(
+        concat(view(userIdLens, state) as string[], userIds),
       );
 
-      return R.set(userIdLens, newUserIds, state);
+      return set(userIdLens, newUserIds, state);
     },
   )
   .handleAction(
     workspacesActions.isWorkspaceIncludedToggled,
     (state, { payload }) => {
       const { id, linkedId } = payload;
+
       const isIncluded = !state.source[id].isIncluded;
+
       const source = {
         ...state.source,
         [id]: {
@@ -142,6 +143,7 @@ export const workspacesReducer = createReducer<
       };
 
       let target = { ...state.target };
+
       if (linkedId) {
         target = {
           ...state.target,

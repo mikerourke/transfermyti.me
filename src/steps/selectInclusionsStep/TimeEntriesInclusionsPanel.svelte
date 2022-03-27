@@ -2,9 +2,9 @@
   import { replaceMappingWithToolName } from "~/entityOperations/replaceMappingWithToolName";
   import { toolActionSelector } from "~/modules/allEntities/allEntitiesSelectors";
   import {
-    isTimeEntryIncludedToggled,
     areAllTimeEntriesIncludedUpdated,
     isDuplicateCheckEnabledToggled,
+    isTimeEntryIncludedToggled,
   } from "~/modules/timeEntries/timeEntriesActions";
   import {
     isDuplicateCheckEnabledSelector,
@@ -12,7 +12,7 @@
     timeEntriesTotalCountsByTypeSelector,
   } from "~/modules/timeEntries/timeEntriesSelectors";
   import { dispatchAction, selectorToStore } from "~/redux/reduxToStore";
-  import { type TimeEntryTableRecord, ToolAction } from "~/typeDefs";
+  import { ToolAction, type TimeEntryTableRecord } from "~/typeDefs";
 
   import AccordionPanel from "~/components/AccordionPanel.svelte";
   import InclusionsTableTitle from "~/components/InclusionsTableTitle.svelte";

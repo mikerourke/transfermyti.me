@@ -1,4 +1,4 @@
-import * as R from "ramda";
+import { isNil, pathOr, propOr } from "ramda";
 import type { SagaIterator } from "redux-saga";
 import { call, delay, select } from "redux-saga/effects";
 
@@ -12,12 +12,12 @@ import { deleteEntitiesForTool } from "~/entityOperations/deleteEntitiesForTool"
 import { fetchEntitiesForTool } from "~/entityOperations/fetchEntitiesForTool";
 import { clientIdToLinkedIdSelector } from "~/modules/clients/clientsSelectors";
 import type {
-  ClockifyHourlyRateResponseModel,
-  ClockifyMembershipResponseModel,
+  ClockifyHourlyRateResponse,
+  ClockifyMembershipResponse,
 } from "~/modules/users/sagas/clockifyUsersSagas";
 import { EntityGroup, ToolName, type Estimate, type Project } from "~/typeDefs";
 
-export interface ClockifyProjectResponseModel {
+export interface ClockifyProjectResponse {
   archived: boolean;
   billable: boolean;
   clientId: string;
@@ -25,9 +25,9 @@ export interface ClockifyProjectResponseModel {
   color: string;
   duration: string;
   estimate: Estimate;
-  hourlyRate: ClockifyHourlyRateResponseModel;
+  hourlyRate: ClockifyHourlyRateResponse;
   id: string;
-  memberships?: ClockifyMembershipResponseModel[];
+  memberships?: ClockifyMembershipResponse[];
   name: string;
   note: string;
   public: boolean;
@@ -82,18 +82,20 @@ function* createClockifyProject(
   targetWorkspaceId: string,
 ): SagaIterator<Project> {
   const clientIdToLinkedId = yield select(clientIdToLinkedIdSelector);
-  const targetClientId = R.propOr<
-    string | null,
-    Record<string, string>,
-    string
-  >(null, sourceProject.clientId ?? "", clientIdToLinkedId);
 
-  const estimateHours = R.pathOr(0, ["estimate", "estimate"], sourceProject);
-  const estimateType = R.pathOr("AUTO", ["estimate", "type"], sourceProject);
+  const targetClientId = propOr<string | null, Dictionary<string>, string>(
+    null,
+    sourceProject.clientId ?? "",
+    clientIdToLinkedId,
+  );
+
+  const estimateHours = pathOr(0, ["estimate", "estimate"], sourceProject);
+
+  const estimateType = pathOr("AUTO", ["estimate", "type"], sourceProject);
 
   const projectRequest = {
     name: sourceProject.name,
-    clientId: R.isNil(targetClientId) ? undefined : targetClientId,
+    clientId: isNil(targetClientId) ? undefined : targetClientId,
     isPublic: sourceProject.isPublic,
     estimate: {
       estimate: +estimateHours,
@@ -150,12 +152,14 @@ function* fetchClockifyProjectsInWorkspace(
 
   const clockifyApiDelay = yield call(getApiDelayForTool, ToolName.Clockify);
 
-  const clockifyProjects: ClockifyProjectResponseModel[] = yield call(
+  const clockifyProjects: ClockifyProjectResponse[] = yield call(
     fetchPaginatedFromClockify,
     `/clockify/api/workspaces/${workspaceId}/projects`,
   );
+
   for (const clockifyProject of clockifyProjects) {
     const memberships = clockifyProject?.memberships ?? [];
+
     const userIds: string[] = memberships
       .map((membership) => {
         if (
@@ -163,9 +167,9 @@ function* fetchClockifyProjectsInWorkspace(
           membership.membershipStatus === "ACTIVE"
         ) {
           return membership.userId;
+        } else {
+          return "";
         }
-
-        return "";
       })
       .filter(Boolean);
 
@@ -178,7 +182,7 @@ function* fetchClockifyProjectsInWorkspace(
 }
 
 function transformFromResponse(
-  project: ClockifyProjectResponseModel,
+  project: ClockifyProjectResponse,
   userIds: string[],
 ): Project {
   return {

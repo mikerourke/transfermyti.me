@@ -12,7 +12,7 @@ import { fetchEntitiesForTool } from "~/entityOperations/fetchEntitiesForTool";
 import { EntityGroup, ToolName, type UserGroup } from "~/typeDefs";
 import { validStringify } from "~/utilities/textTransforms";
 
-interface TogglUserGroupResponseModel {
+interface TogglUserGroupResponse {
   id: number;
   wid: number;
   name: string;
@@ -69,6 +69,7 @@ function* createTogglUserGroup(
     name: sourceUserGroup.name,
     wid: +targetWorkspaceId,
   };
+
   const { data } = yield call(fetchObject, "/toggl/api/groups", {
     method: "POST",
     body: userGroupRequest,
@@ -94,7 +95,7 @@ function* deleteTogglUserGroup(sourceUserGroup: UserGroup): SagaIterator {
 function* fetchTogglUserGroupsInWorkspace(
   workspaceId: string,
 ): SagaIterator<UserGroup[]> {
-  const togglUserGroups: TogglUserGroupResponseModel[] = yield call(
+  const togglUserGroups: TogglUserGroupResponse[] = yield call(
     fetchArray,
     `/toggl/api/workspaces/${workspaceId}/groups`,
   );
@@ -102,9 +103,7 @@ function* fetchTogglUserGroupsInWorkspace(
   return togglUserGroups.map(transformFromResponse);
 }
 
-function transformFromResponse(
-  userGroup: TogglUserGroupResponseModel,
-): UserGroup {
+function transformFromResponse(userGroup: TogglUserGroupResponse): UserGroup {
   return {
     id: userGroup.id.toString(),
     name: userGroup.name,

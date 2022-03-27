@@ -1,5 +1,5 @@
 import differenceInMinutes from "date-fns/differenceInMinutes";
-import * as R from "ramda";
+import { isNil, prop, sortBy } from "ramda";
 import type { SagaIterator } from "redux-saga";
 import { call, select } from "redux-saga/effects";
 
@@ -43,7 +43,7 @@ enum LinkFromType {
 export function* linkEntitiesByIdByMapping<TEntity>(
   sourceRecords: TEntity[],
   targetRecords: TEntity[],
-): SagaIterator<Record<Mapping, Record<string, TEntity>>> {
+): SagaIterator<Record<Mapping, Dictionary<TEntity>>> {
   if (sourceRecords.length === 0) {
     return {
       source: {},
@@ -52,6 +52,7 @@ export function* linkEntitiesByIdByMapping<TEntity>(
   }
 
   const [{ memberOf }] = sourceRecords as unknown as AnyEntity[];
+
   if (memberOf === EntityGroup.TimeEntries) {
     // TypeScript freaks out on this one, but I don't want to add 400 type
     // assertions. I know they're time entries, and I know the function is going
@@ -66,6 +67,7 @@ export function* linkEntitiesByIdByMapping<TEntity>(
 
   // Users may have the same name, but they should never have the same email:
   const field = memberOf === EntityGroup.Users ? "email" : "name";
+
   const workspaceIdToLinkedId = yield select(workspaceIdToLinkedIdSelector);
 
   const source = linkForMappingByField(
@@ -75,6 +77,7 @@ export function* linkEntitiesByIdByMapping<TEntity>(
     targetRecords,
     sourceRecords,
   );
+
   const target = linkForMappingByField(
     field,
     workspaceIdToLinkedId,
@@ -94,11 +97,11 @@ export function* linkEntitiesByIdByMapping<TEntity>(
  */
 function linkForMappingByField<TEntity>(
   field: string,
-  workspaceIdToLinkedId: Record<string, string>,
+  workspaceIdToLinkedId: Dictionary<string>,
   linkFromType: LinkFromType,
   linkFromRecords: TEntity[],
   recordsToUpdate: TEntity[],
-): Record<string, TEntity> {
+): Dictionary<TEntity> {
   type LinkableRecord = TEntity & {
     id: string;
     workspaceId: string;
@@ -114,6 +117,7 @@ function linkForMappingByField<TEntity>(
         // workspaces are the top-level entity, and it's impossible to have 2
         // workspaces with the same name):
         const fieldsMatch = recordToUpdate[field] === linkFromRecord[field];
+
         if (recordToUpdate.memberOf === EntityGroup.Workspaces) {
           return fieldsMatch;
         }
@@ -128,14 +132,16 @@ function linkForMappingByField<TEntity>(
         // See this issue: https://github.com/mikerourke/transfermyti.me/issues/32
         const linkedWorkspaceId =
           workspaceIdToLinkedId[linkFromRecord.workspaceId];
+
         return fieldsMatch && recordToUpdate.workspaceId === linkedWorkspaceId;
       },
     );
 
-    const linkedId = R.isNil(matchingLinkedRecord)
+    const linkedId = isNil(matchingLinkedRecord)
       ? null
       : matchingLinkedRecord.id;
-    const isIncluded = R.isNil(linkedId)
+
+    const isIncluded = isNil(linkedId)
       ? recordToUpdate.memberOf !== EntityGroup.Workspaces
       : false;
 
@@ -169,19 +175,16 @@ function* linkForMappingForTimeEntries(
 
   // Expedite the matching process by sorting by start date (since the start
   // and end date/time are compared against each other):
-  const sortByDate = R.sortBy(R.prop("start"));
+  const sortByDate = sortBy(prop("start"));
+
   const sortedSourceEntries = sortByDate(sourceTimeEntries);
   const sortedTargetEntries = sortByDate(targetTimeEntries);
 
-  const sourceById: Record<string, TimeEntry> = {};
-  const targetById: Record<string, TimeEntry> = {};
+  const sourceById: Dictionary<TimeEntry> = {};
+  const targetById: Dictionary<TimeEntry> = {};
 
   for (const sourceEntry of sortedSourceEntries) {
-    sourceById[sourceEntry.id] = sourceEntry;
-
     for (const targetEntry of sortedTargetEntries) {
-      targetById[targetEntry.id] = targetEntry;
-
       // Even if the times are similar and the descriptions match, we still
       // want to make sure they're in the same project:
       const projectsMatch = doProjectsMatch(
@@ -189,17 +192,20 @@ function* linkForMappingForTimeEntries(
         sourceEntry,
         targetEntry,
       );
+
       const timeEntriesMatch = doTimeEntriesMatch(sourceEntry, targetEntry);
 
       if (projectsMatch && timeEntriesMatch) {
-        sourceById[sourceEntry.id].linkedId = targetEntry.id;
-        targetById[targetEntry.id].linkedId = sourceEntry.id;
+        sourceEntry.linkedId = targetEntry.id;
+        targetEntry.linkedId = sourceEntry.id;
       }
+
+      targetById[targetEntry.id] = targetEntry;
     }
 
-    sourceById[sourceEntry.id].isIncluded = R.isNil(
-      sourceById[sourceEntry.id].linkedId,
-    );
+    sourceEntry.isIncluded = isNil(sourceEntry.linkedId);
+
+    sourceById[sourceEntry.id] = sourceEntry;
   }
 
   return {

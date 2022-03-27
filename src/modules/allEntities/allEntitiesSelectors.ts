@@ -53,7 +53,7 @@ export const transferCountsByEntityGroupSelector = createSelector(
 );
 
 const findLengthOfIncluded = (
-  entityRecordsById: Record<string, AnyEntity>,
+  entityRecordsById: Dictionary<AnyEntity>,
 ): number =>
   Object.values(entityRecordsById).filter(
     (entityRecord) => entityRecord.isIncluded,
@@ -143,6 +143,7 @@ export const toolHelpDetailsByMappingSelector = createSelector(
       if (toolName === ToolName.Clockify) {
         return "https://clockify.me/user/settings";
       }
+
       return "https://toggl.com/app/profile";
     };
 

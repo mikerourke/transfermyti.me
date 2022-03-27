@@ -1,7 +1,7 @@
 import cases from "jest-in-case";
 
 import * as allEntitiesActions from "~/modules/allEntities/allEntitiesActions";
-import { state, invalidAction } from "~/redux/__mocks__/mockStoreWithState";
+import { invalidAction, state } from "~/redux/__mocks__/mockStoreWithState";
 import { EntityGroup, FetchStatus, ToolAction, ToolName } from "~/typeDefs";
 
 import { allEntitiesReducer, initialState } from "../allEntitiesReducer";

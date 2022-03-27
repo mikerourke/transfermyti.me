@@ -1,4 +1,4 @@
-import * as R from "ramda";
+import { indexBy, prop } from "ramda";
 import type { SagaIterator } from "redux-saga";
 import { call, put, select } from "redux-saga/effects";
 
@@ -26,13 +26,16 @@ export function* createUserGroupsSaga(): SagaIterator {
 
   try {
     const toolNameByMapping = yield select(toolNameByMappingSelector);
+
     const createSagaByToolName = {
       [ToolName.Clockify]: clockifySagas.createClockifyUserGroupsSaga,
       [ToolName.Toggl]: togglSagas.createTogglUserGroupsSaga,
     }[toolNameByMapping.target];
 
     const sourceUserGroups = yield select(sourceUserGroupsForTransferSelector);
+
     const targetUserGroups = yield call(createSagaByToolName, sourceUserGroups);
+
     const userGroupsByIdByMapping = yield call(
       linkEntitiesByIdByMapping,
       sourceUserGroups,
@@ -44,6 +47,7 @@ export function* createUserGroupsSaga(): SagaIterator {
     );
   } catch (err: AnyValid) {
     yield put(errorNotificationShown(err));
+
     yield put(userGroupsActions.createUserGroups.failure());
   }
 }
@@ -56,17 +60,20 @@ export function* deleteUserGroupsSaga(): SagaIterator {
 
   try {
     const toolNameByMapping = yield select(toolNameByMappingSelector);
+
     const deleteSagaByToolName = {
       [ToolName.Clockify]: clockifySagas.deleteClockifyUserGroupsSaga,
       [ToolName.Toggl]: togglSagas.deleteTogglUserGroupsSaga,
     }[toolNameByMapping.source];
 
     const sourceUserGroups = yield select(includedSourceUserGroupsSelector);
+
     yield call(deleteSagaByToolName, sourceUserGroups);
 
     yield put(userGroupsActions.deleteUserGroups.success());
   } catch (err: AnyValid) {
     yield put(errorNotificationShown(err));
+
     yield put(userGroupsActions.deleteUserGroups.failure());
   }
 }
@@ -82,10 +89,13 @@ export function* fetchUserGroupsSaga(): SagaIterator {
       [ToolName.Clockify]: clockifySagas.fetchClockifyUserGroupsSaga,
       [ToolName.Toggl]: togglSagas.fetchTogglUserGroupsSaga,
     };
+
     const { source, target } = yield select(toolNameByMappingSelector);
+
     const sourceUserGroups = yield call(fetchSagaByToolName[source]);
 
     const toolAction = yield select(toolActionSelector);
+
     let userGroupsByIdByMapping: Record<Mapping, Dictionary<UserGroup>>;
 
     if (toolAction === ToolAction.Transfer) {
@@ -98,16 +108,16 @@ export function* fetchUserGroupsSaga(): SagaIterator {
       );
     } else {
       userGroupsByIdByMapping = {
-        source: R.indexBy(R.prop("id"), sourceUserGroups),
+        source: indexBy(prop("id"), sourceUserGroups),
         target: {},
       };
     }
 
-    yield put(
-      userGroupsActions.fetchUserGroups.success(userGroupsByIdByMapping),
-    );
+    // prettier-ignore
+    yield put(userGroupsActions.fetchUserGroups.success(userGroupsByIdByMapping));
   } catch (err: AnyValid) {
     yield put(errorNotificationShown(err));
+
     yield put(userGroupsActions.fetchUserGroups.failure());
   }
 }

@@ -1,4 +1,4 @@
-import * as R from "ramda";
+import { isNil, propOr } from "ramda";
 import { createSelector } from "reselect";
 
 import { selectIdToLinkedId } from "~/entityOperations/selectIdToLinkedId";
@@ -36,7 +36,7 @@ export const includedSourceTasksCountSelector = createSelector(
 export const sourceTasksForTransferSelector = createSelector(
   includedSourceTasksSelector,
   (sourceTasks) =>
-    sourceTasks.filter((sourceTask) => R.isNil(sourceTask.linkedId)),
+    sourceTasks.filter((sourceTask) => isNil(sourceTask.linkedId)),
 );
 
 export const sourceTasksInActiveWorkspaceSelector = createSelector(
@@ -48,8 +48,7 @@ export const sourceTasksInActiveWorkspaceSelector = createSelector(
 
 export const taskIdToLinkedIdSelector = createSelector(
   sourceTasksByIdSelector,
-  (sourceTasksById): Record<string, string> =>
-    selectIdToLinkedId(sourceTasksById),
+  (sourceTasksById): Dictionary<string> => selectIdToLinkedId(sourceTasksById),
 );
 
 export const tasksForInclusionsTableSelector = createSelector(
@@ -64,37 +63,40 @@ export const tasksForInclusionsTableSelector = createSelector(
     targetTasksById,
     sourceProjectsById,
     timeEntryCountByTaskId,
-  ): TaskTableRecord[] =>
-    sourceTasks.reduce((acc, sourceTask) => {
+  ): TaskTableRecord[] => {
+    const taskTableRecords: TaskTableRecord[] = [];
+
+    for (const sourceTask of sourceTasks) {
       const existsInTarget = sourceTask.linkedId !== null;
       if (existsInTarget && !areExistsInTargetShown) {
-        return acc;
+        continue;
       }
 
       let isActiveInTarget = false;
       if (existsInTarget) {
         const targetId = sourceTask.linkedId as string;
+
         isActiveInTarget = targetTasksById[targetId].isActive;
       }
 
-      const entryCount = R.propOr<number, Record<string, number>, number>(
+      const entryCount = propOr<number, Dictionary<number>, number>(
         0,
         sourceTask.id,
         timeEntryCountByTaskId,
       );
 
-      return [
-        ...acc,
-        {
-          ...sourceTask,
-          entryCount,
-          existsInTarget,
-          isActiveInSource: sourceTask.isActive,
-          isActiveInTarget,
-          projectName: sourceProjectsById[sourceTask.projectId].name,
-        },
-      ];
-    }, [] as TaskTableRecord[]),
+      taskTableRecords.push({
+        ...sourceTask,
+        entryCount,
+        existsInTarget,
+        isActiveInSource: sourceTask.isActive,
+        isActiveInTarget,
+        projectName: sourceProjectsById[sourceTask.projectId].name,
+      });
+    }
+
+    return taskTableRecords;
+  },
 );
 
 export const tasksTotalCountsByTypeSelector = createSelector(

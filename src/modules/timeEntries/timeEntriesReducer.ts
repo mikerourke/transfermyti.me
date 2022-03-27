@@ -1,5 +1,5 @@
-import * as R from "ramda";
-import { type ActionType, createReducer } from "typesafe-actions";
+import { isNil, lensPath, not, over } from "ramda";
+import { createReducer, type ActionType } from "typesafe-actions";
 
 import { allEntitiesFlushed } from "~/modules/allEntities/allEntitiesActions";
 import * as timeEntriesActions from "~/modules/timeEntries/timeEntriesActions";
@@ -70,7 +70,7 @@ export const timeEntriesReducer = createReducer<
   .handleAction(
     timeEntriesActions.isTimeEntryIncludedToggled,
     (state, { payload }) =>
-      R.over(R.lensPath([Mapping.Source, payload, "isIncluded"]), R.not, state),
+      over(lensPath([Mapping.Source, payload, "isIncluded"]), not, state),
   )
   .handleAction(timeEntriesActions.isDuplicateCheckEnabledToggled, (state) => {
     const newIsDuplicateCheckEnabled = !state.isDuplicateCheckEnabled;
@@ -81,7 +81,7 @@ export const timeEntriesReducer = createReducer<
           ...timeEntry,
           isIncluded: newIsDuplicateCheckEnabled
             ? false
-            : R.isNil(timeEntry.linkedId),
+            : isNil(timeEntry.linkedId),
         },
       }),
       {},

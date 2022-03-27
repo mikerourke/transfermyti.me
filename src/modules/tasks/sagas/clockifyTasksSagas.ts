@@ -1,4 +1,4 @@
-import * as R from "ramda";
+import { isNil, pathOr, propOr } from "ramda";
 import type { SagaIterator } from "redux-saga";
 import { call, delay, select } from "redux-saga/effects";
 
@@ -19,7 +19,7 @@ import { EntityGroup, ToolName, type Task } from "~/typeDefs";
 
 type ClockifyTaskStatus = "ACTIVE" | "DONE";
 
-export interface ClockifyTaskResponseModel {
+export interface ClockifyTaskResponse {
   assigneeIds: string[] | null;
   estimate: string;
   id: string;
@@ -73,22 +73,25 @@ function* createClockifyTask(
   targetWorkspaceId: string,
 ): SagaIterator<Task> {
   const projectIdToLinkedId = yield select(projectIdToLinkedIdSelector);
-  const targetProjectId = R.propOr<
-    string | null,
-    Record<string, string>,
-    string
-  >(null, sourceTask.projectId, projectIdToLinkedId);
 
-  if (R.isNil(targetProjectId)) {
-    throw new Error(
-      `Could not find target project ID for Clockify task ${sourceTask.name}`,
-    );
+  const targetProjectId = propOr<string | null, Dictionary<string>, string>(
+    null,
+    sourceTask.projectId,
+    projectIdToLinkedId,
+  );
+
+  if (isNil(targetProjectId)) {
+    // prettier-ignore
+    throw new Error(`Could not find target project ID for Clockify task ${sourceTask.name}`);
   }
 
   const userIdToLinkedId = yield select(userIdToLinkedIdSelector);
+
   const targetAssigneeIds: string[] = [];
+
   for (const sourceAssigneeId of sourceTask.assigneeIds) {
     const assigneeLinkedId = userIdToLinkedId[sourceAssigneeId];
+
     if (assigneeLinkedId) {
       targetAssigneeIds.push(assigneeLinkedId);
     }
@@ -117,6 +120,7 @@ function* createClockifyTask(
  */
 function* deleteClockifyTask(sourceTask: Task): SagaIterator {
   const { workspaceId, projectId, id } = sourceTask;
+
   yield call(
     fetchObject,
     `/clockify/api/workspaces/${workspaceId}/projects/${projectId}/tasks/${id}`,
@@ -135,7 +139,7 @@ function* fetchClockifyTasksInWorkspace(
     projectsByWorkspaceIdByToolNameSelector,
   );
 
-  const clockifyProjects = R.pathOr(
+  const clockifyProjects = pathOr(
     [],
     [ToolName.Clockify, workspaceId],
     projectsByWorkspaceIdByToolName,
@@ -143,14 +147,16 @@ function* fetchClockifyTasksInWorkspace(
 
   const clockifyApiDelay = yield call(getApiDelayForTool, ToolName.Clockify);
 
-  const allClockifyTasks: ClockifyTaskResponseModel[] = [];
+  const allClockifyTasks: ClockifyTaskResponse[] = [];
 
   for (const clockifyProject of clockifyProjects) {
     const { id: projectId } = clockifyProject;
-    const clockifyTasks: ClockifyTaskResponseModel[] = yield call(
+
+    const clockifyTasks: ClockifyTaskResponse[] = yield call(
       fetchPaginatedFromClockify,
       `/clockify/api/workspaces/${workspaceId}/projects/${projectId}/tasks`,
     );
+
     allClockifyTasks.push(...clockifyTasks);
 
     yield delay(clockifyApiDelay);
@@ -162,7 +168,7 @@ function* fetchClockifyTasksInWorkspace(
 }
 
 function transformFromResponse(
-  task: ClockifyTaskResponseModel,
+  task: ClockifyTaskResponse,
   workspaceId: string,
 ): Task {
   return {

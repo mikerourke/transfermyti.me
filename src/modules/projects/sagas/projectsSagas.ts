@@ -1,7 +1,7 @@
-import * as R from "ramda";
+import { and, indexBy, pathOr, prop } from "ramda";
 import type { SagaIterator } from "redux-saga";
 import { all, call, put, select, takeEvery } from "redux-saga/effects";
-import { type ActionType, isActionOf } from "typesafe-actions";
+import { isActionOf, type ActionType } from "typesafe-actions";
 
 import { linkEntitiesByIdByMapping } from "~/entityOperations/linkEntitiesByIdByMapping";
 import {
@@ -37,11 +37,13 @@ function* pushProjectInclusionChangesToTasks(
   action: ActionType<typeof projectActions>,
 ): SagaIterator {
   const toolAction = yield select(toolActionSelector);
+
   const sourceProjectsById = yield select(sourceProjectsByIdSelector);
+
   const sourceTasks = yield select(sourceTasksSelector);
 
   for (const sourceTask of sourceTasks) {
-    const isProjectIncluded = R.pathOr(
+    const isProjectIncluded = pathOr(
       false,
       [sourceTask.projectId, "isIncluded"],
       sourceProjectsById,
@@ -56,7 +58,7 @@ function* pushProjectInclusionChangesToTasks(
     // including the project, they're automatically including the tasks.
     // We _do_ want to include the tasks associated with a project if that
     // project is included in the deletion process:
-    if (R.and(isProjectIncluded, toolAction === ToolAction.Transfer)) {
+    if (and(isProjectIncluded, toolAction === ToolAction.Transfer)) {
       continue;
     }
 
@@ -90,13 +92,16 @@ export function* createProjectsSaga(): SagaIterator {
 
   try {
     const toolNameByMapping = yield select(toolNameByMappingSelector);
+
     const createSagaByToolName = {
       [ToolName.Clockify]: clockifySagas.createClockifyProjectsSaga,
       [ToolName.Toggl]: togglSagas.createTogglProjectsSaga,
     }[toolNameByMapping.target];
 
     const sourceProjects = yield select(sourceProjectsForTransferSelector);
+
     const targetProjects = yield call(createSagaByToolName, sourceProjects);
+
     const projectsByIdByMapping = yield call(
       linkEntitiesByIdByMapping,
       sourceProjects,
@@ -106,6 +111,7 @@ export function* createProjectsSaga(): SagaIterator {
     yield put(projectActions.createProjects.success(projectsByIdByMapping));
   } catch (err: AnyValid) {
     yield put(errorNotificationShown(err));
+
     yield put(projectActions.createProjects.failure());
   }
 }
@@ -118,17 +124,20 @@ export function* deleteProjectsSaga(): SagaIterator {
 
   try {
     const toolNameByMapping = yield select(toolNameByMappingSelector);
+
     const deleteSagaByToolName = {
       [ToolName.Clockify]: clockifySagas.deleteClockifyProjectsSaga,
       [ToolName.Toggl]: togglSagas.deleteTogglProjectsSaga,
     }[toolNameByMapping.source];
 
     const sourceProjects = yield select(includedSourceProjectsSelector);
+
     yield call(deleteSagaByToolName, sourceProjects);
 
     yield put(projectActions.deleteProjects.success());
   } catch (err: AnyValid) {
     yield put(errorNotificationShown(err));
+
     yield put(projectActions.deleteProjects.failure());
   }
 }
@@ -144,10 +153,13 @@ export function* fetchProjectsSaga(): SagaIterator {
       [ToolName.Clockify]: clockifySagas.fetchClockifyProjectsSaga,
       [ToolName.Toggl]: togglSagas.fetchTogglProjectsSaga,
     };
+
     const { source, target } = yield select(toolNameByMappingSelector);
+
     const sourceProjects = yield call(fetchSagaByToolName[source]);
 
     const toolAction = yield select(toolActionSelector);
+
     let projectsByIdByMapping: Record<Mapping, Dictionary<Project>>;
 
     if (toolAction === ToolAction.Transfer) {
@@ -160,7 +172,7 @@ export function* fetchProjectsSaga(): SagaIterator {
       );
     } else {
       projectsByIdByMapping = {
-        source: R.indexBy(R.prop("id"), sourceProjects),
+        source: indexBy(prop("id"), sourceProjects),
         target: {},
       };
     }
@@ -168,6 +180,7 @@ export function* fetchProjectsSaga(): SagaIterator {
     yield put(projectActions.fetchProjects.success(projectsByIdByMapping));
   } catch (err: AnyValid) {
     yield put(errorNotificationShown(err));
+
     yield put(projectActions.fetchProjects.failure());
   }
 }

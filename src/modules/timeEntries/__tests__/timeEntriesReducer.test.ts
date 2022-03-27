@@ -1,10 +1,10 @@
 import cases from "jest-in-case";
-import * as R from "ramda";
+import { lensProp, set } from "ramda";
 
 import * as timeEntriesActions from "~/modules/timeEntries/timeEntriesActions";
-import { state, invalidAction } from "~/redux/__mocks__/mockStoreWithState";
+import { invalidAction, state } from "~/redux/__mocks__/mockStoreWithState";
 
-import { timeEntriesReducer, initialState } from "../timeEntriesReducer";
+import { initialState, timeEntriesReducer } from "../timeEntriesReducer";
 
 const TEST_TIME_ENTRIES_STATE = { ...state.timeEntries };
 
@@ -98,8 +98,8 @@ describe("within timeEntriesReducer", () => {
   });
 
   test(`the isTimeEntryIncludedToggled action flips the "isIncluded" value of the timeEntry with id = payload`, () => {
-    const updatedState = R.set(
-      R.lensProp("source"),
+    const updatedState = set(
+      lensProp("source"),
       {
         [TEST_TIME_ENTRY_ID]: {
           ...TEST_TIME_ENTRIES_STATE.source[TEST_TIME_ENTRY_ID],

@@ -8,9 +8,9 @@ import {
 import { createEntitiesForTool } from "~/entityOperations/createEntitiesForTool";
 import { deleteEntitiesForTool } from "~/entityOperations/deleteEntitiesForTool";
 import { fetchEntitiesForTool } from "~/entityOperations/fetchEntitiesForTool";
-import { type Client, EntityGroup, ToolName } from "~/typeDefs";
+import { EntityGroup, ToolName, type Client } from "~/typeDefs";
 
-interface ClockifyClientResponseModel {
+interface ClockifyClientResponse {
   id: string;
   name: string;
   workspaceId: string;
@@ -63,6 +63,7 @@ function* createClockifyClient(
   targetWorkspaceId: string,
 ): SagaIterator<Client> {
   const clientRequest = { name: sourceClient.name };
+
   const clockifyClient = yield call(
     fetchObject,
     `/clockify/api/workspaces/${targetWorkspaceId}/clients`,
@@ -78,6 +79,7 @@ function* createClockifyClient(
  */
 function* deleteClockifyClient(sourceClient: Client): SagaIterator {
   const { workspaceId, id } = sourceClient;
+
   yield call(
     fetchObject,
     `/clockify/api/workspaces/${workspaceId}/clients/${id}`,
@@ -92,7 +94,7 @@ function* deleteClockifyClient(sourceClient: Client): SagaIterator {
 function* fetchClockifyClientsInWorkspace(
   workspaceId: string,
 ): SagaIterator<Client[]> {
-  const clockifyClients: ClockifyClientResponseModel[] = yield call(
+  const clockifyClients: ClockifyClientResponse[] = yield call(
     fetchPaginatedFromClockify,
     `/clockify/api/workspaces/${workspaceId}/clients`,
   );
@@ -100,7 +102,7 @@ function* fetchClockifyClientsInWorkspace(
   return clockifyClients.map(transformFromResponse);
 }
 
-function transformFromResponse(client: ClockifyClientResponseModel): Client {
+function transformFromResponse(client: ClockifyClientResponse): Client {
   return {
     id: client.id,
     name: client.name,

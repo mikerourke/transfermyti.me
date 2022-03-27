@@ -10,7 +10,7 @@ import { deleteEntitiesForTool } from "~/entityOperations/deleteEntitiesForTool"
 import { fetchEntitiesForTool } from "~/entityOperations/fetchEntitiesForTool";
 import { EntityGroup, ToolName, type UserGroup } from "~/typeDefs";
 
-interface ClockifyUserGroupResponseModel {
+interface ClockifyUserGroupResponse {
   id: string;
   name: string;
   userIds: string[];
@@ -63,6 +63,7 @@ function* createClockifyUserGroup(
   targetWorkspaceId: string,
 ): SagaIterator {
   const userGroupRequest = { name: sourceUserGroup.name };
+
   const clockifyUserGroup = yield call(
     fetchObject,
     `/clockify/api/workspaces/${targetWorkspaceId}/user-groups`,
@@ -78,6 +79,7 @@ function* createClockifyUserGroup(
  */
 function* deleteClockifyUserGroup(sourceUserGroup: UserGroup): SagaIterator {
   const { workspaceId, id } = sourceUserGroup;
+
   yield call(
     fetchObject,
     `/clockify/api/workspaces/${workspaceId}/user-groups/${id}`,
@@ -92,7 +94,7 @@ function* deleteClockifyUserGroup(sourceUserGroup: UserGroup): SagaIterator {
 function* fetchClockifyUserGroupsInWorkspace(
   workspaceId: string,
 ): SagaIterator<UserGroup[]> {
-  const clockifyUserGroups: ClockifyUserGroupResponseModel[] = yield call(
+  const clockifyUserGroups: ClockifyUserGroupResponse[] = yield call(
     fetchPaginatedFromClockify,
     `/clockify/api/workspaces/${workspaceId}/user-groups`,
   );
@@ -103,7 +105,7 @@ function* fetchClockifyUserGroupsInWorkspace(
 }
 
 function transformFromResponse(
-  userGroup: ClockifyUserGroupResponseModel,
+  userGroup: ClockifyUserGroupResponse,
   workspaceId: string,
 ): UserGroup {
   return {
