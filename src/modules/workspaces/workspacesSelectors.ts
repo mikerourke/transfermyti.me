@@ -67,7 +67,7 @@ export const sourceWorkspacesForTransferSelector = createSelector(
 
 export const workspaceIdToLinkedIdSelector = createSelector(
   sourceWorkspacesByIdSelector,
-  (sourceWorkspacesById): Record<string, string> =>
+  (sourceWorkspacesById): Dictionary<string> =>
     selectIdToLinkedId(sourceWorkspacesById),
 );
 
@@ -89,7 +89,7 @@ export const missingTargetWorkspacesSelector = createSelector(
 export const hasDuplicateTargetWorkspacesSelector = createSelector(
   includedSourceWorkspacesSelector,
   (includedSourceWorkspaces): boolean => {
-    const countByLinkedId: Record<string, number> = {};
+    const countByLinkedId: Dictionary<number> = {};
 
     for (const { linkedId } of includedSourceWorkspaces) {
       if (linkedId === null) {

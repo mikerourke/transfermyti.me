@@ -8,7 +8,7 @@ export type { MockStoreCreator, MockStore } from "redux-mock-store";
 
 // This is the same as Redux action, but the type was changed to `any`, otherwise
 // we'd have to explicitly specify every action `type` name when using jest-in-case:
-export interface ReduxTestAction<TPayload = Record<string, unknown>> {
+export interface ReduxTestAction<TPayload = Dictionary<unknown>> {
   type: AnyValid;
   payload?: TPayload;
   error?: boolean;

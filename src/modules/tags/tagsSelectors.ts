@@ -79,7 +79,7 @@ export const tagsForInclusionsTableSelector = createSelector(
         continue;
       }
 
-      const entryCount = propOr<number, Record<string, number>, number>(
+      const entryCount = propOr<number, Dictionary<number>, number>(
         0,
         sourceTag.id,
         timeEntryCountByTagId,
@@ -120,16 +120,16 @@ export const tagsTotalCountsByTypeSelector = createSelector(
 
 export const tagIdsByNameBySelectorFactory = (
   toolName: ToolName,
-): Selector<ReduxState, Record<string, string>> =>
+): Selector<ReduxState, Dictionary<string>> =>
   createSelector(
     mappingByToolNameSelector,
     tagsByMappingSelector,
-    (mappingByToolName, tagsByMapping): Record<string, string> => {
+    (mappingByToolName, tagsByMapping): Dictionary<string> => {
       const toolMapping = mappingByToolName[toolName];
 
       const tags = tagsByMapping[toolMapping];
 
-      const tagIdsByName: Record<string, string> = {};
+      const tagIdsByName: Dictionary<string> = {};
       for (const tag of tags) {
         tagIdsByName[tag.name] = tag.id;
       }

@@ -67,7 +67,7 @@ function* findTargetWorkspaceId(
 ): SagaIterator<string | null> {
   const workspaceIdToLinkedId = yield select(workspaceIdToLinkedIdSelector);
 
-  return propOr<null, Record<string, string>, string>(
+  return propOr<null, Dictionary<string>, string>(
     null,
     sourceWorkspaceId,
     workspaceIdToLinkedId,

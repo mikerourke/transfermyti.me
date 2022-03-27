@@ -68,7 +68,7 @@ export interface ClockifyUserResponse {
  * Sends invites to the array of specified emails.
  */
 export function* createClockifyUsersSaga(
-  emailsByWorkspaceId: Record<string, string[]>,
+  emailsByWorkspaceId: Dictionary<string[]>,
 ): SagaIterator {
   const clockifyApiDelay = yield call(getApiDelayForTool, ToolName.Clockify);
 

@@ -53,7 +53,7 @@ function* findWorkspaceIdsForTool(toolName: ToolName): SagaIterator<string[]> {
 
   const toolMapping = mappingByToolName[toolName];
 
-  return propOr<string[], Record<string, string>, string[]>(
+  return propOr<string[], Dictionary<string>, string[]>(
     [],
     toolMapping,
     workspaceIdsByMapping,

@@ -23,7 +23,7 @@ const CLOCKIFY_API_PAGE_SIZE = 100;
  */
 export function* fetchPaginatedFromClockify<TEntity>(
   apiUrl: string,
-  queryParams: Record<string, unknown> = {},
+  queryParams: Dictionary<unknown> = {},
 ): SagaIterator<TEntity[]> {
   let keepFetching = true;
 
@@ -198,10 +198,7 @@ async function fetchFromApi<T>(url: string, config: RequestInit): Promise<T> {
  * Returns the headers with correct authentication based on the specified
  * tool name.
  */
-function getHeaders(
-  toolName: ToolName,
-  apiKey: string,
-): Record<string, string> {
+function getHeaders(toolName: ToolName, apiKey: string): Dictionary<string> {
   if (toolName === ToolName.Clockify) {
     return {
       "Content-Type": "application/json",

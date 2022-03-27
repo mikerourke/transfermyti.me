@@ -65,7 +65,7 @@ export function* fetchTogglTasksSaga(): SagaIterator<Task[]> {
 function* createTogglTask(sourceTask: Task): SagaIterator<Task> {
   const projectIdToLinkedId = yield select(projectIdToLinkedIdSelector);
 
-  const targetProjectId = propOr<string | null, Record<string, string>, string>(
+  const targetProjectId = propOr<string | null, Dictionary<string>, string>(
     null,
     sourceTask.projectId,
     projectIdToLinkedId,

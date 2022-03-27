@@ -110,7 +110,7 @@ function* createTogglTimeEntry(
 ): SagaIterator {
   const projectIdToLinkedId = yield select(projectIdToLinkedIdSelector);
 
-  const targetProjectId = propOr<string | null, Record<string, string>, string>(
+  const targetProjectId = propOr<string | null, Dictionary<string>, string>(
     null,
     sourceTimeEntry.projectId ?? "",
     projectIdToLinkedId,
@@ -118,7 +118,7 @@ function* createTogglTimeEntry(
 
   const taskIdToLinkedId = yield select(taskIdToLinkedIdSelector);
 
-  const targetTaskId = propOr<string | null, Record<string, string>, string>(
+  const targetTaskId = propOr<string | null, Dictionary<string>, string>(
     null,
     sourceTimeEntry.taskId ?? "",
     taskIdToLinkedId,
@@ -296,7 +296,7 @@ function transformFromResponse(
   timeEntry: TogglTimeEntryResponse,
   workspaceId: string,
   clientId: string | null,
-  tagIdsByName: Record<string, string>,
+  tagIdsByName: Dictionary<string>,
 ): TimeEntry {
   const startTime = getTime(timeEntry, "start");
 

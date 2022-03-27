@@ -53,7 +53,7 @@ export const transferCountsByEntityGroupSelector = createSelector(
 );
 
 const findLengthOfIncluded = (
-  entityRecordsById: Record<string, AnyEntity>,
+  entityRecordsById: Dictionary<AnyEntity>,
 ): number =>
   Object.values(entityRecordsById).filter(
     (entityRecord) => entityRecord.isIncluded,

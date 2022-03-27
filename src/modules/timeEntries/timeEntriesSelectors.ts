@@ -108,15 +108,16 @@ export const timeEntriesTotalCountsByTypeSelector = createSelector(
 export const sourceTimeEntryCountByTagIdSelector = createSelector(
   sourceTimeEntriesSelector,
   (sourceTimeEntries) => {
-    const timeEntryCountByTagIdField: Record<string, number> = {};
+    const timeEntryCountByTagIdField: Dictionary<number> = {};
 
     for (const timeEntry of sourceTimeEntries) {
       for (const tagId of timeEntry.tagIds) {
-        const currentValue = propOr<number, Record<string, number>, number>(
+        const currentValue = propOr<number, Dictionary<number>, number>(
           0,
           tagId,
           timeEntryCountByTagIdField,
         );
+
         timeEntryCountByTagIdField[tagId] = currentValue + 1;
       }
     }
@@ -127,19 +128,19 @@ export const sourceTimeEntryCountByTagIdSelector = createSelector(
 
 export const sourceTimeEntryCountByIdFieldSelectorFactory = (
   idField: string,
-): Selector<ReduxState, Record<string, number>> =>
+): Selector<ReduxState, Dictionary<number>> =>
   createSelector(sourceTimeEntriesSelector, (sourceTimeEntries) => {
-    const timeEntryCountByIdField: Record<string, number> = {};
+    const timeEntryCountByIdField: Dictionary<number> = {};
 
     for (const timeEntry of sourceTimeEntries) {
       const parentId = timeEntry[idField];
 
       if (!isNil(parentId)) {
-        const currentCountForId = propOr<
-          number,
-          Record<string, number>,
-          number
-        >(0, parentId, timeEntryCountByIdField);
+        const currentCountForId = propOr<number, Dictionary<number>, number>(
+          0,
+          parentId,
+          timeEntryCountByIdField,
+        );
 
         timeEntryCountByIdField[parentId] = currentCountForId + 1;
       }

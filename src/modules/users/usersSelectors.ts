@@ -23,8 +23,7 @@ export const includedSourceUsersSelector = createSelector(
 
 export const userIdToLinkedIdSelector = createSelector(
   sourceUsersByIdSelector,
-  (sourceUsersById): Record<string, string> =>
-    selectIdToLinkedId(sourceUsersById),
+  (sourceUsersById): Dictionary<string> => selectIdToLinkedId(sourceUsersById),
 );
 
 export const sourceUsersForTransferSelector = createSelector(
@@ -36,11 +35,11 @@ export const sourceUsersForTransferSelector = createSelector(
 export const sourceUserEmailsByWorkspaceIdSelector = createSelector(
   sourceUsersSelector,
   workspaceIdToLinkedIdSelector,
-  (sourceUsers, workspaceIdToLinkedId): Record<string, string[]> => {
-    const emailsByWorkspaceId: Record<string, string[]> = {};
+  (sourceUsers, workspaceIdToLinkedId): Dictionary<string[]> => {
+    const emailsByWorkspaceId: Dictionary<string[]> = {};
 
     for (const sourceUser of sourceUsers) {
-      const targetWorkspaceId = propOr<null, Record<string, string>, string>(
+      const targetWorkspaceId = propOr<null, Dictionary<string>, string>(
         null,
         propOr("", "workspaceId", sourceUser) as string,
         workspaceIdToLinkedId,

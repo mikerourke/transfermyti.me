@@ -53,7 +53,7 @@ interface TogglProjectUserResponse {
  * Sends invites to the array of specified emails.
  */
 export function* createTogglUsersSaga(
-  emailsByWorkspaceId: Record<string, string[]>,
+  emailsByWorkspaceId: Dictionary<string[]>,
 ): SagaIterator {
   const togglApiDelay = yield call(getApiDelayForTool, ToolName.Toggl);
 

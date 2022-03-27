@@ -43,7 +43,7 @@ enum LinkFromType {
 export function* linkEntitiesByIdByMapping<TEntity>(
   sourceRecords: TEntity[],
   targetRecords: TEntity[],
-): SagaIterator<Record<Mapping, Record<string, TEntity>>> {
+): SagaIterator<Record<Mapping, Dictionary<TEntity>>> {
   if (sourceRecords.length === 0) {
     return {
       source: {},
@@ -52,6 +52,7 @@ export function* linkEntitiesByIdByMapping<TEntity>(
   }
 
   const [{ memberOf }] = sourceRecords as unknown as AnyEntity[];
+
   if (memberOf === EntityGroup.TimeEntries) {
     // TypeScript freaks out on this one, but I don't want to add 400 type
     // assertions. I know they're time entries, and I know the function is going
@@ -96,11 +97,11 @@ export function* linkEntitiesByIdByMapping<TEntity>(
  */
 function linkForMappingByField<TEntity>(
   field: string,
-  workspaceIdToLinkedId: Record<string, string>,
+  workspaceIdToLinkedId: Dictionary<string>,
   linkFromType: LinkFromType,
   linkFromRecords: TEntity[],
   recordsToUpdate: TEntity[],
-): Record<string, TEntity> {
+): Dictionary<TEntity> {
   type LinkableRecord = TEntity & {
     id: string;
     workspaceId: string;

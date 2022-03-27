@@ -98,7 +98,7 @@ function* createTogglProject(
 ): SagaIterator<Project> {
   const clientIdToLinkedId = yield select(clientIdToLinkedIdSelector);
 
-  const targetClientId = propOr<string | null, Record<string, string>, string>(
+  const targetClientId = propOr<string | null, Dictionary<string>, string>(
     null,
     sourceProject.clientId ?? "",
     clientIdToLinkedId,
