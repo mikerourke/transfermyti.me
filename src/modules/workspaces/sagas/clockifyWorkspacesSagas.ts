@@ -3,7 +3,7 @@ import { call } from "redux-saga/effects";
 
 import { fetchArray } from "~/entityOperations/apiRequests";
 import type { ClockifyMembershipResponseModel } from "~/modules/users/sagas/clockifyUsersSagas";
-import { EntityGroup, type WorkspaceModel } from "~/typeDefs";
+import { EntityGroup, type Workspace } from "~/typeDefs";
 
 interface ClockifyWorkspaceSettingsResponseModel {
   timeRoundingInReports: boolean;
@@ -46,7 +46,7 @@ interface ClockifyWorkspaceResponseModel {
  * workspaces.
  * @see https://clockify.me/developers-api#operation--v1-workspaces-get
  */
-export function* fetchClockifyWorkspacesSaga(): SagaIterator<WorkspaceModel[]> {
+export function* fetchClockifyWorkspacesSaga(): SagaIterator<Workspace[]> {
   const clockifyWorkspaces: ClockifyWorkspaceResponseModel[] = yield call(
     fetchArray,
     "/clockify/api/workspaces",
@@ -57,7 +57,7 @@ export function* fetchClockifyWorkspacesSaga(): SagaIterator<WorkspaceModel[]> {
 
 function transformFromResponse(
   workspace: ClockifyWorkspaceResponseModel,
-): WorkspaceModel {
+): Workspace {
   return {
     id: workspace.id,
     name: workspace.name,

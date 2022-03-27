@@ -22,7 +22,7 @@
     EntityGroup,
     FetchStatus,
     ToolAction,
-    type CountsByEntityGroupModel,
+    type CountsByEntityGroup,
   } from "~/typeDefs";
   import { capitalize } from "~/utilities/textTransforms";
 
@@ -32,7 +32,7 @@
   import ConfirmToolActionDialog from "./ConfirmToolActionDialog.svelte";
   import ProgressBar from "./ProgressBar.svelte";
 
-  const includedCountsByEntityGroup = selectorToStore<CountsByEntityGroupModel>(
+  const includedCountsByEntityGroup = selectorToStore<CountsByEntityGroup>(
     includedCountsByEntityGroupSelector,
   );
 
@@ -66,7 +66,7 @@
   });
 
   function getOrderedEntityGroups(
-    countsByEntityGroup: CountsByEntityGroupModel,
+    countsByEntityGroup: CountsByEntityGroup,
   ): EntityGroup[] {
     const entityGroups: EntityGroup[] = [];
 

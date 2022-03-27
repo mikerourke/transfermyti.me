@@ -1,12 +1,12 @@
 <script lang="ts">
   import { slide } from "svelte/transition";
 
-  import type { ToolHelpDetailsModel } from "~/typeDefs";
+  import type { ToolHelpDetails } from "~/typeDefs";
 
   import ExternalLink from "~/components/ExternalLink.svelte";
 
   export let mapping: string;
-  export let toolHelpDetails: ToolHelpDetailsModel;
+  export let toolHelpDetails: ToolHelpDetails;
   export let errorMessage: string | null;
   export let value: string;
 

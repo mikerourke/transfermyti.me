@@ -4,11 +4,11 @@
 
   import { dismissNotification } from "~/modules/app/appActions";
   import { dispatchAction } from "~/redux/reduxToStore";
-  import type { NotificationModel } from "~/typeDefs";
+  import type { Notification } from "~/typeDefs";
 
   import Icon from "~/components/Icon.svelte";
 
-  export let notification: NotificationModel;
+  export let notification: Notification;
 
   onMount(() => {
     setTimeout(dismiss, 5_000);

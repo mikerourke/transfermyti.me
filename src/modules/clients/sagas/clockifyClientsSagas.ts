@@ -8,7 +8,7 @@ import {
 import { createEntitiesForTool } from "~/entityOperations/createEntitiesForTool";
 import { deleteEntitiesForTool } from "~/entityOperations/deleteEntitiesForTool";
 import { fetchEntitiesForTool } from "~/entityOperations/fetchEntitiesForTool";
-import { type ClientModel, EntityGroup, ToolName } from "~/typeDefs";
+import { type Client, EntityGroup, ToolName } from "~/typeDefs";
 
 interface ClockifyClientResponseModel {
   id: string;
@@ -21,8 +21,8 @@ interface ClockifyClientResponseModel {
  * transformed clients.
  */
 export function* createClockifyClientsSaga(
-  sourceClients: ClientModel[],
-): SagaIterator<ClientModel[]> {
+  sourceClients: Client[],
+): SagaIterator<Client[]> {
   return yield call(createEntitiesForTool, {
     toolName: ToolName.Clockify,
     sourceRecords: sourceClients,
@@ -34,7 +34,7 @@ export function* createClockifyClientsSaga(
  * Deletes all specified source clients from Clockify.
  */
 export function* deleteClockifyClientsSaga(
-  sourceClients: ClientModel[],
+  sourceClients: Client[],
 ): SagaIterator {
   yield call(deleteEntitiesForTool, {
     toolName: ToolName.Clockify,
@@ -47,7 +47,7 @@ export function* deleteClockifyClientsSaga(
  * Fetches all clients in Clockify workspaces and returns array of transformed
  * clients.
  */
-export function* fetchClockifyClientsSaga(): SagaIterator<ClientModel[]> {
+export function* fetchClockifyClientsSaga(): SagaIterator<Client[]> {
   return yield call(fetchEntitiesForTool, {
     toolName: ToolName.Clockify,
     apiFetchFunc: fetchClockifyClientsInWorkspace,
@@ -59,9 +59,9 @@ export function* fetchClockifyClientsSaga(): SagaIterator<ClientModel[]> {
  * @see https://clockify.me/developers-api#operation--v1-workspaces--workspaceId--clients-post
  */
 function* createClockifyClient(
-  sourceClient: ClientModel,
+  sourceClient: Client,
   targetWorkspaceId: string,
-): SagaIterator<ClientModel> {
+): SagaIterator<Client> {
   const clientRequest = { name: sourceClient.name };
   const clockifyClient = yield call(
     fetchObject,
@@ -76,7 +76,7 @@ function* createClockifyClient(
  * Deletes the specified Clockify client.
  * @see https://clockify.me/developers-api#operation--v1-workspaces--workspaceId--clients--clientId--delete
  */
-function* deleteClockifyClient(sourceClient: ClientModel): SagaIterator {
+function* deleteClockifyClient(sourceClient: Client): SagaIterator {
   const { workspaceId, id } = sourceClient;
   yield call(
     fetchObject,
@@ -91,7 +91,7 @@ function* deleteClockifyClient(sourceClient: ClientModel): SagaIterator {
  */
 function* fetchClockifyClientsInWorkspace(
   workspaceId: string,
-): SagaIterator<ClientModel[]> {
+): SagaIterator<Client[]> {
   const clockifyClients: ClockifyClientResponseModel[] = yield call(
     fetchPaginatedFromClockify,
     `/clockify/api/workspaces/${workspaceId}/clients`,
@@ -100,9 +100,7 @@ function* fetchClockifyClientsInWorkspace(
   return clockifyClients.map(transformFromResponse);
 }
 
-function transformFromResponse(
-  client: ClockifyClientResponseModel,
-): ClientModel {
+function transformFromResponse(client: ClockifyClientResponseModel): Client {
   return {
     id: client.id,
     name: client.name,

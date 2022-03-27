@@ -3,16 +3,16 @@ import { type ActionType, createReducer } from "typesafe-actions";
 import * as credentialsActions from "~/modules/credentials/credentialsActions";
 import {
   FetchStatus,
-  type CredentialsModel,
-  type ValidationErrorsByMappingModel,
+  type Credentials,
+  type ValidationErrorsByMapping,
 } from "~/typeDefs";
 
 type CredentialsAction = ActionType<typeof credentialsActions>;
 
 export interface CredentialsState {
-  readonly source: CredentialsModel;
-  readonly target: CredentialsModel;
-  readonly validationErrorsByMapping: ValidationErrorsByMappingModel;
+  readonly source: Credentials;
+  readonly target: Credentials;
+  readonly validationErrorsByMapping: ValidationErrorsByMapping;
   readonly validationFetchStatus: FetchStatus;
 }
 

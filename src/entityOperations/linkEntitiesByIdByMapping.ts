@@ -5,13 +5,12 @@ import { call, select } from "redux-saga/effects";
 
 import { workspaceIdToLinkedIdSelector } from "~/modules/workspaces/workspacesSelectors";
 import {
-  BaseEntityModel,
   EntityGroup,
   Mapping,
-  ProjectsByIdModel,
-  ReduxState,
-  TimeEntriesByIdModel,
-  TimeEntryModel,
+  type AnyEntity,
+  type Project,
+  type ReduxState,
+  type TimeEntry,
 } from "~/typeDefs";
 
 enum LinkFromType {
@@ -52,7 +51,7 @@ export function* linkEntitiesByIdByMapping<TEntity>(
     };
   }
 
-  const [{ memberOf }] = sourceRecords as unknown as BaseEntityModel[];
+  const [{ memberOf }] = sourceRecords as unknown as AnyEntity[];
   if (memberOf === EntityGroup.TimeEntries) {
     // TypeScript freaks out on this one, but I don't want to add 400 type
     // assertions. I know they're time entries, and I know the function is going
@@ -157,9 +156,9 @@ function linkForMappingByField<TEntity>(
  * in the `doTimeEntriesMatch()` function below.
  */
 function* linkForMappingForTimeEntries(
-  sourceTimeEntries: TimeEntryModel[],
-  targetTimeEntries: TimeEntryModel[],
-): SagaIterator<Record<Mapping, TimeEntriesByIdModel>> {
+  sourceTimeEntries: TimeEntry[],
+  targetTimeEntries: TimeEntry[],
+): SagaIterator<Record<Mapping, Dictionary<TimeEntry>>> {
   // I can't use the `sourceProjectsById` selector here because I get a reselect
   // error. Since the linking process only happens when the time entries are
   // initially fetched/created, it shouldn't cause a performance hit due to
@@ -174,8 +173,8 @@ function* linkForMappingForTimeEntries(
   const sortedSourceEntries = sortByDate(sourceTimeEntries);
   const sortedTargetEntries = sortByDate(targetTimeEntries);
 
-  const sourceById: Record<string, TimeEntryModel> = {};
-  const targetById: Record<string, TimeEntryModel> = {};
+  const sourceById: Record<string, TimeEntry> = {};
+  const targetById: Record<string, TimeEntry> = {};
 
   for (const sourceEntry of sortedSourceEntries) {
     sourceById[sourceEntry.id] = sourceEntry;
@@ -214,9 +213,9 @@ function* linkForMappingForTimeEntries(
  * project ID. If they match, return true.
  */
 function doProjectsMatch(
-  sourceProjectsById: ProjectsByIdModel,
-  sourceEntry: TimeEntryModel,
-  targetEntry: TimeEntryModel,
+  sourceProjectsById: Dictionary<Project>,
+  sourceEntry: TimeEntry,
+  targetEntry: TimeEntry,
 ): boolean {
   if (sourceEntry.projectId === null && targetEntry.projectId === null) {
     return true;
@@ -248,8 +247,8 @@ function doProjectsMatch(
  * based on the date and description.
  */
 function doTimeEntriesMatch(
-  sourceEntry: TimeEntryModel,
-  targetEntry: TimeEntryModel,
+  sourceEntry: TimeEntry,
+  targetEntry: TimeEntry,
 ): boolean {
   return [
     sourceEntry.description === targetEntry.description,

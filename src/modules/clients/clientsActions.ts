@@ -1,12 +1,12 @@
 import { createAction, createAsyncAction } from "typesafe-actions";
 
-import type { ClientsByIdModel, Mapping } from "~/typeDefs";
+import type { Client, Mapping } from "~/typeDefs";
 
 export const createClients = createAsyncAction(
   "@clients/CREATE_CLIENTS_REQUEST",
   "@clients/CREATE_CLIENTS_SUCCESS",
   "@clients/CREATE_CLIENTS_FAILURE",
-)<void, Record<Mapping, ClientsByIdModel>, void>();
+)<void, Record<Mapping, Dictionary<Client>>, void>();
 
 export const deleteClients = createAsyncAction(
   "@clients/DELETE_CLIENTS_REQUEST",
@@ -18,7 +18,7 @@ export const fetchClients = createAsyncAction(
   "@clients/FETCH_CLIENTS_REQUEST",
   "@clients/FETCH_CLIENTS_SUCCESS",
   "@clients/FETCH_CLIENTS_FAILURE",
-)<void, Record<Mapping, ClientsByIdModel>, void>();
+)<void, Record<Mapping, Dictionary<Client>>, void>();
 
 export const flipIsClientIncluded = createAction(
   "@clients/FLIP_IS_INCLUDED",

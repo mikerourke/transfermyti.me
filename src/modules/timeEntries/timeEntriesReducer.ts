@@ -3,15 +3,15 @@ import { type ActionType, createReducer } from "typesafe-actions";
 
 import { flushAllEntities } from "~/modules/allEntities/allEntitiesActions";
 import * as timeEntriesActions from "~/modules/timeEntries/timeEntriesActions";
-import { Mapping, type TimeEntriesByIdModel } from "~/typeDefs";
+import { Mapping, type TimeEntry } from "~/typeDefs";
 
 type TimeEntriesAction = ActionType<
   typeof timeEntriesActions | typeof flushAllEntities
 >;
 
 export interface TimeEntriesState {
-  readonly source: TimeEntriesByIdModel;
-  readonly target: TimeEntriesByIdModel;
+  readonly source: Dictionary<TimeEntry>;
+  readonly target: Dictionary<TimeEntry>;
   readonly isFetching: boolean;
   readonly isDuplicateCheckEnabled: boolean;
 }

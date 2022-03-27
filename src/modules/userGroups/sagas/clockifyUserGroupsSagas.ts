@@ -8,7 +8,7 @@ import {
 import { createEntitiesForTool } from "~/entityOperations/createEntitiesForTool";
 import { deleteEntitiesForTool } from "~/entityOperations/deleteEntitiesForTool";
 import { fetchEntitiesForTool } from "~/entityOperations/fetchEntitiesForTool";
-import { EntityGroup, ToolName, type UserGroupModel } from "~/typeDefs";
+import { EntityGroup, ToolName, type UserGroup } from "~/typeDefs";
 
 interface ClockifyUserGroupResponseModel {
   id: string;
@@ -21,8 +21,8 @@ interface ClockifyUserGroupResponseModel {
  * transformed user groups.
  */
 export function* createClockifyUserGroupsSaga(
-  sourceUserGroups: UserGroupModel[],
-): SagaIterator<UserGroupModel[]> {
+  sourceUserGroups: UserGroup[],
+): SagaIterator<UserGroup[]> {
   return yield call(createEntitiesForTool, {
     toolName: ToolName.Clockify,
     sourceRecords: sourceUserGroups,
@@ -34,7 +34,7 @@ export function* createClockifyUserGroupsSaga(
  * Deletes all specified source user groups from Clockify.
  */
 export function* deleteClockifyUserGroupsSaga(
-  sourceUserGroups: UserGroupModel[],
+  sourceUserGroups: UserGroup[],
 ): SagaIterator {
   yield call(deleteEntitiesForTool, {
     toolName: ToolName.Clockify,
@@ -47,7 +47,7 @@ export function* deleteClockifyUserGroupsSaga(
  * Fetches all user groups in Clockify workspaces and returns array of
  * transformed user groups.
  */
-export function* fetchClockifyUserGroupsSaga(): SagaIterator<UserGroupModel[]> {
+export function* fetchClockifyUserGroupsSaga(): SagaIterator<UserGroup[]> {
   return yield call(fetchEntitiesForTool, {
     toolName: ToolName.Clockify,
     apiFetchFunc: fetchClockifyUserGroupsInWorkspace,
@@ -59,7 +59,7 @@ export function* fetchClockifyUserGroupsSaga(): SagaIterator<UserGroupModel[]> {
  * @see https://clockify.me/developers-api#operation--v1-workspaces--workspaceId--user-groups--post
  */
 function* createClockifyUserGroup(
-  sourceUserGroup: UserGroupModel,
+  sourceUserGroup: UserGroup,
   targetWorkspaceId: string,
 ): SagaIterator {
   const userGroupRequest = { name: sourceUserGroup.name };
@@ -76,9 +76,7 @@ function* createClockifyUserGroup(
  * Deletes the specified Clockify user group.
  * @see https://clockify.me/developers-api#operation--v1-workspaces--workspaceId--user-groups--userGroupId--delete
  */
-function* deleteClockifyUserGroup(
-  sourceUserGroup: UserGroupModel,
-): SagaIterator {
+function* deleteClockifyUserGroup(sourceUserGroup: UserGroup): SagaIterator {
   const { workspaceId, id } = sourceUserGroup;
   yield call(
     fetchObject,
@@ -93,7 +91,7 @@ function* deleteClockifyUserGroup(
  */
 function* fetchClockifyUserGroupsInWorkspace(
   workspaceId: string,
-): SagaIterator<UserGroupModel[]> {
+): SagaIterator<UserGroup[]> {
   const clockifyUserGroups: ClockifyUserGroupResponseModel[] = yield call(
     fetchPaginatedFromClockify,
     `/clockify/api/workspaces/${workspaceId}/user-groups`,
@@ -107,7 +105,7 @@ function* fetchClockifyUserGroupsInWorkspace(
 function transformFromResponse(
   userGroup: ClockifyUserGroupResponseModel,
   workspaceId: string,
-): UserGroupModel {
+): UserGroup {
   return {
     id: userGroup.id,
     name: userGroup.name,

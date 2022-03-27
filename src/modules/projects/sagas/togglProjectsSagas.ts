@@ -12,7 +12,7 @@ import { createEntitiesForTool } from "~/entityOperations/createEntitiesForTool"
 import { deleteEntitiesForTool } from "~/entityOperations/deleteEntitiesForTool";
 import { fetchEntitiesForTool } from "~/entityOperations/fetchEntitiesForTool";
 import { clientIdToLinkedIdSelector } from "~/modules/clients/clientsSelectors";
-import { EntityGroup, ToolName, type ProjectModel } from "~/typeDefs";
+import { EntityGroup, ToolName, type Project } from "~/typeDefs";
 import { validStringify } from "~/utilities/textTransforms";
 
 interface TogglProjectResponseModel {
@@ -55,8 +55,8 @@ interface TogglProjectUserResponseModel {
  * transformed projects.
  */
 export function* createTogglProjectsSaga(
-  sourceProjects: ProjectModel[],
-): SagaIterator<ProjectModel[]> {
+  sourceProjects: Project[],
+): SagaIterator<Project[]> {
   return yield call(createEntitiesForTool, {
     toolName: ToolName.Toggl,
     sourceRecords: sourceProjects,
@@ -68,7 +68,7 @@ export function* createTogglProjectsSaga(
  * Deletes all specified source projects from Toggl.
  */
 export function* deleteTogglProjectsSaga(
-  sourceProjects: ProjectModel[],
+  sourceProjects: Project[],
 ): SagaIterator {
   yield call(deleteEntitiesForTool, {
     toolName: ToolName.Toggl,
@@ -81,7 +81,7 @@ export function* deleteTogglProjectsSaga(
  * Fetches all projects in Toggl workspaces, adds associated user IDs, and
  * returns array of transformed projects.
  */
-export function* fetchTogglProjectsSaga(): SagaIterator<ProjectModel[]> {
+export function* fetchTogglProjectsSaga(): SagaIterator<Project[]> {
   return yield call(fetchEntitiesForTool, {
     toolName: ToolName.Toggl,
     apiFetchFunc: fetchTogglProjectsInWorkspace,
@@ -93,9 +93,9 @@ export function* fetchTogglProjectsSaga(): SagaIterator<ProjectModel[]> {
  * @see https://github.com/toggl/toggl_api_docs/blob/master/chapters/projects.md#create-project
  */
 function* createTogglProject(
-  sourceProject: ProjectModel,
+  sourceProject: Project,
   targetWorkspaceId: string,
-): SagaIterator<ProjectModel> {
+): SagaIterator<Project> {
   const clientIdToLinkedId = yield select(clientIdToLinkedIdSelector);
   const targetClientId = R.propOr<
     string | null,
@@ -124,7 +124,7 @@ function* createTogglProject(
  * Deletes the specified Toggl project.
  * @see https://github.com/toggl/toggl_api_docs/blob/master/chapters/projects.md#delete-a-project
  */
-function* deleteTogglProject(sourceProject: ProjectModel): SagaIterator {
+function* deleteTogglProject(sourceProject: Project): SagaIterator {
   yield call(fetchEmpty, `/toggl/api/projects/${sourceProject.id}`, {
     method: "DELETE",
   });
@@ -136,8 +136,8 @@ function* deleteTogglProject(sourceProject: ProjectModel): SagaIterator {
  */
 function* fetchTogglProjectsInWorkspace(
   workspaceId: string,
-): SagaIterator<ProjectModel[]> {
-  const allTogglProjects: ProjectModel[] = [];
+): SagaIterator<Project[]> {
+  const allTogglProjects: Project[] = [];
 
   const togglApiDelay = yield call(getApiDelayForTool, ToolName.Toggl);
 
@@ -174,7 +174,7 @@ function* fetchUserIdsInProject(projectId: string): SagaIterator<string[]> {
 function transformFromResponse(
   project: TogglProjectResponseModel,
   userIds: string[],
-): ProjectModel {
+): Project {
   return {
     id: project.id.toString(),
     name: project.name,

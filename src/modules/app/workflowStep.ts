@@ -4,9 +4,9 @@ import {
   flushAllEntities,
   updatePushAllChangesFetchStatus,
 } from "~/modules/allEntities/allEntitiesActions";
-import { FetchStatus } from "~/modules/allEntities/allEntitiesTypes";
 import { updateValidationFetchStatus } from "~/modules/credentials/credentialsActions";
 import { dispatchAction } from "~/redux/reduxToStore";
+import { FetchStatus } from "~/typeDefs";
 
 export enum WorkflowStep {
   PickToolAction = "pick-tool-action",

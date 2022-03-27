@@ -1,7 +1,7 @@
 import cuid from "cuid";
 import { createAction } from "typesafe-actions";
 
-import type { NotificationModel } from "~/typeDefs";
+import type { Notification } from "~/typeDefs";
 import { isDevelopmentMode } from "~/utilities/environment";
 
 export const dismissNotification = createAction(
@@ -14,10 +14,10 @@ export const dismissAllNotifications = createAction(
 
 export const showNotification = createAction(
   "@app/SHOW_NOTIFICATION",
-  (notification: Partial<NotificationModel>) => {
-    return { id: cuid(), ...notification } as NotificationModel;
+  (notification: Partial<Notification>) => {
+    return { id: cuid(), ...notification } as Notification;
   },
-)<NotificationModel>();
+)<Notification>();
 
 export const showErrorNotification = createAction(
   "@app/SHOW_ERROR_NOTIFICATION",
@@ -46,7 +46,7 @@ export const showErrorNotification = createAction(
       type: "error",
     };
   },
-)<NotificationModel>();
+)<Notification>();
 
 function getApiErrorMessage(response: Response): string {
   const { status, statusText, url } = response;

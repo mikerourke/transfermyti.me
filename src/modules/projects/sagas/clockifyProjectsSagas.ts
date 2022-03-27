@@ -15,12 +15,7 @@ import type {
   ClockifyHourlyRateResponseModel,
   ClockifyMembershipResponseModel,
 } from "~/modules/users/sagas/clockifyUsersSagas";
-import {
-  EntityGroup,
-  ToolName,
-  type EstimateModel,
-  type ProjectModel,
-} from "~/typeDefs";
+import { EntityGroup, ToolName, type Estimate, type Project } from "~/typeDefs";
 
 export interface ClockifyProjectResponseModel {
   archived: boolean;
@@ -29,7 +24,7 @@ export interface ClockifyProjectResponseModel {
   clientName: string;
   color: string;
   duration: string;
-  estimate: EstimateModel;
+  estimate: Estimate;
   hourlyRate: ClockifyHourlyRateResponseModel;
   id: string;
   memberships?: ClockifyMembershipResponseModel[];
@@ -45,8 +40,8 @@ export interface ClockifyProjectResponseModel {
  * transformed projects.
  */
 export function* createClockifyProjectsSaga(
-  sourceProjects: ProjectModel[],
-): SagaIterator<ProjectModel[]> {
+  sourceProjects: Project[],
+): SagaIterator<Project[]> {
   return yield call(createEntitiesForTool, {
     toolName: ToolName.Clockify,
     sourceRecords: sourceProjects,
@@ -58,7 +53,7 @@ export function* createClockifyProjectsSaga(
  * Deletes all specified source projects from Clockify.
  */
 export function* deleteClockifyProjectsSaga(
-  sourceProjects: ProjectModel[],
+  sourceProjects: Project[],
 ): SagaIterator {
   yield call(deleteEntitiesForTool, {
     toolName: ToolName.Clockify,
@@ -71,7 +66,7 @@ export function* deleteClockifyProjectsSaga(
  * Fetches all projects in Clockify workspaces, adds associated user IDs, and
  * returns array of transformed projects.
  */
-export function* fetchClockifyProjectsSaga(): SagaIterator<ProjectModel[]> {
+export function* fetchClockifyProjectsSaga(): SagaIterator<Project[]> {
   return yield call(fetchEntitiesForTool, {
     toolName: ToolName.Clockify,
     apiFetchFunc: fetchClockifyProjectsInWorkspace,
@@ -83,9 +78,9 @@ export function* fetchClockifyProjectsSaga(): SagaIterator<ProjectModel[]> {
  * @see https://clockify.me/developers-api#operation--v1-workspaces--workspaceId--projects-post
  */
 function* createClockifyProject(
-  sourceProject: ProjectModel,
+  sourceProject: Project,
   targetWorkspaceId: string,
-): SagaIterator<ProjectModel> {
+): SagaIterator<Project> {
   const clientIdToLinkedId = yield select(clientIdToLinkedIdSelector);
   const targetClientId = R.propOr<
     string | null,
@@ -121,7 +116,7 @@ function* createClockifyProject(
  * Deletes the specified Clockify project.
  * @see https://clockify.me/developers-api#operation--v1-workspaces--workspaceId--projects--id--delete
  */
-function* deleteClockifyProject(sourceProject: ProjectModel): SagaIterator {
+function* deleteClockifyProject(sourceProject: Project): SagaIterator {
   const { workspaceId, id } = sourceProject;
 
   // Need to set a project to "archived" before it can be deleted:
@@ -150,8 +145,8 @@ function* deleteClockifyProject(sourceProject: ProjectModel): SagaIterator {
  */
 function* fetchClockifyProjectsInWorkspace(
   workspaceId: string,
-): SagaIterator<ProjectModel[]> {
-  const allClockifyProjects: ProjectModel[] = [];
+): SagaIterator<Project[]> {
+  const allClockifyProjects: Project[] = [];
 
   const clockifyApiDelay = yield call(getApiDelayForTool, ToolName.Clockify);
 
@@ -185,7 +180,7 @@ function* fetchClockifyProjectsInWorkspace(
 function transformFromResponse(
   project: ClockifyProjectResponseModel,
   userIds: string[],
-): ProjectModel {
+): Project {
   return {
     id: project.id,
     name: project.name,

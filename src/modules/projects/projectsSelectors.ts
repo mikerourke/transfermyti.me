@@ -8,36 +8,31 @@ import {
 } from "~/modules/allEntities/allEntitiesSelectors";
 import { sourceTimeEntryCountByIdFieldSelectorFactory } from "~/modules/timeEntries/timeEntriesSelectors";
 import { activeWorkspaceIdSelector } from "~/modules/workspaces/workspacesSelectors";
-import type {
-  ReduxState,
-  ProjectModel,
-  ProjectsByIdModel,
-  TableViewModel,
-} from "~/typeDefs";
+import type { ReduxState, Project, EntityTableRecord } from "~/typeDefs";
 
 export const sourceProjectsByIdSelector = createSelector(
   (state: ReduxState) => state.projects.source,
-  (sourceProjectsById): ProjectsByIdModel => sourceProjectsById,
+  (sourceProjectsById): Dictionary<Project> => sourceProjectsById,
 );
 
 export const sourceProjectsSelector = createSelector(
   sourceProjectsByIdSelector,
-  (sourceProjectsById): ProjectModel[] => Object.values(sourceProjectsById),
+  (sourceProjectsById): Project[] => Object.values(sourceProjectsById),
 );
 
 export const targetProjectsByIdSelector = createSelector(
   (state: ReduxState) => state.projects.target,
-  (targetProjectsById): ProjectsByIdModel => targetProjectsById,
+  (targetProjectsById): Dictionary<Project> => targetProjectsById,
 );
 
 const targetProjectsSelector = createSelector(
   targetProjectsByIdSelector,
-  (targetProjectsById): ProjectModel[] => Object.values(targetProjectsById),
+  (targetProjectsById): Project[] => Object.values(targetProjectsById),
 );
 
 export const includedSourceProjectsSelector = createSelector(
   sourceProjectsSelector,
-  (sourceProjects): ProjectModel[] =>
+  (sourceProjects): Project[] =>
     sourceProjects.filter((sourceProject) => sourceProject.isIncluded),
 );
 
@@ -48,7 +43,7 @@ export const includedSourceProjectIdsSelector = createSelector(
 
 export const sourceProjectsForTransferSelector = createSelector(
   includedSourceProjectsSelector,
-  (sourceProjects): ProjectModel[] =>
+  (sourceProjects): Project[] =>
     sourceProjects.filter((sourceProject) => R.isNil(sourceProject.linkedId)),
 );
 
@@ -77,7 +72,7 @@ export const projectsForInclusionsTableSelector = createSelector(
     sourceProjects,
     targetProjectsById,
     timeEntryCountByProjectId,
-  ): TableViewModel<ProjectModel>[] =>
+  ): EntityTableRecord<Project>[] =>
     sourceProjects.reduce((acc, sourceProject) => {
       const existsInTarget = sourceProject.linkedId !== null;
       if (existsInTarget && !areExistsInTargetShown) {
@@ -106,7 +101,7 @@ export const projectsForInclusionsTableSelector = createSelector(
           isActiveInTarget,
         },
       ];
-    }, [] as TableViewModel<ProjectModel>[]),
+    }, [] as EntityTableRecord<Project>[]),
 );
 
 export const projectsTotalCountsByTypeSelector = createSelector(
@@ -121,7 +116,7 @@ export const projectsTotalCountsByTypeSelector = createSelector(
           isIncluded,
           isActiveInSource,
           isActiveInTarget,
-        }: TableViewModel<ProjectModel>,
+        }: EntityTableRecord<Project>,
       ) => ({
         entryCount: acc.entryCount + entryCount,
         existsInTarget: acc.existsInTarget + (existsInTarget ? 1 : 0),
@@ -150,15 +145,15 @@ export const projectsByWorkspaceIdByToolNameSelector = createSelector(
 );
 
 function groupProjectsByWorkspaceId(
-  projects: ProjectModel[],
-): Record<string, ProjectModel[]> {
-  const projectsByWorkspaceId: Record<string, ProjectModel[]> = {};
+  projects: Project[],
+): Record<string, Project[]> {
+  const projectsByWorkspaceId: Record<string, Project[]> = {};
 
   for (const project of projects) {
     const workspaceProjects = R.propOr<
-      ProjectModel[],
-      Record<string, ProjectModel[]>,
-      ProjectModel[]
+      Project[],
+      Record<string, Project[]>,
+      Project[]
     >([], project.workspaceId, projectsByWorkspaceId);
 
     projectsByWorkspaceId[project.workspaceId] = [

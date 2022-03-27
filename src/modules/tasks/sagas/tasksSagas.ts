@@ -1,7 +1,7 @@
 import * as R from "ramda";
 import type { SagaIterator } from "redux-saga";
 import { all, call, put, select, takeEvery } from "redux-saga/effects";
-import { isActionOf } from "typesafe-actions";
+import { ActionType, isActionOf } from "typesafe-actions";
 
 import { linkEntitiesByIdByMapping } from "~/entityOperations/linkEntitiesByIdByMapping";
 import {
@@ -24,19 +24,14 @@ import {
   Mapping,
   ToolAction,
   ToolName,
-  type ProjectModel,
-  type ReduxAction,
-  type TasksByIdModel,
+  type Project,
+  type Task,
 } from "~/typeDefs";
 
 export function* taskMonitoringSaga(): SagaIterator {
   yield all([
     takeEvery(
-      tasksActions.flipIsTaskIncluded,
-      pushTaskInclusionChangesToProject,
-    ),
-    takeEvery(
-      tasksActions.updateAreAllTasksIncluded,
+      [tasksActions.flipIsTaskIncluded, tasksActions.updateAreAllTasksIncluded],
       pushTaskInclusionChangesToProject,
     ),
   ]);
@@ -48,7 +43,7 @@ export function* taskMonitoringSaga(): SagaIterator {
  * transfer.
  */
 function* pushTaskInclusionChangesToProject(
-  action: ReduxAction<string | boolean>,
+  action: ActionType<typeof tasksActions>,
 ): SagaIterator {
   const toolAction = yield select(toolActionSelector);
   // The user can _delete_ tasks from a project without actually deleting the
@@ -57,45 +52,42 @@ function* pushTaskInclusionChangesToProject(
     return;
   }
 
-  const sourceProjects: ProjectModel[] = yield select(sourceProjectsSelector);
+  const sourceProjects: Project[] = yield select(sourceProjectsSelector);
   const includedSourceTasksCount = yield select(
     includedSourceTasksCountSelector,
   );
   const sourceTasksById = yield select(sourceTasksByIdSelector);
 
-  switch (true) {
-    case isActionOf(tasksActions.flipIsTaskIncluded, action):
-      const sourceProjectId = R.pathOr<string>(
-        "",
-        [action.payload as string, "projectId"],
-        sourceTasksById,
-      );
+  if (isActionOf(tasksActions.flipIsTaskIncluded, action)) {
+    const sourceProjectId = R.pathOr<string>(
+      "",
+      [action.payload, "projectId"],
+      sourceTasksById,
+    );
 
+    yield put(
+      updateIsProjectIncluded({
+        id: sourceProjectId,
+        isIncluded: includedSourceTasksCount > 0,
+      }),
+    );
+
+    return;
+  }
+
+  if (isActionOf(tasksActions.updateAreAllTasksIncluded, action)) {
+    if (includedSourceTasksCount === 0) {
+      return;
+    }
+
+    for (const sourceProject of sourceProjects) {
       yield put(
         updateIsProjectIncluded({
-          id: sourceProjectId,
-          isIncluded: includedSourceTasksCount > 0,
+          id: sourceProject.id,
+          isIncluded: true,
         }),
       );
-      break;
-
-    case isActionOf(tasksActions.updateAreAllTasksIncluded, action):
-      if (includedSourceTasksCount === 0) {
-        break;
-      }
-
-      for (const sourceProject of sourceProjects) {
-        yield put(
-          updateIsProjectIncluded({
-            id: sourceProject.id,
-            isIncluded: true,
-          }),
-        );
-      }
-      break;
-
-    default:
-      break;
+    }
   }
 }
 
@@ -166,7 +158,7 @@ export function* fetchTasksSaga(): SagaIterator {
     const sourceTasks = yield call(fetchSagaByToolName[source]);
 
     const toolAction = yield select(toolActionSelector);
-    let tasksByIdByMapping: Record<Mapping, TasksByIdModel>;
+    let tasksByIdByMapping: Record<Mapping, Dictionary<Task>>;
 
     if (toolAction === ToolAction.Transfer) {
       const targetTasks = yield call(fetchSagaByToolName[target]);

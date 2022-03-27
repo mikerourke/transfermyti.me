@@ -1,12 +1,12 @@
 import { ActionType, createReducer } from "typesafe-actions";
 
 import * as appActions from "~/modules/app/appActions";
-import type { NotificationModel } from "~/typeDefs";
+import type { Notification } from "~/typeDefs";
 
 type AppAction = ActionType<typeof appActions>;
 
 export interface AppState {
-  readonly notifications: NotificationModel[];
+  readonly notifications: Notification[];
 }
 
 export const initialState: AppState = {

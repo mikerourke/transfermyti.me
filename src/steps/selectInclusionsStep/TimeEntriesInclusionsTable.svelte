@@ -2,9 +2,9 @@
   import format from "date-fns/format";
   import { createEventDispatcher } from "svelte";
 
-  import type { TimeEntryTableViewModel } from "~/typeDefs";
+  import type { TimeEntryTableRecord } from "~/typeDefs";
 
-  export let timeEntries: TimeEntryTableViewModel[];
+  export let timeEntries: TimeEntryTableRecord[];
   export let totalIncludedCount: number;
 
   const dispatchEvent = createEventDispatcher();

@@ -3,17 +3,13 @@
   import { createEventDispatcher } from "svelte";
 
   import { replaceMappingWithToolName } from "~/entityOperations/replaceMappingWithToolName";
-  import type {
-    BaseEntityModel,
-    EntityGroup,
-    TableViewModel,
-  } from "~/typeDefs";
+  import type { AnyEntity, EntityGroup, EntityTableRecord } from "~/typeDefs";
   import { getEntityGroupDisplay } from "~/utilities/textTransforms";
 
   import AccordionPanel from "~/components/AccordionPanel.svelte";
   import InclusionsTable from "~/components/InclusionsTable.svelte";
 
-  type TableRecord = TableViewModel<BaseEntityModel>;
+  type TableRecord = EntityTableRecord<AnyEntity>;
 
   type TableField = { label: string; field: string };
 

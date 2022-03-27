@@ -4,13 +4,13 @@ import { type ActionType, createReducer } from "typesafe-actions";
 import { updateAreAllRecordsIncluded } from "~/entityOperations/updateAreAllRecordsIncluded";
 import { flushAllEntities } from "~/modules/allEntities/allEntitiesActions";
 import * as tagsActions from "~/modules/tags/tagsActions";
-import { Mapping, type TagsByIdModel } from "~/typeDefs";
+import { Mapping, type Tag } from "~/typeDefs";
 
 type TagsAction = ActionType<typeof tagsActions | typeof flushAllEntities>;
 
 export interface TagsState {
-  readonly source: TagsByIdModel;
-  readonly target: TagsByIdModel;
+  readonly source: Dictionary<Tag>;
+  readonly target: Dictionary<Tag>;
   readonly isFetching: boolean;
 }
 

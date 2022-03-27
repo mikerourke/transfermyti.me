@@ -1,7 +1,7 @@
 <script lang="ts">
   import { createEventDispatcher } from "svelte";
 
-  import type { BaseEntityModel, TableViewModel } from "~/typeDefs";
+  import type { AnyEntity, EntityTableRecord } from "~/typeDefs";
   import { booleanToYesNo } from "~/utilities/textTransforms";
 
   import InclusionsTableTitle from "~/components/InclusionsTableTitle.svelte";
@@ -10,7 +10,7 @@
   export let title: string;
   export let fieldNames: string[];
   export let fieldLabels: string[];
-  export let tableRecords: TableViewModel<BaseEntityModel>[];
+  export let tableRecords: EntityTableRecord<AnyEntity>[];
   export let totalCountsByType: Dictionary<number>;
 
   const dispatchEvent = createEventDispatcher();

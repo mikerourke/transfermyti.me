@@ -1,11 +1,11 @@
 import { createAction, createAsyncAction } from "typesafe-actions";
 
 import type {
-  CredentialsByMappingModel,
+  CredentialsByMapping,
   FetchStatus,
   Mapping,
-  PartialCredentialsUpdateModel,
-  ValidationErrorsByMappingModel,
+  PartialCredentialsUpdate,
+  ValidationErrorsByMapping,
 } from "~/typeDefs";
 
 export const storeCredentials = createAction(
@@ -16,7 +16,7 @@ export const validateCredentials = createAsyncAction(
   "@credentials/VALIDATE_CREDENTIALS_REQUEST",
   "@credentials/VALIDATE_CREDENTIALS_SUCCESS",
   "@credentials/VALIDATE_CREDENTIALS_FAILURE",
-)<void, CredentialsByMappingModel, ValidationErrorsByMappingModel>();
+)<void, CredentialsByMapping, ValidationErrorsByMapping>();
 
 export const flushCredentials = createAction(
   "@credentials/FLUSH_CREDENTIALS",
@@ -24,7 +24,7 @@ export const flushCredentials = createAction(
 
 export const updateCredentials = createAction(
   "@credentials/UPDATE_CREDENTIALS",
-)<PartialCredentialsUpdateModel>();
+)<PartialCredentialsUpdate>();
 
 export const apiKeysUpdated = createAction("@credentials/apiKeysUpdated")<
   Record<Mapping, string>

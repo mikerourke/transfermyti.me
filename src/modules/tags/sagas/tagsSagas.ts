@@ -15,7 +15,7 @@ import {
   includedSourceTagsSelector,
   sourceTagsForTransferSelector,
 } from "~/modules/tags/tagsSelectors";
-import { Mapping, ToolAction, ToolName, type TagsByIdModel } from "~/typeDefs";
+import { Mapping, ToolAction, ToolName, type Tag } from "~/typeDefs";
 
 /**
  * Creates tags in the target tool based on the included tags from the
@@ -84,7 +84,7 @@ export function* fetchTagsSaga(): SagaIterator {
     const sourceTags = yield call(fetchSagaByToolName[source]);
 
     const toolAction = yield select(toolActionSelector);
-    let tagsByIdByMapping: Record<Mapping, TagsByIdModel>;
+    let tagsByIdByMapping: Record<Mapping, Dictionary<Tag>>;
 
     if (toolAction === ToolAction.Transfer) {
       const targetTags = yield call(fetchSagaByToolName[target]);

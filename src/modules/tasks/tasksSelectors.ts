@@ -5,31 +5,26 @@ import { selectIdToLinkedId } from "~/entityOperations/selectIdToLinkedId";
 import { sourceProjectsByIdSelector } from "~/modules/projects/projectsSelectors";
 import { sourceTimeEntryCountByIdFieldSelectorFactory } from "~/modules/timeEntries/timeEntriesSelectors";
 import { activeWorkspaceIdSelector } from "~/modules/workspaces/workspacesSelectors";
-import type {
-  ReduxState,
-  TaskModel,
-  TasksByIdModel,
-  TaskTableViewModel,
-} from "~/typeDefs";
+import type { ReduxState, Task, TaskTableRecord } from "~/typeDefs";
 
 export const sourceTasksByIdSelector = createSelector(
   (state: ReduxState) => state.tasks.source,
-  (sourceTasksById): TasksByIdModel => sourceTasksById,
+  (sourceTasksById): Dictionary<Task> => sourceTasksById,
 );
 
 const targetTasksByIdSelector = createSelector(
   (state: ReduxState) => state.tasks.target,
-  (targetTasksById): TasksByIdModel => targetTasksById,
+  (targetTasksById): Dictionary<Task> => targetTasksById,
 );
 
 export const sourceTasksSelector = createSelector(
   sourceTasksByIdSelector,
-  (sourceTasksById): TaskModel[] => Object.values(sourceTasksById),
+  (sourceTasksById): Task[] => Object.values(sourceTasksById),
 );
 
 export const includedSourceTasksSelector = createSelector(
   sourceTasksSelector,
-  (sourceTasks): TaskModel[] =>
+  (sourceTasks): Task[] =>
     sourceTasks.filter((sourceTask) => sourceTask.isIncluded),
 );
 
@@ -47,7 +42,7 @@ export const sourceTasksForTransferSelector = createSelector(
 export const sourceTasksInActiveWorkspaceSelector = createSelector(
   activeWorkspaceIdSelector,
   sourceTasksSelector,
-  (workspaceId, sourceTasks): TaskModel[] =>
+  (workspaceId, sourceTasks): Task[] =>
     sourceTasks.filter((task) => task.workspaceId === workspaceId),
 );
 
@@ -69,7 +64,7 @@ export const tasksForInclusionsTableSelector = createSelector(
     targetTasksById,
     sourceProjectsById,
     timeEntryCountByTaskId,
-  ): TaskTableViewModel[] =>
+  ): TaskTableRecord[] =>
     sourceTasks.reduce((acc, sourceTask) => {
       const existsInTarget = sourceTask.linkedId !== null;
       if (existsInTarget && !areExistsInTargetShown) {
@@ -99,7 +94,7 @@ export const tasksForInclusionsTableSelector = createSelector(
           projectName: sourceProjectsById[sourceTask.projectId].name,
         },
       ];
-    }, [] as TaskTableViewModel[]),
+    }, [] as TaskTableRecord[]),
 );
 
 export const tasksTotalCountsByTypeSelector = createSelector(
@@ -114,7 +109,7 @@ export const tasksTotalCountsByTypeSelector = createSelector(
           isIncluded,
           isActiveInSource,
           isActiveInTarget,
-        }: TaskTableViewModel,
+        }: TaskTableRecord,
       ) => ({
         entryCount: acc.entryCount + entryCount,
         existsInTarget: acc.existsInTarget + (existsInTarget ? 1 : 0),

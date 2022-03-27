@@ -3,15 +3,15 @@ import { type ActionType, createReducer } from "typesafe-actions";
 
 import { flushAllEntities } from "~/modules/allEntities/allEntitiesActions";
 import * as workspacesActions from "~/modules/workspaces/workspacesActions";
-import type { WorkspacesByIdModel } from "~/typeDefs";
+import type { Workspace } from "~/typeDefs";
 
 type WorkspacesAction = ActionType<
   typeof workspacesActions | typeof flushAllEntities
 >;
 
 export interface WorkspacesState {
-  readonly source: WorkspacesByIdModel;
-  readonly target: WorkspacesByIdModel;
+  readonly source: Dictionary<Workspace>;
+  readonly target: Dictionary<Workspace>;
   readonly activeWorkspaceId: string;
   readonly isFetching: boolean;
 }

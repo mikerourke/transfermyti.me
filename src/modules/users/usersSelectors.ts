@@ -3,21 +3,21 @@ import { createSelector } from "reselect";
 
 import { selectIdToLinkedId } from "~/entityOperations/selectIdToLinkedId";
 import { workspaceIdToLinkedIdSelector } from "~/modules/workspaces/workspacesSelectors";
-import type { ReduxState, UserModel, UsersByIdModel } from "~/typeDefs";
+import type { ReduxState, User } from "~/typeDefs";
 
 const sourceUsersByIdSelector = createSelector(
   (state: ReduxState) => state.users.source,
-  (sourceUsersById): UsersByIdModel => sourceUsersById,
+  (sourceUsersById): Dictionary<User> => sourceUsersById,
 );
 
 export const sourceUsersSelector = createSelector(
   sourceUsersByIdSelector,
-  (sourceUsersById): UserModel[] => Object.values(sourceUsersById),
+  (sourceUsersById): User[] => Object.values(sourceUsersById),
 );
 
 export const includedSourceUsersSelector = createSelector(
   sourceUsersSelector,
-  (sourceUsers): UserModel[] =>
+  (sourceUsers): User[] =>
     sourceUsers.filter((sourceUser) => sourceUser.isIncluded),
 );
 
@@ -29,7 +29,7 @@ export const userIdToLinkedIdSelector = createSelector(
 
 export const sourceUsersForTransferSelector = createSelector(
   includedSourceUsersSelector,
-  (sourceUsers): UserModel[] =>
+  (sourceUsers): User[] =>
     sourceUsers.filter((sourceUser) => R.isNil(sourceUser.linkedId)),
 );
 

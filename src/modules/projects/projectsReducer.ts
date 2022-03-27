@@ -4,15 +4,15 @@ import { type ActionType, createReducer } from "typesafe-actions";
 import { updateAreAllRecordsIncluded } from "~/entityOperations/updateAreAllRecordsIncluded";
 import { flushAllEntities } from "~/modules/allEntities/allEntitiesActions";
 import * as projectsActions from "~/modules/projects/projectsActions";
-import { Mapping, type ProjectsByIdModel } from "~/typeDefs";
+import { Mapping, type Project } from "~/typeDefs";
 
 type ProjectsAction = ActionType<
   typeof projectsActions | typeof flushAllEntities
 >;
 
 export interface ProjectsState {
-  readonly source: ProjectsByIdModel;
-  readonly target: ProjectsByIdModel;
+  readonly source: Dictionary<Project>;
+  readonly target: Dictionary<Project>;
   readonly isFetching: boolean;
 }
 

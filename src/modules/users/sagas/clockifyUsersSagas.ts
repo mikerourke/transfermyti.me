@@ -9,7 +9,7 @@ import {
 import { deleteEntitiesForTool } from "~/entityOperations/deleteEntitiesForTool";
 import { fetchEntitiesForTool } from "~/entityOperations/fetchEntitiesForTool";
 import { incrementEntityGroupTransferCompletedCount } from "~/modules/allEntities/allEntitiesActions";
-import { EntityGroup, ToolName, type UserModel } from "~/typeDefs";
+import { EntityGroup, ToolName, type User } from "~/typeDefs";
 
 export interface ClockifyHourlyRateResponseModel {
   amount: number;
@@ -84,9 +84,7 @@ export function* createClockifyUsersSaga(
 /**
  * Deletes all specified source clients from Clockify.
  */
-export function* removeClockifyUsersSaga(
-  sourceUsers: UserModel[],
-): SagaIterator {
+export function* removeClockifyUsersSaga(sourceUsers: User[]): SagaIterator {
   yield call(deleteEntitiesForTool, {
     toolName: ToolName.Clockify,
     sourceRecords: sourceUsers,
@@ -98,7 +96,7 @@ export function* removeClockifyUsersSaga(
  * Fetches all users in Clockify workspaces and returns array of transformed
  * users.
  */
-export function* fetchClockifyUsersSaga(): SagaIterator<UserModel[]> {
+export function* fetchClockifyUsersSaga(): SagaIterator<User[]> {
   return yield call(fetchEntitiesForTool, {
     toolName: ToolName.Clockify,
     apiFetchFunc: fetchClockifyUsersInWorkspace,
@@ -134,7 +132,7 @@ function* inviteClockifyUsers(
  * Removes the specified Clockify user from the workspace.
  * @see https://clockify.me/developers-api#operation--v1-workspaces--workspaceId--users--userId--delete
  */
-function* removeClockifyUserFromWorkspace(sourceUser: UserModel): SagaIterator {
+function* removeClockifyUserFromWorkspace(sourceUser: User): SagaIterator {
   const { workspaceId, id } = sourceUser;
   yield call(
     fetchObject,
@@ -149,7 +147,7 @@ function* removeClockifyUserFromWorkspace(sourceUser: UserModel): SagaIterator {
  */
 function* fetchClockifyUsersInWorkspace(
   workspaceId: string,
-): SagaIterator<UserModel[]> {
+): SagaIterator<User[]> {
   const clockifyUsers: ClockifyUserResponseModel[] = yield call(
     fetchPaginatedFromClockify,
     `/clockify/api/workspaces/${workspaceId}/users`,
@@ -163,7 +161,7 @@ function* fetchClockifyUsersInWorkspace(
 function transformFromResponse(
   user: ClockifyUserResponseModel,
   workspaceId: string,
-): UserModel {
+): User {
   return {
     id: user.id,
     name: user.name,

@@ -16,7 +16,7 @@ import type { ClockifyTagResponseModel } from "~/modules/tags/sagas/clockifyTags
 import { targetTagIdsSelectorFactory } from "~/modules/tags/tagsSelectors";
 import type { ClockifyTaskResponseModel } from "~/modules/tasks/sagas/clockifyTasksSagas";
 import { taskIdToLinkedIdSelector } from "~/modules/tasks/tasksSelectors";
-import { EntityGroup, ToolName, type TimeEntryModel } from "~/typeDefs";
+import { EntityGroup, ToolName, type TimeEntry } from "~/typeDefs";
 
 interface ClockifyTimeIntervalModel {
   duration: string;
@@ -43,8 +43,8 @@ interface ClockifyTimeEntryResponseModel {
  * transformed time entries.
  */
 export function* createClockifyTimeEntriesSaga(
-  sourceTimeEntries: TimeEntryModel[],
-): SagaIterator<TimeEntryModel[]> {
+  sourceTimeEntries: TimeEntry[],
+): SagaIterator<TimeEntry[]> {
   return yield call(createEntitiesForTool, {
     toolName: ToolName.Clockify,
     sourceRecords: sourceTimeEntries,
@@ -56,7 +56,7 @@ export function* createClockifyTimeEntriesSaga(
  * Deletes all specified source time entries from Clockify.
  */
 export function* deleteClockifyTimeEntriesSaga(
-  sourceTimeEntries: TimeEntryModel[],
+  sourceTimeEntries: TimeEntry[],
 ): SagaIterator {
   yield call(deleteEntitiesForTool, {
     toolName: ToolName.Clockify,
@@ -69,9 +69,7 @@ export function* deleteClockifyTimeEntriesSaga(
  * Fetches all time entries in Clockify workspaces and returns array of
  * transformed time entries.
  */
-export function* fetchClockifyTimeEntriesSaga(): SagaIterator<
-  TimeEntryModel[]
-> {
+export function* fetchClockifyTimeEntriesSaga(): SagaIterator<TimeEntry[]> {
   return yield call(fetchEntitiesForTool, {
     toolName: ToolName.Clockify,
     apiFetchFunc: fetchClockifyTimeEntriesInWorkspace,
@@ -83,9 +81,9 @@ export function* fetchClockifyTimeEntriesSaga(): SagaIterator<
  * @see https://clockify.me/developers-api#operation--v1-workspaces--workspaceId--timeEntries-post
  */
 function* createClockifyTimeEntry(
-  sourceTimeEntry: TimeEntryModel,
+  sourceTimeEntry: TimeEntry,
   targetWorkspaceId: string,
-): SagaIterator<TimeEntryModel> {
+): SagaIterator<TimeEntry> {
   const projectIdToLinkedId = yield select(projectIdToLinkedIdSelector);
   const taskIdToLinkedId = yield select(taskIdToLinkedIdSelector);
 
@@ -137,9 +135,7 @@ function* createClockifyTimeEntry(
  * Deletes the specified Clockify time entry.
  * @see https://clockify.me/developers-api#operation--v1-workspaces--workspaceId--time-entries--id--delete
  */
-function* deleteClockifyTimeEntry(
-  sourceTimeEntry: TimeEntryModel,
-): SagaIterator {
+function* deleteClockifyTimeEntry(sourceTimeEntry: TimeEntry): SagaIterator {
   const { workspaceId, id } = sourceTimeEntry;
   yield call(
     fetchObject,
@@ -154,7 +150,7 @@ function* deleteClockifyTimeEntry(
  */
 function* fetchClockifyTimeEntriesInWorkspace(
   workspaceId: string,
-): SagaIterator<TimeEntryModel[]> {
+): SagaIterator<TimeEntry[]> {
   const credentialsByToolName = yield select(credentialsByToolNameSelector);
   const clockifyUserId = credentialsByToolName?.clockify?.userId;
   if (!clockifyUserId) {
@@ -172,7 +168,7 @@ function* fetchClockifyTimeEntriesInWorkspace(
 
 function transformFromResponse(
   timeEntry: ClockifyTimeEntryResponseModel,
-): TimeEntryModel {
+): TimeEntry {
   const startTime = getTime(timeEntry, "start");
   const clockifyTags = R.propOr<
     ClockifyTagResponseModel[],

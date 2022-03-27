@@ -4,7 +4,7 @@ import type {
   EntityGroup,
   FetchStatus,
   ToolAction,
-  ToolNameByMappingModel,
+  ToolNameByMapping,
 } from "~/typeDefs";
 
 export const createAllEntities = createAsyncAction(
@@ -31,7 +31,7 @@ export const updateToolAction = createAction(
 
 export const updateToolNameByMapping = createAction(
   "@allEntities/UPDATE_TOOL_NAME_BY_MAPPING",
-)<ToolNameByMappingModel>();
+)<ToolNameByMapping>();
 
 export const flushAllEntities = createAction(
   "@allEntities/FLUSH_ALL_ENTITIES",

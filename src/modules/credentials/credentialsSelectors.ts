@@ -5,10 +5,10 @@ import {
   FetchStatus,
   Mapping,
   ToolName,
-  type CredentialsByMappingModel,
-  type CredentialsModel,
+  type CredentialsByMapping,
+  type Credentials,
   type ReduxState,
-  type ValidationErrorsByMappingModel,
+  type ValidationErrorsByMapping,
 } from "~/typeDefs";
 
 export const validationFetchStatusSelector = (state: ReduxState): FetchStatus =>
@@ -16,7 +16,7 @@ export const validationFetchStatusSelector = (state: ReduxState): FetchStatus =>
 
 export const validationErrorsByMappingSelector = createSelector(
   (state: ReduxState) => state.credentials.validationErrorsByMapping,
-  (validationErrorsByMapping): ValidationErrorsByMappingModel =>
+  (validationErrorsByMapping): ValidationErrorsByMapping =>
     validationErrorsByMapping,
 );
 
@@ -39,7 +39,7 @@ const targetCredentialsSelector = createSelector(
 export const credentialsByMappingSelector = createSelector(
   sourceCredentialsSelector,
   targetCredentialsSelector,
-  (sourceCredentials, targetCredentials): CredentialsByMappingModel => ({
+  (sourceCredentials, targetCredentials): CredentialsByMapping => ({
     [Mapping.Source]: sourceCredentials,
     [Mapping.Target]: targetCredentials,
   }),
@@ -53,9 +53,9 @@ export const credentialsByToolNameSelector = createSelector(
     toolNameByMapping,
     sourceCredentials,
     targetCredentials,
-  ): Record<ToolName, CredentialsModel> =>
+  ): Record<ToolName, Credentials> =>
     ({
       [toolNameByMapping[Mapping.Source]]: sourceCredentials,
       [toolNameByMapping[Mapping.Target]]: targetCredentials,
-    } as Record<ToolName, CredentialsModel>),
+    } as Record<ToolName, Credentials>),
 );

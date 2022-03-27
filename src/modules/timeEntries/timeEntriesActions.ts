@@ -1,12 +1,12 @@
 import { createAction, createAsyncAction } from "typesafe-actions";
 
-import type { Mapping, TimeEntriesByIdModel } from "~/typeDefs";
+import type { Mapping, TimeEntry } from "~/typeDefs";
 
 export const createTimeEntries = createAsyncAction(
   "@timeEntries/CREATE_TIME_ENTRIES_REQUEST",
   "@timeEntries/CREATE_TIME_ENTRIES_SUCCESS",
   "@timeEntries/CREATE_TIME_ENTRIES_FAILURE",
-)<void, Record<Mapping, TimeEntriesByIdModel>, void>();
+)<void, Record<Mapping, Dictionary<TimeEntry>>, void>();
 
 export const deleteTimeEntries = createAsyncAction(
   "@timeEntries/DELETE_TIME_ENTRIES_REQUEST",
@@ -18,7 +18,7 @@ export const fetchTimeEntries = createAsyncAction(
   "@timeEntries/FETCH_TIME_ENTRIES_REQUEST",
   "@timeEntries/FETCH_TIME_ENTRIES_SUCCESS",
   "@timeEntries/FETCH_TIME_ENTRIES_FAILURE",
-)<void, Record<Mapping, TimeEntriesByIdModel>, void>();
+)<void, Record<Mapping, Dictionary<TimeEntry>>, void>();
 
 export const flipIsTimeEntryIncluded = createAction(
   "@timeEntries/FLIP_IS_INCLUDED",

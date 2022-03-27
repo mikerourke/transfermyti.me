@@ -1,11 +1,11 @@
 <script lang="ts">
-  import type { WorkspaceModel } from "~/typeDefs";
+  import type { Workspace } from "~/typeDefs";
 
   import AlertDialog from "~/components/AlertDialog.svelte";
 
   export let open: boolean;
   export let targetToolDisplayName: string;
-  export let workspaces: WorkspaceModel[];
+  export let workspaces: Workspace[];
 </script>
 
 <style>

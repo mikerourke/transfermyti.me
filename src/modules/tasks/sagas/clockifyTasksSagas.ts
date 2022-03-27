@@ -15,7 +15,7 @@ import {
   projectsByWorkspaceIdByToolNameSelector,
 } from "~/modules/projects/projectsSelectors";
 import { userIdToLinkedIdSelector } from "~/modules/users/usersSelectors";
-import { EntityGroup, ToolName, type TaskModel } from "~/typeDefs";
+import { EntityGroup, ToolName, type Task } from "~/typeDefs";
 
 type ClockifyTaskStatus = "ACTIVE" | "DONE";
 
@@ -33,8 +33,8 @@ export interface ClockifyTaskResponseModel {
  * transformed tasks.
  */
 export function* createClockifyTasksSaga(
-  sourceTasks: TaskModel[],
-): SagaIterator<TaskModel[]> {
+  sourceTasks: Task[],
+): SagaIterator<Task[]> {
   return yield call(createEntitiesForTool, {
     toolName: ToolName.Clockify,
     sourceRecords: sourceTasks,
@@ -45,9 +45,7 @@ export function* createClockifyTasksSaga(
 /**
  * Deletes all specified source tasks from Clockify.
  */
-export function* deleteClockifyTasksSaga(
-  sourceTasks: TaskModel[],
-): SagaIterator {
+export function* deleteClockifyTasksSaga(sourceTasks: Task[]): SagaIterator {
   yield call(deleteEntitiesForTool, {
     toolName: ToolName.Clockify,
     sourceRecords: sourceTasks,
@@ -71,9 +69,9 @@ export function* fetchClockifyTasksSaga(): SagaIterator {
  * @see https://clockify.me/developers-api#operation--v1-workspaces--workspaceId--tasks-post
  */
 function* createClockifyTask(
-  sourceTask: TaskModel,
+  sourceTask: Task,
   targetWorkspaceId: string,
-): SagaIterator<TaskModel> {
+): SagaIterator<Task> {
   const projectIdToLinkedId = yield select(projectIdToLinkedIdSelector);
   const targetProjectId = R.propOr<
     string | null,
@@ -117,7 +115,7 @@ function* createClockifyTask(
  * Deletes the specified Clockify task.
  * @see https://clockify.me/developers-api#operation--v1-workspaces--workspaceId--projects--projectId--tasks-delete
  */
-function* deleteClockifyTask(sourceTask: TaskModel): SagaIterator {
+function* deleteClockifyTask(sourceTask: Task): SagaIterator {
   const { workspaceId, projectId, id } = sourceTask;
   yield call(
     fetchObject,
@@ -132,7 +130,7 @@ function* deleteClockifyTask(sourceTask: TaskModel): SagaIterator {
  */
 function* fetchClockifyTasksInWorkspace(
   workspaceId: string,
-): SagaIterator<TaskModel[]> {
+): SagaIterator<Task[]> {
   const projectsByWorkspaceIdByToolName = yield select(
     projectsByWorkspaceIdByToolNameSelector,
   );
@@ -166,7 +164,7 @@ function* fetchClockifyTasksInWorkspace(
 function transformFromResponse(
   task: ClockifyTaskResponseModel,
   workspaceId: string,
-): TaskModel {
+): Task {
   return {
     id: task.id,
     name: task.name,

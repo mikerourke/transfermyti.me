@@ -12,7 +12,7 @@
     timeEntriesTotalCountsByTypeSelector,
   } from "~/modules/timeEntries/timeEntriesSelectors";
   import { dispatchAction, selectorToStore } from "~/redux/reduxToStore";
-  import { type TimeEntryTableViewModel, ToolAction } from "~/typeDefs";
+  import { type TimeEntryTableRecord, ToolAction } from "~/typeDefs";
 
   import AccordionPanel from "~/components/AccordionPanel.svelte";
   import InclusionsTableTitle from "~/components/InclusionsTableTitle.svelte";
@@ -39,7 +39,7 @@
     $totalCountsByType.isIncluded + $totalCountsByType.existsInTarget ===
     recordCount;
 
-  let nonExistingRecords: TimeEntryTableViewModel[];
+  let nonExistingRecords: TimeEntryTableRecord[];
   $: nonExistingRecords = $timeEntries.filter(
     ({ existsInTarget }) => !existsInTarget,
   );
