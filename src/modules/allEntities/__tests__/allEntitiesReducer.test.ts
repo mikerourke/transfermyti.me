@@ -73,9 +73,9 @@ describe("within allEntitiesReducer", () => {
         expectedStatus: FetchStatus.Error,
       },
       {
-        name: "when the pushAllChangesFetchStatusChanged action is dispatched",
+        name: "when the pushAllChangesFetchStatusUpdated action is dispatched",
         initialStatus: FetchStatus.InProcess,
-        action: allEntitiesActions.pushAllChangesFetchStatusChanged(FetchStatus.Pending),
+        action: allEntitiesActions.pushAllChangesFetchStatusUpdated(FetchStatus.Pending),
         expectedStatus: FetchStatus.Pending,
       },
       {
@@ -119,9 +119,9 @@ describe("within allEntitiesReducer", () => {
         expectedStatus: FetchStatus.Error,
       },
       {
-        name: "when the updateFetchAllFetchStatus action is dispatched",
+        name: "when the fetchAllFetchStatusUpdated action is dispatched",
         initialStatus: FetchStatus.InProcess,
-        action: allEntitiesActions.fetchAllFetchStatusChanged(FetchStatus.Pending),
+        action: allEntitiesActions.fetchAllFetchStatusUpdated(FetchStatus.Pending),
         expectedStatus: FetchStatus.Pending,
       },
       {
@@ -150,17 +150,17 @@ describe("within allEntitiesReducer", () => {
     },
     [
       {
-        name: "the toolActionChanged action updates state.toolAction",
+        name: "the toolActionUpdated action updates state.toolAction",
         initialStateChange: { toolAction: ToolAction.None },
-        action: allEntitiesActions.toolActionChanged(ToolAction.Delete),
+        action: allEntitiesActions.toolActionUpdated(ToolAction.Delete),
         expectedStateChange: { toolAction: ToolAction.Delete },
       },
       {
-        name: "the toolNameByMappingChanged action updates state.toolNameByMapping",
+        name: "the toolNameByMappingUpdated action updates state.toolNameByMapping",
         initialStateChange: {
           toolNameByMapping: initialState.toolNameByMapping,
         },
-        action: allEntitiesActions.toolNameByMappingChanged({
+        action: allEntitiesActions.toolNameByMappingUpdated({
           source: ToolName.Toggl,
           target: ToolName.Clockify,
         }),
@@ -178,9 +178,9 @@ describe("within allEntitiesReducer", () => {
         expectedStateChange: { areExistsInTargetShown: false },
       },
       {
-        name: "the entityGroupInProcessChanged action updates state.entityGroupInProcess",
+        name: "the entityGroupInProcessUpdated action updates state.entityGroupInProcess",
         initialStateChange: { entityGroupInProcess: null },
-        action: allEntitiesActions.entityGroupInProcessChanged(EntityGroup.Clients),
+        action: allEntitiesActions.entityGroupInProcessUpdated(EntityGroup.Clients),
         expectedStateChange: { entityGroupInProcess: EntityGroup.Clients },
       },
       {

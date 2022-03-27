@@ -24,6 +24,6 @@ export const isClientIncludedToggled = createAction(
   "@clients/isClientIncludedToggled",
 )<string>();
 
-export const areAllClientsIncludedChanged = createAction(
-  "@clients/areAllClientsIncludedChanged",
+export const areAllClientsIncludedUpdated = createAction(
+  "@clients/areAllClientsIncludedUpdated",
 )<boolean>();

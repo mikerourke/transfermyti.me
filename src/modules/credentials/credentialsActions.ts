@@ -8,28 +8,28 @@ import type {
   ValidationErrorsByMapping,
 } from "~/typeDefs";
 
-export const storeCredentials = createAction(
-  "@credentials/STORE_CREDENTIALS",
-)<void>();
-
 export const validateCredentials = createAsyncAction(
-  "@credentials/VALIDATE_CREDENTIALS_REQUEST",
-  "@credentials/VALIDATE_CREDENTIALS_SUCCESS",
-  "@credentials/VALIDATE_CREDENTIALS_FAILURE",
+  "@credentials/validateCredentialsRequest",
+  "@credentials/validateCredentialsSuccess",
+  "@credentials/validateCredentialsFailure",
 )<void, CredentialsByMapping, ValidationErrorsByMapping>();
 
-export const flushCredentials = createAction(
-  "@credentials/FLUSH_CREDENTIALS",
+export const credentialsStored = createAction(
+  "@credentials/credentialsStored",
 )<void>();
 
-export const updateCredentials = createAction(
-  "@credentials/UPDATE_CREDENTIALS",
+export const credentialsFlushed = createAction(
+  "@credentials/credentialsFlushed",
+)<void>();
+
+export const credentialsUpdated = createAction(
+  "@credentials/credentialsUpdated",
 )<PartialCredentialsUpdate>();
 
 export const apiKeysUpdated = createAction("@credentials/apiKeysUpdated")<
   Record<Mapping, string>
 >();
 
-export const updateValidationFetchStatus = createAction(
-  "@credentials/UPDATE_VALIDATION_FETCH_STATUS",
+export const validationFetchStatusUpdated = createAction(
+  "@credentials/validationFetchStatusUpdated",
 )<FetchStatus>();

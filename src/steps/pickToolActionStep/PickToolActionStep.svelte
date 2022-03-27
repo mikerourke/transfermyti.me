@@ -1,7 +1,7 @@
 <script lang="ts">
   import {
-    toolActionChanged,
-    toolNameByMappingChanged,
+    toolActionUpdated,
+    toolNameByMappingUpdated,
   } from "~/modules/allEntities/allEntitiesActions";
   import {
     navigateToWorkflowStep,
@@ -23,9 +23,9 @@
   ): void {
     const { action, source, target } = event.detail;
 
-    dispatchAction(toolActionChanged(action));
+    dispatchAction(toolActionUpdated(action));
 
-    dispatchAction(toolNameByMappingChanged({ source, target }));
+    dispatchAction(toolNameByMappingUpdated({ source, target }));
 
     navigateToWorkflowStep(WorkflowStep.EnterApiKeys);
   }

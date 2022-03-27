@@ -25,12 +25,12 @@ export const fetchAllEntities = createAsyncAction(
   "@allEntities/fetchAllEntitiesFailure",
 )<undefined, undefined, undefined>();
 
-export const toolActionChanged = createAction(
-  "@allEntities/toolActionChanged",
+export const toolActionUpdated = createAction(
+  "@allEntities/toolActionUpdated",
 )<ToolAction>();
 
-export const toolNameByMappingChanged = createAction(
-  "@allEntities/toolNameByMappingChanged",
+export const toolNameByMappingUpdated = createAction(
+  "@allEntities/toolNameByMappingUpdated",
 )<ToolNameByMapping>();
 
 export const allEntitiesFlushed = createAction(
@@ -41,16 +41,16 @@ export const isExistsInTargetShownToggled = createAction(
   "@allEntities/isExistsInTargetShownToggled",
 )<undefined>();
 
-export const fetchAllFetchStatusChanged = createAction(
-  "@allEntities/fetchAllFetchStatusChanged",
+export const fetchAllFetchStatusUpdated = createAction(
+  "@allEntities/fetchAllFetchStatusUpdated",
 )<FetchStatus>();
 
-export const pushAllChangesFetchStatusChanged = createAction(
-  "@allEntities/pushAllChangesFetchStatusChanged",
+export const pushAllChangesFetchStatusUpdated = createAction(
+  "@allEntities/pushAllChangesFetchStatusUpdated",
 )<FetchStatus>();
 
-export const entityGroupInProcessChanged = createAction(
-  "@allEntities/entityGroupInProcessChanged",
+export const entityGroupInProcessUpdated = createAction(
+  "@allEntities/entityGroupInProcessUpdated",
 )<EntityGroup | null>();
 
 export const transferCountsByEntityGroupReset = createAction(

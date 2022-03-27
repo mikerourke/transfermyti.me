@@ -1,6 +1,6 @@
 <script lang="ts">
   import {
-    areAllClientsIncludedChanged,
+    areAllClientsIncludedUpdated,
     isClientIncludedToggled,
   } from "~/modules/clients/clientsActions";
   import {
@@ -17,7 +17,7 @@
   const totalCountsByType = selectorToStore(clientsTotalCountsByTypeSelector);
 
   function handleToggleAll(event: CustomEvent<boolean>): void {
-    dispatchAction(areAllClientsIncludedChanged(event.detail));
+    dispatchAction(areAllClientsIncludedUpdated(event.detail));
   }
 
   function handleToggleOne(event: CustomEvent<string>): void {

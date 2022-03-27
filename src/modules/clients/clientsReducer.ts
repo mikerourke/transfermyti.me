@@ -66,7 +66,7 @@ export const clientsReducer = createReducer<ClientsState, ClientsAction>(
     R.over(R.lensPath([Mapping.Source, payload, "isIncluded"]), R.not, state),
   )
   .handleAction(
-    clientsActions.areAllClientsIncludedChanged,
+    clientsActions.areAllClientsIncludedUpdated,
     (state, { payload }) => ({
       ...state,
       source: updateAreAllRecordsIncluded(state.source, payload),

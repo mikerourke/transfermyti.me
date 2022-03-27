@@ -110,7 +110,7 @@ describe("within clientsReducer", () => {
     expect(result.source[TEST_CLIENT_ID].isIncluded).toBe(true);
   });
 
-  test(`the areAllClientsIncludedChanged action sets the "isIncluded" value of all records to payload`, () => {
+  test(`the areAllClientsIncludedUpdated action sets the "isIncluded" value of all records to payload`, () => {
     const updatedState = {
       ...TEST_CLIENTS_STATE,
       source: {
@@ -135,7 +135,7 @@ describe("within clientsReducer", () => {
       },
       target: {},
     };
-    const result = clientsReducer(updatedState, clientsActions.areAllClientsIncludedChanged(true));
+    const result = clientsReducer(updatedState, clientsActions.areAllClientsIncludedUpdated(true));
 
     expect(result.source["3001"].isIncluded).toEqual(true);
     expect(result.source["3002"].isIncluded).toEqual(true);

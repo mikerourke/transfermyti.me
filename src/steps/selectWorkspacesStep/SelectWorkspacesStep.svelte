@@ -1,7 +1,7 @@
 <script lang="ts">
   import { onMount, tick } from "svelte";
 
-  import { fetchAllFetchStatusChanged } from "~/modules/allEntities/allEntitiesActions";
+  import { fetchAllFetchStatusUpdated } from "~/modules/allEntities/allEntitiesActions";
   import {
     targetToolDisplayNameSelector,
     toolActionSelector,
@@ -113,7 +113,7 @@
       workspacesActions.updateActiveWorkspaceId($firstIncludedWorkspaceId),
     );
 
-    dispatchAction(fetchAllFetchStatusChanged(FetchStatus.Pending));
+    dispatchAction(fetchAllFetchStatusUpdated(FetchStatus.Pending));
 
     await tick();
 

@@ -8,8 +8,8 @@
   } from "~/modules/app/workflowStep";
   import {
     apiKeysUpdated,
-    storeCredentials,
-    updateValidationFetchStatus,
+    credentialsStored,
+    validationFetchStatusUpdated,
     validateCredentials,
   } from "~/modules/credentials/credentialsActions";
   import {
@@ -78,7 +78,7 @@
   ];
 
   onMount(() => {
-    dispatchAction(storeCredentials());
+    dispatchAction(credentialsStored());
 
     setFocusTo("input:first-of-type");
 
@@ -107,7 +107,7 @@
   }
 
   function handleResetClick(): void {
-    dispatchAction(updateValidationFetchStatus(FetchStatus.Pending));
+    dispatchAction(validationFetchStatusUpdated(FetchStatus.Pending));
 
     values = { source: "", target: "" };
 

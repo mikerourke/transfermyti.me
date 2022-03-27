@@ -101,14 +101,14 @@ export const allEntitiesReducer = createReducer<
     entityGroupInProcess: null,
   }))
   .handleAction(
-    allEntitiesActions.pushAllChangesFetchStatusChanged,
+    allEntitiesActions.pushAllChangesFetchStatusUpdated,
     (state, { payload }) => ({
       ...state,
       pushAllChangesFetchStatus: payload,
     }),
   )
   .handleAction(
-    allEntitiesActions.fetchAllFetchStatusChanged,
+    allEntitiesActions.fetchAllFetchStatusUpdated,
     (state, { payload }) => ({
       ...state,
       fetchAllFetchStatus: payload,
@@ -119,12 +119,12 @@ export const allEntitiesReducer = createReducer<
     pushAllChangesFetchStatus: FetchStatus.Pending,
     fetchAllFetchStatus: FetchStatus.Pending,
   }))
-  .handleAction(allEntitiesActions.toolActionChanged, (state, { payload }) => ({
+  .handleAction(allEntitiesActions.toolActionUpdated, (state, { payload }) => ({
     ...state,
     toolAction: payload,
   }))
   .handleAction(
-    allEntitiesActions.toolNameByMappingChanged,
+    allEntitiesActions.toolNameByMappingUpdated,
     (state, { payload }) => ({
       ...state,
       toolNameByMapping: {
@@ -138,7 +138,7 @@ export const allEntitiesReducer = createReducer<
     areExistsInTargetShown: !state.areExistsInTargetShown,
   }))
   .handleAction(
-    allEntitiesActions.entityGroupInProcessChanged,
+    allEntitiesActions.entityGroupInProcessUpdated,
     (state, { payload }) => ({
       ...state,
       entityGroupInProcess: payload,

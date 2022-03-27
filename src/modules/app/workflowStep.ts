@@ -2,9 +2,9 @@ import { writable } from "svelte/store";
 
 import {
   allEntitiesFlushed,
-  pushAllChangesFetchStatusChanged,
+  pushAllChangesFetchStatusUpdated,
 } from "~/modules/allEntities/allEntitiesActions";
-import { updateValidationFetchStatus } from "~/modules/credentials/credentialsActions";
+import { validationFetchStatusUpdated } from "~/modules/credentials/credentialsActions";
 import { dispatchAction } from "~/redux/reduxToStore";
 import { FetchStatus } from "~/typeDefs";
 
@@ -26,11 +26,11 @@ export function navigateToWorkflowStep(workflowStep: WorkflowStep): void {
   }
 
   if (workflowStep !== WorkflowStep.EnterApiKeys) {
-    dispatchAction(updateValidationFetchStatus(FetchStatus.Pending));
+    dispatchAction(validationFetchStatusUpdated(FetchStatus.Pending));
   }
 
   if (workflowStep !== WorkflowStep.PerformToolAction) {
-    dispatchAction(pushAllChangesFetchStatusChanged(FetchStatus.Pending));
+    dispatchAction(pushAllChangesFetchStatusUpdated(FetchStatus.Pending));
   }
 
   setTimeout(() => {
