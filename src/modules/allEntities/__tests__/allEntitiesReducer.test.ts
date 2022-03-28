@@ -1,7 +1,7 @@
 import cases from "jest-in-case";
 
+import { FAKES } from "~/jestUtilities";
 import * as allEntitiesActions from "~/modules/allEntities/allEntitiesActions";
-import { invalidAction, state } from "~/redux/__mocks__/mockStoreWithState";
 import { EntityGroup, FetchStatus, ToolAction, ToolName } from "~/typeDefs";
 
 import { allEntitiesReducer, initialState } from "../allEntitiesReducer";
@@ -10,15 +10,17 @@ const DEFAULT_TRANSFER_COUNTS = {
   ...initialState.transferCountsByEntityGroup,
 };
 
+const { REDUX_STATE, INVALID_ACTION } = FAKES;
+
 describe("within allEntitiesReducer", () => {
   test("returns input state if an invalid action type is passed to the reducer", () => {
-    const result = allEntitiesReducer(initialState, invalidAction as AnyValid);
+    const result = allEntitiesReducer(initialState, INVALID_ACTION);
 
     expect(result).toEqual(initialState);
   });
 
   test("returns input state if no state is passed to the reducer", () => {
-    const result = allEntitiesReducer(undefined as AnyValid, invalidAction as AnyValid);
+    const result = allEntitiesReducer(undefined, INVALID_ACTION);
 
     expect(result).toEqual(initialState);
   });
@@ -27,7 +29,7 @@ describe("within allEntitiesReducer", () => {
     "the pushAllChangesFetchStatus is set to the correct value based on the dispatched action",
     (options) => {
       const updatedState = {
-        ...state.allEntities,
+        ...REDUX_STATE.allEntities,
         entityGroupInProcess: EntityGroup.Projects,
         pushAllChangesFetchStatus: options.initialStatus,
       };
@@ -91,7 +93,7 @@ describe("within allEntitiesReducer", () => {
     "the fetchAllFetchStatus is set to the correct value based on the dispatched action",
     (options) => {
       const updatedState = {
-        ...state.allEntities,
+        ...REDUX_STATE.allEntities,
         entityGroupInProcess: EntityGroup.Projects,
         fetchAllFetchStatus: options.initialStatus,
       };
@@ -137,10 +139,12 @@ describe("within allEntitiesReducer", () => {
     "the correct state value is updated based on the dispatched action",
     (options) => {
       const updatedState = {
-        ...state.allEntities,
+        ...REDUX_STATE.allEntities,
         ...options.initialStateChange,
       };
+
       const result = allEntitiesReducer(updatedState, options.action);
+
       const expected = {
         ...updatedState,
         ...options.expectedStateChange,

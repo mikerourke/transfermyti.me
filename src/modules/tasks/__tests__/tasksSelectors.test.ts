@@ -1,122 +1,61 @@
 import cases from "jest-in-case";
 
-import { state } from "~/redux/__mocks__/mockStoreWithState";
+import { FAKES } from "~/jestUtilities";
 
 import * as tasksSelectors from "../tasksSelectors";
 
-const TEST_STATE = {
-  ...state,
+const MOCK_STATE = {
+  ...FAKES.REDUX_STATE,
   tasks: {
+    ...FAKES.REDUX_STATE.tasks,
     source: {
+      ...FAKES.REDUX_STATE.tasks.source,
       "7001": {
-        id: "7001",
-        name: "Task 1",
-        estimate: "PT2H",
-        projectId: "2001",
-        assigneeIds: ["123123"],
-        isActive: true,
-        workspaceId: "1001",
+        ...FAKES.REDUX_STATE.tasks.source["7001"],
         entryCount: 2,
         linkedId: "clock-task-01",
         isIncluded: false,
-        memberOf: "tasks",
       },
       "7002": {
-        id: "7002",
-        name: "Task 2",
-        estimate: "PT0M",
-        projectId: "2001",
-        assigneeIds: [],
-        isActive: true,
-        workspaceId: "1001",
+        ...FAKES.REDUX_STATE.tasks.source["7002"],
         entryCount: 1,
         linkedId: "clock-task-02",
         isIncluded: false,
-        memberOf: "tasks",
       },
       "7003": {
-        id: "7003",
-        name: "Task 3",
-        estimate: "PT6H",
-        projectId: "2002",
-        assigneeIds: [],
-        isActive: true,
-        workspaceId: "1001",
+        ...FAKES.REDUX_STATE.tasks.source["7003"],
         entryCount: 1,
         linkedId: null,
         isIncluded: true,
-        memberOf: "tasks",
       },
       "7004": {
-        id: "7004",
-        name: "Task 4",
-        estimate: "PT6H",
-        projectId: "2003",
-        assigneeIds: [],
-        isActive: false,
-        workspaceId: "1001",
+        ...FAKES.REDUX_STATE.tasks.source["7004"],
         entryCount: 1,
         linkedId: null,
         isIncluded: true,
-        memberOf: "tasks",
+        isActive: false,
       },
       "7005": {
-        id: "7005",
-        name: "Task 5",
-        estimate: "PT6H",
-        projectId: "2004",
-        assigneeIds: [],
-        isActive: true,
-        workspaceId: "1001",
+        ...FAKES.REDUX_STATE.tasks.source["7005"],
         entryCount: 3,
         linkedId: null,
         isIncluded: true,
-        memberOf: "tasks",
       },
     },
-    target: {
-      "clock-task-01": {
-        id: "clock-task-01",
-        name: "Task 1",
-        estimate: "PT1H30M15S",
-        projectId: "clock-project-01",
-        assigneeIds: ["clock-user-01"],
-        isActive: true,
-        workspaceId: "clock-workspace-01",
-        entryCount: 0,
-        linkedId: "7001",
-        isIncluded: false,
-        memberOf: "tasks",
-      },
-      "clock-task-02": {
-        id: "clock-task-02",
-        name: "Task 2",
-        estimate: "PT1H",
-        projectId: "clock-project-01",
-        assigneeIds: ["clock-user-01"],
-        isActive: false,
-        workspaceId: "clock-workspace-01",
-        entryCount: 0,
-        linkedId: "7002",
-        isIncluded: false,
-        memberOf: "tasks",
-      },
-    },
-    isFetching: false,
   },
 };
 
 describe("within tasksSelectors", () => {
   test("the sourceTasksByIdSelector returns state.source", () => {
-    const result = tasksSelectors.sourceTasksByIdSelector(TEST_STATE);
+    const result = tasksSelectors.sourceTasksByIdSelector(MOCK_STATE);
 
-    expect(result).toEqual(TEST_STATE.tasks.source);
+    expect(result).toEqual(MOCK_STATE.tasks.source);
   });
 
   cases(
     "the selectors match their snapshots",
     (options) => {
-      const result = options.selector(TEST_STATE);
+      const result = options.selector(MOCK_STATE);
 
       expect(result).toMatchSnapshot();
     },
@@ -145,7 +84,7 @@ describe("within tasksSelectors", () => {
   );
 
   test("the includedSourceTasksCountSelector returns the count of included source tasks", () => {
-    const result = tasksSelectors.includedSourceTasksCountSelector(TEST_STATE);
+    const result = tasksSelectors.includedSourceTasksCountSelector(MOCK_STATE);
 
     expect(result).toBe(3);
   });
@@ -154,12 +93,13 @@ describe("within tasksSelectors", () => {
     "the tasksForInclusionsTableSelector matches its snapshot based on state.allEntities.areExistsInTargetShown",
     (options) => {
       const updatedState = {
-        ...TEST_STATE,
+        ...MOCK_STATE,
         allEntities: {
-          ...TEST_STATE.allEntities,
+          ...MOCK_STATE.allEntities,
           areExistsInTargetShown: options.areExistsInTargetShown,
         },
       };
+
       const result = tasksSelectors.tasksForInclusionsTableSelector(updatedState);
 
       expect(result).toMatchSnapshot();

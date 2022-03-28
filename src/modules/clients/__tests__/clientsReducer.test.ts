@@ -1,29 +1,27 @@
 import cases from "jest-in-case";
 import { lensProp, set } from "ramda";
 
+import { FAKES } from "~/jestUtilities";
 import * as clientsActions from "~/modules/clients/clientsActions";
-import { invalidAction, state } from "~/redux/__mocks__/mockStoreWithState";
 
 import { clientsReducer, initialState } from "../clientsReducer";
 
-const TEST_CLIENTS_STATE = { ...state.clients };
+const { INVALID_ACTION, REDUX_STATE, TOGGL_CLIENT, TOGGL_CLIENT_ID } = FAKES;
 
-const TEST_CLIENT_ID = "3001";
-
-const TEST_PAYLOAD = {
-  source: { ...TEST_CLIENTS_STATE.source },
-  target: { ...TEST_CLIENTS_STATE.target },
+const MOCK_PAYLOAD = {
+  source: { ...REDUX_STATE.clients.source },
+  target: { ...REDUX_STATE.clients.target },
 };
 
 describe("within clientsReducer", () => {
   test("returns input state if an invalid action type is passed to the reducer", () => {
-    const result = clientsReducer(initialState, invalidAction as AnyValid);
+    const result = clientsReducer(initialState, INVALID_ACTION);
 
     expect(result).toEqual(initialState);
   });
 
   test("returns input state if no state is passed to the reducer", () => {
-    const result = clientsReducer(undefined as AnyValid, invalidAction as AnyValid);
+    const result = clientsReducer(undefined, INVALID_ACTION);
 
     expect(result).toEqual(initialState);
   });
@@ -32,7 +30,7 @@ describe("within clientsReducer", () => {
     "the isFetching is set to the correct value based on the dispatched action",
     (options) => {
       const updatedState = {
-        ...TEST_CLIENTS_STATE,
+        ...REDUX_STATE.clients,
         isFetching: options.initialStatus,
       };
       const result = clientsReducer(updatedState, options.action);
@@ -43,13 +41,13 @@ describe("within clientsReducer", () => {
       {
         name: "when the createClients.success action is dispatched",
         initialStatus: true,
-        action: clientsActions.createClients.success(TEST_PAYLOAD),
+        action: clientsActions.createClients.success(MOCK_PAYLOAD),
         expectedStatus: false,
       },
       {
         name: "when the fetchClients.success action is dispatched",
         initialStatus: true,
-        action: clientsActions.fetchClients.success(TEST_PAYLOAD),
+        action: clientsActions.fetchClients.success(MOCK_PAYLOAD),
         expectedStatus: false,
       },
       {
@@ -95,54 +93,38 @@ describe("within clientsReducer", () => {
     const updatedState = set(
       lensProp("source"),
       {
-        [TEST_CLIENT_ID]: {
-          ...TEST_CLIENTS_STATE.source[TEST_CLIENT_ID],
+        [TOGGL_CLIENT_ID]: {
+          ...REDUX_STATE.clients.source[TOGGL_CLIENT_ID],
           isIncluded: false,
         },
       },
-      TEST_CLIENTS_STATE,
-    );
-    const result = clientsReducer(
-      updatedState,
-      clientsActions.isClientIncludedToggled(TEST_CLIENT_ID),
+      REDUX_STATE.clients,
     );
 
-    expect(result.source[TEST_CLIENT_ID].isIncluded).toBe(true);
+    const result = clientsReducer(
+      updatedState,
+      clientsActions.isClientIncludedToggled(TOGGL_CLIENT_ID),
+    );
+
+    expect(result.source[TOGGL_CLIENT_ID].isIncluded).toBe(true);
   });
 
   test(`the areAllClientsIncludedUpdated action sets the "isIncluded" value of all records to payload`, () => {
     const updatedState = {
-      ...TEST_CLIENTS_STATE,
+      ...REDUX_STATE.clients,
       source: {
-        "3001": {
-          id: "3001",
-          name: "Test Client A",
-          workspaceId: "1001",
-          entryCount: 3,
-          linkedId: null,
-          isIncluded: false,
-          memberOf: "clients",
-        },
-        "3002": {
-          id: "3002",
-          name: "Test Client B",
-          workspaceId: "1001",
-          entryCount: 3,
-          linkedId: null,
-          isIncluded: false,
-          memberOf: "clients",
-        },
+        [TOGGL_CLIENT_ID]: { ...TOGGL_CLIENT, isIncluded: false, linkedId: null },
       },
       target: {},
     };
+
     const result = clientsReducer(updatedState, clientsActions.areAllClientsIncludedUpdated(true));
 
-    expect(result.source["3001"].isIncluded).toEqual(true);
-    expect(result.source["3002"].isIncluded).toEqual(true);
+    expect(result.source[TOGGL_CLIENT_ID].isIncluded).toBe(true);
   });
 
   test("the deleteClients.success action resets state to initial state", () => {
-    const result = clientsReducer(state, clientsActions.deleteClients.success());
+    const result = clientsReducer(REDUX_STATE.clients, clientsActions.deleteClients.success());
 
     expect(result).toEqual(initialState);
   });

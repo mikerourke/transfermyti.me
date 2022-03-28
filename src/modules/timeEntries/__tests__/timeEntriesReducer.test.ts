@@ -1,29 +1,27 @@
 import cases from "jest-in-case";
 import { lensProp, set } from "ramda";
 
+import { FAKES } from "~/jestUtilities";
 import * as timeEntriesActions from "~/modules/timeEntries/timeEntriesActions";
-import { invalidAction, state } from "~/redux/__mocks__/mockStoreWithState";
 
 import { initialState, timeEntriesReducer } from "../timeEntriesReducer";
 
-const TEST_TIME_ENTRIES_STATE = { ...state.timeEntries };
+const { INVALID_ACTION, REDUX_STATE, TOGGL_TIME_ENTRY_ID } = FAKES;
 
-const TEST_TIME_ENTRY_ID = "8001";
-
-const TEST_PAYLOAD = {
-  source: { ...TEST_TIME_ENTRIES_STATE.source },
-  target: { ...TEST_TIME_ENTRIES_STATE.target },
+const MOCK_PAYLOAD = {
+  source: { ...REDUX_STATE.timeEntries.source },
+  target: { ...REDUX_STATE.timeEntries.target },
 };
 
 describe("within timeEntriesReducer", () => {
   test("returns input state if an invalid action type is passed to the reducer", () => {
-    const result = timeEntriesReducer(initialState, invalidAction as AnyValid);
+    const result = timeEntriesReducer(initialState, INVALID_ACTION);
 
     expect(result).toEqual(initialState);
   });
 
   test("returns input state if no state is passed to the reducer", () => {
-    const result = timeEntriesReducer(undefined as AnyValid, invalidAction as AnyValid);
+    const result = timeEntriesReducer(undefined, INVALID_ACTION);
 
     expect(result).toEqual(initialState);
   });
@@ -32,7 +30,7 @@ describe("within timeEntriesReducer", () => {
     "the isFetching is set to the correct value based on the dispatched action",
     (options) => {
       const updatedState = {
-        ...TEST_TIME_ENTRIES_STATE,
+        ...REDUX_STATE.timeEntries,
         isFetching: options.initialStatus,
       };
       const result = timeEntriesReducer(updatedState, options.action);
@@ -43,13 +41,13 @@ describe("within timeEntriesReducer", () => {
       {
         name: "when the createTimeEntries.success action is dispatched",
         initialStatus: true,
-        action: timeEntriesActions.createTimeEntries.success(TEST_PAYLOAD),
+        action: timeEntriesActions.createTimeEntries.success(MOCK_PAYLOAD),
         expectedStatus: false,
       },
       {
         name: "when the fetchTimeEntries.success action is dispatched",
         initialStatus: true,
-        action: timeEntriesActions.fetchTimeEntries.success(TEST_PAYLOAD),
+        action: timeEntriesActions.fetchTimeEntries.success(MOCK_PAYLOAD),
         expectedStatus: false,
       },
       {
@@ -92,7 +90,10 @@ describe("within timeEntriesReducer", () => {
   );
 
   test("the isDuplicateCheckEnabledToggled action flips the isDuplicateCheckEnabled value in state", () => {
-    const result = timeEntriesReducer(state, timeEntriesActions.isDuplicateCheckEnabledToggled());
+    const result = timeEntriesReducer(
+      { ...REDUX_STATE.timeEntries, isDuplicateCheckEnabled: false },
+      timeEntriesActions.isDuplicateCheckEnabledToggled(),
+    );
 
     expect(result.isDuplicateCheckEnabled).toBe(true);
   });
@@ -101,70 +102,41 @@ describe("within timeEntriesReducer", () => {
     const updatedState = set(
       lensProp("source"),
       {
-        [TEST_TIME_ENTRY_ID]: {
-          ...TEST_TIME_ENTRIES_STATE.source[TEST_TIME_ENTRY_ID],
+        [TOGGL_TIME_ENTRY_ID]: {
+          ...REDUX_STATE.timeEntries.source[TOGGL_TIME_ENTRY_ID],
           isIncluded: false,
         },
       },
-      TEST_TIME_ENTRIES_STATE,
-    );
-    const result = timeEntriesReducer(
-      updatedState,
-      timeEntriesActions.isTimeEntryIncludedToggled(TEST_TIME_ENTRY_ID),
+      REDUX_STATE.timeEntries,
     );
 
-    expect(result.source[TEST_TIME_ENTRY_ID].isIncluded).toBe(true);
+    const result = timeEntriesReducer(
+      updatedState,
+      timeEntriesActions.isTimeEntryIncludedToggled(TOGGL_TIME_ENTRY_ID),
+    );
+
+    expect(result.source[TOGGL_TIME_ENTRY_ID].isIncluded).toBe(true);
   });
 
   test(`the areAllTimeEntriesIncludedUpdated action sets the "isIncluded" value of all records to payload`, () => {
     const updatedState = {
-      ...TEST_TIME_ENTRIES_STATE,
+      ...REDUX_STATE.timeEntries,
       source: {
         "8001": {
-          id: "8001",
-          description: "This is a test entry (01)",
-          isBillable: false,
-          start: "2019-06-25T18:00:00.000Z",
-          end: "2019-06-25T23:00:00.000Z",
-          year: 2019,
-          isActive: false,
-          clientId: "3001",
-          projectId: "2001",
-          tagIds: ["4001", "4002"],
-          tagNames: ["tag-a", "tag-b"],
-          taskId: "7001",
-          userId: "6001",
-          userGroupIds: [],
-          workspaceId: "1001",
-          entryCount: 0,
+          ...REDUX_STATE.timeEntries.source["8001"],
           linkedId: null,
           isIncluded: true,
-          memberOf: "timeEntries",
         },
         "8002": {
-          id: "8002",
-          description: "This is a test entry (02)",
-          isBillable: false,
-          start: "2019-06-24T14:00:00.000Z",
-          end: "2019-06-24T22:00:00.000Z",
-          year: 2019,
-          isActive: false,
-          clientId: "3001",
-          projectId: "2001",
-          tagIds: [],
-          tagNames: [],
-          taskId: "7001",
-          userId: "6001",
-          userGroupIds: [],
-          workspaceId: "1001",
+          ...REDUX_STATE.timeEntries.source["8002"],
           entryCount: 0,
           linkedId: null,
           isIncluded: true,
-          memberOf: "timeEntries",
         },
       },
       target: {},
     };
+
     const result = timeEntriesReducer(
       updatedState,
       timeEntriesActions.areAllTimeEntriesIncludedUpdated(true),
@@ -175,7 +147,10 @@ describe("within timeEntriesReducer", () => {
   });
 
   test("the deleteTimeEntries.success action resets state to initial state", () => {
-    const result = timeEntriesReducer(state, timeEntriesActions.deleteTimeEntries.success());
+    const result = timeEntriesReducer(
+      REDUX_STATE.timeEntries,
+      timeEntriesActions.deleteTimeEntries.success(),
+    );
 
     expect(result).toEqual(initialState);
   });

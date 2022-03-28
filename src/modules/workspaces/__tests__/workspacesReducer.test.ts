@@ -1,23 +1,21 @@
 import cases from "jest-in-case";
 
+import { FAKES } from "~/jestUtilities";
 import { allEntitiesFlushed } from "~/modules/allEntities/allEntitiesActions";
 import * as workspacesActions from "~/modules/workspaces/workspacesActions";
-import { invalidAction, state } from "~/redux/__mocks__/mockStoreWithState";
-import { Mapping } from "~/typeDefs";
+import { EntityGroup, Mapping } from "~/typeDefs";
 
 import { initialState, workspacesReducer } from "../workspacesReducer";
 
-const TEST_WORKSPACES_STATE = { ...state.workspaces };
+const { INVALID_ACTION, REDUX_STATE, TOGGL_WORKSPACE_ID } = FAKES;
 
-const TEST_WORKSPACE_ID = "1001";
-
-const TEST_PAYLOAD = {
-  source: { ...TEST_WORKSPACES_STATE.source },
-  target: { ...TEST_WORKSPACES_STATE.target },
+const MOCK_PAYLOAD = {
+  source: { ...REDUX_STATE.workspaces.source },
+  target: { ...REDUX_STATE.workspaces.target },
 };
 
-const TEST_ALT_WORKSPACE = {
-  ...TEST_WORKSPACES_STATE.source[TEST_WORKSPACE_ID],
+const MOCK_ALT_WORKSPACE = {
+  ...REDUX_STATE.workspaces.source[TOGGL_WORKSPACE_ID],
   name: "Test Workspace 2",
   id: "1002",
   workspaceId: "1002",
@@ -28,19 +26,19 @@ const TEST_ALT_WORKSPACE = {
 
 describe("within workspacesReducer", () => {
   test("returns input state if an invalid action type is passed to the reducer", () => {
-    const result = workspacesReducer(initialState, invalidAction as AnyValid);
+    const result = workspacesReducer(initialState, INVALID_ACTION);
 
     expect(result).toEqual(initialState);
   });
 
   test("returns input state if no state is passed to the reducer", () => {
-    const result = workspacesReducer(undefined as AnyValid, invalidAction as AnyValid);
+    const result = workspacesReducer(undefined, INVALID_ACTION);
 
     expect(result).toEqual(initialState);
   });
 
   test("returns initial state when allEntitiesFlushed is dispatched", () => {
-    const result = workspacesReducer(TEST_WORKSPACES_STATE, allEntitiesFlushed());
+    const result = workspacesReducer(REDUX_STATE.workspaces, allEntitiesFlushed());
 
     expect(result).toEqual(initialState);
   });
@@ -49,9 +47,10 @@ describe("within workspacesReducer", () => {
     "the isFetching is set to the correct value based on the dispatched action",
     (options) => {
       const updatedState = {
-        ...TEST_WORKSPACES_STATE,
+        ...REDUX_STATE.workspaces,
         isFetching: options.initialStatus,
       };
+
       const result = workspacesReducer(updatedState, options.action);
 
       expect(result.isFetching).toEqual(options.expectedStatus);
@@ -60,13 +59,13 @@ describe("within workspacesReducer", () => {
       {
         name: "when the createWorkspaces.success action is dispatched",
         initialStatus: true,
-        action: workspacesActions.createWorkspaces.success(TEST_PAYLOAD),
+        action: workspacesActions.createWorkspaces.success(MOCK_PAYLOAD),
         expectedStatus: false,
       },
       {
         name: "when the fetchWorkspaces.success action is dispatched",
         initialStatus: true,
-        action: workspacesActions.fetchWorkspaces.success(TEST_PAYLOAD),
+        action: workspacesActions.fetchWorkspaces.success(MOCK_PAYLOAD),
         expectedStatus: false,
       },
       {
@@ -98,24 +97,24 @@ describe("within workspacesReducer", () => {
 
   test("the userIdsAppendedToWorkspace action sets state mapping value to initial state", () => {
     const updatedState = {
-      ...TEST_WORKSPACES_STATE,
+      ...REDUX_STATE.workspaces,
       source: {
-        ...TEST_WORKSPACES_STATE.source,
-        [TEST_ALT_WORKSPACE.id]: TEST_ALT_WORKSPACE,
+        ...REDUX_STATE.workspaces.source,
+        [MOCK_ALT_WORKSPACE.id]: MOCK_ALT_WORKSPACE,
       },
     };
 
     const result = workspacesReducer(
       updatedState,
       workspacesActions.userIdsAppendedToWorkspace({
-        workspaceId: TEST_ALT_WORKSPACE.id,
+        workspaceId: MOCK_ALT_WORKSPACE.id,
         mapping: Mapping.Source,
         userIds: ["6002"],
       }),
     );
 
-    expect(result.source[TEST_ALT_WORKSPACE.id]).toEqual({
-      ...TEST_ALT_WORKSPACE,
+    expect(result.source[MOCK_ALT_WORKSPACE.id]).toEqual({
+      ...MOCK_ALT_WORKSPACE,
       userIds: ["6002"],
     });
   });
@@ -125,17 +124,17 @@ describe("within workspacesReducer", () => {
 
     test(`updates the "isIncluded" and "linkedId" values when payload.targetId is not null`, () => {
       const updatedState = {
-        ...TEST_WORKSPACES_STATE,
+        ...REDUX_STATE.workspaces,
         source: {
-          [TEST_WORKSPACE_ID]: {
-            ...TEST_WORKSPACES_STATE.source[TEST_WORKSPACE_ID],
+          [TOGGL_WORKSPACE_ID]: {
+            ...REDUX_STATE.workspaces.source[TOGGL_WORKSPACE_ID],
             isIncluded: false,
             linkedId: null,
           },
         },
         target: {
           [TEST_TARGET_ID]: {
-            ...TEST_WORKSPACES_STATE.target[TEST_TARGET_ID],
+            ...REDUX_STATE.workspaces.target[TEST_TARGET_ID],
             isIncluded: false,
             linkedId: null,
           },
@@ -145,32 +144,32 @@ describe("within workspacesReducer", () => {
       const result = workspacesReducer(
         updatedState,
         workspacesActions.workspaceLinkingUpdated({
-          sourceId: TEST_WORKSPACE_ID,
+          sourceId: TOGGL_WORKSPACE_ID,
           targetId: TEST_TARGET_ID,
         }),
       );
 
-      expect(result.source[TEST_WORKSPACE_ID].isIncluded).toBe(true);
-      expect(result.source[TEST_WORKSPACE_ID].linkedId).toBe(TEST_TARGET_ID);
+      expect(result.source[TOGGL_WORKSPACE_ID].isIncluded).toBe(true);
+      expect(result.source[TOGGL_WORKSPACE_ID].linkedId).toBe(TEST_TARGET_ID);
       expect(result.target[TEST_TARGET_ID].isIncluded).toBe(true);
-      expect(result.target[TEST_TARGET_ID].linkedId).toBe(TEST_WORKSPACE_ID);
+      expect(result.target[TEST_TARGET_ID].linkedId).toBe(TOGGL_WORKSPACE_ID);
     });
 
     test(`updates the "isIncluded" and "linkedId" values when payload.targetId is null`, () => {
       const updatedState = {
-        ...TEST_WORKSPACES_STATE,
+        ...REDUX_STATE.workspaces,
         source: {
-          [TEST_WORKSPACE_ID]: {
-            ...TEST_WORKSPACES_STATE.source[TEST_WORKSPACE_ID],
+          [TOGGL_WORKSPACE_ID]: {
+            ...REDUX_STATE.workspaces.source[TOGGL_WORKSPACE_ID],
             isIncluded: true,
             linkedId: TEST_TARGET_ID,
           },
         },
         target: {
           [TEST_TARGET_ID]: {
-            ...TEST_WORKSPACES_STATE.target[TEST_TARGET_ID],
+            ...REDUX_STATE.workspaces.target[TEST_TARGET_ID],
             isIncluded: true,
-            linkedId: TEST_WORKSPACE_ID,
+            linkedId: TOGGL_WORKSPACE_ID,
           },
           "clock-workspace-02": {
             id: "clock-workspace-02",
@@ -181,7 +180,7 @@ describe("within workspacesReducer", () => {
             entryCount: 0,
             linkedId: null,
             isIncluded: false,
-            memberOf: "workspaces",
+            memberOf: EntityGroup.Workspaces,
           },
         },
       };
@@ -189,13 +188,13 @@ describe("within workspacesReducer", () => {
       const result = workspacesReducer(
         updatedState,
         workspacesActions.workspaceLinkingUpdated({
-          sourceId: TEST_WORKSPACE_ID,
+          sourceId: TOGGL_WORKSPACE_ID,
           targetId: null,
         }),
       );
 
-      expect(result.source[TEST_WORKSPACE_ID].isIncluded).toBe(false);
-      expect(result.source[TEST_WORKSPACE_ID].linkedId).toBeNull();
+      expect(result.source[TOGGL_WORKSPACE_ID].isIncluded).toBe(false);
+      expect(result.source[TOGGL_WORKSPACE_ID].linkedId).toBeNull();
       expect(result.target[TEST_TARGET_ID].isIncluded).toBe(false);
       expect(result.target[TEST_TARGET_ID].linkedId).toBeNull();
     });
@@ -206,18 +205,18 @@ describe("within workspacesReducer", () => {
 
     test(`flips the source and target "isIncluded" value if linked`, () => {
       const updatedState = {
-        ...TEST_WORKSPACES_STATE,
+        ...REDUX_STATE.workspaces,
         source: {
-          ...TEST_WORKSPACES_STATE.source,
-          [TEST_WORKSPACE_ID]: {
-            ...TEST_WORKSPACES_STATE.source[TEST_WORKSPACE_ID],
+          ...REDUX_STATE.workspaces.source,
+          [TOGGL_WORKSPACE_ID]: {
+            ...REDUX_STATE.workspaces.source[TOGGL_WORKSPACE_ID],
             isIncluded: false,
           },
         },
         target: {
-          ...TEST_WORKSPACES_STATE.target,
+          ...REDUX_STATE.workspaces.target,
           [TARGET_ID]: {
-            ...TEST_WORKSPACES_STATE.target[TARGET_ID],
+            ...REDUX_STATE.workspaces.target[TARGET_ID],
             isIncluded: false,
           },
         },
@@ -226,11 +225,11 @@ describe("within workspacesReducer", () => {
       const result = workspacesReducer(
         updatedState,
         workspacesActions.isWorkspaceIncludedToggled(
-          TEST_WORKSPACES_STATE.source[TEST_WORKSPACE_ID],
+          REDUX_STATE.workspaces.source[TOGGL_WORKSPACE_ID],
         ),
       );
 
-      expect(result.source[TEST_WORKSPACE_ID].isIncluded).toBe(true);
+      expect(result.source[TOGGL_WORKSPACE_ID].isIncluded).toBe(true);
       expect(result.target[TARGET_ID].isIncluded).toBe(true);
     });
 
@@ -242,16 +241,16 @@ describe("within workspacesReducer", () => {
         isAdmin: true,
         workspaceId: "clock-workspace-01",
         entryCount: 0,
-        linkedId: TEST_WORKSPACE_ID,
+        linkedId: TOGGL_WORKSPACE_ID,
         isIncluded: true,
-        memberOf: "workspaces",
-      } as AnyValid;
+        memberOf: EntityGroup.Workspaces,
+      };
 
       const updatedState = {
-        ...TEST_WORKSPACES_STATE,
+        ...REDUX_STATE.workspaces,
         source: {
-          ...TEST_WORKSPACES_STATE.source,
-          [TEST_ALT_WORKSPACE.id]: TEST_ALT_WORKSPACE,
+          ...REDUX_STATE.workspaces.source,
+          [MOCK_ALT_WORKSPACE.id]: MOCK_ALT_WORKSPACE,
         },
         target: {
           [TEST_CLOCKIFY_WORKSPACE.id]: TEST_CLOCKIFY_WORKSPACE,
@@ -260,25 +259,25 @@ describe("within workspacesReducer", () => {
 
       const result = workspacesReducer(
         updatedState,
-        workspacesActions.isWorkspaceIncludedToggled(TEST_ALT_WORKSPACE),
+        workspacesActions.isWorkspaceIncludedToggled(MOCK_ALT_WORKSPACE),
       );
 
-      expect(result.source[TEST_WORKSPACE_ID].isIncluded).toBe(true);
+      expect(result.source[TOGGL_WORKSPACE_ID].isIncluded).toBe(true);
     });
   });
 
   test("the activeWorkspaceIdUpdated action sets state.activeWorkspaceId to the payload", () => {
     const result = workspacesReducer(
       initialState,
-      workspacesActions.activeWorkspaceIdUpdated(TEST_WORKSPACE_ID),
+      workspacesActions.activeWorkspaceIdUpdated(TOGGL_WORKSPACE_ID),
     );
 
-    expect(result.activeWorkspaceId).toBe(TEST_WORKSPACE_ID);
+    expect(result.activeWorkspaceId).toBe(TOGGL_WORKSPACE_ID);
   });
 
   test("the contentsForMappingReset action sets state mapping value to initial state", () => {
     const result = workspacesReducer(
-      TEST_WORKSPACES_STATE,
+      REDUX_STATE.workspaces,
       workspacesActions.contentsForMappingReset(Mapping.Source),
     );
 

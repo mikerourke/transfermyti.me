@@ -1,29 +1,27 @@
 import cases from "jest-in-case";
 import { lensProp, set } from "ramda";
 
+import { FAKES } from "~/jestUtilities";
 import * as tagsActions from "~/modules/tags/tagsActions";
-import { invalidAction, state } from "~/redux/__mocks__/mockStoreWithState";
 
 import { initialState, tagsReducer } from "../tagsReducer";
 
-const TEST_TAGS_STATE = { ...state.tags };
+const { INVALID_ACTION, REDUX_STATE, TOGGL_TAG_ID } = FAKES;
 
-const TEST_TAG_ID = "4001";
-
-const TEST_PAYLOAD = {
-  source: { ...TEST_TAGS_STATE.source },
-  target: { ...TEST_TAGS_STATE.target },
+const MOCK_PAYLOAD = {
+  source: { ...REDUX_STATE.tags.source },
+  target: { ...REDUX_STATE.tags.target },
 };
 
 describe("within tagsReducer", () => {
   test("returns input state if an invalid action type is passed to the reducer", () => {
-    const result = tagsReducer(initialState, invalidAction as AnyValid);
+    const result = tagsReducer(initialState, INVALID_ACTION);
 
     expect(result).toEqual(initialState);
   });
 
   test("returns input state if no state is passed to the reducer", () => {
-    const result = tagsReducer(undefined as AnyValid, invalidAction as AnyValid);
+    const result = tagsReducer(undefined, INVALID_ACTION);
 
     expect(result).toEqual(initialState);
   });
@@ -32,9 +30,10 @@ describe("within tagsReducer", () => {
     "the isFetching is set to the correct value based on the dispatched action",
     (options) => {
       const updatedState = {
-        ...TEST_TAGS_STATE,
+        ...REDUX_STATE.tags,
         isFetching: options.initialStatus,
       };
+
       const result = tagsReducer(updatedState, options.action);
 
       expect(result.isFetching).toEqual(options.expectedStatus);
@@ -43,13 +42,13 @@ describe("within tagsReducer", () => {
       {
         name: "when the createTags.success action is dispatched",
         initialStatus: true,
-        action: tagsActions.createTags.success(TEST_PAYLOAD),
+        action: tagsActions.createTags.success(MOCK_PAYLOAD),
         expectedStatus: false,
       },
       {
         name: "when the fetchTags.success action is dispatched",
         initialStatus: true,
-        action: tagsActions.fetchTags.success(TEST_PAYLOAD),
+        action: tagsActions.fetchTags.success(MOCK_PAYLOAD),
         expectedStatus: false,
       },
       {
@@ -95,43 +94,38 @@ describe("within tagsReducer", () => {
     const updatedState = set(
       lensProp("source"),
       {
-        [TEST_TAG_ID]: {
-          ...TEST_TAGS_STATE.source[TEST_TAG_ID],
+        [TOGGL_TAG_ID]: {
+          ...REDUX_STATE.tags.source[TOGGL_TAG_ID],
           isIncluded: false,
         },
       },
-      TEST_TAGS_STATE,
+      REDUX_STATE.tags,
     );
-    const result = tagsReducer(updatedState, tagsActions.isTagIncludedToggled(TEST_TAG_ID));
+    const result = tagsReducer(updatedState, tagsActions.isTagIncludedToggled(TOGGL_TAG_ID));
 
-    expect(result.source[TEST_TAG_ID].isIncluded).toBe(true);
+    expect(result.source[TOGGL_TAG_ID].isIncluded).toBe(true);
   });
 
   test(`the areAllTagsIncludedUpdated action sets the "isIncluded" value of all records to payload`, () => {
     const updatedState = {
-      ...TEST_TAGS_STATE,
+      ...REDUX_STATE.tags,
       source: {
         "4001": {
-          id: "4001",
-          name: "tag-a",
-          workspaceId: "1001",
+          ...REDUX_STATE.tags.source["4001"],
           entryCount: 1,
           linkedId: null,
           isIncluded: false,
-          memberOf: "tags",
         },
         "4002": {
-          id: "4002",
-          name: "tag-b",
-          workspaceId: "1001",
+          ...REDUX_STATE.tags.source["4002"],
           entryCount: 1,
           linkedId: null,
           isIncluded: false,
-          memberOf: "tags",
         },
       },
       target: {},
     };
+
     const result = tagsReducer(updatedState, tagsActions.areAllTagsIncludedUpdated(true));
 
     expect(result.source["4001"].isIncluded).toEqual(true);
@@ -139,7 +133,7 @@ describe("within tagsReducer", () => {
   });
 
   test("the deleteTags.success action resets state to initial state", () => {
-    const result = tagsReducer(state, tagsActions.deleteTags.success());
+    const result = tagsReducer(REDUX_STATE.tags, tagsActions.deleteTags.success());
 
     expect(result).toEqual(initialState);
   });

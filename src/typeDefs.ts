@@ -101,7 +101,7 @@ export interface PartialCredentialsUpdate {
 }
 
 export interface Estimate {
-  estimate: number;
+  estimate: number | string;
   type: "AUTO" | "MANUAL";
 }
 

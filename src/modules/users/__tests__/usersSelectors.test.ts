@@ -1,26 +1,16 @@
 import cases from "jest-in-case";
 
-import { state } from "~/redux/__mocks__/mockStoreWithState";
+import { FAKES } from "~/jestUtilities";
+import { EntityGroup } from "~/typeDefs";
 
 import * as usersSelectors from "../usersSelectors";
 
-const TEST_STATE = {
-  ...state,
+const MOCK_STATE = {
+  ...FAKES.REDUX_STATE,
   users: {
+    ...FAKES.REDUX_STATE.users,
     source: {
-      "6001": {
-        id: "6001",
-        name: "John Test",
-        email: "test-user@test.com",
-        isAdmin: null,
-        isActive: true,
-        userGroupIds: [],
-        workspaceId: "1001",
-        entryCount: 0,
-        linkedId: "clock-user-01",
-        isIncluded: false,
-        memberOf: "users",
-      },
+      ...FAKES.REDUX_STATE.users.source,
       "6002": {
         id: "6002",
         name: "Mary Testarossa",
@@ -28,43 +18,27 @@ const TEST_STATE = {
         isAdmin: null,
         isActive: true,
         userGroupIds: [],
-        workspaceId: null,
+        workspaceId: FAKES.TOGGL_WORKSPACE_ID,
         entryCount: 0,
         linkedId: null,
         isIncluded: true,
-        memberOf: "users",
+        memberOf: EntityGroup.Users,
       },
     },
-    target: {
-      "clock-user-01": {
-        id: "clock-user-01",
-        name: "John Test",
-        email: "test-user@test.com",
-        isAdmin: null,
-        isActive: true,
-        userGroupIds: [],
-        workspaceId: "clock-workspace-01",
-        entryCount: 0,
-        linkedId: "6001",
-        isIncluded: false,
-        memberOf: "users",
-      },
-    },
-    isFetching: false,
   },
 };
 
 describe("within usersSelectors", () => {
   test("the sourceUsersSelector returns array of values from state.source", () => {
-    const result = usersSelectors.sourceUsersSelector(TEST_STATE);
+    const result = usersSelectors.sourceUsersSelector(MOCK_STATE);
 
-    expect(result).toEqual(Object.values(TEST_STATE.users.source));
+    expect(result).toEqual(Object.values(MOCK_STATE.users.source));
   });
 
   cases(
     "the selectors match their snapshots",
     (options) => {
-      const result = options.selector(TEST_STATE);
+      const result = options.selector(MOCK_STATE);
 
       expect(result).toMatchSnapshot();
     },

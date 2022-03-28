@@ -1,29 +1,27 @@
 import cases from "jest-in-case";
 import { lensProp, set } from "ramda";
 
+import { FAKES } from "~/jestUtilities";
 import * as userGroupsActions from "~/modules/userGroups/userGroupsActions";
-import { invalidAction, state } from "~/redux/__mocks__/mockStoreWithState";
 
 import { initialState, userGroupsReducer } from "../userGroupsReducer";
 
-const TEST_USER_GROUPS_STATE = { ...state.userGroups };
+const { INVALID_ACTION, REDUX_STATE, TOGGL_USER_GROUP_ID } = FAKES;
 
-const TEST_USER_GROUP_ID = "5001";
-
-const TEST_PAYLOAD = {
-  source: { ...TEST_USER_GROUPS_STATE.source },
-  target: { ...TEST_USER_GROUPS_STATE.target },
+const MOCK_PAYLOAD = {
+  source: { ...REDUX_STATE.userGroups.source },
+  target: { ...REDUX_STATE.userGroups.target },
 };
 
 describe("within userGroupsReducer", () => {
   test("returns input state if an invalid action type is passed to the reducer", () => {
-    const result = userGroupsReducer(initialState, invalidAction as AnyValid);
+    const result = userGroupsReducer(initialState, INVALID_ACTION);
 
     expect(result).toEqual(initialState);
   });
 
   test("returns input state if no state is passed to the reducer", () => {
-    const result = userGroupsReducer(undefined as AnyValid, invalidAction as AnyValid);
+    const result = userGroupsReducer(undefined, INVALID_ACTION);
 
     expect(result).toEqual(initialState);
   });
@@ -32,7 +30,7 @@ describe("within userGroupsReducer", () => {
     "the isFetching is set to the correct value based on the dispatched action",
     (options) => {
       const updatedState = {
-        ...TEST_USER_GROUPS_STATE,
+        ...REDUX_STATE.userGroups,
         isFetching: options.initialStatus,
       };
       const result = userGroupsReducer(updatedState, options.action);
@@ -43,13 +41,13 @@ describe("within userGroupsReducer", () => {
       {
         name: "when the createUserGroups.success action is dispatched",
         initialStatus: true,
-        action: userGroupsActions.createUserGroups.success(TEST_PAYLOAD),
+        action: userGroupsActions.createUserGroups.success(MOCK_PAYLOAD),
         expectedStatus: false,
       },
       {
         name: "when the fetchUserGroups.success action is dispatched",
         initialStatus: true,
-        action: userGroupsActions.fetchUserGroups.success(TEST_PAYLOAD),
+        action: userGroupsActions.fetchUserGroups.success(MOCK_PAYLOAD),
         expectedStatus: false,
       },
       {
@@ -95,23 +93,27 @@ describe("within userGroupsReducer", () => {
     const updatedState = set(
       lensProp("source"),
       {
-        [TEST_USER_GROUP_ID]: {
-          ...TEST_USER_GROUPS_STATE.source[TEST_USER_GROUP_ID],
+        [TOGGL_USER_GROUP_ID]: {
+          ...REDUX_STATE.userGroups.source[TOGGL_USER_GROUP_ID],
           isIncluded: false,
         },
       },
-      TEST_USER_GROUPS_STATE,
-    );
-    const result = userGroupsReducer(
-      updatedState,
-      userGroupsActions.isUserGroupIncludedToggled(TEST_USER_GROUP_ID),
+      REDUX_STATE.userGroups,
     );
 
-    expect(result.source[TEST_USER_GROUP_ID].isIncluded).toBe(true);
+    const result = userGroupsReducer(
+      updatedState,
+      userGroupsActions.isUserGroupIncludedToggled(TOGGL_USER_GROUP_ID),
+    );
+
+    expect(result.source[TOGGL_USER_GROUP_ID].isIncluded).toBe(true);
   });
 
   test("the deleteUserGroups.success action resets state to initial state", () => {
-    const result = userGroupsReducer(state, userGroupsActions.deleteUserGroups.success());
+    const result = userGroupsReducer(
+      REDUX_STATE.userGroups,
+      userGroupsActions.deleteUserGroups.success(),
+    );
 
     expect(result).toEqual(initialState);
   });
