@@ -135,7 +135,11 @@ async function fetchWithRetries<TResponse>(
  * and stable API.
  */
 export function getApiDelayForTool(toolName: ToolName): number {
-  if (isTestingMode()) {
+  try {
+    if (isTestingMode()) {
+      return 0;
+    }
+  } catch {
     return 0;
   }
 

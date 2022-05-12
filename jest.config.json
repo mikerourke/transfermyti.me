@@ -25,7 +25,9 @@
     "<rootDir>/src/**/?(*.)(spec|test).ts"
   ],
   "testPathIgnorePatterns": ["<rootDir>/scripts/tests.mjs"],
-  "testURL": "http://localhost",
+  "testEnvironmentOptions": {
+    "url": "http://localhost"
+  },
   "transform": {
     "^.+\\.svelte$": ["svelte-jester", { "preprocess": true }],
     "^.+\\.[jt]s$": "babel-jest"
