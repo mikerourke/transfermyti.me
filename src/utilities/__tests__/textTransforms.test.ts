@@ -5,7 +5,7 @@ import { EntityGroup } from "~/typeDefs";
 import * as textTransforms from "../textTransforms";
 
 describe("within textTransforms", () => {
-  describe("the booleanToYesNo method", () => {
+  describe("the booleanToYesNo function", () => {
     test(`returns "Yes" if the value arg is boolean and true`, () => {
       const result = textTransforms.booleanToYesNo(true);
 
@@ -25,7 +25,7 @@ describe("within textTransforms", () => {
     });
   });
 
-  describe("the capitalize method", () => {
+  describe("the capitalize function", () => {
     test("returns the capitalized value arg if valid", () => {
       const result = textTransforms.capitalize("test");
 
@@ -45,7 +45,7 @@ describe("within textTransforms", () => {
     });
   });
 
-  describe("the getEntityGroupDisplay method", () => {
+  describe("the getEntityGroupDisplay function", () => {
     cases(
       "returns the correct display based on the entityGroup arg",
       (options) => {
@@ -79,7 +79,7 @@ describe("within textTransforms", () => {
     });
   });
 
-  describe("the kebabCase method", () => {
+  describe("the kebabCase function", () => {
     test("returns the kebab case value for simple value", () => {
       const result = textTransforms.kebabCase("Do Stuff");
 
@@ -90,6 +90,26 @@ describe("within textTransforms", () => {
       const result = textTransforms.kebabCase("Do Stuff123!!&^");
 
       expect(result).toBe("do-stuff123");
+    });
+  });
+
+  describe("the validStringify function", () => {
+    test("returns the default if the specified value is null", () => {
+      const result = textTransforms.validStringify(null, "Default");
+
+      expect(result).toBe("Default");
+    });
+
+    test("returns the stringified value of a number", () => {
+      const result = textTransforms.validStringify(123, "");
+
+      expect(result).toBe("123");
+    });
+
+    test("returns the stringified value of a string", () => {
+      const result = textTransforms.validStringify("test", "");
+
+      expect(result).toBe("test");
     });
   });
 });

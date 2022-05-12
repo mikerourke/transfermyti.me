@@ -8,6 +8,7 @@ import { getStore } from "~/redux/configureStore";
 import { ToolName } from "~/typeDefs";
 import {
   getApiUrl,
+  isTestingMode,
   isUseLocalApi,
   TogglApiContext,
 } from "~/utilities/environment";
@@ -134,7 +135,7 @@ async function fetchWithRetries<TResponse>(
  * and stable API.
  */
 export function getApiDelayForTool(toolName: ToolName): number {
-  if (process?.env?.NODE_ENV?.toString() === "test") {
+  if (isTestingMode()) {
     return 0;
   }
 

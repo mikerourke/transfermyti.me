@@ -4,9 +4,10 @@
   "coveragePathIgnorePatterns": [
     "/node_modules/",
     "__fixtures__",
-    "declarations.d.ts",
+    "typeDeclarations",
     "state.ts",
-    "typeDefs.ts"
+    "typeDefs.ts",
+    "jestUtilities.ts"
   ],
   "coverageReporters": ["lcov"],
   "globals": {
