@@ -50,6 +50,8 @@ export function configureStore(): void {
     composeEnhancers(applyMiddleware(...middleware)),
   );
 
+  window.store = store;
+
   sagaMiddleware.run(allSagas);
 
   if (isUseLocalApi()) {

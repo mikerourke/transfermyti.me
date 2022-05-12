@@ -32,7 +32,7 @@ export function getApiUrl(
   toolName: ToolName,
   togglApiContext: TogglApiContext,
 ): string {
-  if (isUseLocalApi()) {
+  if (isUseLocalApi() || isTestingMode()) {
     const apiPort = process?.env?.TMT_LOCAL_API_PORT ?? "9009";
 
     return `http://localhost:${apiPort}/api/${toolName}`;
