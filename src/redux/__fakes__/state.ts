@@ -1,5 +1,5 @@
 /* eslint-disable */
-import type { ReduxState } from "~/redux/rootReducer";
+import type { ReduxState } from "~/typeDefs";
 import {
   EntityGroup,
   FetchStatus,
