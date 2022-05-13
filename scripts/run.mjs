@@ -1,4 +1,5 @@
 import dotenv from "dotenv";
+import debug from "debug";
 import yargs from "yargs";
 import { hideBin } from "yargs/helpers";
 
@@ -11,6 +12,8 @@ import {
 import { startServer } from "./server.mjs";
 import { runTests } from "./tests.mjs";
 
+debug.enable("tmt:*");
+
 const RunAction = {
   ClockifyDelete: "clockify-delete",
   ClockifyWrite: "clockify-write",
@@ -18,6 +21,7 @@ const RunAction = {
   Tests: "tests",
 };
 
+// noinspection BadExpressionStatementJS
 yargs(hideBin(process.argv))
   .command({
     command: RunAction.ClockifyDelete,

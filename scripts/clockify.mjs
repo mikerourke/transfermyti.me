@@ -1,12 +1,14 @@
-import path from "path";
-import qs from "querystring";
-import { fileURLToPath, URL } from "url";
+import fsPromises from "node:fs/promises";
+import path from "node:path";
+import qs from "node:querystring";
+import { fileURLToPath, URL } from "node:url";
 
-import fse from "fs-extra";
 import { flatten, isNil, set } from "lodash-es";
 import fetch from "node-fetch";
 import colors from "picocolors";
 import PromiseThrottle from "promise-throttle";
+
+import { readJsonSync, writeJson } from "./utilities.mjs";
 
 const httpEnvPath = fileURLToPath(
   new URL(path.join("..", "http-client.private.env.json"), import.meta.url),
@@ -20,7 +22,7 @@ let httpEnv = {
 };
 
 try {
-  httpEnv = fse.readJsonSync(httpEnvPath);
+  httpEnv = readJsonSync(httpEnvPath);
 } catch {
   // Do nothing. This is only for CI.
 }
@@ -64,7 +66,8 @@ export async function deleteEntitiesInWorkspaces() {
  */
 export async function writeEntitiesToOutputFile() {
   const outputPath = path.resolve(process.cwd(), "clockify.json");
-  await fse.remove(outputPath);
+
+  await fsPromises.rm(outputPath);
 
   const workspaces = await fetchValidWorkspaces();
   const dataByWorkspaceName = {};
@@ -89,7 +92,7 @@ export async function writeEntitiesToOutputFile() {
     await addEntityGroupToWorkspaceData(id, name, "time-entries");
   }
 
-  await fse.writeJson(outputPath, dataByWorkspaceName, { spaces: 2 });
+  await writeJson(outputPath, dataByWorkspaceName);
   console.log(colors.green("Clockify entities written to file!"));
 }
 

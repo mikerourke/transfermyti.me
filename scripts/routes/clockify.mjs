@@ -1,14 +1,15 @@
 import path from "path";
 import { fileURLToPath, URL } from "url";
 
-import fse from "fs-extra";
 import { find, get, isNil, uniqueId } from "lodash-es";
+
+import { readJsonSync } from "../utilities.mjs";
 
 const dbPath = fileURLToPath(
   new URL(path.join("..", "db", "clockify.json"), import.meta.url),
 );
 
-const db = fse.readJsonSync(dbPath);
+const db = readJsonSync(dbPath);
 
 // noinspection EqualityComparisonWithCoercionJS
 const isEmpty = process.env.TMT_LOCAL_API_CLOCKIFY_EMPTY == "true";

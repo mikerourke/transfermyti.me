@@ -2,14 +2,15 @@ import path from "path";
 import { fileURLToPath, URL } from "url";
 
 import { isSameYear } from "date-fns";
-import fse from "fs-extra";
 import { take, uniqueId } from "lodash-es";
+
+import { readJsonSync } from "../utilities.mjs";
 
 const dbPath = fileURLToPath(
   new URL(path.join("..", "db", "toggl.json"), import.meta.url),
 );
 
-const db = fse.readJsonSync(dbPath);
+const db = readJsonSync(dbPath);
 
 // noinspection EqualityComparisonWithCoercionJS
 const isEmpty = process.env.TMT_LOCAL_API_TOGGL_EMPTY == "true";
