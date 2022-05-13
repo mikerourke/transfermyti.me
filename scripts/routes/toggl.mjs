@@ -2,9 +2,8 @@ import path from "path";
 import { fileURLToPath, URL } from "url";
 
 import { isSameYear } from "date-fns";
-import { take, uniqueId } from "lodash-es";
 
-import { readJsonSync } from "../utilities.mjs";
+import { readJsonSync, uniqueId } from "../utilities.mjs";
 
 const dbPath = fileURLToPath(
   new URL(path.join("..", "db", "toggl.json"), import.meta.url),
@@ -58,7 +57,7 @@ export function assignTogglRoutes(router) {
         total_currencies: [],
         total_count: isEmpty === true ? 0 : timeEntries.length,
         per_page: 50,
-        data: isEmpty === true ? [] : take(timeEntries, 50),
+        data: isEmpty === true ? [] : timeEntries.slice(0, 50),
       };
 
       res.status(200).send(payload);

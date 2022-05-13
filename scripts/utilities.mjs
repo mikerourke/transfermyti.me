@@ -3,6 +3,14 @@ import fsPromises from "node:fs/promises";
 
 import debug from "debug";
 
+let idCounter = 0;
+
+export function uniqueId(prefix = "") {
+  const id = ++idCounter;
+
+  return `${prefix}${id}`;
+}
+
 /**
  * Returns the contents of the specified file path as a JSON object.
  * @param {string} filePath Path to the JSON file

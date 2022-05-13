@@ -35,7 +35,6 @@ specifiers:
   jest: ^28.1.0
   jest-environment-jsdom: ^28.1.0
   jest-in-case: ^1.0.2
-  lodash-es: ^4.17.21
   mini-css-extract-plugin: ^2.6.0
   morgan: ^1.10.0
   node-fetch: ^3.2.4
@@ -111,7 +110,6 @@ devDependencies:
   jest: 28.1.0
   jest-environment-jsdom: 28.1.0
   jest-in-case: 1.0.2
-  lodash-es: 4.17.21
   mini-css-extract-plugin: 2.6.0_webpack@5.72.1
   morgan: 1.10.0
   node-fetch: 3.2.4
@@ -5425,10 +5423,6 @@ packages:
     engines: {node: '>=8'}
     dependencies:
       p-locate: 4.1.0
-    dev: true
-
-  /lodash-es/4.17.21:
-    resolution: {integrity: sha512-mKnC+QJ9pWVzv+C4/U3rRsHapFfHvQFoFB92e52xeyGMcX6/OlIl78je1u8vePzYZSkkogMPJ2yjxxsb89cxyw==}
     dev: true
 
   /lodash.debounce/4.0.8:

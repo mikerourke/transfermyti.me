@@ -3,7 +3,6 @@ import path from "node:path";
 import qs from "node:querystring";
 import { fileURLToPath, URL } from "node:url";
 
-import { flatten, isNil, set } from "lodash-es";
 import fetch from "node-fetch";
 import colors from "picocolors";
 import PromiseThrottle from "promise-throttle";
@@ -73,13 +72,17 @@ export async function writeEntitiesToOutputFile() {
   const dataByWorkspaceName = {};
 
   const addEntityGroupToWorkspaceData = async (id, name, entityGroup) => {
+    // noinspection UnnecessaryLocalVariableJS
     const contents = await getEntityGroupRecordsInWorkspace(id, entityGroup);
-    set(dataByWorkspaceName, [name, entityGroup], contents);
+
+    dataByWorkspaceName[name][entityGroup] = contents;
   };
 
   for (const { id, name, ...workspace } of workspaces) {
     console.log(colors.cyan(`Processing ${name}...`));
-    set(dataByWorkspaceName, [name, "data"], { id, ...workspace });
+
+    dataByWorkspaceName[name].data = { id, ...workspace };
+
     await addEntityGroupToWorkspaceData(id, name, "projects");
     await pause(1000);
 
@@ -241,7 +244,7 @@ async function fetchTimeEntriesInWorkspace(workspaceId) {
     currentPage += 1;
   }
 
-  return flatten(allEntries);
+  return allEntries.flat();
 }
 
 /**
@@ -311,10 +314,11 @@ async function clockifyFetch(endpoint, options) {
 
   // Make sure the request body is stringified and the "Accept" header is
   // present (for POST request):
-  if (!isNil(requestOptions.body)) {
+  if ((requestOptions?.body ?? null) !== null) {
     Object.assign(requestOptions.headers, {
       Accept: "application/json",
     });
+
     requestOptions.body = JSON.stringify(requestOptions.body);
   }
   const response = await fetch(fullUrl, requestOptions);

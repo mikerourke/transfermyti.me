@@ -1,9 +1,7 @@
 import path from "path";
 import { fileURLToPath, URL } from "url";
 
-import { find, get, isNil, uniqueId } from "lodash-es";
-
-import { readJsonSync } from "../utilities.mjs";
+import { readJsonSync, uniqueId } from "../utilities.mjs";
 
 const dbPath = fileURLToPath(
   new URL(path.join("..", "db", "clockify.json"), import.meta.url),
@@ -45,9 +43,11 @@ export function assignClockifyRoutes(router) {
 
       const responseEntries = db.timeEntries.reduce((acc, timeEntry) => {
         const { projectId, tagIds, taskId, ...responseEntry } = timeEntry;
-        if (!isNil(projectId)) {
-          const project = find(db.projects, ["id", projectId]);
-          responseEntry.project = project || null;
+        if (projectId) {
+          const project = db.projects.find(
+            (project) => project.id === projectId,
+          );
+          responseEntry.project = project ?? null;
         }
 
         if (tagIds.length !== 0) {
@@ -58,9 +58,9 @@ export function assignClockifyRoutes(router) {
           responseEntry.tags = [];
         }
 
-        if (!isNil(taskId)) {
-          const task = find(db.tasks, ["id", taskId]);
-          responseEntry.task = task || null;
+        if (taskId) {
+          const task = db.tasks.find((task) => task.id === taskId);
+          responseEntry.task = task ?? null;
         }
 
         return [...acc, responseEntry];
@@ -97,10 +97,10 @@ export function assignClockifyRoutes(router) {
         estimate: req.body.estimate,
         color: req.body.color,
         workspaceId: req.params.workspaceId,
-        memberships: get(db.users, ["clock-user-01", "memberships"], []),
+        memberships: db.users?.["clock-user-01"]?.memberships ?? [],
         archived: false,
         duration: "PT0S",
-        clientName: get(db.clients, [req.body.clientId, "name"], null),
+        clientName: db.clients?.[req.body.clientId]?.name ?? null,
         public: req.body.isPublic,
         billable: req.body.billable,
       };
@@ -162,7 +162,7 @@ export function assignClockifyRoutes(router) {
       res.status(200).send(newUserGroup);
     })
     .post("/workspaces/:workspaceId/users", (req, res) => {
-      const workspace = get(db.workspaces, req.params.workspaceId, {});
+      const workspace = db.workspaces?.[req.params.workspaceId] ?? {};
       res.status(200).send(workspace);
     })
     .post("/workspaces", (req, res) => {
