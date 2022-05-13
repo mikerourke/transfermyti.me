@@ -1,5 +1,7 @@
 import { ToolName } from "~/typeDefs";
 
+/* istanbul ignore file: These are just wrappers to get environment variables.  */
+
 export function isDevelopmentMode(): boolean {
   try {
     if (process?.env?.NODE_ENV?.toString() === "development") {
@@ -7,6 +9,14 @@ export function isDevelopmentMode(): boolean {
     }
 
     return process?.env?.WEBPACK_SERVE?.toString() === "true";
+  } catch {
+    return false;
+  }
+}
+
+export function isTestingMode(): boolean {
+  try {
+    return process?.env?.NODE_ENV?.toString() === "test";
   } catch {
     return false;
   }
@@ -22,7 +32,7 @@ export function getApiUrl(
   toolName: ToolName,
   togglApiContext: TogglApiContext,
 ): string {
-  if (isUseLocalApi()) {
+  if (isUseLocalApi() || isTestingMode()) {
     const apiPort = process?.env?.TMT_LOCAL_API_PORT ?? "9009";
 
     return `http://localhost:${apiPort}/api/${toolName}`;

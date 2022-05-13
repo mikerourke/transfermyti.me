@@ -1,19 +1,21 @@
 import cases from "jest-in-case";
 
+import { FAKES } from "~/jestUtilities";
 import * as appActions from "~/modules/app/appActions";
-import { invalidAction } from "~/redux/__mocks__/mockStoreWithState";
 
 import { appReducer, initialState } from "../appReducer";
 
+const { INVALID_ACTION } = FAKES;
+
 describe("within appReducer", () => {
   test("returns input state if an invalid action type is passed to the reducer", () => {
-    const result = appReducer(initialState, invalidAction);
+    const result = appReducer(initialState, INVALID_ACTION);
 
     expect(result).toEqual(initialState);
   });
 
   test("returns input state if no state is passed to the reducer", () => {
-    const result = appReducer(undefined as AnyValid, invalidAction);
+    const result = appReducer(undefined, INVALID_ACTION);
 
     expect(result).toEqual(initialState);
   });
@@ -23,6 +25,7 @@ describe("within appReducer", () => {
       ...initialState,
       notifications: [{ id: "ntf1", type: "info", message: "Test Error" } as const],
     };
+
     const result = appReducer(testState, appActions.notificationDismissed("ntf1"));
 
     expect(result.notifications).toHaveLength(0);
@@ -36,6 +39,7 @@ describe("within appReducer", () => {
         { id: "ntf2", type: "info", message: "Test Error 2" } as const,
       ],
     };
+
     const result = appReducer(testState, appActions.allNotificationsDismissed());
 
     expect(result.notifications).toHaveLength(0);
@@ -46,6 +50,7 @@ describe("within appReducer", () => {
       initialState,
       appActions.notificationShown({ message: "Test Message", type: "info" }),
     );
+
     const [firstNotification] = result.notifications;
 
     expect(firstNotification.message).toBe("Test Message");
@@ -57,6 +62,7 @@ describe("within appReducer", () => {
     "sets the correct error message when the errorNotificationShown action is dispatched",
     (options) => {
       const result = appReducer(initialState, appActions.errorNotificationShown(options.payload));
+
       const [firstNotification] = result.notifications;
 
       expect(firstNotification.message).toBe(options.expected);

@@ -4,7 +4,6 @@ import type { SagaIterator } from "redux-saga";
 import { call, delay } from "redux-saga/effects";
 
 import { credentialsByToolNameSelector } from "~/modules/credentials/credentialsSelectors";
-import { getStore } from "~/redux/configureStore";
 import { ToolName } from "~/typeDefs";
 import {
   getApiUrl,
@@ -134,10 +133,6 @@ async function fetchWithRetries<TResponse>(
  * and stable API.
  */
 export function getApiDelayForTool(toolName: ToolName): number {
-  if (process?.env?.NODE_ENV?.toString() === "test") {
-    return 0;
-  }
-
   switch (toolName) {
     case ToolName.Clockify:
       return isUseLocalApi() ? 0 : 1000 / 8;
@@ -153,7 +148,7 @@ export function getApiDelayForTool(toolName: ToolName): number {
 async function fetchFromApi<T>(url: string, config: RequestInit): Promise<T> {
   const { toolName, context, endpoint } = extrapolateFromUrl(url);
 
-  const state = getStore().getState();
+  const state = window.store.getState();
 
   const credentialsByToolName = credentialsByToolNameSelector(state);
 

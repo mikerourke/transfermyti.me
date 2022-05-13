@@ -13,7 +13,7 @@ Array [
     "memberOf": "users",
     "name": "Mary Testarossa",
     "userGroupIds": Array [],
-    "workspaceId": null,
+    "workspaceId": "1001",
   },
 ]
 `;
@@ -22,6 +22,7 @@ exports[`within usersSelectors the selectors match their snapshots for the sourc
 Object {
   "clock-workspace-01": Array [
     "test-user@test.com",
+    "mary@testarossa.com",
   ],
 }
 `;
@@ -39,7 +40,7 @@ Array [
     "memberOf": "users",
     "name": "Mary Testarossa",
     "userGroupIds": Array [],
-    "workspaceId": null,
+    "workspaceId": "1001",
   },
 ]
 `;

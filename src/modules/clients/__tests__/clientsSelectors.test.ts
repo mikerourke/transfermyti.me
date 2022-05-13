@@ -1,12 +1,14 @@
 import cases from "jest-in-case";
 
-import { state } from "~/redux/__mocks__/mockStoreWithState";
-import { ToolName } from "~/typeDefs";
+import { FAKES } from "~/jestUtilities";
+import { EntityGroup, ToolName } from "~/typeDefs";
 
 import * as clientsSelectors from "../clientsSelectors";
 
-const TEST_STATE = {
-  ...state,
+const { REDUX_STATE } = FAKES;
+
+const MOCK_STATE = {
+  ...REDUX_STATE,
   clients: {
     source: {
       "3001": {
@@ -16,7 +18,7 @@ const TEST_STATE = {
         entryCount: 3,
         linkedId: "clock-client-01",
         isIncluded: false,
-        memberOf: "clients",
+        memberOf: EntityGroup.Clients,
       },
       "3002": {
         id: "3002",
@@ -25,7 +27,7 @@ const TEST_STATE = {
         entryCount: 3,
         linkedId: null,
         isIncluded: false,
-        memberOf: "clients",
+        memberOf: EntityGroup.Clients,
       },
       "3003": {
         id: "3003",
@@ -34,7 +36,7 @@ const TEST_STATE = {
         entryCount: 1,
         linkedId: null,
         isIncluded: true,
-        memberOf: "clients",
+        memberOf: EntityGroup.Clients,
       },
     },
     target: {
@@ -45,7 +47,7 @@ const TEST_STATE = {
         entryCount: 0,
         linkedId: "3001",
         isIncluded: false,
-        memberOf: "clients",
+        memberOf: EntityGroup.Clients,
       },
     },
     isFetching: false,
@@ -54,15 +56,15 @@ const TEST_STATE = {
 
 describe("within clientsSelectors", () => {
   test("the sourceClientsByIdSelector returns state.source", () => {
-    const result = clientsSelectors.sourceClientsByIdSelector(TEST_STATE);
+    const result = clientsSelectors.sourceClientsByIdSelector(MOCK_STATE);
 
-    expect(result).toEqual(TEST_STATE.clients.source);
+    expect(result).toEqual(MOCK_STATE.clients.source);
   });
 
   cases(
     "the selectors match their snapshots",
     (options) => {
-      const result = options.selector(TEST_STATE);
+      const result = options.selector(MOCK_STATE);
 
       expect(result).toMatchSnapshot();
     },
@@ -94,12 +96,13 @@ describe("within clientsSelectors", () => {
     "the clientsForInclusionsTableSelector matches its snapshot based on state.allEntities.areExistsInTargetShown",
     (options) => {
       const updatedState = {
-        ...TEST_STATE,
+        ...MOCK_STATE,
         allEntities: {
-          ...TEST_STATE.allEntities,
+          ...MOCK_STATE.allEntities,
           areExistsInTargetShown: options.areExistsInTargetShown,
         },
       };
+
       const result = clientsSelectors.clientsForInclusionsTableSelector(updatedState);
 
       expect(result).toMatchSnapshot();
@@ -118,7 +121,8 @@ describe("within clientsSelectors", () => {
 
   test("the clientIdsByNameSelectorFactory matches its snapshot", () => {
     const getClientIdsByName = clientsSelectors.clientIdsByNameSelectorFactory(ToolName.Toggl);
-    const result = getClientIdsByName(TEST_STATE);
+
+    const result = getClientIdsByName(MOCK_STATE);
 
     expect(result).toMatchSnapshot();
   });

@@ -1,4 +1,28 @@
-export type { ReduxState } from "~/redux/rootReducer";
+import type { AllEntitiesState } from "~/modules/allEntities/allEntitiesReducer";
+import type { AppState } from "~/modules/app/appReducer";
+import type { ClientsState } from "~/modules/clients/clientsReducer";
+import type { CredentialsState } from "~/modules/credentials/credentialsReducer";
+import type { ProjectsState } from "~/modules/projects/projectsReducer";
+import type { TagsState } from "~/modules/tags/tagsReducer";
+import type { TasksState } from "~/modules/tasks/tasksReducer";
+import type { TimeEntriesState } from "~/modules/timeEntries/timeEntriesReducer";
+import type { UserGroupsState } from "~/modules/userGroups/userGroupsReducer";
+import type { UsersState } from "~/modules/users/usersReducer";
+import type { WorkspacesState } from "~/modules/workspaces/workspacesReducer";
+
+export interface ReduxState {
+  allEntities: AllEntitiesState;
+  app: AppState;
+  clients: ClientsState;
+  credentials: CredentialsState;
+  projects: ProjectsState;
+  tags: TagsState;
+  tasks: TasksState;
+  timeEntries: TimeEntriesState;
+  userGroups: UserGroupsState;
+  users: UsersState;
+  workspaces: WorkspacesState;
+}
 
 type NotificationType = "error" | "info" | "success";
 
@@ -101,7 +125,7 @@ export interface PartialCredentialsUpdate {
 }
 
 export interface Estimate {
-  estimate: number;
+  estimate: number | string;
   type: "AUTO" | "MANUAL";
 }
 

@@ -1,29 +1,27 @@
 import cases from "jest-in-case";
 import { lensProp, set } from "ramda";
 
+import { FAKES } from "~/jestUtilities";
 import * as projectsActions from "~/modules/projects/projectsActions";
-import { invalidAction, state } from "~/redux/__mocks__/mockStoreWithState";
 
 import { initialState, projectsReducer } from "../projectsReducer";
 
-const TEST_PROJECTS_STATE = { ...state.projects };
+const { INVALID_ACTION, REDUX_STATE, TOGGL_PROJECT_ID } = FAKES;
 
-const TEST_PROJECT_ID = "2001";
-
-const TEST_PAYLOAD = {
-  source: { ...TEST_PROJECTS_STATE.source },
-  target: { ...TEST_PROJECTS_STATE.target },
+const MOCK_PAYLOAD = {
+  source: { ...REDUX_STATE.projects.source },
+  target: { ...REDUX_STATE.projects.target },
 };
 
 describe("within projectsReducer", () => {
   test("returns input state if an invalid action type is passed to the reducer", () => {
-    const result = projectsReducer(initialState, invalidAction as AnyValid);
+    const result = projectsReducer(initialState, INVALID_ACTION);
 
     expect(result).toEqual(initialState);
   });
 
   test("returns input state if no state is passed to the reducer", () => {
-    const result = projectsReducer(undefined as AnyValid, invalidAction as AnyValid);
+    const result = projectsReducer(undefined, INVALID_ACTION);
 
     expect(result).toEqual(initialState);
   });
@@ -32,7 +30,7 @@ describe("within projectsReducer", () => {
     "the isFetching is set to the correct value based on the dispatched action",
     (options) => {
       const updatedState = {
-        ...TEST_PROJECTS_STATE,
+        ...REDUX_STATE.projects,
         isFetching: options.initialStatus,
       };
       const result = projectsReducer(updatedState, options.action);
@@ -43,13 +41,13 @@ describe("within projectsReducer", () => {
       {
         name: "when the createProjects.success action is dispatched",
         initialStatus: true,
-        action: projectsActions.createProjects.success(TEST_PAYLOAD),
+        action: projectsActions.createProjects.success(MOCK_PAYLOAD),
         expectedStatus: false,
       },
       {
         name: "when the fetchProjects.success action is dispatched",
         initialStatus: true,
-        action: projectsActions.fetchProjects.success(TEST_PAYLOAD),
+        action: projectsActions.fetchProjects.success(MOCK_PAYLOAD),
         expectedStatus: false,
       },
       {
@@ -95,82 +93,63 @@ describe("within projectsReducer", () => {
     const updatedState = set(
       lensProp("source"),
       {
-        [TEST_PROJECT_ID]: {
-          ...TEST_PROJECTS_STATE.source[TEST_PROJECT_ID],
+        [TOGGL_PROJECT_ID]: {
+          ...REDUX_STATE.projects.source[TOGGL_PROJECT_ID],
           isIncluded: false,
         },
       },
-      TEST_PROJECTS_STATE,
-    );
-    const result = projectsReducer(
-      updatedState,
-      projectsActions.isProjectIncludedToggled(TEST_PROJECT_ID),
+      REDUX_STATE.projects,
     );
 
-    expect(result.source[TEST_PROJECT_ID].isIncluded).toBe(true);
+    const result = projectsReducer(
+      updatedState,
+      projectsActions.isProjectIncludedToggled(TOGGL_PROJECT_ID),
+    );
+
+    expect(result.source[TOGGL_PROJECT_ID].isIncluded).toBe(true);
   });
 
   test(`the isProjectIncludedUpdated action sets the "isIncluded" value based on payload`, () => {
     const updatedState = set(
       lensProp("source"),
       {
-        [TEST_PROJECT_ID]: {
-          ...TEST_PROJECTS_STATE.source[TEST_PROJECT_ID],
+        [TOGGL_PROJECT_ID]: {
+          ...REDUX_STATE.projects.source[TOGGL_PROJECT_ID],
           isIncluded: true,
         },
       },
-      TEST_PROJECTS_STATE,
+      REDUX_STATE.projects,
     );
+
     const result = projectsReducer(
       updatedState,
       projectsActions.isProjectIncludedUpdated({
-        id: TEST_PROJECT_ID,
+        id: TOGGL_PROJECT_ID,
         isIncluded: false,
       }),
     );
 
-    expect(result.source[TEST_PROJECT_ID].isIncluded).toBe(false);
+    expect(result.source[TOGGL_PROJECT_ID].isIncluded).toBe(false);
   });
 
   test(`the areAllProjectsIncludedUpdated action sets the "isIncluded" value of all records to payload`, () => {
     const updatedState = {
-      ...TEST_PROJECTS_STATE,
+      ...REDUX_STATE.projects,
       source: {
         "2001": {
-          id: "2001",
-          name: "Test Project A",
-          workspaceId: "1001",
-          clientId: null,
-          isBillable: false,
-          isPublic: false,
-          isActive: true,
-          color: "#ea468d",
-          estimate: { estimate: 0, type: "MANUAL" },
-          userIds: ["6001"],
-          entryCount: 3,
+          ...REDUX_STATE.projects.source["2001"],
           linkedId: null,
           isIncluded: false,
-          memberOf: "projects",
         },
         "2002": {
-          id: "2002",
-          name: "Test Project B",
-          workspaceId: "1001",
-          clientId: null,
-          isBillable: false,
-          isPublic: false,
-          isActive: false,
-          color: "#3750b5",
-          estimate: { estimate: 40, type: "MANUAL" },
-          userIds: ["6001"],
-          entryCount: 3,
+          ...REDUX_STATE.projects.source["2002"],
           linkedId: null,
           isIncluded: false,
-          memberOf: "projects",
         },
       },
       target: {},
     };
+
     const result = projectsReducer(
       updatedState,
       projectsActions.areAllProjectsIncludedUpdated(true),
@@ -181,7 +160,7 @@ describe("within projectsReducer", () => {
   });
 
   test("the deleteProjects.success action resets state to initial state", () => {
-    const result = projectsReducer(state, projectsActions.deleteProjects.success());
+    const result = projectsReducer(REDUX_STATE.projects, projectsActions.deleteProjects.success());
 
     expect(result).toEqual(initialState);
   });

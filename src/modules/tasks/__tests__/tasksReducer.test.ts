@@ -1,29 +1,27 @@
 import cases from "jest-in-case";
 import { lensProp, set } from "ramda";
 
+import { FAKES } from "~/jestUtilities";
 import * as tasksActions from "~/modules/tasks/tasksActions";
-import { invalidAction, state } from "~/redux/__mocks__/mockStoreWithState";
 
 import { initialState, tasksReducer } from "../tasksReducer";
 
-const TEST_TASKS_STATE = { ...state.tasks };
+const { INVALID_ACTION, REDUX_STATE, TOGGL_TASK_ID } = FAKES;
 
-const TEST_TASK_ID = "7001";
-
-const TEST_PAYLOAD = {
-  source: { ...TEST_TASKS_STATE.source },
-  target: { ...TEST_TASKS_STATE.target },
+const MOCK_PAYLOAD = {
+  source: { ...REDUX_STATE.tasks.source },
+  target: { ...REDUX_STATE.tasks.target },
 };
 
 describe("within tasksReducer", () => {
   test("returns input state if an invalid action type is passed to the reducer", () => {
-    const result = tasksReducer(initialState, invalidAction as AnyValid);
+    const result = tasksReducer(initialState, INVALID_ACTION);
 
     expect(result).toEqual(initialState);
   });
 
   test("returns input state if no state is passed to the reducer", () => {
-    const result = tasksReducer(undefined as AnyValid, invalidAction as AnyValid);
+    const result = tasksReducer(undefined, INVALID_ACTION);
 
     expect(result).toEqual(initialState);
   });
@@ -32,7 +30,7 @@ describe("within tasksReducer", () => {
     "the isFetching is set to the correct value based on the dispatched action",
     (options) => {
       const updatedState = {
-        ...TEST_TASKS_STATE,
+        ...REDUX_STATE.tasks,
         isFetching: options.initialStatus,
       };
       const result = tasksReducer(updatedState, options.action);
@@ -43,13 +41,13 @@ describe("within tasksReducer", () => {
       {
         name: "when the createTasks.success action is dispatched",
         initialStatus: true,
-        action: tasksActions.createTasks.success(TEST_PAYLOAD),
+        action: tasksActions.createTasks.success(MOCK_PAYLOAD),
         expectedStatus: false,
       },
       {
         name: "when the fetchTasks.success action is dispatched",
         initialStatus: true,
-        action: tasksActions.fetchTasks.success(TEST_PAYLOAD),
+        action: tasksActions.fetchTasks.success(MOCK_PAYLOAD),
         expectedStatus: false,
       },
       {
@@ -95,69 +93,57 @@ describe("within tasksReducer", () => {
     const updatedState = set(
       lensProp("source"),
       {
-        [TEST_TASK_ID]: {
-          ...TEST_TASKS_STATE.source[TEST_TASK_ID],
+        [TOGGL_TASK_ID]: {
+          ...REDUX_STATE.tasks.source[TOGGL_TASK_ID],
           isIncluded: false,
         },
       },
-      TEST_TASKS_STATE,
+      REDUX_STATE.tasks,
     );
-    const result = tasksReducer(updatedState, tasksActions.isTaskIncludedToggled(TEST_TASK_ID));
 
-    expect(result.source[TEST_TASK_ID].isIncluded).toBe(true);
+    const result = tasksReducer(updatedState, tasksActions.isTaskIncludedToggled(TOGGL_TASK_ID));
+
+    expect(result.source[TOGGL_TASK_ID].isIncluded).toBe(true);
   });
 
   test(`the isTaskIncludedUpdated action sets the "isIncluded" value based on payload`, () => {
     const updatedState = set(
       lensProp("source"),
       {
-        [TEST_TASK_ID]: {
-          ...TEST_TASKS_STATE.source[TEST_TASK_ID],
+        [TOGGL_TASK_ID]: {
+          ...REDUX_STATE.tasks.source[TOGGL_TASK_ID],
           isIncluded: true,
         },
       },
-      TEST_TASKS_STATE,
+      REDUX_STATE.tasks,
     );
+
     const result = tasksReducer(
       updatedState,
       tasksActions.isTaskIncludedUpdated({
-        id: TEST_TASK_ID,
+        id: TOGGL_TASK_ID,
         isIncluded: false,
       }),
     );
 
-    expect(result.source[TEST_TASK_ID].isIncluded).toBe(false);
+    expect(result.source[TOGGL_TASK_ID].isIncluded).toBe(false);
   });
 
   test(`the areAllTasksIncludedUpdated action sets the "isIncluded" value of all records to payload`, () => {
     const updatedState = {
-      ...TEST_TASKS_STATE,
+      ...REDUX_STATE.tasks,
       source: {
         "7001": {
-          id: "7001",
-          name: "Task 1",
-          estimate: "PT2H",
-          projectId: "2001",
-          assigneeIds: ["123123"],
-          isActive: true,
-          workspaceId: "1001",
+          ...REDUX_STATE.tasks.source["7001"],
           entryCount: 2,
           linkedId: null,
           isIncluded: false,
-          memberOf: "tasks",
         },
         "7002": {
-          id: "7002",
-          name: "Task 2",
-          estimate: "PT0M",
-          projectId: "2001",
-          assigneeIds: [],
-          isActive: true,
-          workspaceId: "1001",
+          ...REDUX_STATE.tasks.source["7002"],
           entryCount: 1,
           linkedId: null,
           isIncluded: false,
-          memberOf: "tasks",
         },
       },
       target: {},
@@ -169,7 +155,7 @@ describe("within tasksReducer", () => {
   });
 
   test("the deleteTasks.success action resets state to initial state", () => {
-    const result = tasksReducer(state, tasksActions.deleteTasks.success());
+    const result = tasksReducer(REDUX_STATE.tasks, tasksActions.deleteTasks.success());
 
     expect(result).toEqual(initialState);
   });

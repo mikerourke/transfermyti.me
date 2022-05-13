@@ -36,7 +36,7 @@ Array [
     "entryCount": 0,
     "id": "5001",
     "isIncluded": false,
-    "linkedId": "clock-user-group-02",
+    "linkedId": "clock-user-group-01",
     "memberOf": "userGroups",
     "name": "Test Group A",
     "userIds": Array [],

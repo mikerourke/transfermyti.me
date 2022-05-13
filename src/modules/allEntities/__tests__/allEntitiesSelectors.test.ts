@@ -1,8 +1,10 @@
 import cases from "jest-in-case";
 import { lensPath, set } from "ramda";
 
-import { state } from "~/redux/__mocks__/mockStoreWithState";
+import { FAKES } from "~/jestUtilities";
 import { EntityGroup, ToolName } from "~/typeDefs";
+
+const { REDUX_STATE } = FAKES;
 
 import * as allEntitiesSelectors from "../allEntitiesSelectors";
 
@@ -10,7 +12,7 @@ describe("within allEntitiesSelectors", () => {
   cases(
     "selectors that directly access state return the correct value",
     (options) => {
-      const result = options.selector(state);
+      const result = options.selector(REDUX_STATE);
 
       expect(result).toEqual(options.expected);
     },
@@ -18,37 +20,37 @@ describe("within allEntitiesSelectors", () => {
       {
         name: "areExistsInTargetShownSelector returns state.areExistsInTargetShown",
         selector: allEntitiesSelectors.areExistsInTargetShownSelector,
-        expected: state.allEntities.areExistsInTargetShown,
+        expected: REDUX_STATE.allEntities.areExistsInTargetShown,
       },
       {
         name: "fetchAllFetchStatusSelector returns state.fetchAllFetchStatus",
         selector: allEntitiesSelectors.fetchAllFetchStatusSelector,
-        expected: state.allEntities.fetchAllFetchStatus,
+        expected: REDUX_STATE.allEntities.fetchAllFetchStatus,
       },
       {
         name: "pushAllChangesFetchStatusSelector returns state.pushAllChangesFetchStatus",
         selector: allEntitiesSelectors.pushAllChangesFetchStatusSelector,
-        expected: state.allEntities.pushAllChangesFetchStatus,
+        expected: REDUX_STATE.allEntities.pushAllChangesFetchStatus,
       },
       {
         name: "toolActionSelector returns state.toolAction",
         selector: allEntitiesSelectors.toolActionSelector,
-        expected: state.allEntities.toolAction,
+        expected: REDUX_STATE.allEntities.toolAction,
       },
       {
         name: "toolNameByMappingSelector returns state.toolNameByMapping",
         selector: allEntitiesSelectors.toolNameByMappingSelector,
-        expected: state.allEntities.toolNameByMapping,
+        expected: REDUX_STATE.allEntities.toolNameByMapping,
       },
       {
         name: "transferCountsByEntityGroupSelector returns state.transferCountsByEntityGroup",
         selector: allEntitiesSelectors.transferCountsByEntityGroupSelector,
-        expected: state.allEntities.transferCountsByEntityGroup,
+        expected: REDUX_STATE.allEntities.transferCountsByEntityGroup,
       },
       {
         name: "toolForTargetMappingSelector returns state.toolNameByMapping.target",
         selector: allEntitiesSelectors.toolForTargetMappingSelector,
-        expected: state.allEntities.toolNameByMapping.target,
+        expected: REDUX_STATE.allEntities.toolNameByMapping.target,
       },
     ],
   );
@@ -57,7 +59,7 @@ describe("within allEntitiesSelectors", () => {
     const updatedState = set(
       lensPath(["allEntities", "entityGroupInProcess"]),
       EntityGroup.TimeEntries,
-      state,
+      REDUX_STATE,
     );
     const result = allEntitiesSelectors.entityGroupInProcessDisplaySelector(updatedState);
 
@@ -65,12 +67,12 @@ describe("within allEntitiesSelectors", () => {
   });
 
   test("the includedCountsByEntityGroupSelector returns the count of entities by group", () => {
-    const result = allEntitiesSelectors.includedCountsByEntityGroupSelector(state);
+    const result = allEntitiesSelectors.includedCountsByEntityGroupSelector(REDUX_STATE);
 
     expect(result).toEqual({
       clients: 0,
       tags: 4,
-      projects: 0,
+      projects: 2,
       tasks: 0,
       timeEntries: 0,
       userGroups: 0,
@@ -79,14 +81,14 @@ describe("within allEntitiesSelectors", () => {
   });
 
   test("the totalIncludedRecordsCountSelector returns sum of included record counts", () => {
-    const result = allEntitiesSelectors.totalIncludedRecordsCountSelector(state);
+    const result = allEntitiesSelectors.totalIncludedRecordsCountSelector(REDUX_STATE);
 
-    expect(result).toBe(4);
+    expect(result).toBe(6);
   });
 
   test("the mappingByToolNameSelector returns state.toolNameByMapping inverted", () => {
-    const result = allEntitiesSelectors.mappingByToolNameSelector(state);
-    const { toolNameByMapping } = state.allEntities;
+    const result = allEntitiesSelectors.mappingByToolNameSelector(REDUX_STATE);
+    const { toolNameByMapping } = REDUX_STATE.allEntities;
 
     expect(result).toEqual({
       [toolNameByMapping.source]: "source",
@@ -98,7 +100,7 @@ describe("within allEntitiesSelectors", () => {
     const updatedState = set(
       lensPath(["allEntities", "toolNameByMapping"]),
       { source: ToolName.Clockify, target: ToolName.Toggl },
-      state,
+      REDUX_STATE,
     );
     const result = allEntitiesSelectors.toolHelpDetailsByMappingSelector(updatedState);
 
@@ -120,7 +122,7 @@ describe("within allEntitiesSelectors", () => {
     const updatedState = set(
       lensPath(["allEntities", "toolNameByMapping"]),
       { source: ToolName.Clockify, target: ToolName.Toggl },
-      state,
+      REDUX_STATE,
     );
     const replacer = allEntitiesSelectors.replaceMappingWithToolNameSelector(updatedState);
 
@@ -142,7 +144,7 @@ describe("within allEntitiesSelectors", () => {
       const updatedState = set(
         lensPath(["allEntities", "toolNameByMapping"]),
         { source: ToolName.Clockify, target: ToolName.None },
-        state,
+        REDUX_STATE,
       );
       const result = allEntitiesSelectors.targetToolDisplayNameSelector(updatedState);
 
@@ -153,7 +155,7 @@ describe("within allEntitiesSelectors", () => {
       const updatedState = set(
         lensPath(["allEntities", "toolNameByMapping"]),
         { source: ToolName.Clockify, target: ToolName.Toggl },
-        state,
+        REDUX_STATE,
       );
       const result = allEntitiesSelectors.targetToolDisplayNameSelector(updatedState);
 
@@ -166,7 +168,7 @@ describe("within allEntitiesSelectors", () => {
       const updatedState = set(
         lensPath(["allEntities", "toolNameByMapping"]),
         { source: ToolName.Clockify, target: ToolName.None },
-        state,
+        REDUX_STATE,
       );
       const result = allEntitiesSelectors.targetToolTrackerUrlSelector(updatedState);
 
@@ -177,7 +179,7 @@ describe("within allEntitiesSelectors", () => {
       const updatedState = set(
         lensPath(["allEntities", "toolNameByMapping"]),
         { source: ToolName.Clockify, target: ToolName.Toggl },
-        state,
+        REDUX_STATE,
       );
       const result = allEntitiesSelectors.targetToolTrackerUrlSelector(updatedState);
 

@@ -1,29 +1,27 @@
 import cases from "jest-in-case";
 import { lensProp, set } from "ramda";
 
+import { FAKES } from "~/jestUtilities";
 import * as usersActions from "~/modules/users/usersActions";
-import { invalidAction, state } from "~/redux/__mocks__/mockStoreWithState";
 
 import { initialState, usersReducer } from "../usersReducer";
 
-const TEST_USERS_STATE = { ...state.users };
+const { INVALID_ACTION, REDUX_STATE, TOGGL_USER_ID } = FAKES;
 
-const TEST_USER_ID = "6001";
-
-const TEST_PAYLOAD = {
-  source: { ...TEST_USERS_STATE.source },
-  target: { ...TEST_USERS_STATE.target },
+const MOCK_PAYLOAD = {
+  source: { ...REDUX_STATE.users.source },
+  target: { ...REDUX_STATE.users.target },
 };
 
 describe("within usersReducer", () => {
   test("returns input state if an invalid action type is passed to the reducer", () => {
-    const result = usersReducer(initialState, invalidAction as AnyValid);
+    const result = usersReducer(initialState, INVALID_ACTION);
 
     expect(result).toEqual(initialState);
   });
 
   test("returns input state if no state is passed to the reducer", () => {
-    const result = usersReducer(undefined as AnyValid, invalidAction as AnyValid);
+    const result = usersReducer(undefined, INVALID_ACTION);
 
     expect(result).toEqual(initialState);
   });
@@ -32,9 +30,10 @@ describe("within usersReducer", () => {
     "the isFetching is set to the correct value based on the dispatched action",
     (options) => {
       const updatedState = {
-        ...TEST_USERS_STATE,
+        ...REDUX_STATE.users,
         isFetching: options.initialStatus,
       };
+
       const result = usersReducer(updatedState, options.action);
 
       expect(result.isFetching).toEqual(options.expectedStatus);
@@ -49,7 +48,7 @@ describe("within usersReducer", () => {
       {
         name: "when the fetchUsers.success action is dispatched",
         initialStatus: true,
-        action: usersActions.fetchUsers.success(TEST_PAYLOAD),
+        action: usersActions.fetchUsers.success(MOCK_PAYLOAD),
         expectedStatus: false,
       },
       {
@@ -95,20 +94,21 @@ describe("within usersReducer", () => {
     const updatedState = set(
       lensProp("source"),
       {
-        [TEST_USER_ID]: {
-          ...TEST_USERS_STATE.source[TEST_USER_ID],
+        [TOGGL_USER_ID]: {
+          ...REDUX_STATE.users.source[TOGGL_USER_ID],
           isIncluded: false,
         },
       },
-      TEST_USERS_STATE,
+      REDUX_STATE.users,
     );
-    const result = usersReducer(updatedState, usersActions.isUserIncludedToggled(TEST_USER_ID));
 
-    expect(result.source[TEST_USER_ID].isIncluded).toBe(true);
+    const result = usersReducer(updatedState, usersActions.isUserIncludedToggled(TOGGL_USER_ID));
+
+    expect(result.source[TOGGL_USER_ID].isIncluded).toBe(true);
   });
 
   test("the deleteUsers.success action resets state to initial state", () => {
-    const result = usersReducer(state, usersActions.deleteUsers.success());
+    const result = usersReducer(REDUX_STATE.users, usersActions.deleteUsers.success());
 
     expect(result).toEqual(initialState);
   });

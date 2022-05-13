@@ -5,6 +5,7 @@ declare type AnyValid = any;
 declare type Dictionary<T> = Record<string, T>;
 
 declare interface Window {
+  store: any;
   __REDUX_DEVTOOLS_EXTENSION_COMPOSE__<R>(
     options?: ReduxDevToolsComposeOptions,
   ): (...args: AnyValid[]) => R;
