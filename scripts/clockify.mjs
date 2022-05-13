@@ -4,10 +4,12 @@ import qs from "node:querystring";
 import { fileURLToPath, URL } from "node:url";
 
 import fetch from "node-fetch";
-import colors from "picocolors";
-import PromiseThrottle from "promise-throttle";
 
-import { readJsonSync, writeJson } from "./utilities.mjs";
+import { readJsonSync, TaskRunner, writeJson } from "./utilities.mjs";
+
+const task = new TaskRunner("clockify");
+
+const API_DELAY = 500;
 
 const httpEnvPath = fileURLToPath(
   new URL(path.join("..", "http-client.private.env.json"), import.meta.url),
@@ -44,7 +46,8 @@ export async function deleteEntitiesInWorkspaces() {
 
   // Wait 1 second between each entity group, just to hedge my bets:
   for (const workspace of workspaces) {
-    console.log(colors.cyan(`Processing ${workspace.name}...`));
+    task.log(`Processing ${workspace.name}...`);
+
     await deleteEntityGroupInWorkspace(workspace.id, "time-entries");
     await pause(1000);
 
@@ -55,7 +58,7 @@ export async function deleteEntitiesInWorkspaces() {
     await pause(1000);
 
     await deleteEntityGroupInWorkspace(workspace.id, "projects");
-    console.log(colors.green(`Processing complete for ${workspace.name}`));
+    task.log(`Processing complete for ${workspace.name}`);
   }
 }
 
@@ -79,7 +82,7 @@ export async function writeEntitiesToOutputFile() {
   };
 
   for (const { id, name, ...workspace } of workspaces) {
-    console.log(colors.cyan(`Processing ${name}...`));
+    task.log(`Processing ${name}...`);
 
     dataByWorkspaceName[name].data = { id, ...workspace };
 
@@ -96,7 +99,7 @@ export async function writeEntitiesToOutputFile() {
   }
 
   await writeJson(outputPath, dataByWorkspaceName);
-  console.log(colors.green("Clockify entities written to file!"));
+  task.log("Clockify entities written to file!");
 }
 
 /**
@@ -113,25 +116,25 @@ async function deleteEntityGroupInWorkspace(workspaceId, entityGroup) {
   );
 
   if (!entityRecords || entityRecords.length === 0) {
-    return console.log(colors.yellow(`No ${entityGroup} to delete.`));
+    return task.log(`No ${entityGroup} to delete.`);
   }
 
   const baseEndpoint = getEntityGroupEndpoint(workspaceId, entityGroup);
   const apiDeleteEntity = (entityId) =>
     clockifyFetch(`${baseEndpoint}/${entityId}`, { method: "DELETE" });
 
-  const { promiseThrottle, throttledFn } = buildThrottler(apiDeleteEntity);
+  task.log(`Deleting ${entityGroup} in workspace...`);
 
-  console.log(colors.cyan(`Deleting ${entityGroup} in workspace...`));
   for (const { id, name } of entityRecords) {
-    await promiseThrottle
-      .add(throttledFn.bind(this, id))
-      .then(() => {
-        console.log(colors.green(`Delete ${name} successful`));
-      })
-      .catch((err) => {
-        console.log(colors.magenta(`Error deleting ${entityGroup}: ${err}`));
-      });
+    try {
+      await apiDeleteEntity(id);
+
+      await pause(API_DELAY);
+
+      task.log(`Delete ${name} successful`);
+    } catch (err) {
+      task.log(`Error deleting ${entityGroup}: ${err}`);
+    }
   }
 }
 
@@ -165,25 +168,21 @@ async function deleteTimeEntriesInWorkspace(workspaceId) {
       method: "DELETE",
     });
 
-  const { promiseThrottle, throttledFn } = buildThrottler(
-    apiDeleteTimeEntryById,
-  );
-
   const totalEntryCount = timeEntries.length;
   let currentEntry = 1;
 
   for (const { id } of timeEntries) {
-    await promiseThrottle
-      .add(throttledFn.bind(this, id))
-      .then(() => {
-        console.log(
-          colors.green(`Deleted ${currentEntry} of ${totalEntryCount}`),
-        );
-        currentEntry += 1;
-      })
-      .catch((err) => {
-        console.log(colors.magenta(`Error deleting time entries: ${err}`));
-      });
+    try {
+      await apiDeleteTimeEntryById(id);
+
+      task.log(`Deleted ${currentEntry} of ${totalEntryCount}`);
+
+      currentEntry += 1;
+
+      await pause(API_DELAY);
+    } catch (err) {
+      task.log(`Error deleting time entries: ${err}`);
+    }
   }
 }
 
@@ -216,31 +215,26 @@ async function fetchTimeEntriesInWorkspace(workspaceId) {
     });
   };
 
-  const { promiseThrottle, throttledFn } = buildThrottler(
-    apiFetchTimeEntriesForYear,
-  );
-
   const allEntries = [];
 
   let keepFetching = true;
   let currentPage = 1;
 
   while (keepFetching) {
-    await promiseThrottle
-      .add(throttledFn.bind(this, currentPage))
-      .then((timeEntries) => {
-        keepFetching = timeEntries.length === 100;
-        allEntries.push(timeEntries);
-        console.log(
-          colors.green(
-            `Fetched ${timeEntries.length} entries for page ${currentPage}`,
-          ),
-        );
-      })
-      .catch((err) => {
-        keepFetching = false;
-        console.log(colors.magenta(`Error fetching time entries: ${err}`));
-      });
+    try {
+      const timeEntries = await apiFetchTimeEntriesForYear(currentPage);
+
+      keepFetching = timeEntries.length === 100;
+      allEntries.push(timeEntries);
+
+      // prettier-ignore
+      task.log(`Fetched ${timeEntries.length} entries for page ${currentPage}`);
+    } catch (err) {
+      keepFetching = false;
+
+      task.log(`Error fetching time entries: ${err}`);
+    }
+
     currentPage += 1;
   }
 
@@ -253,6 +247,7 @@ async function fetchTimeEntriesInWorkspace(workspaceId) {
  */
 async function fetchValidWorkspaces() {
   const workspaceResults = await clockifyFetch("/workspaces");
+
   return workspaceResults.reduce((acc, workspace) => {
     // This is due to an issue with one of my workspaces that wasn't deleted
     // properly (I suspect it may have been a Clockify bug). If I try deleting
@@ -263,34 +258,6 @@ async function fetchValidWorkspaces() {
 
     return [...acc, workspace];
   }, []);
-}
-
-/**
- * Returns a PromiseThrottle instance and throttler function for throttling
- * API requests.
- */
-function buildThrottler(fetchFunc) {
-  const promiseThrottle = new PromiseThrottle({
-    requestsPerSecond: 4,
-    promiseImplementation: /** @type {PromiseConstructorLike} */ Promise,
-  });
-
-  const throttledFn = (...args) =>
-    new Promise((resolve, reject) =>
-      fetchFunc
-        .call(null, ...args)
-        .then((response) => {
-          resolve(response);
-        })
-        .catch((err) => {
-          reject(err);
-        }),
-    );
-
-  return {
-    promiseThrottle,
-    throttledFn,
-  };
 }
 
 /**

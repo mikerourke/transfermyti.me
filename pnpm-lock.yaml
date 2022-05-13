@@ -38,11 +38,9 @@ specifiers:
   mini-css-extract-plugin: ^2.6.0
   morgan: ^1.10.0
   node-fetch: ^3.2.4
-  picocolors: ^1.0.0
   postcss-html: ^1.4.1
   prettier: ^2.6.2
   prettier-plugin-svelte: ^2.7.0
-  promise-throttle: ^1.1.2
   qs: ^6.10.3
   ramda: ^0.28.0
   redux: ^4.2.0
@@ -113,11 +111,9 @@ devDependencies:
   mini-css-extract-plugin: 2.6.0_webpack@5.72.1
   morgan: 1.10.0
   node-fetch: 3.2.4
-  picocolors: 1.0.0
   postcss-html: 1.4.1
   prettier: 2.6.2
   prettier-plugin-svelte: 2.7.0_kkjbqzpydplecjtkxrgomroeru
-  promise-throttle: 1.1.2
   redux-mock-store: 1.5.4
   redux-saga-test-plan: 4.0.4_redux-saga@1.1.3
   rimraf: 3.0.2
@@ -6165,10 +6161,6 @@ packages:
 
   /process-nextick-args/2.0.1:
     resolution: {integrity: sha512-3ouUOpQhtgrbOa17J7+uxOTpITYWaGP7/AhoR3+A+/1e9skrzelGi/dXzEYyvbxubEF6Wn2ypscTKiKJFFn1ag==}
-    dev: true
-
-  /promise-throttle/1.1.2:
-    resolution: {integrity: sha512-dij7vjyXNewuuN/gyr+TX2KRjw48mbV5FEtgyXaIoJjGYAKT0au23/voNvy9eS4UNJjx2KUdEcO5Yyfc1h7vWQ==}
     dev: true
 
   /prompts/2.4.2:
