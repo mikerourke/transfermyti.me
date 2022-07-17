@@ -46,10 +46,12 @@
     transferCountsByEntityGroupSelector,
   );
 
-  let isConfirmToolActionDialogOpen: boolean = false;
+  const orderedEntityGroups: EntityGroup[] = getOrderedEntityGroups(
+    $includedCountsByEntityGroup,
+  );
+  let shownEntityGroups: EntityGroup[] = [];
 
-  let orderedEntityGroups: EntityGroup[];
-  $: orderedEntityGroups = getOrderedEntityGroups($includedCountsByEntityGroup);
+  let isConfirmToolActionDialogOpen: boolean = false;
 
   const unsubscribe = pushAllChangesFetchStatus.subscribe((value) => {
     if (value === FetchStatus.Success) {
@@ -59,6 +61,8 @@
 
   onMount(() => {
     dispatchAction(transferCountsByEntityGroupReset());
+
+    shownEntityGroups = getOrderedEntityGroups($includedCountsByEntityGroup);
 
     return () => {
       unsubscribe();
@@ -155,7 +159,7 @@
   </HelpDetails>
 
   <ul>
-    {#each orderedEntityGroups as entityGroup}
+    {#each shownEntityGroups as entityGroup}
       <li transition:slide|local={{ duration: 250 }}>
         <ProgressBar
           {entityGroup}
