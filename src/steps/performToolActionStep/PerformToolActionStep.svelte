@@ -46,10 +46,13 @@
     transferCountsByEntityGroupSelector,
   );
 
-  let isConfirmToolActionDialogOpen: boolean = false;
+  const orderedEntityGroups: EntityGroup[] = getOrderedEntityGroups(
+    $includedCountsByEntityGroup,
+  );
 
-  let orderedEntityGroups: EntityGroup[];
-  $: orderedEntityGroups = getOrderedEntityGroups($includedCountsByEntityGroup);
+  const totalCountsByGroup = { ...$includedCountsByEntityGroup };
+
+  let isConfirmToolActionDialogOpen: boolean = false;
 
   const unsubscribe = pushAllChangesFetchStatus.subscribe((value) => {
     if (value === FetchStatus.Success) {
@@ -160,7 +163,7 @@
         <ProgressBar
           {entityGroup}
           completedCount={$transferCountsByEntityGroup[entityGroup]}
-          totalCount={$includedCountsByEntityGroup[entityGroup]}
+          totalCount={totalCountsByGroup[entityGroup]}
         />
       </li>
     {/each}

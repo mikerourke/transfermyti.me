@@ -23,7 +23,6 @@ specifiers:
   cuid: ^2.1.8
   date-fns: ^2.28.0
   debug: ^4.3.4
-  dotenv: ^16.0.1
   eslint: ^8.20.0
   eslint-import-resolver-alias: ^1.1.2
   eslint-plugin-import: ^2.26.0
@@ -48,7 +47,6 @@ specifiers:
   redux-saga: ^1.1.3
   redux-saga-test-plan: ^4.0.5
   reselect: ^4.1.6
-  rimraf: ^3.0.2
   style-loader: ^3.3.1
   stylelint: ^14.9.1
   stylelint-a11y: ^1.2.3
@@ -97,7 +95,6 @@ devDependencies:
   copy-webpack-plugin: 11.0.0_webpack@5.73.0
   css-loader: 6.7.1_webpack@5.73.0
   debug: 4.3.4
-  dotenv: 16.0.1
   eslint: 8.20.0
   eslint-import-resolver-alias: 1.1.2_fkfqfehjtk7sk2efaqbgxsuasa
   eslint-plugin-import: 2.26.0_y5cwkwncsnk6w3wfynadgn7abe
@@ -116,7 +113,6 @@ devDependencies:
   prettier-plugin-svelte: 2.7.0_o3ioganyptcsrh6x4hnxvjkpqi
   redux-mock-store: 1.5.4
   redux-saga-test-plan: 4.0.5_redux-saga@1.1.3
-  rimraf: 3.0.2
   style-loader: 3.3.1_webpack@5.73.0
   stylelint: 14.9.1
   stylelint-a11y: 1.2.3_stylelint@14.9.1
@@ -3409,11 +3405,6 @@ packages:
     dependencies:
       no-case: 3.0.4
       tslib: 2.4.0
-    dev: true
-
-  /dotenv/16.0.1:
-    resolution: {integrity: sha512-1K6hR6wtk2FviQ4kEiSjFiH5rpzEVi8WW0x96aztHVMhEspNpc4DVOUTEHtEva5VThQ8IaBX1Pe4gSzpVVUsKQ==}
-    engines: {node: '>=12'}
     dev: true
 
   /ee-first/1.1.1:

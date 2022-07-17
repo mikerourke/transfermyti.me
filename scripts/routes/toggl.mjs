@@ -11,10 +11,7 @@ const dbPath = fileURLToPath(
 
 const db = readJsonSync(dbPath);
 
-// noinspection EqualityComparisonWithCoercionJS
-const isEmpty = process.env.TMT_LOCAL_API_TOGGL_EMPTY == "true";
-
-export function assignTogglRoutes(router) {
+export function assignTogglRoutes(router, isEmpty) {
   router
     .get("/me", (req, res) => {
       const [firstUser] = db.users;
@@ -68,30 +65,32 @@ export function assignTogglRoutes(router) {
     .get("/workspaces/:workspaceId/users", (req, res) =>
       res.status(200).send(isEmpty === true ? [] : db.users),
     )
-    .get("/workspaces", (req, res) =>
-      res.status(200).send(isEmpty === true ? [] : db.workspaces),
-    )
+    .get("/workspaces", (req, res) => res.status(200).send(db.workspaces))
     .get("/workspaces/:workspaceId/workspace_users", (req, res) =>
       res.status(200).send(isEmpty === true ? [] : db.workspaceUsers),
     );
 
   router
     .post("/clients", (req, res) => {
+      const { client } = req.body;
+
       const newClient = {
         id: +uniqueId("30"),
-        wid: +req.body.wid,
-        name: req.body.name,
+        wid: +client.wid,
+        name: client.name,
         at: new Date().toLocaleString(),
       };
 
       res.status(200).send({ data: newClient });
     })
     .post("/projects", (req, res) => {
+      const { project } = req.body;
+
       const newProject = {
         id: +uniqueId("20"),
-        wid: +req.body.wid,
-        cid: +req.body.cid,
-        name: req.body.name,
+        wid: +project.wid,
+        cid: +project.cid,
+        name: project.name,
         billable: false,
         is_private: true,
         active: true,
@@ -99,24 +98,30 @@ export function assignTogglRoutes(router) {
         at: new Date().toLocaleString(),
       };
 
+      console.log(newProject);
+
       res.status(200).send({ data: newProject });
     })
     .post("/tags", (req, res) => {
+      const { tag } = req.body;
+
       const newTag = {
         id: +uniqueId("40"),
-        wid: +req.body.wid,
-        name: req.body.name,
+        wid: +tag.wid,
+        name: tag.name,
       };
 
       res.status(200).send({ data: newTag });
     })
     .post("/tasks", (req, res) => {
+      const { task } = req.body;
+
       const [workspace] = db.workspaces;
       const newTask = {
         id: +uniqueId("70"),
-        pid: +req.body.pid,
+        pid: +task.pid,
         wid: +workspace.id,
-        name: req.body.name,
+        name: task.name,
         active: true,
         estimated_seconds: 0,
       };
@@ -125,6 +130,7 @@ export function assignTogglRoutes(router) {
     })
     .post("/time_entries", (req, res) => {
       const { time_entry: entry } = req.body;
+
       const newTimeEntry = {
         id: +uniqueId("80"),
         pid: +entry.pid,

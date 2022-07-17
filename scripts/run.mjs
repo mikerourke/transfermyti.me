@@ -1,9 +1,6 @@
 import debug from "debug";
-import dotenv from "dotenv";
 import yargs from "yargs";
 import { hideBin } from "yargs/helpers";
-
-dotenv.config();
 
 import {
   deleteEntitiesInWorkspaces,
@@ -46,19 +43,15 @@ yargs(hideBin(process.argv))
         default: [],
         demandOption: false,
       },
+      port: {
+        alias: "p",
+        describe: "Port number to run server on (defaults to 9009)",
+        type: "number",
+        default: 9009,
+        demandOption: false,
+      },
     },
-    handler: async (argv) => {
-      const { emptyTools } = argv;
-      if (emptyTools.includes("clockify")) {
-        process.env.TMT_LOCAL_API_CLOCKIFY_EMPTY = "true";
-      }
-
-      if (emptyTools.includes("toggl")) {
-        process.env.TMT_LOCAL_API_TOGGL_EMPTY = "true";
-      }
-
-      await startServer();
-    },
+    handler: startServer,
   })
 
   .command({
