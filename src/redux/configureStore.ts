@@ -1,69 +1,63 @@
-import { connectRouter, routerMiddleware } from "connected-react-router";
-import { History } from "history";
-import { AnyAction, applyMiddleware, compose, createStore } from "redux";
+import { applyMiddleware, compose, createStore, type Store } from "redux";
 import createSagaMiddleware from "redux-saga";
-import storage from "store";
 
-import { allEntitiesSaga } from "~/allEntities/allEntitiesSaga";
-import { appSaga } from "~/app/appSaga";
-import { IS_USING_LOCAL_API, STORAGE_KEY } from "~/constants";
-import { validateCredentials } from "~/credentials/credentialsActions";
-import { initialState as initialCredentialsState } from "~/credentials/credentialsReducer";
-import { credentialsSaga } from "~/credentials/sagas/credentialsSaga";
-import { projectMonitoringSaga } from "~/projects/sagas/projectsSagas";
-import { taskMonitoringSaga } from "~/tasks/sagas/tasksSagas";
-import { getIfDev } from "~/utils";
-import { workspacesSaga } from "~/workspaces/sagas/workspacesSaga";
+import { allSagas } from "~/modules/allSagas";
+import { validateCredentials } from "~/modules/credentials/credentialsActions";
+import { initialState as initialCredentialsState } from "~/modules/credentials/credentialsReducer";
+import { getCredentialsFromStorage } from "~/modules/credentials/credentialsStorage";
+import { rootReducer } from "~/redux/rootReducer";
+import type { ReduxState } from "~/typeDefs";
+import { isDevelopmentMode, isUseLocalApi } from "~/utilities/environment";
 
-import { analyticsMiddleware } from "./analyticsMiddlewares";
-import { ReduxState, ReduxStore } from "./reduxTypes";
-import { createRootReducer, RouterReducer } from "./rootReducer";
+let currentStore: Store<ReduxState> | null = null;
 
-const devTools = window.__REDUX_DEVTOOLS_EXTENSION_COMPOSE__;
-const composeEnhancers: AnyValid = devTools || compose;
+export function getStore(): Store<ReduxState> {
+  if (currentStore === null) {
+    configureStore();
+  }
 
-export function configureStore(history: History): ReduxStore {
+  return currentStore!;
+}
+
+export function configureStore(): void {
   let credentials = initialCredentialsState;
+  let composeEnhancers = compose;
 
   // Only load the stored credentials from localStorage if in dev mode:
-  if (getIfDev()) {
-    const storedCredentials = storage.get(STORAGE_KEY);
-    if (storedCredentials) {
+  if (isDevelopmentMode()) {
+    const storedCredentials = getCredentialsFromStorage();
+
+    if (storedCredentials !== null) {
       credentials = {
         ...initialCredentialsState,
         ...storedCredentials,
       };
     }
+
+    const composeWithDevTools = window.__REDUX_DEVTOOLS_EXTENSION_COMPOSE__;
+
+    if (composeWithDevTools !== undefined) {
+      composeEnhancers = composeWithDevTools as unknown as typeof compose;
+    }
   }
 
-  const routerReducer = connectRouter(history) as RouterReducer;
-  const rootReducer = createRootReducer(routerReducer);
   const sagaMiddleware = createSagaMiddleware();
 
-  const middleware = [
-    sagaMiddleware,
-    routerMiddleware(history),
-    analyticsMiddleware,
-  ];
+  const middleware = [sagaMiddleware];
 
   const store = createStore(
     rootReducer,
-    // TODO: Figure out why TypeScript is throwing an error.
-    // @ts-ignore
     { credentials } as ReduxState,
     composeEnhancers(applyMiddleware(...middleware)),
   );
 
-  sagaMiddleware.run(allEntitiesSaga);
-  sagaMiddleware.run(appSaga);
-  sagaMiddleware.run(credentialsSaga);
-  sagaMiddleware.run(projectMonitoringSaga);
-  sagaMiddleware.run(taskMonitoringSaga);
-  sagaMiddleware.run(workspacesSaga);
+  window.store = store;
 
-  if (IS_USING_LOCAL_API) {
-    store.dispatch(validateCredentials.request() as AnyAction);
+  sagaMiddleware.run(allSagas);
+
+  if (isUseLocalApi()) {
+    store.dispatch(validateCredentials.request());
   }
 
-  return store;
+  currentStore = store;
 }

@@ -1,62 +1,27 @@
-import { RouterState } from "connected-react-router";
-import { combineReducers, Reducer } from "redux";
+import { combineReducers } from "redux";
 
-import {
-  allEntitiesReducer,
-  AllEntitiesState,
-} from "~/allEntities/allEntitiesReducer";
-import { appReducer, AppState } from "~/app/appReducer";
-import { clientsReducer, ClientsState } from "~/clients/clientsReducer";
-import {
-  credentialsReducer,
-  CredentialsState,
-} from "~/credentials/credentialsReducer";
-import { projectsReducer, ProjectsState } from "~/projects/projectsReducer";
-import { tagsReducer, TagsState } from "~/tags/tagsReducer";
-import { tasksReducer, TasksState } from "~/tasks/tasksReducer";
-import {
-  timeEntriesReducer,
-  TimeEntriesState,
-} from "~/timeEntries/timeEntriesReducer";
-import {
-  userGroupsReducer,
-  UserGroupsState,
-} from "~/userGroups/userGroupsReducer";
-import { usersReducer, UsersState } from "~/users/usersReducer";
-import {
-  workspacesReducer,
-  WorkspacesState,
-} from "~/workspaces/workspacesReducer";
+import { allEntitiesReducer } from "~/modules/allEntities/allEntitiesReducer";
+import { appReducer } from "~/modules/app/appReducer";
+import { clientsReducer } from "~/modules/clients/clientsReducer";
+import { credentialsReducer } from "~/modules/credentials/credentialsReducer";
+import { projectsReducer } from "~/modules/projects/projectsReducer";
+import { tagsReducer } from "~/modules/tags/tagsReducer";
+import { tasksReducer } from "~/modules/tasks/tasksReducer";
+import { timeEntriesReducer } from "~/modules/timeEntries/timeEntriesReducer";
+import { userGroupsReducer } from "~/modules/userGroups/userGroupsReducer";
+import { usersReducer } from "~/modules/users/usersReducer";
+import { workspacesReducer } from "~/modules/workspaces/workspacesReducer";
 
-export type RouterReducer = Reducer<RouterState>;
-
-export interface State {
-  allEntities: AllEntitiesState;
-  app: AppState;
-  clients: ClientsState;
-  credentials: CredentialsState;
-  projects: ProjectsState;
-  router: RouterState;
-  tags: TagsState;
-  tasks: TasksState;
-  timeEntries: TimeEntriesState;
-  userGroups: UserGroupsState;
-  users: UsersState;
-  workspaces: WorkspacesState;
-}
-
-export const createRootReducer = (router: RouterReducer): Reducer<State> =>
-  combineReducers({
-    allEntities: allEntitiesReducer,
-    app: appReducer,
-    clients: clientsReducer,
-    credentials: credentialsReducer,
-    projects: projectsReducer,
-    router,
-    tags: tagsReducer,
-    tasks: tasksReducer,
-    timeEntries: timeEntriesReducer,
-    userGroups: userGroupsReducer,
-    users: usersReducer,
-    workspaces: workspacesReducer,
-  });
+export const rootReducer = combineReducers({
+  allEntities: allEntitiesReducer,
+  app: appReducer,
+  clients: clientsReducer,
+  credentials: credentialsReducer,
+  projects: projectsReducer,
+  tags: tagsReducer,
+  tasks: tasksReducer,
+  timeEntries: timeEntriesReducer,
+  userGroups: userGroupsReducer,
+  users: usersReducer,
+  workspaces: workspacesReducer,
+});

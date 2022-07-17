@@ -1,44 +1,35 @@
 {
-  "globals": {
-    "window": true
-  },
-  "collectCoverageFrom": ["src/**/*.{ts,tsx}"],
+  "collectCoverageFrom": ["src/**/*.{ts,svelte}"],
+  "coverageDirectory": "out/coverage",
   "coveragePathIgnorePatterns": [
     "/node_modules/",
     "__fixtures__",
-    "constants.ts",
-    "declarations.d.ts",
-    "jestHelpers.ts",
+    "typeDeclarations",
     "state.ts",
     "typeDefs.ts",
-    "allEntitiesTypes.ts",
-    "appTypes.ts",
-    "clientsTypes.ts",
-    "credentialsTypes.ts",
-    "projectsTypes.ts",
-    "reduxTypes.ts",
-    "tagsTypes.ts",
-    "tasksTypes.ts",
-    "timeEntriesTypes.ts",
-    "userGroupsTypes.ts",
-    "usersTypes.ts",
-    "workspacesTypes.ts",
-    "utils/index.ts",
-    "components/index.tsx"
+    "jestUtilities.ts"
   ],
   "coverageReporters": ["lcov"],
-  "moduleFileExtensions": ["js", "json", "jsx", "ts", "tsx"],
+  "globals": {
+    "window": true
+  },
+  "moduleFileExtensions": ["js", "json", "ts", "svelte"],
   "moduleNameMapper": {
     "^~/(.*)$": "<rootDir>/src/$1"
   },
   "roots": ["<rootDir>/src/"],
   "setupFilesAfterEnv": ["<rootDir>/src/setupJest.ts"],
-  "snapshotSerializers": ["@emotion/jest/serializer"],
   "testEnvironment": "jsdom",
   "testMatch": [
-    "<rootDir>/src/**/__tests__/**/*.ts?(x)",
-    "<rootDir>/src/**/?(*.)(spec|test).ts?(x)"
+    "<rootDir>/src/**/__tests__/**/*.ts",
+    "<rootDir>/src/**/?(*.)(spec|test).ts"
   ],
-  "testPathIgnorePatterns": ["<rootDir>/scripts/runTests.js"],
-  "testURL": "http://localhost"
+  "testPathIgnorePatterns": ["<rootDir>/scripts/tests.mjs"],
+  "testEnvironmentOptions": {
+    "url": "http://localhost"
+  },
+  "transform": {
+    "^.+\\.svelte$": ["svelte-jester", { "preprocess": true }],
+    "^.+\\.[jt]s$": "babel-jest"
+  }
 }

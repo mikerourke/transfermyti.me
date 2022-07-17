@@ -1,28 +1,23 @@
 module.exports = {
   parser: "@typescript-eslint/parser",
   extends: [
-    "plugin:react/recommended",
     "plugin:@typescript-eslint/recommended",
     "plugin:import/errors",
     "plugin:import/warnings",
     "plugin:import/typescript",
-    "plugin:jsx-a11y/recommended",
   ],
-  plugins: ["@typescript-eslint", "react", "unicorn", "import", "jsx-a11y"],
+  plugins: ["@typescript-eslint", "unicorn", "import", "svelte3"],
   settings: {
-    react: {
-      version: "detect",
-    },
+    "svelte3/typescript": () => require("typescript"),
     "import/resolver": {
       alias: {
         map: [["~", "./src/"]],
-        extensions: [".ts", ".mjs", ".js", ".tsx"],
+        extensions: [".ts", ".mjs", ".js", ".svelte"],
       },
       node: {
-        extensions: [".js", ".jsx", ".ts", ".tsx"],
+        extensions: [".js", ".jsx", ".ts", ".svelte"],
       },
     },
-    "import/core-modules": ["reselect"],
   },
   env: {
     es6: true,
@@ -31,12 +26,9 @@ module.exports = {
     jest: true,
   },
   parserOptions: {
-    ecmaVersion: 2018,
+    ecmaVersion: 2020,
     sourceType: "module",
-    ecmaFeatures: {
-      jsx: true,
-    },
-    extraFileExtensions: [".ts", ".tsx"],
+    extraFileExtensions: [".ts", ".svelte"],
   },
   rules: {
     curly: ["error", "all"],
@@ -55,6 +47,7 @@ module.exports = {
     "@typescript-eslint/indent": "off",
     "@typescript-eslint/member-ordering": "error",
     "@typescript-eslint/no-inferrable-types": "off",
+    "@typescript-eslint/no-non-null-assertion": "off",
     "@typescript-eslint/no-parameter-properties": "off",
     "@typescript-eslint/no-unused-vars": [
       "error",
@@ -69,6 +62,7 @@ module.exports = {
       { functions: false, classes: false },
     ],
     "@typescript-eslint/no-var-requires": "off",
+    "import/no-cycle": "error",
     "import/no-default-export": "error",
     "import/no-unresolved": "error",
     "import/order": [
@@ -78,26 +72,24 @@ module.exports = {
         groups: [
           "builtin",
           "external",
-          ["internal", "parent"],
-          "sibling",
+          "internal",
+          ["parent", "sibling"],
           "object",
         ],
         pathGroups: [
           {
-            pattern: "~/**",
+            pattern: "~/**/!(*.svelte|components)",
             group: "internal",
+          },
+          {
+            pattern: "~/**/*.svelte",
+            group: "internal",
+            position: "after",
           },
         ],
         "newlines-between": "always-and-inside-groups",
       },
     ],
-    "react/jsx-curly-spacing": [
-      "error",
-      {
-        when: "never",
-      },
-    ],
-    "react/prop-types": "off",
     "unicorn/catch-error-name": [
       "error",
       {
@@ -117,10 +109,23 @@ module.exports = {
   },
   overrides: [
     {
-      files: ["scripts/*", "server/**/*.js"],
+      files: ["*.svelte", "*.ts"],
+      parserOptions: {
+        tsconfigRootDir: __dirname,
+        project: ["./tsconfig.json"],
+      },
+    },
+    {
+      files: ["*.svelte"],
+      processor: "svelte3/svelte3",
+    },
+    {
+      files: ["*.mjs"],
       rules: {
         "no-console": "off",
         "@typescript-eslint/explicit-function-return-type": "off",
+        "import/default": "off",
+        "import/no-default-export": "off",
       },
     },
     {
@@ -133,7 +138,7 @@ module.exports = {
       },
     },
     {
-      files: ["*.tsx"],
+      files: ["src/main.ts"],
       rules: {
         "@typescript-eslint/member-ordering": "off",
         "import/no-default-export": "off",

@@ -1,0 +1,52 @@
+name: Validate
+on: [push]
+env:
+  CI: true
+
+jobs:
+  # If you put "[skip ci]" in the commit message, it won't run the checks/test.
+  # https://gist.github.com/ybiquitous/c80f15c18319c63cae8447a3be341267
+  proceed:
+    runs-on: ubuntu-latest
+    if: |
+      !contains(format('{0} {1} {2}', github.event.head_commit.message, github.event.pull_request.title, github.event.pull_request.body), '[skip ci]')
+    steps:
+      - run: |
+          cat <<'MESSAGE'
+          github.event_name: ${{ toJson(github.event_name) }}
+          github.event:
+          ${{ toJson(github.event) }}
+          MESSAGE
+
+  check:
+    needs: proceed
+    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        node-version: [18.x]
+    steps:
+      - uses: actions/checkout@v2
+
+      - uses: pnpm/action-setup@646cdf48217256a3d0b80361c5a50727664284f2
+        with:
+          version: 7.5.2
+
+      - uses: actions/setup-node@v2
+        with:
+          node-version: '18'
+          cache: 'pnpm'
+
+      - name: Install Dependencies
+        run: pnpm install
+
+      - name: Lint
+        run: pnpm lint
+
+      - name: Check Types
+        run: pnpm typecheck
+
+      - name: Check Svelte
+        run: pnpm svelte-check
+
+      - name: Test
+        run: pnpm test
