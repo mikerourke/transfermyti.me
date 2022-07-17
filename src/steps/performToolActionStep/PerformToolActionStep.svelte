@@ -49,7 +49,8 @@
   const orderedEntityGroups: EntityGroup[] = getOrderedEntityGroups(
     $includedCountsByEntityGroup,
   );
-  let shownEntityGroups: EntityGroup[] = [];
+
+  const totalCountsByGroup = { ...$includedCountsByEntityGroup };
 
   let isConfirmToolActionDialogOpen: boolean = false;
 
@@ -61,8 +62,6 @@
 
   onMount(() => {
     dispatchAction(transferCountsByEntityGroupReset());
-
-    shownEntityGroups = getOrderedEntityGroups($includedCountsByEntityGroup);
 
     return () => {
       unsubscribe();
@@ -159,12 +158,12 @@
   </HelpDetails>
 
   <ul>
-    {#each shownEntityGroups as entityGroup}
+    {#each orderedEntityGroups as entityGroup}
       <li transition:slide|local={{ duration: 250 }}>
         <ProgressBar
           {entityGroup}
           completedCount={$transferCountsByEntityGroup[entityGroup]}
-          totalCount={$includedCountsByEntityGroup[entityGroup]}
+          totalCount={totalCountsByGroup[entityGroup]}
         />
       </li>
     {/each}

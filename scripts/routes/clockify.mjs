@@ -173,6 +173,10 @@ export function assignClockifyRoutes(router, isEmpty) {
       res.status(200).send(newWorkspace);
     });
 
+  router.put("/workspaces/:workspaceId/projects/:projectId", (req, res) =>
+    res.status(200).send(req.body),
+  );
+
   router
     .delete("/workspaces/:workspaceId/clients/:clientId", (req, res) =>
       res.status(200).send({}),

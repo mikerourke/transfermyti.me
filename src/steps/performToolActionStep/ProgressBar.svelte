@@ -49,22 +49,20 @@
   }
 </style>
 
-{#if totalCount !== 0}
-  <div>
-    <h2 id="{entityGroup}-progress">{getEntityGroupDisplay(entityGroup)}</h2>
+<div>
+  <h2 id="{entityGroup}-progress">{getEntityGroupDisplay(entityGroup)}</h2>
 
-    <div
-      role="progressbar"
-      aria-valuenow={percentage}
-      aria-valuemin={0}
-      aria-valuemax={100}
-      aria-labelledby="{entityGroup}-progress"
-    >
-      <span style="width: {percentage}%;" />
-    </div>
-
-    <h3>
-      {completedCount} / {totalCount}
-    </h3>
+  <div
+    role="progressbar"
+    aria-valuenow={percentage}
+    aria-valuemin={0}
+    aria-valuemax={100}
+    aria-labelledby="{entityGroup}-progress"
+  >
+    <span style="width: {percentage}%;" />
   </div>
-{/if}
+
+  <h3>
+    {completedCount} / {totalCount}
+  </h3>
+</div>
