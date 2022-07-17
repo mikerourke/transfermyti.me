@@ -25,7 +25,7 @@ if (process.env.CI) {
 }
 
 export async function runTests() {
-  await startServer();
+  await startServer({ emptyTools: [], port: 9009 });
 
   await jest.run(argv);
 
