@@ -23,17 +23,17 @@ jobs:
     runs-on: ubuntu-latest
     strategy:
       matrix:
-        node-version: [16.x]
+        node-version: [18.x]
     steps:
       - uses: actions/checkout@v2
 
       - uses: pnpm/action-setup@646cdf48217256a3d0b80361c5a50727664284f2
         with:
-          version: 6.30.1
+          version: 7.5.2
 
       - uses: actions/setup-node@v2
         with:
-          node-version: '16'
+          node-version: '18'
           cache: 'pnpm'
 
       - name: Install Dependencies
@@ -44,6 +44,9 @@ jobs:
 
       - name: Check Types
         run: pnpm typecheck
+
+      - name: Check Svelte
+        run: pnpm svelte-check
 
       - name: Test
         run: pnpm test

@@ -1,5 +1,5 @@
-import path from "path";
-import { fileURLToPath, URL } from "url";
+import path from "node:path";
+import { fileURLToPath, URL } from "node:url";
 
 import { readJsonSync, uniqueId } from "../utilities.mjs";
 
