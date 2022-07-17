@@ -9,11 +9,8 @@ const dbPath = fileURLToPath(
 
 const db = readJsonSync(dbPath);
 
-// noinspection EqualityComparisonWithCoercionJS
-const isEmpty = process.env.TMT_LOCAL_API_CLOCKIFY_EMPTY == "true";
-
 // TODO: Update routes to reflect V1 Clockify API only.
-export function assignClockifyRoutes(router) {
+export function assignClockifyRoutes(router, isEmpty) {
   let entriesCreated = 20;
 
   router

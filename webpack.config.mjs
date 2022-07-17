@@ -1,9 +1,7 @@
-import fs from "node:fs";
 import path from "node:path";
 import { fileURLToPath } from "node:url";
 
 import CopyPlugin from "copy-webpack-plugin";
-import dotenv from "dotenv";
 import HtmlWebpackPlugin from "html-webpack-plugin";
 import MiniCssExtractPlugin from "mini-css-extract-plugin";
 import webpack from "webpack";
@@ -83,29 +81,9 @@ const htmlTemplate = `
 `;
 
 function getEnvironmentPlugin(env, argv) {
-  let envEntries;
+  const envEntries = {};
 
-  const envFilePath = path.resolve(thisDirPath, ".env");
-
-  if (!fs.existsSync(envFilePath)) {
-    envEntries = {
-      TMT_LOCAL_API_CLOCKIFY_EMPTY: false,
-      TMT_LOCAL_API_TOGGL_EMPTY: false,
-      TMT_LOCAL_API_PORT: 9009,
-      TMT_USE_LOCAL_API: true,
-    };
-  } else {
-    const contents = fs.readFileSync(envFilePath);
-
-    envEntries = dotenv.parse(contents);
-  }
-
-  envEntries = {
-    ...envEntries,
-    ...env,
-  };
-
-  for (const [key, value] of Object.entries(envEntries)) {
+  for (const [key, value] of Object.entries(env)) {
     envEntries[key] = JSON.stringify(value);
   }
 

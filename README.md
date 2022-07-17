@@ -56,16 +56,12 @@ section.
 #### Development With the Mock Server
 
 1. Install dependencies with `pnpm install`
-2. Rename `.env.example` to `.env`
-3. Set `TMT_USE_LOCAL_API` to `true` in the `.env` file
-4. Set `TMT_LOCAL_API_<TOOL>_EMPTY` to `true` in the `.env` file if you want either of the mock APIs to return empty records (useful for testing transfer)
-5. Run `pnpm start:server` (no data will be transferred from Toggl to Clockify)
-6. Run `pnpm start:web` to start the web application
-7. Navigate to `http://localhost:8080`
+2. Run `pnpm start:server` (no data will be transferred from Toggl to Clockify)
+3. Run `pnpm start:web -- --env TMT_USE_LOCAL_API=true` to start the web application
+4. Navigate to `http://localhost:8080`
 
 #### Development Without the Mock Server
 
 1. Install dependencies with `pnpm install`
-2. Rename `.env.example` to `.env`
-3. Run `pnpm start:web -- --env TMT_USE_LOCAL_API=false`
-4. Navigate to `http://localhost:8080`
+2. Run `pnpm start:web -- --env TMT_USE_LOCAL_API=false`
+3. Navigate to `http://localhost:8080`
