@@ -1,15 +1,15 @@
-import path from "path";
-import { fileURLToPath, URL } from "url";
+import path from "node:path";
+import { fileURLToPath, URL } from "node:url";
 
 import { isSameYear } from "date-fns";
-import fse from "fs-extra";
-import { take, uniqueId } from "lodash-es";
+
+import { readJsonSync, uniqueId } from "../utilities.mjs";
 
 const dbPath = fileURLToPath(
   new URL(path.join("..", "db", "toggl.json"), import.meta.url),
 );
 
-const db = fse.readJsonSync(dbPath);
+const db = readJsonSync(dbPath);
 
 // noinspection EqualityComparisonWithCoercionJS
 const isEmpty = process.env.TMT_LOCAL_API_TOGGL_EMPTY == "true";
@@ -57,7 +57,7 @@ export function assignTogglRoutes(router) {
         total_currencies: [],
         total_count: isEmpty === true ? 0 : timeEntries.length,
         per_page: 50,
-        data: isEmpty === true ? [] : take(timeEntries, 50),
+        data: isEmpty === true ? [] : timeEntries.slice(0, 50),
       };
 
       res.status(200).send(payload);

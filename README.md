@@ -25,7 +25,7 @@ You'll need the following to use the application:
 
 ### Prerequisites
 
-- Node.js >= v16
+- Node.js >= v18
 - pnpm
 
 ### Technologies Used
