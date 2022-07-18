@@ -32,19 +32,18 @@ You'll need the following to use the application:
 
 This is by no means an exhaustive list, but it makes up the core of the front-end code:
 
-- [React](https://reactjs.org/)
+- [Svelte](https://svelte.dev/)
 - [Redux](https://redux.js.org/)
 - [Redux Saga](http://redux-saga.js.org/)
-- [Emotion](https://emotion.sh)
+- [Goober](https://goober.rocks/)
 - [Ramda](https://ramdajs.com/)
 - [date-fns](https://date-fns.org/)
-- [Parcel](https://parceljs.org/)
 - [TypeScript](https://www.typescriptlang.org/)
 
 ### Mock Server
 
 To expedite development and get around API rate limiting, I created a development server that mocks the Toggl and Clockify APIs.
-The codebase checks whether the API server should be used based on an environment variable set in the `.env` file.
+The codebase checks whether the API server should be used based on args passed into the `start` scripts.
 
 If you'd like to use the mock server in development, follow the steps in the **Development With the Mock Server** section below.
 
