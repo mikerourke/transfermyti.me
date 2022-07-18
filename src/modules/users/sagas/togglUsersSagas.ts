@@ -16,28 +16,21 @@ import { validStringify } from "~/utilities/textTransforms";
 
 interface TogglUserResponse {
   id: number;
-  default_wid: number;
+  api_token: string;
   email: string;
   fullname: string;
-  jquery_timeofday_format: string;
-  jquery_date_format: string;
-  timeofday_format: string;
-  date_format: string;
-  store_start_and_stop_time: boolean;
+  timezone: string;
+  default_workspace_id: number;
   beginning_of_week: number;
-  language: string;
   image_url: string;
-  sidebar_piechart: false;
+  created_at: string;
+  updated_at: string;
+  openid_email: string | null;
+  openid_enabled: boolean;
+  country_id: number;
   at: string;
-  retention: number;
-  record_timeline: boolean;
-  render_timeline: boolean;
-  timeline_enabled: boolean;
-  timeline_experiment: boolean;
-  new_blog_post: unknown;
-  should_upgrade: boolean;
-  invitation: unknown;
-  userGroupIds?: string[];
+  intercom_hash: string;
+  has_password: boolean;
 }
 
 interface TogglProjectUserResponse {
@@ -203,7 +196,8 @@ function transformFromResponse(
     email: user.email,
     isAdmin: null,
     isActive: true,
-    userGroupIds: user?.userGroupIds ?? [],
+    // TODO: Find out where to get this from in the new API.
+    userGroupIds: [],
     workspaceId,
     entryCount: 0,
     linkedId: null,

@@ -1,5 +1,3 @@
-import { ToolName } from "~/typeDefs";
-
 /* istanbul ignore file: These are just wrappers to get environment variables.  */
 
 export function isDevelopmentMode(): boolean {
@@ -20,31 +18,6 @@ export function isTestingMode(): boolean {
   } catch {
     return false;
   }
-}
-
-export type TogglApiContext = "api" | "reports";
-
-/**
- * Returns the base URL to prefix the endpoint based on the specified tool
- * name and Toggl API context (e.g. reports).
- */
-export function getApiUrl(
-  toolName: ToolName,
-  togglApiContext: TogglApiContext,
-): string {
-  if (isUseLocalApi() || isTestingMode()) {
-    const apiPort = process?.env?.TMT_LOCAL_API_PORT ?? "9009";
-
-    return `http://localhost:${apiPort}/api/${toolName}`;
-  }
-
-  if (toolName === ToolName.Clockify) {
-    return "https://api.clockify.me/api/v1";
-  }
-
-  return togglApiContext === "reports"
-    ? "https://api.track.toggl.com/reports/api/v2"
-    : "https://api.track.toggl.com/api/v8";
 }
 
 /**

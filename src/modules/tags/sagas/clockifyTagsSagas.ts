@@ -58,12 +58,12 @@ function* createClockifyTag(
   sourceTag: Tag,
   targetWorkspaceId: string,
 ): SagaIterator<Tag> {
-  const tagRequest = { name: sourceTag.name };
+  const body = { name: sourceTag.name };
 
   const clockifyTag = yield call(
     fetchObject,
     `/clockify/api/workspaces/${targetWorkspaceId}/tags`,
-    { method: "POST", body: tagRequest },
+    { method: "POST", body },
   );
 
   return transformFromResponse(clockifyTag);

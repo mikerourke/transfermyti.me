@@ -93,7 +93,7 @@ function* createClockifyProject(
 
   const estimateType = pathOr("AUTO", ["estimate", "type"], sourceProject);
 
-  const projectRequest = {
+  const body = {
     name: sourceProject.name,
     clientId: isNil(targetClientId) ? undefined : targetClientId,
     isPublic: sourceProject.isPublic,
@@ -108,7 +108,7 @@ function* createClockifyProject(
   const clockifyProject = yield call(
     fetchObject,
     `/clockify/api/workspaces/${targetWorkspaceId}/projects`,
-    { method: "POST", body: projectRequest },
+    { method: "POST", body },
   );
 
   return transformFromResponse(clockifyProject, []);

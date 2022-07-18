@@ -1,28 +1,39 @@
 import { isNil, propOr } from "ramda";
 import type { SagaIterator } from "redux-saga";
-import { call, select } from "redux-saga/effects";
+import { call, delay, select } from "redux-saga/effects";
 
 import {
   fetchArray,
   fetchEmpty,
   fetchObject,
+  getApiDelayForTool,
 } from "~/entityOperations/apiRequests";
 import { createEntitiesForTool } from "~/entityOperations/createEntitiesForTool";
 import { deleteEntitiesForTool } from "~/entityOperations/deleteEntitiesForTool";
-import { fetchEntitiesForTool } from "~/entityOperations/fetchEntitiesForTool";
-import { projectIdToLinkedIdSelector } from "~/modules/projects/projectsSelectors";
-import { EntityGroup, ToolName, type Task } from "~/typeDefs";
+import {
+  projectIdToLinkedIdSelector,
+  projectsByWorkspaceIdByToolNameSelector,
+  targetProjectsByIdSelector,
+} from "~/modules/projects/projectsSelectors";
+import { userIdToLinkedIdSelector } from "~/modules/users/usersSelectors";
+import { EntityGroup, Project, type Task, ToolName } from "~/typeDefs";
 import { validStringify } from "~/utilities/textTransforms";
 
+/**
+ * Response from Toggl API for tasks.
+ * @see https://developers.track.toggl.com/docs/api/tasks#response
+ */
 interface TogglTaskResponse {
-  name: string;
   id: number;
-  wid: number;
-  pid: number;
-  uid?: number;
+  name: string;
+  workspace_id: number;
+  project_id: number;
+  user_id: number | null;
   active: boolean;
   at: string;
   estimated_seconds: number;
+  server_deleted_at: string | null;
+  tracked_seconds: number;
 }
 
 /**
@@ -52,15 +63,38 @@ export function* deleteTogglTasksSaga(sourceTasks: Task[]): SagaIterator {
  * Fetches all tasks in Toggl workspaces and returns the result.
  */
 export function* fetchTogglTasksSaga(): SagaIterator<Task[]> {
-  return yield call(fetchEntitiesForTool, {
-    toolName: ToolName.Toggl,
-    apiFetchFunc: fetchTogglTasksInWorkspace,
-  });
+  const allProjectsTable = yield select(
+    projectsByWorkspaceIdByToolNameSelector,
+  );
+
+  const togglProjectsTable = allProjectsTable[ToolName.Toggl];
+
+  const allTasks: Task[] = [];
+
+  const apiDelay = getApiDelayForTool(ToolName.Toggl);
+
+  for (const entry of Object.entries(togglProjectsTable)) {
+    const [workspaceId, projects] = entry as [string, Project[]];
+
+    for (const project of projects) {
+      const tasks = yield call(
+        fetchTogglTasksInProject,
+        workspaceId,
+        project.id,
+      );
+
+      allTasks.push(...tasks);
+
+      yield delay(apiDelay);
+    }
+  }
+
+  return allTasks;
 }
 
 /**
  * Creates a new Toggl task.
- * @see https://github.com/toggl/toggl_api_docs/blob/master/chapters/tasks.md#create-a-task
+ * @see https://developers.track.toggl.com/docs/api/tasks#post-workspaceprojecttasks
  */
 function* createTogglTask(sourceTask: Task): SagaIterator<Task> {
   const projectIdToLinkedId = yield select(projectIdToLinkedIdSelector);
@@ -76,41 +110,79 @@ function* createTogglTask(sourceTask: Task): SagaIterator<Task> {
     throw new Error(`Could not find target project ID for Toggl task ${sourceTask.name}`);
   }
 
-  const taskRequest = {
-    task: {
-      name: sourceTask.name,
-      pid: +targetProjectId,
-    },
+  const targetProjectsById = yield select(targetProjectsByIdSelector);
+
+  const targetProject = targetProjectsById[targetProjectId];
+
+  if (isNil(targetProject)) {
+    throw new Error(
+      `Could not find target project for Toggl task ${sourceTask.name}`,
+    );
+  }
+
+  const targetWorkspaceId = +targetProject.workspaceId;
+
+  const body: RequestBody = {
+    name: sourceTask.name,
+    project_id: +targetProjectId,
+    workspace_id: targetWorkspaceId,
   };
 
-  const { data } = yield call(fetchObject, "/toggl/api/tasks", {
-    method: "POST",
-    body: taskRequest,
-  });
+  let targetAssigneeId: number | null = null;
 
-  return transformFromResponse(data);
+  const userIdToLinkedId = yield select(userIdToLinkedIdSelector);
+
+  for (const sourceAssigneeId of sourceTask.assigneeIds) {
+    const assigneeLinkedId: string | undefined =
+      userIdToLinkedId[sourceAssigneeId];
+
+    if (!isNil(assigneeLinkedId)) {
+      targetAssigneeId = +assigneeLinkedId;
+
+      break;
+    }
+  }
+
+  if (targetAssigneeId !== null) {
+    body.user_id = targetAssigneeId;
+  }
+
+  const togglTask = yield call(
+    fetchObject,
+    `/toggl/api/workspaces/${targetWorkspaceId}/projects/${targetProjectId}/tasks`,
+    { method: "POST", body },
+  );
+
+  return transformFromResponse(togglTask);
 }
 
 /**
  * Deletes the specified Toggl task.
- * @see https://github.com/toggl/toggl_api_docs/blob/master/chapters/tasks.md#delete-a-task
+ * @see https://developers.track.toggl.com/docs/api/tasks#delete-workspaceprojecttask
  */
 function* deleteTogglTask(sourceTask: Task): SagaIterator {
-  yield call(fetchEmpty, `/toggl/api/tasks/${sourceTask.id}`, {
-    method: "DELETE",
-  });
+  const { id, projectId, workspaceId } = sourceTask;
+
+  yield call(
+    fetchEmpty,
+    `/toggl/api/workspaces/${workspaceId}/projects/${projectId}/tasks/${id}`,
+    {
+      method: "DELETE",
+    },
+  );
 }
 
 /**
  * Fetches Toggl tasks in the specified workspace.
- * @see https://github.com/toggl/toggl_api_docs/blob/master/chapters/workspaces.md#get-workspace-tasks
+ * @see https://developers.track.toggl.com/docs/api/tasks#get-workspaceprojecttasks
  */
-function* fetchTogglTasksInWorkspace(
+function* fetchTogglTasksInProject(
   workspaceId: string,
+  projectId: string,
 ): SagaIterator<Task[]> {
   const togglTasks: TogglTaskResponse[] = yield call(
     fetchArray,
-    `/toggl/api/workspaces/${workspaceId}/tasks`,
+    `/toggl/api/workspaces/${workspaceId}/projects/${projectId}/tasks`,
   );
 
   return togglTasks.map(transformFromResponse);
@@ -121,10 +193,10 @@ function transformFromResponse(task: TogglTaskResponse): Task {
     id: task.id.toString(),
     name: task.name,
     estimate: convertSecondsToClockifyEstimate(task.estimated_seconds),
-    projectId: task.pid.toString(),
-    assigneeIds: task.uid ? [validStringify(task?.uid, "")] : [],
+    projectId: task.project_id.toString(),
+    assigneeIds: task.user_id ? [validStringify(task?.user_id, "")] : [],
     isActive: task.active,
-    workspaceId: validStringify(task?.wid, ""),
+    workspaceId: validStringify(task?.workspace_id, ""),
     entryCount: 0,
     linkedId: null,
     isIncluded: true,

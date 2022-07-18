@@ -110,7 +110,7 @@ function* createClockifyTimeEntry(
     // payload.
   }
 
-  const timeEntryRequest = {
+  const body = {
     start: sourceTimeEntry.start,
     billable: sourceTimeEntry.isBillable,
     description: sourceTimeEntry.description,
@@ -123,10 +123,7 @@ function* createClockifyTimeEntry(
   const targetTimeEntry = yield call(
     fetchObject,
     `/clockify/api/workspaces/${targetWorkspaceId}/time-entries`,
-    {
-      method: "POST",
-      body: timeEntryRequest,
-    },
+    { method: "POST", body },
   );
 
   return transformFromResponse(targetTimeEntry);

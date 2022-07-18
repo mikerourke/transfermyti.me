@@ -15,39 +15,59 @@ import { clientIdToLinkedIdSelector } from "~/modules/clients/clientsSelectors";
 import { EntityGroup, ToolName, type Project } from "~/typeDefs";
 import { validStringify } from "~/utilities/textTransforms";
 
-interface TogglProjectResponse {
-  id: number;
-  wid: number;
-  cid: number;
-  name: string;
-  billable: boolean;
-  is_private: boolean;
-  active: boolean;
-  // ID of the color selected for the project:
-  color: string;
-  hex_color: string;
-  at: string;
-  // Whether the estimated hours are automatically calculated based on task
-  //estimations or manually fixed based on the value of 'estimated_hours':
-  auto_estimates?: boolean;
-  // If auto_estimates is true then the sum of task estimations is returned,
-  // otherwise user inserted hours:
-  estimated_hours?: number;
-  // Hourly rate of the project (float, not required, premium functionality):
-  rate?: number;
-  // Whether the project can be used as a template
-  template?: boolean;
-  // ID of the template project used on current project's creation:
-  template_id?: number;
+interface TogglRecurringParametersItem {
+  custom_period: number;
+  estimated_seconds: number;
+  parameter_end_date: string;
+  parameter_start_date: string;
+  period: string;
+  project_start_date: string;
 }
 
+/**
+ * Response from Toggl API for projects.
+ * @see https://developers.track.toggl.com/docs/api/projects#response-5
+ */
+interface TogglProjectResponse {
+  id: number;
+  workspace_id: number;
+  client_id: number;
+  name: string;
+  is_private: boolean;
+  active: boolean;
+  at: string;
+  created_at: string;
+  server_deleted_at: string | null;
+  color: string;
+  billable: boolean | null;
+  template: boolean | null;
+  auto_estimates: boolean | null;
+  estimated_hours: number | null;
+  rate: number | null;
+  rate_last_updated: string | null;
+  currency: string | null;
+  recurring: boolean;
+  recurring_parameters: { items: TogglRecurringParametersItem[] } | null;
+  current_period: { end_date: string; start_date: string } | null;
+  fixed_fee: number | null;
+  actual_hours: number;
+}
+
+/**
+ * Response from Toggl API for projects users.
+ * @see https://developers.track.toggl.com/docs/api/projects#response
+ */
 interface TogglProjectUserResponse {
   id: number;
-  pid: number;
-  uid: number;
-  wid: number;
+  project_id: number;
+  user_id: number;
+  workspace_id: number;
   manager: boolean;
-  rate: number;
+  rate: number | null;
+  rate_last_updated: string | null;
+  at: string;
+  group_id: number | null;
+  labour_cost: number | null;
 }
 
 /**
@@ -90,7 +110,7 @@ export function* fetchTogglProjectsSaga(): SagaIterator<Project[]> {
 
 /**
  * Creates a new Toggl project.
- * @see https://github.com/toggl/toggl_api_docs/blob/master/chapters/projects.md#create-project
+ * @see https://developers.track.toggl.com/docs/api/projects#post-workspaceprojects
  */
 function* createTogglProject(
   sourceProject: Project,
@@ -104,36 +124,50 @@ function* createTogglProject(
     clientIdToLinkedId,
   );
 
-  const projectRequest = {
-    project: {
-      name: sourceProject.name,
-      wid: +targetWorkspaceId,
-      cid: isNil(targetClientId) ? undefined : +targetClientId,
-      is_private: !sourceProject.isPublic,
-    },
+  const body: RequestBody = {
+    name: sourceProject.name,
+    is_private: !sourceProject.isPublic,
   };
 
-  const { data } = yield call(fetchObject, "/toggl/api/projects", {
-    method: "POST",
-    body: projectRequest,
-  });
+  if (!isNil(targetClientId)) {
+    body.client_id = +targetClientId;
+  }
 
-  return transformFromResponse(data, []);
+  if (sourceProject.color?.startsWith("#")) {
+    body.color = sourceProject.color;
+  }
+
+  const togglProject = yield call(
+    fetchObject,
+    `/toggl/api/workspaces/${targetWorkspaceId}/projects`,
+    {
+      method: "POST",
+      body,
+    },
+  );
+
+  return transformFromResponse(togglProject, []);
 }
 
 /**
  * Deletes the specified Toggl project.
- * @see https://github.com/toggl/toggl_api_docs/blob/master/chapters/projects.md#delete-a-project
+ * @see https://developers.track.toggl.com/docs/api/projects#delete-workspaceproject
  */
 function* deleteTogglProject(sourceProject: Project): SagaIterator {
-  yield call(fetchEmpty, `/toggl/api/projects/${sourceProject.id}`, {
-    method: "DELETE",
-  });
+  const { id, workspaceId } = sourceProject;
+
+  yield call(
+    fetchEmpty,
+    `/toggl/api/workspaces/${workspaceId}/projects/${id}`,
+    {
+      method: "DELETE",
+    },
+  );
 }
 
 /**
  * Fetches Toggl projects in the specified workspace.
- * @see https://github.com/toggl/toggl_api_docs/blob/master/chapters/workspaces.md#get-workspace-projects
+ * @see https://developers.track.toggl.com/docs/api/projects#get-workspaceprojects
  */
 function* fetchTogglProjectsInWorkspace(
   workspaceId: string,
@@ -142,15 +176,27 @@ function* fetchTogglProjectsInWorkspace(
 
   const togglApiDelay = yield call(getApiDelayForTool, ToolName.Toggl);
 
-  const togglProjects: TogglProjectResponse[] = yield call(
+  const activeTogglProjects: TogglProjectResponse[] = yield call(
     fetchArray,
-    `/toggl/api/workspaces/${workspaceId}/projects?active=both`,
+    `/toggl/api/workspaces/${workspaceId}/projects?active=true`,
+  );
+
+  const inactiveTogglProjects: TogglProjectResponse[] = yield call(
+    fetchArray,
+    `/toggl/api/workspaces/${workspaceId}/projects?active=false`,
+  );
+
+  const togglProjects = [...activeTogglProjects, ...inactiveTogglProjects];
+
+  const usersInProjectsMap = yield call(
+    fetchProjectUsersInWorkspace,
+    workspaceId,
   );
 
   for (const togglProject of togglProjects) {
     const projectId = validStringify(togglProject?.id, "");
 
-    const userIds: string[] = yield call(fetchUserIdsInProject, projectId);
+    const userIds: string[] = usersInProjectsMap.get(projectId) ?? [];
 
     allTogglProjects.push(transformFromResponse(togglProject, userIds));
 
@@ -163,16 +209,31 @@ function* fetchTogglProjectsInWorkspace(
 /**
  * Fetches the users associated with a specific project and returns an array
  * of strings that represents the user ID.
- * @see https://github.com/toggl/toggl_api_docs/blob/master/chapters/projects.md#get-project-users
- * @see https://github.com/toggl/toggl_api_docs/blob/master/chapters/project_users.md
+ * @see https://developers.track.toggl.com/docs/api/projects#get-get-workspace-projects-users
  */
-function* fetchUserIdsInProject(projectId: string): SagaIterator<string[]> {
+function* fetchProjectUsersInWorkspace(
+  workspaceId: string,
+): SagaIterator<Map<string, string[]>> {
   const projectUsers: TogglProjectUserResponse[] = yield call(
     fetchArray,
-    `/toggl/api/projects/${projectId}/project_users`,
+    `/toggl/api/workspaces/${workspaceId}/project_users`,
   );
 
-  return projectUsers.map(({ uid }) => validStringify(uid, ""));
+  const usersInProjectsMap = new Map<string, string[]>();
+
+  for (const projectUser of projectUsers) {
+    const { project_id, user_id } = projectUser;
+
+    const projectIdString = project_id.toString();
+
+    const usersInProject = usersInProjectsMap.get(projectIdString) ?? [];
+
+    usersInProject.push(user_id.toString());
+
+    usersInProjectsMap.set(projectIdString, usersInProject);
+  }
+
+  return usersInProjectsMap;
 }
 
 function transformFromResponse(
@@ -182,12 +243,12 @@ function transformFromResponse(
   return {
     id: project.id.toString(),
     name: project.name,
-    workspaceId: project.wid.toString(),
-    clientId: validStringify(project?.cid, null),
-    isBillable: project.billable,
+    workspaceId: project.workspace_id.toString(),
+    clientId: validStringify(project?.client_id, null),
+    isBillable: project.billable ?? false,
     isPublic: !project.is_private,
     isActive: project.active,
-    color: project.hex_color,
+    color: project.color,
     estimate: {
       estimate: project?.estimated_hours ?? 0,
       type: project?.auto_estimates ? "AUTO" : "MANUAL",

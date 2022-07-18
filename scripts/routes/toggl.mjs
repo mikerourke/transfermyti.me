@@ -14,32 +14,31 @@ const db = readJsonSync(dbPath);
 export function assignTogglRoutes(router, isEmpty) {
   router
     .get("/me", (req, res) => {
-      const [firstUser] = db.users;
-      const payload = {
-        since: 1555774945,
-        data: {
-          ...firstUser,
-          workspaces: db.workspaces,
-        },
-      };
+      const [user] = db.users;
 
-      res.status(200).send(payload);
+      res.status(200).send(user);
     })
+
     .get("/workspaces/:workspaceId/clients", (req, res) =>
       res.status(200).send(isEmpty === true ? [] : db.clients),
     )
+
     .get("/workspaces/:workspaceId/projects", (req, res) =>
       res.status(200).send(isEmpty === true ? [] : db.projects),
     )
-    .get("/projects/:projectId/project_users", (req, res) =>
+
+    .get("/workspaces/:workspaceId/project_users", (req, res) =>
       res.status(200).send(isEmpty === true ? [] : db.projectUsers),
     )
+
     .get("/workspaces/:workspaceId/tags", (req, res) =>
       res.status(200).send(isEmpty === true ? [] : db.tags),
     )
+
     .get("/workspaces/:workspaceId/tasks", (req, res) =>
       res.status(200).send(isEmpty === true ? [] : db.tasks),
     )
+
     .get("/details", (req, res) => {
       const { since } = req.query;
       const queryDate = new Date(since);
@@ -59,37 +58,42 @@ export function assignTogglRoutes(router, isEmpty) {
 
       res.status(200).send(payload);
     })
+
     .get("/workspaces/:workspaceId/groups", (req, res) =>
       res.status(200).send(isEmpty === true ? [] : db.userGroups),
     )
+
     .get("/workspaces/:workspaceId/users", (req, res) =>
       res.status(200).send(isEmpty === true ? [] : db.users),
     )
+
     .get("/workspaces", (req, res) => res.status(200).send(db.workspaces))
+
     .get("/workspaces/:workspaceId/workspace_users", (req, res) =>
       res.status(200).send(isEmpty === true ? [] : db.workspaceUsers),
     );
 
   router
-    .post("/clients", (req, res) => {
+    .post("/workspaces/:workspaceId/clients", (req, res) => {
       const { client } = req.body;
 
       const newClient = {
         id: +uniqueId("30"),
-        wid: +client.wid,
+        wid: +req.params.workspaceId,
         name: client.name,
         at: new Date().toLocaleString(),
       };
 
-      res.status(200).send({ data: newClient });
+      res.status(200).send(newClient);
     })
-    .post("/projects", (req, res) => {
+
+    .post("/workspaces/:workspaceId/projects", (req, res) => {
       const { project } = req.body;
 
       const newProject = {
         id: +uniqueId("20"),
-        wid: +project.wid,
-        cid: +project.cid,
+        workspace_id: +req.params.workspaceId,
+        client_id: +project.client_id,
         name: project.name,
         billable: false,
         is_private: true,
@@ -102,32 +106,34 @@ export function assignTogglRoutes(router, isEmpty) {
 
       res.status(200).send({ data: newProject });
     })
-    .post("/tags", (req, res) => {
+
+    .post("/workspaces/:workspaceId/tags", (req, res) => {
       const { tag } = req.body;
 
       const newTag = {
         id: +uniqueId("40"),
-        wid: +tag.wid,
+        workspace_id: +req.params.workspaceId,
         name: tag.name,
       };
 
-      res.status(200).send({ data: newTag });
+      res.status(200).send(newTag);
     })
-    .post("/tasks", (req, res) => {
+
+    .post("/workspaces/:workspaceId/projects/:projectId/tasks", (req, res) => {
       const { task } = req.body;
 
-      const [workspace] = db.workspaces;
       const newTask = {
         id: +uniqueId("70"),
-        pid: +task.pid,
-        wid: +workspace.id,
+        project_id: +req.params.projectId,
+        workspace_id: +req.params.workspaceId,
         name: task.name,
         active: true,
         estimated_seconds: 0,
       };
 
-      res.status(200).send({ data: newTask });
+      res.status(200).send(newTask);
     })
+
     .post("/time_entries", (req, res) => {
       const { time_entry: entry } = req.body;
 
@@ -144,6 +150,7 @@ export function assignTogglRoutes(router, isEmpty) {
 
       res.status(200).send({ data: newTimeEntry });
     })
+
     .post("/groups", (req, res) => {
       const newUserGroup = {
         id: +uniqueId("50"),
@@ -156,13 +163,28 @@ export function assignTogglRoutes(router, isEmpty) {
     });
 
   router
-    .delete("/clients/:clientId", (req, res) => res.status(200).send({}))
-    .delete("/projects/:projectId", (req, res) => res.status(200).send({}))
-    .delete("/tags/:tagId", (req, res) => res.status(200).send({}))
-    .delete("/tasks/:taskId", (req, res) => res.status(200).send({}))
+    .delete("/workspaces/:workspaceId/clients/:clientId", (req, res) =>
+      res.status(200).send({}),
+    )
+
+    .delete("/workspaces/:workspaceId/projects/:projectId", (req, res) =>
+      res.status(200).send({}),
+    )
+
+    .delete("/workspaces/:workspaceId/tags/:tagId", (req, res) =>
+      res.status(200).send({}),
+    )
+
+    .delete(
+      "/workspaces/:workspaceId/projects/:projectId/tasks/:taskId",
+      (req, res) => res.status(200).send({}),
+    )
+
     .delete("/time_entries/:timeEntryId", (req, res) =>
       res.status(200).send({}),
     )
+
     .delete("/groups/:userGroupId", (req, res) => res.status(200).send({}))
+
     .delete("/project_users/:userId", (req, res) => res.status(200).send());
 }

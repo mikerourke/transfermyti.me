@@ -62,12 +62,12 @@ function* createClockifyClient(
   sourceClient: Client,
   targetWorkspaceId: string,
 ): SagaIterator<Client> {
-  const clientRequest = { name: sourceClient.name };
+  const body = { name: sourceClient.name };
 
   const clockifyClient = yield call(
     fetchObject,
     `/clockify/api/workspaces/${targetWorkspaceId}/clients`,
-    { method: "POST", body: clientRequest },
+    { method: "POST", body },
   );
 
   return transformFromResponse(clockifyClient);
