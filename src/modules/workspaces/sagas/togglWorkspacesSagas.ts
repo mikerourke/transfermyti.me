@@ -28,6 +28,10 @@ interface TogglCsvUpload {
   log_id: string;
 }
 
+/**
+ * Response from Toggl API for workspace.
+ * @see https://developers.track.toggl.com/docs/api/workspaces#response-4
+ */
 export interface TogglWorkspaceResponse {
   id: number;
   organization_id: number;
@@ -61,12 +65,11 @@ export interface TogglWorkspaceResponse {
 /**
  * Fetches all workspaces from Toggl and returns array of transformed
  * workspaces.
- * @see https://github.com/toggl/toggl_api_docs/blob/master/chapters/workspaces.md#get-workspace-workspaces
  */
 export function* fetchTogglWorkspacesSaga(): SagaIterator {
   const togglWorkspaces: TogglWorkspaceResponse[] = yield call(
     fetchArray,
-    "/toggl/api/workspaces",
+    "/toggl/api/me/workspaces",
   );
 
   return togglWorkspaces.map(transformFromResponse);
