@@ -14,7 +14,7 @@ import { includedSourceWorkspaceIdsSelector } from "~/modules/workspaces/workspa
 import { EntityGroup, ToolName, type User } from "~/typeDefs";
 import { validStringify } from "~/utilities/textTransforms";
 
-interface TogglUserResponse {
+export interface TogglUserResponse {
   id: number;
   api_token: string;
   email: string;
