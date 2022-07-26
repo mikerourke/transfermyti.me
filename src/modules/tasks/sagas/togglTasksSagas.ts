@@ -77,13 +77,20 @@ export function* fetchTogglTasksSaga(): SagaIterator<Task[]> {
     const [workspaceId, projects] = entry as [string, Project[]];
 
     for (const project of projects) {
-      const tasks = yield call(
-        fetchTogglTasksInProject,
-        workspaceId,
-        project.id,
-      );
+      try {
+        const tasks = yield call(
+          fetchTogglTasksInProject,
+          workspaceId,
+          project.id,
+        );
 
-      allTasks.push(...tasks);
+        allTasks.push(...tasks);
+      } catch (err: AnyValid) {
+        if (err.status === 402) {
+          // User can't create or fetch tasks.
+          break;
+        }
+      }
 
       yield delay(apiDelay);
     }

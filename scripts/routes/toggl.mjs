@@ -35,8 +35,18 @@ export function assignTogglRoutes(router, isEmpty) {
       res.status(200).send(isEmpty === true ? [] : db.tags),
     )
 
-    .get("/workspaces/:workspaceId/tasks", (req, res) =>
-      res.status(200).send(isEmpty === true ? [] : db.tasks),
+    .get("/workspaces/:workspaceId/projects/:projectId/tasks", (req, res) =>
+      res
+        .status(200)
+        .send(
+          isEmpty === true
+            ? []
+            : db.tasks.filter(
+                (task) =>
+                  task.workspace_id === +req.params.workspaceId &&
+                  task.project_id === +req.params.projectId,
+              ),
+        ),
     )
 
     .get("/details", (req, res) => {
@@ -67,7 +77,7 @@ export function assignTogglRoutes(router, isEmpty) {
       res.status(200).send(isEmpty === true ? [] : db.users),
     )
 
-    .get("/workspaces", (req, res) => res.status(200).send(db.workspaces))
+    .get("/me/workspaces", (req, res) => res.status(200).send(db.workspaces))
 
     .get("/workspaces/:workspaceId/workspace_users", (req, res) =>
       res.status(200).send(isEmpty === true ? [] : db.workspaceUsers),
@@ -75,7 +85,7 @@ export function assignTogglRoutes(router, isEmpty) {
 
   router
     .post("/workspaces/:workspaceId/clients", (req, res) => {
-      const { client } = req.body;
+      const client = req.body;
 
       const newClient = {
         id: +uniqueId("30"),
@@ -88,103 +98,129 @@ export function assignTogglRoutes(router, isEmpty) {
     })
 
     .post("/workspaces/:workspaceId/projects", (req, res) => {
-      const { project } = req.body;
+      const project = req.body;
 
       const newProject = {
         id: +uniqueId("20"),
         workspace_id: +req.params.workspaceId,
         client_id: +project.client_id,
         name: project.name,
-        billable: false,
         is_private: true,
         active: true,
-        color: "5",
         at: new Date().toLocaleString(),
+        created_at: new Date().toLocaleString(),
+        color: "#ea468d",
+        server_deleted_at: null,
+        billable: null,
+        template: null,
+        auto_estimates: null,
+        estimated_hours: null,
+        rate: null,
+        rate_last_updated: null,
+        currency: null,
+        recurring: false,
+        recurring_parameters: null,
+        current_period: null,
+        fixed_fee: null,
+        actual_hours: 0,
       };
 
       console.log(newProject);
 
-      res.status(200).send({ data: newProject });
+      res.status(200).send(newProject);
     })
 
     .post("/workspaces/:workspaceId/tags", (req, res) => {
-      const { tag } = req.body;
+      const tag = req.body;
 
       const newTag = {
         id: +uniqueId("40"),
         workspace_id: +req.params.workspaceId,
         name: tag.name,
+        at: new Date().toLocaleString(),
+        deleted_at: null,
       };
 
       res.status(200).send(newTag);
     })
 
     .post("/workspaces/:workspaceId/projects/:projectId/tasks", (req, res) => {
-      const { task } = req.body;
+      const task = req.body;
 
       const newTask = {
         id: +uniqueId("70"),
-        project_id: +req.params.projectId,
-        workspace_id: +req.params.workspaceId,
         name: task.name,
+        workspace_id: +req.params.workspaceId,
+        project_id: +req.params.projectId,
+        user_id: task.user_id,
         active: true,
+        at: new Date().toLocaleString(),
         estimated_seconds: 0,
+        tracked_seconds: 0,
+        server_deleted_at: null,
       };
 
       res.status(200).send(newTask);
     })
 
-    .post("/time_entries", (req, res) => {
-      const { time_entry: entry } = req.body;
+    .post("/workspaces/:workspaceId/time_entries", (req, res) => {
+      const timeEntry = req.body;
 
       const newTimeEntry = {
         id: +uniqueId("80"),
-        pid: +entry.pid,
-        wid: +entry.wid,
-        description: entry.description,
-        billable: entry.billable,
-        duration: entry.duration,
-        start: entry.start,
-        tags: entry.tags,
+        project_id: +timeEntry.project_id,
+        task_id: +timeEntry.task_id,
+        user_id: +timeEntry.user_id,
+        workspace_id: +timeEntry.workspace_id,
+        description: timeEntry.description,
+        start: timeEntry.start,
+        stop: timeEntry.stop,
+        at: new Date().toLocaleString(),
+        server_deleted_at: null,
+        duration: timeEntry.duration,
+        duronly: false,
+        billable: timeEntry.billable,
+        tag_ids: timeEntry.tag_ids,
+        tags: timeEntry.tags,
       };
 
-      res.status(200).send({ data: newTimeEntry });
+      res.status(200).send(newTimeEntry);
     })
 
     .post("/groups", (req, res) => {
       const newUserGroup = {
         id: +uniqueId("50"),
-        wid: +req.body.wid,
+        workspace_id: +req.body.workspace_id,
         name: req.body.name,
         at: new Date().toLocaleString(),
       };
 
-      res.status(200).send({ data: newUserGroup });
+      res.status(200).send(newUserGroup);
     });
 
   router
     .delete("/workspaces/:workspaceId/clients/:clientId", (req, res) =>
-      res.status(200).send({}),
+      res.status(200).send(),
     )
 
     .delete("/workspaces/:workspaceId/projects/:projectId", (req, res) =>
-      res.status(200).send({}),
+      res.status(200).send(),
     )
 
     .delete("/workspaces/:workspaceId/tags/:tagId", (req, res) =>
-      res.status(200).send({}),
+      res.status(200).send(),
     )
 
     .delete(
       "/workspaces/:workspaceId/projects/:projectId/tasks/:taskId",
-      (req, res) => res.status(200).send({}),
+      (req, res) => res.status(200).send(),
     )
 
-    .delete("/time_entries/:timeEntryId", (req, res) =>
-      res.status(200).send({}),
+    .delete("/workspaces/:workspaceId/time_entries/:timeEntryId", (req, res) =>
+      res.status(200).send(),
     )
 
-    .delete("/groups/:userGroupId", (req, res) => res.status(200).send({}))
+    .delete("/groups/:userGroupId", (req, res) => res.status(200).send())
 
     .delete("/project_users/:userId", (req, res) => res.status(200).send());
 }
