@@ -181,7 +181,13 @@ async function fetchFromApi<T>(url: string, config: RequestInit): Promise<T> {
   }
 
   if (type.includes("json")) {
-    return await response.json();
+    try {
+      return await response.json();
+    } catch (err: AnyValid) {
+      if (/unexpected end of JSON input/gi.test(err.message)) {
+        return {} as unknown as T;
+      }
+    }
   }
 
   return (await response.text()) as unknown as T;

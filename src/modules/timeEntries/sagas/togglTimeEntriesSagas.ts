@@ -153,7 +153,6 @@ function* createTogglTimeEntry(
   const body = {
     description: sourceTimeEntry.description,
     tags: sourceTimeEntry.tagNames,
-    tag_ids: sourceTimeEntry.tagIds,
     duration: differenceInSeconds(sourceTimeEntry.end, sourceTimeEntry.start),
     start: sourceTimeEntry.start.toISOString(),
     stop: sourceTimeEntry.end.toISOString(),
