@@ -23,7 +23,16 @@ export function readJsonSync(filePath) {
 }
 
 /**
- * Writes the specified contents to the specified JSON file path.
+ * Writes the specified contents to the specified JSON file path sync.
+ * @param {string} filePath JSON output file path
+ * @param {Record<string, *>} contents Contents to write to JSON file
+ */
+export function writeJsonSync(filePath, contents) {
+  fs.writeFileSync(filePath, JSON.stringify(contents, null, 2));
+}
+
+/**
+ * Writes the specified contents to the specified JSON file path async.
  * @param {string} filePath JSON output file path
  * @param {Record<string, *>} contents Contents to write to JSON file
  */

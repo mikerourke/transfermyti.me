@@ -85,6 +85,13 @@ function* createClockifyTask(
     throw new Error(`Could not find target project ID for Clockify task ${sourceTask.name}`);
   }
 
+  const body: RequestBody = {
+    name: sourceTask.name,
+    projectId: targetProjectId,
+    estimate: sourceTask.estimate,
+    status: sourceTask.isActive ? "ACTIVE" : "DONE",
+  };
+
   const userIdToLinkedId = yield select(userIdToLinkedIdSelector);
 
   const targetAssigneeIds: string[] = [];
@@ -92,23 +99,19 @@ function* createClockifyTask(
   for (const sourceAssigneeId of sourceTask.assigneeIds) {
     const assigneeLinkedId = userIdToLinkedId[sourceAssigneeId];
 
-    if (assigneeLinkedId) {
+    if (!isNil(assigneeLinkedId)) {
       targetAssigneeIds.push(assigneeLinkedId);
     }
   }
 
-  const taskRequest = {
-    name: sourceTask.name,
-    projectId: targetProjectId,
-    assigneeIds: targetAssigneeIds.length !== 0 ? targetAssigneeIds : undefined,
-    estimate: sourceTask.estimate,
-    status: sourceTask.isActive ? "ACTIVE" : "DONE",
-  };
+  if (targetAssigneeIds.length !== 0) {
+    body.assigneeIds = targetAssigneeIds;
+  }
 
   const clockifyTask = yield call(
     fetchObject,
     `/clockify/api/workspaces/${targetWorkspaceId}/projects/${targetProjectId}/tasks`,
-    { method: "POST", body: taskRequest },
+    { method: "POST", body },
   );
 
   return transformFromResponse(clockifyTask, targetWorkspaceId);

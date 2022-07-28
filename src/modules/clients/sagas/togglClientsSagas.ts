@@ -12,11 +12,17 @@ import { fetchEntitiesForTool } from "~/entityOperations/fetchEntitiesForTool";
 import { EntityGroup, ToolName, type Client } from "~/typeDefs";
 import { validStringify } from "~/utilities/textTransforms";
 
+/**
+ * Response from Toggl API for clients.
+ * @see https://developers.track.toggl.com/docs/api/clients#response
+ */
 interface TogglClientResponse {
   id: number;
   wid: number;
   name: string;
   at: string;
+  foreign_id: string | null;
+  server_deleted_at: string | null;
 }
 
 /**
@@ -57,40 +63,41 @@ export function* fetchTogglClientsSaga(): SagaIterator<Client[]> {
 
 /**
  * Creates a new Toggl client.
- * @see https://github.com/toggl/toggl_api_docs/blob/master/chapters/clients.md#create-a-client
+ * @see https://developers.track.toggl.com/docs/api/clients#post-create-client
  */
 function* createTogglClient(
   sourceClient: Client,
   targetWorkspaceId: string,
 ): SagaIterator<Client> {
-  const clientRequest = {
-    client: {
-      name: sourceClient.name,
-      wid: +targetWorkspaceId,
-    },
+  const body = {
+    name: sourceClient.name,
+    wid: +targetWorkspaceId,
   };
 
-  const { data } = yield call(fetchObject, "/toggl/api/clients", {
-    method: "POST",
-    body: clientRequest,
-  });
+  const togglClient = yield call(
+    fetchObject,
+    `/toggl/api/workspaces/${targetWorkspaceId}/clients`,
+    { method: "POST", body },
+  );
 
-  return transformFromResponse(data);
+  return transformFromResponse(togglClient);
 }
 
 /**
  * Deletes the specified Toggl client.
- * @see https://github.com/toggl/toggl_api_docs/blob/master/chapters/clients.md#delete-a-client
+ * @see https://developers.track.toggl.com/docs/api/clients#delete-delete-client
  */
 function* deleteTogglClient(sourceClient: Client): SagaIterator {
-  yield call(fetchEmpty, `/toggl/api/clients/${sourceClient.id}`, {
+  const { id, workspaceId } = sourceClient;
+
+  yield call(fetchEmpty, `/toggl/api/workspaces/${workspaceId}/clients/${id}`, {
     method: "DELETE",
   });
 }
 
 /**
  * Fetches Toggl clients in the specified workspace.
- * @see https://github.com/toggl/toggl_api_docs/blob/master/chapters/workspaces.md#get-workspace-clients
+ * @see https://developers.track.toggl.com/docs/api/clients#get-list-clients
  */
 function* fetchTogglClientsInWorkspace(
   workspaceId: string,

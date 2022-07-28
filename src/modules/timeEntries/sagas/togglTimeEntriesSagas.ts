@@ -20,17 +20,12 @@ import { credentialsByToolNameSelector } from "~/modules/credentials/credentials
 import { projectIdToLinkedIdSelector } from "~/modules/projects/projectsSelectors";
 import { tagIdsByNameBySelectorFactory } from "~/modules/tags/tagsSelectors";
 import { taskIdToLinkedIdSelector } from "~/modules/tasks/tasksSelectors";
-import { EntityGroup, ToolName, type TimeEntry } from "~/typeDefs";
+import { EntityGroup, type TimeEntry, ToolName } from "~/typeDefs";
 import { validStringify } from "~/utilities/textTransforms";
 
 const togglApiDelay = getApiDelayForTool(ToolName.Toggl);
 
-interface TogglTotalCurrency {
-  currency: string | null;
-  amount: number | null;
-}
-
-interface TogglTimeEntryResponse {
+interface TogglReportsTimeEntryResponse {
   id: number;
   pid: number;
   tid: number | null;
@@ -51,6 +46,37 @@ interface TogglTimeEntryResponse {
   is_billable: boolean;
   cur: string | null;
   tags: string[];
+}
+
+/**
+ * Response from Toggl API for time entries.
+ * @see https://developers.track.toggl.com/docs/api/time_entries#response
+ */
+interface TogglTrackTimeEntryResponse {
+  id: number;
+  project_id: number;
+  task_id: number | null;
+  user_id: number;
+  workspace_id: number;
+  description: string;
+  start: string;
+  stop: string;
+  at: string;
+  server_deleted_at: string | null;
+  duration: number;
+  duronly: boolean;
+  billable: boolean;
+  tag_ids: number[];
+  tags: string[];
+}
+
+type TogglTimeEntryResponse =
+  | TogglTrackTimeEntryResponse
+  | TogglReportsTimeEntryResponse;
+
+interface TogglTotalCurrency {
+  currency: string | null;
+  amount: number | null;
 }
 
 interface TogglTimeEntriesFetchResponse {
@@ -102,7 +128,7 @@ export function* fetchTogglTimeEntriesSaga(): SagaIterator<TimeEntry[]> {
 
 /**
  * Creates a new Toggl time entry.
- * @see https://github.com/toggl/toggl_api_docs/blob/master/chapters/time_entries.md#create-a-time-entry
+ * @see https://developers.track.toggl.com/docs/api/time_entries#post-timeentries
  */
 function* createTogglTimeEntry(
   sourceTimeEntry: TimeEntry,
@@ -124,34 +150,43 @@ function* createTogglTimeEntry(
     taskIdToLinkedId,
   );
 
-  const timeEntryRequest = {
-    time_entry: {
-      description: sourceTimeEntry.description,
-      tags: sourceTimeEntry.tagNames,
-      duration: differenceInSeconds(sourceTimeEntry.end, sourceTimeEntry.start),
-      start: sourceTimeEntry.start.toISOString(),
-      wid: +targetWorkspaceId,
-      pid: isNil(targetProjectId) ? undefined : +targetProjectId,
-      tid: isNil(targetTaskId) ? undefined : +targetTaskId,
-      billable: sourceTimeEntry.isBillable,
-      created_with: "transfermyti.me",
-    },
+  const body = {
+    description: sourceTimeEntry.description,
+    tags: sourceTimeEntry.tagNames,
+    duration: differenceInSeconds(sourceTimeEntry.end, sourceTimeEntry.start),
+    start: sourceTimeEntry.start.toISOString(),
+    stop: sourceTimeEntry.end.toISOString(),
+    workspace_id: +targetWorkspaceId,
+    project_id: isNil(targetProjectId) ? undefined : +targetProjectId,
+    task_id: isNil(targetTaskId) ? undefined : +targetTaskId,
+    billable: sourceTimeEntry.isBillable,
+    created_with: "transfermyti.me",
   };
 
-  yield call(fetchObject, "/toggl/api/time_entries", {
-    method: "POST",
-    body: timeEntryRequest,
-  });
+  yield call(
+    fetchObject,
+    `/toggl/api/workspaces/${targetWorkspaceId}/time_entries`,
+    {
+      method: "POST",
+      body,
+    },
+  );
 }
 
 /**
  * Deletes the specified Toggl time entry.
- * @see https://github.com/toggl/toggl_api_docs/blob/master/chapters/time_entries.md#delete-a-time-entry
+ * @see https://developers.track.toggl.com/docs/api/time_entries#delete-timeentries
  */
 function* deleteTogglTimeEntry(sourceTimeEntry: TimeEntry): SagaIterator {
-  yield call(fetchEmpty, `/toggl/api/time_entries/${sourceTimeEntry.id}`, {
-    method: "DELETE",
-  });
+  const { workspaceId, id } = sourceTimeEntry;
+
+  yield call(
+    fetchEmpty,
+    `/toggl/api/workspaces/${workspaceId}/time_entries/${id}`,
+    {
+      method: "DELETE",
+    },
+  );
 }
 
 /**
@@ -168,7 +203,7 @@ function* fetchTogglTimeEntriesInWorkspace(
     throw new Error("Invalid or missing Toggl user ID");
   }
 
-  const togglTimeEntries: TogglTimeEntryResponse[] = [];
+  const togglTimeEntries: TogglReportsTimeEntryResponse[] = [];
 
   const currentYear = new Date().getFullYear();
 
@@ -195,13 +230,15 @@ function* fetchTogglTimeEntriesInWorkspace(
     yield delay(togglApiDelay);
   }
 
-  return togglTimeEntries.reduce((acc, togglTimeEntry) => {
+  const transformedTimeEntries: TimeEntry[] = [];
+
+  for (const togglTimeEntry of togglTimeEntries) {
     const validUserId = togglTimeEntry?.uid ?? 0;
 
     // Extra check to ensure we only transfer time entries for the user
     // associated with the API key:
     if (validUserId.toString() !== togglUserId) {
-      return acc;
+      continue;
     }
 
     const clientId = propOr<null, string, string>(
@@ -210,14 +247,17 @@ function* fetchTogglTimeEntriesInWorkspace(
       clientIdsByName,
     );
 
-    const transformedEntry = transformFromResponse(
+    const transformedEntry = transformFromTogglReportsResponse(
       togglTimeEntry,
       workspaceId,
       clientId,
       tagIdsByName,
     );
-    return [...acc, transformedEntry];
-  }, [] as TimeEntry[]);
+
+    transformedTimeEntries.push(transformedEntry);
+  }
+
+  return transformedTimeEntries;
 }
 
 function* fetchAllTogglTimeEntriesForYear(
@@ -292,8 +332,8 @@ function* fetchTogglTimeEntriesForYearAndPage(
   return yield call(fetchObject, `/toggl/reports/details?${query}`);
 }
 
-function transformFromResponse(
-  timeEntry: TogglTimeEntryResponse,
+function transformFromTogglReportsResponse(
+  timeEntry: TogglReportsTimeEntryResponse,
   workspaceId: string,
   clientId: string | null,
   tagIdsByName: Dictionary<string>,
@@ -329,7 +369,7 @@ function transformFromResponse(
 
 function getTime(
   timeEntry: TogglTimeEntryResponse,
-  field: "start" | "end",
+  field: "start" | "end" | "stop",
 ): Date {
   const value = propOr<null, TogglTimeEntryResponse, string>(
     null,

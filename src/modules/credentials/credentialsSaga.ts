@@ -11,7 +11,7 @@ import { mappingByToolNameSelector } from "~/modules/allEntities/allEntitiesSele
 import * as credentialsActions from "~/modules/credentials/credentialsActions";
 import { credentialsByMappingSelector } from "~/modules/credentials/credentialsSelectors";
 import { mergeCredentialsInStorage } from "~/modules/credentials/credentialsStorage";
-import type { TogglWorkspaceResponse } from "~/modules/workspaces/sagas/togglWorkspacesSagas";
+import type { TogglUserResponse } from "~/modules/users/sagas/togglUsersSagas";
 import { ToolName, ValidationErrorsByMapping } from "~/typeDefs";
 import { isDevelopmentMode } from "~/utilities/environment";
 import { validStringify } from "~/utilities/textTransforms";
@@ -49,20 +49,6 @@ function* storeCredentialsSaga(): SagaIterator {
   }
 }
 
-interface TogglMeResponse {
-  since: number;
-  data: {
-    id: number;
-    default_wid: number;
-    email: string;
-    fullname: string;
-    at: string;
-    created_at: string;
-    timezone: string;
-    workspaces: TogglWorkspaceResponse[];
-  };
-}
-
 function* validateCredentialsSaga(): SagaIterator {
   const credentialsByMapping = yield select(credentialsByMappingSelector);
 
@@ -93,17 +79,11 @@ function* validateCredentialsSaga(): SagaIterator {
   const togglMapping = mappingByToolName[ToolName.Toggl];
   if (!isNil(togglMapping)) {
     try {
-      const { data }: TogglMeResponse = yield call(
-        fetchObject,
-        "/toggl/api/me",
-      );
+      const me: TogglUserResponse = yield call(fetchObject, "/toggl/api/me");
 
-      credentialsByMapping[togglMapping].email = data.email;
+      credentialsByMapping[togglMapping].email = me.email;
 
-      credentialsByMapping[togglMapping].userId = validStringify(
-        data?.id,
-        null,
-      );
+      credentialsByMapping[togglMapping].userId = validStringify(me?.id, null);
     } catch {
       validationErrorsByMapping[togglMapping] = "Invalid API key";
 

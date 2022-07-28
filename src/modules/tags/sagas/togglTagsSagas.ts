@@ -8,9 +8,13 @@ import { fetchEntitiesForTool } from "~/entityOperations/fetchEntitiesForTool";
 import { EntityGroup, ToolName, type Tag } from "~/typeDefs";
 import { validStringify } from "~/utilities/textTransforms";
 
+/**
+ * Response from Toggl API for tags.
+ * @see https://developers.track.toggl.com/docs/api/tags#response
+ */
 interface TogglTagResponse {
   id: number;
-  wid: number;
+  workspace_id: number;
   name: string;
   at: string;
 }
@@ -50,40 +54,44 @@ export function* fetchTogglTagsSaga(): SagaIterator<Tag[]> {
 
 /**
  * Creates a new Toggl tag.
- * @see https://github.com/toggl/toggl_api_docs/blob/master/chapters/tags.md#create-a-tag
+ * @see https://developers.track.toggl.com/docs/api/tags#post-create-tag
  */
 function* createTogglTag(
   sourceTag: Tag,
   targetWorkspaceId: string,
 ): SagaIterator<Tag> {
-  const tagRequest = {
-    tag: {
-      name: sourceTag.name,
-      wid: +targetWorkspaceId,
-    },
+  const body = {
+    name: sourceTag.name,
+    workspace_id: +targetWorkspaceId,
   };
 
-  const { data } = yield call(fetchObject, "/toggl/api/tags", {
-    method: "POST",
-    body: tagRequest,
-  });
+  const togglTag = yield call(
+    fetchObject,
+    `/toggl/api/workspaces/${targetWorkspaceId}/tags`,
+    {
+      method: "POST",
+      body,
+    },
+  );
 
-  return transformFromResponse(data);
+  return transformFromResponse(togglTag);
 }
 
 /**
  * Deletes the specified Toggl tag.
- * @see https://github.com/toggl/toggl_api_docs/blob/master/chapters/tags.md#delete-a-tag
+ * @see https://developers.track.toggl.com/docs/api/tags#delete-delete-tag
  */
 function* deleteTogglTag(sourceTag: Tag): SagaIterator {
-  yield call(fetchObject, `/toggl/api/tags/${sourceTag.id}`, {
+  const { id, workspaceId } = sourceTag;
+
+  yield call(fetchObject, `/toggl/api/workspaces/${workspaceId}/tags/${id}`, {
     method: "DELETE",
   });
 }
 
 /**
  * Fetches Toggl tags in the specified workspace.
- * @see https://github.com/toggl/toggl_api_docs/blob/master/chapters/workspaces.md#get-workspace-tags
+ * @see https://developers.track.toggl.com/docs/api/tags#get-tags
  */
 function* fetchTogglTagsInWorkspace(workspaceId: string): SagaIterator<Tag[]> {
   const togglTags: TogglTagResponse[] = yield call(
@@ -98,7 +106,7 @@ function transformFromResponse(tag: TogglTagResponse): Tag {
   return {
     id: tag.id.toString(),
     name: tag.name,
-    workspaceId: validStringify(tag?.wid, ""),
+    workspaceId: validStringify(tag?.workspace_id, ""),
     entryCount: 0,
     linkedId: null,
     isIncluded: true,

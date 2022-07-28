@@ -18,21 +18,27 @@ export function assignClockifyRoutes(router, isEmpty) {
       const [firstUser] = db.users;
       res.status(200).send(firstUser);
     })
+
     .get("/workspaces/:workspaceId/clients", (req, res) =>
       res.status(200).send(isEmpty === true ? [] : db.clients),
     )
+
     .get("/workspaces/:workspaceId/projects", (req, res) =>
       res.status(200).send(isEmpty === true ? [] : db.projects),
     )
+
     .get("/workspaces/:workspaceId/projects/:projectId/users/", (req, res) =>
       res.status(200).send(isEmpty === true ? [] : db.users),
     )
+
     .get("/workspaces/:workspaceId/tags", (req, res) =>
       res.status(200).send(isEmpty === true ? [] : db.tags),
     )
+
     .get("/workspaces/:workspaceId/projects/:projectId/tasks", (req, res) =>
       res.status(200).send(isEmpty === true ? [] : db.tasks),
     )
+
     .get("/workspaces/:workspaceId/user/:userId/time-entries", (req, res) => {
       if (isEmpty === true) {
         return res.status(200).send([]);
@@ -65,12 +71,15 @@ export function assignClockifyRoutes(router, isEmpty) {
 
       res.status(200).send(responseEntries);
     })
+
     .get("/workspaces/:workspaceId/user-groups/", (req, res) =>
       res.status(200).send(isEmpty === true ? [] : db.userGroups),
     )
+
     .get("/workspaces/:workspaceId/users", (req, res) =>
       res.status(200).send(isEmpty === true ? [] : db.users),
     )
+
     .get("/workspaces", (req, res) => res.status(200).send(db.workspaces));
 
   router
@@ -83,6 +92,7 @@ export function assignClockifyRoutes(router, isEmpty) {
 
       res.status(200).send(newClient);
     })
+
     .post("/workspaces/:workspaceId/projects", (req, res) => {
       const newProject = {
         id: uniqueId("clock-client-0"),
@@ -104,6 +114,7 @@ export function assignClockifyRoutes(router, isEmpty) {
 
       res.status(200).send(newProject);
     })
+
     .post("/workspaces/:workspaceId/tags", (req, res) => {
       const newTag = {
         id: uniqueId("clock-tag-0"),
@@ -113,6 +124,7 @@ export function assignClockifyRoutes(router, isEmpty) {
 
       res.status(200).send(newTag);
     })
+
     .post("/workspaces/:workspaceId/projects/:projectId/tasks", (req, res) => {
       const newTask = {
         id: uniqueId("clock-task-"),
@@ -126,6 +138,7 @@ export function assignClockifyRoutes(router, isEmpty) {
 
       res.status(200).send(newTask);
     })
+
     .post("/workspaces/:workspaceId/time-entries", (req, res) => {
       const [firstUser] = db.users;
       entriesCreated += 1;
@@ -148,6 +161,7 @@ export function assignClockifyRoutes(router, isEmpty) {
 
       res.status(200).send(newTimeEntry);
     })
+
     .post("/workspaces/:workspaceId/user-groups", (req, res) => {
       const newUserGroup = {
         id: uniqueId("clock-user-group-0"),
@@ -158,10 +172,12 @@ export function assignClockifyRoutes(router, isEmpty) {
 
       res.status(200).send(newUserGroup);
     })
+
     .post("/workspaces/:workspaceId/users", (req, res) => {
       const workspace = db.workspaces?.[req.params.workspaceId] ?? {};
       res.status(200).send(workspace);
     })
+
     .post("/workspaces", (req, res) => {
       const [firstWorkspace] = db.workspaces;
       const newWorkspace = {
@@ -181,21 +197,27 @@ export function assignClockifyRoutes(router, isEmpty) {
     .delete("/workspaces/:workspaceId/clients/:clientId", (req, res) =>
       res.status(200).send({}),
     )
+
     .delete("/workspaces/:workspaceId/projects/:projectId", (req, res) =>
       res.status(200).send({}),
     )
+
     .delete("/workspaces/:workspaceId/tags/:tagId", (req, res) =>
       res.status(200).send({}),
     )
+
     .delete(
       "/workspaces/:workspaceId/projects/:projectId/tasks/:taskId",
       (req, res) => res.status(200).send({}),
     )
+
     .delete("/workspaces/:workspaceId/time-entries/:timeEntryId", (req, res) =>
       res.status(200).send({}),
     )
+
     .delete("/workspaces/:workspaceId/user-groups/:userGroupId", (req, res) =>
       res.status(200).send({}),
     )
+
     .delete("/users/:userId", (req, res) => res.status(200).send());
 }

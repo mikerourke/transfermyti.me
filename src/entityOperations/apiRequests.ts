@@ -5,13 +5,11 @@ import { call, delay } from "redux-saga/effects";
 
 import { credentialsByToolNameSelector } from "~/modules/credentials/credentialsSelectors";
 import { ToolName } from "~/typeDefs";
-import {
-  getApiUrl,
-  isUseLocalApi,
-  TogglApiContext,
-} from "~/utilities/environment";
+import { isTestingMode, isUseLocalApi } from "~/utilities/environment";
 
 const CLOCKIFY_API_PAGE_SIZE = 100;
+
+type TogglApiContext = "api" | "reports";
 
 /**
  * Several Clockify endpoints support passing in a page size and page number
@@ -183,7 +181,13 @@ async function fetchFromApi<T>(url: string, config: RequestInit): Promise<T> {
   }
 
   if (type.includes("json")) {
-    return await response.json();
+    try {
+      return await response.json();
+    } catch (err: AnyValid) {
+      if (/unexpected end of JSON input/gi.test(err.message)) {
+        return {} as unknown as T;
+      }
+    }
   }
 
   return (await response.text()) as unknown as T;
@@ -230,4 +234,27 @@ function extrapolateFromUrl(url: string): {
     context: context as TogglApiContext,
     endpoint: rest.join("/"),
   };
+}
+
+/**
+ * Returns the base URL to prefix the endpoint based on the specified tool
+ * name and Toggl API context (e.g. reports).
+ */
+function getApiUrl(
+  toolName: ToolName,
+  togglApiContext: TogglApiContext,
+): string {
+  if (isUseLocalApi() || isTestingMode()) {
+    const apiPort = process?.env?.TMT_LOCAL_API_PORT ?? "9009";
+
+    return `http://localhost:${apiPort}/api/${toolName}`;
+  }
+
+  if (toolName === ToolName.Clockify) {
+    return "https://api.clockify.me/api/v1";
+  }
+
+  return togglApiContext === "reports"
+    ? "https://api.track.toggl.com/reports/api/v2"
+    : "https://api.track.toggl.com/api/v9";
 }

@@ -4,6 +4,10 @@ declare type AnyValid = any;
 
 declare type Dictionary<T> = Record<string, T>;
 
+declare type RequestBody = Dictionary<
+  boolean | number | string | undefined | null | AnyValid[]
+>;
+
 declare interface Window {
   store: any;
   __REDUX_DEVTOOLS_EXTENSION_COMPOSE__<R>(
