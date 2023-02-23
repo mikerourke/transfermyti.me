@@ -1,8 +1,8 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
 exports[`within timeEntriesSelectors the selectors match their snapshots for the includedSourceTimeEntriesSelector 1`] = `
-Array [
-  Object {
+[
+  {
     "clientId": "3002",
     "description": "This is a test entry (04)",
     "end": 2019-06-23T17:05:20.000Z,
@@ -15,15 +15,15 @@ Array [
     "memberOf": "timeEntries",
     "projectId": "2002",
     "start": 2019-06-23T14:00:20.000Z,
-    "tagIds": Array [],
-    "tagNames": Array [],
+    "tagIds": [],
+    "tagNames": [],
     "taskId": null,
-    "userGroupIds": Array [],
+    "userGroupIds": [],
     "userId": "6001",
     "workspaceId": "1001",
     "year": 2019,
   },
-  Object {
+  {
     "clientId": "3002",
     "description": "This is a test entry (05)",
     "end": 2019-06-22T19:15:19.000Z,
@@ -36,10 +36,10 @@ Array [
     "memberOf": "timeEntries",
     "projectId": "2002",
     "start": 2019-06-22T14:00:19.000Z,
-    "tagIds": Array [],
-    "tagNames": Array [],
+    "tagIds": [],
+    "tagNames": [],
     "taskId": null,
-    "userGroupIds": Array [],
+    "userGroupIds": [],
     "userId": "6001",
     "workspaceId": "1001",
     "year": 2019,
@@ -48,8 +48,8 @@ Array [
 `;
 
 exports[`within timeEntriesSelectors the selectors match their snapshots for the sourceTimeEntriesForTransferSelector 1`] = `
-Array [
-  Object {
+[
+  {
     "clientId": "3002",
     "description": "This is a test entry (04)",
     "end": 2019-06-23T17:05:20.000Z,
@@ -62,15 +62,15 @@ Array [
     "memberOf": "timeEntries",
     "projectId": "2002",
     "start": 2019-06-23T14:00:20.000Z,
-    "tagIds": Array [],
-    "tagNames": Array [],
+    "tagIds": [],
+    "tagNames": [],
     "taskId": null,
-    "userGroupIds": Array [],
+    "userGroupIds": [],
     "userId": "6001",
     "workspaceId": "1001",
     "year": 2019,
   },
-  Object {
+  {
     "clientId": "3002",
     "description": "This is a test entry (05)",
     "end": 2019-06-22T19:15:19.000Z,
@@ -83,10 +83,10 @@ Array [
     "memberOf": "timeEntries",
     "projectId": "2002",
     "start": 2019-06-22T14:00:19.000Z,
-    "tagIds": Array [],
-    "tagNames": Array [],
+    "tagIds": [],
+    "tagNames": [],
     "taskId": null,
-    "userGroupIds": Array [],
+    "userGroupIds": [],
     "userId": "6001",
     "workspaceId": "1001",
     "year": 2019,
@@ -95,8 +95,8 @@ Array [
 `;
 
 exports[`within timeEntriesSelectors the selectors match their snapshots for the sourceTimeEntriesInActiveWorkspaceSelector 1`] = `
-Array [
-  Object {
+[
+  {
     "clientId": "3001",
     "description": "This is a test entry (01)",
     "end": 2019-06-25T23:00:00.000Z,
@@ -109,21 +109,21 @@ Array [
     "memberOf": "timeEntries",
     "projectId": "2001",
     "start": 2019-06-25T18:00:00.000Z,
-    "tagIds": Array [
+    "tagIds": [
       "4001",
       "4002",
     ],
-    "tagNames": Array [
+    "tagNames": [
       "tag-a",
       "tag-b",
     ],
     "taskId": "7001",
-    "userGroupIds": Array [],
+    "userGroupIds": [],
     "userId": "6001",
     "workspaceId": "1001",
     "year": 2019,
   },
-  Object {
+  {
     "clientId": "3001",
     "description": "This is a test entry (02)",
     "end": 2019-06-24T22:00:00.000Z,
@@ -136,15 +136,15 @@ Array [
     "memberOf": "timeEntries",
     "projectId": "2001",
     "start": 2019-06-24T14:00:00.000Z,
-    "tagIds": Array [],
-    "tagNames": Array [],
+    "tagIds": [],
+    "tagNames": [],
     "taskId": "7001",
-    "userGroupIds": Array [],
+    "userGroupIds": [],
     "userId": "6001",
     "workspaceId": "1001",
     "year": 2019,
   },
-  Object {
+  {
     "clientId": "3001",
     "description": "This is a test entry (03)",
     "end": 2019-06-24T04:30:00.000Z,
@@ -157,19 +157,19 @@ Array [
     "memberOf": "timeEntries",
     "projectId": "2001",
     "start": 2019-06-23T14:30:00.000Z,
-    "tagIds": Array [
+    "tagIds": [
       "4003",
     ],
-    "tagNames": Array [
+    "tagNames": [
       "tag-c",
     ],
     "taskId": "7002",
-    "userGroupIds": Array [],
+    "userGroupIds": [],
     "userId": "6001",
     "workspaceId": "1001",
     "year": 2019,
   },
-  Object {
+  {
     "clientId": "3002",
     "description": "This is a test entry (04)",
     "end": 2019-06-23T17:05:20.000Z,
@@ -182,15 +182,15 @@ Array [
     "memberOf": "timeEntries",
     "projectId": "2002",
     "start": 2019-06-23T14:00:20.000Z,
-    "tagIds": Array [],
-    "tagNames": Array [],
+    "tagIds": [],
+    "tagNames": [],
     "taskId": null,
-    "userGroupIds": Array [],
+    "userGroupIds": [],
     "userId": "6001",
     "workspaceId": "1001",
     "year": 2019,
   },
-  Object {
+  {
     "clientId": "3002",
     "description": "This is a test entry (05)",
     "end": 2019-06-22T19:15:19.000Z,
@@ -203,10 +203,10 @@ Array [
     "memberOf": "timeEntries",
     "projectId": "2002",
     "start": 2019-06-22T14:00:19.000Z,
-    "tagIds": Array [],
-    "tagNames": Array [],
+    "tagIds": [],
+    "tagNames": [],
     "taskId": null,
-    "userGroupIds": Array [],
+    "userGroupIds": [],
     "userId": "6001",
     "workspaceId": "1001",
     "year": 2019,
@@ -215,7 +215,7 @@ Array [
 `;
 
 exports[`within timeEntriesSelectors the selectors match their snapshots for the sourceTimeEntryCountByTagIdSelector 1`] = `
-Object {
+{
   "4001": 1,
   "4002": 1,
   "4003": 1,
@@ -223,17 +223,17 @@ Object {
 `;
 
 exports[`within timeEntriesSelectors the selectors match their snapshots for the timeEntriesTotalCountsByTypeSelector 1`] = `
-Object {
+{
   "existsInTarget": 3,
   "isIncluded": 2,
 }
 `;
 
-exports[`within timeEntriesSelectors the sourceTimeEntryCountByIdFieldSelectorFactory matches its snapshot 1`] = `Object {}`;
+exports[`within timeEntriesSelectors the sourceTimeEntryCountByIdFieldSelectorFactory matches its snapshot 1`] = `{}`;
 
 exports[`within timeEntriesSelectors the timeEntriesForInclusionsTableSelector matches its snapshot based on state.allEntities.areExistsInTargetShown when state.allEntities.areExistsInTargetShown = false 1`] = `
-Array [
-  Object {
+[
+  {
     "clientId": "3002",
     "description": "This is a test entry (04)",
     "end": 2019-06-23T17:05:20.000Z,
@@ -250,16 +250,16 @@ Array [
     "projectId": "2002",
     "projectName": "Test Project B",
     "start": 2019-06-23T14:00:20.000Z,
-    "tagIds": Array [],
-    "tagNames": Array [],
+    "tagIds": [],
+    "tagNames": [],
     "taskId": null,
     "taskName": null,
-    "userGroupIds": Array [],
+    "userGroupIds": [],
     "userId": "6001",
     "workspaceId": "1001",
     "year": 2019,
   },
-  Object {
+  {
     "clientId": "3002",
     "description": "This is a test entry (05)",
     "end": 2019-06-22T19:15:19.000Z,
@@ -276,11 +276,11 @@ Array [
     "projectId": "2002",
     "projectName": "Test Project B",
     "start": 2019-06-22T14:00:19.000Z,
-    "tagIds": Array [],
-    "tagNames": Array [],
+    "tagIds": [],
+    "tagNames": [],
     "taskId": null,
     "taskName": null,
-    "userGroupIds": Array [],
+    "userGroupIds": [],
     "userId": "6001",
     "workspaceId": "1001",
     "year": 2019,
@@ -289,8 +289,8 @@ Array [
 `;
 
 exports[`within timeEntriesSelectors the timeEntriesForInclusionsTableSelector matches its snapshot based on state.allEntities.areExistsInTargetShown when state.allEntities.areExistsInTargetShown = true 1`] = `
-Array [
-  Object {
+[
+  {
     "clientId": "3001",
     "description": "This is a test entry (01)",
     "end": 2019-06-25T23:00:00.000Z,
@@ -307,22 +307,22 @@ Array [
     "projectId": "2001",
     "projectName": "Test Project A",
     "start": 2019-06-25T18:00:00.000Z,
-    "tagIds": Array [
+    "tagIds": [
       "4001",
       "4002",
     ],
-    "tagNames": Array [
+    "tagNames": [
       "tag-a",
       "tag-b",
     ],
     "taskId": "7001",
     "taskName": "Task 1",
-    "userGroupIds": Array [],
+    "userGroupIds": [],
     "userId": "6001",
     "workspaceId": "1001",
     "year": 2019,
   },
-  Object {
+  {
     "clientId": "3001",
     "description": "This is a test entry (02)",
     "end": 2019-06-24T22:00:00.000Z,
@@ -339,16 +339,16 @@ Array [
     "projectId": "2001",
     "projectName": "Test Project A",
     "start": 2019-06-24T14:00:00.000Z,
-    "tagIds": Array [],
-    "tagNames": Array [],
+    "tagIds": [],
+    "tagNames": [],
     "taskId": "7001",
     "taskName": "Task 1",
-    "userGroupIds": Array [],
+    "userGroupIds": [],
     "userId": "6001",
     "workspaceId": "1001",
     "year": 2019,
   },
-  Object {
+  {
     "clientId": "3001",
     "description": "This is a test entry (03)",
     "end": 2019-06-24T04:30:00.000Z,
@@ -365,20 +365,20 @@ Array [
     "projectId": "2001",
     "projectName": "Test Project A",
     "start": 2019-06-23T14:30:00.000Z,
-    "tagIds": Array [
+    "tagIds": [
       "4003",
     ],
-    "tagNames": Array [
+    "tagNames": [
       "tag-c",
     ],
     "taskId": "7002",
     "taskName": "Task 2",
-    "userGroupIds": Array [],
+    "userGroupIds": [],
     "userId": "6001",
     "workspaceId": "1001",
     "year": 2019,
   },
-  Object {
+  {
     "clientId": "3002",
     "description": "This is a test entry (04)",
     "end": 2019-06-23T17:05:20.000Z,
@@ -395,16 +395,16 @@ Array [
     "projectId": "2002",
     "projectName": "Test Project B",
     "start": 2019-06-23T14:00:20.000Z,
-    "tagIds": Array [],
-    "tagNames": Array [],
+    "tagIds": [],
+    "tagNames": [],
     "taskId": null,
     "taskName": null,
-    "userGroupIds": Array [],
+    "userGroupIds": [],
     "userId": "6001",
     "workspaceId": "1001",
     "year": 2019,
   },
-  Object {
+  {
     "clientId": "3002",
     "description": "This is a test entry (05)",
     "end": 2019-06-22T19:15:19.000Z,
@@ -421,11 +421,11 @@ Array [
     "projectId": "2002",
     "projectName": "Test Project B",
     "start": 2019-06-22T14:00:19.000Z,
-    "tagIds": Array [],
-    "tagNames": Array [],
+    "tagIds": [],
+    "tagNames": [],
     "taskId": null,
     "taskName": null,
-    "userGroupIds": Array [],
+    "userGroupIds": [],
     "userId": "6001",
     "workspaceId": "1001",
     "year": 2019,
@@ -434,8 +434,8 @@ Array [
 `;
 
 exports[`within timeEntriesSelectors the timeEntriesForInclusionsTableSelector matches its snapshot when state.isDuplicateCheckEnabled = false 1`] = `
-Array [
-  Object {
+[
+  {
     "clientId": "3001",
     "description": "This is a test entry (01)",
     "end": 2019-06-25T23:00:00.000Z,
@@ -452,22 +452,22 @@ Array [
     "projectId": "2001",
     "projectName": "Test Project A",
     "start": 2019-06-25T18:00:00.000Z,
-    "tagIds": Array [
+    "tagIds": [
       "4001",
       "4002",
     ],
-    "tagNames": Array [
+    "tagNames": [
       "tag-a",
       "tag-b",
     ],
     "taskId": "7001",
     "taskName": "Task 1",
-    "userGroupIds": Array [],
+    "userGroupIds": [],
     "userId": "6001",
     "workspaceId": "1001",
     "year": 2019,
   },
-  Object {
+  {
     "clientId": "3001",
     "description": "This is a test entry (02)",
     "end": 2019-06-24T22:00:00.000Z,
@@ -484,16 +484,16 @@ Array [
     "projectId": "2001",
     "projectName": "Test Project A",
     "start": 2019-06-24T14:00:00.000Z,
-    "tagIds": Array [],
-    "tagNames": Array [],
+    "tagIds": [],
+    "tagNames": [],
     "taskId": "7001",
     "taskName": "Task 1",
-    "userGroupIds": Array [],
+    "userGroupIds": [],
     "userId": "6001",
     "workspaceId": "1001",
     "year": 2019,
   },
-  Object {
+  {
     "clientId": "3001",
     "description": "This is a test entry (03)",
     "end": 2019-06-24T04:30:00.000Z,
@@ -510,20 +510,20 @@ Array [
     "projectId": "2001",
     "projectName": "Test Project A",
     "start": 2019-06-23T14:30:00.000Z,
-    "tagIds": Array [
+    "tagIds": [
       "4003",
     ],
-    "tagNames": Array [
+    "tagNames": [
       "tag-c",
     ],
     "taskId": "7002",
     "taskName": "Task 2",
-    "userGroupIds": Array [],
+    "userGroupIds": [],
     "userId": "6001",
     "workspaceId": "1001",
     "year": 2019,
   },
-  Object {
+  {
     "clientId": "3002",
     "description": "This is a test entry (04)",
     "end": 2019-06-23T17:05:20.000Z,
@@ -540,16 +540,16 @@ Array [
     "projectId": "2002",
     "projectName": "Test Project B",
     "start": 2019-06-23T14:00:20.000Z,
-    "tagIds": Array [],
-    "tagNames": Array [],
+    "tagIds": [],
+    "tagNames": [],
     "taskId": null,
     "taskName": null,
-    "userGroupIds": Array [],
+    "userGroupIds": [],
     "userId": "6001",
     "workspaceId": "1001",
     "year": 2019,
   },
-  Object {
+  {
     "clientId": "3002",
     "description": "This is a test entry (05)",
     "end": 2019-06-22T19:15:19.000Z,
@@ -566,11 +566,11 @@ Array [
     "projectId": "2002",
     "projectName": "Test Project B",
     "start": 2019-06-22T14:00:19.000Z,
-    "tagIds": Array [],
-    "tagNames": Array [],
+    "tagIds": [],
+    "tagNames": [],
     "taskId": null,
     "taskName": null,
-    "userGroupIds": Array [],
+    "userGroupIds": [],
     "userId": "6001",
     "workspaceId": "1001",
     "year": 2019,

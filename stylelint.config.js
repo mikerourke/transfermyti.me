@@ -14,7 +14,7 @@ const rules = {
 
 module.exports = {
   extends: "stylelint-config-standard",
-  plugins: ["stylelint-a11y"],
+  plugins: ["@ronilaukkarinen/stylelint-a11y"],
   overrides: [
     {
       files: ["**/*.html", "**/*.svelte"],

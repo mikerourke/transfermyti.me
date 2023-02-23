@@ -1,12 +1,12 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
 exports[`within projectsSelectors the projectsForInclusionsTableSelector matches its snapshot based on state.allEntities.areExistsInTargetShown when state.allEntities.areExistsInTargetShown = false 1`] = `
-Array [
-  Object {
+[
+  {
     "clientId": null,
     "color": "#04bb9b",
     "entryCount": 3,
-    "estimate": Object {
+    "estimate": {
       "estimate": 0,
       "type": "MANUAL",
     },
@@ -21,16 +21,16 @@ Array [
     "linkedId": null,
     "memberOf": "projects",
     "name": "Test Project D",
-    "userIds": Array [
+    "userIds": [
       "6001",
     ],
     "workspaceId": "1001",
   },
-  Object {
+  {
     "clientId": null,
     "color": "#205500",
     "entryCount": 4,
-    "estimate": Object {
+    "estimate": {
       "estimate": 0,
       "type": "MANUAL",
     },
@@ -45,16 +45,16 @@ Array [
     "linkedId": null,
     "memberOf": "projects",
     "name": "Test Project E",
-    "userIds": Array [
+    "userIds": [
       "6001",
     ],
     "workspaceId": "1001",
   },
-  Object {
+  {
     "clientId": null,
     "color": "#a01aa5",
     "entryCount": 4,
-    "estimate": Object {
+    "estimate": {
       "estimate": 0,
       "type": "MANUAL",
     },
@@ -69,7 +69,7 @@ Array [
     "linkedId": null,
     "memberOf": "projects",
     "name": "Test Project F",
-    "userIds": Array [
+    "userIds": [
       "6001",
     ],
     "workspaceId": "1001",
@@ -78,12 +78,12 @@ Array [
 `;
 
 exports[`within projectsSelectors the projectsForInclusionsTableSelector matches its snapshot based on state.allEntities.areExistsInTargetShown when state.allEntities.areExistsInTargetShown = true 1`] = `
-Array [
-  Object {
+[
+  {
     "clientId": "3001",
     "color": "#ea468d",
     "entryCount": 3,
-    "estimate": Object {
+    "estimate": {
       "estimate": 0,
       "type": "MANUAL",
     },
@@ -98,16 +98,16 @@ Array [
     "linkedId": "clock-project-01",
     "memberOf": "projects",
     "name": "Test Project A",
-    "userIds": Array [
+    "userIds": [
       "6001",
     ],
     "workspaceId": "1001",
   },
-  Object {
+  {
     "clientId": null,
     "color": "#3750b5",
     "entryCount": 3,
-    "estimate": Object {
+    "estimate": {
       "estimate": 40,
       "type": "MANUAL",
     },
@@ -122,16 +122,16 @@ Array [
     "linkedId": "clock-project-02",
     "memberOf": "projects",
     "name": "Test Project B",
-    "userIds": Array [
+    "userIds": [
       "6001",
     ],
     "workspaceId": "1001",
   },
-  Object {
+  {
     "clientId": null,
     "color": "#c56bff",
     "entryCount": 3,
-    "estimate": Object {
+    "estimate": {
       "estimate": 0,
       "type": "MANUAL",
     },
@@ -146,16 +146,16 @@ Array [
     "linkedId": "clock-project-03",
     "memberOf": "projects",
     "name": "Test Project C",
-    "userIds": Array [
+    "userIds": [
       "6001",
     ],
     "workspaceId": "1001",
   },
-  Object {
+  {
     "clientId": null,
     "color": "#04bb9b",
     "entryCount": 3,
-    "estimate": Object {
+    "estimate": {
       "estimate": 0,
       "type": "MANUAL",
     },
@@ -170,16 +170,16 @@ Array [
     "linkedId": null,
     "memberOf": "projects",
     "name": "Test Project D",
-    "userIds": Array [
+    "userIds": [
       "6001",
     ],
     "workspaceId": "1001",
   },
-  Object {
+  {
     "clientId": null,
     "color": "#205500",
     "entryCount": 4,
-    "estimate": Object {
+    "estimate": {
       "estimate": 0,
       "type": "MANUAL",
     },
@@ -194,16 +194,16 @@ Array [
     "linkedId": null,
     "memberOf": "projects",
     "name": "Test Project E",
-    "userIds": Array [
+    "userIds": [
       "6001",
     ],
     "workspaceId": "1001",
   },
-  Object {
+  {
     "clientId": null,
     "color": "#a01aa5",
     "entryCount": 4,
-    "estimate": Object {
+    "estimate": {
       "estimate": 0,
       "type": "MANUAL",
     },
@@ -218,7 +218,7 @@ Array [
     "linkedId": null,
     "memberOf": "projects",
     "name": "Test Project F",
-    "userIds": Array [
+    "userIds": [
       "6001",
     ],
     "workspaceId": "1001",
@@ -227,19 +227,19 @@ Array [
 `;
 
 exports[`within projectsSelectors the selectors match their snapshots for the includedSourceProjectIdsSelector 1`] = `
-Array [
+[
   "2004",
   "2005",
 ]
 `;
 
 exports[`within projectsSelectors the selectors match their snapshots for the includedSourceProjectsSelector 1`] = `
-Array [
-  Object {
+[
+  {
     "clientId": null,
     "color": "#04bb9b",
     "entryCount": 3,
-    "estimate": Object {
+    "estimate": {
       "estimate": 0,
       "type": "MANUAL",
     },
@@ -251,16 +251,16 @@ Array [
     "linkedId": null,
     "memberOf": "projects",
     "name": "Test Project D",
-    "userIds": Array [
+    "userIds": [
       "6001",
     ],
     "workspaceId": "1001",
   },
-  Object {
+  {
     "clientId": null,
     "color": "#205500",
     "entryCount": 4,
-    "estimate": Object {
+    "estimate": {
       "estimate": 0,
       "type": "MANUAL",
     },
@@ -272,7 +272,7 @@ Array [
     "linkedId": null,
     "memberOf": "projects",
     "name": "Test Project E",
-    "userIds": Array [
+    "userIds": [
       "6001",
     ],
     "workspaceId": "1001",
@@ -281,7 +281,7 @@ Array [
 `;
 
 exports[`within projectsSelectors the selectors match their snapshots for the projectIdToLinkedIdSelector 1`] = `
-Object {
+{
   "2001": "clock-project-01",
   "2002": "clock-project-02",
   "2003": "clock-project-03",
@@ -292,14 +292,14 @@ Object {
 `;
 
 exports[`within projectsSelectors the selectors match their snapshots for the projectsByWorkspaceIdByToolNameSelector 1`] = `
-Object {
-  "clockify": Object {
-    "clock-workspace-01": Array [
-      Object {
+{
+  "clockify": {
+    "clock-workspace-01": [
+      {
         "clientId": "clock-client-01",
         "color": "#ea468d",
         "entryCount": 0,
-        "estimate": Object {
+        "estimate": {
           "estimate": "PT0S",
           "type": "AUTO",
         },
@@ -311,16 +311,16 @@ Object {
         "linkedId": "2001",
         "memberOf": "projects",
         "name": "Test Project A",
-        "userIds": Array [
+        "userIds": [
           "clock-user-01",
         ],
         "workspaceId": "clock-workspace-01",
       },
-      Object {
+      {
         "clientId": "clock-client-02",
         "color": "#c56bff",
         "entryCount": 0,
-        "estimate": Object {
+        "estimate": {
           "estimate": "PT0S",
           "type": "AUTO",
         },
@@ -332,16 +332,16 @@ Object {
         "linkedId": "2002",
         "memberOf": "projects",
         "name": "Test Project B",
-        "userIds": Array [
+        "userIds": [
           "clock-user-01",
         ],
         "workspaceId": "clock-workspace-01",
       },
-      Object {
+      {
         "clientId": "",
         "color": "#04bb9b",
         "entryCount": 0,
-        "estimate": Object {
+        "estimate": {
           "estimate": "PT0S",
           "type": "AUTO",
         },
@@ -353,16 +353,16 @@ Object {
         "linkedId": "2003",
         "memberOf": "projects",
         "name": "Test Project C",
-        "userIds": Array [
+        "userIds": [
           "clock-user-01",
         ],
         "workspaceId": "clock-workspace-01",
       },
-      Object {
+      {
         "clientId": "",
         "color": "#04bb9b",
         "entryCount": 0,
-        "estimate": Object {
+        "estimate": {
           "estimate": "PT0S",
           "type": "MANUAL",
         },
@@ -374,16 +374,16 @@ Object {
         "linkedId": "2004",
         "memberOf": "projects",
         "name": "Test Project D",
-        "userIds": Array [
+        "userIds": [
           "clock-user-01",
         ],
         "workspaceId": "clock-workspace-01",
       },
-      Object {
+      {
         "clientId": "",
         "color": "#205500",
         "entryCount": 0,
-        "estimate": Object {
+        "estimate": {
           "estimate": "PT0S",
           "type": "AUTO",
         },
@@ -395,16 +395,16 @@ Object {
         "linkedId": "2005",
         "memberOf": "projects",
         "name": "Test Project E",
-        "userIds": Array [
+        "userIds": [
           "clock-user-01",
         ],
         "workspaceId": "clock-workspace-01",
       },
-      Object {
+      {
         "clientId": "",
         "color": "#a01aa5",
         "entryCount": 0,
-        "estimate": Object {
+        "estimate": {
           "estimate": "PT0S",
           "type": "AUTO",
         },
@@ -416,20 +416,20 @@ Object {
         "linkedId": "2006",
         "memberOf": "projects",
         "name": "Test Project F",
-        "userIds": Array [
+        "userIds": [
           "clock-user-01",
         ],
         "workspaceId": "clock-workspace-01",
       },
     ],
   },
-  "toggl": Object {
-    "1001": Array [
-      Object {
+  "toggl": {
+    "1001": [
+      {
         "clientId": "3001",
         "color": "#ea468d",
         "entryCount": 3,
-        "estimate": Object {
+        "estimate": {
           "estimate": 0,
           "type": "MANUAL",
         },
@@ -441,16 +441,16 @@ Object {
         "linkedId": "clock-project-01",
         "memberOf": "projects",
         "name": "Test Project A",
-        "userIds": Array [
+        "userIds": [
           "6001",
         ],
         "workspaceId": "1001",
       },
-      Object {
+      {
         "clientId": null,
         "color": "#3750b5",
         "entryCount": 3,
-        "estimate": Object {
+        "estimate": {
           "estimate": 40,
           "type": "MANUAL",
         },
@@ -462,16 +462,16 @@ Object {
         "linkedId": "clock-project-02",
         "memberOf": "projects",
         "name": "Test Project B",
-        "userIds": Array [
+        "userIds": [
           "6001",
         ],
         "workspaceId": "1001",
       },
-      Object {
+      {
         "clientId": null,
         "color": "#c56bff",
         "entryCount": 3,
-        "estimate": Object {
+        "estimate": {
           "estimate": 0,
           "type": "MANUAL",
         },
@@ -483,16 +483,16 @@ Object {
         "linkedId": "clock-project-03",
         "memberOf": "projects",
         "name": "Test Project C",
-        "userIds": Array [
+        "userIds": [
           "6001",
         ],
         "workspaceId": "1001",
       },
-      Object {
+      {
         "clientId": null,
         "color": "#04bb9b",
         "entryCount": 3,
-        "estimate": Object {
+        "estimate": {
           "estimate": 0,
           "type": "MANUAL",
         },
@@ -504,16 +504,16 @@ Object {
         "linkedId": null,
         "memberOf": "projects",
         "name": "Test Project D",
-        "userIds": Array [
+        "userIds": [
           "6001",
         ],
         "workspaceId": "1001",
       },
-      Object {
+      {
         "clientId": null,
         "color": "#205500",
         "entryCount": 4,
-        "estimate": Object {
+        "estimate": {
           "estimate": 0,
           "type": "MANUAL",
         },
@@ -525,16 +525,16 @@ Object {
         "linkedId": null,
         "memberOf": "projects",
         "name": "Test Project E",
-        "userIds": Array [
+        "userIds": [
           "6001",
         ],
         "workspaceId": "1001",
       },
-      Object {
+      {
         "clientId": null,
         "color": "#a01aa5",
         "entryCount": 4,
-        "estimate": Object {
+        "estimate": {
           "estimate": 0,
           "type": "MANUAL",
         },
@@ -546,7 +546,7 @@ Object {
         "linkedId": null,
         "memberOf": "projects",
         "name": "Test Project F",
-        "userIds": Array [
+        "userIds": [
           "6001",
         ],
         "workspaceId": "1001",
@@ -557,7 +557,7 @@ Object {
 `;
 
 exports[`within projectsSelectors the selectors match their snapshots for the projectsTotalCountsByTypeSelector 1`] = `
-Object {
+{
   "entryCount": 20,
   "existsInTarget": 3,
   "isActiveInSource": 5,
@@ -567,12 +567,12 @@ Object {
 `;
 
 exports[`within projectsSelectors the selectors match their snapshots for the sourceProjectsForTransferSelector 1`] = `
-Array [
-  Object {
+[
+  {
     "clientId": null,
     "color": "#04bb9b",
     "entryCount": 3,
-    "estimate": Object {
+    "estimate": {
       "estimate": 0,
       "type": "MANUAL",
     },
@@ -584,16 +584,16 @@ Array [
     "linkedId": null,
     "memberOf": "projects",
     "name": "Test Project D",
-    "userIds": Array [
+    "userIds": [
       "6001",
     ],
     "workspaceId": "1001",
   },
-  Object {
+  {
     "clientId": null,
     "color": "#205500",
     "entryCount": 4,
-    "estimate": Object {
+    "estimate": {
       "estimate": 0,
       "type": "MANUAL",
     },
@@ -605,7 +605,7 @@ Array [
     "linkedId": null,
     "memberOf": "projects",
     "name": "Test Project E",
-    "userIds": Array [
+    "userIds": [
       "6001",
     ],
     "workspaceId": "1001",
@@ -614,12 +614,12 @@ Array [
 `;
 
 exports[`within projectsSelectors the selectors match their snapshots for the sourceProjectsInActiveWorkspaceSelector 1`] = `
-Array [
-  Object {
+[
+  {
     "clientId": "3001",
     "color": "#ea468d",
     "entryCount": 3,
-    "estimate": Object {
+    "estimate": {
       "estimate": 0,
       "type": "MANUAL",
     },
@@ -631,16 +631,16 @@ Array [
     "linkedId": "clock-project-01",
     "memberOf": "projects",
     "name": "Test Project A",
-    "userIds": Array [
+    "userIds": [
       "6001",
     ],
     "workspaceId": "1001",
   },
-  Object {
+  {
     "clientId": null,
     "color": "#3750b5",
     "entryCount": 3,
-    "estimate": Object {
+    "estimate": {
       "estimate": 40,
       "type": "MANUAL",
     },
@@ -652,16 +652,16 @@ Array [
     "linkedId": "clock-project-02",
     "memberOf": "projects",
     "name": "Test Project B",
-    "userIds": Array [
+    "userIds": [
       "6001",
     ],
     "workspaceId": "1001",
   },
-  Object {
+  {
     "clientId": null,
     "color": "#c56bff",
     "entryCount": 3,
-    "estimate": Object {
+    "estimate": {
       "estimate": 0,
       "type": "MANUAL",
     },
@@ -673,16 +673,16 @@ Array [
     "linkedId": "clock-project-03",
     "memberOf": "projects",
     "name": "Test Project C",
-    "userIds": Array [
+    "userIds": [
       "6001",
     ],
     "workspaceId": "1001",
   },
-  Object {
+  {
     "clientId": null,
     "color": "#04bb9b",
     "entryCount": 3,
-    "estimate": Object {
+    "estimate": {
       "estimate": 0,
       "type": "MANUAL",
     },
@@ -694,16 +694,16 @@ Array [
     "linkedId": null,
     "memberOf": "projects",
     "name": "Test Project D",
-    "userIds": Array [
+    "userIds": [
       "6001",
     ],
     "workspaceId": "1001",
   },
-  Object {
+  {
     "clientId": null,
     "color": "#205500",
     "entryCount": 4,
-    "estimate": Object {
+    "estimate": {
       "estimate": 0,
       "type": "MANUAL",
     },
@@ -715,16 +715,16 @@ Array [
     "linkedId": null,
     "memberOf": "projects",
     "name": "Test Project E",
-    "userIds": Array [
+    "userIds": [
       "6001",
     ],
     "workspaceId": "1001",
   },
-  Object {
+  {
     "clientId": null,
     "color": "#a01aa5",
     "entryCount": 4,
-    "estimate": Object {
+    "estimate": {
       "estimate": 0,
       "type": "MANUAL",
     },
@@ -736,7 +736,7 @@ Array [
     "linkedId": null,
     "memberOf": "projects",
     "name": "Test Project F",
-    "userIds": Array [
+    "userIds": [
       "6001",
     ],
     "workspaceId": "1001",

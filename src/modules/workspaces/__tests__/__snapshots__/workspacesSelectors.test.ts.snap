@@ -1,15 +1,15 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
 exports[`within workspacesSelectors the selectors match their snapshots for the includedSourceWorkspaceIdsSelector 1`] = `
-Array [
+[
   "1001",
   "1002",
 ]
 `;
 
 exports[`within workspacesSelectors the selectors match their snapshots for the includedSourceWorkspacesSelector 1`] = `
-Array [
-  Object {
+[
+  {
     "entryCount": 20,
     "id": "1001",
     "isAdmin": true,
@@ -17,12 +17,12 @@ Array [
     "linkedId": "clock-workspace-01",
     "memberOf": "workspaces",
     "name": "Test Workspace",
-    "userIds": Array [
+    "userIds": [
       "6001",
     ],
     "workspaceId": "1001",
   },
-  Object {
+  {
     "entryCount": 20,
     "id": "1002",
     "isAdmin": true,
@@ -30,7 +30,7 @@ Array [
     "linkedId": null,
     "memberOf": "workspaces",
     "name": "Test Workspace 2",
-    "userIds": Array [
+    "userIds": [
       "6001",
     ],
     "workspaceId": "1002",
@@ -39,20 +39,20 @@ Array [
 `;
 
 exports[`within workspacesSelectors the selectors match their snapshots for the includedWorkspaceIdsByMappingSelector 1`] = `
-Object {
-  "source": Array [
+{
+  "source": [
     "1001",
     "1002",
   ],
-  "target": Array [
+  "target": [
     "clock-workspace-01",
   ],
 }
 `;
 
 exports[`within workspacesSelectors the selectors match their snapshots for the missingTargetWorkspacesSelector 1`] = `
-Array [
-  Object {
+[
+  {
     "entryCount": 20,
     "id": "1002",
     "isAdmin": true,
@@ -60,7 +60,7 @@ Array [
     "linkedId": null,
     "memberOf": "workspaces",
     "name": "Test Workspace 2",
-    "userIds": Array [
+    "userIds": [
       "6001",
     ],
     "workspaceId": "1002",
@@ -69,8 +69,8 @@ Array [
 `;
 
 exports[`within workspacesSelectors the selectors match their snapshots for the sourceWorkspacesForTransferSelector 1`] = `
-Array [
-  Object {
+[
+  {
     "entryCount": 20,
     "id": "1002",
     "isAdmin": true,
@@ -78,7 +78,7 @@ Array [
     "linkedId": null,
     "memberOf": "workspaces",
     "name": "Test Workspace 2",
-    "userIds": Array [
+    "userIds": [
       "6001",
     ],
     "workspaceId": "1002",
@@ -87,7 +87,7 @@ Array [
 `;
 
 exports[`within workspacesSelectors the selectors match their snapshots for the workspaceIdToLinkedIdSelector 1`] = `
-Object {
+{
   "1001": "clock-workspace-01",
   "clock-workspace-01": "1001",
 }

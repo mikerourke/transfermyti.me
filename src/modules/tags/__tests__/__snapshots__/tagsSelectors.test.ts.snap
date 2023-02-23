@@ -1,8 +1,8 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
 exports[`within tagsSelectors the selectors match their snapshots for the includedSourceTagsSelector 1`] = `
-Array [
-  Object {
+[
+  {
     "entryCount": 0,
     "id": "4006",
     "isIncluded": true,
@@ -11,7 +11,7 @@ Array [
     "name": "tag-f",
     "workspaceId": "1001",
   },
-  Object {
+  {
     "entryCount": 0,
     "id": "4007",
     "isIncluded": true,
@@ -20,7 +20,7 @@ Array [
     "name": "tag-g",
     "workspaceId": "1001",
   },
-  Object {
+  {
     "entryCount": 0,
     "id": "4008",
     "isIncluded": true,
@@ -29,7 +29,7 @@ Array [
     "name": "tag-h",
     "workspaceId": "1001",
   },
-  Object {
+  {
     "entryCount": 0,
     "id": "4009",
     "isIncluded": true,
@@ -42,8 +42,8 @@ Array [
 `;
 
 exports[`within tagsSelectors the selectors match their snapshots for the sourceTagsForTransferSelector 1`] = `
-Array [
-  Object {
+[
+  {
     "entryCount": 0,
     "id": "4006",
     "isIncluded": true,
@@ -52,7 +52,7 @@ Array [
     "name": "tag-f",
     "workspaceId": "1001",
   },
-  Object {
+  {
     "entryCount": 0,
     "id": "4007",
     "isIncluded": true,
@@ -61,7 +61,7 @@ Array [
     "name": "tag-g",
     "workspaceId": "1001",
   },
-  Object {
+  {
     "entryCount": 0,
     "id": "4008",
     "isIncluded": true,
@@ -70,7 +70,7 @@ Array [
     "name": "tag-h",
     "workspaceId": "1001",
   },
-  Object {
+  {
     "entryCount": 0,
     "id": "4009",
     "isIncluded": true,
@@ -83,7 +83,7 @@ Array [
 `;
 
 exports[`within tagsSelectors the selectors match their snapshots for the tagsTotalCountsByTypeSelector 1`] = `
-Object {
+{
   "entryCount": 3,
   "existsInTarget": 3,
   "isIncluded": 4,
@@ -91,7 +91,7 @@ Object {
 `;
 
 exports[`within tagsSelectors the tagIdsByNameSelectorFactory matches its snapshot 1`] = `
-Object {
+{
   "tag-a": "4001",
   "tag-b": "4002",
   "tag-c": "4003",
@@ -105,8 +105,8 @@ Object {
 `;
 
 exports[`within tagsSelectors the tagsForInclusionsTableSelector matches its snapshot based on state.allEntities.areExistsInTargetShown when state.allEntities.areExistsInTargetShown = false 1`] = `
-Array [
-  Object {
+[
+  {
     "entryCount": 0,
     "existsInTarget": false,
     "id": "4004",
@@ -118,7 +118,7 @@ Array [
     "name": "tag-d",
     "workspaceId": "1001",
   },
-  Object {
+  {
     "entryCount": 0,
     "existsInTarget": false,
     "id": "4005",
@@ -130,7 +130,7 @@ Array [
     "name": "tag-e",
     "workspaceId": "1001",
   },
-  Object {
+  {
     "entryCount": 0,
     "existsInTarget": false,
     "id": "4006",
@@ -142,7 +142,7 @@ Array [
     "name": "tag-f",
     "workspaceId": "1001",
   },
-  Object {
+  {
     "entryCount": 0,
     "existsInTarget": false,
     "id": "4007",
@@ -154,7 +154,7 @@ Array [
     "name": "tag-g",
     "workspaceId": "1001",
   },
-  Object {
+  {
     "entryCount": 0,
     "existsInTarget": false,
     "id": "4008",
@@ -166,7 +166,7 @@ Array [
     "name": "tag-h",
     "workspaceId": "1001",
   },
-  Object {
+  {
     "entryCount": 0,
     "existsInTarget": false,
     "id": "4009",
@@ -182,8 +182,8 @@ Array [
 `;
 
 exports[`within tagsSelectors the tagsForInclusionsTableSelector matches its snapshot based on state.allEntities.areExistsInTargetShown when state.allEntities.areExistsInTargetShown = true 1`] = `
-Array [
-  Object {
+[
+  {
     "entryCount": 1,
     "existsInTarget": true,
     "id": "4001",
@@ -195,7 +195,7 @@ Array [
     "name": "tag-a",
     "workspaceId": "1001",
   },
-  Object {
+  {
     "entryCount": 1,
     "existsInTarget": true,
     "id": "4002",
@@ -207,7 +207,7 @@ Array [
     "name": "tag-b",
     "workspaceId": "1001",
   },
-  Object {
+  {
     "entryCount": 1,
     "existsInTarget": true,
     "id": "4003",
@@ -219,7 +219,7 @@ Array [
     "name": "tag-c",
     "workspaceId": "1001",
   },
-  Object {
+  {
     "entryCount": 0,
     "existsInTarget": false,
     "id": "4004",
@@ -231,7 +231,7 @@ Array [
     "name": "tag-d",
     "workspaceId": "1001",
   },
-  Object {
+  {
     "entryCount": 0,
     "existsInTarget": false,
     "id": "4005",
@@ -243,7 +243,7 @@ Array [
     "name": "tag-e",
     "workspaceId": "1001",
   },
-  Object {
+  {
     "entryCount": 0,
     "existsInTarget": false,
     "id": "4006",
@@ -255,7 +255,7 @@ Array [
     "name": "tag-f",
     "workspaceId": "1001",
   },
-  Object {
+  {
     "entryCount": 0,
     "existsInTarget": false,
     "id": "4007",
@@ -267,7 +267,7 @@ Array [
     "name": "tag-g",
     "workspaceId": "1001",
   },
-  Object {
+  {
     "entryCount": 0,
     "existsInTarget": false,
     "id": "4008",
@@ -279,7 +279,7 @@ Array [
     "name": "tag-h",
     "workspaceId": "1001",
   },
-  Object {
+  {
     "entryCount": 0,
     "existsInTarget": false,
     "id": "4009",
@@ -295,7 +295,7 @@ Array [
 `;
 
 exports[`within tagsSelectors the targetTagIdsSelectorFactory matches its snapshot 1`] = `
-Array [
+[
   "clock-tag-01",
   "clock-tag-02",
   "clock-tag-03",

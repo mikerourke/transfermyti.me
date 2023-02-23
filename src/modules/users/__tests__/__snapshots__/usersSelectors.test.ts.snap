@@ -1,8 +1,8 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
 exports[`within usersSelectors the selectors match their snapshots for the includedSourceUsersSelector 1`] = `
-Array [
-  Object {
+[
+  {
     "email": "mary@testarossa.com",
     "entryCount": 0,
     "id": "6002",
@@ -12,15 +12,15 @@ Array [
     "linkedId": null,
     "memberOf": "users",
     "name": "Mary Testarossa",
-    "userGroupIds": Array [],
+    "userGroupIds": [],
     "workspaceId": "1001",
   },
 ]
 `;
 
 exports[`within usersSelectors the selectors match their snapshots for the sourceUserEmailsByWorkspaceIdSelector 1`] = `
-Object {
-  "clock-workspace-01": Array [
+{
+  "clock-workspace-01": [
     "test-user@test.com",
     "mary@testarossa.com",
   ],
@@ -28,8 +28,8 @@ Object {
 `;
 
 exports[`within usersSelectors the selectors match their snapshots for the sourceUsersForTransferSelector 1`] = `
-Array [
-  Object {
+[
+  {
     "email": "mary@testarossa.com",
     "entryCount": 0,
     "id": "6002",
@@ -39,14 +39,14 @@ Array [
     "linkedId": null,
     "memberOf": "users",
     "name": "Mary Testarossa",
-    "userGroupIds": Array [],
+    "userGroupIds": [],
     "workspaceId": "1001",
   },
 ]
 `;
 
 exports[`within usersSelectors the selectors match their snapshots for the userIdToLinkedIdSelector 1`] = `
-Object {
+{
   "6001": "clock-user-01",
   "clock-user-01": "6001",
 }

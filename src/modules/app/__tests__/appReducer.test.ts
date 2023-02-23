@@ -5,6 +5,10 @@ import * as appActions from "~/modules/app/appActions";
 
 import { appReducer, initialState } from "../appReducer";
 
+jest.mock("nanoid", () => ({
+  nanoid: () => require("crypto").randomUUID(),
+}));
+
 const { INVALID_ACTION } = FAKES;
 
 describe("within appReducer", () => {

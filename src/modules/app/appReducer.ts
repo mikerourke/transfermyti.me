@@ -1,4 +1,4 @@
-import cuid from "cuid";
+import { nanoid } from "nanoid";
 import { createReducer, type ActionType } from "typesafe-actions";
 
 import * as appActions from "~/modules/app/appActions";
@@ -18,14 +18,14 @@ export const initialState: AppState = {
 export const appReducer = createReducer<AppState, AppAction>(initialState)
   .handleAction(appActions.notificationShown, (state, { payload }) => ({
     ...state,
-    notifications: [...state.notifications, { ...payload, id: cuid() }],
+    notifications: [...state.notifications, { ...payload, id: nanoid() }],
   }))
   .handleAction(appActions.errorNotificationShown, (state, { payload }) => ({
     ...state,
     notifications: [
       ...state.notifications,
       {
-        id: cuid(),
+        id: nanoid(),
         message: messageFromErrorOrResponse(payload),
         type: "error",
       },
