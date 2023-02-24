@@ -10,12 +10,9 @@ module.exports = {
   settings: {
     "svelte3/typescript": () => require("typescript"),
     "import/resolver": {
-      alias: {
-        map: [["~", "./src/"]],
-        extensions: [".ts", ".mjs", ".js", ".svelte"],
-      },
-      node: {
-        extensions: [".js", ".jsx", ".ts", ".svelte"],
+      typescript: {
+        project: ["tsconfig.json"],
+        extensions: [".ts", ".d.ts", ".json", ".svelte", ".mjs"],
       },
     },
   },
@@ -25,10 +22,11 @@ module.exports = {
     node: true,
     jest: true,
   },
+  ignorePatterns: ["node_modules"],
   parserOptions: {
     ecmaVersion: 2020,
     sourceType: "module",
-    extraFileExtensions: [".ts", ".svelte"],
+    extraFileExtensions: [".svelte"],
   },
   rules: {
     curly: ["error", "all"],
@@ -109,15 +107,23 @@ module.exports = {
   },
   overrides: [
     {
-      files: ["*.svelte", "*.ts"],
-      parserOptions: {
-        tsconfigRootDir: __dirname,
-        project: ["./tsconfig.json"],
-      },
-    },
-    {
       files: ["*.svelte"],
       processor: "svelte3/svelte3",
+      rules: {
+        "@typescript-eslint/naming-convention": [
+          "error",
+          {
+            selector: "default",
+            format: ["camelCase", "PascalCase"],
+            leadingUnderscore: "forbid",
+            trailingUnderscore: "forbid",
+          },
+          {
+            selector: "variable",
+            format: ["camelCase", "PascalCase", "UPPER_CASE"],
+          },
+        ],
+      },
     },
     {
       files: ["*.mjs"],

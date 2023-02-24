@@ -16,7 +16,7 @@ import {
   targetProjectsByIdSelector,
 } from "~/modules/projects/projectsSelectors";
 import { userIdToLinkedIdSelector } from "~/modules/users/usersSelectors";
-import { EntityGroup, Project, type Task, ToolName } from "~/typeDefs";
+import { EntityGroup, ToolName, type Project, type Task } from "~/typeDefs";
 import { validStringify } from "~/utilities/textTransforms";
 
 /**

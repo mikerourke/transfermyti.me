@@ -22,3 +22,7 @@ declare type InputChangeEvent = Event & {
 declare type SelectChangeEvent = Event & {
   currentTarget: EventTarget & HTMLSelectElement;
 };
+
+declare const __USE_LOCAL_API__: boolean;
+
+declare const __ENV__: "test" | "development";

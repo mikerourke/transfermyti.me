@@ -12,7 +12,7 @@ import * as credentialsActions from "~/modules/credentials/credentialsActions";
 import { credentialsByMappingSelector } from "~/modules/credentials/credentialsSelectors";
 import { mergeCredentialsInStorage } from "~/modules/credentials/credentialsStorage";
 import type { TogglUserResponse } from "~/modules/users/sagas/togglUsersSagas";
-import { ToolName, ValidationErrorsByMapping } from "~/typeDefs";
+import { ToolName, type ValidationErrorsByMapping } from "~/typeDefs";
 import { isDevelopmentMode } from "~/utilities/environment";
 import { validStringify } from "~/utilities/textTransforms";
 
