@@ -1,4 +1,4 @@
-import cases from "jest-in-case";
+import { describe, test } from "vitest";
 
 import { FAKES } from "~/testUtilities";
 
@@ -11,14 +11,8 @@ describe("within userGroupsSelectors", () => {
     expect(result).toEqual(Object.values(FAKES.REDUX_STATE.userGroups.source));
   });
 
-  cases(
-    "the selectors match their snapshots",
-    (options) => {
-      const result = options.selector(FAKES.REDUX_STATE);
-
-      expect(result).toMatchSnapshot();
-    },
-    [
+  describe("the selectors match their snapshots", () => {
+    const testCases = [
       {
         name: "for the includedSourceUserGroupsSelector",
         selector: userGroupsSelectors.includedSourceUserGroupsSelector,
@@ -31,6 +25,14 @@ describe("within userGroupsSelectors", () => {
         name: "for the sourceUserGroupsInActiveWorkspaceSelector",
         selector: userGroupsSelectors.sourceUserGroupsInActiveWorkspaceSelector,
       },
-    ],
-  );
+    ];
+
+    for (const testCase of testCases) {
+      test.concurrent(testCase.name, async () => {
+        const result = testCase.selector(FAKES.REDUX_STATE);
+
+        expect(result).toMatchSnapshot();
+      });
+    }
+  });
 });

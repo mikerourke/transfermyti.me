@@ -1,6 +1,6 @@
-// Jest Snapshot v1, https://goo.gl/fbAQLP
+// Vitest Snapshot v1
 
-exports[`within userGroupsSelectors the selectors match their snapshots for the includedSourceUserGroupsSelector 1`] = `
+exports[`within userGroupsSelectors > the selectors match their snapshots > for the sourceUserGroupsInActiveWorkspaceSelector 1`] = `
 [
   {
     "entryCount": 0,
@@ -15,7 +15,7 @@ exports[`within userGroupsSelectors the selectors match their snapshots for the 
 ]
 `;
 
-exports[`within userGroupsSelectors the selectors match their snapshots for the sourceUserGroupsForTransferSelector 1`] = `
+exports[`within userGroupsSelectors > the selectors match their snapshots > for the sourceUserGroupsInActiveWorkspaceSelector 2`] = `
 [
   {
     "entryCount": 0,
@@ -30,7 +30,7 @@ exports[`within userGroupsSelectors the selectors match their snapshots for the 
 ]
 `;
 
-exports[`within userGroupsSelectors the selectors match their snapshots for the sourceUserGroupsInActiveWorkspaceSelector 1`] = `
+exports[`within userGroupsSelectors > the selectors match their snapshots > for the sourceUserGroupsInActiveWorkspaceSelector 3`] = `
 [
   {
     "entryCount": 0,

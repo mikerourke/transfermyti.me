@@ -1,3 +1,5 @@
+import { describe, test } from "vitest";
+
 import { FAKES } from "~/testUtilities";
 
 import * as appSelectors from "../appSelectors";

@@ -1,6 +1,6 @@
-// Jest Snapshot v1, https://goo.gl/fbAQLP
+// Vitest Snapshot v1
 
-exports[`within tasksSelectors the selectors match their snapshots for the includedSourceTasksSelector 1`] = `
+exports[`within tasksSelectors > the selectors match their snapshots > for the tasksTotalCountsByTypeSelector 1`] = `
 [
   {
     "assigneeIds": [],
@@ -44,7 +44,7 @@ exports[`within tasksSelectors the selectors match their snapshots for the inclu
 ]
 `;
 
-exports[`within tasksSelectors the selectors match their snapshots for the sourceTasksForTransferSelector 1`] = `
+exports[`within tasksSelectors > the selectors match their snapshots > for the tasksTotalCountsByTypeSelector 2`] = `
 [
   {
     "assigneeIds": [],
@@ -88,7 +88,7 @@ exports[`within tasksSelectors the selectors match their snapshots for the sourc
 ]
 `;
 
-exports[`within tasksSelectors the selectors match their snapshots for the sourceTasksInActiveWorkspaceSelector 1`] = `
+exports[`within tasksSelectors > the selectors match their snapshots > for the tasksTotalCountsByTypeSelector 3`] = `
 [
   {
     "assigneeIds": [
@@ -160,7 +160,7 @@ exports[`within tasksSelectors the selectors match their snapshots for the sourc
 ]
 `;
 
-exports[`within tasksSelectors the selectors match their snapshots for the taskIdToLinkedIdSelector 1`] = `
+exports[`within tasksSelectors > the selectors match their snapshots > for the tasksTotalCountsByTypeSelector 4`] = `
 {
   "7001": "clock-task-01",
   "7002": "clock-task-02",
@@ -169,7 +169,7 @@ exports[`within tasksSelectors the selectors match their snapshots for the taskI
 }
 `;
 
-exports[`within tasksSelectors the selectors match their snapshots for the tasksTotalCountsByTypeSelector 1`] = `
+exports[`within tasksSelectors > the selectors match their snapshots > for the tasksTotalCountsByTypeSelector 5`] = `
 {
   "entryCount": 8,
   "existsInTarget": 2,
@@ -179,8 +179,44 @@ exports[`within tasksSelectors the selectors match their snapshots for the tasks
 }
 `;
 
-exports[`within tasksSelectors the tasksForInclusionsTableSelector matches its snapshot based on state.allEntities.areExistsInTargetShown when state.allEntities.areExistsInTargetShown = false 1`] = `
+exports[`within tasksSelectors > the tasksForInclusionsTableSelector matches its snapshot based on state.allEntities.areExistsInTargetShown > when state.allEntities.areExistsInTargetShown = false 1`] = `
 [
+  {
+    "assigneeIds": [
+      "123123",
+    ],
+    "entryCount": 2,
+    "estimate": "PT2H",
+    "existsInTarget": true,
+    "id": "7001",
+    "isActive": true,
+    "isActiveInSource": true,
+    "isActiveInTarget": true,
+    "isIncluded": false,
+    "linkedId": "clock-task-01",
+    "memberOf": "tasks",
+    "name": "Task 1",
+    "projectId": "2001",
+    "projectName": "Test Project A",
+    "workspaceId": "1001",
+  },
+  {
+    "assigneeIds": [],
+    "entryCount": 1,
+    "estimate": "PT0M",
+    "existsInTarget": true,
+    "id": "7002",
+    "isActive": true,
+    "isActiveInSource": true,
+    "isActiveInTarget": false,
+    "isIncluded": false,
+    "linkedId": "clock-task-02",
+    "memberOf": "tasks",
+    "name": "Task 2",
+    "projectId": "2001",
+    "projectName": "Test Project A",
+    "workspaceId": "1001",
+  },
   {
     "assigneeIds": [],
     "entryCount": 1,
@@ -235,44 +271,8 @@ exports[`within tasksSelectors the tasksForInclusionsTableSelector matches its s
 ]
 `;
 
-exports[`within tasksSelectors the tasksForInclusionsTableSelector matches its snapshot based on state.allEntities.areExistsInTargetShown when state.allEntities.areExistsInTargetShown = true 1`] = `
+exports[`within tasksSelectors > the tasksForInclusionsTableSelector matches its snapshot based on state.allEntities.areExistsInTargetShown > when state.allEntities.areExistsInTargetShown = false 2`] = `
 [
-  {
-    "assigneeIds": [
-      "123123",
-    ],
-    "entryCount": 2,
-    "estimate": "PT2H",
-    "existsInTarget": true,
-    "id": "7001",
-    "isActive": true,
-    "isActiveInSource": true,
-    "isActiveInTarget": true,
-    "isIncluded": false,
-    "linkedId": "clock-task-01",
-    "memberOf": "tasks",
-    "name": "Task 1",
-    "projectId": "2001",
-    "projectName": "Test Project A",
-    "workspaceId": "1001",
-  },
-  {
-    "assigneeIds": [],
-    "entryCount": 1,
-    "estimate": "PT0M",
-    "existsInTarget": true,
-    "id": "7002",
-    "isActive": true,
-    "isActiveInSource": true,
-    "isActiveInTarget": false,
-    "isIncluded": false,
-    "linkedId": "clock-task-02",
-    "memberOf": "tasks",
-    "name": "Task 2",
-    "projectId": "2001",
-    "projectName": "Test Project A",
-    "workspaceId": "1001",
-  },
   {
     "assigneeIds": [],
     "entryCount": 1,

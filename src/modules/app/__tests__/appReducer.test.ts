@@ -1,11 +1,11 @@
-import cases from "jest-in-case";
+import { describe, test, vi } from "vitest";
 
 import * as appActions from "~/modules/app/appActions";
 import { FAKES } from "~/testUtilities";
 
 import { appReducer, initialState } from "../appReducer";
 
-jest.mock("nanoid", () => ({
+vi.mock("nanoid", () => ({
   nanoid: () => require("crypto").randomUUID(),
 }));
 
@@ -62,19 +62,9 @@ describe("within appReducer", () => {
     expect(firstNotification.id).toBeDefined();
   });
 
-  cases(
-    "sets the correct error message when the errorNotificationShown action is dispatched",
-    (options) => {
-      const result = appReducer(initialState, appActions.errorNotificationShown(options.payload));
-
-      const [firstNotification] = result.notifications;
-
-      expect(firstNotification.message).toBe(options.expected);
-      expect(firstNotification.type).toBe("error");
-      expect(firstNotification.id).toBeDefined();
-    },
+  describe("sets the correct error message when the errorNotificationShown action is dispatched", () => {
     // prettier-ignore
-    [
+    const testCases = [
       {
         name: "when the error payload is an Error",
         payload: new Error("Test error message"),
@@ -115,6 +105,21 @@ describe("within appReducer", () => {
         } as Response,
         expected: "The following error occurred: Error code 400 when fetching from unknown API.",
       },
-    ],
-  );
+    ];
+
+    for (const testCase of testCases) {
+      test.concurrent(testCase.name, async () => {
+        const result = appReducer(
+          initialState,
+          appActions.errorNotificationShown(testCase.payload),
+        );
+
+        const [firstNotification] = result.notifications;
+
+        expect(firstNotification.message).toBe(testCase.expected);
+        expect(firstNotification.type).toBe("error");
+        expect(firstNotification.id).toBeDefined();
+      });
+    }
+  });
 });

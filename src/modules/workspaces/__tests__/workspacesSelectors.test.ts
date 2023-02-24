@@ -1,4 +1,4 @@
-import cases from "jest-in-case";
+import { describe, test } from "vitest";
 
 import { FAKES } from "~/testUtilities";
 import { EntityGroup } from "~/typeDefs";
@@ -29,14 +29,8 @@ const MOCK_STATE = {
 };
 
 describe("within workspacesSelectors", () => {
-  cases(
-    "selectors that directly access state return the correct value",
-    (options) => {
-      const result = options.selector(MOCK_STATE);
-
-      expect(result).toEqual(options.expected);
-    },
-    [
+  describe("selectors that directly access state return the correct value", () => {
+    const testCases = [
       {
         name: "areWorkspacesFetchingSelector returns state.isFetching",
         selector: workspacesSelectors.areWorkspacesFetchingSelector,
@@ -62,17 +56,19 @@ describe("within workspacesSelectors", () => {
         selector: workspacesSelectors.targetWorkspacesByIdSelector,
         expected: MOCK_STATE.workspaces.target,
       },
-    ],
-  );
+    ];
 
-  cases(
-    "the selectors match their snapshots",
-    (options) => {
-      const result = options.selector(MOCK_STATE);
+    for (const testCase of testCases) {
+      test.concurrent(testCase.name, async () => {
+        const result = testCase.selector(MOCK_STATE);
 
-      expect(result).toMatchSnapshot();
-    },
-    [
+        expect(result).toEqual(testCase.expected);
+      });
+    }
+  });
+
+  describe("the selectors match their snapshots", () => {
+    const testCases = [
       {
         name: "for the includedSourceWorkspacesSelector",
         selector: workspacesSelectors.includedSourceWorkspacesSelector,
@@ -97,8 +93,16 @@ describe("within workspacesSelectors", () => {
         name: "for the includedWorkspaceIdsByMappingSelector",
         selector: workspacesSelectors.includedWorkspaceIdsByMappingSelector,
       },
-    ],
-  );
+    ];
+
+    for (const testCase of testCases) {
+      test.concurrent(testCase.name, async () => {
+        const result = testCase.selector(MOCK_STATE);
+
+        expect(result).toMatchSnapshot();
+      });
+    }
+  });
 
   describe("the firstIncludedWorkspaceIdSelector", () => {
     test("returns the ID of the first included workspace if one is present in state", () => {

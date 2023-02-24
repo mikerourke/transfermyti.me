@@ -1,4 +1,6 @@
-import jest from "jest";
+import { startVitest } from "vitest/node";
+import yargs from "yargs";
+import { hideBin } from "yargs/helpers";
 
 import { startServer } from "./server.mjs";
 
@@ -24,11 +26,20 @@ if (process.env.CI) {
   argv.push("--ci=true");
 }
 
+const options = yargs(hideBin(process.argv)).parse();
+
 export async function runTests() {
   await startServer({ emptyTools: [], port: 9009 });
 
   // eslint-disable-next-line import/no-named-as-default-member
-  await jest.run(argv);
+  const vitest = await startVitest("test", [], {
+    run: true,
+    watch: false,
+    silent: options?.silent ?? false,
+    coverage: options?.coverage ?? false,
+  });
+
+  await vitest.close();
 
   process.exit(0);
 }

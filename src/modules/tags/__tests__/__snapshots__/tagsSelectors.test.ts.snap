@@ -1,6 +1,6 @@
-// Jest Snapshot v1, https://goo.gl/fbAQLP
+// Vitest Snapshot v1
 
-exports[`within tagsSelectors the selectors match their snapshots for the includedSourceTagsSelector 1`] = `
+exports[`within tagsSelectors > the selectors match their snapshots > for the includedSourceTagsSelector 1`] = `
 [
   {
     "entryCount": 0,
@@ -41,7 +41,7 @@ exports[`within tagsSelectors the selectors match their snapshots for the includ
 ]
 `;
 
-exports[`within tagsSelectors the selectors match their snapshots for the sourceTagsForTransferSelector 1`] = `
+exports[`within tagsSelectors > the selectors match their snapshots > for the sourceTagsForTransferSelector 1`] = `
 [
   {
     "entryCount": 0,
@@ -82,7 +82,7 @@ exports[`within tagsSelectors the selectors match their snapshots for the source
 ]
 `;
 
-exports[`within tagsSelectors the selectors match their snapshots for the tagsTotalCountsByTypeSelector 1`] = `
+exports[`within tagsSelectors > the selectors match their snapshots > for the tagsTotalCountsByTypeSelector 1`] = `
 {
   "entryCount": 3,
   "existsInTarget": 3,
@@ -90,7 +90,7 @@ exports[`within tagsSelectors the selectors match their snapshots for the tagsTo
 }
 `;
 
-exports[`within tagsSelectors the tagIdsByNameSelectorFactory matches its snapshot 1`] = `
+exports[`within tagsSelectors > the tagIdsByNameSelectorFactory matches its snapshot 1`] = `
 {
   "tag-a": "4001",
   "tag-b": "4002",
@@ -104,84 +104,7 @@ exports[`within tagsSelectors the tagIdsByNameSelectorFactory matches its snapsh
 }
 `;
 
-exports[`within tagsSelectors the tagsForInclusionsTableSelector matches its snapshot based on state.allEntities.areExistsInTargetShown when state.allEntities.areExistsInTargetShown = false 1`] = `
-[
-  {
-    "entryCount": 0,
-    "existsInTarget": false,
-    "id": "4004",
-    "isActiveInSource": true,
-    "isActiveInTarget": false,
-    "isIncluded": false,
-    "linkedId": null,
-    "memberOf": "tags",
-    "name": "tag-d",
-    "workspaceId": "1001",
-  },
-  {
-    "entryCount": 0,
-    "existsInTarget": false,
-    "id": "4005",
-    "isActiveInSource": true,
-    "isActiveInTarget": false,
-    "isIncluded": false,
-    "linkedId": null,
-    "memberOf": "tags",
-    "name": "tag-e",
-    "workspaceId": "1001",
-  },
-  {
-    "entryCount": 0,
-    "existsInTarget": false,
-    "id": "4006",
-    "isActiveInSource": true,
-    "isActiveInTarget": false,
-    "isIncluded": true,
-    "linkedId": null,
-    "memberOf": "tags",
-    "name": "tag-f",
-    "workspaceId": "1001",
-  },
-  {
-    "entryCount": 0,
-    "existsInTarget": false,
-    "id": "4007",
-    "isActiveInSource": true,
-    "isActiveInTarget": false,
-    "isIncluded": true,
-    "linkedId": null,
-    "memberOf": "tags",
-    "name": "tag-g",
-    "workspaceId": "1001",
-  },
-  {
-    "entryCount": 0,
-    "existsInTarget": false,
-    "id": "4008",
-    "isActiveInSource": true,
-    "isActiveInTarget": false,
-    "isIncluded": true,
-    "linkedId": null,
-    "memberOf": "tags",
-    "name": "tag-h",
-    "workspaceId": "1001",
-  },
-  {
-    "entryCount": 0,
-    "existsInTarget": false,
-    "id": "4009",
-    "isActiveInSource": true,
-    "isActiveInTarget": false,
-    "isIncluded": true,
-    "linkedId": null,
-    "memberOf": "tags",
-    "name": "tag-i",
-    "workspaceId": "1001",
-  },
-]
-`;
-
-exports[`within tagsSelectors the tagsForInclusionsTableSelector matches its snapshot based on state.allEntities.areExistsInTargetShown when state.allEntities.areExistsInTargetShown = true 1`] = `
+exports[`within tagsSelectors > the tagsForInclusionsTableSelector matches its snapshot based on state.allEntities.areExistsInTargetShown > when state.allEntities.areExistsInTargetShown = false 1`] = `
 [
   {
     "entryCount": 1,
@@ -294,7 +217,84 @@ exports[`within tagsSelectors the tagsForInclusionsTableSelector matches its sna
 ]
 `;
 
-exports[`within tagsSelectors the targetTagIdsSelectorFactory matches its snapshot 1`] = `
+exports[`within tagsSelectors > the tagsForInclusionsTableSelector matches its snapshot based on state.allEntities.areExistsInTargetShown > when state.allEntities.areExistsInTargetShown = false 2`] = `
+[
+  {
+    "entryCount": 0,
+    "existsInTarget": false,
+    "id": "4004",
+    "isActiveInSource": true,
+    "isActiveInTarget": false,
+    "isIncluded": false,
+    "linkedId": null,
+    "memberOf": "tags",
+    "name": "tag-d",
+    "workspaceId": "1001",
+  },
+  {
+    "entryCount": 0,
+    "existsInTarget": false,
+    "id": "4005",
+    "isActiveInSource": true,
+    "isActiveInTarget": false,
+    "isIncluded": false,
+    "linkedId": null,
+    "memberOf": "tags",
+    "name": "tag-e",
+    "workspaceId": "1001",
+  },
+  {
+    "entryCount": 0,
+    "existsInTarget": false,
+    "id": "4006",
+    "isActiveInSource": true,
+    "isActiveInTarget": false,
+    "isIncluded": true,
+    "linkedId": null,
+    "memberOf": "tags",
+    "name": "tag-f",
+    "workspaceId": "1001",
+  },
+  {
+    "entryCount": 0,
+    "existsInTarget": false,
+    "id": "4007",
+    "isActiveInSource": true,
+    "isActiveInTarget": false,
+    "isIncluded": true,
+    "linkedId": null,
+    "memberOf": "tags",
+    "name": "tag-g",
+    "workspaceId": "1001",
+  },
+  {
+    "entryCount": 0,
+    "existsInTarget": false,
+    "id": "4008",
+    "isActiveInSource": true,
+    "isActiveInTarget": false,
+    "isIncluded": true,
+    "linkedId": null,
+    "memberOf": "tags",
+    "name": "tag-h",
+    "workspaceId": "1001",
+  },
+  {
+    "entryCount": 0,
+    "existsInTarget": false,
+    "id": "4009",
+    "isActiveInSource": true,
+    "isActiveInTarget": false,
+    "isIncluded": true,
+    "linkedId": null,
+    "memberOf": "tags",
+    "name": "tag-i",
+    "workspaceId": "1001",
+  },
+]
+`;
+
+exports[`within tagsSelectors > the targetTagIdsSelectorFactory matches its snapshot 1`] = `
 [
   "clock-tag-01",
   "clock-tag-02",

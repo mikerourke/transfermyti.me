@@ -1,5 +1,5 @@
-import cases from "jest-in-case";
 import { lensProp, set } from "ramda";
+import { describe, test } from "vitest";
 
 import * as tasksActions from "~/modules/tasks/tasksActions";
 import { FAKES } from "~/testUtilities";
@@ -26,18 +26,8 @@ describe("within tasksReducer", () => {
     expect(result).toEqual(initialState);
   });
 
-  cases(
-    "the isFetching is set to the correct value based on the dispatched action",
-    (options) => {
-      const updatedState = {
-        ...REDUX_STATE.tasks,
-        isFetching: options.initialStatus,
-      };
-      const result = tasksReducer(updatedState, options.action);
-
-      expect(result.isFetching).toEqual(options.expectedStatus);
-    },
-    [
+  describe("the isFetching is set to the correct value based on the dispatched action", () => {
+    const testCases = [
       {
         name: "when the createTasks.success action is dispatched",
         initialStatus: true,
@@ -86,8 +76,20 @@ describe("within tasksReducer", () => {
         action: tasksActions.fetchTasks.failure(),
         expectedStatus: false,
       },
-    ],
-  );
+    ];
+
+    for (const testCase of testCases) {
+      test.concurrent(testCase.name, async () => {
+        const updatedState = {
+          ...REDUX_STATE.tasks,
+          isFetching: testCase.initialStatus,
+        };
+        const result = tasksReducer(updatedState, testCase.action);
+
+        expect(result.isFetching).toEqual(testCase.expectedStatus);
+      });
+    }
+  });
 
   test(`the isTaskIncludedToggled action flips the "isIncluded" value of the task with id = payload`, () => {
     const updatedState = set(

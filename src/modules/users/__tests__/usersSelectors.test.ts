@@ -1,4 +1,4 @@
-import cases from "jest-in-case";
+import { describe, test } from "vitest";
 
 import { FAKES } from "~/testUtilities";
 import { EntityGroup } from "~/typeDefs";
@@ -35,14 +35,8 @@ describe("within usersSelectors", () => {
     expect(result).toEqual(Object.values(MOCK_STATE.users.source));
   });
 
-  cases(
-    "the selectors match their snapshots",
-    (options) => {
-      const result = options.selector(MOCK_STATE);
-
-      expect(result).toMatchSnapshot();
-    },
-    [
+  describe("the selectors match their snapshots", () => {
+    const testCases = [
       {
         name: "for the includedSourceUsersSelector",
         selector: usersSelectors.includedSourceUsersSelector,
@@ -59,6 +53,14 @@ describe("within usersSelectors", () => {
         name: "for the sourceUserEmailsByWorkspaceIdSelector",
         selector: usersSelectors.sourceUserEmailsByWorkspaceIdSelector,
       },
-    ],
-  );
+    ];
+
+    for (const testCase of testCases) {
+      test.concurrent(testCase.name, async () => {
+        const result = testCase.selector(MOCK_STATE);
+
+        expect(result).toMatchSnapshot();
+      });
+    }
+  });
 });

@@ -1,4 +1,4 @@
-import cases from "jest-in-case";
+import { describe, test } from "vitest";
 
 import { EntityGroup } from "~/typeDefs";
 
@@ -46,31 +46,31 @@ describe("within textTransforms", () => {
   });
 
   describe("the getEntityGroupDisplay function", () => {
-    cases(
-      "returns the correct display based on the entityGroup arg",
-      (options) => {
-        const result = textTransforms.getEntityGroupDisplay(options.entityGroup);
-
-        expect(result).toBe(options.expected);
+    const testCases = [
+      {
+        name: "when the entity group is TimeEntries",
+        entityGroup: EntityGroup.TimeEntries,
+        expected: "Time Entries",
       },
-      [
-        {
-          name: "when the entity group is TimeEntries",
-          entityGroup: EntityGroup.TimeEntries,
-          expected: "Time Entries",
-        },
-        {
-          name: "when the entity group is UserGroups",
-          entityGroup: EntityGroup.UserGroups,
-          expected: "User Groups",
-        },
-        {
-          name: "when the entity group is Clients",
-          entityGroup: EntityGroup.Clients,
-          expected: "Clients",
-        },
-      ],
-    );
+      {
+        name: "when the entity group is UserGroups",
+        entityGroup: EntityGroup.UserGroups,
+        expected: "User Groups",
+      },
+      {
+        name: "when the entity group is Clients",
+        entityGroup: EntityGroup.Clients,
+        expected: "Clients",
+      },
+    ];
+
+    for (const testCase of testCases) {
+      test.concurrent(testCase.name, async () => {
+        const result = textTransforms.getEntityGroupDisplay(testCase.entityGroup);
+
+        expect(result).toBe(testCase.expected);
+      });
+    }
 
     test(`returns "None" if entityGroup arg is null`, () => {
       const result = textTransforms.getEntityGroupDisplay(null);

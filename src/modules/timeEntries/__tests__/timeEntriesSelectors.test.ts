@@ -1,4 +1,4 @@
-import cases from "jest-in-case";
+import { describe, test } from "vitest";
 
 import { FAKES } from "~/testUtilities";
 
@@ -70,14 +70,8 @@ describe("within timeEntriesSelectors", () => {
     expect(result).toEqual(Object.values(MOCK_STATE.timeEntries.source));
   });
 
-  cases(
-    "the selectors match their snapshots",
-    (options) => {
-      const result = options.selector(MOCK_STATE);
-
-      expect(result).toMatchSnapshot();
-    },
-    [
+  describe("the selectors match their snapshots", () => {
+    const testCases = [
       {
         name: "for the includedSourceTimeEntriesSelector",
         selector: timeEntriesSelectors.includedSourceTimeEntriesSelector,
@@ -98,8 +92,16 @@ describe("within timeEntriesSelectors", () => {
         name: "for the sourceTimeEntryCountByTagIdSelector",
         selector: timeEntriesSelectors.sourceTimeEntryCountByTagIdSelector,
       },
-    ],
-  );
+    ];
+
+    for (const testCase of testCases) {
+      test.concurrent(testCase.name, async () => {
+        const result = testCase.selector(MOCK_STATE);
+
+        expect(result).toMatchSnapshot();
+      });
+    }
+  });
 
   test(`the sourceTimeEntriesForTransferSelector returns all values if state.isDuplicateCheckEnabled = false`, () => {
     const updatedState = {
@@ -117,22 +119,8 @@ describe("within timeEntriesSelectors", () => {
     expect(result).toEqual(expected);
   });
 
-  cases(
-    "the timeEntriesForInclusionsTableSelector matches its snapshot based on state.allEntities.areExistsInTargetShown",
-    (options) => {
-      const updatedState = {
-        ...MOCK_STATE,
-        allEntities: {
-          ...MOCK_STATE.allEntities,
-          areExistsInTargetShown: options.areExistsInTargetShown,
-        },
-      };
-
-      const result = timeEntriesSelectors.timeEntriesForInclusionsTableSelector(updatedState);
-
-      expect(result).toMatchSnapshot();
-    },
-    [
+  describe("the timeEntriesForInclusionsTableSelector matches its snapshot based on state.allEntities.areExistsInTargetShown", () => {
+    const testCases = [
       {
         name: "when state.allEntities.areExistsInTargetShown = true",
         areExistsInTargetShown: true,
@@ -141,8 +129,24 @@ describe("within timeEntriesSelectors", () => {
         name: "when state.allEntities.areExistsInTargetShown = false",
         areExistsInTargetShown: false,
       },
-    ],
-  );
+    ];
+
+    for (const testCase of testCases) {
+      test.concurrent(testCase.name, async () => {
+        const updatedState = {
+          ...MOCK_STATE,
+          allEntities: {
+            ...MOCK_STATE.allEntities,
+            areExistsInTargetShown: testCase.areExistsInTargetShown,
+          },
+        };
+
+        const result = timeEntriesSelectors.timeEntriesForInclusionsTableSelector(updatedState);
+
+        expect(result).toMatchSnapshot();
+      });
+    }
+  });
 
   test(`the timeEntriesForInclusionsTableSelector matches its snapshot when state.isDuplicateCheckEnabled = false`, () => {
     const updatedState = {

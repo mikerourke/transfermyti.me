@@ -1,13 +1,6 @@
-// Jest Snapshot v1, https://goo.gl/fbAQLP
+// Vitest Snapshot v1
 
-exports[`within workspacesSelectors the selectors match their snapshots for the includedSourceWorkspaceIdsSelector 1`] = `
-[
-  "1001",
-  "1002",
-]
-`;
-
-exports[`within workspacesSelectors the selectors match their snapshots for the includedSourceWorkspacesSelector 1`] = `
+exports[`within workspacesSelectors > the selectors match their snapshots > for the includedSourceWorkspaceIdsSelector 1`] = `
 [
   {
     "entryCount": 20,
@@ -38,7 +31,57 @@ exports[`within workspacesSelectors the selectors match their snapshots for the 
 ]
 `;
 
-exports[`within workspacesSelectors the selectors match their snapshots for the includedWorkspaceIdsByMappingSelector 1`] = `
+exports[`within workspacesSelectors > the selectors match their snapshots > for the includedSourceWorkspaceIdsSelector 2`] = `
+[
+  {
+    "entryCount": 20,
+    "id": "1002",
+    "isAdmin": true,
+    "isIncluded": true,
+    "linkedId": null,
+    "memberOf": "workspaces",
+    "name": "Test Workspace 2",
+    "userIds": [
+      "6001",
+    ],
+    "workspaceId": "1002",
+  },
+]
+`;
+
+exports[`within workspacesSelectors > the selectors match their snapshots > for the includedSourceWorkspaceIdsSelector 3`] = `
+{
+  "1001": "clock-workspace-01",
+  "clock-workspace-01": "1001",
+}
+`;
+
+exports[`within workspacesSelectors > the selectors match their snapshots > for the includedSourceWorkspaceIdsSelector 4`] = `
+[
+  {
+    "entryCount": 20,
+    "id": "1002",
+    "isAdmin": true,
+    "isIncluded": true,
+    "linkedId": null,
+    "memberOf": "workspaces",
+    "name": "Test Workspace 2",
+    "userIds": [
+      "6001",
+    ],
+    "workspaceId": "1002",
+  },
+]
+`;
+
+exports[`within workspacesSelectors > the selectors match their snapshots > for the includedSourceWorkspaceIdsSelector 5`] = `
+[
+  "1001",
+  "1002",
+]
+`;
+
+exports[`within workspacesSelectors > the selectors match their snapshots > for the includedWorkspaceIdsByMappingSelector 1`] = `
 {
   "source": [
     "1001",
@@ -47,48 +90,5 @@ exports[`within workspacesSelectors the selectors match their snapshots for the 
   "target": [
     "clock-workspace-01",
   ],
-}
-`;
-
-exports[`within workspacesSelectors the selectors match their snapshots for the missingTargetWorkspacesSelector 1`] = `
-[
-  {
-    "entryCount": 20,
-    "id": "1002",
-    "isAdmin": true,
-    "isIncluded": true,
-    "linkedId": null,
-    "memberOf": "workspaces",
-    "name": "Test Workspace 2",
-    "userIds": [
-      "6001",
-    ],
-    "workspaceId": "1002",
-  },
-]
-`;
-
-exports[`within workspacesSelectors the selectors match their snapshots for the sourceWorkspacesForTransferSelector 1`] = `
-[
-  {
-    "entryCount": 20,
-    "id": "1002",
-    "isAdmin": true,
-    "isIncluded": true,
-    "linkedId": null,
-    "memberOf": "workspaces",
-    "name": "Test Workspace 2",
-    "userIds": [
-      "6001",
-    ],
-    "workspaceId": "1002",
-  },
-]
-`;
-
-exports[`within workspacesSelectors the selectors match their snapshots for the workspaceIdToLinkedIdSelector 1`] = `
-{
-  "1001": "clock-workspace-01",
-  "clock-workspace-01": "1001",
 }
 `;

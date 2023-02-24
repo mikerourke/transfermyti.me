@@ -1,5 +1,5 @@
-import cases from "jest-in-case";
 import { lensPath, set } from "ramda";
+import { describe, test } from "vitest";
 
 import { FAKES } from "~/testUtilities";
 import { EntityGroup, ToolName } from "~/typeDefs";
@@ -9,14 +9,8 @@ const { REDUX_STATE } = FAKES;
 import * as allEntitiesSelectors from "../allEntitiesSelectors";
 
 describe("within allEntitiesSelectors", () => {
-  cases(
-    "selectors that directly access state return the correct value",
-    (options) => {
-      const result = options.selector(REDUX_STATE);
-
-      expect(result).toEqual(options.expected);
-    },
-    [
+  describe("selectors that directly access state return the correct value", () => {
+    const testCases = [
       {
         name: "areExistsInTargetShownSelector returns state.areExistsInTargetShown",
         selector: allEntitiesSelectors.areExistsInTargetShownSelector,
@@ -52,8 +46,16 @@ describe("within allEntitiesSelectors", () => {
         selector: allEntitiesSelectors.toolForTargetMappingSelector,
         expected: REDUX_STATE.allEntities.toolNameByMapping.target,
       },
-    ],
-  );
+    ];
+
+    for (const testCase of testCases) {
+      test.concurrent(testCase.name, async () => {
+        const result = testCase.selector(REDUX_STATE);
+
+        expect(result).toEqual(testCase.expected);
+      });
+    }
+  });
 
   test("the entityGroupInProcessDisplaySelector returns state.entityGroupInProcess display value", () => {
     const updatedState = set(

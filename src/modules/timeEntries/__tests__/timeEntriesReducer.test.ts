@@ -1,5 +1,5 @@
-import cases from "jest-in-case";
 import { lensProp, set } from "ramda";
+import { describe, test } from "vitest";
 
 import * as timeEntriesActions from "~/modules/timeEntries/timeEntriesActions";
 import { FAKES } from "~/testUtilities";
@@ -26,18 +26,8 @@ describe("within timeEntriesReducer", () => {
     expect(result).toEqual(initialState);
   });
 
-  cases(
-    "the isFetching is set to the correct value based on the dispatched action",
-    (options) => {
-      const updatedState = {
-        ...REDUX_STATE.timeEntries,
-        isFetching: options.initialStatus,
-      };
-      const result = timeEntriesReducer(updatedState, options.action);
-
-      expect(result.isFetching).toEqual(options.expectedStatus);
-    },
-    [
+  describe("the isFetching is set to the correct value based on the dispatched action", () => {
+    const testCases = [
       {
         name: "when the createTimeEntries.success action is dispatched",
         initialStatus: true,
@@ -86,8 +76,20 @@ describe("within timeEntriesReducer", () => {
         action: timeEntriesActions.fetchTimeEntries.failure(),
         expectedStatus: false,
       },
-    ],
-  );
+    ];
+
+    for (const testCase of testCases) {
+      test.concurrent(testCase.name, async () => {
+        const updatedState = {
+          ...REDUX_STATE.timeEntries,
+          isFetching: testCase.initialStatus,
+        };
+        const result = timeEntriesReducer(updatedState, testCase.action);
+
+        expect(result.isFetching).toEqual(testCase.expectedStatus);
+      });
+    }
+  });
 
   test("the isDuplicateCheckEnabledToggled action flips the isDuplicateCheckEnabled value in state", () => {
     const result = timeEntriesReducer(

@@ -1,4 +1,4 @@
-import cases from "jest-in-case";
+import { describe, test } from "vitest";
 
 import * as allEntitiesActions from "~/modules/allEntities/allEntitiesActions";
 import { FAKES } from "~/testUtilities";
@@ -25,19 +25,8 @@ describe("within allEntitiesReducer", () => {
     expect(result).toEqual(initialState);
   });
 
-  cases(
-    "the pushAllChangesFetchStatus is set to the correct value based on the dispatched action",
-    (options) => {
-      const updatedState = {
-        ...REDUX_STATE.allEntities,
-        entityGroupInProcess: EntityGroup.Projects,
-        pushAllChangesFetchStatus: options.initialStatus,
-      };
-      const result = allEntitiesReducer(updatedState, options.action);
-
-      expect(result.pushAllChangesFetchStatus).toEqual(options.expectedStatus);
-    },
-    [
+  describe("the pushAllChangesFetchStatus is set to the correct value based on the dispatched action", () => {
+    const testCases = [
       {
         name: "when the createAllEntities.request action is dispatched",
         initialStatus: FetchStatus.Pending,
@@ -86,22 +75,24 @@ describe("within allEntitiesReducer", () => {
         action: allEntitiesActions.allEntitiesFlushed(),
         expectedStatus: FetchStatus.Pending,
       },
-    ],
-  );
+    ];
 
-  cases(
-    "the fetchAllFetchStatus is set to the correct value based on the dispatched action",
-    (options) => {
-      const updatedState = {
-        ...REDUX_STATE.allEntities,
-        entityGroupInProcess: EntityGroup.Projects,
-        fetchAllFetchStatus: options.initialStatus,
-      };
-      const result = allEntitiesReducer(updatedState, options.action);
+    for (const testCase of testCases) {
+      test.concurrent(testCase.name, async () => {
+        const updatedState = {
+          ...REDUX_STATE.allEntities,
+          entityGroupInProcess: EntityGroup.Projects,
+          pushAllChangesFetchStatus: testCase.initialStatus,
+        };
+        const result = allEntitiesReducer(updatedState, testCase.action);
 
-      expect(result.fetchAllFetchStatus).toEqual(options.expectedStatus);
-    },
-    [
+        expect(result.pushAllChangesFetchStatus).toEqual(testCase.expectedStatus);
+      });
+    }
+  });
+
+  describe("the fetchAllFetchStatus is set to the correct value based on the dispatched action", () => {
+    const testCases = [
       {
         name: "when the fetchAllEntities.request action is dispatched",
         initialStatus: FetchStatus.Pending,
@@ -132,27 +123,24 @@ describe("within allEntitiesReducer", () => {
         action: allEntitiesActions.allEntitiesFlushed(),
         expectedStatus: FetchStatus.Pending,
       },
-    ],
-  );
+    ];
 
-  cases(
-    "the correct state value is updated based on the dispatched action",
-    (options) => {
-      const updatedState = {
-        ...REDUX_STATE.allEntities,
-        ...options.initialStateChange,
-      };
+    for (const testCase of testCases) {
+      test.concurrent(testCase.name, async () => {
+        const updatedState = {
+          ...REDUX_STATE.allEntities,
+          entityGroupInProcess: EntityGroup.Projects,
+          fetchAllFetchStatus: testCase.initialStatus,
+        };
+        const result = allEntitiesReducer(updatedState, testCase.action);
 
-      const result = allEntitiesReducer(updatedState, options.action);
+        expect(result.fetchAllFetchStatus).toEqual(testCase.expectedStatus);
+      });
+    }
+  });
 
-      const expected = {
-        ...updatedState,
-        ...options.expectedStateChange,
-      };
-
-      expect(result).toEqual(expected);
-    },
-    [
+  describe("the correct state value is updated based on the dispatched action", () => {
+    const testCases = [
       {
         name: "the toolActionUpdated action updates state.toolAction",
         initialStateChange: { toolAction: ToolAction.None },
@@ -216,6 +204,24 @@ describe("within allEntitiesReducer", () => {
           },
         },
       },
-    ],
-  );
+    ];
+
+    for (const testCase of testCases) {
+      test.concurrent(testCase.name, async () => {
+        const updatedState = {
+          ...REDUX_STATE.allEntities,
+          ...testCase.initialStateChange,
+        };
+
+        const result = allEntitiesReducer(updatedState, testCase.action);
+
+        const expected = {
+          ...updatedState,
+          ...testCase.expectedStateChange,
+        };
+
+        expect(result).toEqual(expected);
+      });
+    }
+  });
 });

@@ -1,4 +1,3 @@
-/// <reference types="vitest/globals" />
 /// <reference types="svelte" />
 /// <reference types="vite/client" />
 

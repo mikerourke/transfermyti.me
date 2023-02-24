@@ -1,6 +1,6 @@
-// Jest Snapshot v1, https://goo.gl/fbAQLP
+// Vitest Snapshot v1
 
-exports[`within timeEntriesSelectors the selectors match their snapshots for the includedSourceTimeEntriesSelector 1`] = `
+exports[`within timeEntriesSelectors > the selectors match their snapshots > for the sourceTimeEntryCountByTagIdSelector 1`] = `
 [
   {
     "clientId": "3002",
@@ -47,7 +47,7 @@ exports[`within timeEntriesSelectors the selectors match their snapshots for the
 ]
 `;
 
-exports[`within timeEntriesSelectors the selectors match their snapshots for the sourceTimeEntriesForTransferSelector 1`] = `
+exports[`within timeEntriesSelectors > the selectors match their snapshots > for the sourceTimeEntryCountByTagIdSelector 2`] = `
 [
   {
     "clientId": "3002",
@@ -94,7 +94,7 @@ exports[`within timeEntriesSelectors the selectors match their snapshots for the
 ]
 `;
 
-exports[`within timeEntriesSelectors the selectors match their snapshots for the sourceTimeEntriesInActiveWorkspaceSelector 1`] = `
+exports[`within timeEntriesSelectors > the selectors match their snapshots > for the sourceTimeEntryCountByTagIdSelector 3`] = `
 [
   {
     "clientId": "3001",
@@ -214,7 +214,14 @@ exports[`within timeEntriesSelectors the selectors match their snapshots for the
 ]
 `;
 
-exports[`within timeEntriesSelectors the selectors match their snapshots for the sourceTimeEntryCountByTagIdSelector 1`] = `
+exports[`within timeEntriesSelectors > the selectors match their snapshots > for the sourceTimeEntryCountByTagIdSelector 4`] = `
+{
+  "existsInTarget": 3,
+  "isIncluded": 2,
+}
+`;
+
+exports[`within timeEntriesSelectors > the selectors match their snapshots > for the sourceTimeEntryCountByTagIdSelector 5`] = `
 {
   "4001": 1,
   "4002": 1,
@@ -222,73 +229,9 @@ exports[`within timeEntriesSelectors the selectors match their snapshots for the
 }
 `;
 
-exports[`within timeEntriesSelectors the selectors match their snapshots for the timeEntriesTotalCountsByTypeSelector 1`] = `
-{
-  "existsInTarget": 3,
-  "isIncluded": 2,
-}
-`;
+exports[`within timeEntriesSelectors > the sourceTimeEntryCountByIdFieldSelectorFactory matches its snapshot 1`] = `{}`;
 
-exports[`within timeEntriesSelectors the sourceTimeEntryCountByIdFieldSelectorFactory matches its snapshot 1`] = `{}`;
-
-exports[`within timeEntriesSelectors the timeEntriesForInclusionsTableSelector matches its snapshot based on state.allEntities.areExistsInTargetShown when state.allEntities.areExistsInTargetShown = false 1`] = `
-[
-  {
-    "clientId": "3002",
-    "description": "This is a test entry (04)",
-    "end": 2019-06-23T17:05:20.000Z,
-    "entryCount": 0,
-    "existsInTarget": false,
-    "id": "8004",
-    "isActive": false,
-    "isActiveInSource": true,
-    "isActiveInTarget": false,
-    "isBillable": false,
-    "isIncluded": true,
-    "linkedId": null,
-    "memberOf": "timeEntries",
-    "projectId": "2002",
-    "projectName": "Test Project B",
-    "start": 2019-06-23T14:00:20.000Z,
-    "tagIds": [],
-    "tagNames": [],
-    "taskId": null,
-    "taskName": null,
-    "userGroupIds": [],
-    "userId": "6001",
-    "workspaceId": "1001",
-    "year": 2019,
-  },
-  {
-    "clientId": "3002",
-    "description": "This is a test entry (05)",
-    "end": 2019-06-22T19:15:19.000Z,
-    "entryCount": 0,
-    "existsInTarget": false,
-    "id": "8005",
-    "isActive": false,
-    "isActiveInSource": true,
-    "isActiveInTarget": false,
-    "isBillable": false,
-    "isIncluded": true,
-    "linkedId": null,
-    "memberOf": "timeEntries",
-    "projectId": "2002",
-    "projectName": "Test Project B",
-    "start": 2019-06-22T14:00:19.000Z,
-    "tagIds": [],
-    "tagNames": [],
-    "taskId": null,
-    "taskName": null,
-    "userGroupIds": [],
-    "userId": "6001",
-    "workspaceId": "1001",
-    "year": 2019,
-  },
-]
-`;
-
-exports[`within timeEntriesSelectors the timeEntriesForInclusionsTableSelector matches its snapshot based on state.allEntities.areExistsInTargetShown when state.allEntities.areExistsInTargetShown = true 1`] = `
+exports[`within timeEntriesSelectors > the timeEntriesForInclusionsTableSelector matches its snapshot based on state.allEntities.areExistsInTargetShown > when state.allEntities.areExistsInTargetShown = false 1`] = `
 [
   {
     "clientId": "3001",
@@ -433,7 +376,64 @@ exports[`within timeEntriesSelectors the timeEntriesForInclusionsTableSelector m
 ]
 `;
 
-exports[`within timeEntriesSelectors the timeEntriesForInclusionsTableSelector matches its snapshot when state.isDuplicateCheckEnabled = false 1`] = `
+exports[`within timeEntriesSelectors > the timeEntriesForInclusionsTableSelector matches its snapshot based on state.allEntities.areExistsInTargetShown > when state.allEntities.areExistsInTargetShown = false 2`] = `
+[
+  {
+    "clientId": "3002",
+    "description": "This is a test entry (04)",
+    "end": 2019-06-23T17:05:20.000Z,
+    "entryCount": 0,
+    "existsInTarget": false,
+    "id": "8004",
+    "isActive": false,
+    "isActiveInSource": true,
+    "isActiveInTarget": false,
+    "isBillable": false,
+    "isIncluded": true,
+    "linkedId": null,
+    "memberOf": "timeEntries",
+    "projectId": "2002",
+    "projectName": "Test Project B",
+    "start": 2019-06-23T14:00:20.000Z,
+    "tagIds": [],
+    "tagNames": [],
+    "taskId": null,
+    "taskName": null,
+    "userGroupIds": [],
+    "userId": "6001",
+    "workspaceId": "1001",
+    "year": 2019,
+  },
+  {
+    "clientId": "3002",
+    "description": "This is a test entry (05)",
+    "end": 2019-06-22T19:15:19.000Z,
+    "entryCount": 0,
+    "existsInTarget": false,
+    "id": "8005",
+    "isActive": false,
+    "isActiveInSource": true,
+    "isActiveInTarget": false,
+    "isBillable": false,
+    "isIncluded": true,
+    "linkedId": null,
+    "memberOf": "timeEntries",
+    "projectId": "2002",
+    "projectName": "Test Project B",
+    "start": 2019-06-22T14:00:19.000Z,
+    "tagIds": [],
+    "tagNames": [],
+    "taskId": null,
+    "taskName": null,
+    "userGroupIds": [],
+    "userId": "6001",
+    "workspaceId": "1001",
+    "year": 2019,
+  },
+]
+`;
+
+exports[`within timeEntriesSelectors > the timeEntriesForInclusionsTableSelector matches its snapshot when state.isDuplicateCheckEnabled = false 1`] = `
 [
   {
     "clientId": "3001",
