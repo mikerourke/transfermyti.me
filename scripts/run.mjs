@@ -7,7 +7,6 @@ import {
   writeEntitiesToOutputFile,
 } from "./clockify.mjs";
 import { startServer } from "./server.mjs";
-import { runTests } from "./tests.mjs";
 
 debug.enable("tmt:*");
 
@@ -15,7 +14,6 @@ const RunAction = {
   ClockifyDelete: "clockify-delete",
   ClockifyWrite: "clockify-write",
   Serve: "serve",
-  Tests: "tests",
 };
 
 // noinspection BadExpressionStatementJS
@@ -50,14 +48,15 @@ yargs(hideBin(process.argv))
         default: 9009,
         demandOption: false,
       },
+      silent: {
+        alias: "s",
+        describe: "If true, don't log to the console",
+        type: "boolean",
+        default: false,
+        demandOption: false,
+      },
     },
     handler: startServer,
-  })
-
-  .command({
-    command: RunAction.Tests,
-    describe: "Run the unit tests",
-    handler: runTests,
   })
 
   .fail((message, err) => {

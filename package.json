@@ -17,7 +17,6 @@
     "start:server": "node scripts/run.mjs serve",
     "stylelint": "stylelint \"src/**/*.{css,html,svelte}\"",
     "svelte-check": "svelte-check",
-    "test": "NODE_ENV=test node scripts/run.mjs tests",
     "typecheck": "tsc -p tsconfig.json",
     "vitest": "vitest"
   },

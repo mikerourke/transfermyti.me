@@ -34,8 +34,8 @@ export default defineConfig(({ command, mode }) => ({
     },
     globals: true,
     environment: "jsdom",
-    setupFiles: path.resolve(rootDirPath, "src", "setupVitest.ts"),
-    globalSetup: path.resolve(rootDirPath, "src", "globalSetup.mjs"),
+    setupFiles: path.resolve(rootDirPath, "vitestSetup.ts"),
+    globalSetup: path.resolve(rootDirPath, "vitestGlobalSetup.mjs"),
     cache: {
       dir: path.resolve(rootDirPath, "node_modules", ".vitest"),
     },
