@@ -11,7 +11,7 @@ vi.mock("nanoid", () => ({
 
 const { INVALID_ACTION } = FAKES;
 
-describe.only("within appReducer", () => {
+describe("within appReducer", () => {
   test("returns input state if an invalid action type is passed to the reducer", () => {
     const result = appReducer(initialState, INVALID_ACTION);
 
@@ -62,7 +62,7 @@ describe.only("within appReducer", () => {
     expect(firstNotification.id).toBeDefined();
   });
 
-  describe.only("sets the correct error message when the errorNotificationShown action is dispatched", () => {
+  describe("sets the correct error message when the errorNotificationShown action is dispatched", () => {
     let consoleError: (...args: any) => void;
 
     beforeAll(() => {
