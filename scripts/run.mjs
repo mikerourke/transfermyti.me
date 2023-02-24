@@ -1,4 +1,3 @@
-import debug from "debug";
 import yargs from "yargs";
 import { hideBin } from "yargs/helpers";
 
@@ -7,8 +6,6 @@ import {
   writeEntitiesToOutputFile,
 } from "./clockify.mjs";
 import { startServer } from "./server.mjs";
-
-debug.enable("tmt:*");
 
 const RunAction = {
   ClockifyDelete: "clockify-delete",
