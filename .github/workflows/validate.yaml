@@ -39,14 +39,17 @@ jobs:
       - name: Install Dependencies
         run: pnpm install
 
-      - name: Lint
-        run: pnpm lint
+      - name: Lint Code
+        run: pnpm lint:eslint
+
+      - name: Lint Styles
+        run: pnpm lint:stylelint
 
       - name: Check Types
-        run: pnpm typecheck
+        run: pnpm check:types
 
       - name: Check Svelte
-        run: pnpm svelte-check
+        run: pnpm check:svelte
 
       - name: Test
-        run: pnpm test
+        run: pnpm vitest

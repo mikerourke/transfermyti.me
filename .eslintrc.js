@@ -20,7 +20,6 @@ module.exports = {
     es6: true,
     browser: true,
     node: true,
-    jest: true,
   },
   ignorePatterns: ["node_modules"],
   parserOptions: {

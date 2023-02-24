@@ -9,15 +9,15 @@
   "scripts": {
     "prebuild": "rimraf ./out/build",
     "build": "vite build",
+    "check:svelte": "svelte-check",
+    "check:types": "tsc -p tsconfig.json",
     "clockify:delete": "node scripts/run.mjs clockify-delete",
     "clockify:write": "node scripts/run.mjs clockify-write",
-    "lint": "eslint --cache --ext .js,.mjs,.ts,.svelte scripts src",
-    "prettier": "prettier --cache --write \"{scripts,src}/**/*.{js,mjs,ts,css,html,svelte}\"",
-    "start:web": "vite --port 8080",
+    "lint:eslint": "eslint --cache --ext .js,.mjs,.ts,.svelte scripts src",
+    "lint:stylelint": "stylelint --cache src",
+    "prettier": "prettier --cache --write --ignore-unknown --no-error-on-unmatched-pattern src scripts public",
     "start:server": "node scripts/run.mjs serve",
-    "stylelint": "stylelint \"src/**/*.{css,html,svelte}\"",
-    "svelte-check": "svelte-check",
-    "typecheck": "tsc -p tsconfig.json",
+    "start:web": "vite --port 8080",
     "vitest": "vitest"
   },
   "dependencies": {
