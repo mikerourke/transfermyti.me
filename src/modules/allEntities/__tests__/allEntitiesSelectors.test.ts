@@ -1,5 +1,5 @@
 import { lensPath, set } from "ramda";
-import { describe, test } from "vitest";
+import { describe, expect, test } from "vitest";
 
 import { FAKES } from "~/testUtilities";
 import { EntityGroup, ToolName } from "~/typeDefs";

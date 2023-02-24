@@ -1,5 +1,5 @@
 import { lensProp, set } from "ramda";
-import { describe, test } from "vitest";
+import { describe, expect, test } from "vitest";
 
 import * as tagsActions from "~/modules/tags/tagsActions";
 import { FAKES } from "~/testUtilities";

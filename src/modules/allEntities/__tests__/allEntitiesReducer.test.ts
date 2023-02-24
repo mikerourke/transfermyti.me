@@ -1,4 +1,4 @@
-import { describe, test } from "vitest";
+import { describe, expect, test } from "vitest";
 
 import * as allEntitiesActions from "~/modules/allEntities/allEntitiesActions";
 import { FAKES } from "~/testUtilities";

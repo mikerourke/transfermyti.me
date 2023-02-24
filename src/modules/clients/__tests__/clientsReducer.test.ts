@@ -1,5 +1,5 @@
 import { lensProp, set } from "ramda";
-import { describe, test } from "vitest";
+import { describe, expect, test } from "vitest";
 
 import * as clientsActions from "~/modules/clients/clientsActions";
 import { FAKES } from "~/testUtilities";

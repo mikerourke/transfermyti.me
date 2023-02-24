@@ -1,4 +1,4 @@
-import { describe, test } from "vitest";
+import { describe, expect, test } from "vitest";
 
 import { FAKES } from "~/testUtilities";
 import { EntityGroup } from "~/typeDefs";
