@@ -1,8 +1,8 @@
 import cases from "jest-in-case";
 import { lensProp, set } from "ramda";
 
-import { FAKES } from "~/jestUtilities";
 import * as tagsActions from "~/modules/tags/tagsActions";
+import { FAKES } from "~/testUtilities";
 
 import { initialState, tagsReducer } from "../tagsReducer";
 

@@ -11,7 +11,7 @@
     "build": "vite build",
     "clockify:delete": "node scripts/run.mjs clockify-delete",
     "clockify:write": "node scripts/run.mjs clockify-write",
-    "lint": "eslint --ext \".js,.mjs,.ts,.svelte\" \"{scripts,src}/**/*.{js,mjs,ts,svelte}\"",
+    "lint": "eslint --ext .js,.mjs,.ts,.svelte scripts src",
     "prettier": "prettier --write \"{scripts,src}/**/*.{js,ts,css,html,svelte}\"",
     "start:web": "vite --port 8080",
     "start:server": "node scripts/run.mjs serve",
@@ -46,8 +46,10 @@
     "@types/qs": "^6.9.7",
     "@types/ramda": "^0.28.23",
     "@types/redux-mock-store": "^1.0.3",
+    "@types/testing-library__jest-dom": "^5.14.5",
     "@typescript-eslint/eslint-plugin": "^5.53.0",
     "@typescript-eslint/parser": "^5.53.0",
+    "@vitest/coverage-istanbul": "^0.28.5",
     "babel-jest": "^29.4.3",
     "babel-plugin-module-resolver": "^5.0.0",
     "babel-plugin-transform-inline-environment-variables": "^0.4.4",
@@ -63,6 +65,7 @@
     "jest": "^29.4.3",
     "jest-environment-jsdom": "^29.4.3",
     "jest-in-case": "^1.0.2",
+    "jsdom": "^21.1.0",
     "morgan": "^1.10.0",
     "node-fetch": "^3.3.0",
     "postcss-html": "^1.5.0",
@@ -79,15 +82,7 @@
     "typescript": "^4.9.5",
     "vite": "^4.1.4",
     "vite-tsconfig-paths": "^4.0.5",
+    "vitest": "^0.28.5",
     "yargs": "^17.7.1"
-  },
-  "pnpm": {
-    "peerDependencyRules": {
-      "ignoreMissing": [
-        "redux-saga-test-plan",
-        "goober",
-        "stylelint-a11y"
-      ]
-    }
   }
 }

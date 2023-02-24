@@ -1,8 +1,8 @@
 import cases from "jest-in-case";
 import { lensProp, set } from "ramda";
 
-import { FAKES } from "~/jestUtilities";
 import * as userGroupsActions from "~/modules/userGroups/userGroupsActions";
+import { FAKES } from "~/testUtilities";
 
 import { initialState, userGroupsReducer } from "../userGroupsReducer";
 

@@ -1,6 +1,6 @@
 import cases from "jest-in-case";
 
-import { FAKES } from "~/jestUtilities";
+import { FAKES } from "~/testUtilities";
 import { EntityGroup } from "~/typeDefs";
 
 import * as usersSelectors from "../usersSelectors";

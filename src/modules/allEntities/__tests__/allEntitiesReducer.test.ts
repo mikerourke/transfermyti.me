@@ -1,7 +1,7 @@
 import cases from "jest-in-case";
 
-import { FAKES } from "~/jestUtilities";
 import * as allEntitiesActions from "~/modules/allEntities/allEntitiesActions";
+import { FAKES } from "~/testUtilities";
 import { EntityGroup, FetchStatus, ToolAction, ToolName } from "~/typeDefs";
 
 import { allEntitiesReducer, initialState } from "../allEntitiesReducer";

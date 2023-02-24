@@ -62,6 +62,7 @@ module.exports = {
     "@typescript-eslint/no-var-requires": "off",
     "import/no-cycle": "error",
     "import/no-default-export": "error",
+    "import/no-duplicates": "off",
     "import/no-unresolved": "error",
     "import/order": [
       "error",

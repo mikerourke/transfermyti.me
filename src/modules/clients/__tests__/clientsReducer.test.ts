@@ -1,8 +1,8 @@
 import cases from "jest-in-case";
 import { lensProp, set } from "ramda";
 
-import { FAKES } from "~/jestUtilities";
 import * as clientsActions from "~/modules/clients/clientsActions";
+import { FAKES } from "~/testUtilities";
 
 import { clientsReducer, initialState } from "../clientsReducer";
 

@@ -13,8 +13,6 @@
   import SelectInclusionsStep from "~/steps/selectInclusionsStep/SelectInclusionsStep.svelte";
   import SelectWorkspacesStep from "~/steps/selectWorkspacesStep/SelectWorkspacesStep.svelte";
   import SuccessStep from "~/steps/successStep/SuccessStep.svelte";
-
-  console.log(__ENV__, __USE_LOCAL_API__);
 </script>
 
 <Notifications />

@@ -1,7 +1,7 @@
 import cases from "jest-in-case";
 import { lensPath, set } from "ramda";
 
-import { FAKES } from "~/jestUtilities";
+import { FAKES } from "~/testUtilities";
 import { EntityGroup, ToolName } from "~/typeDefs";
 
 const { REDUX_STATE } = FAKES;

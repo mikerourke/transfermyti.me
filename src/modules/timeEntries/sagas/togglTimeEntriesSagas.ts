@@ -2,7 +2,7 @@ import differenceInSeconds from "date-fns/differenceInSeconds";
 import endOfYear from "date-fns/endOfYear";
 import format from "date-fns/format";
 import startOfYear from "date-fns/startOfYear";
-import qs from "qs";
+import { stringify } from "qs";
 import { isNil, propOr } from "ramda";
 import type { SagaIterator } from "redux-saga";
 import { call, delay, select } from "redux-saga/effects";
@@ -20,7 +20,7 @@ import { credentialsByToolNameSelector } from "~/modules/credentials/credentials
 import { projectIdToLinkedIdSelector } from "~/modules/projects/projectsSelectors";
 import { tagIdsByNameBySelectorFactory } from "~/modules/tags/tagsSelectors";
 import { taskIdToLinkedIdSelector } from "~/modules/tasks/tasksSelectors";
-import { EntityGroup, type TimeEntry, ToolName } from "~/typeDefs";
+import { EntityGroup, ToolName, type TimeEntry } from "~/typeDefs";
 import { validStringify } from "~/utilities/textTransforms";
 
 const togglApiDelay = getApiDelayForTool(ToolName.Toggl);
@@ -320,7 +320,7 @@ function* fetchTogglTimeEntriesForYearAndPage(
   const firstDay = format(startOfYear(currentDate), DATE_FORMAT);
   const lastDay = format(endOfYear(currentDate), DATE_FORMAT);
 
-  const query = qs.stringify({
+  const query = stringify({
     workspace_id: workspaceId,
     since: firstDay,
     until: lastDay,

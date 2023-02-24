@@ -1,8 +1,8 @@
 import cases from "jest-in-case";
 import { lensProp, set } from "ramda";
 
-import { FAKES } from "~/jestUtilities";
 import * as timeEntriesActions from "~/modules/timeEntries/timeEntriesActions";
+import { FAKES } from "~/testUtilities";
 
 import { initialState, timeEntriesReducer } from "../timeEntriesReducer";
 

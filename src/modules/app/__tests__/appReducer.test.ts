@@ -1,7 +1,7 @@
 import cases from "jest-in-case";
 
-import { FAKES } from "~/jestUtilities";
 import * as appActions from "~/modules/app/appActions";
+import { FAKES } from "~/testUtilities";
 
 import { appReducer, initialState } from "../appReducer";
 

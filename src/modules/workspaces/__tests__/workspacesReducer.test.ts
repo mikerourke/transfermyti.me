@@ -1,8 +1,8 @@
 import cases from "jest-in-case";
 
-import { FAKES } from "~/jestUtilities";
 import { allEntitiesFlushed } from "~/modules/allEntities/allEntitiesActions";
 import * as workspacesActions from "~/modules/workspaces/workspacesActions";
+import { FAKES } from "~/testUtilities";
 import { EntityGroup, Mapping } from "~/typeDefs";
 
 import { initialState, workspacesReducer } from "../workspacesReducer";

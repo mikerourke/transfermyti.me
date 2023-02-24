@@ -27,6 +27,7 @@ if (process.env.CI) {
 export async function runTests() {
   await startServer({ emptyTools: [], port: 9009 });
 
+  // eslint-disable-next-line import/no-named-as-default-member
   await jest.run(argv);
 
   process.exit(0);

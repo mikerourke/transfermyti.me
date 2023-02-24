@@ -1,4 +1,4 @@
-import qs from "qs";
+import { stringify } from "qs";
 import { isNil } from "ramda";
 import type { SagaIterator } from "redux-saga";
 import { call, delay } from "redux-saga/effects";
@@ -29,7 +29,7 @@ export function* fetchPaginatedFromClockify<TEntity>(
   const allEntityRecords: TEntity[] = [];
 
   while (keepFetching) {
-    const query = qs.stringify({
+    const query = stringify({
       page: currentPage,
       "page-size": CLOCKIFY_API_PAGE_SIZE,
       ...queryParams,

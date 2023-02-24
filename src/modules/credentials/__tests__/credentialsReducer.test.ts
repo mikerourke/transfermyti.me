@@ -1,5 +1,5 @@
-import { FAKES } from "~/jestUtilities";
 import * as credentialsActions from "~/modules/credentials/credentialsActions";
+import { FAKES } from "~/testUtilities";
 import { FetchStatus, Mapping } from "~/typeDefs";
 
 import { credentialsReducer, initialState } from "../credentialsReducer";

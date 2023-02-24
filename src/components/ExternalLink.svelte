@@ -1,5 +1,5 @@
 <script lang="ts">
-  import clsx from "clsx";
+  import { clsx } from "clsx";
   import { css } from "goober";
 
   import Icon from "~/components/Icon.svelte";

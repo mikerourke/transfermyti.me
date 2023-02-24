@@ -26,8 +26,7 @@
     "sourceMap": false,
     "strict": true,
     "suppressImplicitAnyIndexErrors": true,
-    "target": "ES2017",
-    "types": ["jest", "svelte"]
+    "target": "ES2017"
   },
   "include": ["src/**/*.ts", "src/**/*.svelte", "src/**/*.d.ts"],
   "exclude": ["node_modules/*", "scripts/*"]

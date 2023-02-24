@@ -1,4 +1,4 @@
-import { FAKES } from "~/jestUtilities";
+import { FAKES } from "~/testUtilities";
 
 import * as appSelectors from "../appSelectors";
 
