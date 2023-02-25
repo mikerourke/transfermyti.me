@@ -1,6 +1,7 @@
 import { expectSaga } from "redux-saga-test-plan";
 import * as matchers from "redux-saga-test-plan/matchers";
 import { throwError } from "redux-saga-test-plan/providers";
+import { describe, test, vi } from "vitest";
 
 import * as allEntitiesActions from "~/modules/allEntities/allEntitiesActions";
 import * as clientsSagas from "~/modules/clients/sagas/clientsSagas";
@@ -12,8 +13,8 @@ import { EntityGroup } from "~/typeDefs";
 
 import { allEntitiesSaga } from "../allEntitiesSaga";
 
-jest.mock("~/modules/app/workflowStep");
-jest.mock("~/utilities/environment");
+vi.mock("~/modules/app/workflowStep");
+vi.mock("~/utilities/environment");
 
 describe("within allEntitiesSaga", () => {
   test("the createAllEntitiesSaga dispatches the correct actions", () => {

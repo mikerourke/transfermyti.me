@@ -1,10 +1,12 @@
+import { vi } from "vitest";
+
 import type { ToolName } from "~/typeDefs";
 
-export const isDevelopmentMode = jest.fn(() => false);
+export const isDevelopmentMode = vi.fn(() => false);
 
-export const isTestingMode = jest.fn(() => false);
+export const isTestingMode = vi.fn(() => false);
 
 export const getApiUrl = (toolName: ToolName): string =>
   `http://localhost:9009/api/${toolName}`;
 
-export const isUseLocalApi = jest.fn(() => true);
+export const isUseLocalApi = vi.fn(() => true);

@@ -1,18 +1,17 @@
-import fsPromises from "node:fs/promises";
-import path from "node:path";
-import qs from "node:querystring";
+import { rm } from "node:fs/promises";
+import { join, resolve } from "node:path";
+import { stringify } from "node:querystring";
+import { setTimeout } from "node:timers/promises";
 import { fileURLToPath, URL } from "node:url";
 
-import fetch from "node-fetch";
+import { Listr } from "listr2";
 
-import { readJsonSync, TaskRunner, writeJson } from "./utilities.mjs";
-
-const task = new TaskRunner("clockify");
+import { readJsonSync, writeJson } from "./utilities.mjs";
 
 const API_DELAY = 500;
 
 const httpEnvPath = fileURLToPath(
-  new URL(path.join("..", "http-client.private.env.json"), import.meta.url),
+  new URL(join("..", "http-client.private.env.json"), import.meta.url),
 );
 
 let httpEnv = {
@@ -42,24 +41,84 @@ const clockifyUserId = httpEnv.development["clockify-user-id"];
  * Deletes the time entries, clients, tags, and projects from all workspaces.
  */
 export async function deleteEntitiesInWorkspaces() {
-  const workspaces = await fetchValidWorkspaces();
+  const tasks = new Listr(
+    [
+      {
+        title: "Getting valid workspaces",
+        task: async (ctx) => {
+          ctx.workspaces = await fetchValidWorkspaces();
+        },
+      },
+      {
+        title: "Deleting entities in all workspaces",
+        task: async (ctx, task) => {
+          const subTasks = [];
 
-  // Wait 1 second between each entity group, just to hedge my bets:
-  for (const workspace of workspaces) {
-    task.log(`Processing ${workspace.name}...`);
+          for (const workspace of ctx.workspaces) {
+            subTasks.push({
+              title: `Deleting entities in ${workspace.name}`,
+              task: async (ctx, task) => {
+                return task.newListr(
+                  [
+                    {
+                      title: `Deleting time entries in ${workspace.name}`,
+                      task: async (ctx, task) => {
+                        await deleteEntityGroupInWorkspace(
+                          workspace.id,
+                          "time-entries",
+                          task,
+                        );
+                        await setTimeout(1_000);
+                      },
+                    },
+                    {
+                      title: `Deleting clients in ${workspace.name}`,
+                      task: async (ctx, task) => {
+                        await deleteEntityGroupInWorkspace(
+                          workspace.id,
+                          "clients",
+                          task,
+                        );
+                        await setTimeout(1_000);
+                      },
+                    },
+                    {
+                      title: `Deleting tags in ${workspace.name}`,
+                      task: async (ctx, task) => {
+                        await deleteEntityGroupInWorkspace(
+                          workspace.id,
+                          "tags",
+                          task,
+                        );
+                        await setTimeout(1_000);
+                      },
+                    },
+                    {
+                      title: `Deleting projects in ${workspace.name}`,
+                      task: async (ctx, task) => {
+                        await deleteEntityGroupInWorkspace(
+                          workspace.id,
+                          "projects",
+                          task,
+                        );
+                        await setTimeout(1_000);
+                      },
+                    },
+                  ],
+                  { concurrent: false },
+                );
+              },
+            });
+          }
 
-    await deleteEntityGroupInWorkspace(workspace.id, "time-entries");
-    await pause(1000);
+          return task.newListr(subTasks, { concurrent: false });
+        },
+      },
+    ],
+    { concurrent: false },
+  );
 
-    await deleteEntityGroupInWorkspace(workspace.id, "clients");
-    await pause(1000);
-
-    await deleteEntityGroupInWorkspace(workspace.id, "tags");
-    await pause(1000);
-
-    await deleteEntityGroupInWorkspace(workspace.id, "projects");
-    task.log(`Processing complete for ${workspace.name}`);
-  }
+  await tasks.run({ workspaces: [] });
 }
 
 /**
@@ -67,87 +126,178 @@ export async function deleteEntitiesInWorkspaces() {
  * entries for the user and outputs them to a "clockify.json" file in the CWD.
  */
 export async function writeEntitiesToOutputFile() {
-  const outputPath = path.resolve(process.cwd(), "clockify.json");
+  const outputPath = resolve(process.cwd(), "clockify.json");
 
-  await fsPromises.rm(outputPath);
-
-  const workspaces = await fetchValidWorkspaces();
-  const dataByWorkspaceName = {};
-
-  const addEntityGroupToWorkspaceData = async (id, name, entityGroup) => {
-    // noinspection UnnecessaryLocalVariableJS
-    const contents = await getEntityGroupRecordsInWorkspace(id, entityGroup);
-
-    dataByWorkspaceName[name][entityGroup] = contents;
-  };
-
-  for (const { id, name, ...workspace } of workspaces) {
-    task.log(`Processing ${name}...`);
-
-    dataByWorkspaceName[name].data = { id, ...workspace };
-
-    await addEntityGroupToWorkspaceData(id, name, "projects");
-    await pause(1000);
-
-    await addEntityGroupToWorkspaceData(id, name, "clients");
-    await pause(1000);
-
-    await addEntityGroupToWorkspaceData(id, name, "tags");
-    await pause(1000);
-
-    await addEntityGroupToWorkspaceData(id, name, "time-entries");
+  try {
+    await rm(outputPath);
+  } catch {
+    // Do nothing, file probably doesn't exist.
   }
 
-  await writeJson(outputPath, dataByWorkspaceName);
-  task.log("Clockify entities written to file!");
+  const addEntityGroupToWorkspaceData = async ({
+    workspace,
+    entityGroup,
+    ctx,
+    task,
+  }) => {
+    // noinspection UnnecessaryLocalVariableJS
+    const contents = await getEntityGroupRecordsInWorkspace(
+      workspace.id,
+      entityGroup,
+      task,
+    );
+
+    ctx.dataByWorkspaceName[workspace.name][entityGroup] = contents;
+
+    await setTimeout(1_000);
+  };
+
+  const tasks = new Listr(
+    [
+      {
+        title: "Fetching workspaces",
+        task: async (ctx) => {
+          ctx.workspaces = await fetchValidWorkspaces();
+        },
+      },
+      {
+        title: "Fetching entities in all workspaces",
+        task: async (ctx, task) => {
+          const subTasks = [];
+
+          for (const workspace of ctx.workspaces) {
+            ctx.dataByWorkspaceName[workspace.name] = {
+              data: workspace,
+            };
+
+            subTasks.push({
+              title: `Fetching entities in ${workspace.name}`,
+              task: async (ctx, task) => {
+                return task.newListr(
+                  [
+                    {
+                      title: `Adding projects to ${workspace.name}`,
+                      task: async (ctx, task) =>
+                        await addEntityGroupToWorkspaceData({
+                          workspace,
+                          entityGroup: "projects",
+                          ctx,
+                          task,
+                        }),
+                    },
+                    {
+                      title: `Adding clients to ${workspace.name}`,
+                      task: async (ctx, task) =>
+                        await addEntityGroupToWorkspaceData({
+                          workspace,
+                          entityGroup: "clients",
+                          ctx,
+                          task,
+                        }),
+                    },
+                    {
+                      title: `Adding tags to ${workspace.name}`,
+                      task: async (ctx, task) =>
+                        await addEntityGroupToWorkspaceData({
+                          workspace,
+                          entityGroup: "tags",
+                          ctx,
+                          task,
+                        }),
+                    },
+                    {
+                      title: `Adding time entries to ${workspace.name}`,
+                      task: async (ctx, task) =>
+                        await addEntityGroupToWorkspaceData({
+                          workspace,
+                          entityGroup: "time-entries",
+                          ctx,
+                          task,
+                        }),
+                    },
+                  ],
+                  { concurrent: false },
+                );
+              },
+            });
+          }
+
+          return task.newListr(subTasks, { concurrent: false });
+        },
+      },
+      {
+        title: "Writing entries to JSON file",
+        task: async (ctx, task) => {
+          await writeJson(outputPath, ctx.dataByWorkspaceName);
+
+          task.output = `Clockify entities written to ${outputPath}`;
+        },
+      },
+    ],
+    { concurrent: false },
+  );
+
+  await tasks.run({ workspaces: [], dataByWorkspaceName: {} });
 }
 
 /**
  * Deletes all the entities in the specified group from the specified workspace.
+ * @param {string} workspaceId
+ * @param {string} entityGroup
+ * @param {import("listr2").ListrTaskWrapper} task
  */
-async function deleteEntityGroupInWorkspace(workspaceId, entityGroup) {
+async function deleteEntityGroupInWorkspace(workspaceId, entityGroup, task) {
   if (entityGroup === "time-entries") {
-    return await deleteTimeEntriesInWorkspace(workspaceId);
+    return await deleteTimeEntriesInWorkspace(workspaceId, task);
   }
 
   const entityRecords = await getEntityGroupRecordsInWorkspace(
     workspaceId,
     entityGroup,
+    task,
   );
 
   if (!entityRecords || entityRecords.length === 0) {
-    return task.log(`No ${entityGroup} to delete.`);
+    return (task.ouput = `No ${entityGroup} to delete.`);
   }
 
   const baseEndpoint = getEntityGroupEndpoint(workspaceId, entityGroup);
+
   const apiDeleteEntity = (entityId) =>
     clockifyFetch(`${baseEndpoint}/${entityId}`, { method: "DELETE" });
 
-  task.log(`Deleting ${entityGroup} in workspace...`);
+  task.output = `Deleting ${entityGroup} in workspace...`;
 
   for (const { id, name } of entityRecords) {
     try {
       await apiDeleteEntity(id);
 
-      await pause(API_DELAY);
+      await setTimeout(API_DELAY);
 
-      task.log(`Delete ${name} successful`);
+      task.output = `Delete ${name} successful`;
     } catch (err) {
-      task.log(`Error deleting ${entityGroup}: ${err}`);
+      task.output = `Error deleting ${entityGroup}: ${err}`;
     }
   }
 }
 
 /**
  * Fetches the records in the specified entity group and workspace.
+ * @param {string} workspaceId
+ * @param {string} entityGroup
+ * @param {import("listr2").ListrTaskWrapper} task
  */
-async function getEntityGroupRecordsInWorkspace(workspaceId, entityGroup) {
+async function getEntityGroupRecordsInWorkspace(
+  workspaceId,
+  entityGroup,
+  task,
+) {
   if (entityGroup === "time-entries") {
-    return await fetchTimeEntriesInWorkspace(workspaceId);
+    return await fetchTimeEntriesInWorkspace(workspaceId, task);
+  } else {
+    const endpoint = getEntityGroupEndpoint(workspaceId, entityGroup);
+    return await clockifyFetch(endpoint);
   }
-
-  const endpoint = getEntityGroupEndpoint(workspaceId, entityGroup);
-  return await clockifyFetch(endpoint);
 }
 
 /**
@@ -159,9 +309,11 @@ function getEntityGroupEndpoint(workspaceId, entityGroup) {
 
 /**
  * Deletes all the time entries in the specified workspace.
+ * @param {string} workspaceId
+ * @param {import("listr2").ListrTaskWrapper} task
  */
-async function deleteTimeEntriesInWorkspace(workspaceId) {
-  const timeEntries = await fetchTimeEntriesInWorkspace(workspaceId);
+async function deleteTimeEntriesInWorkspace(workspaceId, task) {
+  const timeEntries = await fetchTimeEntriesInWorkspace(workspaceId, task);
 
   const apiDeleteTimeEntryById = (entryId) =>
     clockifyFetch(`/workspaces/${workspaceId}/time-entries/${entryId}`, {
@@ -175,31 +327,23 @@ async function deleteTimeEntriesInWorkspace(workspaceId) {
     try {
       await apiDeleteTimeEntryById(id);
 
-      task.log(`Deleted ${currentEntry} of ${totalEntryCount}`);
+      task.output = `Deleted ${currentEntry} of ${totalEntryCount}`;
 
       currentEntry += 1;
 
-      await pause(API_DELAY);
+      await setTimeout(API_DELAY);
     } catch (err) {
-      task.log(`Error deleting time entries: ${err}`);
+      task.output = `Error deleting time entries: ${err}`;
     }
   }
 }
 
 /**
- * Pause execution for the specified milliseconds. This is used to ensure the
- * rate limits aren't exceeded.
- */
-function pause(duration = 1000) {
-  return new Promise((resolve) => {
-    setTimeout(resolve, duration);
-  });
-}
-
-/**
  * Fetches all time entries (for all years) for the specified workspace ID.
+ * @param {string} workspaceId
+ * @param {import("listr2").ListrTaskWrapper} task
  */
-async function fetchTimeEntriesInWorkspace(workspaceId) {
+async function fetchTimeEntriesInWorkspace(workspaceId, task) {
   const apiFetchTimeEntriesForYear = (page) => {
     const endpointUrl = [
       "workspaces",
@@ -208,7 +352,7 @@ async function fetchTimeEntriesInWorkspace(workspaceId) {
       clockifyUserId,
       "time-entries",
     ].join("/");
-    const query = qs.stringify({ page, "page-size": 100 });
+    const query = stringify({ page, "page-size": 100 });
 
     return clockifyFetch(`/${endpointUrl}?${query}`, {
       method: "GET",
@@ -228,11 +372,11 @@ async function fetchTimeEntriesInWorkspace(workspaceId) {
       allEntries.push(timeEntries);
 
       // prettier-ignore
-      task.log(`Fetched ${timeEntries.length} entries for page ${currentPage}`);
+      task.output = `Fetched ${timeEntries.length} entries for page ${currentPage}`;
     } catch (err) {
       keepFetching = false;
 
-      task.log(`Error fetching time entries: ${err}`);
+      task.output = `Error fetching time entries: ${err}`;
     }
 
     currentPage += 1;
@@ -263,6 +407,8 @@ async function fetchValidWorkspaces() {
 /**
  * Makes a fetch call to the Clockify API to the specified endpoint with
  * specified options.
+ * @param {string} endpoint
+ * @param {RequestInit | undefined} [options]
  */
 async function clockifyFetch(endpoint, options) {
   let rootUrl = "https://api.clockify.me/api";

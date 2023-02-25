@@ -1,8 +1,8 @@
-import cases from "jest-in-case";
 import { lensProp, set } from "ramda";
+import { describe, expect, test } from "vitest";
 
-import { FAKES } from "~/jestUtilities";
 import * as usersActions from "~/modules/users/usersActions";
+import { FAKES } from "~/testUtilities";
 
 import { initialState, usersReducer } from "../usersReducer";
 
@@ -26,19 +26,8 @@ describe("within usersReducer", () => {
     expect(result).toEqual(initialState);
   });
 
-  cases(
-    "the isFetching is set to the correct value based on the dispatched action",
-    (options) => {
-      const updatedState = {
-        ...REDUX_STATE.users,
-        isFetching: options.initialStatus,
-      };
-
-      const result = usersReducer(updatedState, options.action);
-
-      expect(result.isFetching).toEqual(options.expectedStatus);
-    },
-    [
+  describe("the isFetching is set to the correct value based on the dispatched action", () => {
+    const testCases = [
       {
         name: "when the createUsers.success action is dispatched",
         initialStatus: true,
@@ -87,8 +76,21 @@ describe("within usersReducer", () => {
         action: usersActions.fetchUsers.failure(),
         expectedStatus: false,
       },
-    ],
-  );
+    ];
+
+    for (const testCase of testCases) {
+      test.concurrent(testCase.name, async () => {
+        const updatedState = {
+          ...REDUX_STATE.users,
+          isFetching: testCase.initialStatus,
+        };
+
+        const result = usersReducer(updatedState, testCase.action);
+
+        expect(result.isFetching).toEqual(testCase.expectedStatus);
+      });
+    }
+  });
 
   test(`the isUserIncludedToggled action flips the "isIncluded" value of the user with id = payload`, () => {
     const updatedState = set(

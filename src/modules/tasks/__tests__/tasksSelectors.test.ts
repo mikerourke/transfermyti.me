@@ -1,6 +1,6 @@
-import cases from "jest-in-case";
+import { describe, expect, test } from "vitest";
 
-import { FAKES } from "~/jestUtilities";
+import { FAKES } from "~/testUtilities";
 
 import * as tasksSelectors from "../tasksSelectors";
 
@@ -52,14 +52,8 @@ describe("within tasksSelectors", () => {
     expect(result).toEqual(MOCK_STATE.tasks.source);
   });
 
-  cases(
-    "the selectors match their snapshots",
-    (options) => {
-      const result = options.selector(MOCK_STATE);
-
-      expect(result).toMatchSnapshot();
-    },
-    [
+  describe("the selectors match their snapshots", () => {
+    const testCases = [
       {
         name: "for the includedSourceTasksSelector",
         selector: tasksSelectors.includedSourceTasksSelector,
@@ -80,8 +74,16 @@ describe("within tasksSelectors", () => {
         name: "for the tasksTotalCountsByTypeSelector",
         selector: tasksSelectors.tasksTotalCountsByTypeSelector,
       },
-    ],
-  );
+    ];
+
+    for (const testCase of testCases) {
+      test.concurrent(testCase.name, async () => {
+        const result = testCase.selector(MOCK_STATE);
+
+        expect(result).toMatchSnapshot();
+      });
+    }
+  });
 
   test("the includedSourceTasksCountSelector returns the count of included source tasks", () => {
     const result = tasksSelectors.includedSourceTasksCountSelector(MOCK_STATE);
@@ -89,22 +91,8 @@ describe("within tasksSelectors", () => {
     expect(result).toBe(3);
   });
 
-  cases(
-    "the tasksForInclusionsTableSelector matches its snapshot based on state.allEntities.areExistsInTargetShown",
-    (options) => {
-      const updatedState = {
-        ...MOCK_STATE,
-        allEntities: {
-          ...MOCK_STATE.allEntities,
-          areExistsInTargetShown: options.areExistsInTargetShown,
-        },
-      };
-
-      const result = tasksSelectors.tasksForInclusionsTableSelector(updatedState);
-
-      expect(result).toMatchSnapshot();
-    },
-    [
+  describe("the tasksForInclusionsTableSelector matches its snapshot based on state.allEntities.areExistsInTargetShown", () => {
+    const testCases = [
       {
         name: "when state.allEntities.areExistsInTargetShown = true",
         areExistsInTargetShown: true,
@@ -113,6 +101,22 @@ describe("within tasksSelectors", () => {
         name: "when state.allEntities.areExistsInTargetShown = false",
         areExistsInTargetShown: false,
       },
-    ],
-  );
+    ];
+
+    for (const testCase of testCases) {
+      test.concurrent(testCase.name, async () => {
+        const updatedState = {
+          ...MOCK_STATE,
+          allEntities: {
+            ...MOCK_STATE.allEntities,
+            areExistsInTargetShown: testCase.areExistsInTargetShown,
+          },
+        };
+
+        const result = tasksSelectors.tasksForInclusionsTableSelector(updatedState);
+
+        expect(result).toMatchSnapshot();
+      });
+    }
+  });
 });

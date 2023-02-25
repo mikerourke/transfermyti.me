@@ -1,8 +1,8 @@
-import cases from "jest-in-case";
 import { lensProp, set } from "ramda";
+import { describe, expect, test } from "vitest";
 
-import { FAKES } from "~/jestUtilities";
 import * as clientsActions from "~/modules/clients/clientsActions";
+import { FAKES } from "~/testUtilities";
 
 import { clientsReducer, initialState } from "../clientsReducer";
 
@@ -26,18 +26,8 @@ describe("within clientsReducer", () => {
     expect(result).toEqual(initialState);
   });
 
-  cases(
-    "the isFetching is set to the correct value based on the dispatched action",
-    (options) => {
-      const updatedState = {
-        ...REDUX_STATE.clients,
-        isFetching: options.initialStatus,
-      };
-      const result = clientsReducer(updatedState, options.action);
-
-      expect(result.isFetching).toEqual(options.expectedStatus);
-    },
-    [
+  describe("the isFetching is set to the correct value based on the dispatched action", () => {
+    const testCases = [
       {
         name: "when the createClients.success action is dispatched",
         initialStatus: true,
@@ -86,8 +76,20 @@ describe("within clientsReducer", () => {
         action: clientsActions.fetchClients.failure(),
         expectedStatus: false,
       },
-    ],
-  );
+    ];
+
+    for (const testCase of testCases) {
+      test.concurrent(testCase.name, async () => {
+        const updatedState = {
+          ...REDUX_STATE.clients,
+          isFetching: testCase.initialStatus,
+        };
+        const result = clientsReducer(updatedState, testCase.action);
+
+        expect(result.isFetching).toEqual(testCase.expectedStatus);
+      });
+    }
+  });
 
   test(`the isClientIncludedToggled action flips the "isIncluded" value of the client with id = payload`, () => {
     const updatedState = set(

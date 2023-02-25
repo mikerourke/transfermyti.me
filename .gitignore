@@ -68,5 +68,4 @@ http-client.private.env.json
 dist
 .env
 
-out/*
-!out/.gitkeep
+.stylelintcache

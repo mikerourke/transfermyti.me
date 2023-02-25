@@ -1,6 +1,6 @@
-import cases from "jest-in-case";
+import { describe, expect, test } from "vitest";
 
-import { FAKES } from "~/jestUtilities";
+import { FAKES } from "~/testUtilities";
 import { EntityGroup, ToolName } from "~/typeDefs";
 
 import * as clientsSelectors from "../clientsSelectors";
@@ -61,14 +61,8 @@ describe("within clientsSelectors", () => {
     expect(result).toEqual(MOCK_STATE.clients.source);
   });
 
-  cases(
-    "the selectors match their snapshots",
-    (options) => {
-      const result = options.selector(MOCK_STATE);
-
-      expect(result).toMatchSnapshot();
-    },
-    [
+  describe("the selectors match their snapshots", () => {
+    const testCases = [
       {
         name: "for the includedSourceClientsSelector",
         selector: clientsSelectors.includedSourceClientsSelector,
@@ -89,25 +83,19 @@ describe("within clientsSelectors", () => {
         name: "for the clientsTotalCountsByTypeSelector",
         selector: clientsSelectors.clientsTotalCountsByTypeSelector,
       },
-    ],
-  );
+    ];
 
-  cases(
-    "the clientsForInclusionsTableSelector matches its snapshot based on state.allEntities.areExistsInTargetShown",
-    (options) => {
-      const updatedState = {
-        ...MOCK_STATE,
-        allEntities: {
-          ...MOCK_STATE.allEntities,
-          areExistsInTargetShown: options.areExistsInTargetShown,
-        },
-      };
+    for (const testCase of testCases) {
+      test.concurrent(testCase.name, async () => {
+        const result = testCase.selector(MOCK_STATE);
 
-      const result = clientsSelectors.clientsForInclusionsTableSelector(updatedState);
+        expect(result).toMatchSnapshot();
+      });
+    }
+  });
 
-      expect(result).toMatchSnapshot();
-    },
-    [
+  describe("the clientsForInclusionsTableSelector matches its snapshot based on state.allEntities.areExistsInTargetShown", () => {
+    const testCases = [
       {
         name: "when state.allEntities.areExistsInTargetShown = true",
         areExistsInTargetShown: true,
@@ -116,8 +104,24 @@ describe("within clientsSelectors", () => {
         name: "when state.allEntities.areExistsInTargetShown = false",
         areExistsInTargetShown: false,
       },
-    ],
-  );
+    ];
+
+    for (const testCase of testCases) {
+      test.concurrent(testCase.name, async () => {
+        const updatedState = {
+          ...MOCK_STATE,
+          allEntities: {
+            ...MOCK_STATE.allEntities,
+            areExistsInTargetShown: testCase.areExistsInTargetShown,
+          },
+        };
+
+        const result = clientsSelectors.clientsForInclusionsTableSelector(updatedState);
+
+        expect(result).toMatchSnapshot();
+      });
+    }
+  });
 
   test("the clientIdsByNameSelectorFactory matches its snapshot", () => {
     const getClientIdsByName = clientsSelectors.clientIdsByNameSelectorFactory(ToolName.Toggl);

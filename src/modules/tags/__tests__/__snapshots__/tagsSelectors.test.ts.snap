@@ -1,8 +1,8 @@
-// Jest Snapshot v1, https://goo.gl/fbAQLP
+// Vitest Snapshot v1
 
-exports[`within tagsSelectors the selectors match their snapshots for the includedSourceTagsSelector 1`] = `
-Array [
-  Object {
+exports[`within tagsSelectors > the selectors match their snapshots > for the includedSourceTagsSelector 1`] = `
+[
+  {
     "entryCount": 0,
     "id": "4006",
     "isIncluded": true,
@@ -11,7 +11,7 @@ Array [
     "name": "tag-f",
     "workspaceId": "1001",
   },
-  Object {
+  {
     "entryCount": 0,
     "id": "4007",
     "isIncluded": true,
@@ -20,7 +20,7 @@ Array [
     "name": "tag-g",
     "workspaceId": "1001",
   },
-  Object {
+  {
     "entryCount": 0,
     "id": "4008",
     "isIncluded": true,
@@ -29,7 +29,7 @@ Array [
     "name": "tag-h",
     "workspaceId": "1001",
   },
-  Object {
+  {
     "entryCount": 0,
     "id": "4009",
     "isIncluded": true,
@@ -41,9 +41,9 @@ Array [
 ]
 `;
 
-exports[`within tagsSelectors the selectors match their snapshots for the sourceTagsForTransferSelector 1`] = `
-Array [
-  Object {
+exports[`within tagsSelectors > the selectors match their snapshots > for the sourceTagsForTransferSelector 1`] = `
+[
+  {
     "entryCount": 0,
     "id": "4006",
     "isIncluded": true,
@@ -52,7 +52,7 @@ Array [
     "name": "tag-f",
     "workspaceId": "1001",
   },
-  Object {
+  {
     "entryCount": 0,
     "id": "4007",
     "isIncluded": true,
@@ -61,7 +61,7 @@ Array [
     "name": "tag-g",
     "workspaceId": "1001",
   },
-  Object {
+  {
     "entryCount": 0,
     "id": "4008",
     "isIncluded": true,
@@ -70,7 +70,7 @@ Array [
     "name": "tag-h",
     "workspaceId": "1001",
   },
-  Object {
+  {
     "entryCount": 0,
     "id": "4009",
     "isIncluded": true,
@@ -82,16 +82,16 @@ Array [
 ]
 `;
 
-exports[`within tagsSelectors the selectors match their snapshots for the tagsTotalCountsByTypeSelector 1`] = `
-Object {
+exports[`within tagsSelectors > the selectors match their snapshots > for the tagsTotalCountsByTypeSelector 1`] = `
+{
   "entryCount": 3,
   "existsInTarget": 3,
   "isIncluded": 4,
 }
 `;
 
-exports[`within tagsSelectors the tagIdsByNameSelectorFactory matches its snapshot 1`] = `
-Object {
+exports[`within tagsSelectors > the tagIdsByNameSelectorFactory matches its snapshot 1`] = `
+{
   "tag-a": "4001",
   "tag-b": "4002",
   "tag-c": "4003",
@@ -104,86 +104,9 @@ Object {
 }
 `;
 
-exports[`within tagsSelectors the tagsForInclusionsTableSelector matches its snapshot based on state.allEntities.areExistsInTargetShown when state.allEntities.areExistsInTargetShown = false 1`] = `
-Array [
-  Object {
-    "entryCount": 0,
-    "existsInTarget": false,
-    "id": "4004",
-    "isActiveInSource": true,
-    "isActiveInTarget": false,
-    "isIncluded": false,
-    "linkedId": null,
-    "memberOf": "tags",
-    "name": "tag-d",
-    "workspaceId": "1001",
-  },
-  Object {
-    "entryCount": 0,
-    "existsInTarget": false,
-    "id": "4005",
-    "isActiveInSource": true,
-    "isActiveInTarget": false,
-    "isIncluded": false,
-    "linkedId": null,
-    "memberOf": "tags",
-    "name": "tag-e",
-    "workspaceId": "1001",
-  },
-  Object {
-    "entryCount": 0,
-    "existsInTarget": false,
-    "id": "4006",
-    "isActiveInSource": true,
-    "isActiveInTarget": false,
-    "isIncluded": true,
-    "linkedId": null,
-    "memberOf": "tags",
-    "name": "tag-f",
-    "workspaceId": "1001",
-  },
-  Object {
-    "entryCount": 0,
-    "existsInTarget": false,
-    "id": "4007",
-    "isActiveInSource": true,
-    "isActiveInTarget": false,
-    "isIncluded": true,
-    "linkedId": null,
-    "memberOf": "tags",
-    "name": "tag-g",
-    "workspaceId": "1001",
-  },
-  Object {
-    "entryCount": 0,
-    "existsInTarget": false,
-    "id": "4008",
-    "isActiveInSource": true,
-    "isActiveInTarget": false,
-    "isIncluded": true,
-    "linkedId": null,
-    "memberOf": "tags",
-    "name": "tag-h",
-    "workspaceId": "1001",
-  },
-  Object {
-    "entryCount": 0,
-    "existsInTarget": false,
-    "id": "4009",
-    "isActiveInSource": true,
-    "isActiveInTarget": false,
-    "isIncluded": true,
-    "linkedId": null,
-    "memberOf": "tags",
-    "name": "tag-i",
-    "workspaceId": "1001",
-  },
-]
-`;
-
-exports[`within tagsSelectors the tagsForInclusionsTableSelector matches its snapshot based on state.allEntities.areExistsInTargetShown when state.allEntities.areExistsInTargetShown = true 1`] = `
-Array [
-  Object {
+exports[`within tagsSelectors > the tagsForInclusionsTableSelector matches its snapshot based on state.allEntities.areExistsInTargetShown > when state.allEntities.areExistsInTargetShown = false 1`] = `
+[
+  {
     "entryCount": 1,
     "existsInTarget": true,
     "id": "4001",
@@ -195,7 +118,7 @@ Array [
     "name": "tag-a",
     "workspaceId": "1001",
   },
-  Object {
+  {
     "entryCount": 1,
     "existsInTarget": true,
     "id": "4002",
@@ -207,7 +130,7 @@ Array [
     "name": "tag-b",
     "workspaceId": "1001",
   },
-  Object {
+  {
     "entryCount": 1,
     "existsInTarget": true,
     "id": "4003",
@@ -219,7 +142,7 @@ Array [
     "name": "tag-c",
     "workspaceId": "1001",
   },
-  Object {
+  {
     "entryCount": 0,
     "existsInTarget": false,
     "id": "4004",
@@ -231,7 +154,7 @@ Array [
     "name": "tag-d",
     "workspaceId": "1001",
   },
-  Object {
+  {
     "entryCount": 0,
     "existsInTarget": false,
     "id": "4005",
@@ -243,7 +166,7 @@ Array [
     "name": "tag-e",
     "workspaceId": "1001",
   },
-  Object {
+  {
     "entryCount": 0,
     "existsInTarget": false,
     "id": "4006",
@@ -255,7 +178,7 @@ Array [
     "name": "tag-f",
     "workspaceId": "1001",
   },
-  Object {
+  {
     "entryCount": 0,
     "existsInTarget": false,
     "id": "4007",
@@ -267,7 +190,7 @@ Array [
     "name": "tag-g",
     "workspaceId": "1001",
   },
-  Object {
+  {
     "entryCount": 0,
     "existsInTarget": false,
     "id": "4008",
@@ -279,7 +202,7 @@ Array [
     "name": "tag-h",
     "workspaceId": "1001",
   },
-  Object {
+  {
     "entryCount": 0,
     "existsInTarget": false,
     "id": "4009",
@@ -294,8 +217,85 @@ Array [
 ]
 `;
 
-exports[`within tagsSelectors the targetTagIdsSelectorFactory matches its snapshot 1`] = `
-Array [
+exports[`within tagsSelectors > the tagsForInclusionsTableSelector matches its snapshot based on state.allEntities.areExistsInTargetShown > when state.allEntities.areExistsInTargetShown = false 2`] = `
+[
+  {
+    "entryCount": 0,
+    "existsInTarget": false,
+    "id": "4004",
+    "isActiveInSource": true,
+    "isActiveInTarget": false,
+    "isIncluded": false,
+    "linkedId": null,
+    "memberOf": "tags",
+    "name": "tag-d",
+    "workspaceId": "1001",
+  },
+  {
+    "entryCount": 0,
+    "existsInTarget": false,
+    "id": "4005",
+    "isActiveInSource": true,
+    "isActiveInTarget": false,
+    "isIncluded": false,
+    "linkedId": null,
+    "memberOf": "tags",
+    "name": "tag-e",
+    "workspaceId": "1001",
+  },
+  {
+    "entryCount": 0,
+    "existsInTarget": false,
+    "id": "4006",
+    "isActiveInSource": true,
+    "isActiveInTarget": false,
+    "isIncluded": true,
+    "linkedId": null,
+    "memberOf": "tags",
+    "name": "tag-f",
+    "workspaceId": "1001",
+  },
+  {
+    "entryCount": 0,
+    "existsInTarget": false,
+    "id": "4007",
+    "isActiveInSource": true,
+    "isActiveInTarget": false,
+    "isIncluded": true,
+    "linkedId": null,
+    "memberOf": "tags",
+    "name": "tag-g",
+    "workspaceId": "1001",
+  },
+  {
+    "entryCount": 0,
+    "existsInTarget": false,
+    "id": "4008",
+    "isActiveInSource": true,
+    "isActiveInTarget": false,
+    "isIncluded": true,
+    "linkedId": null,
+    "memberOf": "tags",
+    "name": "tag-h",
+    "workspaceId": "1001",
+  },
+  {
+    "entryCount": 0,
+    "existsInTarget": false,
+    "id": "4009",
+    "isActiveInSource": true,
+    "isActiveInTarget": false,
+    "isIncluded": true,
+    "linkedId": null,
+    "memberOf": "tags",
+    "name": "tag-i",
+    "workspaceId": "1001",
+  },
+]
+`;
+
+exports[`within tagsSelectors > the targetTagIdsSelectorFactory matches its snapshot 1`] = `
+[
   "clock-tag-01",
   "clock-tag-02",
   "clock-tag-03",

@@ -1,8 +1,8 @@
-import cases from "jest-in-case";
+import { describe, expect, test } from "vitest";
 
-import { FAKES } from "~/jestUtilities";
 import { allEntitiesFlushed } from "~/modules/allEntities/allEntitiesActions";
 import * as workspacesActions from "~/modules/workspaces/workspacesActions";
+import { FAKES } from "~/testUtilities";
 import { EntityGroup, Mapping } from "~/typeDefs";
 
 import { initialState, workspacesReducer } from "../workspacesReducer";
@@ -43,19 +43,8 @@ describe("within workspacesReducer", () => {
     expect(result).toEqual(initialState);
   });
 
-  cases(
-    "the isFetching is set to the correct value based on the dispatched action",
-    (options) => {
-      const updatedState = {
-        ...REDUX_STATE.workspaces,
-        isFetching: options.initialStatus,
-      };
-
-      const result = workspacesReducer(updatedState, options.action);
-
-      expect(result.isFetching).toEqual(options.expectedStatus);
-    },
-    [
+  describe("the isFetching is set to the correct value based on the dispatched action", () => {
+    const testCases = [
       {
         name: "when the createWorkspaces.success action is dispatched",
         initialStatus: true,
@@ -92,8 +81,21 @@ describe("within workspacesReducer", () => {
         action: workspacesActions.fetchWorkspaces.failure(),
         expectedStatus: false,
       },
-    ],
-  );
+    ];
+
+    for (const testCase of testCases) {
+      test.concurrent(testCase.name, async () => {
+        const updatedState = {
+          ...REDUX_STATE.workspaces,
+          isFetching: testCase.initialStatus,
+        };
+
+        const result = workspacesReducer(updatedState, testCase.action);
+
+        expect(result.isFetching).toEqual(testCase.expectedStatus);
+      });
+    }
+  });
 
   test("the userIdsAppendedToWorkspace action sets state mapping value to initial state", () => {
     const updatedState = {

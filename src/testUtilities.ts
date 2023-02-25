@@ -1,6 +1,8 @@
+import type { MockInstance as VitestMockInstance } from "vitest";
+
 export { FAKES } from "~/redux/__fakes__/state";
 
-type MockInstance = jest.MockInstance<AnyValid, AnyValid>;
+type MockInstance = VitestMockInstance<AnyValid, AnyValid>;
 
 interface WrapForMockingReturn {
   calls: AnyValid[];
@@ -16,7 +18,7 @@ interface WrapForMockingReturn {
 }
 
 /**
- * Wrappers around someFunc.mock...() that Jest provides. Using
+ * Wrappers around someFunc.mock...() that Vitest provides. Using
  * this avoids the annoying `someFunc as AnyValid` required to shut TypeScript
  * up.
  */

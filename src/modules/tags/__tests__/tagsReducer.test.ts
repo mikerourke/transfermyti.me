@@ -1,8 +1,8 @@
-import cases from "jest-in-case";
 import { lensProp, set } from "ramda";
+import { describe, expect, test } from "vitest";
 
-import { FAKES } from "~/jestUtilities";
 import * as tagsActions from "~/modules/tags/tagsActions";
+import { FAKES } from "~/testUtilities";
 
 import { initialState, tagsReducer } from "../tagsReducer";
 
@@ -26,19 +26,8 @@ describe("within tagsReducer", () => {
     expect(result).toEqual(initialState);
   });
 
-  cases(
-    "the isFetching is set to the correct value based on the dispatched action",
-    (options) => {
-      const updatedState = {
-        ...REDUX_STATE.tags,
-        isFetching: options.initialStatus,
-      };
-
-      const result = tagsReducer(updatedState, options.action);
-
-      expect(result.isFetching).toEqual(options.expectedStatus);
-    },
-    [
+  describe("the isFetching is set to the correct value based on the dispatched action", () => {
+    const testCases = [
       {
         name: "when the createTags.success action is dispatched",
         initialStatus: true,
@@ -87,8 +76,21 @@ describe("within tagsReducer", () => {
         action: tagsActions.fetchTags.failure(),
         expectedStatus: false,
       },
-    ],
-  );
+    ];
+
+    for (const testCase of testCases) {
+      test.concurrent(testCase.name, async () => {
+        const updatedState = {
+          ...REDUX_STATE.tags,
+          isFetching: testCase.initialStatus,
+        };
+
+        const result = tagsReducer(updatedState, testCase.action);
+
+        expect(result.isFetching).toEqual(testCase.expectedStatus);
+      });
+    }
+  });
 
   test(`the isTagIncludedToggled action flips the "isIncluded" value of the tag with id = payload`, () => {
     const updatedState = set(

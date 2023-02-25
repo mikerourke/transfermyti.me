@@ -4,49 +4,43 @@ env:
   CI: true
 
 jobs:
-  # If you put "[skip ci]" in the commit message, it won't run the checks/test.
-  # https://gist.github.com/ybiquitous/c80f15c18319c63cae8447a3be341267
-  proceed:
-    runs-on: ubuntu-latest
-    if: |
-      !contains(format('{0} {1} {2}', github.event.head_commit.message, github.event.pull_request.title, github.event.pull_request.body), '[skip ci]')
-    steps:
-      - run: |
-          cat <<'MESSAGE'
-          github.event_name: ${{ toJson(github.event_name) }}
-          github.event:
-          ${{ toJson(github.event) }}
-          MESSAGE
-
   check:
-    needs: proceed
     runs-on: ubuntu-latest
-    strategy:
-      matrix:
-        node-version: [18.x]
     steps:
-      - uses: actions/checkout@v2
+      - uses: actions/checkout@v3
 
-      - uses: pnpm/action-setup@646cdf48217256a3d0b80361c5a50727664284f2
+      - name: Setup Node.js environment
+        uses: actions/setup-node@v3.5.0
         with:
-          version: 7.5.2
+          node-version: lts/hydrogen
 
-      - uses: actions/setup-node@v2
+      - name: Setup pnpm
+        uses: pnpm/action-setup@v2.2.3
         with:
-          node-version: '18'
-          cache: 'pnpm'
+          version: latest
+          run_install: false
+
+      - name: Get pnpm store directory
+        id: pnpm-cache
+        run: |
+          echo "pnpm_cache_dir=$(pnpm store path)" >> $GITHUB_OUTPUT
+
+      - uses: actions/cache@v3
+        name: Setup pnpm cache
+        with:
+          path: ${{ steps.pnpm-cache.outputs.pnpm_cache_dir }}
+          key: ${{ runner.os }}-pnpm-store-${{ hashFiles('**/pnpm-lock.yaml') }}
+          restore-keys: |
+            ${{ runner.os }}-pnpm-store-
 
       - name: Install Dependencies
         run: pnpm install
 
-      - name: Lint
+      - name: Lint Code and Styles
         run: pnpm lint
 
-      - name: Check Types
-        run: pnpm typecheck
-
-      - name: Check Svelte
-        run: pnpm svelte-check
+      - name: Check Svelte and TypeScript
+        run: pnpm check
 
       - name: Test
-        run: pnpm test
+        run: pnpm vitest

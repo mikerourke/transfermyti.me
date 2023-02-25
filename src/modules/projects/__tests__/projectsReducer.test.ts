@@ -1,8 +1,8 @@
-import cases from "jest-in-case";
 import { lensProp, set } from "ramda";
+import { describe, expect, test } from "vitest";
 
-import { FAKES } from "~/jestUtilities";
 import * as projectsActions from "~/modules/projects/projectsActions";
+import { FAKES } from "~/testUtilities";
 
 import { initialState, projectsReducer } from "../projectsReducer";
 
@@ -26,18 +26,8 @@ describe("within projectsReducer", () => {
     expect(result).toEqual(initialState);
   });
 
-  cases(
-    "the isFetching is set to the correct value based on the dispatched action",
-    (options) => {
-      const updatedState = {
-        ...REDUX_STATE.projects,
-        isFetching: options.initialStatus,
-      };
-      const result = projectsReducer(updatedState, options.action);
-
-      expect(result.isFetching).toEqual(options.expectedStatus);
-    },
-    [
+  describe("the isFetching is set to the correct value based on the dispatched action", () => {
+    const testCases = [
       {
         name: "when the createProjects.success action is dispatched",
         initialStatus: true,
@@ -86,8 +76,20 @@ describe("within projectsReducer", () => {
         action: projectsActions.fetchProjects.failure(),
         expectedStatus: false,
       },
-    ],
-  );
+    ];
+
+    for (const testCase of testCases) {
+      test.concurrent(testCase.name, async () => {
+        const updatedState = {
+          ...REDUX_STATE.projects,
+          isFetching: testCase.initialStatus,
+        };
+        const result = projectsReducer(updatedState, testCase.action);
+
+        expect(result.isFetching).toEqual(testCase.expectedStatus);
+      });
+    }
+  });
 
   test(`the isProjectIncludedToggled action flips the "isIncluded" value of the project with id = payload`, () => {
     const updatedState = set(

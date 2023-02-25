@@ -1,20 +1,14 @@
-import cases from "jest-in-case";
+import { describe, expect, test } from "vitest";
 
-import { FAKES } from "~/jestUtilities";
+import { FAKES } from "~/testUtilities";
 
 import * as projectsSelectors from "../projectsSelectors";
 
 const MOCK_STATE = { ...FAKES.REDUX_STATE };
 
 describe("within projectsSelectors", () => {
-  cases(
-    "selectors that directly access state return the correct value",
-    (options) => {
-      const result = options.selector(MOCK_STATE);
-
-      expect(result).toEqual(options.expected);
-    },
-    [
+  describe("selectors that directly access state return the correct value", () => {
+    const testCases = [
       {
         name: "sourceProjectsByIdSelector returns state.sourceProjectsById",
         selector: projectsSelectors.sourceProjectsByIdSelector,
@@ -30,17 +24,19 @@ describe("within projectsSelectors", () => {
         selector: projectsSelectors.targetProjectsByIdSelector,
         expected: MOCK_STATE.projects.target,
       },
-    ],
-  );
+    ];
 
-  cases(
-    "the selectors match their snapshots",
-    (options) => {
-      const result = options.selector(MOCK_STATE);
+    for (const testCase of testCases) {
+      test.concurrent(testCase.name, async () => {
+        const result = testCase.selector(MOCK_STATE);
 
-      expect(result).toMatchSnapshot();
-    },
-    [
+        expect(result).toEqual(testCase.expected);
+      });
+    }
+  });
+
+  describe("the selectors match their snapshots", () => {
+    const testCases = [
       {
         name: "for the includedSourceProjectsSelector",
         selector: projectsSelectors.includedSourceProjectsSelector,
@@ -69,24 +65,19 @@ describe("within projectsSelectors", () => {
         name: "for the projectsByWorkspaceIdByToolNameSelector",
         selector: projectsSelectors.projectsByWorkspaceIdByToolNameSelector,
       },
-    ],
-  );
+    ];
 
-  cases(
-    "the projectsForInclusionsTableSelector matches its snapshot based on state.allEntities.areExistsInTargetShown",
-    (options) => {
-      const updatedState = {
-        ...MOCK_STATE,
-        allEntities: {
-          ...MOCK_STATE.allEntities,
-          areExistsInTargetShown: options.areExistsInTargetShown,
-        },
-      };
-      const result = projectsSelectors.projectsForInclusionsTableSelector(updatedState);
+    for (const testCase of testCases) {
+      test.concurrent(testCase.name, async () => {
+        const result = testCase.selector(MOCK_STATE);
 
-      expect(result).toMatchSnapshot();
-    },
-    [
+        expect(result).toMatchSnapshot();
+      });
+    }
+  });
+
+  describe("the projectsForInclusionsTableSelector matches its snapshot based on state.allEntities.areExistsInTargetShown", () => {
+    const testCases = [
       {
         name: "when state.allEntities.areExistsInTargetShown = true",
         areExistsInTargetShown: true,
@@ -95,6 +86,21 @@ describe("within projectsSelectors", () => {
         name: "when state.allEntities.areExistsInTargetShown = false",
         areExistsInTargetShown: false,
       },
-    ],
-  );
+    ];
+
+    for (const testCase of testCases) {
+      test.concurrent(testCase.name, async () => {
+        const updatedState = {
+          ...MOCK_STATE,
+          allEntities: {
+            ...MOCK_STATE.allEntities,
+            areExistsInTargetShown: testCase.areExistsInTargetShown,
+          },
+        };
+        const result = projectsSelectors.projectsForInclusionsTableSelector(updatedState);
+
+        expect(result).toMatchSnapshot();
+      });
+    }
+  });
 });

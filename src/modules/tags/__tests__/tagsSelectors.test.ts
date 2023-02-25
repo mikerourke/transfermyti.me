@@ -1,6 +1,6 @@
-import cases from "jest-in-case";
+import { describe, expect, test } from "vitest";
 
-import { FAKES } from "~/jestUtilities";
+import { FAKES } from "~/testUtilities";
 import { ToolName } from "~/typeDefs";
 
 import * as tagsSelectors from "../tagsSelectors";
@@ -49,14 +49,8 @@ const MOCK_STATE = {
 };
 
 describe("within tagsSelectors", () => {
-  cases(
-    "the selectors match their snapshots",
-    (options) => {
-      const result = options.selector(MOCK_STATE);
-
-      expect(result).toMatchSnapshot();
-    },
-    [
+  describe("the selectors match their snapshots", () => {
+    const testCases = [
       {
         name: "for the includedSourceTagsSelector",
         selector: tagsSelectors.includedSourceTagsSelector,
@@ -69,25 +63,19 @@ describe("within tagsSelectors", () => {
         name: "for the tagsTotalCountsByTypeSelector",
         selector: tagsSelectors.tagsTotalCountsByTypeSelector,
       },
-    ],
-  );
+    ];
 
-  cases(
-    "the tagsForInclusionsTableSelector matches its snapshot based on state.allEntities.areExistsInTargetShown",
-    (options) => {
-      const updatedState = {
-        ...MOCK_STATE,
-        allEntities: {
-          ...MOCK_STATE.allEntities,
-          areExistsInTargetShown: options.areExistsInTargetShown,
-        },
-      };
+    for (const testCase of testCases) {
+      test(testCase.name, () => {
+        const result = testCase.selector(MOCK_STATE);
 
-      const result = tagsSelectors.tagsForInclusionsTableSelector(updatedState);
+        expect(result).toMatchSnapshot();
+      });
+    }
+  });
 
-      expect(result).toMatchSnapshot();
-    },
-    [
+  describe("the tagsForInclusionsTableSelector matches its snapshot based on state.allEntities.areExistsInTargetShown", () => {
+    const testCases = [
       {
         name: "when state.allEntities.areExistsInTargetShown = true",
         areExistsInTargetShown: true,
@@ -96,8 +84,24 @@ describe("within tagsSelectors", () => {
         name: "when state.allEntities.areExistsInTargetShown = false",
         areExistsInTargetShown: false,
       },
-    ],
-  );
+    ];
+
+    for (const testCase of testCases) {
+      test.concurrent(testCase.name, async () => {
+        const updatedState = {
+          ...MOCK_STATE,
+          allEntities: {
+            ...MOCK_STATE.allEntities,
+            areExistsInTargetShown: testCase.areExistsInTargetShown,
+          },
+        };
+
+        const result = tagsSelectors.tagsForInclusionsTableSelector(updatedState);
+
+        expect(result).toMatchSnapshot();
+      });
+    }
+  });
 
   test("the tagIdsByNameSelectorFactory matches its snapshot", () => {
     const getTagIdsByName = tagsSelectors.tagIdsByNameBySelectorFactory(ToolName.Toggl);

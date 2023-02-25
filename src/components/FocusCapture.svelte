@@ -4,9 +4,9 @@
   import {
     asElement,
     datasetValue,
-    ElementInput,
     findAllFocusableElements,
     setFocusTo,
+    type ElementInput,
   } from "~/utilities/domElements";
 
   type FocusGuardsLocation = "start" | "end" | "both";
@@ -84,6 +84,7 @@
 </script>
 
 {#if guards === "start" || guards === "both"}
+  <!-- svelte-ignore a11y-no-noninteractive-tabindex -->
   <div
     data-guard="start"
     class="visuallyHidden"
@@ -95,6 +96,7 @@
 <slot />
 
 {#if guards === "end" || guards === "both"}
+  <!-- svelte-ignore a11y-no-noninteractive-tabindex -->
   <div
     data-guard="end"
     class="visuallyHidden"

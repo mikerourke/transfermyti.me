@@ -1,9 +1,13 @@
-import cases from "jest-in-case";
+import { afterAll, beforeAll, describe, expect, test, vi } from "vitest";
 
-import { FAKES } from "~/jestUtilities";
 import * as appActions from "~/modules/app/appActions";
+import { FAKES } from "~/testUtilities";
 
 import { appReducer, initialState } from "../appReducer";
+
+vi.mock("nanoid", () => ({
+  nanoid: () => require("crypto").randomUUID(),
+}));
 
 const { INVALID_ACTION } = FAKES;
 
@@ -58,19 +62,22 @@ describe("within appReducer", () => {
     expect(firstNotification.id).toBeDefined();
   });
 
-  cases(
-    "sets the correct error message when the errorNotificationShown action is dispatched",
-    (options) => {
-      const result = appReducer(initialState, appActions.errorNotificationShown(options.payload));
+  describe("sets the correct error message when the errorNotificationShown action is dispatched", () => {
+    let consoleError: (...args: any) => void;
 
-      const [firstNotification] = result.notifications;
+    beforeAll(() => {
+      consoleError = console.error;
+      console.error = () => {
+        // Do nothing;
+      };
+    });
 
-      expect(firstNotification.message).toBe(options.expected);
-      expect(firstNotification.type).toBe("error");
-      expect(firstNotification.id).toBeDefined();
-    },
+    afterAll(() => {
+      console.error = consoleError;
+    });
+
     // prettier-ignore
-    [
+    const testCases = [
       {
         name: "when the error payload is an Error",
         payload: new Error("Test error message"),
@@ -111,6 +118,21 @@ describe("within appReducer", () => {
         } as Response,
         expected: "The following error occurred: Error code 400 when fetching from unknown API.",
       },
-    ],
-  );
+    ];
+
+    for (const testCase of testCases) {
+      test.concurrent(testCase.name, async () => {
+        const result = appReducer(
+          initialState,
+          appActions.errorNotificationShown(testCase.payload),
+        );
+
+        const [firstNotification] = result.notifications;
+
+        expect(firstNotification.message).toBe(testCase.expected);
+        expect(firstNotification.type).toBe("error");
+        expect(firstNotification.id).toBeDefined();
+      });
+    }
+  });
 });

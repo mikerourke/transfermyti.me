@@ -1,9 +1,9 @@
-// Jest Snapshot v1, https://goo.gl/fbAQLP
+// Vitest Snapshot v1
 
-exports[`within tasksSelectors the selectors match their snapshots for the includedSourceTasksSelector 1`] = `
-Array [
-  Object {
-    "assigneeIds": Array [],
+exports[`within tasksSelectors > the selectors match their snapshots > for the tasksTotalCountsByTypeSelector 1`] = `
+[
+  {
+    "assigneeIds": [],
     "entryCount": 1,
     "estimate": "PT6H",
     "id": "7003",
@@ -15,8 +15,8 @@ Array [
     "projectId": "2002",
     "workspaceId": "1001",
   },
-  Object {
-    "assigneeIds": Array [],
+  {
+    "assigneeIds": [],
     "entryCount": 1,
     "estimate": "PT6H",
     "id": "7004",
@@ -28,8 +28,8 @@ Array [
     "projectId": "2003",
     "workspaceId": "1001",
   },
-  Object {
-    "assigneeIds": Array [],
+  {
+    "assigneeIds": [],
     "entryCount": 3,
     "estimate": "PT6H",
     "id": "7005",
@@ -44,10 +44,10 @@ Array [
 ]
 `;
 
-exports[`within tasksSelectors the selectors match their snapshots for the sourceTasksForTransferSelector 1`] = `
-Array [
-  Object {
-    "assigneeIds": Array [],
+exports[`within tasksSelectors > the selectors match their snapshots > for the tasksTotalCountsByTypeSelector 2`] = `
+[
+  {
+    "assigneeIds": [],
     "entryCount": 1,
     "estimate": "PT6H",
     "id": "7003",
@@ -59,8 +59,8 @@ Array [
     "projectId": "2002",
     "workspaceId": "1001",
   },
-  Object {
-    "assigneeIds": Array [],
+  {
+    "assigneeIds": [],
     "entryCount": 1,
     "estimate": "PT6H",
     "id": "7004",
@@ -72,8 +72,8 @@ Array [
     "projectId": "2003",
     "workspaceId": "1001",
   },
-  Object {
-    "assigneeIds": Array [],
+  {
+    "assigneeIds": [],
     "entryCount": 3,
     "estimate": "PT6H",
     "id": "7005",
@@ -88,10 +88,10 @@ Array [
 ]
 `;
 
-exports[`within tasksSelectors the selectors match their snapshots for the sourceTasksInActiveWorkspaceSelector 1`] = `
-Array [
-  Object {
-    "assigneeIds": Array [
+exports[`within tasksSelectors > the selectors match their snapshots > for the tasksTotalCountsByTypeSelector 3`] = `
+[
+  {
+    "assigneeIds": [
       "123123",
     ],
     "entryCount": 2,
@@ -105,8 +105,8 @@ Array [
     "projectId": "2001",
     "workspaceId": "1001",
   },
-  Object {
-    "assigneeIds": Array [],
+  {
+    "assigneeIds": [],
     "entryCount": 1,
     "estimate": "PT0M",
     "id": "7002",
@@ -118,8 +118,8 @@ Array [
     "projectId": "2001",
     "workspaceId": "1001",
   },
-  Object {
-    "assigneeIds": Array [],
+  {
+    "assigneeIds": [],
     "entryCount": 1,
     "estimate": "PT6H",
     "id": "7003",
@@ -131,8 +131,8 @@ Array [
     "projectId": "2002",
     "workspaceId": "1001",
   },
-  Object {
-    "assigneeIds": Array [],
+  {
+    "assigneeIds": [],
     "entryCount": 1,
     "estimate": "PT6H",
     "id": "7004",
@@ -144,8 +144,8 @@ Array [
     "projectId": "2003",
     "workspaceId": "1001",
   },
-  Object {
-    "assigneeIds": Array [],
+  {
+    "assigneeIds": [],
     "entryCount": 3,
     "estimate": "PT6H",
     "id": "7005",
@@ -160,8 +160,8 @@ Array [
 ]
 `;
 
-exports[`within tasksSelectors the selectors match their snapshots for the taskIdToLinkedIdSelector 1`] = `
-Object {
+exports[`within tasksSelectors > the selectors match their snapshots > for the tasksTotalCountsByTypeSelector 4`] = `
+{
   "7001": "clock-task-01",
   "7002": "clock-task-02",
   "clock-task-01": "7001",
@@ -169,8 +169,8 @@ Object {
 }
 `;
 
-exports[`within tasksSelectors the selectors match their snapshots for the tasksTotalCountsByTypeSelector 1`] = `
-Object {
+exports[`within tasksSelectors > the selectors match their snapshots > for the tasksTotalCountsByTypeSelector 5`] = `
+{
   "entryCount": 8,
   "existsInTarget": 2,
   "isActiveInSource": 4,
@@ -179,10 +179,46 @@ Object {
 }
 `;
 
-exports[`within tasksSelectors the tasksForInclusionsTableSelector matches its snapshot based on state.allEntities.areExistsInTargetShown when state.allEntities.areExistsInTargetShown = false 1`] = `
-Array [
-  Object {
-    "assigneeIds": Array [],
+exports[`within tasksSelectors > the tasksForInclusionsTableSelector matches its snapshot based on state.allEntities.areExistsInTargetShown > when state.allEntities.areExistsInTargetShown = false 1`] = `
+[
+  {
+    "assigneeIds": [
+      "123123",
+    ],
+    "entryCount": 2,
+    "estimate": "PT2H",
+    "existsInTarget": true,
+    "id": "7001",
+    "isActive": true,
+    "isActiveInSource": true,
+    "isActiveInTarget": true,
+    "isIncluded": false,
+    "linkedId": "clock-task-01",
+    "memberOf": "tasks",
+    "name": "Task 1",
+    "projectId": "2001",
+    "projectName": "Test Project A",
+    "workspaceId": "1001",
+  },
+  {
+    "assigneeIds": [],
+    "entryCount": 1,
+    "estimate": "PT0M",
+    "existsInTarget": true,
+    "id": "7002",
+    "isActive": true,
+    "isActiveInSource": true,
+    "isActiveInTarget": false,
+    "isIncluded": false,
+    "linkedId": "clock-task-02",
+    "memberOf": "tasks",
+    "name": "Task 2",
+    "projectId": "2001",
+    "projectName": "Test Project A",
+    "workspaceId": "1001",
+  },
+  {
+    "assigneeIds": [],
     "entryCount": 1,
     "estimate": "PT6H",
     "existsInTarget": false,
@@ -198,8 +234,8 @@ Array [
     "projectName": "Test Project B",
     "workspaceId": "1001",
   },
-  Object {
-    "assigneeIds": Array [],
+  {
+    "assigneeIds": [],
     "entryCount": 1,
     "estimate": "PT6H",
     "existsInTarget": false,
@@ -215,8 +251,8 @@ Array [
     "projectName": "Test Project C",
     "workspaceId": "1001",
   },
-  Object {
-    "assigneeIds": Array [],
+  {
+    "assigneeIds": [],
     "entryCount": 3,
     "estimate": "PT6H",
     "existsInTarget": false,
@@ -235,46 +271,10 @@ Array [
 ]
 `;
 
-exports[`within tasksSelectors the tasksForInclusionsTableSelector matches its snapshot based on state.allEntities.areExistsInTargetShown when state.allEntities.areExistsInTargetShown = true 1`] = `
-Array [
-  Object {
-    "assigneeIds": Array [
-      "123123",
-    ],
-    "entryCount": 2,
-    "estimate": "PT2H",
-    "existsInTarget": true,
-    "id": "7001",
-    "isActive": true,
-    "isActiveInSource": true,
-    "isActiveInTarget": true,
-    "isIncluded": false,
-    "linkedId": "clock-task-01",
-    "memberOf": "tasks",
-    "name": "Task 1",
-    "projectId": "2001",
-    "projectName": "Test Project A",
-    "workspaceId": "1001",
-  },
-  Object {
-    "assigneeIds": Array [],
-    "entryCount": 1,
-    "estimate": "PT0M",
-    "existsInTarget": true,
-    "id": "7002",
-    "isActive": true,
-    "isActiveInSource": true,
-    "isActiveInTarget": false,
-    "isIncluded": false,
-    "linkedId": "clock-task-02",
-    "memberOf": "tasks",
-    "name": "Task 2",
-    "projectId": "2001",
-    "projectName": "Test Project A",
-    "workspaceId": "1001",
-  },
-  Object {
-    "assigneeIds": Array [],
+exports[`within tasksSelectors > the tasksForInclusionsTableSelector matches its snapshot based on state.allEntities.areExistsInTargetShown > when state.allEntities.areExistsInTargetShown = false 2`] = `
+[
+  {
+    "assigneeIds": [],
     "entryCount": 1,
     "estimate": "PT6H",
     "existsInTarget": false,
@@ -290,8 +290,8 @@ Array [
     "projectName": "Test Project B",
     "workspaceId": "1001",
   },
-  Object {
-    "assigneeIds": Array [],
+  {
+    "assigneeIds": [],
     "entryCount": 1,
     "estimate": "PT6H",
     "existsInTarget": false,
@@ -307,8 +307,8 @@ Array [
     "projectName": "Test Project C",
     "workspaceId": "1001",
   },
-  Object {
-    "assigneeIds": Array [],
+  {
+    "assigneeIds": [],
     "entryCount": 3,
     "estimate": "PT6H",
     "existsInTarget": false,
