@@ -1,5 +1,4 @@
 <script lang="ts">
-  import { css } from "goober";
   import { isNil } from "ramda";
   import { createEventDispatcher } from "svelte";
   import { slide } from "svelte/transition";
@@ -9,6 +8,8 @@
   import Card from "~/components/Card.svelte";
   import Toggle from "~/components/Toggle.svelte";
   import WorkspaceSelect from "~/components/WorkspaceSelect.svelte";
+
+  import classes from "./WorkspaceCard.module.css";
 
   export let sourceWorkspace: Workspace;
   export let targetWorkspaces: Workspace[];
@@ -59,22 +60,6 @@
       targetWorkspace: event.detail,
     });
   }
-
-  const styleClass = css`
-    h2 {
-      margin: 0;
-    }
-
-    [role="switch"] {
-      margin-bottom: 0.5rem;
-      margin-top: 0.5rem;
-      background-color: var(--color-secondary);
-
-      &:focus {
-        outline-color: var(--color-active);
-      }
-    }
-  `;
 </script>
 
 <style>
@@ -88,7 +73,7 @@
   }
 </style>
 
-<Card title={sourceWorkspace.name} class={styleClass}>
+<Card title={sourceWorkspace.name} class={classes.workspaceCard}>
   <hr />
 
   <h3>{actionTitle}</h3>

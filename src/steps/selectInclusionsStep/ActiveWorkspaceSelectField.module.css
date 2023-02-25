@@ -1,0 +1,12 @@
+.activeWorkspaceSelectField {
+  &:hover,
+  &:focus {
+    & select {
+      color: var(--color-primary);
+    }
+
+    & span {
+      border-top-color: var(--color-primary);
+    }
+  }
+}

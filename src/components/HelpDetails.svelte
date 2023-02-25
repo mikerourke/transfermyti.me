@@ -1,25 +1,8 @@
 <script lang="ts">
-  import { css } from "goober";
+  import classes from "./HelpDetails.module.css";
 
   export let title: string = "Show/Hide Help";
   export let open: boolean = false;
-
-  const styleClass = css`
-    p {
-      &:first-of-type {
-        margin-top: 0;
-        padding-top: 0;
-      }
-
-      &:not(:first-of-type) {
-        margin-top: 0;
-      }
-
-      &:last-of-type {
-        margin-bottom: 0;
-      }
-    }
-  `;
 </script>
 
 <style>
@@ -45,7 +28,7 @@
   }
 </style>
 
-<details class={styleClass} {open} {...$$restProps}>
+<details class={classes.helpDetails} {open} {...$$restProps}>
   <summary>
     {title}
   </summary>

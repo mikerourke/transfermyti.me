@@ -1,29 +1,11 @@
 <script lang="ts">
-  import { css } from "goober";
-
   import ExternalLink from "~/components/ExternalLink.svelte";
   import Icon from "~/components/Icon.svelte";
   import IconLink from "~/components/IconLink.svelte";
 
+  import classes from "./Footer.module.css";
+
   const iconSize = { height: 18, width: 18 };
-
-  const styleClass = css`
-    a {
-      color: var(--color-white);
-      text-decoration: underline;
-    }
-
-    ul li a {
-      &:active,
-      &:focus {
-        outline: none;
-
-        path {
-          fill: var(--color-active);
-        }
-      }
-    }
-  `;
 </script>
 
 <style>
@@ -91,7 +73,7 @@
   }
 </style>
 
-<footer class={styleClass}>
+<footer class={classes.footer}>
   <div>
     <p>
       Made with <Icon name="heart" color="var(--color-ruby)" height={12} />

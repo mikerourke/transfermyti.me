@@ -76,12 +76,26 @@ module.exports = {
         ],
         pathGroups: [
           {
-            pattern: "~/**/!(*.svelte|components)",
+            pattern: "./**/!(*.svelte|*.css)",
+            group: "sibling",
+          },
+          {
+            pattern: "~/**/!(*.svelte|*.css)",
             group: "internal",
+          },
+          {
+            pattern: "./**/*.svelte",
+            group: "sibling",
+            position: "after",
           },
           {
             pattern: "~/**/*.svelte",
             group: "internal",
+            position: "after",
+          },
+          {
+            pattern: "./**/*.css",
+            group: "object",
             position: "after",
           },
         ],

@@ -1,0 +1,17 @@
+.footer {
+  & a {
+    color: var(--color-white);
+    text-decoration: underline;
+  }
+
+  & ul li a {
+    &:active,
+    &:focus {
+      outline: none;
+
+      & path {
+        fill: var(--color-active);
+      }
+    }
+  }
+}
