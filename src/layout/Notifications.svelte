@@ -3,7 +3,7 @@
   import { quintOut } from "svelte/easing";
   import { crossfade } from "svelte/transition";
 
-  import { notificationsSelector } from "~/modules/app/appSelectors";
+  import { notificationsSelector } from "~/redux/app/appSelectors";
   import { selectorToStore } from "~/redux/reduxToStore";
 
   import NotificationToast from "./NotificationToast.svelte";

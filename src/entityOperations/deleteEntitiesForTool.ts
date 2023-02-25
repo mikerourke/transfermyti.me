@@ -2,7 +2,7 @@ import type { SagaIterator } from "redux-saga";
 import { call, delay, put } from "redux-saga/effects";
 
 import { getApiDelayForTool } from "~/entityOperations/apiRequests";
-import { entityGroupTransferCompletedCountIncremented } from "~/modules/allEntities/allEntitiesActions";
+import { entityGroupTransferCompletedCountIncremented } from "~/redux/allEntities/allEntitiesActions";
 import type { EntityGroup, ToolName, ValidEntity } from "~/typeDefs";
 
 /**

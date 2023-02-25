@@ -2,11 +2,11 @@
   import {
     areAllClientsIncludedUpdated,
     isClientIncludedToggled,
-  } from "~/modules/clients/clientsActions";
+  } from "~/redux/clients/clientsActions";
   import {
     clientsForInclusionsTableSelector,
     clientsTotalCountsByTypeSelector,
-  } from "~/modules/clients/clientsSelectors";
+  } from "~/redux/clients/clientsSelectors";
   import { dispatchAction, selectorToStore } from "~/redux/reduxToStore";
   import { EntityGroup } from "~/typeDefs";
 

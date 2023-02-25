@@ -1,13 +1,13 @@
 <script lang="ts">
+  import { dispatchAction, selectorToStore } from "~/redux/reduxToStore";
   import {
     areAllTagsIncludedUpdated,
     isTagIncludedToggled,
-  } from "~/modules/tags/tagsActions";
+  } from "~/redux/tags/tagsActions";
   import {
     tagsForInclusionsTableSelector,
     tagsTotalCountsByTypeSelector,
-  } from "~/modules/tags/tagsSelectors";
-  import { dispatchAction, selectorToStore } from "~/redux/reduxToStore";
+  } from "~/redux/tags/tagsSelectors";
   import { EntityGroup } from "~/typeDefs";
 
   import EntityGroupInclusionsPanel from "~/components/EntityGroupInclusionsPanel.svelte";

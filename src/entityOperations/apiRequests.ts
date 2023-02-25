@@ -2,7 +2,7 @@ import { isNil } from "ramda";
 import type { SagaIterator } from "redux-saga";
 import { call, delay } from "redux-saga/effects";
 
-import { credentialsByToolNameSelector } from "~/modules/credentials/credentialsSelectors";
+import { credentialsByToolNameSelector } from "~/redux/credentials/credentialsSelectors";
 import { ToolName } from "~/typeDefs";
 import { isTestingMode, isUseLocalApi } from "~/utilities/environment";
 

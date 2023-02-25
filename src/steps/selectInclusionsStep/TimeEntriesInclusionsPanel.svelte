@@ -1,17 +1,17 @@
 <script lang="ts">
   import { replaceMappingWithToolName } from "~/entityOperations/replaceMappingWithToolName";
-  import { toolActionSelector } from "~/modules/allEntities/allEntitiesSelectors";
+  import { toolActionSelector } from "~/redux/allEntities/allEntitiesSelectors";
+  import { dispatchAction, selectorToStore } from "~/redux/reduxToStore";
   import {
     areAllTimeEntriesIncludedUpdated,
     isDuplicateCheckEnabledToggled,
     isTimeEntryIncludedToggled,
-  } from "~/modules/timeEntries/timeEntriesActions";
+  } from "~/redux/timeEntries/timeEntriesActions";
   import {
     isDuplicateCheckEnabledSelector,
     timeEntriesForInclusionsTableSelector,
     timeEntriesTotalCountsByTypeSelector,
-  } from "~/modules/timeEntries/timeEntriesSelectors";
-  import { dispatchAction, selectorToStore } from "~/redux/reduxToStore";
+  } from "~/redux/timeEntries/timeEntriesSelectors";
   import { ToolAction, type TimeEntryTableRecord } from "~/typeDefs";
 
   import AccordionPanel from "~/components/AccordionPanel.svelte";

@@ -3,35 +3,35 @@ import { combineReducers } from "@reduxjs/toolkit";
 import {
   allEntitiesInitialState,
   allEntitiesReducer,
-} from "~/modules/allEntities/allEntitiesReducer";
-import { appInitialState, appReducer } from "~/modules/app/appReducer";
+} from "~/redux/allEntities/allEntitiesReducer";
+import { appInitialState, appReducer } from "~/redux/app/appReducer";
 import {
   clientsInitialState,
   clientsReducer,
-} from "~/modules/clients/clientsReducer";
+} from "~/redux/clients/clientsReducer";
 import {
   credentialsInitialState,
   credentialsReducer,
-} from "~/modules/credentials/credentialsReducer";
+} from "~/redux/credentials/credentialsReducer";
 import {
   projectsInitialState,
   projectsReducer,
-} from "~/modules/projects/projectsReducer";
-import { tagsInitialState, tagsReducer } from "~/modules/tags/tagsReducer";
-import { tasksInitialState, tasksReducer } from "~/modules/tasks/tasksReducer";
+} from "~/redux/projects/projectsReducer";
+import { tagsInitialState, tagsReducer } from "~/redux/tags/tagsReducer";
+import { tasksInitialState, tasksReducer } from "~/redux/tasks/tasksReducer";
 import {
   timeEntriesInitialState,
   timeEntriesReducer,
-} from "~/modules/timeEntries/timeEntriesReducer";
+} from "~/redux/timeEntries/timeEntriesReducer";
 import {
   userGroupsInitialState,
   userGroupsReducer,
-} from "~/modules/userGroups/userGroupsReducer";
-import { usersInitialState, usersReducer } from "~/modules/users/usersReducer";
+} from "~/redux/userGroups/userGroupsReducer";
+import { usersInitialState, usersReducer } from "~/redux/users/usersReducer";
 import {
   workspacesInitialState,
   workspacesReducer,
-} from "~/modules/workspaces/workspacesReducer";
+} from "~/redux/workspaces/workspacesReducer";
 
 export const initialState = {
   allEntities: { ...allEntitiesInitialState },
