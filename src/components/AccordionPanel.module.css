@@ -1,0 +1,7 @@
+.iconButton {
+  &:hover {
+    & path {
+      fill: var(--color-white);
+    }
+  }
+}

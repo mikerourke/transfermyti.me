@@ -1,0 +1,15 @@
+.workspaceCard {
+  & h2 {
+    margin: 0;
+  }
+
+  & [role="switch"] {
+    margin-bottom: 0.5rem;
+    margin-top: 0.5rem;
+    background-color: var(--color-secondary);
+
+    &:focus {
+      outline-color: var(--color-active);
+    }
+  }
+}

@@ -8,11 +8,15 @@ const rootDirPath = process.cwd();
 
 const outDirPath = path.resolve(rootDirPath, "out", "build");
 
-// https://vitejs.dev/config/
-export default defineConfig(({ command, mode }) => ({
+/**
+ * @returns {import("vitest").UserConfig}
+ * @see https://vitejs.dev/config/
+ */
+export default defineConfig(({ command, mode }) => /** @type {*} */ ({
   define: {
     __ENV__: JSON.stringify(command === "build" ? "production" : "development"),
     __USE_LOCAL_API__: JSON.stringify(mode === "mocked"),
+    __LOCAL_API_PORT__: JSON.stringify(9009),
   },
   build: {
     outDir: outDirPath,

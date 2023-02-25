@@ -17,7 +17,6 @@
     align-items: center;
     height: var(--height-header);
     padding: 0 1rem;
-    width: 100%;
     background-color: var(--color-primary);
     color: var(--color-secondary);
     box-shadow: var(--elevation-dp1);

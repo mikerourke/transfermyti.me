@@ -245,7 +245,7 @@ function getApiUrl(
   togglApiContext: TogglApiContext,
 ): string {
   if (isUseLocalApi() || isTestingMode()) {
-    const apiPort = process?.env?.TMT_LOCAL_API_PORT ?? "9009";
+    const apiPort = __LOCAL_API_PORT__ ?? "9009";
 
     return `http://localhost:${apiPort}/api/${toolName}`;
   }

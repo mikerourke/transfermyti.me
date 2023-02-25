@@ -35,7 +35,6 @@ This is by no means an exhaustive list, but it makes up the core of the front-en
 - [Svelte](https://svelte.dev/)
 - [Redux](https://redux.js.org/)
 - [Redux Saga](http://redux-saga.js.org/)
-- [Goober](https://goober.rocks/)
 - [Ramda](https://ramdajs.com/)
 - [date-fns](https://date-fns.org/)
 - [TypeScript](https://www.typescriptlang.org/)

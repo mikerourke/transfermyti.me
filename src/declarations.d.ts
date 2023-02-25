@@ -1,6 +1,8 @@
 /// <reference types="svelte" />
 /// <reference types="vite/client" />
 
+declare module "*.css";
+
 // Used to avoid the no-explicit-any ESLint rule explicitly. In some cases, it
 // is totally OK to just say it's `any`:
 declare type AnyValid = any;
@@ -27,5 +29,7 @@ declare type SelectChangeEvent = Event & {
 };
 
 declare const __USE_LOCAL_API__: boolean;
+
+declare const __LOCAL_API_PORT__: string;
 
 declare const __ENV__: "test" | "development";

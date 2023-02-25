@@ -1,8 +1,9 @@
 <script lang="ts">
-  import { css } from "goober";
   import { createEventDispatcher } from "svelte";
 
   import Button from "~/components/Button.svelte";
+
+  import classes from "./NavigationButtonsRow.module.css";
 
   export let disabled: boolean = false;
   export let loading: boolean = false;
@@ -22,13 +23,6 @@
   function handleRefreshClick(): void {
     dispatchEvent("refresh");
   }
-
-  const styleClass = css`
-    button {
-      min-height: 3rem;
-      min-width: 6.5rem;
-    }
-  `;
 </script>
 
 <style>
@@ -46,7 +40,7 @@
   }
 </style>
 
-<nav class={styleClass} {...$$restProps}>
+<nav class={classes.navigationButtonRow} {...$$restProps}>
   <ul>
     <li>
       <Button variant="default" {disabled} on:click={handleBackClick}>
