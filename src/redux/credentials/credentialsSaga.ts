@@ -1,4 +1,4 @@
-import { isNil } from "ramda";
+import { clone, isNil } from "ramda";
 import type { SagaIterator } from "redux-saga";
 import { all, call, put, select, takeEvery } from "redux-saga/effects";
 
@@ -50,7 +50,11 @@ function* storeCredentialsSaga(): SagaIterator {
 }
 
 function* validateCredentialsSaga(): SagaIterator {
-  const credentialsByMapping = yield select(credentialsByMappingSelector);
+  const currentCredentialsByMapping = yield select(
+    credentialsByMappingSelector,
+  );
+
+  const credentialsByMapping = clone(currentCredentialsByMapping);
 
   const mappingByToolName = yield select(mappingByToolNameSelector);
 

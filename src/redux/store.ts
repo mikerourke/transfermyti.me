@@ -1,4 +1,5 @@
 import { configureStore, type Store } from "@reduxjs/toolkit";
+import { clone } from "ramda";
 import createSagaMiddleware from "redux-saga";
 
 import { allSagas } from "~/redux/allSagas";
@@ -19,7 +20,7 @@ export function getStore(): Store<ReduxState> {
 }
 
 export function createStore(): void {
-  let credentials = initialState.credentials;
+  let credentials = clone(initialState.credentials);
 
   const isDevelopment = isDevelopmentMode();
 
@@ -29,7 +30,7 @@ export function createStore(): void {
 
     if (storedCredentials !== null) {
       credentials = {
-        ...initialState.credentials,
+        ...credentials,
         ...storedCredentials,
       };
     }
@@ -40,7 +41,7 @@ export function createStore(): void {
   const store = configureStore({
     reducer: rootReducer,
     middleware: (getDefaultMiddleware) =>
-      getDefaultMiddleware().concat(sagaMiddleware),
+      getDefaultMiddleware({ serializableCheck: false }).concat(sagaMiddleware),
     preloadedState: {
       ...initialState,
       credentials,

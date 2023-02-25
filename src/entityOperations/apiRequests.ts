@@ -1,6 +1,6 @@
 import { isNil } from "ramda";
 import type { SagaIterator } from "redux-saga";
-import { call, delay } from "redux-saga/effects";
+import { call, delay, select } from "redux-saga/effects";
 
 import { credentialsByToolNameSelector } from "~/redux/credentials/credentialsSelectors";
 import { ToolName } from "~/typeDefs";
@@ -103,13 +103,13 @@ export function* fetchObject<TResponse>(
  * a second and tries again. If after 5 attempts, the fetch call was
  * unsuccessful, throw an error.
  */
-async function fetchWithRetries<TResponse>(
+function* fetchWithRetries<TResponse>(
   endpoint: string,
   fetchOptions: unknown,
   attempt: number = 5,
-): Promise<TResponse> {
+): SagaIterator<TResponse> {
   try {
-    return await fetchFromApi(endpoint, fetchOptions as RequestInit);
+    return yield call(fetchFromApi, endpoint, fetchOptions as RequestInit);
   } catch (err: AnyValid) {
     if (err.status === 429) {
       if (attempt <= 0) {
@@ -119,9 +119,9 @@ async function fetchWithRetries<TResponse>(
       // Most API services allow at least 1 request per second. If we encounter
       // a tool that doesn't adhere to this standard, we may have to make this
       // tool-specific. Just to hedge my bets, I'm using a 3-second delay:
-      await delay(3_000);
+      yield delay(3_000);
 
-      return await fetchWithRetries(endpoint, fetchOptions, attempt - 1);
+      return yield call(fetchWithRetries, endpoint, fetchOptions, attempt - 1);
     } else {
       throw err;
     }
@@ -147,12 +147,10 @@ export function getApiDelayForTool(toolName: ToolName): number {
   }
 }
 
-async function fetchFromApi<T>(url: string, config: RequestInit): Promise<T> {
-  const { toolName, context, endpoint } = extrapolateFromUrl(url);
+function* fetchFromApi<T>(url: string, config: RequestInit): SagaIterator<T> {
+  const { toolName, context, endpoint } = yield call(extrapolateFromUrl, url);
 
-  const state = window.store.getState();
-
-  const credentialsByToolName = credentialsByToolNameSelector(state);
+  const credentialsByToolName = yield select(credentialsByToolNameSelector);
 
   const apiKey = credentialsByToolName[toolName]?.apiKey ?? "";
 
@@ -160,7 +158,7 @@ async function fetchFromApi<T>(url: string, config: RequestInit): Promise<T> {
     config.body = JSON.stringify(config.body);
   }
 
-  const baseHeaders = getHeaders(toolName, apiKey);
+  const baseHeaders = yield call(getHeaders, toolName, apiKey);
   if (config.headers) {
     config.headers = {
       ...config.headers,
@@ -170,12 +168,15 @@ async function fetchFromApi<T>(url: string, config: RequestInit): Promise<T> {
     config.headers = baseHeaders;
   }
 
-  const fullUrl = getApiUrl(toolName, context).concat("/", endpoint);
+  const rootUrl = yield call(getApiUrl, toolName, context);
 
-  const response = await fetch(fullUrl, config);
+  const fullUrl = rootUrl.concat("/", endpoint);
+
+  const response = yield call(fetch, fullUrl, config);
 
   if (!response.ok) {
-    return Promise.reject(response);
+    console.log("NOO");
+    throw new Error(response);
   }
 
   const type = response.headers.get("content-type") ?? null;
@@ -186,7 +187,7 @@ async function fetchFromApi<T>(url: string, config: RequestInit): Promise<T> {
 
   if (type.includes("json")) {
     try {
-      return await response.json();
+      return yield response.json();
     } catch (err: AnyValid) {
       if (/unexpected end of JSON input/gi.test(err.message)) {
         return {} as unknown as T;
@@ -194,7 +195,9 @@ async function fetchFromApi<T>(url: string, config: RequestInit): Promise<T> {
     }
   }
 
-  return (await response.text()) as unknown as T;
+  const textValue = yield response.text();
+
+  return textValue as unknown as T;
 }
 
 /**

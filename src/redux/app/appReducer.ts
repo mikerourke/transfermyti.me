@@ -1,6 +1,4 @@
-import { nanoid } from "nanoid";
-
-import { createReducer } from "~/redux/reduxTools";
+import { createReducer, nanoid } from "~/redux/reduxTools";
 import type { Notification } from "~/typeDefs";
 import { isDevelopmentMode } from "~/utilities/environment";
 

@@ -1,7 +1,7 @@
 import { readable, type Readable } from "svelte/store";
 
-import { getStore } from "~/redux/configureStore";
 import type { Selector } from "~/redux/reduxTools";
+import { getStore } from "~/redux/store";
 import type { ReduxState } from "~/typeDefs";
 
 type StoreFromRedux<TReturn> = Readable<TReturn>;
