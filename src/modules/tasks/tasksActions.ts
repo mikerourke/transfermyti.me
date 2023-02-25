@@ -1,36 +1,31 @@
-import { createAction, createAsyncAction } from "typesafe-actions";
-
+import { createAction, createAsyncAction } from "~/redux/reduxTools";
 import type { Mapping, Task } from "~/typeDefs";
 
-export const createTasks = createAsyncAction(
-  "@tasks/createTasksRequest",
-  "@tasks/createTasksSuccess",
-  "@tasks/createTasksFailure",
-)<undefined, Record<Mapping, Dictionary<Task>>, undefined>();
+export const areAllTasksIncludedUpdated = createAction<boolean>(
+  "@tasks/areAllTasksIncludedUpdated",
+);
 
-export const deleteTasks = createAsyncAction(
-  "@tasks/deleteTasksRequest",
-  "@tasks/deleteTasksSuccess",
-  "@tasks/deleteTasksFailure",
-)<undefined, undefined, undefined>();
-
-export const fetchTasks = createAsyncAction(
-  "@tasks/fetchTasksRequest",
-  "@tasks/fetchTasksSuccess",
-  "@tasks/fetchTasksFailure",
-)<undefined, Record<Mapping, Dictionary<Task>>, undefined>();
-
-export const isTaskIncludedToggled = createAction(
+export const isTaskIncludedToggled = createAction<string>(
   "@tasks/isTaskIncludedToggled",
-)<string>();
+);
 
-export const isTaskIncludedUpdated = createAction(
-  "@tasks/isTaskIncludedUpdated",
-)<{
+export const isTaskIncludedUpdated = createAction<{
   id: string;
   isIncluded: boolean;
-}>();
+}>("@tasks/isTaskIncludedUpdated");
 
-export const areAllTasksIncludedUpdated = createAction(
-  "@tasks/areAllTasksIncludedUpdated",
-)<boolean>();
+export const createTasks = createAsyncAction<
+  undefined,
+  Record<Mapping, Dictionary<Task>>,
+  undefined
+>("@tasks/createTasks");
+
+export const deleteTasks = createAsyncAction<undefined, undefined, undefined>(
+  "@tasks/deleteTasks",
+);
+
+export const fetchTasks = createAsyncAction<
+  undefined,
+  Record<Mapping, Dictionary<Task>>,
+  undefined
+>("@tasks/fetchTasks");

@@ -5,7 +5,7 @@ import * as workspacesActions from "~/modules/workspaces/workspacesActions";
 import { FAKES } from "~/testUtilities";
 import { EntityGroup, Mapping } from "~/typeDefs";
 
-import { initialState, workspacesReducer } from "../workspacesReducer";
+import { workspacesInitialState, workspacesReducer } from "../workspacesReducer";
 
 const { INVALID_ACTION, REDUX_STATE, TOGGL_WORKSPACE_ID } = FAKES;
 
@@ -26,21 +26,21 @@ const MOCK_ALT_WORKSPACE = {
 
 describe("within workspacesReducer", () => {
   test("returns input state if an invalid action type is passed to the reducer", () => {
-    const result = workspacesReducer(initialState, INVALID_ACTION);
+    const result = workspacesReducer(workspacesInitialState, INVALID_ACTION);
 
-    expect(result).toEqual(initialState);
+    expect(result).toEqual(workspacesInitialState);
   });
 
   test("returns input state if no state is passed to the reducer", () => {
     const result = workspacesReducer(undefined, INVALID_ACTION);
 
-    expect(result).toEqual(initialState);
+    expect(result).toEqual(workspacesInitialState);
   });
 
   test("returns initial state when allEntitiesFlushed is dispatched", () => {
     const result = workspacesReducer(REDUX_STATE.workspaces, allEntitiesFlushed());
 
-    expect(result).toEqual(initialState);
+    expect(result).toEqual(workspacesInitialState);
   });
 
   describe("the isFetching is set to the correct value based on the dispatched action", () => {
@@ -270,7 +270,7 @@ describe("within workspacesReducer", () => {
 
   test("the activeWorkspaceIdUpdated action sets state.activeWorkspaceId to the payload", () => {
     const result = workspacesReducer(
-      initialState,
+      workspacesInitialState,
       workspacesActions.activeWorkspaceIdUpdated(TOGGL_WORKSPACE_ID),
     );
 
@@ -283,6 +283,6 @@ describe("within workspacesReducer", () => {
       workspacesActions.contentsForMappingReset(Mapping.Source),
     );
 
-    expect(result.source).toEqual(initialState.source);
+    expect(result.source).toEqual(workspacesInitialState.source);
   });
 });

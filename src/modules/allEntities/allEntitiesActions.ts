@@ -1,4 +1,4 @@
-import { createAction, createAsyncAction } from "typesafe-actions";
+import { createAction, createAsyncAction } from "~/redux/reduxTools";
 
 import type {
   EntityGroup,
@@ -7,56 +7,57 @@ import type {
   ToolNameByMapping,
 } from "~/typeDefs";
 
-export const createAllEntities = createAsyncAction(
-  "@allEntities/createAllEntitiesRequest",
-  "@allEntities/createAllEntitiesSuccess",
-  "@allEntities/createAllEntitiesFailure",
-)<undefined, undefined, undefined>();
-
-export const deleteAllEntities = createAsyncAction(
-  "@allEntities/deleteAllEntitiesRequest",
-  "@allEntities/deleteAllEntitiesSuccess",
-  "@allEntities/deleteAllEntitiesFailure",
-)<undefined, undefined, undefined>();
-
-export const fetchAllEntities = createAsyncAction(
-  "@allEntities/fetchAllEntitiesRequest",
-  "@allEntities/fetchAllEntitiesSuccess",
-  "@allEntities/fetchAllEntitiesFailure",
-)<undefined, undefined, undefined>();
-
-export const toolActionUpdated = createAction(
-  "@allEntities/toolActionUpdated",
-)<ToolAction>();
-
-export const toolNameByMappingUpdated = createAction(
-  "@allEntities/toolNameByMappingUpdated",
-)<ToolNameByMapping>();
-
-export const allEntitiesFlushed = createAction(
+export const allEntitiesFlushed = createAction<undefined>(
   "@allEntities/allEntitiesFlushed",
-)<undefined>();
+);
 
-export const isExistsInTargetShownToggled = createAction(
-  "@allEntities/isExistsInTargetShownToggled",
-)<undefined>();
-
-export const fetchAllFetchStatusUpdated = createAction(
-  "@allEntities/fetchAllFetchStatusUpdated",
-)<FetchStatus>();
-
-export const pushAllChangesFetchStatusUpdated = createAction(
-  "@allEntities/pushAllChangesFetchStatusUpdated",
-)<FetchStatus>();
-
-export const entityGroupInProcessUpdated = createAction(
+export const entityGroupInProcessUpdated = createAction<EntityGroup | null>(
   "@allEntities/entityGroupInProcessUpdated",
-)<EntityGroup | null>();
+);
 
-export const transferCountsByEntityGroupReset = createAction(
+export const entityGroupTransferCompletedCountIncremented =
+  createAction<EntityGroup>(
+    "@allEntities/entityGroupTransferCompletedCountIncremented",
+  );
+
+export const fetchAllFetchStatusUpdated = createAction<FetchStatus>(
+  "@allEntities/fetchAllFetchStatusUpdated",
+);
+
+export const isExistsInTargetShownToggled = createAction<undefined>(
+  "@allEntities/isExistsInTargetShownToggled",
+);
+
+export const pushAllChangesFetchStatusUpdated = createAction<FetchStatus>(
+  "@allEntities/pushAllChangesFetchStatusUpdated",
+);
+
+export const toolActionUpdated = createAction<ToolAction>(
+  "@allEntities/toolActionUpdated",
+);
+
+export const toolNameByMappingUpdated = createAction<ToolNameByMapping>(
+  "@allEntities/toolNameByMappingUpdated",
+);
+
+export const transferCountsByEntityGroupReset = createAction<undefined>(
   "@allEntities/transferCountsByEntityGroupReset",
-)<undefined>();
+);
 
-export const entityGroupTransferCompletedCountIncremented = createAction(
-  "@allEntities/entityGroupTransferCompletedCountIncremented",
-)<EntityGroup>();
+export const createAllEntities = createAsyncAction<
+  undefined,
+  undefined,
+  undefined
+>("@allEntities/createAllEntities");
+
+export const deleteAllEntities = createAsyncAction<
+  undefined,
+  undefined,
+  undefined
+>("@allEntities/deleteAllEntities");
+
+export const fetchAllEntities = createAsyncAction<
+  undefined,
+  undefined,
+  undefined
+>("@allEntities/fetchAllEntities");

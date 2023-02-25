@@ -1,29 +1,26 @@
-import { createAction, createAsyncAction } from "typesafe-actions";
-
+import { createAction, createAsyncAction } from "~/redux/reduxTools";
 import type { Mapping, Tag } from "~/typeDefs";
 
-export const createTags = createAsyncAction(
-  "@tags/createTagsRequest",
-  "@tags/createTagsSuccess",
-  "@tags/createTagsFailure",
-)<undefined, Record<Mapping, Dictionary<Tag>>, undefined>();
-
-export const deleteTags = createAsyncAction(
-  "@tags/deleteTagsRequest",
-  "@tags/deleteTagsSuccess",
-  "@tags/deleteTagsFailure",
-)<undefined, undefined, undefined>();
-
-export const fetchTags = createAsyncAction(
-  "@tags/fetchTagsRequest",
-  "@tags/fetchTagsSuccess",
-  "@tags/fetchTagsFailure",
-)<undefined, Record<Mapping, Dictionary<Tag>>, undefined>();
-
-export const isTagIncludedToggled = createAction(
-  "@tags/isTagIncludedToggled",
-)<string>();
-
-export const areAllTagsIncludedUpdated = createAction(
+export const areAllTagsIncludedUpdated = createAction<boolean>(
   "@tags/areAllTagsIncludedUpdated",
-)<boolean>();
+);
+
+export const isTagIncludedToggled = createAction<string>(
+  "@tags/isTagIncludedToggled",
+);
+
+export const createTags = createAsyncAction<
+  undefined,
+  Record<Mapping, Dictionary<Tag>>,
+  undefined
+>("@tags/createTags");
+
+export const deleteTags = createAsyncAction<undefined, undefined, undefined>(
+  "@tags/deleteTags",
+);
+
+export const fetchTags = createAsyncAction<
+  undefined,
+  Record<Mapping, Dictionary<Tag>>,
+  undefined
+>("@tags/fetchTags");

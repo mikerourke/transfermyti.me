@@ -4,7 +4,7 @@ import { describe, expect, test } from "vitest";
 import * as clientsActions from "~/modules/clients/clientsActions";
 import { FAKES } from "~/testUtilities";
 
-import { clientsReducer, initialState } from "../clientsReducer";
+import { clientsReducer, clientsInitialState } from "../clientsReducer";
 
 const { INVALID_ACTION, REDUX_STATE, TOGGL_CLIENT, TOGGL_CLIENT_ID } = FAKES;
 
@@ -15,15 +15,15 @@ const MOCK_PAYLOAD = {
 
 describe("within clientsReducer", () => {
   test("returns input state if an invalid action type is passed to the reducer", () => {
-    const result = clientsReducer(initialState, INVALID_ACTION);
+    const result = clientsReducer(clientsInitialState, INVALID_ACTION);
 
-    expect(result).toEqual(initialState);
+    expect(result).toEqual(clientsInitialState);
   });
 
   test("returns input state if no state is passed to the reducer", () => {
     const result = clientsReducer(undefined, INVALID_ACTION);
 
-    expect(result).toEqual(initialState);
+    expect(result).toEqual(clientsInitialState);
   });
 
   describe("the isFetching is set to the correct value based on the dispatched action", () => {
@@ -128,6 +128,6 @@ describe("within clientsReducer", () => {
   test("the deleteClients.success action resets state to initial state", () => {
     const result = clientsReducer(REDUX_STATE.clients, clientsActions.deleteClients.success());
 
-    expect(result).toEqual(initialState);
+    expect(result).toEqual(clientsInitialState);
   });
 });

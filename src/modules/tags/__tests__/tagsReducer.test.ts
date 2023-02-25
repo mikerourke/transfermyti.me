@@ -4,7 +4,7 @@ import { describe, expect, test } from "vitest";
 import * as tagsActions from "~/modules/tags/tagsActions";
 import { FAKES } from "~/testUtilities";
 
-import { initialState, tagsReducer } from "../tagsReducer";
+import { tagsInitialState, tagsReducer } from "../tagsReducer";
 
 const { INVALID_ACTION, REDUX_STATE, TOGGL_TAG_ID } = FAKES;
 
@@ -15,15 +15,15 @@ const MOCK_PAYLOAD = {
 
 describe("within tagsReducer", () => {
   test("returns input state if an invalid action type is passed to the reducer", () => {
-    const result = tagsReducer(initialState, INVALID_ACTION);
+    const result = tagsReducer(tagsInitialState, INVALID_ACTION);
 
-    expect(result).toEqual(initialState);
+    expect(result).toEqual(tagsInitialState);
   });
 
   test("returns input state if no state is passed to the reducer", () => {
     const result = tagsReducer(undefined, INVALID_ACTION);
 
-    expect(result).toEqual(initialState);
+    expect(result).toEqual(tagsInitialState);
   });
 
   describe("the isFetching is set to the correct value based on the dispatched action", () => {
@@ -137,6 +137,6 @@ describe("within tagsReducer", () => {
   test("the deleteTags.success action resets state to initial state", () => {
     const result = tagsReducer(REDUX_STATE.tags, tagsActions.deleteTags.success());
 
-    expect(result).toEqual(initialState);
+    expect(result).toEqual(tagsInitialState);
   });
 });

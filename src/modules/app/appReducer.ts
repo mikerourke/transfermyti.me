@@ -1,46 +1,42 @@
 import { nanoid } from "nanoid";
-import { createReducer, type ActionType } from "typesafe-actions";
 
-import * as appActions from "~/modules/app/appActions";
+import { createReducer } from "~/redux/reduxTools";
 import type { Notification } from "~/typeDefs";
 import { isDevelopmentMode } from "~/utilities/environment";
 
-type AppAction = ActionType<typeof appActions>;
+import * as appActions from "./appActions";
 
 export interface AppState {
   readonly notifications: Notification[];
 }
 
-export const initialState: AppState = {
+export const appInitialState: AppState = {
   notifications: [],
 };
 
-export const appReducer = createReducer<AppState, AppAction>(initialState)
-  .handleAction(appActions.notificationShown, (state, { payload }) => ({
-    ...state,
-    notifications: [...state.notifications, { ...payload, id: nanoid() }],
-  }))
-  .handleAction(appActions.errorNotificationShown, (state, { payload }) => ({
-    ...state,
-    notifications: [
-      ...state.notifications,
-      {
-        id: nanoid(),
-        message: messageFromErrorOrResponse(payload),
-        type: "error",
-      },
-    ],
-  }))
-  .handleAction(appActions.notificationDismissed, (state, { payload }) => ({
-    ...state,
-    notifications: state.notifications.filter(({ id }) => id !== payload),
-  }))
-  .handleAction(appActions.allNotificationsDismissed, (state) => ({
-    ...state,
-    notifications: [],
-  }));
+export const appReducer = createReducer<AppState>(
+  appInitialState,
+  (builder) => {
+    builder
+      .addCase(appActions.allNotificationsDismissed, (state) => {
+        state.notifications = [];
+      })
+      .addCase(appActions.errorNotificationShown, (state, { payload }) => ({
+        ...state,
+        notifications: [...state.notifications, getErrorNotification(payload)],
+      }))
+      .addCase(appActions.notificationShown, (state, { payload }) => ({
+        ...state,
+        notifications: [...state.notifications, { ...payload, id: nanoid() }],
+      }))
+      .addCase(appActions.notificationDismissed, (state, { payload }) => ({
+        ...state,
+        notifications: state.notifications.filter(({ id }) => id !== payload),
+      }));
+  },
+);
 
-function messageFromErrorOrResponse(err: Error | Response): string {
+function getErrorNotification(err: Error | Response): Notification {
   /* istanbul ignore if  */
   if (isDevelopmentMode()) {
     console.error(err);
@@ -59,7 +55,11 @@ function messageFromErrorOrResponse(err: Error | Response): string {
     message = "Parsing error";
   }
 
-  return `The following error occurred: ${message}`;
+  return {
+    id: nanoid(),
+    message: `The following error occurred: ${message}`,
+    type: "error",
+  };
 }
 
 function extrapolateApiErrorMessage(response: Response): string {

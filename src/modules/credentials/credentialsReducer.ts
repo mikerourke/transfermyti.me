@@ -1,13 +1,11 @@
-import { createReducer, type ActionType } from "typesafe-actions";
-
-import * as credentialsActions from "~/modules/credentials/credentialsActions";
+import { createReducer } from "~/redux/reduxTools";
 import {
   FetchStatus,
   type Credentials,
   type ValidationErrorsByMapping,
 } from "~/typeDefs";
 
-type CredentialsAction = ActionType<typeof credentialsActions>;
+import * as credentialsActions from "./credentialsActions";
 
 export interface CredentialsState {
   readonly source: Credentials;
@@ -21,7 +19,7 @@ const DEFAULT_VALIDATION_ERRORS = {
   target: null,
 };
 
-export const initialState: CredentialsState = {
+export const credentialsInitialState: CredentialsState = {
   source: {
     apiKey: null,
     email: null,
@@ -36,74 +34,70 @@ export const initialState: CredentialsState = {
   validationFetchStatus: FetchStatus.Pending,
 };
 
-export const credentialsReducer = createReducer<
-  CredentialsState,
-  CredentialsAction
->(initialState)
-  .handleAction(credentialsActions.validateCredentials.request, (state) => ({
-    ...state,
-    validationFetchStatus: FetchStatus.InProcess,
-    validationErrorsByMapping: { ...DEFAULT_VALIDATION_ERRORS },
-  }))
-  .handleAction(
-    credentialsActions.validateCredentials.failure,
-    (state, { payload }) => ({
-      ...state,
-      validationFetchStatus: FetchStatus.Error,
-      validationErrorsByMapping: payload,
-    }),
-  )
-  .handleAction(
-    credentialsActions.validateCredentials.success,
-    (state, { payload }) => ({
-      ...state,
-      ...payload,
-      validationFetchStatus: FetchStatus.Success,
-      validationErrorsByMapping: { ...DEFAULT_VALIDATION_ERRORS },
-    }),
-  )
-  .handleAction(credentialsActions.credentialsFlushed, () => ({
-    ...initialState,
-  }))
-  .handleAction(credentialsActions.credentialsUpdated, (state, { payload }) => {
-    const { mapping, ...credentials } = payload;
-    return {
-      ...state,
-      [mapping]: {
-        ...state[mapping],
-        ...credentials,
-      },
-    };
-  })
-  .handleAction(credentialsActions.apiKeysUpdated, (state, { payload }) => {
-    const source = {
-      ...state.source,
-      apiKey: payload.source ?? state.source.apiKey,
-    };
-
-    const target = {
-      ...state.target,
-      apiKey: payload.target ?? state.target.apiKey,
-    };
-
-    return {
-      ...state,
-      source,
-      target,
-    };
-  })
-  .handleAction(
-    credentialsActions.validationFetchStatusUpdated,
-    (state, { payload }) => {
-      let newValidationErrors = { ...state.validationErrorsByMapping };
-      if (payload === FetchStatus.Pending) {
-        newValidationErrors = { ...DEFAULT_VALIDATION_ERRORS };
-      }
-
-      return {
+export const credentialsReducer = createReducer<CredentialsState>(
+  credentialsInitialState,
+  (builder) => {
+    builder
+      .addCase(credentialsActions.apiKeysUpdated, (state, { payload }) => ({
         ...state,
-        validationFetchStatus: payload,
-        validationErrorsByMapping: newValidationErrors,
-      };
-    },
-  );
+        source: {
+          ...state.source,
+          apiKey: payload.source ?? state.source.apiKey,
+        },
+        target: {
+          ...state.target,
+          apiKey: payload.target ?? state.target.apiKey,
+        },
+      }))
+      .addCase(credentialsActions.credentialsFlushed, () => ({
+        ...credentialsInitialState,
+      }))
+      .addCase(credentialsActions.credentialsUpdated, (state, { payload }) => {
+        const { mapping, ...credentials } = payload;
+        return {
+          ...state,
+          [mapping]: {
+            ...state[mapping],
+            ...credentials,
+          },
+        };
+      })
+      .addCase(
+        credentialsActions.validationFetchStatusUpdated,
+        (state, { payload }) => {
+          let newValidationErrors = { ...state.validationErrorsByMapping };
+          if (payload === FetchStatus.Pending) {
+            newValidationErrors = { ...DEFAULT_VALIDATION_ERRORS };
+          }
+
+          return {
+            ...state,
+            validationFetchStatus: payload,
+            validationErrorsByMapping: newValidationErrors,
+          };
+        },
+      )
+      .addCase(credentialsActions.validateCredentials.request, (state) => ({
+        ...state,
+        validationFetchStatus: FetchStatus.InProcess,
+        validationErrorsByMapping: { ...DEFAULT_VALIDATION_ERRORS },
+      }))
+      .addCase(
+        credentialsActions.validateCredentials.failure,
+        (state, { payload }) => ({
+          ...state,
+          validationFetchStatus: FetchStatus.Error,
+          validationErrorsByMapping: payload,
+        }),
+      )
+      .addCase(
+        credentialsActions.validateCredentials.success,
+        (state, { payload }) => ({
+          ...state,
+          ...payload,
+          validationFetchStatus: FetchStatus.Success,
+          validationErrorsByMapping: { ...DEFAULT_VALIDATION_ERRORS },
+        }),
+      );
+  },
+);

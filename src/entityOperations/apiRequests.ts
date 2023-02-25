@@ -1,4 +1,3 @@
-import { stringify } from "qs";
 import { isNil } from "ramda";
 import type { SagaIterator } from "redux-saga";
 import { call, delay } from "redux-saga/effects";
@@ -20,7 +19,7 @@ type TogglApiContext = "api" | "reports";
  */
 export function* fetchPaginatedFromClockify<TEntity>(
   apiUrl: string,
-  queryParams: Dictionary<unknown> = {},
+  queryParams: Dictionary<boolean | number | string> = {},
 ): SagaIterator<TEntity[]> {
   let keepFetching = true;
 
@@ -29,11 +28,16 @@ export function* fetchPaginatedFromClockify<TEntity>(
   const allEntityRecords: TEntity[] = [];
 
   while (keepFetching) {
-    const query = stringify({
-      page: currentPage,
-      "page-size": CLOCKIFY_API_PAGE_SIZE,
-      ...queryParams,
-    });
+    const allParams = {
+      page: currentPage.toString(),
+      "page-size": CLOCKIFY_API_PAGE_SIZE.toString(),
+    };
+
+    for (const [key, value] of Object.entries(queryParams)) {
+      allParams[key] = value.toString();
+    }
+
+    const query = new URLSearchParams(allParams).toString();
 
     const endpoint = `${apiUrl}?${query}`;
 

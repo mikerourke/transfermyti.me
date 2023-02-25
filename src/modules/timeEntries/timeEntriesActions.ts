@@ -1,33 +1,32 @@
-import { createAction, createAsyncAction } from "typesafe-actions";
-
+import { createAction, createAsyncAction } from "~/redux/reduxTools";
 import type { Mapping, TimeEntry } from "~/typeDefs";
 
-export const createTimeEntries = createAsyncAction(
-  "@timeEntries/createTimeEntriesRequest",
-  "@timeEntries/createTimeEntriesSuccess",
-  "@timeEntries/createTimeEntriesFailure",
-)<undefined, Record<Mapping, Dictionary<TimeEntry>>, undefined>();
-
-export const deleteTimeEntries = createAsyncAction(
-  "@timeEntries/deleteTimeEntriesRequest",
-  "@timeEntries/deleteTimeEntriesSuccess",
-  "@timeEntries/deleteTimeEntriesFailure",
-)<undefined, undefined, undefined>();
-
-export const fetchTimeEntries = createAsyncAction(
-  "@timeEntries/fetchTimeEntriesRequest",
-  "@timeEntries/fetchTimeEntriesSuccess",
-  "@timeEntries/fetchTimeEntriesFailure",
-)<undefined, Record<Mapping, Dictionary<TimeEntry>>, undefined>();
-
-export const isTimeEntryIncludedToggled = createAction(
-  "@timeEntries/isTimeEntryIncludedToggled",
-)<string>();
-
-export const isDuplicateCheckEnabledToggled = createAction(
-  "@timeEntries/isDuplicateCheckEnabledToggled",
-)<undefined>();
-
-export const areAllTimeEntriesIncludedUpdated = createAction(
+export const areAllTimeEntriesIncludedUpdated = createAction<boolean>(
   "@timeEntries/areAllTimeEntriesIncludedUpdated",
-)<boolean>();
+);
+
+export const isDuplicateCheckEnabledToggled = createAction<undefined>(
+  "@timeEntries/isDuplicateCheckEnabledToggled",
+);
+
+export const isTimeEntryIncludedToggled = createAction<string>(
+  "@timeEntries/isTimeEntryIncludedToggled",
+);
+
+export const createTimeEntries = createAsyncAction<
+  undefined,
+  Record<Mapping, Dictionary<TimeEntry>>,
+  undefined
+>("@timeEntries/createTimeEntries");
+
+export const deleteTimeEntries = createAsyncAction<
+  undefined,
+  undefined,
+  undefined
+>("@timeEntries/deleteTimeEntr");
+
+export const fetchTimeEntries = createAsyncAction<
+  undefined,
+  Record<Mapping, Dictionary<TimeEntry>>,
+  undefined
+>("@timeEntries/fetchTimeEntries");

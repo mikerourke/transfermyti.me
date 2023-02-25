@@ -1,13 +1,9 @@
 import { isNil, propOr } from "ramda";
-import {
-  createSelector,
-  createStructuredSelector,
-  type Selector,
-} from "reselect";
 
 import { mappingByToolNameSelector } from "~/modules/allEntities/allEntitiesSelectors";
 import { sourceTimeEntryCountByTagIdSelector } from "~/modules/timeEntries/timeEntriesSelectors";
 import { activeWorkspaceIdSelector } from "~/modules/workspaces/workspacesSelectors";
+import { createSelector, type Selector } from "~/redux/reduxTools";
 import type {
   EntityTableRecord,
   Mapping,
@@ -36,13 +32,14 @@ const targetTagsSelector = createSelector(
   (targetTagsById): Tag[] => Object.values(targetTagsById),
 );
 
-const tagsByMappingSelector = createStructuredSelector<
-  ReduxState,
-  Record<Mapping, Tag[]>
->({
-  source: sourceTagsSelector,
-  target: targetTagsSelector,
-});
+const tagsByMappingSelector = createSelector(
+  sourceTagsSelector,
+  targetTagsSelector,
+  (sourceTags, targetTags): Record<Mapping, Tag[]> => ({
+    source: sourceTags,
+    target: targetTags,
+  }),
+);
 
 export const includedSourceTagsSelector = createSelector(
   sourceTagsSelector,

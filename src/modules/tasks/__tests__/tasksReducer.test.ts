@@ -4,7 +4,7 @@ import { describe, expect, test } from "vitest";
 import * as tasksActions from "~/modules/tasks/tasksActions";
 import { FAKES } from "~/testUtilities";
 
-import { initialState, tasksReducer } from "../tasksReducer";
+import { tasksInitialState, tasksReducer } from "../tasksReducer";
 
 const { INVALID_ACTION, REDUX_STATE, TOGGL_TASK_ID } = FAKES;
 
@@ -15,15 +15,15 @@ const MOCK_PAYLOAD = {
 
 describe("within tasksReducer", () => {
   test("returns input state if an invalid action type is passed to the reducer", () => {
-    const result = tasksReducer(initialState, INVALID_ACTION);
+    const result = tasksReducer(tasksInitialState, INVALID_ACTION);
 
-    expect(result).toEqual(initialState);
+    expect(result).toEqual(tasksInitialState);
   });
 
   test("returns input state if no state is passed to the reducer", () => {
     const result = tasksReducer(undefined, INVALID_ACTION);
 
-    expect(result).toEqual(initialState);
+    expect(result).toEqual(tasksInitialState);
   });
 
   describe("the isFetching is set to the correct value based on the dispatched action", () => {
@@ -159,6 +159,6 @@ describe("within tasksReducer", () => {
   test("the deleteTasks.success action resets state to initial state", () => {
     const result = tasksReducer(REDUX_STATE.tasks, tasksActions.deleteTasks.success());
 
-    expect(result).toEqual(initialState);
+    expect(result).toEqual(tasksInitialState);
   });
 });

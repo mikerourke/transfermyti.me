@@ -1,35 +1,45 @@
-import { createAction, createAsyncAction } from "typesafe-actions";
-
+import { createAction, createAsyncAction } from "~/redux/reduxTools";
 import type { Mapping, Workspace } from "~/typeDefs";
 
-export const createWorkspaces = createAsyncAction(
-  "@workspaces/createWorkspacesRequest",
-  "@workspaces/createWorkspacesSuccess",
-  "@workspaces/createWorkspacesFailure",
-)<undefined, Record<Mapping, Dictionary<Workspace>>, undefined>();
-
-export const fetchWorkspaces = createAsyncAction(
-  "@workspaces/fetchWorkspacesRequest",
-  "@workspaces/fetchWorkspacesSuccess",
-  "@workspaces/fetchWorkspacesFailure",
-)<undefined, Record<Mapping, Dictionary<Workspace>>, undefined>();
-
-export const activeWorkspaceIdUpdated = createAction(
+export const activeWorkspaceIdUpdated = createAction<string>(
   "@workspaces/activeWorkspaceIdUpdated",
-)<string>();
+);
 
-export const workspaceLinkingUpdated = createAction(
-  "@workspaces/workspaceLinkingUpdated",
-)<{ sourceId: string; targetId: string | null }>();
-
-export const userIdsAppendedToWorkspace = createAction(
-  "@workspaces/userIdsAppendedToWorkspace",
-)<{ mapping: Mapping; workspaceId: string; userIds: string[] }>();
-
-export const isWorkspaceIncludedToggled = createAction(
-  "@workspaces/isWorkspaceIncludedToggled",
-)<Workspace>();
-
-export const contentsForMappingReset = createAction(
+export const contentsForMappingReset = createAction<Mapping>(
   "@workspaces/contentsForMappingReset",
-)<Mapping>();
+);
+
+export const isWorkspaceIncludedToggled = createAction<Workspace>(
+  "@workspaces/isWorkspaceIncludedToggled",
+);
+
+interface UserIdsAppendedPayload {
+  mapping: Mapping;
+  workspaceId: string;
+  userIds: string[];
+}
+
+export const userIdsAppendedToWorkspace = createAction<UserIdsAppendedPayload>(
+  "@workspaces/userIdsAppendedToWorkspace",
+);
+
+interface WorkspaceLinkingPayload {
+  sourceId: string;
+  targetId: string | null;
+}
+
+export const workspaceLinkingUpdated = createAction<WorkspaceLinkingPayload>(
+  "@workspaces/workspaceLinkingUpdated",
+);
+
+export const createWorkspaces = createAsyncAction<
+  undefined,
+  Record<Mapping, Dictionary<Workspace>>,
+  undefined
+>("@workspaces/createWorkspaces");
+
+export const fetchWorkspaces = createAsyncAction<
+  undefined,
+  Record<Mapping, Dictionary<Workspace>>,
+  undefined
+>("@workspaces/fetchWorkspaces");

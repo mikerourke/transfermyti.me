@@ -1,12 +1,16 @@
 import { lensPath, not, over } from "ramda";
-import { createReducer, type ActionType } from "typesafe-actions";
 
 import { updateAreAllRecordsIncluded } from "~/entityOperations/updateAreAllRecordsIncluded";
 import { allEntitiesFlushed } from "~/modules/allEntities/allEntitiesActions";
-import * as tagsActions from "~/modules/tags/tagsActions";
+import {
+  createReducer,
+  isActionOf,
+  type ActionType,
+  type AnyAction,
+} from "~/redux/reduxTools";
 import { Mapping, type Tag } from "~/typeDefs";
 
-type TagsAction = ActionType<typeof tagsActions | typeof allEntitiesFlushed>;
+import * as tagsActions from "./tagsActions";
 
 export interface TagsState {
   readonly source: Dictionary<Tag>;
@@ -14,60 +18,107 @@ export interface TagsState {
   readonly isFetching: boolean;
 }
 
-export const initialState: TagsState = {
+export const tagsInitialState: TagsState = {
   source: {},
   target: {},
   isFetching: false,
 };
 
-export const tagsReducer = createReducer<TagsState, TagsAction>(initialState)
-  .handleAction(
+export const tagsReducer = createReducer<TagsState>(
+  tagsInitialState,
+  (builder) => {
+    builder
+      .addCase(tagsActions.areAllTagsIncludedUpdated, (state, { payload }) => ({
+        ...state,
+        source: updateAreAllRecordsIncluded(state.source, payload),
+      }))
+      .addCase(tagsActions.isTagIncludedToggled, (state, { payload }) =>
+        over(lensPath([Mapping.Source, payload, "isIncluded"]), not, state),
+      )
+      .addMatcher(isTagsApiSuccessAction, (state, { payload }) => ({
+        ...state,
+        source: {
+          ...state.source,
+          ...payload.source,
+        },
+        target: {
+          ...state.target,
+          ...payload.target,
+        },
+        isFetching: false,
+      }))
+      .addMatcher(isTagsApiRequestAction, (state) => {
+        state.isFetching = true;
+      })
+      .addMatcher(isTagsApiFailureAction, (state) => {
+        state.isFetching = false;
+      })
+      .addMatcher(isResetTagsStateAction, () => ({
+        ...tagsInitialState,
+      }));
+  },
+);
+
+type TagsCreateOrFetchSuccessAction = ActionType<
+  typeof tagsActions.createTags.success | typeof tagsActions.fetchTags.success
+>;
+
+function isTagsApiSuccessAction(
+  action: AnyAction,
+): action is TagsCreateOrFetchSuccessAction {
+  return isActionOf(
     [tagsActions.createTags.success, tagsActions.fetchTags.success],
-    (state, { payload }) => ({
-      ...state,
-      source: {
-        ...state.source,
-        ...payload.source,
-      },
-      target: {
-        ...state.target,
-        ...payload.target,
-      },
-      isFetching: false,
-    }),
-  )
-  .handleAction(
+    action,
+  );
+}
+
+type TagsApiRequestAction = ActionType<
+  | typeof tagsActions.createTags.request
+  | typeof tagsActions.deleteTags.request
+  | typeof tagsActions.fetchTags.request
+>;
+
+function isTagsApiRequestAction(
+  action: AnyAction,
+): action is TagsApiRequestAction {
+  return isActionOf(
     [
       tagsActions.createTags.request,
       tagsActions.deleteTags.request,
       tagsActions.fetchTags.request,
     ],
-    (state) => ({
-      ...state,
-      isFetching: true,
-    }),
-  )
-  .handleAction(
+    action,
+  );
+}
+
+type TagsApiFailureAction = ActionType<
+  | typeof tagsActions.createTags.failure
+  | typeof tagsActions.deleteTags.failure
+  | typeof tagsActions.fetchTags.failure
+>;
+
+function isTagsApiFailureAction(
+  action: AnyAction,
+): action is TagsApiFailureAction {
+  return isActionOf(
     [
       tagsActions.createTags.failure,
       tagsActions.deleteTags.failure,
       tagsActions.fetchTags.failure,
     ],
-    (state) => ({
-      ...state,
-      isFetching: false,
-    }),
-  )
-  .handleAction(tagsActions.isTagIncludedToggled, (state, { payload }) =>
-    over(lensPath([Mapping.Source, payload, "isIncluded"]), not, state),
-  )
-  .handleAction(
-    tagsActions.areAllTagsIncludedUpdated,
-    (state, { payload }) => ({
-      ...state,
-      source: updateAreAllRecordsIncluded(state.source, payload),
-    }),
-  )
-  .handleAction([tagsActions.deleteTags.success, allEntitiesFlushed], () => ({
-    ...initialState,
-  }));
+    action,
+  );
+}
+
+type ResetTagsStateAction = ActionType<
+  typeof tagsActions.deleteTags.success | typeof allEntitiesFlushed
+>;
+
+function isResetTagsStateAction(
+  action: AnyAction,
+): action is ResetTagsStateAction {
+  return isActionOf(
+    [tagsActions.deleteTags.success, allEntitiesFlushed],
+    action,
+  );
+}

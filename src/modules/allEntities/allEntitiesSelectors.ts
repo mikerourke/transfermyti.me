@@ -1,6 +1,6 @@
 import { invertObj } from "ramda";
-import { createSelector } from "reselect";
 
+import { createSelector } from "~/redux/reduxTools";
 import {
   EntityGroup,
   FetchStatus,
@@ -61,26 +61,25 @@ const findLengthOfIncluded = (
 
 export const includedCountsByEntityGroupSelector = createSelector(
   (state: ReduxState) => state.clients.source,
-  (state: ReduxState) => state.tags.source,
   (state: ReduxState) => state.projects.source,
+  (state: ReduxState) => state.tags.source,
   (state: ReduxState) => state.tasks.source,
   (state: ReduxState) => state.timeEntries.source,
   (
     sourceClientsById,
-    sourceTagsById,
     sourceProjectsById,
+    sourceTagsById,
     sourceTasksById,
     sourceTimeEntriesById,
-  ): CountsByEntityGroup =>
-    ({
-      [EntityGroup.Clients]: findLengthOfIncluded(sourceClientsById),
-      [EntityGroup.Tags]: findLengthOfIncluded(sourceTagsById),
-      [EntityGroup.Projects]: findLengthOfIncluded(sourceProjectsById),
-      [EntityGroup.Tasks]: findLengthOfIncluded(sourceTasksById),
-      [EntityGroup.TimeEntries]: findLengthOfIncluded(sourceTimeEntriesById),
-      [EntityGroup.UserGroups]: 0,
-      [EntityGroup.Users]: 0,
-    } as CountsByEntityGroup),
+  ): CountsByEntityGroup => ({
+    [EntityGroup.Clients]: findLengthOfIncluded(sourceClientsById),
+    [EntityGroup.Projects]: findLengthOfIncluded(sourceProjectsById),
+    [EntityGroup.Tags]: findLengthOfIncluded(sourceTagsById),
+    [EntityGroup.Tasks]: findLengthOfIncluded(sourceTasksById),
+    [EntityGroup.TimeEntries]: findLengthOfIncluded(sourceTimeEntriesById),
+    [EntityGroup.UserGroups]: 0,
+    [EntityGroup.Users]: 0,
+  }),
 );
 
 export const totalIncludedRecordsCountSelector = createSelector(
@@ -142,9 +141,9 @@ export const toolHelpDetailsByMappingSelector = createSelector(
     const findToolLink = (toolName: ToolName): string => {
       if (toolName === ToolName.Clockify) {
         return "https://clockify.me/user/settings";
+      } else {
+        return "https://toggl.com/app/profile";
       }
-
-      return "https://toggl.com/app/profile";
     };
 
     const toolHelpDetailsByMapping: Record<Mapping, ToolHelpDetails> = {
@@ -170,9 +169,9 @@ export const targetToolDisplayNameSelector = createSelector(
   (toolNameByMapping, toolDisplayNameByMapping): string => {
     if (toolNameByMapping[Mapping.Target] === ToolName.None) {
       return toolDisplayNameByMapping[Mapping.Source];
+    } else {
+      return toolDisplayNameByMapping[Mapping.Target];
     }
-
-    return toolDisplayNameByMapping[Mapping.Target];
   },
 );
 

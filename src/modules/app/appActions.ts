@@ -1,19 +1,18 @@
-import { createAction } from "typesafe-actions";
-
+import { createAction } from "~/redux/reduxTools";
 import type { Notification } from "~/typeDefs";
 
-export const notificationDismissed = createAction(
-  "@app/notificationDismissed",
-)<string>();
-
-export const allNotificationsDismissed = createAction(
+export const allNotificationsDismissed = createAction<undefined>(
   "@app/allNotificationsDismissed",
-)<undefined>();
+);
 
-export const notificationShown = createAction("@app/notificationShown")<
-  Omit<Notification, "id">
->();
-
-export const errorNotificationShown = createAction(
+export const errorNotificationShown = createAction<Error | Response>(
   "@app/errorNotificationShown",
-)<Error | Response>();
+);
+
+export const notificationDismissed = createAction<string>(
+  "@app/notificationDismissed",
+);
+
+export const notificationShown = createAction<Omit<Notification, "id">>(
+  "@app/notificationShown",
+);

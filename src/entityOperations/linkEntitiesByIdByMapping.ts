@@ -165,7 +165,7 @@ function* linkForMappingForTimeEntries(
   sourceTimeEntries: TimeEntry[],
   targetTimeEntries: TimeEntry[],
 ): SagaIterator<Record<Mapping, Dictionary<TimeEntry>>> {
-  // I can't use the `sourceProjectsById` selector here because I get a reselect
+  // I can't use the `sourceProjectsById` selector here because I get an
   // error. Since the linking process only happens when the time entries are
   // initially fetched/created, it shouldn't cause a performance hit due to
   // lack of memoization:

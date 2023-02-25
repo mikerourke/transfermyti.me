@@ -1,7 +1,7 @@
-import type { Selector } from "reselect";
 import { readable, type Readable } from "svelte/store";
 
 import { getStore } from "~/redux/configureStore";
+import type { Selector } from "~/redux/reduxTools";
 import type { ReduxState } from "~/typeDefs";
 
 type StoreFromRedux<TReturn> = Readable<TReturn>;
@@ -11,7 +11,7 @@ export const dispatchAction = getStore().dispatch;
 /**
  * Wraps a selector in a Svelte store, so you can refer to the value reactively
  * and only declare the variable once.
- * @param selector Reselect selector to subscribe to for reactivity
+ * @param selector Selector to subscribe to for reactivity
  */
 export function selectorToStore<TReturn>(
   selector: Selector<ReduxState, TReturn>,

@@ -4,7 +4,7 @@ import { describe, expect, test } from "vitest";
 import * as timeEntriesActions from "~/modules/timeEntries/timeEntriesActions";
 import { FAKES } from "~/testUtilities";
 
-import { initialState, timeEntriesReducer } from "../timeEntriesReducer";
+import { timeEntriesInitialState, timeEntriesReducer } from "../timeEntriesReducer";
 
 const { INVALID_ACTION, REDUX_STATE, TOGGL_TIME_ENTRY_ID } = FAKES;
 
@@ -15,15 +15,15 @@ const MOCK_PAYLOAD = {
 
 describe("within timeEntriesReducer", () => {
   test("returns input state if an invalid action type is passed to the reducer", () => {
-    const result = timeEntriesReducer(initialState, INVALID_ACTION);
+    const result = timeEntriesReducer(timeEntriesInitialState, INVALID_ACTION);
 
-    expect(result).toEqual(initialState);
+    expect(result).toEqual(timeEntriesInitialState);
   });
 
   test("returns input state if no state is passed to the reducer", () => {
     const result = timeEntriesReducer(undefined, INVALID_ACTION);
 
-    expect(result).toEqual(initialState);
+    expect(result).toEqual(timeEntriesInitialState);
   });
 
   describe("the isFetching is set to the correct value based on the dispatched action", () => {
@@ -154,6 +154,6 @@ describe("within timeEntriesReducer", () => {
       timeEntriesActions.deleteTimeEntries.success(),
     );
 
-    expect(result).toEqual(initialState);
+    expect(result).toEqual(timeEntriesInitialState);
   });
 });

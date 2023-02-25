@@ -4,7 +4,7 @@ import { describe, expect, test } from "vitest";
 import * as usersActions from "~/modules/users/usersActions";
 import { FAKES } from "~/testUtilities";
 
-import { initialState, usersReducer } from "../usersReducer";
+import { usersInitialState, usersReducer } from "../usersReducer";
 
 const { INVALID_ACTION, REDUX_STATE, TOGGL_USER_ID } = FAKES;
 
@@ -15,15 +15,15 @@ const MOCK_PAYLOAD = {
 
 describe("within usersReducer", () => {
   test("returns input state if an invalid action type is passed to the reducer", () => {
-    const result = usersReducer(initialState, INVALID_ACTION);
+    const result = usersReducer(usersInitialState, INVALID_ACTION);
 
-    expect(result).toEqual(initialState);
+    expect(result).toEqual(usersInitialState);
   });
 
   test("returns input state if no state is passed to the reducer", () => {
     const result = usersReducer(undefined, INVALID_ACTION);
 
-    expect(result).toEqual(initialState);
+    expect(result).toEqual(usersInitialState);
   });
 
   describe("the isFetching is set to the correct value based on the dispatched action", () => {
@@ -112,6 +112,6 @@ describe("within usersReducer", () => {
   test("the deleteUsers.success action resets state to initial state", () => {
     const result = usersReducer(REDUX_STATE.users, usersActions.deleteUsers.success());
 
-    expect(result).toEqual(initialState);
+    expect(result).toEqual(usersInitialState);
   });
 });

@@ -1,6 +1,5 @@
-import { createSelector } from "reselect";
-
 import { toolNameByMappingSelector } from "~/modules/allEntities/allEntitiesSelectors";
+import { createSelector } from "~/redux/reduxTools";
 import {
   FetchStatus,
   Mapping,

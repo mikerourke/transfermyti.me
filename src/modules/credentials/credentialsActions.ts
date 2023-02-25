@@ -1,5 +1,4 @@
-import { createAction, createAsyncAction } from "typesafe-actions";
-
+import { createAction, createAsyncAction } from "~/redux/reduxTools";
 import type {
   CredentialsByMapping,
   FetchStatus,
@@ -8,28 +7,28 @@ import type {
   ValidationErrorsByMapping,
 } from "~/typeDefs";
 
-export const validateCredentials = createAsyncAction(
-  "@credentials/validateCredentialsRequest",
-  "@credentials/validateCredentialsSuccess",
-  "@credentials/validateCredentialsFailure",
-)<undefined, CredentialsByMapping, ValidationErrorsByMapping>();
+export const apiKeysUpdated = createAction<Record<Mapping, string>>(
+  "@credentials/apiKeysUpdated",
+);
 
-export const credentialsStored = createAction(
-  "@credentials/credentialsStored",
-)<undefined>();
-
-export const credentialsFlushed = createAction(
+export const credentialsFlushed = createAction<undefined>(
   "@credentials/credentialsFlushed",
-)<undefined>();
+);
 
-export const credentialsUpdated = createAction(
+export const credentialsStored = createAction<undefined>(
+  "@credentials/credentialsStored",
+);
+
+export const credentialsUpdated = createAction<PartialCredentialsUpdate>(
   "@credentials/credentialsUpdated",
-)<PartialCredentialsUpdate>();
+);
 
-export const apiKeysUpdated = createAction("@credentials/apiKeysUpdated")<
-  Record<Mapping, string>
->();
-
-export const validationFetchStatusUpdated = createAction(
+export const validationFetchStatusUpdated = createAction<FetchStatus>(
   "@credentials/validationFetchStatusUpdated",
-)<FetchStatus>();
+);
+
+export const validateCredentials = createAsyncAction<
+  undefined,
+  CredentialsByMapping,
+  ValidationErrorsByMapping
+>("@credentials/validateCredentials");

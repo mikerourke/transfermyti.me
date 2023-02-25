@@ -1,7 +1,6 @@
 import { indexBy, pathOr, prop } from "ramda";
 import type { SagaIterator } from "redux-saga";
 import { all, call, put, select, takeEvery } from "redux-saga/effects";
-import { isActionOf, type ActionType } from "typesafe-actions";
 
 import { linkEntitiesByIdByMapping } from "~/entityOperations/linkEntitiesByIdByMapping";
 import {
@@ -20,6 +19,7 @@ import {
   sourceTasksByIdSelector,
   sourceTasksForTransferSelector,
 } from "~/modules/tasks/tasksSelectors";
+import { isActionOf, type ActionType } from "~/redux/reduxTools";
 import {
   Mapping,
   ToolAction,

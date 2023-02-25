@@ -4,7 +4,7 @@ import { describe, expect, test } from "vitest";
 import * as userGroupsActions from "~/modules/userGroups/userGroupsActions";
 import { FAKES } from "~/testUtilities";
 
-import { initialState, userGroupsReducer } from "../userGroupsReducer";
+import { userGroupsInitialState, userGroupsReducer } from "../userGroupsReducer";
 
 const { INVALID_ACTION, REDUX_STATE, TOGGL_USER_GROUP_ID } = FAKES;
 
@@ -15,15 +15,15 @@ const MOCK_PAYLOAD = {
 
 describe("within userGroupsReducer", () => {
   test("returns input state if an invalid action type is passed to the reducer", () => {
-    const result = userGroupsReducer(initialState, INVALID_ACTION);
+    const result = userGroupsReducer(userGroupsInitialState, INVALID_ACTION);
 
-    expect(result).toEqual(initialState);
+    expect(result).toEqual(userGroupsInitialState);
   });
 
   test("returns input state if no state is passed to the reducer", () => {
     const result = userGroupsReducer(undefined, INVALID_ACTION);
 
-    expect(result).toEqual(initialState);
+    expect(result).toEqual(userGroupsInitialState);
   });
 
   describe("the isFetching is set to the correct value based on the dispatched action", () => {
@@ -117,6 +117,6 @@ describe("within userGroupsReducer", () => {
       userGroupsActions.deleteUserGroups.success(),
     );
 
-    expect(result).toEqual(initialState);
+    expect(result).toEqual(userGroupsInitialState);
   });
 });

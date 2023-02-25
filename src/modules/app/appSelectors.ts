@@ -1,5 +1,4 @@
-import { createSelector } from "reselect";
-
+import { createSelector } from "~/redux/reduxTools";
 import type { Notification, ReduxState } from "~/typeDefs";
 
 export const notificationsSelector = createSelector(

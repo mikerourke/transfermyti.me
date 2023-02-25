@@ -4,25 +4,25 @@ import * as allEntitiesActions from "~/modules/allEntities/allEntitiesActions";
 import { FAKES } from "~/testUtilities";
 import { EntityGroup, FetchStatus, ToolAction, ToolName } from "~/typeDefs";
 
-import { allEntitiesReducer, initialState } from "../allEntitiesReducer";
+import { allEntitiesReducer, allEntitiesInitialState } from "../allEntitiesReducer";
 
 const DEFAULT_TRANSFER_COUNTS = {
-  ...initialState.transferCountsByEntityGroup,
+  ...allEntitiesInitialState.transferCountsByEntityGroup,
 };
 
 const { REDUX_STATE, INVALID_ACTION } = FAKES;
 
 describe("within allEntitiesReducer", () => {
   test("returns input state if an invalid action type is passed to the reducer", () => {
-    const result = allEntitiesReducer(initialState, INVALID_ACTION);
+    const result = allEntitiesReducer(allEntitiesInitialState, INVALID_ACTION);
 
-    expect(result).toEqual(initialState);
+    expect(result).toEqual(allEntitiesInitialState);
   });
 
   test("returns input state if no state is passed to the reducer", () => {
     const result = allEntitiesReducer(undefined, INVALID_ACTION);
 
-    expect(result).toEqual(initialState);
+    expect(result).toEqual(allEntitiesInitialState);
   });
 
   describe("the pushAllChangesFetchStatus is set to the correct value based on the dispatched action", () => {
@@ -150,7 +150,7 @@ describe("within allEntitiesReducer", () => {
       {
         name: "the toolNameByMappingUpdated action updates state.toolNameByMapping",
         initialStateChange: {
-          toolNameByMapping: initialState.toolNameByMapping,
+          toolNameByMapping: allEntitiesInitialState.toolNameByMapping,
         },
         action: allEntitiesActions.toolNameByMappingUpdated({
           source: ToolName.Toggl,

@@ -1,14 +1,16 @@
 import { lensPath, not, over } from "ramda";
-import { createReducer, type ActionType } from "typesafe-actions";
 
 import { updateAreAllRecordsIncluded } from "~/entityOperations/updateAreAllRecordsIncluded";
 import { allEntitiesFlushed } from "~/modules/allEntities/allEntitiesActions";
-import * as clientsActions from "~/modules/clients/clientsActions";
+import {
+  createReducer,
+  isActionOf,
+  type AnyAction,
+  type ActionType,
+} from "~/redux/reduxTools";
 import { Mapping, type Client } from "~/typeDefs";
 
-type ClientsAction = ActionType<
-  typeof clientsActions | typeof allEntitiesFlushed
->;
+import * as clientsActions from "./clientsActions";
 
 export interface ClientsState {
   readonly source: Dictionary<Client>;
@@ -16,63 +18,111 @@ export interface ClientsState {
   readonly isFetching: boolean;
 }
 
-export const initialState: ClientsState = {
+export const clientsInitialState: ClientsState = {
   source: {},
   target: {},
   isFetching: false,
 };
 
-export const clientsReducer = createReducer<ClientsState, ClientsAction>(
-  initialState,
-)
-  .handleAction(
+export const clientsReducer = createReducer<ClientsState>(
+  clientsInitialState,
+  (builder) => {
+    builder
+      .addCase(
+        clientsActions.areAllClientsIncludedUpdated,
+        (state, { payload }) => ({
+          ...state,
+          source: updateAreAllRecordsIncluded(state.source, payload),
+        }),
+      )
+      .addCase(clientsActions.isClientIncludedToggled, (state, { payload }) =>
+        over(lensPath([Mapping.Source, payload, "isIncluded"]), not, state),
+      )
+      .addMatcher(isClientsApiSuccessAction, (state, { payload }) => ({
+        ...state,
+        source: {
+          ...state.source,
+          ...payload.source,
+        },
+        target: {
+          ...state.target,
+          ...payload.target,
+        },
+        isFetching: false,
+      }))
+      .addMatcher(isClientsApiRequestAction, (state) => {
+        state.isFetching = true;
+      })
+      .addMatcher(isClientsApiFailureAction, (state) => {
+        state.isFetching = false;
+      })
+      .addMatcher(isResetClientsStateAction, () => ({
+        ...clientsInitialState,
+      }));
+  },
+);
+
+type ClientsCreateOrFetchSuccessAction = ActionType<
+  | typeof clientsActions.createClients.success
+  | typeof clientsActions.fetchClients.success
+>;
+
+function isClientsApiSuccessAction(
+  action: AnyAction,
+): action is ClientsCreateOrFetchSuccessAction {
+  return isActionOf(
     [clientsActions.createClients.success, clientsActions.fetchClients.success],
-    (state, { payload }) => ({
-      ...state,
-      source: {
-        ...state.source,
-        ...payload.source,
-      },
-      target: {
-        ...state.target,
-        ...payload.target,
-      },
-      isFetching: false,
-    }),
-  )
-  .handleAction(
+    action,
+  );
+}
+
+type ClientsApiRequestAction = ActionType<
+  | typeof clientsActions.createClients.request
+  | typeof clientsActions.deleteClients.request
+  | typeof clientsActions.fetchClients.request
+>;
+
+function isClientsApiRequestAction(
+  action: AnyAction,
+): action is ClientsApiRequestAction {
+  return isActionOf(
     [
       clientsActions.createClients.request,
       clientsActions.deleteClients.request,
       clientsActions.fetchClients.request,
     ],
-    (state) => ({
-      ...state,
-      isFetching: true,
-    }),
-  )
-  .handleAction(
+    action,
+  );
+}
+
+type ClientsApiFailureAction = ActionType<
+  | typeof clientsActions.createClients.failure
+  | typeof clientsActions.deleteClients.failure
+  | typeof clientsActions.fetchClients.failure
+>;
+
+function isClientsApiFailureAction(
+  action: AnyAction,
+): action is ClientsApiFailureAction {
+  return isActionOf(
     [
       clientsActions.createClients.failure,
       clientsActions.deleteClients.failure,
       clientsActions.fetchClients.failure,
     ],
-    (state) => ({
-      ...state,
-      isFetching: false,
-    }),
-  )
-  .handleAction(clientsActions.isClientIncludedToggled, (state, { payload }) =>
-    over(lensPath([Mapping.Source, payload, "isIncluded"]), not, state),
-  )
-  .handleAction(
-    clientsActions.areAllClientsIncludedUpdated,
-    (state, { payload }) => ({
-      ...state,
-      source: updateAreAllRecordsIncluded(state.source, payload),
-    }),
-  )
-  .handleAction(
-    [clientsActions.deleteClients.success, allEntitiesFlushed],
-    () => ({ ...initialState }),
+    action,
   );
+}
+
+type ResetClientsStateAction = ActionType<
+  typeof clientsActions.deleteClients.success | typeof allEntitiesFlushed
+>;
+
+function isResetClientsStateAction(
+  action: AnyAction,
+): action is ResetClientsStateAction {
+  return isActionOf(
+    [clientsActions.deleteClients.success, allEntitiesFlushed],
+    action,
+  );
+}

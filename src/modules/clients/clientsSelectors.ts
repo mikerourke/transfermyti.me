@@ -1,14 +1,10 @@
 import { isNil, propOr } from "ramda";
-import {
-  createSelector,
-  createStructuredSelector,
-  type Selector,
-} from "reselect";
 
 import { selectIdToLinkedId } from "~/entityOperations/selectIdToLinkedId";
 import { mappingByToolNameSelector } from "~/modules/allEntities/allEntitiesSelectors";
 import { sourceTimeEntryCountByIdFieldSelectorFactory } from "~/modules/timeEntries/timeEntriesSelectors";
 import { activeWorkspaceIdSelector } from "~/modules/workspaces/workspacesSelectors";
+import { createSelector, type Selector } from "~/redux/reduxTools";
 import type {
   Client,
   ClientTableRecord,
@@ -156,13 +152,14 @@ export const clientsTotalCountsByTypeSelector = createSelector(
     ),
 );
 
-const clientsByMappingSelector = createStructuredSelector<
-  ReduxState,
-  Record<Mapping, Client[]>
->({
-  source: sourceClientsSelector,
-  target: targetClientsSelector,
-});
+const clientsByMappingSelector = createSelector(
+  sourceClientsSelector,
+  targetClientsSelector,
+  (sourceClients, targetClients): Record<Mapping, Client[]> => ({
+    source: sourceClients,
+    target: targetClients,
+  }),
+);
 
 export const clientIdsByNameSelectorFactory = (
   toolName: ToolName,

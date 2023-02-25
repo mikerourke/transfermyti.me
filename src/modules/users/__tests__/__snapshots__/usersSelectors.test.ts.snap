@@ -1,4 +1,4 @@
-// Vitest Snapshot v1
+// Vitest Snapshot v1, https://vitest.dev/guide/snapshot.html
 
 exports[`within usersSelectors > the selectors match their snapshots > for the sourceUserEmailsByWorkspaceIdSelector 1`] = `
 [

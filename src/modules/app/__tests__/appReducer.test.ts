@@ -3,7 +3,7 @@ import { afterAll, beforeAll, describe, expect, test, vi } from "vitest";
 import * as appActions from "~/modules/app/appActions";
 import { FAKES } from "~/testUtilities";
 
-import { appReducer, initialState } from "../appReducer";
+import { appReducer, appInitialState } from "../appReducer";
 
 vi.mock("nanoid", () => ({
   nanoid: () => require("crypto").randomUUID(),
@@ -13,20 +13,20 @@ const { INVALID_ACTION } = FAKES;
 
 describe("within appReducer", () => {
   test("returns input state if an invalid action type is passed to the reducer", () => {
-    const result = appReducer(initialState, INVALID_ACTION);
+    const result = appReducer(appInitialState, INVALID_ACTION);
 
-    expect(result).toEqual(initialState);
+    expect(result).toEqual(appInitialState);
   });
 
   test("returns input state if no state is passed to the reducer", () => {
     const result = appReducer(undefined, INVALID_ACTION);
 
-    expect(result).toEqual(initialState);
+    expect(result).toEqual(appInitialState);
   });
 
   test("the notificationDismissed action removes the notification with id = payload from state when dispatched", () => {
     const testState = {
-      ...initialState,
+      ...appInitialState,
       notifications: [{ id: "ntf1", type: "info", message: "Test Error" } as const],
     };
 
@@ -37,7 +37,7 @@ describe("within appReducer", () => {
 
   test("the allNotificationsDismissed action removes all notifications from state when dispatched", () => {
     const testState = {
-      ...initialState,
+      ...appInitialState,
       notifications: [
         { id: "ntf1", type: "info", message: "Test Error 1" } as const,
         { id: "ntf2", type: "info", message: "Test Error 2" } as const,
@@ -51,7 +51,7 @@ describe("within appReducer", () => {
 
   test("the notificationShown action creates a new notification = payload when dispatched", () => {
     const result = appReducer(
-      initialState,
+      appInitialState,
       appActions.notificationShown({ message: "Test Message", type: "info" }),
     );
 
@@ -123,7 +123,7 @@ describe("within appReducer", () => {
     for (const testCase of testCases) {
       test.concurrent(testCase.name, async () => {
         const result = appReducer(
-          initialState,
+          appInitialState,
           appActions.errorNotificationShown(testCase.payload),
         );
 

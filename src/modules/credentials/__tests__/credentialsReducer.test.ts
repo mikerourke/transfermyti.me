@@ -4,7 +4,7 @@ import * as credentialsActions from "~/modules/credentials/credentialsActions";
 import { FAKES } from "~/testUtilities";
 import { FetchStatus, Mapping } from "~/typeDefs";
 
-import { credentialsReducer, initialState } from "../credentialsReducer";
+import { credentialsReducer, credentialsInitialState } from "../credentialsReducer";
 
 const { REDUX_STATE, INVALID_ACTION } = FAKES;
 
@@ -15,15 +15,15 @@ const MOCK_CREDENTIALS = {
 
 describe("within credentialsReducer", () => {
   test("returns input state if an invalid action type is passed to the reducer", () => {
-    const result = credentialsReducer(initialState, INVALID_ACTION);
+    const result = credentialsReducer(credentialsInitialState, INVALID_ACTION);
 
-    expect(result).toEqual(initialState);
+    expect(result).toEqual(credentialsInitialState);
   });
 
   test("returns input state if no state is passed to the reducer", () => {
     const result = credentialsReducer(undefined, INVALID_ACTION);
 
-    expect(result).toEqual(initialState);
+    expect(result).toEqual(credentialsInitialState);
   });
 
   test("the validateCredentials.request action updates state.validationFetchStatus and state.validationErrorsByMapping when dispatched", () => {
@@ -34,7 +34,7 @@ describe("within credentialsReducer", () => {
 
     expect(result.validationFetchStatus).toBe(FetchStatus.InProcess);
     expect(result.validationErrorsByMapping).toEqual({
-      ...initialState.validationErrorsByMapping,
+      ...credentialsInitialState.validationErrorsByMapping,
     });
   });
 
@@ -64,7 +64,7 @@ describe("within credentialsReducer", () => {
       ...REDUX_STATE.credentials,
       ...MOCK_CREDENTIALS,
       validationFetchStatus: FetchStatus.Success,
-      validationErrorsByMapping: { ...initialState.validationErrorsByMapping },
+      validationErrorsByMapping: { ...credentialsInitialState.validationErrorsByMapping },
     });
   });
 
@@ -74,7 +74,7 @@ describe("within credentialsReducer", () => {
       credentialsActions.credentialsFlushed(),
     );
 
-    expect(result).toEqual({ ...initialState });
+    expect(result).toEqual({ ...credentialsInitialState });
   });
 
   test("the credentialsUpdated action updates the mapping from payload with credentials from payload", () => {
@@ -121,7 +121,7 @@ describe("within credentialsReducer", () => {
         ...REDUX_STATE.credentials,
         validationFetchStatus: FetchStatus.Pending,
         validationErrorsByMapping: {
-          ...initialState.validationErrorsByMapping,
+          ...credentialsInitialState.validationErrorsByMapping,
         },
       });
     });

@@ -90,7 +90,10 @@ export type EntityTableRecord<TEntity> = TEntity & {
   isActiveInTarget: boolean;
 };
 
-export type CountsByEntityGroup = Record<EntityGroup, number>;
+export type CountsByEntityGroup = Record<
+  Exclude<EntityGroup, EntityGroup.Workspaces>,
+  number
+>;
 
 export interface ToolNameByMapping {
   [Mapping.Source]: ToolName;

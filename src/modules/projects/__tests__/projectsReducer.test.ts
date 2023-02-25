@@ -4,7 +4,7 @@ import { describe, expect, test } from "vitest";
 import * as projectsActions from "~/modules/projects/projectsActions";
 import { FAKES } from "~/testUtilities";
 
-import { initialState, projectsReducer } from "../projectsReducer";
+import { projectsInitialState, projectsReducer } from "../projectsReducer";
 
 const { INVALID_ACTION, REDUX_STATE, TOGGL_PROJECT_ID } = FAKES;
 
@@ -15,15 +15,15 @@ const MOCK_PAYLOAD = {
 
 describe("within projectsReducer", () => {
   test("returns input state if an invalid action type is passed to the reducer", () => {
-    const result = projectsReducer(initialState, INVALID_ACTION);
+    const result = projectsReducer(projectsInitialState, INVALID_ACTION);
 
-    expect(result).toEqual(initialState);
+    expect(result).toEqual(projectsInitialState);
   });
 
   test("returns input state if no state is passed to the reducer", () => {
     const result = projectsReducer(undefined, INVALID_ACTION);
 
-    expect(result).toEqual(initialState);
+    expect(result).toEqual(projectsInitialState);
   });
 
   describe("the isFetching is set to the correct value based on the dispatched action", () => {
@@ -164,6 +164,6 @@ describe("within projectsReducer", () => {
   test("the deleteProjects.success action resets state to initial state", () => {
     const result = projectsReducer(REDUX_STATE.projects, projectsActions.deleteProjects.success());
 
-    expect(result).toEqual(initialState);
+    expect(result).toEqual(projectsInitialState);
   });
 });

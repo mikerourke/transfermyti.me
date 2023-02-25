@@ -1,7 +1,7 @@
 import { compose, isNil, prop, sortBy, toLower } from "ramda";
-import { createSelector, createStructuredSelector } from "reselect";
 
 import { selectIdToLinkedId } from "~/entityOperations/selectIdToLinkedId";
+import { createSelector } from "~/redux/reduxTools";
 import type { Mapping, ReduxState, Workspace } from "~/typeDefs";
 
 export const areWorkspacesFetchingSelector = createSelector(
@@ -129,10 +129,14 @@ const includedTargetWorkspaceIdsSelector = createSelector(
   limitIdsToIncluded,
 );
 
-export const includedWorkspaceIdsByMappingSelector = createStructuredSelector<
-  ReduxState,
-  Record<Mapping, string[]>
->({
-  source: includedSourceWorkspaceIdsSelector,
-  target: includedTargetWorkspaceIdsSelector,
-});
+export const includedWorkspaceIdsByMappingSelector = createSelector(
+  includedSourceWorkspaceIdsSelector,
+  includedTargetWorkspaceIdsSelector,
+  (
+    includedSourceWorkspaceIds,
+    includedTargetWorkspaceIds,
+  ): Record<Mapping, string[]> => ({
+    source: includedSourceWorkspaceIds,
+    target: includedTargetWorkspaceIds,
+  }),
+);

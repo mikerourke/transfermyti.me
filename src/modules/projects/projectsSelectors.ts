@@ -1,5 +1,4 @@
 import { isNil, pluck, propOr } from "ramda";
-import { createSelector } from "reselect";
 
 import { selectIdToLinkedId } from "~/entityOperations/selectIdToLinkedId";
 import {
@@ -8,6 +7,7 @@ import {
 } from "~/modules/allEntities/allEntitiesSelectors";
 import { sourceTimeEntryCountByIdFieldSelectorFactory } from "~/modules/timeEntries/timeEntriesSelectors";
 import { activeWorkspaceIdSelector } from "~/modules/workspaces/workspacesSelectors";
+import { createSelector } from "~/redux/reduxTools";
 import type { EntityTableRecord, Project, ReduxState } from "~/typeDefs";
 
 export const sourceProjectsByIdSelector = createSelector(

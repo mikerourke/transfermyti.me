@@ -1,33 +1,33 @@
-import { createAction, createAsyncAction } from "typesafe-actions";
-
+import { createAction, createAsyncAction } from "~/redux/reduxTools";
 import type { Mapping, Project } from "~/typeDefs";
 
-export const createProjects = createAsyncAction(
-  "@projects/createProjectsRequest",
-  "@projects/createProjectsSuccess",
-  "@projects/createProjectsFailure",
-)<undefined, Record<Mapping, Dictionary<Project>>, undefined>();
-
-export const deleteProjects = createAsyncAction(
-  "@projects/deleteProjectsRequest",
-  "@projects/deleteProjectsSuccess",
-  "@projects/deleteProjectsFailure",
-)<undefined, undefined, undefined>();
-
-export const fetchProjects = createAsyncAction(
-  "@projects/fetchProjectsRequest",
-  "@projects/fetchProjectsSuccess",
-  "@projects/fetchProjectsFailure",
-)<undefined, Record<Mapping, Dictionary<Project>>, undefined>();
-
-export const isProjectIncludedToggled = createAction(
-  "@projects/isProjectIncludedToggled",
-)<string>();
-
-export const isProjectIncludedUpdated = createAction(
-  "@projects/isProjectIncludedUpdated",
-)<{ id: string; isIncluded: boolean }>();
-
-export const areAllProjectsIncludedUpdated = createAction(
+export const areAllProjectsIncludedUpdated = createAction<boolean>(
   "@projects/areAllProjectsIncludedUpdated",
-)<boolean>();
+);
+
+export const isProjectIncludedToggled = createAction<string>(
+  "@projects/isProjectIncludedToggled",
+);
+
+export const isProjectIncludedUpdated = createAction<{
+  id: string;
+  isIncluded: boolean;
+}>("@projects/isProjectIncludedUpdated");
+
+export const createProjects = createAsyncAction<
+  undefined,
+  Record<Mapping, Dictionary<Project>>,
+  undefined
+>("@projects/createProjects");
+
+export const deleteProjects = createAsyncAction<
+  undefined,
+  undefined,
+  undefined
+>("@projects/deleteProjects");
+
+export const fetchProjects = createAsyncAction<
+  undefined,
+  Record<Mapping, Dictionary<Project>>,
+  undefined
+>("@projects/fetchProjects");

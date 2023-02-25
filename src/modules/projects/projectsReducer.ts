@@ -1,14 +1,16 @@
 import { lensPath, not, over, set } from "ramda";
-import { createReducer, type ActionType } from "typesafe-actions";
 
 import { updateAreAllRecordsIncluded } from "~/entityOperations/updateAreAllRecordsIncluded";
 import { allEntitiesFlushed } from "~/modules/allEntities/allEntitiesActions";
-import * as projectsActions from "~/modules/projects/projectsActions";
+import {
+  createReducer,
+  isActionOf,
+  type ActionType,
+  type AnyAction,
+} from "~/redux/reduxTools";
 import { Mapping, type Project } from "~/typeDefs";
 
-type ProjectsAction = ActionType<
-  typeof projectsActions | typeof allEntitiesFlushed
->;
+import * as projectsActions from "./projectsActions";
 
 export interface ProjectsState {
   readonly source: Dictionary<Project>;
@@ -16,77 +18,121 @@ export interface ProjectsState {
   readonly isFetching: boolean;
 }
 
-export const initialState: ProjectsState = {
+export const projectsInitialState: ProjectsState = {
   source: {},
   target: {},
   isFetching: false,
 };
 
-export const projectsReducer = createReducer<ProjectsState, ProjectsAction>(
-  initialState,
-)
-  .handleAction(
+export const projectsReducer = createReducer<ProjectsState>(
+  projectsInitialState,
+  (builder) => {
+    builder
+      .addCase(projectsActions.isProjectIncludedToggled, (state, { payload }) =>
+        over(lensPath([Mapping.Source, payload, "isIncluded"]), not, state),
+      )
+      .addCase(projectsActions.isProjectIncludedUpdated, (state, { payload }) =>
+        set(
+          lensPath([Mapping.Source, payload.id, "isIncluded"]),
+          payload.isIncluded,
+          state,
+        ),
+      )
+      .addCase(
+        projectsActions.areAllProjectsIncludedUpdated,
+        (state, { payload }) => ({
+          ...state,
+          source: updateAreAllRecordsIncluded(state.source, payload),
+        }),
+      )
+      .addMatcher(isProjectsApiSuccessAction, (state, { payload }) => ({
+        ...state,
+        source: {
+          ...state.source,
+          ...payload.source,
+        },
+        target: {
+          ...state.target,
+          ...payload.target,
+        },
+        isFetching: false,
+      }))
+      .addMatcher(isProjectsApiRequestAction, (state) => {
+        state.isFetching = true;
+      })
+      .addMatcher(isProjectsApiFailureAction, (state) => {
+        state.isFetching = false;
+      })
+      .addMatcher(isResetProjectsStateAction, () => ({
+        ...projectsInitialState,
+      }));
+  },
+);
+
+type ProjectsCreateOrFetchSuccessAction = ActionType<
+  | typeof projectsActions.createProjects.success
+  | typeof projectsActions.fetchProjects.success
+>;
+
+function isProjectsApiSuccessAction(
+  action: AnyAction,
+): action is ProjectsCreateOrFetchSuccessAction {
+  return isActionOf(
     [
       projectsActions.createProjects.success,
       projectsActions.fetchProjects.success,
     ],
-    (state, { payload }) => ({
-      ...state,
-      source: {
-        ...state.source,
-        ...payload.source,
-      },
-      target: {
-        ...state.target,
-        ...payload.target,
-      },
-      isFetching: false,
-    }),
-  )
-  .handleAction(
+    action,
+  );
+}
+
+type ProjectsApiRequestAction = ActionType<
+  | typeof projectsActions.createProjects.request
+  | typeof projectsActions.deleteProjects.request
+  | typeof projectsActions.fetchProjects.request
+>;
+
+function isProjectsApiRequestAction(
+  action: AnyAction,
+): action is ProjectsApiRequestAction {
+  return isActionOf(
     [
       projectsActions.createProjects.request,
       projectsActions.deleteProjects.request,
       projectsActions.fetchProjects.request,
     ],
-    (state) => ({
-      ...state,
-      isFetching: true,
-    }),
-  )
-  .handleAction(
+    action,
+  );
+}
+
+type ProjectsApiFailureAction = ActionType<
+  | typeof projectsActions.createProjects.failure
+  | typeof projectsActions.deleteProjects.failure
+  | typeof projectsActions.fetchProjects.failure
+>;
+
+function isProjectsApiFailureAction(
+  action: AnyAction,
+): action is ProjectsApiFailureAction {
+  return isActionOf(
     [
       projectsActions.createProjects.failure,
       projectsActions.deleteProjects.failure,
       projectsActions.fetchProjects.failure,
     ],
-    (state) => ({
-      ...state,
-      isFetching: false,
-    }),
-  )
-  .handleAction(
-    projectsActions.isProjectIncludedToggled,
-    (state, { payload }) =>
-      over(lensPath([Mapping.Source, payload, "isIncluded"]), not, state),
-  )
-  .handleAction(
-    projectsActions.isProjectIncludedUpdated,
-    (state, { payload }) =>
-      set(
-        lensPath([Mapping.Source, payload.id, "isIncluded"]),
-        payload.isIncluded,
-        state,
-      ),
-  )
-  .handleAction(
-    projectsActions.areAllProjectsIncludedUpdated,
-    (state, { payload }) => ({
-      ...state,
-      source: updateAreAllRecordsIncluded(state.source, payload),
-    }),
-  )
-  .handleAction(
-    [projectsActions.deleteProjects.success, allEntitiesFlushed],
-    () => ({ ...initialState }),
+    action,
   );
+}
+
+type ResetProjectsStateAction = ActionType<
+  typeof projectsActions.deleteProjects.success | typeof allEntitiesFlushed
+>;
+
+function isResetProjectsStateAction(
+  action: AnyAction,
+): action is ResetProjectsStateAction {
+  return isActionOf(
+    [projectsActions.deleteProjects.success, allEntitiesFlushed],
+    action,
+  );
+}

@@ -2,7 +2,6 @@ import differenceInSeconds from "date-fns/differenceInSeconds";
 import endOfYear from "date-fns/endOfYear";
 import format from "date-fns/format";
 import startOfYear from "date-fns/startOfYear";
-import { stringify } from "qs";
 import { isNil, propOr } from "ramda";
 import type { SagaIterator } from "redux-saga";
 import { call, delay, select } from "redux-saga/effects";
@@ -320,14 +319,14 @@ function* fetchTogglTimeEntriesForYearAndPage(
   const firstDay = format(startOfYear(currentDate), DATE_FORMAT);
   const lastDay = format(endOfYear(currentDate), DATE_FORMAT);
 
-  const query = stringify({
+  const query = new URLSearchParams({
     workspace_id: workspaceId,
     since: firstDay,
     until: lastDay,
     user_agent: "transfermyti.me",
     user_ids: userId,
-    page: page,
-  });
+    page: page.toString(),
+  }).toString();
 
   return yield call(fetchObject, `/toggl/reports/details?${query}`);
 }
