@@ -56,16 +56,13 @@ typings/
 # Yarn Integrity file
 .yarn-integrity
 
-# dotenv environment variables file
-.private
-
 # next.js build output
 .next
 
 build
 .cache
-http-client.private.env.json
 dist
 .env
+creds.json
 
 .stylelintcache
