@@ -28,16 +28,9 @@
   href="https://www.buymeacoffee.com/mikerourke"
   rel="noopener noreferrer"
   target="_blank"
-  class="successButtonLink"
+  class="success-button-link"
 >
-  <svg
-    height={32}
-    viewBox="0 0 24 36"
-    aria-labelledby="buy-me-a-coffee-title"
-    aria-describedby="buy-me-a-coffee-desc"
-  >
-    <title id="buy-me-a-coffee-title">Coffee Cup</title>
-    <desc id="buy-me-a-coffee-desc">Disposable coffee cup with lid</desc>
+  <svg height={32} viewBox="0 0 24 36">
     <g stroke="none" stroke-width={1} fill="none" fill-rule="evenodd">
       <g transform="translate(-17, -7)">
         <g transform="translate(17, 8)">

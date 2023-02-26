@@ -25,7 +25,8 @@
   button {
     appearance: none;
     margin: 0;
-    padding: 0.25rem;
+    padding: 0.375rem 0.5rem;
+    border-radius: 0;
     background-color: transparent;
     color: var(--color-secondary);
     font-size: 1.5rem;

@@ -97,7 +97,7 @@
     <ActiveWorkspaceSelectField />
 
     {#if $toolAction === ToolAction.Transfer}
-      <div class="toggleRow">
+      <div class="toggle-row">
         <label for="show-existing-toggle">
           Show records that already exist in target?
         </label>

@@ -87,7 +87,7 @@
           href={$targetToolTrackerUrl}
           rel="noopener noreferrer"
           target="_blank"
-          class="successButtonLink"
+          class="success-button-link"
         >
           Go to {$targetToolDisplayName}
 

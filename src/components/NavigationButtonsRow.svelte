@@ -9,6 +9,7 @@
   export let loading: boolean = false;
   export let nextLabel: string = "Next";
   export let refreshLabel: string | undefined = undefined;
+  export let style: string | undefined = undefined;
 
   const dispatchEvent = createEventDispatcher();
 
@@ -40,7 +41,7 @@
   }
 </style>
 
-<nav class={classes.navigationButtonRow} {...$$restProps}>
+<nav class={classes.navigationButtonRow} {style}>
   <ul>
     <li>
       <Button variant="default" {disabled} on:click={handleBackClick}>

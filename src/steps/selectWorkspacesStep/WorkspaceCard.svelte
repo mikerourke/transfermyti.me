@@ -78,8 +78,11 @@
 
   <h3>{actionTitle}</h3>
 
+  <label for="toggle-is-source-included" class="visually-hidden">
+    {actionTitle}
+  </label>
   <Toggle
-    aria-label={actionTitle}
+    id="toggle-is-source-included"
     toggled={sourceWorkspace.isIncluded}
     on:toggle={handleToggleIncludeWorkspace}
   />
@@ -87,6 +90,10 @@
   {#if sourceWorkspace.isIncluded && targetWorkspaces.length !== 0}
     <div transition:slide={{ duration: 250 }}>
       <h3>Target Workspaces</h3>
+
+      <label for="{sourceWorkspace.id}-select" class="visually-hidden">
+        Select Workspace
+      </label>
 
       <WorkspaceSelect
         id="{sourceWorkspace.id}-select"

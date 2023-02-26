@@ -1,6 +1,8 @@
 <script lang="ts">
   import { createEventDispatcher } from "svelte";
 
+  export let id: string | undefined = undefined;
+  export let style: string | undefined = undefined;
   export let toggled: boolean;
 
   const dispatchEvent = createEventDispatcher();
@@ -69,10 +71,11 @@
 </style>
 
 <button
+  {id}
   aria-checked={toggled}
   role="switch"
+  {style}
   on:click={handleClick}
-  {...$$restProps}
 >
   <span />
 </button>

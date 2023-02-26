@@ -28,7 +28,7 @@
       <!-- prettier-ignore -->
       <p>
         Alternatively, all of the records may already exist on the target tool.
-        If you believe this is an error, please <ExternalLink variant="dark" href="https://github.com/mikerourke/transfermyti.me/issues">file a GitHub issue </ExternalLink>
+        If you believe this is an error, please <ExternalLink href="https://github.com/mikerourke/transfermyti.me/issues">file a GitHub issue </ExternalLink>
         or <a href="mailto:mike.w.rourke@gmail.com"> contact the developer</a>.
       </p>
     {/if}

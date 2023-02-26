@@ -330,14 +330,7 @@ tbody tr:last-of-type td {
   font-weight: var(--font-weight-bold);
 }
 
-.loadingMessage {
-  margin: 1rem 0 3rem;
-  text-align: center;
-  font-size: 1rem;
-  font-weight: var(--font-weight-bold);
-}
-
-.noRecordsFound {
+.no-records-found {
   margin: 0;
   padding: 3rem 0;
   text-align: center;
@@ -345,13 +338,13 @@ tbody tr:last-of-type td {
   font-weight: var(--font-weight-bold);
 }
 
-.toggleRow label {
+.toggle-row label {
   display: block;
   margin-bottom: 0.75rem;
   font-weight: var(--font-weight-bold);
 }
 
-.successButtonLink {
+.success-button-link {
   display: inline-flex;
   align-items: center;
   justify-content: center;
@@ -365,18 +358,18 @@ tbody tr:last-of-type td {
   text-decoration: none;
   box-shadow: var(--elevation-dp1);
   transition: background-color 250ms ease-in-out;
-}
 
-.successButtonLink:active,
-.successButtonLink:focus {
-  background-color: var(--color-active);
+  &:active,
+  &:focus {
+    background-color: var(--color-active);
+  }
 }
 
 /*
  * Used for hiding input labels while maintaining a11y requirements.
  * See https://www.a11ywithlindsey.com/blog/introduction-accessible-labeling
 */
-.visuallyHidden {
+.visually-hidden {
   position: absolute !important;
   height: 1px;
   width: 1px;

@@ -6,12 +6,13 @@
 
   export let href: string;
   export let iconName: IconName;
+  export let label: string;
   export let color: string = "var(--color-white)";
   export let height: number | undefined = 24;
   export let width: number | undefined = 24;
 </script>
 
-<a {href} class={classes.iconLink} {...$$restProps}>
+<a {href} class={classes.iconLink} aria-label={label}>
   <Icon name={iconName} {color} {height} {width} />
 
   <slot />

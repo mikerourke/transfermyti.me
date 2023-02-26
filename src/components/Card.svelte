@@ -1,5 +1,8 @@
 <script lang="ts">
   export let title: string;
+
+  let className: string | undefined = undefined;
+  export { className as class };
 </script>
 
 <style>
@@ -22,7 +25,7 @@
   }
 </style>
 
-<article {...$$restProps}>
+<article class={className}>
   <h2>{title}</h2>
 
   <slot />

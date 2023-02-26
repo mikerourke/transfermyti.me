@@ -2,7 +2,6 @@
   import { createEventDispatcher } from "svelte";
 
   import type { AnyEntity, EntityTableRecord } from "~/typeDefs";
-  import { booleanToYesNo } from "~/utilities/textTransforms";
 
   import InclusionsTableTitle from "~/components/InclusionsTableTitle.svelte";
 
@@ -35,6 +34,14 @@
 
   function handleIncludeToggle(id: string): void {
     dispatchEvent("toggle-one", id);
+  }
+
+  function booleanToYesNo(value: boolean | string): string {
+    if (typeof value === "boolean") {
+      return value ? "Yes" : "No";
+    } else {
+      return value;
+    }
   }
 </script>
 
