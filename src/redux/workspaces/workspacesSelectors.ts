@@ -1,6 +1,6 @@
 import { compose, isNil, prop, sortBy, toLower } from "ramda";
 
-import { selectIdToLinkedId } from "~/entityOperations/selectIdToLinkedId";
+import { selectIdToLinkedId } from "~/api/selectIdToLinkedId";
 import { createSelector } from "~/redux/reduxTools";
 import type { Mapping, ReduxState, Workspace } from "~/typeDefs";
 

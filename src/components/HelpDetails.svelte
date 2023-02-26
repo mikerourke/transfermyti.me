@@ -1,8 +1,9 @@
 <script lang="ts">
   import classes from "./HelpDetails.module.css";
 
-  export let title: string = "Show/Hide Help";
   export let open: boolean = false;
+  export let style: string | undefined = undefined;
+  export let title: string = "Show/Hide Help";
 </script>
 
 <style>
@@ -28,10 +29,8 @@
   }
 </style>
 
-<details class={classes.helpDetails} {open} {...$$restProps}>
-  <summary>
-    {title}
-  </summary>
+<details class={classes.helpDetails} {open} {style}>
+  <summary>{title}</summary>
 
   <div>
     <slot />

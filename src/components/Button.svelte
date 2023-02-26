@@ -6,6 +6,7 @@
   export let variant: Variant = "default";
   export let disabled: boolean = false;
   export let loading: boolean = false;
+  export let style: string | undefined = undefined;
 
   const dispatchEvent = createEventDispatcher();
 
@@ -134,7 +135,7 @@
   class:outline={variant === "outline"}
   class:primary={variant === "primary"}
   class:secondary={variant === "secondary"}
-  {...$$restProps}
+  {style}
 >
   {#if loading}
     <span />

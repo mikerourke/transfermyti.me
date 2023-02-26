@@ -5,9 +5,9 @@ import {
   fetchObject,
   fetchPaginatedFromClockify,
   getApiDelayForTool,
-} from "~/entityOperations/apiRequests";
-import { deleteEntitiesForTool } from "~/entityOperations/deleteEntitiesForTool";
-import { fetchEntitiesForTool } from "~/entityOperations/fetchEntitiesForTool";
+} from "~/api/apiRequests";
+import { deleteEntitiesForTool } from "~/api/deleteEntitiesForTool";
+import { fetchEntitiesForTool } from "~/api/fetchEntitiesForTool";
 import { entityGroupTransferCompletedCountIncremented } from "~/redux/allEntities/allEntitiesActions";
 import { EntityGroup, ToolName, type User } from "~/typeDefs";
 

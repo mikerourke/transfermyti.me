@@ -75,8 +75,8 @@
   {#if expanded}
     <div
       id={contentId}
-      aria-labelledby={titleId}
       role="region"
+      aria-labelledby={titleId}
       aria-hidden={!expanded}
       transition:slide|local={{ duration: slideDuration }}
     >

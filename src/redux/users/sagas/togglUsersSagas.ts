@@ -6,8 +6,8 @@ import {
   fetchEmpty,
   fetchObject,
   getApiDelayForTool,
-} from "~/entityOperations/apiRequests";
-import { fetchEntitiesForTool } from "~/entityOperations/fetchEntitiesForTool";
+} from "~/api/apiRequests";
+import { fetchEntitiesForTool } from "~/api/fetchEntitiesForTool";
 import { entityGroupTransferCompletedCountIncremented } from "~/redux/allEntities/allEntitiesActions";
 import { includedSourceProjectIdsSelector } from "~/redux/projects/projectsSelectors";
 import { includedSourceWorkspaceIdsSelector } from "~/redux/workspaces/workspacesSelectors";

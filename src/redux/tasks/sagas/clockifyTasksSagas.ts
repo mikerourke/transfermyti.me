@@ -6,10 +6,10 @@ import {
   fetchObject,
   fetchPaginatedFromClockify,
   getApiDelayForTool,
-} from "~/entityOperations/apiRequests";
-import { createEntitiesForTool } from "~/entityOperations/createEntitiesForTool";
-import { deleteEntitiesForTool } from "~/entityOperations/deleteEntitiesForTool";
-import { fetchEntitiesForTool } from "~/entityOperations/fetchEntitiesForTool";
+} from "~/api/apiRequests";
+import { createEntitiesForTool } from "~/api/createEntitiesForTool";
+import { deleteEntitiesForTool } from "~/api/deleteEntitiesForTool";
+import { fetchEntitiesForTool } from "~/api/fetchEntitiesForTool";
 import {
   projectIdToLinkedIdSelector,
   projectsByWorkspaceIdByToolNameSelector,

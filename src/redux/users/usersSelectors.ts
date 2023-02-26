@@ -1,6 +1,6 @@
 import { isNil, propOr } from "ramda";
 
-import { selectIdToLinkedId } from "~/entityOperations/selectIdToLinkedId";
+import { selectIdToLinkedId } from "~/api/selectIdToLinkedId";
 import { createSelector } from "~/redux/reduxTools";
 import { workspaceIdToLinkedIdSelector } from "~/redux/workspaces/workspacesSelectors";
 import type { ReduxState, User } from "~/typeDefs";

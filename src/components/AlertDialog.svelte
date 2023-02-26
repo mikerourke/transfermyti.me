@@ -33,7 +33,6 @@
   class={className}
   open={true}
   role="alertdialog"
-  {...$$restProps}
   transition:fade={{ duration: 250 }}
 >
   <FocusCapture parent={dialogElement}>
@@ -42,13 +41,7 @@
 
       <menu class="alignRight">
         <li>
-          <Button
-            aria-label="Close the dialog"
-            variant="primary"
-            on:click={closeDialog}
-          >
-            Close
-          </Button>
+          <Button variant="primary" on:click={closeDialog}>Close</Button>
         </li>
       </menu>
     </div>

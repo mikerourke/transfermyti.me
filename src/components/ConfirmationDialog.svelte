@@ -44,7 +44,6 @@
   aria-modal={true}
   class={className}
   open={true}
-  {...$$restProps}
   transition:fade={{ duration: 250 }}
 >
   <FocusCapture parent={dialogElement}>
@@ -53,21 +52,13 @@
 
       <menu class="alignRight">
         <li>
-          <Button
-            aria-label="Cancel and close the dialog"
-            variant="eggplant"
-            on:click={handleCancelClick}
-          >
+          <Button variant="eggplant" on:click={handleCancelClick}>
             Cancel
           </Button>
         </li>
 
         <li>
-          <Button
-            aria-label="Perform the action and close the dialog"
-            variant="primary"
-            on:click={handleConfirmClick}
-          >
+          <Button variant="primary" on:click={handleConfirmClick}>
             Confirm
           </Button>
         </li>

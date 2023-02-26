@@ -85,7 +85,7 @@
       <ul>
         <li>
           <IconLink
-            aria-label="GitHub Profile"
+            label="GitHub Profile"
             iconName="github"
             href="https://github.com/mikerourke"
             {...iconSize}
@@ -94,7 +94,7 @@
 
         <li>
           <IconLink
-            aria-label="LinkedIn Profile"
+            label="LinkedIn Profile"
             iconName="linkedIn"
             href="https://www.linkedin.com/in/michaelwrourke"
             {...iconSize}
@@ -103,7 +103,7 @@
 
         <li>
           <IconLink
-            aria-label="Twitter Profile"
+            label="Twitter Profile"
             iconName="twitter"
             href="https://twitter.com/codelikeawolf"
             {...iconSize}

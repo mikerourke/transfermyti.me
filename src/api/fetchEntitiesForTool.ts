@@ -2,7 +2,7 @@ import { propOr } from "ramda";
 import type { SagaIterator } from "redux-saga";
 import { call, delay, select } from "redux-saga/effects";
 
-import { getApiDelayForTool } from "~/entityOperations/apiRequests";
+import { getApiDelayForTool } from "~/api/apiRequests";
 import { mappingByToolNameSelector } from "~/redux/allEntities/allEntitiesSelectors";
 import { includedWorkspaceIdsByMappingSelector } from "~/redux/workspaces/workspacesSelectors";
 import type { ToolName } from "~/typeDefs";

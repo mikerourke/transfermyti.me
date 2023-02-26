@@ -1,6 +1,6 @@
 import { isNil, propOr } from "ramda";
 
-import { selectIdToLinkedId } from "~/entityOperations/selectIdToLinkedId";
+import { selectIdToLinkedId } from "~/api/selectIdToLinkedId";
 import { sourceProjectsByIdSelector } from "~/redux/projects/projectsSelectors";
 import { createSelector } from "~/redux/reduxTools";
 import { sourceTimeEntryCountByIdFieldSelectorFactory } from "~/redux/timeEntries/timeEntriesSelectors";

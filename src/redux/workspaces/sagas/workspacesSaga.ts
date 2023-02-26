@@ -2,7 +2,7 @@ import { indexBy, prop } from "ramda";
 import type { SagaIterator } from "redux-saga";
 import { all, call, put, select, takeEvery } from "redux-saga/effects";
 
-import { linkEntitiesByIdByMapping } from "~/entityOperations/linkEntitiesByIdByMapping";
+import { linkEntitiesByIdByMapping } from "~/api/linkEntitiesByIdByMapping";
 import {
   toolActionSelector,
   toolNameByMappingSelector,

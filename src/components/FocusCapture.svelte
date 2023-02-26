@@ -87,7 +87,7 @@
   <!-- svelte-ignore a11y-no-noninteractive-tabindex -->
   <div
     data-guard="start"
-    class="visuallyHidden"
+    class="visually-hidden"
     tabindex="0"
     on:focus={handleFocusGuard}
   />
@@ -99,7 +99,7 @@
   <!-- svelte-ignore a11y-no-noninteractive-tabindex -->
   <div
     data-guard="end"
-    class="visuallyHidden"
+    class="visually-hidden"
     tabindex="0"
     on:focus={handleFocusGuard}
   />

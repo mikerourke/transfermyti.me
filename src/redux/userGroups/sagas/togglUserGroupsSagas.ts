@@ -1,14 +1,10 @@
 import type { SagaIterator } from "redux-saga";
 import { call } from "redux-saga/effects";
 
-import {
-  fetchArray,
-  fetchEmpty,
-  fetchObject,
-} from "~/entityOperations/apiRequests";
-import { createEntitiesForTool } from "~/entityOperations/createEntitiesForTool";
-import { deleteEntitiesForTool } from "~/entityOperations/deleteEntitiesForTool";
-import { fetchEntitiesForTool } from "~/entityOperations/fetchEntitiesForTool";
+import { fetchArray, fetchEmpty, fetchObject } from "~/api/apiRequests";
+import { createEntitiesForTool } from "~/api/createEntitiesForTool";
+import { deleteEntitiesForTool } from "~/api/deleteEntitiesForTool";
+import { fetchEntitiesForTool } from "~/api/fetchEntitiesForTool";
 import { EntityGroup, ToolName, type UserGroup } from "~/typeDefs";
 import { validStringify } from "~/utilities/textTransforms";
 
