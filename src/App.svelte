@@ -1,8 +1,5 @@
 <script lang="ts">
-  import {
-    WorkflowStep,
-    currentWorkflowStep,
-  } from "~/modules/app/workflowStep";
+  import { WorkflowStep, currentWorkflowStep } from "~/redux/app/workflowStep";
 
   import Footer from "~/layout/Footer.svelte";
   import Header from "~/layout/Header.svelte";

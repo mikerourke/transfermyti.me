@@ -2,7 +2,7 @@
   import {
     navigateToWorkflowStep,
     WorkflowStep,
-  } from "~/modules/app/workflowStep";
+  } from "~/redux/app/workflowStep";
 
   import Logo from "~/layout/Logo.svelte";
 

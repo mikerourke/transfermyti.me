@@ -291,7 +291,6 @@ const REDUX_STATE_FAKE: ReduxState = {
       timeEntries: 0,
       users: 0,
       userGroups: 0,
-      workspaces: 0,
     },
   },
   app: {

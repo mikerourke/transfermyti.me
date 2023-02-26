@@ -2,11 +2,11 @@
   import {
     toolActionUpdated,
     toolNameByMappingUpdated,
-  } from "~/modules/allEntities/allEntitiesActions";
+  } from "~/redux/allEntities/allEntitiesActions";
   import {
     navigateToWorkflowStep,
     WorkflowStep,
-  } from "~/modules/app/workflowStep";
+  } from "~/redux/app/workflowStep";
   import { dispatchAction } from "~/redux/reduxToStore";
   import { ToolAction, ToolName } from "~/typeDefs";
 

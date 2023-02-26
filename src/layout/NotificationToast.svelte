@@ -1,7 +1,7 @@
 <script lang="ts">
   import { onMount } from "svelte";
 
-  import { notificationDismissed } from "~/modules/app/appActions";
+  import { notificationDismissed } from "~/redux/app/appActions";
   import { dispatchAction } from "~/redux/reduxToStore";
   import type { Notification } from "~/typeDefs";
 

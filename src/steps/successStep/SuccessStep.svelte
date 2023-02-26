@@ -4,8 +4,8 @@
   import {
     targetToolDisplayNameSelector,
     targetToolTrackerUrlSelector,
-  } from "~/modules/allEntities/allEntitiesSelectors";
-  import { credentialsFlushed } from "~/modules/credentials/credentialsActions";
+  } from "~/redux/allEntities/allEntitiesSelectors";
+  import { credentialsFlushed } from "~/redux/credentials/credentialsActions";
   import { dispatchAction, selectorToStore } from "~/redux/reduxToStore";
 
   import Icon from "~/components/Icon.svelte";

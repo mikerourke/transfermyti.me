@@ -1,18 +1,18 @@
 <script lang="ts">
   import { onMount, tick } from "svelte";
 
-  import { fetchAllFetchStatusUpdated } from "~/modules/allEntities/allEntitiesActions";
+  import { fetchAllFetchStatusUpdated } from "~/redux/allEntities/allEntitiesActions";
   import {
     targetToolDisplayNameSelector,
     toolActionSelector,
-  } from "~/modules/allEntities/allEntitiesSelectors";
+  } from "~/redux/allEntities/allEntitiesSelectors";
   import {
     navigateToWorkflowStep,
     WorkflowStep,
-  } from "~/modules/app/workflowStep";
-  import * as workspacesActions from "~/modules/workspaces/workspacesActions";
-  import * as workspacesSelectors from "~/modules/workspaces/workspacesSelectors";
+  } from "~/redux/app/workflowStep";
   import { dispatchAction, selectorToStore } from "~/redux/reduxToStore";
+  import * as workspacesActions from "~/redux/workspaces/workspacesActions";
+  import * as workspacesSelectors from "~/redux/workspaces/workspacesSelectors";
   import { FetchStatus, ToolAction, type Workspace } from "~/typeDefs";
 
   import HelpDetails from "~/components/HelpDetails.svelte";

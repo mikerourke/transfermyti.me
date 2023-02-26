@@ -3,8 +3,8 @@ import type { SagaIterator } from "redux-saga";
 import { call, delay, put, select } from "redux-saga/effects";
 
 import { getApiDelayForTool } from "~/entityOperations/apiRequests";
-import { entityGroupTransferCompletedCountIncremented } from "~/modules/allEntities/allEntitiesActions";
-import { workspaceIdToLinkedIdSelector } from "~/modules/workspaces/workspacesSelectors";
+import { entityGroupTransferCompletedCountIncremented } from "~/redux/allEntities/allEntitiesActions";
+import { workspaceIdToLinkedIdSelector } from "~/redux/workspaces/workspacesSelectors";
 import type { EntityGroup, ToolName, ValidEntity } from "~/typeDefs";
 
 /**

@@ -1,14 +1,14 @@
-import type { AllEntitiesState } from "~/modules/allEntities/allEntitiesReducer";
-import type { AppState } from "~/modules/app/appReducer";
-import type { ClientsState } from "~/modules/clients/clientsReducer";
-import type { CredentialsState } from "~/modules/credentials/credentialsReducer";
-import type { ProjectsState } from "~/modules/projects/projectsReducer";
-import type { TagsState } from "~/modules/tags/tagsReducer";
-import type { TasksState } from "~/modules/tasks/tasksReducer";
-import type { TimeEntriesState } from "~/modules/timeEntries/timeEntriesReducer";
-import type { UserGroupsState } from "~/modules/userGroups/userGroupsReducer";
-import type { UsersState } from "~/modules/users/usersReducer";
-import type { WorkspacesState } from "~/modules/workspaces/workspacesReducer";
+import type { AllEntitiesState } from "~/redux/allEntities/allEntitiesReducer";
+import type { AppState } from "~/redux/app/appReducer";
+import type { ClientsState } from "~/redux/clients/clientsReducer";
+import type { CredentialsState } from "~/redux/credentials/credentialsReducer";
+import type { ProjectsState } from "~/redux/projects/projectsReducer";
+import type { TagsState } from "~/redux/tags/tagsReducer";
+import type { TasksState } from "~/redux/tasks/tasksReducer";
+import type { TimeEntriesState } from "~/redux/timeEntries/timeEntriesReducer";
+import type { UserGroupsState } from "~/redux/userGroups/userGroupsReducer";
+import type { UsersState } from "~/redux/users/usersReducer";
+import type { WorkspacesState } from "~/redux/workspaces/workspacesReducer";
 
 export interface ReduxState {
   allEntities: AllEntitiesState;
@@ -90,7 +90,10 @@ export type EntityTableRecord<TEntity> = TEntity & {
   isActiveInTarget: boolean;
 };
 
-export type CountsByEntityGroup = Record<EntityGroup, number>;
+export type CountsByEntityGroup = Record<
+  Exclude<EntityGroup, EntityGroup.Workspaces>,
+  number
+>;
 
 export interface ToolNameByMapping {
   [Mapping.Source]: ToolName;

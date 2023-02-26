@@ -1,15 +1,15 @@
 <script lang="ts">
   import { omit } from "ramda";
 
-  import { toolActionSelector } from "~/modules/allEntities/allEntitiesSelectors";
+  import { toolActionSelector } from "~/redux/allEntities/allEntitiesSelectors";
   import {
     areAllProjectsIncludedUpdated,
     isProjectIncludedToggled,
-  } from "~/modules/projects/projectsActions";
+  } from "~/redux/projects/projectsActions";
   import {
     projectsForInclusionsTableSelector,
     projectsTotalCountsByTypeSelector,
-  } from "~/modules/projects/projectsSelectors";
+  } from "~/redux/projects/projectsSelectors";
   import { dispatchAction, selectorToStore } from "~/redux/reduxToStore";
   import { EntityGroup, ToolAction } from "~/typeDefs";
 

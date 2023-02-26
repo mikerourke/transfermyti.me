@@ -1,5 +1,5 @@
-import { toolNameByMappingSelector } from "~/modules/allEntities/allEntitiesSelectors";
-import { getStore } from "~/redux/configureStore";
+import { toolNameByMappingSelector } from "~/redux/allEntities/allEntitiesSelectors";
+import { getStore } from "~/redux/store";
 import { capitalize } from "~/utilities/textTransforms";
 
 export function replaceMappingWithToolName(label: string): string {

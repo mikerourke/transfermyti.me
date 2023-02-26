@@ -4,12 +4,12 @@
   import {
     fetchAllEntities,
     isExistsInTargetShownToggled,
-  } from "~/modules/allEntities/allEntitiesActions";
-  import * as allEntitiesSelectors from "~/modules/allEntities/allEntitiesSelectors";
+  } from "~/redux/allEntities/allEntitiesActions";
+  import * as allEntitiesSelectors from "~/redux/allEntities/allEntitiesSelectors";
   import {
     navigateToWorkflowStep,
     WorkflowStep,
-  } from "~/modules/app/workflowStep";
+  } from "~/redux/app/workflowStep";
   import { dispatchAction, selectorToStore } from "~/redux/reduxToStore";
   import { FetchStatus, ToolAction } from "~/typeDefs";
   import { capitalize } from "~/utilities/textTransforms";
