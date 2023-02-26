@@ -1,5 +1,4 @@
 <script lang="ts">
-  import { replaceMappingWithToolName } from "~/entityOperations/replaceMappingWithToolName";
   import { toolActionSelector } from "~/redux/allEntities/allEntitiesSelectors";
   import { dispatchAction, selectorToStore } from "~/redux/reduxToStore";
   import {
@@ -13,6 +12,7 @@
     timeEntriesTotalCountsByTypeSelector,
   } from "~/redux/timeEntries/timeEntriesSelectors";
   import { ToolAction, type TimeEntryTableRecord } from "~/typeDefs";
+  import { replaceMappingWithToolName } from "~/utilities/replaceMappingWithToolName";
 
   import AccordionPanel from "~/components/AccordionPanel.svelte";
   import InclusionsTableTitle from "~/components/InclusionsTableTitle.svelte";

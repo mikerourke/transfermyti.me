@@ -2,13 +2,10 @@ import { isNil, pathOr, prop, propOr } from "ramda";
 import type { SagaIterator } from "redux-saga";
 import { call, select } from "redux-saga/effects";
 
-import {
-  fetchObject,
-  fetchPaginatedFromClockify,
-} from "~/entityOperations/apiRequests";
-import { createEntitiesForTool } from "~/entityOperations/createEntitiesForTool";
-import { deleteEntitiesForTool } from "~/entityOperations/deleteEntitiesForTool";
-import { fetchEntitiesForTool } from "~/entityOperations/fetchEntitiesForTool";
+import { fetchObject, fetchPaginatedFromClockify } from "~/api/apiRequests";
+import { createEntitiesForTool } from "~/api/createEntitiesForTool";
+import { deleteEntitiesForTool } from "~/api/deleteEntitiesForTool";
+import { fetchEntitiesForTool } from "~/api/fetchEntitiesForTool";
 import { credentialsByToolNameSelector } from "~/redux/credentials/credentialsSelectors";
 import { projectIdToLinkedIdSelector } from "~/redux/projects/projectsSelectors";
 import type { ClockifyProjectResponse } from "~/redux/projects/sagas/clockifyProjectsSagas";

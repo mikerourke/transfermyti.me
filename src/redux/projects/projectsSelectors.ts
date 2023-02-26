@@ -1,6 +1,6 @@
 import { isNil, pluck, propOr } from "ramda";
 
-import { selectIdToLinkedId } from "~/entityOperations/selectIdToLinkedId";
+import { selectIdToLinkedId } from "~/api/selectIdToLinkedId";
 import {
   areExistsInTargetShownSelector,
   toolNameByMappingSelector,

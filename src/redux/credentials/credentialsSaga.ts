@@ -2,7 +2,7 @@ import { clone, isNil } from "ramda";
 import type { SagaIterator } from "redux-saga";
 import { all, call, put, select, takeEvery } from "redux-saga/effects";
 
-import { fetchObject } from "~/entityOperations/apiRequests";
+import { fetchObject } from "~/api/apiRequests";
 import {
   toolActionUpdated,
   toolNameByMappingUpdated,

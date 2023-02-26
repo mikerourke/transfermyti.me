@@ -1,6 +1,6 @@
 import { lensPath, not, over, set } from "ramda";
 
-import { updateAreAllRecordsIncluded } from "~/entityOperations/updateAreAllRecordsIncluded";
+import { updateAreAllRecordsIncluded } from "~/api/updateAreAllRecordsIncluded";
 import { allEntitiesFlushed } from "~/redux/allEntities/allEntitiesActions";
 import {
   createReducer,

@@ -7,9 +7,9 @@ import {
   fetchEmpty,
   fetchObject,
   getApiDelayForTool,
-} from "~/entityOperations/apiRequests";
-import { createEntitiesForTool } from "~/entityOperations/createEntitiesForTool";
-import { deleteEntitiesForTool } from "~/entityOperations/deleteEntitiesForTool";
+} from "~/api/apiRequests";
+import { createEntitiesForTool } from "~/api/createEntitiesForTool";
+import { deleteEntitiesForTool } from "~/api/deleteEntitiesForTool";
 import {
   projectIdToLinkedIdSelector,
   projectsByWorkspaceIdByToolNameSelector,

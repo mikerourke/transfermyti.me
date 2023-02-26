@@ -6,14 +6,10 @@ import { isNil, propOr } from "ramda";
 import type { SagaIterator } from "redux-saga";
 import { call, delay, select } from "redux-saga/effects";
 
-import {
-  fetchEmpty,
-  fetchObject,
-  getApiDelayForTool,
-} from "~/entityOperations/apiRequests";
-import { createEntitiesForTool } from "~/entityOperations/createEntitiesForTool";
-import { deleteEntitiesForTool } from "~/entityOperations/deleteEntitiesForTool";
-import { fetchEntitiesForTool } from "~/entityOperations/fetchEntitiesForTool";
+import { fetchEmpty, fetchObject, getApiDelayForTool } from "~/api/apiRequests";
+import { createEntitiesForTool } from "~/api/createEntitiesForTool";
+import { deleteEntitiesForTool } from "~/api/deleteEntitiesForTool";
+import { fetchEntitiesForTool } from "~/api/fetchEntitiesForTool";
 import { clientIdsByNameSelectorFactory } from "~/redux/clients/clientsSelectors";
 import { credentialsByToolNameSelector } from "~/redux/credentials/credentialsSelectors";
 import { projectIdToLinkedIdSelector } from "~/redux/projects/projectsSelectors";

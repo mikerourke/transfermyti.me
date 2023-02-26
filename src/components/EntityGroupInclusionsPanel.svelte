@@ -2,8 +2,8 @@
   import { compose, prop, sortBy, toLower } from "ramda";
   import { createEventDispatcher } from "svelte";
 
-  import { replaceMappingWithToolName } from "~/entityOperations/replaceMappingWithToolName";
   import type { AnyEntity, EntityGroup, EntityTableRecord } from "~/typeDefs";
+  import { replaceMappingWithToolName } from "~/utilities/replaceMappingWithToolName";
   import { getEntityGroupDisplay } from "~/utilities/textTransforms";
 
   import AccordionPanel from "~/components/AccordionPanel.svelte";
