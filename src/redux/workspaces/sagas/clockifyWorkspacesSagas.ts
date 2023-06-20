@@ -3,7 +3,7 @@ import { call } from "redux-saga/effects";
 
 import { fetchArray } from "~/api/apiRequests";
 import type { ClockifyMembershipResponse } from "~/redux/users/sagas/clockifyUsersSagas";
-import { EntityGroup, type Workspace } from "~/typeDefs";
+import { EntityGroup, type Workspace } from "~/types";
 
 interface ClockifyWorkspaceSettingsResponse {
   timeRoundingInReports: boolean;

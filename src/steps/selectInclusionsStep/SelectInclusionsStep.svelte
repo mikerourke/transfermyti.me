@@ -11,7 +11,7 @@
     WorkflowStep,
   } from "~/redux/app/workflowStep";
   import { dispatchAction, selectorToStore } from "~/redux/reduxToStore";
-  import { FetchStatus, ToolAction } from "~/typeDefs";
+  import { FetchStatus, ToolAction } from "~/types";
   import { capitalize } from "~/utilities/textTransforms";
 
   import Loader from "~/components/Loader.svelte";

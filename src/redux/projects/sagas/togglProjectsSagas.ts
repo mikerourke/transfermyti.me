@@ -12,7 +12,7 @@ import { createEntitiesForTool } from "~/api/createEntitiesForTool";
 import { deleteEntitiesForTool } from "~/api/deleteEntitiesForTool";
 import { fetchEntitiesForTool } from "~/api/fetchEntitiesForTool";
 import { clientIdToLinkedIdSelector } from "~/redux/clients/clientsSelectors";
-import { EntityGroup, ToolName, type Project } from "~/typeDefs";
+import { EntityGroup, ToolName, type Project } from "~/types";
 import { validStringify } from "~/utilities/textTransforms";
 
 interface TogglRecurringParametersItem {

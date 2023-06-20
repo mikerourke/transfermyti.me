@@ -15,7 +15,7 @@ import {
   includedSourceTagsSelector,
   sourceTagsForTransferSelector,
 } from "~/redux/tags/tagsSelectors";
-import { Mapping, ToolAction, ToolName, type Tag } from "~/typeDefs";
+import { Mapping, ToolAction, ToolName, type Tag } from "~/types";
 
 /**
  * Creates tags in the target tool based on the included tags from the

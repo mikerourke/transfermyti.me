@@ -13,7 +13,7 @@ import type { ClockifyTagResponse } from "~/redux/tags/sagas/clockifyTagsSagas";
 import { targetTagIdsSelectorFactory } from "~/redux/tags/tagsSelectors";
 import type { ClockifyTaskResponse } from "~/redux/tasks/sagas/clockifyTasksSagas";
 import { taskIdToLinkedIdSelector } from "~/redux/tasks/tasksSelectors";
-import { EntityGroup, ToolName, type TimeEntry } from "~/typeDefs";
+import { EntityGroup, ToolName, type TimeEntry } from "~/types";
 
 interface ClockifyTimeInterval {
   duration: string;

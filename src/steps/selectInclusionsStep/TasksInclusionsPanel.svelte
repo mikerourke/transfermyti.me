@@ -11,7 +11,7 @@
     tasksForInclusionsTableSelector,
     tasksTotalCountsByTypeSelector,
   } from "~/redux/tasks/tasksSelectors";
-  import { EntityGroup, ToolAction } from "~/typeDefs";
+  import { EntityGroup, ToolAction } from "~/types";
 
   import EntityGroupInclusionsPanel from "~/components/EntityGroupInclusionsPanel.svelte";
 

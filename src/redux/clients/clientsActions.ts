@@ -1,5 +1,5 @@
 import { createAction, createAsyncAction } from "~/redux/reduxTools";
-import type { Client, Mapping } from "~/typeDefs";
+import type { Client, Mapping } from "~/types";
 
 export const areAllClientsIncludedUpdated = createAction<boolean>(
   "@clients/areAllClientsIncludedUpdated",

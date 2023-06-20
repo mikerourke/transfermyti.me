@@ -1,5 +1,5 @@
 import { createReducer, nanoid } from "~/redux/reduxTools";
-import type { Notification } from "~/typeDefs";
+import type { Notification } from "~/types";
 import { isDevelopmentMode } from "~/utilities/environment";
 
 import * as appActions from "./appActions";

@@ -6,7 +6,7 @@ import { allSagas } from "~/redux/allSagas";
 import { validateCredentials } from "~/redux/credentials/credentialsActions";
 import { getCredentialsFromStorage } from "~/redux/credentials/credentialsStorage";
 import { rootReducer, initialState } from "~/redux/rootReducer";
-import type { ReduxState } from "~/typeDefs";
+import type { ReduxState } from "~/types";
 import { isDevelopmentMode, isUseLocalApi } from "~/utilities/environment";
 
 let currentStore: Store<ReduxState> | null = null;

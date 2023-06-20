@@ -3,7 +3,7 @@ import { describe, expect, test } from "vitest";
 import { allEntitiesFlushed } from "~/redux/allEntities/allEntitiesActions";
 import * as workspacesActions from "~/redux/workspaces/workspacesActions";
 import { FAKES } from "~/testUtilities";
-import { EntityGroup, Mapping } from "~/typeDefs";
+import { EntityGroup, Mapping } from "~/types";
 
 import { workspacesInitialState, workspacesReducer } from "../workspacesReducer";
 

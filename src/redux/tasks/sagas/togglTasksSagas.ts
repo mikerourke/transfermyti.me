@@ -16,7 +16,7 @@ import {
   targetProjectsByIdSelector,
 } from "~/redux/projects/projectsSelectors";
 import { userIdToLinkedIdSelector } from "~/redux/users/usersSelectors";
-import { EntityGroup, ToolName, type Project, type Task } from "~/typeDefs";
+import { EntityGroup, ToolName, type Project, type Task } from "~/types";
 import { validStringify } from "~/utilities/textTransforms";
 
 /**

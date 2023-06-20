@@ -11,7 +11,7 @@ import type {
   Mapping,
   ReduxState,
   ToolName,
-} from "~/typeDefs";
+} from "~/types";
 
 export const sourceClientsByIdSelector = createSelector(
   (state: ReduxState) => state.clients.source,

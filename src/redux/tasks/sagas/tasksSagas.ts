@@ -26,7 +26,7 @@ import {
   ToolName,
   type Project,
   type Task,
-} from "~/typeDefs";
+} from "~/types";
 
 export function* taskMonitoringSaga(): SagaIterator {
   yield all([

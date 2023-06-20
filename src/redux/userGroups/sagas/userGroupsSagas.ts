@@ -15,7 +15,7 @@ import {
   includedSourceUserGroupsSelector,
   sourceUserGroupsForTransferSelector,
 } from "~/redux/userGroups/userGroupsSelectors";
-import { Mapping, ToolAction, ToolName, type UserGroup } from "~/typeDefs";
+import { Mapping, ToolAction, ToolName, type UserGroup } from "~/types";
 
 /**
  * Creates user groups in the target tool based on the included user groups from

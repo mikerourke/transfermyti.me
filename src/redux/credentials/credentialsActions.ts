@@ -5,7 +5,7 @@ import type {
   Mapping,
   PartialCredentialsUpdate,
   ValidationErrorsByMapping,
-} from "~/typeDefs";
+} from "~/types";
 
 export const apiKeysUpdated = createAction<Record<Mapping, string>>(
   "@credentials/apiKeysUpdated",

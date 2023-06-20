@@ -7,7 +7,7 @@ import {
   type ActionType,
   type AnyAction,
 } from "~/redux/reduxTools";
-import type { Workspace } from "~/typeDefs";
+import type { Workspace } from "~/types";
 
 import * as workspacesActions from "./workspacesActions";
 

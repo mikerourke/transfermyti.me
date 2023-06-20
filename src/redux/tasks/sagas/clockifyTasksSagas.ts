@@ -15,7 +15,7 @@ import {
   projectsByWorkspaceIdByToolNameSelector,
 } from "~/redux/projects/projectsSelectors";
 import { userIdToLinkedIdSelector } from "~/redux/users/usersSelectors";
-import { EntityGroup, ToolName, type Task } from "~/typeDefs";
+import { EntityGroup, ToolName, type Task } from "~/types";
 
 type ClockifyTaskStatus = "ACTIVE" | "DONE";
 

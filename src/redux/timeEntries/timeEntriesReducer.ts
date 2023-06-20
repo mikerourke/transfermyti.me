@@ -7,7 +7,7 @@ import {
   type ActionType,
   type AnyAction,
 } from "~/redux/reduxTools";
-import { Mapping, type TimeEntry } from "~/typeDefs";
+import { Mapping, type TimeEntry } from "~/types";
 
 import * as timeEntriesActions from "./timeEntriesActions";
 

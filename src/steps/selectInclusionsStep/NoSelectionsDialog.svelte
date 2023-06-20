@@ -1,5 +1,5 @@
 <script lang="ts">
-  import { ToolAction } from "~/typeDefs";
+  import { ToolAction } from "~/types";
 
   import AlertDialog from "~/components/AlertDialog.svelte";
   import ExternalLink from "~/components/ExternalLink.svelte";

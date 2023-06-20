@@ -15,7 +15,7 @@ import type {
   ClockifyHourlyRateResponse,
   ClockifyMembershipResponse,
 } from "~/redux/users/sagas/clockifyUsersSagas";
-import { EntityGroup, ToolName, type Estimate, type Project } from "~/typeDefs";
+import { EntityGroup, ToolName, type Estimate, type Project } from "~/types";
 
 export interface ClockifyProjectResponse {
   archived: boolean;

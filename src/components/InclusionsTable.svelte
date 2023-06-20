@@ -1,7 +1,7 @@
 <script lang="ts">
   import { createEventDispatcher } from "svelte";
 
-  import type { AnyEntity, EntityTableRecord } from "~/typeDefs";
+  import type { AnyEntity, EntityTableRecord } from "~/types";
 
   import InclusionsTableTitle from "~/components/InclusionsTableTitle.svelte";
 

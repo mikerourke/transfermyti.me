@@ -11,7 +11,7 @@ import {
   type Project,
   type ReduxState,
   type TimeEntry,
-} from "~/typeDefs";
+} from "~/types";
 
 enum LinkFromType {
   Source,

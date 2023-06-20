@@ -9,7 +9,7 @@ import {
 import { deleteEntitiesForTool } from "~/api/deleteEntitiesForTool";
 import { fetchEntitiesForTool } from "~/api/fetchEntitiesForTool";
 import { entityGroupTransferCompletedCountIncremented } from "~/redux/allEntities/allEntitiesActions";
-import { EntityGroup, ToolName, type User } from "~/typeDefs";
+import { EntityGroup, ToolName, type User } from "~/types";
 
 export interface ClockifyHourlyRateResponse {
   amount: number;

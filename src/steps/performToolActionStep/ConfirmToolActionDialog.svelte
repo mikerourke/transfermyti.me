@@ -1,5 +1,5 @@
 <script lang="ts">
-  import type { ToolAction } from "~/typeDefs";
+  import type { ToolAction } from "~/types";
 
   import ConfirmationDialog from "~/components/ConfirmationDialog.svelte";
 

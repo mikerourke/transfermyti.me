@@ -5,7 +5,7 @@ import { sourceProjectsByIdSelector } from "~/redux/projects/projectsSelectors";
 import { createSelector } from "~/redux/reduxTools";
 import { sourceTimeEntryCountByIdFieldSelectorFactory } from "~/redux/timeEntries/timeEntriesSelectors";
 import { activeWorkspaceIdSelector } from "~/redux/workspaces/workspacesSelectors";
-import type { ReduxState, Task, TaskTableRecord } from "~/typeDefs";
+import type { ReduxState, Task, TaskTableRecord } from "~/types";
 
 export const sourceTasksByIdSelector = createSelector(
   (state: ReduxState) => state.tasks.source,

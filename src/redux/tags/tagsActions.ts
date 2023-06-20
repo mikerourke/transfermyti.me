@@ -1,5 +1,5 @@
 import { createAction, createAsyncAction } from "~/redux/reduxTools";
-import type { Mapping, Tag } from "~/typeDefs";
+import type { Mapping, Tag } from "~/types";
 
 export const areAllTagsIncludedUpdated = createAction<boolean>(
   "@tags/areAllTagsIncludedUpdated",

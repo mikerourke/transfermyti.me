@@ -11,7 +11,7 @@
     timeEntriesForInclusionsTableSelector,
     timeEntriesTotalCountsByTypeSelector,
   } from "~/redux/timeEntries/timeEntriesSelectors";
-  import { ToolAction, type TimeEntryTableRecord } from "~/typeDefs";
+  import { ToolAction, type TimeEntryTableRecord } from "~/types";
   import { replaceMappingWithToolName } from "~/utilities/replaceMappingWithToolName";
 
   import AccordionPanel from "~/components/AccordionPanel.svelte";

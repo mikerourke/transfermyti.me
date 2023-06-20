@@ -5,7 +5,7 @@ import type {
   FetchStatus,
   ToolAction,
   ToolNameByMapping,
-} from "~/typeDefs";
+} from "~/types";
 
 export const allEntitiesFlushed = createAction<undefined>(
   "@allEntities/allEntitiesFlushed",

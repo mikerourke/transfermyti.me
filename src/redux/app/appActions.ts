@@ -1,5 +1,5 @@
 import { createAction } from "~/redux/reduxTools";
-import type { Notification } from "~/typeDefs";
+import type { Notification } from "~/types";
 
 export const allNotificationsDismissed = createAction<undefined>(
   "@app/allNotificationsDismissed",

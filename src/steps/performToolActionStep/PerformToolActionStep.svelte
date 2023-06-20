@@ -23,7 +23,7 @@
     FetchStatus,
     ToolAction,
     type CountsByEntityGroup,
-  } from "~/typeDefs";
+  } from "~/types";
   import { capitalize } from "~/utilities/textTransforms";
 
   import HelpDetails from "~/components/HelpDetails.svelte";

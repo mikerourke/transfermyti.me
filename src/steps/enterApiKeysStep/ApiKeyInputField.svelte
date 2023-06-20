@@ -1,7 +1,7 @@
 <script lang="ts">
   import { slide } from "svelte/transition";
 
-  import type { ToolHelpDetails } from "~/typeDefs";
+  import type { ToolHelpDetails } from "~/types";
 
   import ExternalLink from "~/components/ExternalLink.svelte";
 

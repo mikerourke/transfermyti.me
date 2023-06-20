@@ -1,5 +1,5 @@
 import { createAction, createAsyncAction } from "~/redux/reduxTools";
-import type { Mapping, Workspace } from "~/typeDefs";
+import type { Mapping, Workspace } from "~/types";
 
 export const activeWorkspaceIdUpdated = createAction<string>(
   "@workspaces/activeWorkspaceIdUpdated",

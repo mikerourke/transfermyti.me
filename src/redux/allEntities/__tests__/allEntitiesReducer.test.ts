@@ -2,7 +2,7 @@ import { describe, expect, test } from "vitest";
 
 import * as allEntitiesActions from "~/redux/allEntities/allEntitiesActions";
 import { FAKES } from "~/testUtilities";
-import { EntityGroup, FetchStatus, ToolAction, ToolName } from "~/typeDefs";
+import { EntityGroup, FetchStatus, ToolAction, ToolName } from "~/types";
 
 import { allEntitiesReducer, allEntitiesInitialState } from "../allEntitiesReducer";
 

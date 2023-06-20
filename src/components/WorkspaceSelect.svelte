@@ -1,7 +1,7 @@
 <script lang="ts">
   import { createEventDispatcher } from "svelte";
 
-  import type { Workspace } from "~/typeDefs";
+  import type { Workspace } from "~/types";
 
   export let id: string;
   export let style: string | undefined = undefined;

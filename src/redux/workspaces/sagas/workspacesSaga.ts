@@ -11,7 +11,7 @@ import { errorNotificationShown } from "~/redux/app/appActions";
 import * as clockifySagas from "~/redux/workspaces/sagas/clockifyWorkspacesSagas";
 import * as togglSagas from "~/redux/workspaces/sagas/togglWorkspacesSagas";
 import { fetchWorkspaces } from "~/redux/workspaces/workspacesActions";
-import { Mapping, ToolAction, ToolName, type Workspace } from "~/typeDefs";
+import { Mapping, ToolAction, ToolName, type Workspace } from "~/types";
 
 export function* workspacesSaga(): SagaIterator {
   yield all([takeEvery(fetchWorkspaces.request, fetchWorkspacesSaga)]);

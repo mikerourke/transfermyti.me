@@ -3,7 +3,7 @@
 
   import { notificationDismissed } from "~/redux/app/appActions";
   import { dispatchAction } from "~/redux/reduxToStore";
-  import type { Notification } from "~/typeDefs";
+  import type { Notification } from "~/types";
 
   import Icon from "~/components/Icon.svelte";
 

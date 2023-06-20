@@ -8,7 +8,7 @@
     tagsForInclusionsTableSelector,
     tagsTotalCountsByTypeSelector,
   } from "~/redux/tags/tagsSelectors";
-  import { EntityGroup } from "~/typeDefs";
+  import { EntityGroup } from "~/types";
 
   import EntityGroupInclusionsPanel from "~/components/EntityGroupInclusionsPanel.svelte";
 

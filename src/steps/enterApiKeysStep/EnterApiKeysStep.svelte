@@ -19,7 +19,7 @@
     validationFetchStatusSelector,
   } from "~/redux/credentials/credentialsSelectors";
   import { dispatchAction, selectorToStore } from "~/redux/reduxToStore";
-  import { FetchStatus, Mapping, ToolName } from "~/typeDefs";
+  import { FetchStatus, Mapping, ToolName } from "~/types";
 
   import { setFocusTo } from "~/utilities/domElements";
 

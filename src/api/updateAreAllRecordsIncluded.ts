@@ -1,6 +1,6 @@
 import { isNil } from "ramda";
 
-import type { ValidEntity } from "~/typeDefs";
+import type { ValidEntity } from "~/types";
 
 /**
  * Loops through the specified entity records and updates the `isIncluded`

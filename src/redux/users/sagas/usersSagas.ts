@@ -15,7 +15,7 @@ import {
   includedSourceUsersSelector,
   sourceUserEmailsByWorkspaceIdSelector,
 } from "~/redux/users/usersSelectors";
-import { Mapping, ToolAction, ToolName, type User } from "~/typeDefs";
+import { Mapping, ToolAction, ToolName, type User } from "~/types";
 
 /**
  * Invites users to the target tool based on the source users.

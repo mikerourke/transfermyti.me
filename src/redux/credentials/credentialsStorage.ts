@@ -1,4 +1,4 @@
-import type { CredentialsByMapping } from "~/typeDefs";
+import type { CredentialsByMapping } from "~/types";
 
 const STORAGE_KEY = "transfermytime";
 

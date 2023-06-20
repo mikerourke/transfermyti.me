@@ -1,7 +1,7 @@
 import { describe, expect, test } from "vitest";
 
 import { FAKES } from "~/testUtilities";
-import { EntityGroup, ToolName } from "~/typeDefs";
+import { EntityGroup, ToolName } from "~/types";
 
 import * as clientsSelectors from "../clientsSelectors";
 

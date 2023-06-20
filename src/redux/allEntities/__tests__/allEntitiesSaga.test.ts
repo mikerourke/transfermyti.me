@@ -9,7 +9,7 @@ import * as projectsSagas from "~/redux/projects/sagas/projectsSagas";
 import * as tagsSagas from "~/redux/tags/sagas/tagsSagas";
 import * as tasksSagas from "~/redux/tasks/sagas/tasksSagas";
 import * as timeEntriesSagas from "~/redux/timeEntries/sagas/timeEntriesSagas";
-import { EntityGroup } from "~/typeDefs";
+import { EntityGroup } from "~/types";
 
 import { allEntitiesSaga } from "../allEntitiesSaga";
 

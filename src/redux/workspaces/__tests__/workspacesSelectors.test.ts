@@ -1,7 +1,7 @@
 import { describe, expect, test } from "vitest";
 
 import { FAKES } from "~/testUtilities";
-import { EntityGroup } from "~/typeDefs";
+import { EntityGroup } from "~/types";
 
 import * as workspacesSelectors from "../workspacesSelectors";
 

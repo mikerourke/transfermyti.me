@@ -8,7 +8,7 @@ import {
   type AnyAction,
   type ActionType,
 } from "~/redux/reduxTools";
-import { Mapping, type Client } from "~/typeDefs";
+import { Mapping, type Client } from "~/types";
 
 import * as clientsActions from "./clientsActions";
 

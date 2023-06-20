@@ -8,7 +8,7 @@
     WorkflowStep,
   } from "~/redux/app/workflowStep";
   import { dispatchAction } from "~/redux/reduxToStore";
-  import { ToolAction, ToolName } from "~/typeDefs";
+  import { ToolAction, ToolName } from "~/types";
 
   import HelpDetails from "~/components/HelpDetails.svelte";
 

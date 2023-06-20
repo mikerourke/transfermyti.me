@@ -13,7 +13,7 @@ import {
   ToolName,
   type CountsByEntityGroup,
   type ToolNameByMapping,
-} from "~/typeDefs";
+} from "~/types";
 
 import * as allEntitiesActions from "./allEntitiesActions";
 

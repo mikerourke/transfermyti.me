@@ -6,7 +6,7 @@ import {
 } from "~/redux/allEntities/allEntitiesActions";
 import { validationFetchStatusUpdated } from "~/redux/credentials/credentialsActions";
 import { dispatchAction } from "~/redux/reduxToStore";
-import { FetchStatus } from "~/typeDefs";
+import { FetchStatus } from "~/types";
 
 export enum WorkflowStep {
   PickToolAction = "pick-tool-action",

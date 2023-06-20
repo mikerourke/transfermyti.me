@@ -15,7 +15,7 @@ import {
   includedSourceTimeEntriesSelector,
   sourceTimeEntriesForTransferSelector,
 } from "~/redux/timeEntries/timeEntriesSelectors";
-import { Mapping, ToolAction, ToolName, type TimeEntry } from "~/typeDefs";
+import { Mapping, ToolAction, ToolName, type TimeEntry } from "~/types";
 
 /**
  * Creates time entries in the target tool based on the included time entries

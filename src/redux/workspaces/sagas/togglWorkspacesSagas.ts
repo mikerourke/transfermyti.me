@@ -2,7 +2,7 @@ import type { SagaIterator } from "redux-saga";
 import { call } from "redux-saga/effects";
 
 import { fetchArray } from "~/api/apiRequests";
-import { EntityGroup, type Workspace } from "~/typeDefs";
+import { EntityGroup, type Workspace } from "~/types";
 
 interface TogglWorkspaceSubscription {
   auto_renew: boolean;

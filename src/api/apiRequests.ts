@@ -3,7 +3,7 @@ import type { SagaIterator } from "redux-saga";
 import { call, delay, select } from "redux-saga/effects";
 
 import { credentialsByToolNameSelector } from "~/redux/credentials/credentialsSelectors";
-import { ToolName } from "~/typeDefs";
+import { ToolName } from "~/types";
 import { isTestingMode, isUseLocalApi } from "~/utilities/environment";
 
 const CLOCKIFY_API_PAGE_SIZE = 100;

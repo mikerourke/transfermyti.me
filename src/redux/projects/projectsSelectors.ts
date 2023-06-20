@@ -8,7 +8,7 @@ import {
 import { createSelector } from "~/redux/reduxTools";
 import { sourceTimeEntryCountByIdFieldSelectorFactory } from "~/redux/timeEntries/timeEntriesSelectors";
 import { activeWorkspaceIdSelector } from "~/redux/workspaces/workspacesSelectors";
-import type { EntityTableRecord, Project, ReduxState } from "~/typeDefs";
+import type { EntityTableRecord, Project, ReduxState } from "~/types";
 
 export const sourceProjectsByIdSelector = createSelector(
   (state: ReduxState) => state.projects.source,

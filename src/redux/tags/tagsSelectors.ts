@@ -10,7 +10,7 @@ import type {
   ReduxState,
   Tag,
   ToolName,
-} from "~/typeDefs";
+} from "~/types";
 
 const sourceTagsByIdSelector = createSelector(
   (state: ReduxState) => state.tags.source,

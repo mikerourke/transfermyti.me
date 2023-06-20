@@ -13,7 +13,7 @@
   import { dispatchAction, selectorToStore } from "~/redux/reduxToStore";
   import * as workspacesActions from "~/redux/workspaces/workspacesActions";
   import * as workspacesSelectors from "~/redux/workspaces/workspacesSelectors";
-  import { FetchStatus, ToolAction, type Workspace } from "~/typeDefs";
+  import { FetchStatus, ToolAction, type Workspace } from "~/types";
 
   import HelpDetails from "~/components/HelpDetails.svelte";
   import Loader from "~/components/Loader.svelte";

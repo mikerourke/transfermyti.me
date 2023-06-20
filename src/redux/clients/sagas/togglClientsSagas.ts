@@ -5,7 +5,7 @@ import { fetchArray, fetchEmpty, fetchObject } from "~/api/apiRequests";
 import { createEntitiesForTool } from "~/api/createEntitiesForTool";
 import { deleteEntitiesForTool } from "~/api/deleteEntitiesForTool";
 import { fetchEntitiesForTool } from "~/api/fetchEntitiesForTool";
-import { EntityGroup, ToolName, type Client } from "~/typeDefs";
+import { EntityGroup, ToolName, type Client } from "~/types";
 import { validStringify } from "~/utilities/textTransforms";
 
 /**

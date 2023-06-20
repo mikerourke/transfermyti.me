@@ -5,7 +5,7 @@ import { fetchObject, fetchPaginatedFromClockify } from "~/api/apiRequests";
 import { createEntitiesForTool } from "~/api/createEntitiesForTool";
 import { deleteEntitiesForTool } from "~/api/deleteEntitiesForTool";
 import { fetchEntitiesForTool } from "~/api/fetchEntitiesForTool";
-import { EntityGroup, ToolName, type Tag } from "~/typeDefs";
+import { EntityGroup, ToolName, type Tag } from "~/types";
 
 export interface ClockifyTagResponse {
   id: string;

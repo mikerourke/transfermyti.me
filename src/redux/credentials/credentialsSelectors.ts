@@ -8,7 +8,7 @@ import {
   type CredentialsByMapping,
   type ReduxState,
   type ValidationErrorsByMapping,
-} from "~/typeDefs";
+} from "~/types";
 
 export const validationFetchStatusSelector = createSelector(
   (state: ReduxState) => state.credentials.validationFetchStatus,

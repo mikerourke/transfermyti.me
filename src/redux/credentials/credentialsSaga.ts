@@ -12,7 +12,7 @@ import * as credentialsActions from "~/redux/credentials/credentialsActions";
 import { credentialsByMappingSelector } from "~/redux/credentials/credentialsSelectors";
 import { mergeCredentialsInStorage } from "~/redux/credentials/credentialsStorage";
 import type { TogglUserResponse } from "~/redux/users/sagas/togglUsersSagas";
-import { ToolName, type ValidationErrorsByMapping } from "~/typeDefs";
+import { ToolName, type ValidationErrorsByMapping } from "~/types";
 import { isDevelopmentMode } from "~/utilities/environment";
 import { validStringify } from "~/utilities/textTransforms";
 

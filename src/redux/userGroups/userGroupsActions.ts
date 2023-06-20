@@ -1,5 +1,5 @@
 import { createAction, createAsyncAction } from "~/redux/reduxTools";
-import type { Mapping, UserGroup } from "~/typeDefs";
+import type { Mapping, UserGroup } from "~/types";
 
 interface UserAddedPayload {
   mapping: Mapping;

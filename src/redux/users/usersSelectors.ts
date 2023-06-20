@@ -3,7 +3,7 @@ import { isNil, propOr } from "ramda";
 import { selectIdToLinkedId } from "~/api/selectIdToLinkedId";
 import { createSelector } from "~/redux/reduxTools";
 import { workspaceIdToLinkedIdSelector } from "~/redux/workspaces/workspacesSelectors";
-import type { ReduxState, User } from "~/typeDefs";
+import type { ReduxState, User } from "~/types";
 
 const sourceUsersByIdSelector = createSelector(
   (state: ReduxState) => state.users.source,

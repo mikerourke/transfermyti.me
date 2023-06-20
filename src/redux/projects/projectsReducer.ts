@@ -8,7 +8,7 @@ import {
   type ActionType,
   type AnyAction,
 } from "~/redux/reduxTools";
-import { Mapping, type Project } from "~/typeDefs";
+import { Mapping, type Project } from "~/types";
 
 import * as projectsActions from "./projectsActions";
 

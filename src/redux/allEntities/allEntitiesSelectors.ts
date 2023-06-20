@@ -12,7 +12,7 @@ import {
   type ReduxState,
   type ToolHelpDetails,
   type ToolNameByMapping,
-} from "~/typeDefs";
+} from "~/types";
 import { capitalize, getEntityGroupDisplay } from "~/utilities/textTransforms";
 
 export const areExistsInTargetShownSelector = createSelector(

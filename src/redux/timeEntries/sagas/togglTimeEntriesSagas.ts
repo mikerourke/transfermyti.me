@@ -15,7 +15,7 @@ import { credentialsByToolNameSelector } from "~/redux/credentials/credentialsSe
 import { projectIdToLinkedIdSelector } from "~/redux/projects/projectsSelectors";
 import { tagIdsByNameBySelectorFactory } from "~/redux/tags/tagsSelectors";
 import { taskIdToLinkedIdSelector } from "~/redux/tasks/tasksSelectors";
-import { EntityGroup, ToolName, type TimeEntry } from "~/typeDefs";
+import { EntityGroup, ToolName, type TimeEntry } from "~/types";
 import { validStringify } from "~/utilities/textTransforms";
 
 const togglApiDelay = getApiDelayForTool(ToolName.Toggl);

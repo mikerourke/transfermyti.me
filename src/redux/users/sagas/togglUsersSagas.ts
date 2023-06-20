@@ -11,7 +11,7 @@ import { fetchEntitiesForTool } from "~/api/fetchEntitiesForTool";
 import { entityGroupTransferCompletedCountIncremented } from "~/redux/allEntities/allEntitiesActions";
 import { includedSourceProjectIdsSelector } from "~/redux/projects/projectsSelectors";
 import { includedSourceWorkspaceIdsSelector } from "~/redux/workspaces/workspacesSelectors";
-import { EntityGroup, ToolName, type User } from "~/typeDefs";
+import { EntityGroup, ToolName, type User } from "~/types";
 import { validStringify } from "~/utilities/textTransforms";
 
 export interface TogglUserResponse {

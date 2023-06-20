@@ -2,7 +2,7 @@ import { lensPath, set } from "ramda";
 import { describe, expect, test } from "vitest";
 
 import { FAKES } from "~/testUtilities";
-import { EntityGroup, ToolName } from "~/typeDefs";
+import { EntityGroup, ToolName } from "~/types";
 
 const { REDUX_STATE } = FAKES;
 

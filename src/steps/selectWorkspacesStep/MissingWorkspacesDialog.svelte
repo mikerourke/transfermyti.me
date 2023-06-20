@@ -1,5 +1,5 @@
 <script lang="ts">
-  import type { Workspace } from "~/typeDefs";
+  import type { Workspace } from "~/types";
 
   import AlertDialog from "~/components/AlertDialog.svelte";
 

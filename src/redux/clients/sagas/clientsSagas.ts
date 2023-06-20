@@ -15,7 +15,7 @@ import {
 } from "~/redux/clients/clientsSelectors";
 import * as clockifySagas from "~/redux/clients/sagas/clockifyClientsSagas";
 import * as togglSagas from "~/redux/clients/sagas/togglClientsSagas";
-import { Mapping, ToolAction, ToolName, type Client } from "~/typeDefs";
+import { Mapping, ToolAction, ToolName, type Client } from "~/types";
 
 /**
  * Creates clients in the target tool based on the included clients from the

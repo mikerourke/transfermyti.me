@@ -2,7 +2,7 @@
   import format from "date-fns/format";
   import { createEventDispatcher } from "svelte";
 
-  import type { TimeEntryTableRecord } from "~/typeDefs";
+  import type { TimeEntryTableRecord } from "~/types";
 
   export let timeEntries: TimeEntryTableRecord[];
   export let totalIncludedCount: number;

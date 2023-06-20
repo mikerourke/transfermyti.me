@@ -1,5 +1,5 @@
 import { createAction, createAsyncAction } from "~/redux/reduxTools";
-import type { Mapping, TimeEntry } from "~/typeDefs";
+import type { Mapping, TimeEntry } from "~/types";
 
 export const areAllTimeEntriesIncludedUpdated = createAction<boolean>(
   "@timeEntries/areAllTimeEntriesIncludedUpdated",

@@ -2,7 +2,7 @@ import { isNil, pathOr, propOr } from "ramda";
 
 import { createSelector, type Selector } from "~/redux/reduxTools";
 import { activeWorkspaceIdSelector } from "~/redux/workspaces/workspacesSelectors";
-import type { ReduxState, TimeEntry, TimeEntryTableRecord } from "~/typeDefs";
+import type { ReduxState, TimeEntry, TimeEntryTableRecord } from "~/types";
 
 export const isDuplicateCheckEnabledSelector = createSelector(
   (state: ReduxState) => state.timeEntries.isDuplicateCheckEnabled,

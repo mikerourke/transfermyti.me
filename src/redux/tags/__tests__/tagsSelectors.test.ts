@@ -1,7 +1,7 @@
 import { describe, expect, test } from "vitest";
 
 import { FAKES } from "~/testUtilities";
-import { ToolName } from "~/typeDefs";
+import { ToolName } from "~/types";
 
 import * as tagsSelectors from "../tagsSelectors";
 

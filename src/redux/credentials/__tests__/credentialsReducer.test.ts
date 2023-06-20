@@ -2,7 +2,7 @@ import { describe, expect, test } from "vitest";
 
 import * as credentialsActions from "~/redux/credentials/credentialsActions";
 import { FAKES } from "~/testUtilities";
-import { FetchStatus, Mapping } from "~/typeDefs";
+import { FetchStatus, Mapping } from "~/types";
 
 import { credentialsReducer, credentialsInitialState } from "../credentialsReducer";
 

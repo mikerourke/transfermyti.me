@@ -19,7 +19,7 @@ import * as togglSagas from "~/redux/projects/sagas/togglProjectsSagas";
 import { isActionOf, type ActionType } from "~/redux/reduxTools";
 import { isTaskIncludedUpdated } from "~/redux/tasks/tasksActions";
 import { sourceTasksSelector } from "~/redux/tasks/tasksSelectors";
-import { Mapping, ToolAction, ToolName, type Project } from "~/typeDefs";
+import { Mapping, ToolAction, ToolName, type Project } from "~/types";
 
 export function* projectMonitoringSaga(): SagaIterator {
   yield all([

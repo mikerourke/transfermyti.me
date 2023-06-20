@@ -2,7 +2,7 @@ import { compose, isNil, prop, sortBy, toLower } from "ramda";
 
 import { selectIdToLinkedId } from "~/api/selectIdToLinkedId";
 import { createSelector } from "~/redux/reduxTools";
-import type { Mapping, ReduxState, Workspace } from "~/typeDefs";
+import type { Mapping, ReduxState, Workspace } from "~/types";
 
 export const areWorkspacesFetchingSelector = createSelector(
   (state: ReduxState) => state.workspaces.isFetching,

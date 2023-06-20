@@ -5,7 +5,7 @@
     activeWorkspaceIdSelector,
     includedSourceWorkspacesSelector,
   } from "~/redux/workspaces/workspacesSelectors";
-  import type { Workspace } from "~/typeDefs";
+  import type { Workspace } from "~/types";
 
   import WorkspaceSelect from "~/components/WorkspaceSelect.svelte";
 

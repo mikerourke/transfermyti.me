@@ -1,6 +1,6 @@
 import { isEmpty, isNil } from "ramda";
 
-import { EntityGroup } from "~/typeDefs";
+import { EntityGroup } from "~/types";
 
 /**
  * Capitalizes the first word of the specified value (if defined).

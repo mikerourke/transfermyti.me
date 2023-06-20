@@ -11,7 +11,7 @@
     projectsTotalCountsByTypeSelector,
   } from "~/redux/projects/projectsSelectors";
   import { dispatchAction, selectorToStore } from "~/redux/reduxToStore";
-  import { EntityGroup, ToolAction } from "~/typeDefs";
+  import { EntityGroup, ToolAction } from "~/types";
 
   import EntityGroupInclusionsPanel from "~/components/EntityGroupInclusionsPanel.svelte";
 

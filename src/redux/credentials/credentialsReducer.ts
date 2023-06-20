@@ -3,7 +3,7 @@ import {
   FetchStatus,
   type Credentials,
   type ValidationErrorsByMapping,
-} from "~/typeDefs";
+} from "~/types";
 
 import * as credentialsActions from "./credentialsActions";
 

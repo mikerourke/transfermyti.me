@@ -1,5 +1,5 @@
 import { createAction, createAsyncAction } from "~/redux/reduxTools";
-import type { Mapping, User } from "~/typeDefs";
+import type { Mapping, User } from "~/types";
 
 export const isUserIncludedToggled = createAction<string>(
   "@users/isUserIncludedToggled",

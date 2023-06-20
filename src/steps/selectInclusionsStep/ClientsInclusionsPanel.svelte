@@ -8,7 +8,7 @@
     clientsTotalCountsByTypeSelector,
   } from "~/redux/clients/clientsSelectors";
   import { dispatchAction, selectorToStore } from "~/redux/reduxToStore";
-  import { EntityGroup } from "~/typeDefs";
+  import { EntityGroup } from "~/types";
 
   import EntityGroupInclusionsPanel from "~/components/EntityGroupInclusionsPanel.svelte";
 

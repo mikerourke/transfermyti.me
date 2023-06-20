@@ -9,7 +9,7 @@ import * as tasksSagas from "~/redux/tasks/sagas/tasksSagas";
 import * as timeEntriesSagas from "~/redux/timeEntries/sagas/timeEntriesSagas";
 import * as userGroupsSagas from "~/redux/userGroups/sagas/userGroupsSagas";
 import * as usersSagas from "~/redux/users/sagas/usersSagas";
-import { EntityGroup } from "~/typeDefs";
+import { EntityGroup } from "~/types";
 
 export function* allEntitiesSaga(): SagaIterator {
   yield all([
