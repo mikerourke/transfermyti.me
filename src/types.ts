@@ -1,14 +1,14 @@
-import type { AllEntitiesState } from "~/redux/allEntities/allEntitiesReducer";
-import type { AppState } from "~/redux/app/appReducer";
-import type { ClientsState } from "~/redux/clients/clientsReducer";
-import type { CredentialsState } from "~/redux/credentials/credentialsReducer";
-import type { ProjectsState } from "~/redux/projects/projectsReducer";
-import type { TagsState } from "~/redux/tags/tagsReducer";
-import type { TasksState } from "~/redux/tasks/tasksReducer";
-import type { TimeEntriesState } from "~/redux/timeEntries/timeEntriesReducer";
-import type { UserGroupsState } from "~/redux/userGroups/userGroupsReducer";
-import type { UsersState } from "~/redux/users/usersReducer";
-import type { WorkspacesState } from "~/redux/workspaces/workspacesReducer";
+import type { AllEntitiesState } from "~/redux/allEntities/allEntities.reducer";
+import type { AppState } from "~/redux/app/app.reducer";
+import type { ClientsState } from "~/redux/clients/clients.reducer";
+import type { CredentialsState } from "~/redux/credentials/credentials.reducer";
+import type { ProjectsState } from "~/redux/projects/projects.reducer";
+import type { TagsState } from "~/redux/tags/tags.reducer";
+import type { TasksState } from "~/redux/tasks/tasks.reducer";
+import type { TimeEntriesState } from "~/redux/timeEntries/timeEntries.reducer";
+import type { UserGroupsState } from "~/redux/userGroups/userGroups.reducer";
+import type { UsersState } from "~/redux/users/users.reducer";
+import type { WorkspacesState } from "~/redux/workspaces/workspaces.reducer";
 
 export interface ReduxState {
   allEntities: AllEntitiesState;

@@ -3,11 +3,11 @@
   import {
     areAllTagsIncludedUpdated,
     isTagIncludedToggled,
-  } from "~/redux/tags/tagsActions";
+  } from "~/redux/tags/tags.actions";
   import {
     tagsForInclusionsTableSelector,
     tagsTotalCountsByTypeSelector,
-  } from "~/redux/tags/tagsSelectors";
+  } from "~/redux/tags/tags.selectors";
   import { EntityGroup } from "~/types";
 
   import EntityGroupInclusionsPanel from "~/components/EntityGroupInclusionsPanel.svelte";

@@ -2,7 +2,7 @@
   import {
     toolActionUpdated,
     toolNameByMappingUpdated,
-  } from "~/redux/allEntities/allEntitiesActions";
+  } from "~/redux/allEntities/allEntities.actions";
   import {
     navigateToWorkflowStep,
     WorkflowStep,

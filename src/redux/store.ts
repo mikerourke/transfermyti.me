@@ -2,12 +2,13 @@ import { configureStore, type Store } from "@reduxjs/toolkit";
 import { clone } from "ramda";
 import createSagaMiddleware from "redux-saga";
 
-import { allSagas } from "~/redux/allSagas";
-import { validateCredentials } from "~/redux/credentials/credentialsActions";
-import { getCredentialsFromStorage } from "~/redux/credentials/credentialsStorage";
-import { rootReducer, initialState } from "~/redux/rootReducer";
+import { validateCredentials } from "~/redux/credentials/credentials.actions";
+import { getCredentialsFromStorage } from "~/redux/credentials/credentials.storage";
 import type { ReduxState } from "~/types";
 import { isDevelopmentMode, isUseLocalApi } from "~/utilities/environment";
+
+import { rootReducer, initialState } from "./root.reducer";
+import { rootSagas } from "./root.sagas";
 
 let currentStore: Store<ReduxState> | null = null;
 
@@ -51,7 +52,7 @@ export function createStore(): void {
 
   window.store = store;
 
-  sagaMiddleware.run(allSagas);
+  sagaMiddleware.run(rootSagas);
 
   if (isUseLocalApi()) {
     store.dispatch(validateCredentials.request());

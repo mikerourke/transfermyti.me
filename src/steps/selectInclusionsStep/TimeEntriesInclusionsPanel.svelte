@@ -1,16 +1,16 @@
 <script lang="ts">
-  import { toolActionSelector } from "~/redux/allEntities/allEntitiesSelectors";
+  import { toolActionSelector } from "~/redux/allEntities/allEntities.selectors";
   import { dispatchAction, select } from "~/redux/reduxToStore";
   import {
     areAllTimeEntriesIncludedUpdated,
     isDuplicateCheckEnabledToggled,
     isTimeEntryIncludedToggled,
-  } from "~/redux/timeEntries/timeEntriesActions";
+  } from "~/redux/timeEntries/timeEntries.actions";
   import {
     isDuplicateCheckEnabledSelector,
     timeEntriesForInclusionsTableSelector,
     timeEntriesTotalCountsByTypeSelector,
-  } from "~/redux/timeEntries/timeEntriesSelectors";
+  } from "~/redux/timeEntries/timeEntries.selectors";
   import { ToolAction, type TimeEntryTableRecord } from "~/types";
   import { replaceMappingWithToolName } from "~/utilities/replaceMappingWithToolName";
 

@@ -1,10 +1,10 @@
 <script lang="ts">
   import { dispatchAction, select } from "~/redux/reduxToStore";
-  import { activeWorkspaceIdUpdated } from "~/redux/workspaces/workspacesActions";
+  import { activeWorkspaceIdUpdated } from "~/redux/workspaces/workspaces.actions";
   import {
     activeWorkspaceIdSelector,
     includedSourceWorkspacesSelector,
-  } from "~/redux/workspaces/workspacesSelectors";
+  } from "~/redux/workspaces/workspaces.selectors";
   import type { Workspace } from "~/types";
 
   import WorkspaceSelect from "~/components/WorkspaceSelect.svelte";

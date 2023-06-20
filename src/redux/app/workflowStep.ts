@@ -3,8 +3,8 @@ import { writable } from "svelte/store";
 import {
   allEntitiesFlushed,
   pushAllChangesFetchStatusUpdated,
-} from "~/redux/allEntities/allEntitiesActions";
-import { validationFetchStatusUpdated } from "~/redux/credentials/credentialsActions";
+} from "~/redux/allEntities/allEntities.actions";
+import { validationFetchStatusUpdated } from "~/redux/credentials/credentials.actions";
 import { dispatchAction } from "~/redux/reduxToStore";
 import { FetchStatus } from "~/types";
 
