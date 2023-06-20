@@ -7,14 +7,13 @@
     clientsForInclusionsTableSelector,
     clientsTotalCountsByTypeSelector,
   } from "~/redux/clients/clientsSelectors";
-  import { dispatchAction, selectorToStore } from "~/redux/reduxToStore";
+  import { dispatchAction, select } from "~/redux/reduxToStore";
   import { EntityGroup } from "~/types";
 
   import EntityGroupInclusionsPanel from "~/components/EntityGroupInclusionsPanel.svelte";
 
-  const clients = selectorToStore(clientsForInclusionsTableSelector);
-
-  const totalCountsByType = selectorToStore(clientsTotalCountsByTypeSelector);
+  const clients = select(clientsForInclusionsTableSelector);
+  const totalCountsByType = select(clientsTotalCountsByTypeSelector);
 
   function handleToggleAll(event: CustomEvent<boolean>): void {
     dispatchAction(areAllClientsIncludedUpdated(event.detail));

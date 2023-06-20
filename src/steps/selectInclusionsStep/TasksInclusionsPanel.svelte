@@ -2,7 +2,7 @@
   import { omit } from "ramda";
 
   import { toolActionSelector } from "~/redux/allEntities/allEntitiesSelectors";
-  import { dispatchAction, selectorToStore } from "~/redux/reduxToStore";
+  import { dispatchAction, select } from "~/redux/reduxToStore";
   import {
     areAllTasksIncludedUpdated,
     isTaskIncludedToggled,
@@ -15,11 +15,9 @@
 
   import EntityGroupInclusionsPanel from "~/components/EntityGroupInclusionsPanel.svelte";
 
-  const tasks = selectorToStore(tasksForInclusionsTableSelector);
-
-  const toolAction = selectorToStore(toolActionSelector);
-
-  const totalCountsByType = selectorToStore(tasksTotalCountsByTypeSelector);
+  const tasks = select(tasksForInclusionsTableSelector);
+  const toolAction = select(toolActionSelector);
+  const totalCountsByType = select(tasksTotalCountsByTypeSelector);
 
   // Only show the `isActiveInTarget` field if you're performing a transfer.
   // If the user is just deleting records, there is no "target":

@@ -18,7 +18,7 @@
     validationErrorsByMappingSelector,
     validationFetchStatusSelector,
   } from "~/redux/credentials/credentialsSelectors";
-  import { dispatchAction, selectorToStore } from "~/redux/reduxToStore";
+  import { dispatchAction, select } from "~/redux/reduxToStore";
   import { FetchStatus, Mapping, ToolName } from "~/types";
 
   import { setFocusTo } from "~/utilities/domElements";
@@ -28,19 +28,11 @@
 
   import ApiKeyInputField from "./ApiKeyInputField.svelte";
 
-  const credentialsByMapping = selectorToStore(credentialsByMappingSelector);
-
-  const hasValidationErrors = selectorToStore(hasValidationErrorsSelector);
-
-  const toolHelpDetailsByMapping = selectorToStore(
-    toolHelpDetailsByMappingSelector,
-  );
-
-  const validationErrorsByMapping = selectorToStore(
-    validationErrorsByMappingSelector,
-  );
-
-  const validationFetchStatus = selectorToStore(validationFetchStatusSelector);
+  const credentialsByMapping = select(credentialsByMappingSelector);
+  const hasValidationErrors = select(hasValidationErrorsSelector);
+  const toolHelpDetailsByMapping = select(toolHelpDetailsByMappingSelector);
+  const validationErrorsByMapping = select(validationErrorsByMappingSelector);
+  const validationFetchStatus = select(validationFetchStatusSelector);
 
   let values: Record<Mapping, string> = {
     source: $credentialsByMapping.source.apiKey ?? "",

@@ -6,15 +6,14 @@
     targetToolTrackerUrlSelector,
   } from "~/redux/allEntities/allEntitiesSelectors";
   import { credentialsFlushed } from "~/redux/credentials/credentialsActions";
-  import { dispatchAction, selectorToStore } from "~/redux/reduxToStore";
+  import { dispatchAction, select } from "~/redux/reduxToStore";
 
   import Icon from "~/components/Icon.svelte";
 
   import BuyMeACoffeeButton from "./BuyMeACoffeeButton.svelte";
 
-  const targetToolDisplayName = selectorToStore(targetToolDisplayNameSelector);
-
-  const targetToolTrackerUrl = selectorToStore(targetToolTrackerUrlSelector);
+  const targetToolDisplayName = select(targetToolDisplayNameSelector);
+  const targetToolTrackerUrl = select(targetToolTrackerUrlSelector);
 
   onMount(() => {
     dispatchAction(credentialsFlushed());

@@ -10,16 +10,14 @@
     projectsForInclusionsTableSelector,
     projectsTotalCountsByTypeSelector,
   } from "~/redux/projects/projectsSelectors";
-  import { dispatchAction, selectorToStore } from "~/redux/reduxToStore";
+  import { dispatchAction, select } from "~/redux/reduxToStore";
   import { EntityGroup, ToolAction } from "~/types";
 
   import EntityGroupInclusionsPanel from "~/components/EntityGroupInclusionsPanel.svelte";
 
-  const projects = selectorToStore(projectsForInclusionsTableSelector);
-
-  const toolAction = selectorToStore(toolActionSelector);
-
-  const totalCountsByType = selectorToStore(projectsTotalCountsByTypeSelector);
+  const projects = select(projectsForInclusionsTableSelector);
+  const toolAction = select(toolActionSelector);
+  const totalCountsByType = select(projectsTotalCountsByTypeSelector);
 
   // Only show the `isActiveInTarget` field if you're performing a transfer.
   // If the user is just deleting records, there is no "target":

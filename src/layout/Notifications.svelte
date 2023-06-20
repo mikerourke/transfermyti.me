@@ -4,7 +4,7 @@
   import { crossfade } from "svelte/transition";
 
   import { notificationsSelector } from "~/redux/app/appSelectors";
-  import { selectorToStore } from "~/redux/reduxToStore";
+  import { select } from "~/redux/reduxToStore";
 
   import NotificationToast from "./NotificationToast.svelte";
 
@@ -27,7 +27,7 @@
     },
   });
 
-  const notifications = selectorToStore(notificationsSelector);
+  const notifications = select(notificationsSelector);
 </script>
 
 <style>

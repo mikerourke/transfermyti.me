@@ -1,5 +1,5 @@
 <script lang="ts">
-  import { dispatchAction, selectorToStore } from "~/redux/reduxToStore";
+  import { dispatchAction, select } from "~/redux/reduxToStore";
   import { activeWorkspaceIdUpdated } from "~/redux/workspaces/workspacesActions";
   import {
     activeWorkspaceIdSelector,
@@ -11,11 +11,8 @@
 
   import classes from "./ActiveWorkspaceSelectField.module.css";
 
-  const activeWorkspaceId = selectorToStore(activeWorkspaceIdSelector);
-
-  const includedSourceWorkspaces = selectorToStore(
-    includedSourceWorkspacesSelector,
-  );
+  const activeWorkspaceId = select(activeWorkspaceIdSelector);
+  const includedSourceWorkspaces = select(includedSourceWorkspacesSelector);
 
   function handleSelect(event: CustomEvent<Workspace>): void {
     dispatchAction(activeWorkspaceIdUpdated(event.detail.id));

@@ -13,7 +13,7 @@ export const dispatchAction = getStore().dispatch;
  * and only declare the variable once.
  * @param selector Selector to subscribe to for reactivity
  */
-export function selectorToStore<TReturn>(
+export function select<TReturn>(
   selector: Selector<ReduxState, TReturn>,
 ): StoreFromRedux<TReturn> {
   const reduxStore = getStore();

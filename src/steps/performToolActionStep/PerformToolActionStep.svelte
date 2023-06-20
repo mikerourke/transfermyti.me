@@ -17,7 +17,7 @@
     navigateToWorkflowStep,
     WorkflowStep,
   } from "~/redux/app/workflowStep";
-  import { dispatchAction, selectorToStore } from "~/redux/reduxToStore";
+  import { dispatchAction, select } from "~/redux/reduxToStore";
   import {
     EntityGroup,
     FetchStatus,
@@ -32,17 +32,12 @@
   import ConfirmToolActionDialog from "./ConfirmToolActionDialog.svelte";
   import ProgressBar from "./ProgressBar.svelte";
 
-  const includedCountsByEntityGroup = selectorToStore<CountsByEntityGroup>(
+  const pushAllChangesFetchStatus = select(pushAllChangesFetchStatusSelector);
+  const toolAction = select(toolActionSelector);
+  const includedCountsByEntityGroup = select<CountsByEntityGroup>(
     includedCountsByEntityGroupSelector,
   );
-
-  const pushAllChangesFetchStatus = selectorToStore(
-    pushAllChangesFetchStatusSelector,
-  );
-
-  const toolAction = selectorToStore(toolActionSelector);
-
-  const transferCountsByEntityGroup = selectorToStore<any>(
+  const transferCountsByEntityGroup = select<any>(
     transferCountsByEntityGroupSelector,
   );
 

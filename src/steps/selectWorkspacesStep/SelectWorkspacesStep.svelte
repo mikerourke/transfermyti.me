@@ -10,9 +10,17 @@
     navigateToWorkflowStep,
     WorkflowStep,
   } from "~/redux/app/workflowStep";
-  import { dispatchAction, selectorToStore } from "~/redux/reduxToStore";
+  import { dispatchAction, select } from "~/redux/reduxToStore";
   import * as workspacesActions from "~/redux/workspaces/workspacesActions";
-  import * as workspacesSelectors from "~/redux/workspaces/workspacesSelectors";
+  import {
+    areWorkspacesFetchingSelector,
+    firstIncludedWorkspaceIdSelector,
+    hasDuplicateTargetWorkspacesSelector,
+    missingTargetWorkspacesSelector,
+    sourceIncludedWorkspacesCountSelector,
+    sourceWorkspacesSelector,
+    targetWorkspacesSelector,
+  } from "~/redux/workspaces/workspacesSelectors";
   import { FetchStatus, ToolAction, type Workspace } from "~/types";
 
   import HelpDetails from "~/components/HelpDetails.svelte";
@@ -24,37 +32,17 @@
   import NoWorkspacesDialog from "./NoWorkspacesDialog.svelte";
   import WorkspaceCard from "./WorkspaceCard.svelte";
 
-  const areWorkspacesFetching = selectorToStore(
-    workspacesSelectors.areWorkspacesFetchingSelector,
+  const areWorkspacesFetching = select(areWorkspacesFetchingSelector);
+  const firstIncludedWorkspaceId = select(firstIncludedWorkspaceIdSelector);
+  const hasDuplicateTargetWorkspaces = select(
+    hasDuplicateTargetWorkspacesSelector,
   );
-
-  const firstIncludedWorkspaceId = selectorToStore(
-    workspacesSelectors.firstIncludedWorkspaceIdSelector,
-  );
-
-  const hasDuplicateTargetWorkspaces = selectorToStore(
-    workspacesSelectors.hasDuplicateTargetWorkspacesSelector,
-  );
-
-  const includedWorkspacesCount = selectorToStore(
-    workspacesSelectors.sourceIncludedWorkspacesCountSelector,
-  );
-
-  const missingTargetWorkspaces = selectorToStore(
-    workspacesSelectors.missingTargetWorkspacesSelector,
-  );
-
-  const sourceWorkspaces = selectorToStore(
-    workspacesSelectors.sourceWorkspacesSelector,
-  );
-
-  const targetToolDisplayName = selectorToStore(targetToolDisplayNameSelector);
-
-  const targetWorkspaces = selectorToStore(
-    workspacesSelectors.targetWorkspacesSelector,
-  );
-
-  const toolAction = selectorToStore(toolActionSelector);
+  const includedWorkspacesCount = select(sourceIncludedWorkspacesCountSelector);
+  const missingTargetWorkspaces = select(missingTargetWorkspacesSelector);
+  const sourceWorkspaces = select(sourceWorkspacesSelector);
+  const targetToolDisplayName = select(targetToolDisplayNameSelector);
+  const targetWorkspaces = select(targetWorkspacesSelector);
+  const toolAction = select(toolActionSelector);
 
   let isNoWorkspacesDialogOpen: boolean = false;
   let isMissingWorkspacesDialogOpen: boolean = false;

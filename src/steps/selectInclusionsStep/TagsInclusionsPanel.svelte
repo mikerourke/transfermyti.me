@@ -1,5 +1,5 @@
 <script lang="ts">
-  import { dispatchAction, selectorToStore } from "~/redux/reduxToStore";
+  import { dispatchAction, select } from "~/redux/reduxToStore";
   import {
     areAllTagsIncludedUpdated,
     isTagIncludedToggled,
@@ -12,9 +12,8 @@
 
   import EntityGroupInclusionsPanel from "~/components/EntityGroupInclusionsPanel.svelte";
 
-  const tags = selectorToStore(tagsForInclusionsTableSelector);
-
-  const totalCountsByType = selectorToStore(tagsTotalCountsByTypeSelector);
+  const tags = select(tagsForInclusionsTableSelector);
+  const totalCountsByType = select(tagsTotalCountsByTypeSelector);
 
   function handleToggleAll(event: CustomEvent<boolean>): void {
     dispatchAction(areAllTagsIncludedUpdated(event.detail));
