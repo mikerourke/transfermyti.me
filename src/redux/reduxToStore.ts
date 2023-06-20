@@ -1,6 +1,6 @@
+import type { Selector } from "@reduxjs/toolkit";
 import { readable, type Readable } from "svelte/store";
 
-import type { Selector } from "~/redux/reduxTools";
 import { getStore } from "~/redux/store";
 import type { ReduxState } from "~/types";
 

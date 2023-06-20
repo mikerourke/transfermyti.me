@@ -20,7 +20,6 @@
   } from "~/redux/credentials/credentials.selectors";
   import { dispatchAction, select } from "~/redux/reduxToStore";
   import { FetchStatus, Mapping, ToolName } from "~/types";
-
   import { setFocusTo } from "~/utilities/domElements";
 
   import HelpDetails from "~/components/HelpDetails.svelte";

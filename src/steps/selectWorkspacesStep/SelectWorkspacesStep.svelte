@@ -32,11 +32,10 @@
   import NoWorkspacesDialog from "./NoWorkspacesDialog.svelte";
   import WorkspaceCard from "./WorkspaceCard.svelte";
 
+  // prettier-ignore
+  const hasDuplicateTargetWorkspaces = select(hasDuplicateTargetWorkspacesSelector);
   const areWorkspacesFetching = select(areWorkspacesFetchingSelector);
   const firstIncludedWorkspaceId = select(firstIncludedWorkspaceIdSelector);
-  const hasDuplicateTargetWorkspaces = select(
-    hasDuplicateTargetWorkspacesSelector,
-  );
   const includedWorkspacesCount = select(sourceIncludedWorkspacesCountSelector);
   const missingTargetWorkspaces = select(missingTargetWorkspacesSelector);
   const sourceWorkspaces = select(sourceWorkspacesSelector);
