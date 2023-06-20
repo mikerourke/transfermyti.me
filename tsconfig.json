@@ -5,7 +5,6 @@
     "baseUrl": "./",
     "esModuleInterop": true,
     "forceConsistentCasingInFileNames": true,
-    "importsNotUsedAsValues": "error",
     "isolatedModules": true,
     "lib": ["DOM", "ESNext"],
     "module": "ESNext",
@@ -19,13 +18,12 @@
     "paths": {
       "~/*": ["./src/*"]
     },
-    "preserveValueImports": true,
+    "verbatimModuleSyntax": true,
     "resolveJsonModule": true,
     "rootDir": ".",
     "skipLibCheck": true,
     "sourceMap": false,
     "strict": true,
-    "suppressImplicitAnyIndexErrors": true,
     "target": "ES2017"
   },
   "include": ["src/**/*.ts", "src/**/*.svelte", "src/**/*.d.ts"],

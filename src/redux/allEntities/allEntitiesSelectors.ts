@@ -152,8 +152,10 @@ export const toolHelpDetailsByMappingSelector = createSelector(
     };
 
     for (const [mapping, toolName] of Object.entries(toolNameByMapping)) {
+      // @ts-expect-error
       toolHelpDetailsByMapping[mapping] = {
         toolName,
+        // @ts-expect-error
         displayName: displayNameByMapping[mapping],
         toolLink: findToolLink(toolName),
       };

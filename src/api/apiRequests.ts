@@ -34,7 +34,9 @@ export function* fetchPaginatedFromClockify<TEntity>(
     };
 
     for (const [key, value] of Object.entries(queryParams)) {
-      allParams[key] = value.toString();
+      const keyValue = key as keyof typeof allParams;
+
+      allParams[keyValue] = value.toString();
     }
 
     const query = new URLSearchParams(allParams).toString();

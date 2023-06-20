@@ -74,6 +74,7 @@ function* validateCredentialsSaga(): SagaIterator {
 
       credentialsByMapping[clockifyMapping].userId = clockifyUser.id;
     } catch {
+      // @ts-expect-error
       validationErrorsByMapping[clockifyMapping] = "Invalid API key";
 
       hasValidationErrors = true;
@@ -89,6 +90,7 @@ function* validateCredentialsSaga(): SagaIterator {
 
       credentialsByMapping[togglMapping].userId = validStringify(me?.id, null);
     } catch {
+      // @ts-expect-error
       validationErrorsByMapping[togglMapping] = "Invalid API key";
 
       hasValidationErrors = true;

@@ -4,6 +4,8 @@ const rules = {
   // Disabling these to accommodate for older browsers:
   "alpha-value-notation": null,
   "color-function-notation": null,
+  "media-feature-range-notation": null,
+  "declaration-block-no-redundant-longhand-properties": null,
 };
 
 module.exports = {

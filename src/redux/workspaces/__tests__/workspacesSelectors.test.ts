@@ -118,6 +118,7 @@ describe("within workspacesSelectors", () => {
           ...MOCK_STATE.workspaces,
           source: {
             "1001": {
+              // @ts-expect-error
               ...MOCK_STATE.workspaces.source["1001"],
               isIncluded: false,
             },
@@ -151,6 +152,7 @@ describe("within workspacesSelectors", () => {
           source: {
             ...MOCK_STATE.workspaces.source,
             "1001": {
+              // @ts-expect-error
               ...MOCK_STATE.workspaces.source["1001"],
               linkedId: "clock-workspace-01",
             },

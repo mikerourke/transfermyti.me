@@ -34,6 +34,7 @@ module.exports = {
     "@typescript-eslint/array-type": ["error", { default: "array" }],
     "@typescript-eslint/ban-ts-ignore": "off",
     "@typescript-eslint/ban-ts-comment": "off",
+    "@typescript-eslint/no-explicit-any": "off",
     "@typescript-eslint/explicit-function-return-type": [
       "error",
       {

@@ -133,6 +133,7 @@ export const sourceTimeEntryCountByIdFieldSelectorFactory = (
     const timeEntryCountByIdField: Dictionary<number> = {};
 
     for (const timeEntry of sourceTimeEntries) {
+      // @ts-expect-error
       const parentId = timeEntry[idField];
 
       if (!isNil(parentId)) {

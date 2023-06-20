@@ -42,7 +42,7 @@
 
   const toolAction = selectorToStore(toolActionSelector);
 
-  const transferCountsByEntityGroup = selectorToStore(
+  const transferCountsByEntityGroup = selectorToStore<any>(
     transferCountsByEntityGroupSelector,
   );
 
@@ -50,7 +50,7 @@
     $includedCountsByEntityGroup,
   );
 
-  const totalCountsByGroup = { ...$includedCountsByEntityGroup };
+  const totalCountsByGroup: any = { ...$includedCountsByEntityGroup };
 
   let isConfirmToolActionDialogOpen: boolean = false;
 
@@ -85,6 +85,7 @@
         : Object.keys(countsByEntityGroup);
 
     for (const entityGroup of allOrdered) {
+      // @ts-expect-error
       if (countsByEntityGroup[entityGroup] !== 0) {
         entityGroups.push(entityGroup as EntityGroup);
       }

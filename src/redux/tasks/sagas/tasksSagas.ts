@@ -106,6 +106,7 @@ export function* createTasksSaga(): SagaIterator {
   try {
     const toolNameByMapping = yield select(toolNameByMappingSelector);
 
+    // @ts-expect-error
     const createSagaByToolName = {
       [ToolName.Clockify]: clockifySagas.createClockifyTasksSaga,
       [ToolName.Toggl]: togglSagas.createTogglTasksSaga,
@@ -138,6 +139,7 @@ export function* deleteTasksSaga(): SagaIterator {
   try {
     const toolNameByMapping = yield select(toolNameByMappingSelector);
 
+    // @ts-expect-error
     const deleteSagaByToolName = {
       [ToolName.Clockify]: clockifySagas.deleteClockifyTasksSaga,
       [ToolName.Toggl]: togglSagas.deleteTogglTasksSaga,
@@ -169,6 +171,7 @@ export function* fetchTasksSaga(): SagaIterator {
 
     const { source, target } = yield select(toolNameByMappingSelector);
 
+    // @ts-expect-error
     const sourceTasks = yield call(fetchSagaByToolName[source]);
 
     const toolAction = yield select(toolActionSelector);
@@ -176,6 +179,7 @@ export function* fetchTasksSaga(): SagaIterator {
     let tasksByIdByMapping: Record<Mapping, Dictionary<Task>>;
 
     if (toolAction === ToolAction.Transfer) {
+      // @ts-expect-error
       const targetTasks = yield call(fetchSagaByToolName[target]);
 
       tasksByIdByMapping = yield call(

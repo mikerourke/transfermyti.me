@@ -110,13 +110,16 @@ function linkForMappingByField<TEntity>(
 
   const linkedRecordsById = {};
 
+  const validField = field as keyof TEntity;
+
   for (const recordToUpdate of recordsToUpdate as LinkableRecord[]) {
     const matchingLinkedRecord = (linkFromRecords as LinkableRecord[]).find(
       (linkFromRecord) => {
         // For workspaces, we only want to check if the names match (since
         // workspaces are the top-level entity, and it's impossible to have 2
         // workspaces with the same name):
-        const fieldsMatch = recordToUpdate[field] === linkFromRecord[field];
+        // prettier-ignore
+        const fieldsMatch = recordToUpdate[validField] === linkFromRecord[validField];
 
         if (recordToUpdate.memberOf === EntityGroup.Workspaces) {
           return fieldsMatch;
@@ -145,6 +148,7 @@ function linkForMappingByField<TEntity>(
       ? recordToUpdate.memberOf !== EntityGroup.Workspaces
       : false;
 
+    // @ts-ignore
     linkedRecordsById[recordToUpdate.id] = {
       ...recordToUpdate,
       linkedId,

@@ -26,6 +26,7 @@ function* fetchWorkspacesSaga(): SagaIterator {
 
     const { source, target } = yield select(toolNameByMappingSelector);
 
+    // @ts-expect-error
     const sourceWorkspaces = yield call(fetchSagaByToolName[source]);
 
     const toolAction = yield select(toolActionSelector);
@@ -33,6 +34,7 @@ function* fetchWorkspacesSaga(): SagaIterator {
     let workspaceByIdByMapping: Record<Mapping, Dictionary<Workspace>>;
 
     if (toolAction === ToolAction.Transfer) {
+      // @ts-expect-error
       const targetWorkspaces = yield call(fetchSagaByToolName[target]);
 
       workspaceByIdByMapping = yield call(
