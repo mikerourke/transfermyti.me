@@ -2,13 +2,13 @@
   import {
     toolActionUpdated,
     toolNameByMappingUpdated,
-  } from "~/redux/allEntities/allEntitiesActions";
+  } from "~/redux/allEntities/allEntities.actions";
   import {
     navigateToWorkflowStep,
     WorkflowStep,
   } from "~/redux/app/workflowStep";
   import { dispatchAction } from "~/redux/reduxToStore";
-  import { ToolAction, ToolName } from "~/typeDefs";
+  import { ToolAction, ToolName } from "~/types";
 
   import HelpDetails from "~/components/HelpDetails.svelte";
 

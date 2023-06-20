@@ -6,24 +6,24 @@
     createAllEntities,
     deleteAllEntities,
     transferCountsByEntityGroupReset,
-  } from "~/redux/allEntities/allEntitiesActions";
+  } from "~/redux/allEntities/allEntities.actions";
   import {
     includedCountsByEntityGroupSelector,
     pushAllChangesFetchStatusSelector,
     toolActionSelector,
     transferCountsByEntityGroupSelector,
-  } from "~/redux/allEntities/allEntitiesSelectors";
+  } from "~/redux/allEntities/allEntities.selectors";
   import {
     navigateToWorkflowStep,
     WorkflowStep,
   } from "~/redux/app/workflowStep";
-  import { dispatchAction, selectorToStore } from "~/redux/reduxToStore";
+  import { dispatchAction, select } from "~/redux/reduxToStore";
   import {
     EntityGroup,
     FetchStatus,
     ToolAction,
     type CountsByEntityGroup,
-  } from "~/typeDefs";
+  } from "~/types";
   import { capitalize } from "~/utilities/textTransforms";
 
   import HelpDetails from "~/components/HelpDetails.svelte";
@@ -32,17 +32,12 @@
   import ConfirmToolActionDialog from "./ConfirmToolActionDialog.svelte";
   import ProgressBar from "./ProgressBar.svelte";
 
-  const includedCountsByEntityGroup = selectorToStore<CountsByEntityGroup>(
+  const pushAllChangesFetchStatus = select(pushAllChangesFetchStatusSelector);
+  const toolAction = select(toolActionSelector);
+  const includedCountsByEntityGroup = select<CountsByEntityGroup>(
     includedCountsByEntityGroupSelector,
   );
-
-  const pushAllChangesFetchStatus = selectorToStore(
-    pushAllChangesFetchStatusSelector,
-  );
-
-  const toolAction = selectorToStore(toolActionSelector);
-
-  const transferCountsByEntityGroup = selectorToStore<any>(
+  const transferCountsByEntityGroup = select<any>(
     transferCountsByEntityGroupSelector,
   );
 

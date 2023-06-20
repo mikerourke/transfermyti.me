@@ -1,8 +1,8 @@
+import type { Selector } from "@reduxjs/toolkit";
 import { readable, type Readable } from "svelte/store";
 
-import type { Selector } from "~/redux/reduxTools";
 import { getStore } from "~/redux/store";
-import type { ReduxState } from "~/typeDefs";
+import type { ReduxState } from "~/types";
 
 type StoreFromRedux<TReturn> = Readable<TReturn>;
 
@@ -13,7 +13,7 @@ export const dispatchAction = getStore().dispatch;
  * and only declare the variable once.
  * @param selector Selector to subscribe to for reactivity
  */
-export function selectorToStore<TReturn>(
+export function select<TReturn>(
   selector: Selector<ReduxState, TReturn>,
 ): StoreFromRedux<TReturn> {
   const reduxStore = getStore();

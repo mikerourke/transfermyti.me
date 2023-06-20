@@ -1,9 +1,9 @@
 <script lang="ts">
   import { onMount } from "svelte";
 
-  import { notificationDismissed } from "~/redux/app/appActions";
+  import { notificationDismissed } from "~/redux/app/app.actions";
   import { dispatchAction } from "~/redux/reduxToStore";
-  import type { Notification } from "~/typeDefs";
+  import type { Notification } from "~/types";
 
   import Icon from "~/components/Icon.svelte";
 

@@ -3,7 +3,7 @@
   import { createEventDispatcher } from "svelte";
   import { slide } from "svelte/transition";
 
-  import { ToolAction, type Workspace } from "~/typeDefs";
+  import { ToolAction, type Workspace } from "~/types";
 
   import Card from "~/components/Card.svelte";
   import Toggle from "~/components/Toggle.svelte";

@@ -1,20 +1,19 @@
 <script lang="ts">
-  import { dispatchAction, selectorToStore } from "~/redux/reduxToStore";
+  import { dispatchAction, select } from "~/redux/reduxToStore";
   import {
     areAllTagsIncludedUpdated,
     isTagIncludedToggled,
-  } from "~/redux/tags/tagsActions";
+  } from "~/redux/tags/tags.actions";
   import {
     tagsForInclusionsTableSelector,
     tagsTotalCountsByTypeSelector,
-  } from "~/redux/tags/tagsSelectors";
-  import { EntityGroup } from "~/typeDefs";
+  } from "~/redux/tags/tags.selectors";
+  import { EntityGroup } from "~/types";
 
   import EntityGroupInclusionsPanel from "~/components/EntityGroupInclusionsPanel.svelte";
 
-  const tags = selectorToStore(tagsForInclusionsTableSelector);
-
-  const totalCountsByType = selectorToStore(tagsTotalCountsByTypeSelector);
+  const tags = select(tagsForInclusionsTableSelector);
+  const totalCountsByType = select(tagsTotalCountsByTypeSelector);
 
   function handleToggleAll(event: CustomEvent<boolean>): void {
     dispatchAction(areAllTagsIncludedUpdated(event.detail));

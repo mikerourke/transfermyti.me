@@ -1,6 +1,6 @@
 import { isNil } from "ramda";
 
-import type { ValidEntity } from "~/typeDefs";
+import type { ValidEntity } from "~/types";
 
 /**
  * Returns an object with a key of the source record's `id` field and a value

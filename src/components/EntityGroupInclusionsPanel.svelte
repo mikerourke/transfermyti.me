@@ -2,7 +2,7 @@
   import { compose, prop, sortBy, toLower } from "ramda";
   import { createEventDispatcher } from "svelte";
 
-  import type { AnyEntity, EntityGroup, EntityTableRecord } from "~/typeDefs";
+  import type { AnyEntity, EntityGroup, EntityTableRecord } from "~/types";
   import { replaceMappingWithToolName } from "~/utilities/replaceMappingWithToolName";
   import { getEntityGroupDisplay } from "~/utilities/textTransforms";
 

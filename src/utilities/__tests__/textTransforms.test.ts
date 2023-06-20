@@ -1,6 +1,6 @@
 import { describe, expect, test } from "vitest";
 
-import { EntityGroup } from "~/typeDefs";
+import { EntityGroup } from "~/types";
 
 import * as textTransforms from "../textTransforms";
 

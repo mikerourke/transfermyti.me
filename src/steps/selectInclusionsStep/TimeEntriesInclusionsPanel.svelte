@@ -1,17 +1,17 @@
 <script lang="ts">
-  import { toolActionSelector } from "~/redux/allEntities/allEntitiesSelectors";
-  import { dispatchAction, selectorToStore } from "~/redux/reduxToStore";
+  import { toolActionSelector } from "~/redux/allEntities/allEntities.selectors";
+  import { dispatchAction, select } from "~/redux/reduxToStore";
   import {
     areAllTimeEntriesIncludedUpdated,
     isDuplicateCheckEnabledToggled,
     isTimeEntryIncludedToggled,
-  } from "~/redux/timeEntries/timeEntriesActions";
+  } from "~/redux/timeEntries/timeEntries.actions";
   import {
     isDuplicateCheckEnabledSelector,
     timeEntriesForInclusionsTableSelector,
     timeEntriesTotalCountsByTypeSelector,
-  } from "~/redux/timeEntries/timeEntriesSelectors";
-  import { ToolAction, type TimeEntryTableRecord } from "~/typeDefs";
+  } from "~/redux/timeEntries/timeEntries.selectors";
+  import { ToolAction, type TimeEntryTableRecord } from "~/types";
   import { replaceMappingWithToolName } from "~/utilities/replaceMappingWithToolName";
 
   import AccordionPanel from "~/components/AccordionPanel.svelte";
@@ -21,15 +21,10 @@
   import TimeEntriesInclusionsTable from "./TimeEntriesInclusionsTable.svelte";
   import TimeEntryComparisonDisclaimer from "./TimeEntryComparisonDisclaimer.svelte";
 
-  const isCheckDuplicates = selectorToStore(isDuplicateCheckEnabledSelector);
-
-  const timeEntries = selectorToStore(timeEntriesForInclusionsTableSelector);
-
-  const toolAction = selectorToStore(toolActionSelector);
-
-  const totalCountsByType = selectorToStore(
-    timeEntriesTotalCountsByTypeSelector,
-  );
+  const isCheckDuplicates = select(isDuplicateCheckEnabledSelector);
+  const timeEntries = select(timeEntriesForInclusionsTableSelector);
+  const toolAction = select(toolActionSelector);
+  const totalCountsByType = select(timeEntriesTotalCountsByTypeSelector);
 
   let recordCount: number;
   $: recordCount = $timeEntries.length !== 0 ? $timeEntries.length : 1;

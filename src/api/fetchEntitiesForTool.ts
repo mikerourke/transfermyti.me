@@ -3,9 +3,9 @@ import type { SagaIterator } from "redux-saga";
 import { call, delay, select } from "redux-saga/effects";
 
 import { getApiDelayForTool } from "~/api/apiRequests";
-import { mappingByToolNameSelector } from "~/redux/allEntities/allEntitiesSelectors";
-import { includedWorkspaceIdsByMappingSelector } from "~/redux/workspaces/workspacesSelectors";
-import type { ToolName } from "~/typeDefs";
+import { mappingByToolNameSelector } from "~/redux/allEntities/allEntities.selectors";
+import { includedWorkspaceIdsByMappingSelector } from "~/redux/workspaces/workspaces.selectors";
+import type { ToolName } from "~/types";
 
 /**
  * Fetches all the of the entity records in all workspaces associated with the

@@ -1,5 +1,5 @@
 /* eslint-disable */
-import type { ReduxState } from "~/typeDefs";
+import type { ReduxState } from "~/types";
 import {
   EntityGroup,
   FetchStatus,
@@ -14,7 +14,7 @@ import {
   type User,
   type UserGroup,
   type Workspace,
-} from "~/typeDefs";
+} from "~/types";
 
 const CLOCKIFY_CLIENT_ID_FAKE = "clock-client-01";
 const CLOCKIFY_PROJECT_ID_FAKE = "clock-project-01";

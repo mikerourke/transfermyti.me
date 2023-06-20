@@ -4,14 +4,20 @@
   import {
     fetchAllEntities,
     isExistsInTargetShownToggled,
-  } from "~/redux/allEntities/allEntitiesActions";
-  import * as allEntitiesSelectors from "~/redux/allEntities/allEntitiesSelectors";
+  } from "~/redux/allEntities/allEntities.actions";
+  import {
+    areExistsInTargetShownSelector,
+    entityGroupInProcessDisplaySelector,
+    fetchAllFetchStatusSelector,
+    toolActionSelector,
+    totalIncludedRecordsCountSelector,
+  } from "~/redux/allEntities/allEntities.selectors";
   import {
     navigateToWorkflowStep,
     WorkflowStep,
   } from "~/redux/app/workflowStep";
-  import { dispatchAction, selectorToStore } from "~/redux/reduxToStore";
-  import { FetchStatus, ToolAction } from "~/typeDefs";
+  import { dispatchAction, select } from "~/redux/reduxToStore";
+  import { FetchStatus, ToolAction } from "~/types";
   import { capitalize } from "~/utilities/textTransforms";
 
   import Loader from "~/components/Loader.svelte";
@@ -27,23 +33,11 @@
   import TasksInclusionsPanel from "./TasksInclusionsPanel.svelte";
   import TimeEntriesInclusionsPanel from "./TimeEntriesInclusionsPanel.svelte";
 
-  const areExistsInTargetShown = selectorToStore(
-    allEntitiesSelectors.areExistsInTargetShownSelector,
-  );
-
-  const entityGroupInProcessDisplay = selectorToStore(
-    allEntitiesSelectors.entityGroupInProcessDisplaySelector,
-  );
-
-  const fetchAllFetchStatus = selectorToStore(
-    allEntitiesSelectors.fetchAllFetchStatusSelector,
-  );
-
-  const toolAction = selectorToStore(allEntitiesSelectors.toolActionSelector);
-
-  const totalIncludedRecordsCount = selectorToStore(
-    allEntitiesSelectors.totalIncludedRecordsCountSelector,
-  );
+  const areExistsInTargetShown = select(areExistsInTargetShownSelector);
+  const entityGroupDisplay = select(entityGroupInProcessDisplaySelector);
+  const fetchAllFetchStatus = select(fetchAllFetchStatusSelector);
+  const toolAction = select(toolActionSelector);
+  const totalIncludedRecordsCount = select(totalIncludedRecordsCountSelector);
 
   let isNoSelectionsDialogOpen: boolean = false;
 
@@ -120,7 +114,7 @@
       <TimeEntriesInclusionsPanel />
     </div>
   {:else}
-    <Loader>Fetching {$entityGroupInProcessDisplay}, please wait...</Loader>
+    <Loader>Fetching {$entityGroupDisplay}, please wait...</Loader>
   {/if}
 
   <NavigationButtonsRow

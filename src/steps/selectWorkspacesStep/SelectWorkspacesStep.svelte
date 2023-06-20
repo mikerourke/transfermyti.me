@@ -1,19 +1,27 @@
 <script lang="ts">
   import { onMount, tick } from "svelte";
 
-  import { fetchAllFetchStatusUpdated } from "~/redux/allEntities/allEntitiesActions";
+  import { fetchAllFetchStatusUpdated } from "~/redux/allEntities/allEntities.actions";
   import {
     targetToolDisplayNameSelector,
     toolActionSelector,
-  } from "~/redux/allEntities/allEntitiesSelectors";
+  } from "~/redux/allEntities/allEntities.selectors";
   import {
     navigateToWorkflowStep,
     WorkflowStep,
   } from "~/redux/app/workflowStep";
-  import { dispatchAction, selectorToStore } from "~/redux/reduxToStore";
-  import * as workspacesActions from "~/redux/workspaces/workspacesActions";
-  import * as workspacesSelectors from "~/redux/workspaces/workspacesSelectors";
-  import { FetchStatus, ToolAction, type Workspace } from "~/typeDefs";
+  import { dispatchAction, select } from "~/redux/reduxToStore";
+  import * as workspacesActions from "~/redux/workspaces/workspaces.actions";
+  import {
+    areWorkspacesFetchingSelector,
+    firstIncludedWorkspaceIdSelector,
+    hasDuplicateTargetWorkspacesSelector,
+    missingTargetWorkspacesSelector,
+    sourceIncludedWorkspacesCountSelector,
+    sourceWorkspacesSelector,
+    targetWorkspacesSelector,
+  } from "~/redux/workspaces/workspaces.selectors";
+  import { FetchStatus, ToolAction, type Workspace } from "~/types";
 
   import HelpDetails from "~/components/HelpDetails.svelte";
   import Loader from "~/components/Loader.svelte";
@@ -24,37 +32,16 @@
   import NoWorkspacesDialog from "./NoWorkspacesDialog.svelte";
   import WorkspaceCard from "./WorkspaceCard.svelte";
 
-  const areWorkspacesFetching = selectorToStore(
-    workspacesSelectors.areWorkspacesFetchingSelector,
-  );
-
-  const firstIncludedWorkspaceId = selectorToStore(
-    workspacesSelectors.firstIncludedWorkspaceIdSelector,
-  );
-
-  const hasDuplicateTargetWorkspaces = selectorToStore(
-    workspacesSelectors.hasDuplicateTargetWorkspacesSelector,
-  );
-
-  const includedWorkspacesCount = selectorToStore(
-    workspacesSelectors.sourceIncludedWorkspacesCountSelector,
-  );
-
-  const missingTargetWorkspaces = selectorToStore(
-    workspacesSelectors.missingTargetWorkspacesSelector,
-  );
-
-  const sourceWorkspaces = selectorToStore(
-    workspacesSelectors.sourceWorkspacesSelector,
-  );
-
-  const targetToolDisplayName = selectorToStore(targetToolDisplayNameSelector);
-
-  const targetWorkspaces = selectorToStore(
-    workspacesSelectors.targetWorkspacesSelector,
-  );
-
-  const toolAction = selectorToStore(toolActionSelector);
+  // prettier-ignore
+  const hasDuplicateTargetWorkspaces = select(hasDuplicateTargetWorkspacesSelector);
+  const areWorkspacesFetching = select(areWorkspacesFetchingSelector);
+  const firstIncludedWorkspaceId = select(firstIncludedWorkspaceIdSelector);
+  const includedWorkspacesCount = select(sourceIncludedWorkspacesCountSelector);
+  const missingTargetWorkspaces = select(missingTargetWorkspacesSelector);
+  const sourceWorkspaces = select(sourceWorkspacesSelector);
+  const targetToolDisplayName = select(targetToolDisplayNameSelector);
+  const targetWorkspaces = select(targetWorkspacesSelector);
+  const toolAction = select(toolActionSelector);
 
   let isNoWorkspacesDialogOpen: boolean = false;
   let isMissingWorkspacesDialogOpen: boolean = false;
