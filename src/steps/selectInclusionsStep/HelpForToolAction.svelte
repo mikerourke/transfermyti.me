@@ -1,5 +1,5 @@
 <script lang="ts">
-  import { ToolAction } from "~/typeDefs";
+  import { ToolAction } from "~/types";
 
   import HelpDetails from "~/components/HelpDetails.svelte";
 

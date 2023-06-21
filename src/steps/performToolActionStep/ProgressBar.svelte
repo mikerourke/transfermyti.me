@@ -1,5 +1,5 @@
 <script lang="ts">
-  import type { EntityGroup } from "~/typeDefs";
+  import type { EntityGroup } from "~/types";
   import { getEntityGroupDisplay } from "~/utilities/textTransforms";
 
   export let entityGroup: EntityGroup;

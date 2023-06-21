@@ -2,8 +2,8 @@
   import { compose, prop, sortBy, toLower } from "ramda";
   import { createEventDispatcher } from "svelte";
 
-  import { replaceMappingWithToolName } from "~/entityOperations/replaceMappingWithToolName";
-  import type { AnyEntity, EntityGroup, EntityTableRecord } from "~/typeDefs";
+  import type { AnyEntity, EntityGroup, EntityTableRecord } from "~/types";
+  import { replaceMappingWithToolName } from "~/utilities/replaceMappingWithToolName";
   import { getEntityGroupDisplay } from "~/utilities/textTransforms";
 
   import AccordionPanel from "~/components/AccordionPanel.svelte";
@@ -68,7 +68,7 @@
 
 <AccordionPanel {rowNumber} title={entityGroupDisplay}>
   {#if tableRecords.length === 0}
-    <p class="noRecordsFound">No records found!</p>
+    <p class="no-records-found">No records found!</p>
   {:else}
     <!-- prettier-ignore -->
     <InclusionsTable

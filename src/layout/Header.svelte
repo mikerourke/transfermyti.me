@@ -2,7 +2,7 @@
   import {
     navigateToWorkflowStep,
     WorkflowStep,
-  } from "~/modules/app/workflowStep";
+  } from "~/redux/app/workflowStep";
 
   import Logo from "~/layout/Logo.svelte";
 
@@ -17,7 +17,6 @@
     align-items: center;
     height: var(--height-header);
     padding: 0 1rem;
-    width: 100%;
     background-color: var(--color-primary);
     color: var(--color-secondary);
     box-shadow: var(--elevation-dp1);
@@ -26,7 +25,8 @@
   button {
     appearance: none;
     margin: 0;
-    padding: 0.25rem;
+    padding: 0.375rem 0.5rem;
+    border-radius: 0;
     background-color: transparent;
     color: var(--color-secondary);
     font-size: 1.5rem;

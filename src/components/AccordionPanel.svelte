@@ -1,8 +1,9 @@
 <script lang="ts">
-  import { css } from "goober";
   import { slide } from "svelte/transition";
 
   import Icon from "~/components/Icon.svelte";
+
+  import classes from "./AccordionPanel.module.css";
 
   export let rowNumber: number;
   export let title: string;
@@ -15,14 +16,6 @@
   function handleClick(): void {
     expanded = !expanded;
   }
-
-  const buttonStyleClass = css`
-    &:hover {
-      path {
-        fill: var(--color-white);
-      }
-    }
-  `;
 </script>
 
 <style>
@@ -65,7 +58,7 @@
       id={titleId}
       aria-controls={contentId}
       aria-expanded={expanded}
-      class={buttonStyleClass}
+      class={classes.iconButton}
       on:click={handleClick}
     >
       {title}
@@ -82,8 +75,8 @@
   {#if expanded}
     <div
       id={contentId}
-      aria-labelledby={titleId}
       role="region"
+      aria-labelledby={titleId}
       aria-hidden={!expanded}
       transition:slide|local={{ duration: slideDuration }}
     >

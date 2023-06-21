@@ -84,6 +84,13 @@
   [data-cubes] span:last-of-type::before {
     animation-delay: 600ms;
   }
+
+  p {
+    margin: 1rem 0 3rem;
+    text-align: center;
+    font-size: 1rem;
+    font-weight: var(--font-weight-bold);
+  }
 </style>
 
 <div data-wrapper>
@@ -95,6 +102,6 @@
   </div>
 
   {#if $$slots.default}
-    <p class="loadingMessage"><slot /></p>
+    <p><slot /></p>
   {/if}
 </div>

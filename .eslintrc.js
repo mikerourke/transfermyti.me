@@ -10,12 +10,9 @@ module.exports = {
   settings: {
     "svelte3/typescript": () => require("typescript"),
     "import/resolver": {
-      alias: {
-        map: [["~", "./src/"]],
-        extensions: [".ts", ".mjs", ".js", ".svelte"],
-      },
-      node: {
-        extensions: [".js", ".jsx", ".ts", ".svelte"],
+      typescript: {
+        project: ["tsconfig.json"],
+        extensions: [".ts", ".d.ts", ".json", ".svelte", ".mjs"],
       },
     },
   },
@@ -23,12 +20,12 @@ module.exports = {
     es6: true,
     browser: true,
     node: true,
-    jest: true,
   },
+  ignorePatterns: ["node_modules"],
   parserOptions: {
     ecmaVersion: 2020,
     sourceType: "module",
-    extraFileExtensions: [".ts", ".svelte"],
+    extraFileExtensions: [".svelte"],
   },
   rules: {
     curly: ["error", "all"],
@@ -37,6 +34,7 @@ module.exports = {
     "@typescript-eslint/array-type": ["error", { default: "array" }],
     "@typescript-eslint/ban-ts-ignore": "off",
     "@typescript-eslint/ban-ts-comment": "off",
+    "@typescript-eslint/no-explicit-any": "off",
     "@typescript-eslint/explicit-function-return-type": [
       "error",
       {
@@ -64,6 +62,7 @@ module.exports = {
     "@typescript-eslint/no-var-requires": "off",
     "import/no-cycle": "error",
     "import/no-default-export": "error",
+    "import/no-duplicates": "off",
     "import/no-unresolved": "error",
     "import/order": [
       "error",
@@ -78,12 +77,26 @@ module.exports = {
         ],
         pathGroups: [
           {
-            pattern: "~/**/!(*.svelte|components)",
+            pattern: "./**/!(*.svelte|*.css)",
+            group: "sibling",
+          },
+          {
+            pattern: "~/**/!(*.svelte|*.css)",
             group: "internal",
+          },
+          {
+            pattern: "./**/*.svelte",
+            group: "sibling",
+            position: "after",
           },
           {
             pattern: "~/**/*.svelte",
             group: "internal",
+            position: "after",
+          },
+          {
+            pattern: "./**/*.css",
+            group: "object",
             position: "after",
           },
         ],
@@ -109,15 +122,23 @@ module.exports = {
   },
   overrides: [
     {
-      files: ["*.svelte", "*.ts"],
-      parserOptions: {
-        tsconfigRootDir: __dirname,
-        project: ["./tsconfig.json"],
-      },
-    },
-    {
       files: ["*.svelte"],
       processor: "svelte3/svelte3",
+      rules: {
+        "@typescript-eslint/naming-convention": [
+          "error",
+          {
+            selector: "default",
+            format: ["camelCase", "PascalCase"],
+            leadingUnderscore: "forbid",
+            trailingUnderscore: "forbid",
+          },
+          {
+            selector: "variable",
+            format: ["camelCase", "PascalCase", "UPPER_CASE"],
+          },
+        ],
+      },
     },
     {
       files: ["*.mjs"],

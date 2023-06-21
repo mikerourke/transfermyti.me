@@ -1,7 +1,7 @@
 <script lang="ts">
   import { createEventDispatcher } from "svelte";
 
-  import type { ToolAction, ToolName } from "~/typeDefs";
+  import type { ToolAction, ToolName } from "~/types";
 
   import Button from "~/components/Button.svelte";
   import Card from "~/components/Card.svelte";

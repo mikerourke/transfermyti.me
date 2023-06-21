@@ -1,8 +1,6 @@
 import fs from "node:fs";
 import fsPromises from "node:fs/promises";
 
-import debug from "debug";
-
 let idCounter = 0;
 
 export function uniqueId(prefix = "") {
@@ -38,40 +36,4 @@ export function writeJsonSync(filePath, contents) {
  */
 export async function writeJson(filePath, contents) {
   await fsPromises.writeFile(filePath, JSON.stringify(contents, null, 2));
-}
-
-export class TaskRunner {
-  #log;
-
-  constructor(namespace) {
-    this.#log = debug(`tmt:${namespace}`);
-  }
-
-  async run(message, taskFunction) {
-    this.#log(message);
-
-    try {
-      await taskFunction();
-    } catch (err) {
-      if (typeof err === "string") {
-        this.#log(err);
-      } else {
-        if ("stdout" in err || "stderr" in err) {
-          if (err.stdout) {
-            this.#log(err.stdout);
-          }
-
-          if (err.stderr) {
-            this.#log(err.stderr);
-          }
-        }
-      }
-
-      process.exit(1);
-    }
-  }
-
-  log(...message) {
-    this.#log(...message);
-  }
 }

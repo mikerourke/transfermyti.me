@@ -35,7 +35,6 @@ This is by no means an exhaustive list, but it makes up the core of the front-en
 - [Svelte](https://svelte.dev/)
 - [Redux](https://redux.js.org/)
 - [Redux Saga](http://redux-saga.js.org/)
-- [Goober](https://goober.rocks/)
 - [Ramda](https://ramdajs.com/)
 - [date-fns](https://date-fns.org/)
 - [TypeScript](https://www.typescriptlang.org/)
@@ -56,11 +55,11 @@ section.
 
 1. Install dependencies with `pnpm install`
 2. Run `pnpm start:server` (no data will be transferred from Toggl to Clockify)
-3. Run `pnpm start:web -- --env TMT_USE_LOCAL_API=true` to start the web application
+3. Run `pnpm start:web --mode mocked` to start the web application
 4. Navigate to `http://localhost:8080`
 
 #### Development Without the Mock Server
 
 1. Install dependencies with `pnpm install`
-2. Run `pnpm start:web -- --env TMT_USE_LOCAL_API=false`
+2. Run `pnpm start:web`
 3. Navigate to `http://localhost:8080`

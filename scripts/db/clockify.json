@@ -388,7 +388,7 @@
       "description": "This is a test entry (08)",
       "tagIds": [],
       "billable": false,
-      "taskId":  null,
+      "taskId": null,
       "timeInterval": {
         "start": "2019-05-01T20:00:00Z",
         "end": "2019-05-01T21:00:00Z",
@@ -406,7 +406,7 @@
       "description": "This is a test entry (09)",
       "tagIds": ["clock-tag-03", "clock-tag-04", "clock-tag-05"],
       "billable": false,
-      "taskId":  null,
+      "taskId": null,
       "timeInterval": {
         "start": "2018-06-25T18:00:00Z",
         "end": "2018-06-25T23:00:00Z",
@@ -424,7 +424,7 @@
       "description": "This is a test entry (10)",
       "tagIds": [],
       "billable": false,
-      "taskId":  null,
+      "taskId": null,
       "timeInterval": {
         "start": "2018-06-24T14:00:00Z",
         "end": "2018-06-24T22:00:00Z",
@@ -442,7 +442,7 @@
       "description": "This is a test entry (11)",
       "tagIds": [],
       "billable": false,
-      "taskId":  null,
+      "taskId": null,
       "timeInterval": {
         "start": "2018-06-23T14:30:00Z",
         "end": "2018-06-24T04:30:00Z",
@@ -460,7 +460,7 @@
       "description": "This is a test entry (12)",
       "tagIds": [],
       "billable": false,
-      "taskId":  null,
+      "taskId": null,
       "timeInterval": {
         "start": "2018-06-23T14:00:20Z",
         "end": "2018-06-23T17:05:20Z",
@@ -478,7 +478,7 @@
       "description": "This is a test entry (13)",
       "tagIds": [],
       "billable": false,
-      "taskId":  null,
+      "taskId": null,
       "timeInterval": {
         "start": "2018-06-22T14:00:19Z",
         "end": "2018-06-22T19:15:19Z",
@@ -496,7 +496,7 @@
       "description": "This is a test entry (14)",
       "tagIds": [],
       "billable": false,
-      "taskId":  null,
+      "taskId": null,
       "timeInterval": {
         "start": "2018-06-21T20:45:57Z",
         "end": "2018-06-21T21:50:57Z",
@@ -514,7 +514,7 @@
       "description": "This is a test entry (15)",
       "tagIds": [],
       "billable": false,
-      "taskId":  null,
+      "taskId": null,
       "timeInterval": {
         "start": "2017-06-25T18:00:00Z",
         "end": "2017-06-25T23:00:00Z",
@@ -532,7 +532,7 @@
       "description": "This is a test entry (16)",
       "tagIds": [],
       "billable": false,
-      "taskId":  null,
+      "taskId": null,
       "timeInterval": {
         "start": "2017-06-24T14:00:00Z",
         "end": "2017-06-24T22:00:00Z",
@@ -550,7 +550,7 @@
       "description": "This is a test entry (17)",
       "tagIds": [],
       "billable": false,
-      "taskId":  null,
+      "taskId": null,
       "timeInterval": {
         "start": "2017-06-23T14:30:00Z",
         "end": "2017-06-24T04:30:00Z",
@@ -568,7 +568,7 @@
       "description": "This is a test entry (18)",
       "tagIds": [],
       "billable": false,
-      "taskId":  null,
+      "taskId": null,
       "timeInterval": {
         "start": "2017-06-23T14:00:20Z",
         "end": "2017-06-23T17:05:20Z",
@@ -586,7 +586,7 @@
       "description": "This is a test entry (19)",
       "tagIds": [],
       "billable": false,
-      "taskId":  null,
+      "taskId": null,
       "timeInterval": {
         "start": "2017-06-22T14:00:19Z",
         "end": "2017-06-22T19:15:19Z",
@@ -604,7 +604,7 @@
       "description": "This is a test entry (20)",
       "tagIds": [],
       "billable": false,
-      "taskId":  null,
+      "taskId": null,
       "timeInterval": {
         "start": "2017-06-21T20:45:57Z",
         "end": "2017-06-21T21:50:57Z",

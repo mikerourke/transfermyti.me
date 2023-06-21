@@ -1,13 +1,15 @@
 <script lang="ts">
-  import { css } from "goober";
   import { createEventDispatcher } from "svelte";
 
   import Button from "~/components/Button.svelte";
+
+  import classes from "./NavigationButtonsRow.module.css";
 
   export let disabled: boolean = false;
   export let loading: boolean = false;
   export let nextLabel: string = "Next";
   export let refreshLabel: string | undefined = undefined;
+  export let style: string | undefined = undefined;
 
   const dispatchEvent = createEventDispatcher();
 
@@ -22,13 +24,6 @@
   function handleRefreshClick(): void {
     dispatchEvent("refresh");
   }
-
-  const styleClass = css`
-    button {
-      min-height: 3rem;
-      min-width: 6.5rem;
-    }
-  `;
 </script>
 
 <style>
@@ -46,7 +41,7 @@
   }
 </style>
 
-<nav class={styleClass} {...$$restProps}>
+<nav class={classes.navigationButtonRow} {style}>
   <ul>
     <li>
       <Button variant="default" {disabled} on:click={handleBackClick}>

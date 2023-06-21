@@ -1,9 +1,10 @@
 <script lang="ts">
   import { createEventDispatcher } from "svelte";
 
-  import type { Workspace } from "~/typeDefs";
+  import type { Workspace } from "~/types";
 
   export let id: string;
+  export let style: string | undefined = undefined;
   export let value: string;
   export let workspaces: Workspace[];
 
@@ -59,7 +60,7 @@
 </style>
 
 <div>
-  <select {id} {value} on:input={handleInput} {...$$restProps}>
+  <select {id} {value} {style} on:input={handleInput}>
     {#each options as option}
       <option value={option.value}>{option.label}</option>
     {/each}

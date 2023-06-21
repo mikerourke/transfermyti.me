@@ -1,12 +1,13 @@
 <script lang="ts">
-  import { css } from "goober";
   import { onMount } from "svelte";
 
-  import { notificationDismissed } from "~/modules/app/appActions";
+  import { notificationDismissed } from "~/redux/app/app.actions";
   import { dispatchAction } from "~/redux/reduxToStore";
-  import type { Notification } from "~/typeDefs";
+  import type { Notification } from "~/types";
 
   import Icon from "~/components/Icon.svelte";
+
+  import classes from "./NotificationToast.module.css";
 
   export let notification: Notification;
 
@@ -17,28 +18,6 @@
   function dismiss(): void {
     dispatchAction(notificationDismissed(notification.id));
   }
-
-  const buttonStyleClass = css`
-    position: absolute;
-    top: 0.375rem;
-    right: 0.5rem;
-    margin: 0;
-    padding: 0;
-    background-color: transparent;
-    color: var(--color-white);
-    line-height: 1;
-
-    path {
-      fill: var(--color-white);
-      stroke: var(--color-white);
-    }
-
-    &:hover path {
-      stroke: var(--color-white);
-      stroke-width: 4;
-      transition: all var(--duration-short) var(--transition-function);
-    }
-  `;
 </script>
 
 <style>
@@ -74,7 +53,7 @@
   {notification.message}
 
   <button
-    class={buttonStyleClass}
+    class={classes.navigationToastButton}
     aria-label="Dismiss the notification"
     on:click={dismiss}
   >

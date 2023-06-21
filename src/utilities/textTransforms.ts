@@ -1,18 +1,6 @@
 import { isEmpty, isNil } from "ramda";
 
-import { EntityGroup } from "~/typeDefs";
-
-/**
- * Converts the specified boolean or string value to the "Yes"/"No"
- * representation.
- */
-export function booleanToYesNo(value: boolean | string): string {
-  if (typeof value === "boolean") {
-    return value ? "Yes" : "No";
-  }
-
-  return value;
-}
+import { EntityGroup } from "~/types";
 
 /**
  * Capitalizes the first word of the specified value (if defined).
@@ -43,17 +31,6 @@ export function getEntityGroupDisplay(entityGroup: EntityGroup | null): string {
     default:
       return capitalize(entityGroup as string);
   }
-}
-
-/**
- * Converts the specified value to kebab-case.
- */
-export function kebabCase(value: string): string {
-  // Removes all punctuation and leaves only letters.
-  // @see https://stackoverflow.com/a/4328546
-  const cleanValue = value.replace(/[^\w\s]|_/g, "").replace(/\s+/g, " ");
-
-  return cleanValue.toLowerCase().replace(/\s+/g, "-");
 }
 
 /**

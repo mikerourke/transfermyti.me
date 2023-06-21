@@ -1,30 +1,30 @@
 <script lang="ts">
-  import { css } from "goober";
   import { onMount } from "svelte";
 
   import {
     fetchAllEntities,
     isExistsInTargetShownToggled,
-  } from "~/modules/allEntities/allEntitiesActions";
-  import * as allEntitiesSelectors from "~/modules/allEntities/allEntitiesSelectors";
+  } from "~/redux/allEntities/allEntities.actions";
+  import {
+    areExistsInTargetShownSelector,
+    entityGroupInProcessDisplaySelector,
+    fetchAllFetchStatusSelector,
+    toolActionSelector,
+    totalIncludedRecordsCountSelector,
+  } from "~/redux/allEntities/allEntities.selectors";
   import {
     navigateToWorkflowStep,
     WorkflowStep,
-  } from "~/modules/app/workflowStep";
-  import { activeWorkspaceIdUpdated } from "~/modules/workspaces/workspacesActions";
-  import {
-    activeWorkspaceIdSelector,
-    includedSourceWorkspacesSelector,
-  } from "~/modules/workspaces/workspacesSelectors";
-  import { dispatchAction, selectorToStore } from "~/redux/reduxToStore";
-  import { FetchStatus, ToolAction, type Workspace } from "~/typeDefs";
+  } from "~/redux/app/workflowStep";
+  import { dispatchAction, select } from "~/redux/reduxToStore";
+  import { FetchStatus, ToolAction } from "~/types";
   import { capitalize } from "~/utilities/textTransforms";
 
   import Loader from "~/components/Loader.svelte";
   import NavigationButtonsRow from "~/components/NavigationButtonsRow.svelte";
   import Toggle from "~/components/Toggle.svelte";
-  import WorkspaceSelect from "~/components/WorkspaceSelect.svelte";
 
+  import ActiveWorkspaceSelectField from "./ActiveWorkspaceSelectField.svelte";
   import ClientsInclusionsPanel from "./ClientsInclusionsPanel.svelte";
   import HelpForToolAction from "./HelpForToolAction.svelte";
   import NoSelectionsDialog from "./NoSelectionsDialog.svelte";
@@ -33,29 +33,11 @@
   import TasksInclusionsPanel from "./TasksInclusionsPanel.svelte";
   import TimeEntriesInclusionsPanel from "./TimeEntriesInclusionsPanel.svelte";
 
-  const activeWorkspaceId = selectorToStore(activeWorkspaceIdSelector);
-
-  const includedSourceWorkspaces = selectorToStore(
-    includedSourceWorkspacesSelector,
-  );
-
-  const areExistsInTargetShown = selectorToStore(
-    allEntitiesSelectors.areExistsInTargetShownSelector,
-  );
-
-  const entityGroupInProcessDisplay = selectorToStore(
-    allEntitiesSelectors.entityGroupInProcessDisplaySelector,
-  );
-
-  const fetchAllFetchStatus = selectorToStore(
-    allEntitiesSelectors.fetchAllFetchStatusSelector,
-  );
-
-  const toolAction = selectorToStore(allEntitiesSelectors.toolActionSelector);
-
-  const totalIncludedRecordsCount = selectorToStore(
-    allEntitiesSelectors.totalIncludedRecordsCountSelector,
-  );
+  const areExistsInTargetShown = select(areExistsInTargetShownSelector);
+  const entityGroupDisplay = select(entityGroupInProcessDisplaySelector);
+  const fetchAllFetchStatus = select(fetchAllFetchStatusSelector);
+  const toolAction = select(toolActionSelector);
+  const totalIncludedRecordsCount = select(totalIncludedRecordsCountSelector);
 
   let isNoSelectionsDialogOpen: boolean = false;
 
@@ -79,10 +61,6 @@
     }
   });
 
-  function handleSelectActiveWorkspace(event: CustomEvent<Workspace>): void {
-    dispatchAction(activeWorkspaceIdUpdated(event.detail.id));
-  }
-
   function handleShowExistingToggle(): void {
     dispatchAction(isExistsInTargetShownToggled());
   }
@@ -102,29 +80,6 @@
   function handleRefreshClick(): void {
     dispatchAction(fetchAllEntities.request());
   }
-
-  const workspacesFieldStyleClass = css`
-    display: inline-block;
-    margin-bottom: 1rem;
-    position: relative;
-    width: 100%;
-
-    label {
-      font-size: 1rem;
-      font-weight: var(--font-weight-bold);
-    }
-
-    &:hover,
-    &:focus {
-      select {
-        color: var(--color-primary);
-      }
-
-      span {
-        border-top-color: var(--color-primary);
-      }
-    }
-  `;
 </script>
 
 <main data-step={WorkflowStep.SelectInclusions}>
@@ -133,19 +88,10 @@
   <HelpForToolAction toolAction={$toolAction} />
 
   {#if $fetchAllFetchStatus === FetchStatus.Success}
-    <div class={workspacesFieldStyleClass}>
-      <label for="active-workspace">Active Workspace</label>
-
-      <WorkspaceSelect
-        id="active-workspace"
-        workspaces={$includedSourceWorkspaces}
-        value={$activeWorkspaceId}
-        on:select={handleSelectActiveWorkspace}
-      />
-    </div>
+    <ActiveWorkspaceSelectField />
 
     {#if $toolAction === ToolAction.Transfer}
-      <div class="toggleRow">
+      <div class="toggle-row">
         <label for="show-existing-toggle">
           Show records that already exist in target?
         </label>
@@ -168,7 +114,7 @@
       <TimeEntriesInclusionsPanel />
     </div>
   {:else}
-    <Loader>Fetching {$entityGroupInProcessDisplay}, please wait...</Loader>
+    <Loader>Fetching {$entityGroupDisplay}, please wait...</Loader>
   {/if}
 
   <NavigationButtonsRow

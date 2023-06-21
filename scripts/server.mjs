@@ -10,17 +10,18 @@ import { assignTogglRoutes } from "./routes/toggl.mjs";
  * @desc Options for starting the server.
  * @property {number} port Port number to run server on.
  * @property {string[]} emptyTools Array of tools that return empty responses.
+ * @property {boolean} silent If true, don't log to the console.
  */
 
 /**
  * Starts the development server.
  * @param {StartServerOptions} options Options for starting the server
- * @returns {Promise<void>}
+ * @returns {Promise<import("node:http").Server>}
  */
 export function startServer(options) {
   const app = express();
 
-  const { emptyTools, port } = options;
+  const { emptyTools, port, silent } = options;
 
   assignMiddleware(app);
 
@@ -37,10 +38,12 @@ export function startServer(options) {
   });
 
   return new Promise((resolve) => {
-    app.listen(port, () => {
-      console.log(`Example app listening at http://localhost/${port}`);
+    const server = app.listen(port, () => {
+      if (!silent) {
+        console.log(`Example app listening at http://localhost/${port}`);
+      }
 
-      resolve();
+      resolve(server);
     });
   });
 }

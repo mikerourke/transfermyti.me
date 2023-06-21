@@ -1,8 +1,7 @@
 <script lang="ts">
   import { createEventDispatcher } from "svelte";
 
-  import type { AnyEntity, EntityTableRecord } from "~/typeDefs";
-  import { booleanToYesNo } from "~/utilities/textTransforms";
+  import type { AnyEntity, EntityTableRecord } from "~/types";
 
   import InclusionsTableTitle from "~/components/InclusionsTableTitle.svelte";
 
@@ -36,6 +35,22 @@
   function handleIncludeToggle(id: string): void {
     dispatchEvent("toggle-one", id);
   }
+
+  function booleanToYesNo(
+    record: EntityTableRecord<AnyEntity>,
+    fieldName: string,
+  ): string {
+    const key = fieldName as keyof typeof record;
+    const value = record[key];
+
+    if (typeof value === "boolean") {
+      return value ? "Yes" : "No";
+    } else {
+      // I can't make TypeScript happy here, so I gave up, but it works.
+      // @ts-ignore
+      return value;
+    }
+  }
 </script>
 
 <InclusionsTableTitle
@@ -61,7 +76,7 @@
     {#each tableRecords as record (record.id)}
       <tr data-disabled={record.existsInTarget}>
         {#each fieldNames as fieldName}
-          <td>{booleanToYesNo(record[fieldName])}</td>
+          <td>{booleanToYesNo(record, fieldName)}</td>
         {/each}
 
         <td data-include>
