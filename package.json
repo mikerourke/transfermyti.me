@@ -58,6 +58,7 @@
     "prettier": "^2.8.8",
     "prettier-plugin-svelte": "^2.10.1",
     "redux-saga-test-plan": "^4.0.6",
+    "rimraf": "^5.0.1",
     "stylelint": "^15.8.0",
     "stylelint-config-standard": "^33.0.0",
     "svelte": "^3.59.1",
