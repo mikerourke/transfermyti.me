@@ -9,7 +9,6 @@ module.exports = {
   ],
   plugins: ["@typescript-eslint", "unicorn", "import"],
   settings: {
-    "svelte3/typescript": () => require("typescript"),
     "import/resolver": {
       typescript: {
         project: ["tsconfig.json"],
