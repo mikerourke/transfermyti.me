@@ -1,16 +1,16 @@
 <script lang="ts">
   import { omit } from "ramda";
 
-  import { toolActionSelector } from "~/redux/allEntities/allEntities.selectors";
+  import { toolActionSelector } from "~/redux/allEntities/allEntitiesSelectors";
   import { dispatchAction, select } from "~/redux/reduxToStore";
   import {
     areAllTasksIncludedUpdated,
     isTaskIncludedToggled,
-  } from "~/redux/tasks/tasks.actions";
+  } from "~/redux/tasks/tasksActions";
   import {
     tasksForInclusionsTableSelector,
     tasksTotalCountsByTypeSelector,
-  } from "~/redux/tasks/tasks.selectors";
+  } from "~/redux/tasks/tasksSelectors";
   import { EntityGroup, ToolAction } from "~/types";
 
   import EntityGroupInclusionsPanel from "~/components/EntityGroupInclusionsPanel.svelte";

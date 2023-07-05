@@ -5,10 +5,10 @@ module.exports = {
     "plugin:import/errors",
     "plugin:import/warnings",
     "plugin:import/typescript",
+    "plugin:svelte/recommended",
   ],
-  plugins: ["@typescript-eslint", "unicorn", "import", "svelte3"],
+  plugins: ["@typescript-eslint", "unicorn", "import"],
   settings: {
-    "svelte3/typescript": () => require("typescript"),
     "import/resolver": {
       typescript: {
         project: ["tsconfig.json"],
@@ -123,21 +123,12 @@ module.exports = {
   overrides: [
     {
       files: ["*.svelte"],
-      processor: "svelte3/svelte3",
+      parser: "svelte-eslint-parser",
+      parserOptions: {
+        parser: "@typescript-eslint/parser",
+      },
       rules: {
-        "@typescript-eslint/naming-convention": [
-          "error",
-          {
-            selector: "default",
-            format: ["camelCase", "PascalCase"],
-            leadingUnderscore: "forbid",
-            trailingUnderscore: "forbid",
-          },
-          {
-            selector: "variable",
-            format: ["camelCase", "PascalCase", "UPPER_CASE"],
-          },
-        ],
+        "import/no-duplicates": "off",
       },
     },
     {

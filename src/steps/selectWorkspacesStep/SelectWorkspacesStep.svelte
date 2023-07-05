@@ -1,17 +1,17 @@
 <script lang="ts">
   import { onMount, tick } from "svelte";
 
-  import { fetchAllFetchStatusUpdated } from "~/redux/allEntities/allEntities.actions";
+  import { fetchAllFetchStatusUpdated } from "~/redux/allEntities/allEntitiesActions";
   import {
     targetToolDisplayNameSelector,
     toolActionSelector,
-  } from "~/redux/allEntities/allEntities.selectors";
+  } from "~/redux/allEntities/allEntitiesSelectors";
   import {
     navigateToWorkflowStep,
     WorkflowStep,
   } from "~/redux/app/workflowStep";
   import { dispatchAction, select } from "~/redux/reduxToStore";
-  import * as workspacesActions from "~/redux/workspaces/workspaces.actions";
+  import * as workspacesActions from "~/redux/workspaces/workspacesActions";
   import {
     areWorkspacesFetchingSelector,
     firstIncludedWorkspaceIdSelector,
@@ -20,7 +20,7 @@
     sourceIncludedWorkspacesCountSelector,
     sourceWorkspacesSelector,
     targetWorkspacesSelector,
-  } from "~/redux/workspaces/workspaces.selectors";
+  } from "~/redux/workspaces/workspacesSelectors";
   import { FetchStatus, ToolAction, type Workspace } from "~/types";
 
   import HelpDetails from "~/components/HelpDetails.svelte";

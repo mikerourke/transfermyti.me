@@ -4,14 +4,14 @@
   import {
     fetchAllEntities,
     isExistsInTargetShownToggled,
-  } from "~/redux/allEntities/allEntities.actions";
+  } from "~/redux/allEntities/allEntitiesActions";
   import {
     areExistsInTargetShownSelector,
     entityGroupInProcessDisplaySelector,
     fetchAllFetchStatusSelector,
     toolActionSelector,
     totalIncludedRecordsCountSelector,
-  } from "~/redux/allEntities/allEntities.selectors";
+  } from "~/redux/allEntities/allEntitiesSelectors";
   import {
     navigateToWorkflowStep,
     WorkflowStep,
