@@ -6,13 +6,13 @@
     createAllEntities,
     deleteAllEntities,
     transferCountsByEntityGroupReset,
-  } from "~/redux/allEntities/allEntities.actions";
+  } from "~/redux/allEntities/allEntitiesActions";
   import {
     includedCountsByEntityGroupSelector,
     pushAllChangesFetchStatusSelector,
     toolActionSelector,
     transferCountsByEntityGroupSelector,
-  } from "~/redux/allEntities/allEntities.selectors";
+  } from "~/redux/allEntities/allEntitiesSelectors";
   import {
     navigateToWorkflowStep,
     WorkflowStep,

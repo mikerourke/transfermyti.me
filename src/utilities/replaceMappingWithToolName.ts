@@ -1,4 +1,4 @@
-import { toolNameByMappingSelector } from "~/redux/allEntities/allEntities.selectors";
+import { toolNameByMappingSelector } from "~/redux/allEntities/allEntitiesSelectors";
 import { getStore } from "~/redux/store";
 import { capitalize } from "~/utilities/textTransforms";
 

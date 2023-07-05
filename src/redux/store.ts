@@ -2,13 +2,13 @@ import { configureStore, type Store } from "@reduxjs/toolkit";
 import { clone } from "ramda";
 import createSagaMiddleware from "redux-saga";
 
-import { validateCredentials } from "~/redux/credentials/credentials.actions";
-import { getCredentialsFromStorage } from "~/redux/credentials/credentials.storage";
+import { validateCredentials } from "~/redux/credentials/credentialsActions";
+import { getCredentialsFromStorage } from "~/redux/credentials/credentialsStorage";
 import type { ReduxState } from "~/types";
 import { isDevelopmentMode, isUseLocalApi } from "~/utilities/environment";
 
-import { rootReducer, initialState } from "./root.reducer";
-import { rootSagas } from "./root.sagas";
+import { rootReducer, initialState } from "./rootReducer";
+import { rootSagas } from "./rootSagas";
 
 let currentStore: Store<ReduxState> | null = null;
 

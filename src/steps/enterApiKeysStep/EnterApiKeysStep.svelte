@@ -1,7 +1,7 @@
 <script lang="ts">
   import { onMount, tick } from "svelte";
 
-  import { toolHelpDetailsByMappingSelector } from "~/redux/allEntities/allEntities.selectors";
+  import { toolHelpDetailsByMappingSelector } from "~/redux/allEntities/allEntitiesSelectors";
   import {
     navigateToWorkflowStep,
     WorkflowStep,
@@ -11,13 +11,13 @@
     credentialsStored,
     validateCredentials,
     validationFetchStatusUpdated,
-  } from "~/redux/credentials/credentials.actions";
+  } from "~/redux/credentials/credentialsActions";
   import {
     credentialsByMappingSelector,
     hasValidationErrorsSelector,
     validationErrorsByMappingSelector,
     validationFetchStatusSelector,
-  } from "~/redux/credentials/credentials.selectors";
+  } from "~/redux/credentials/credentialsSelectors";
   import { dispatchAction, select } from "~/redux/reduxToStore";
   import { FetchStatus, Mapping, ToolName } from "~/types";
   import { setFocusTo } from "~/utilities/domElements";
