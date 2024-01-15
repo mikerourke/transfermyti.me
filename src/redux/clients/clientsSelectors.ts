@@ -13,15 +13,12 @@ import type {
   ToolName,
 } from "~/types";
 
-export const sourceClientsByIdSelector = createSelector(
-  (state: ReduxState) => state.clients.source,
-  (sourceClientsById): Dictionary<Client> => sourceClientsById,
-);
+export const sourceClientsByIdSelector = (
+  state: ReduxState,
+): Dictionary<Client> => state.clients.source;
 
-const targetClientsByIdSelector = createSelector(
-  (state: ReduxState) => state.clients.target,
-  (targetClientsById): Dictionary<Client> => targetClientsById,
-);
+const targetClientsByIdSelector = (state: ReduxState): Dictionary<Client> =>
+  state.clients.target;
 
 const sourceClientsSelector = createSelector(
   sourceClientsByIdSelector,

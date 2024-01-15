@@ -151,6 +151,7 @@
       transfer is complete, the values are cleared from state.
     </p>
 
+    <!-- prettier-ignore -->
     <p>
       Press the <strong>Next</strong> button to validate your keys and move on to
       the workspace selection step. If the key is invalid, an error message will

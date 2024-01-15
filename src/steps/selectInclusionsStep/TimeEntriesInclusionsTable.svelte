@@ -1,5 +1,5 @@
 <script lang="ts">
-  import format from "date-fns/format";
+  import { format } from "date-fns/format";
   import { createEventDispatcher } from "svelte";
 
   import type { TimeEntryTableRecord } from "~/types";
@@ -81,7 +81,7 @@
 
   <tfoot>
     <tr>
-      <th colspan={4}> Total </th>
+      <th colspan={4}>Total</th>
       <td>{totalIncludedCount}</td>
     </tr>
   </tfoot>

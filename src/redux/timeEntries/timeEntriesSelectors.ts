@@ -4,10 +4,8 @@ import { createSelector, type Selector } from "~/redux/reduxTools";
 import { activeWorkspaceIdSelector } from "~/redux/workspaces/workspacesSelectors";
 import type { ReduxState, TimeEntry, TimeEntryTableRecord } from "~/types";
 
-export const isDuplicateCheckEnabledSelector = createSelector(
-  (state: ReduxState) => state.timeEntries.isDuplicateCheckEnabled,
-  (isDuplicateCheckEnabled): boolean => isDuplicateCheckEnabled,
-);
+export const isDuplicateCheckEnabledSelector = (state: ReduxState): boolean =>
+  state.timeEntries.isDuplicateCheckEnabled;
 
 export const sourceTimeEntriesSelector = createSelector(
   (state: ReduxState) => state.timeEntries.source,

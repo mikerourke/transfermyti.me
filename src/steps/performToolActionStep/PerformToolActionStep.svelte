@@ -144,6 +144,7 @@
   </h1>
 
   <HelpDetails>
+    <!-- prettier-ignore -->
     <p>
       Press the <strong>Start</strong> button and confirm the action in the dialog.
     </p>

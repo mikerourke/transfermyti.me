@@ -15,30 +15,22 @@ import {
 } from "~/types";
 import { capitalize, getEntityGroupDisplay } from "~/utilities/textTransforms";
 
-export const areExistsInTargetShownSelector = createSelector(
-  (state: ReduxState) => state.allEntities.areExistsInTargetShown,
-  (areExistsInTargetShown): boolean => areExistsInTargetShown,
-);
+export const areExistsInTargetShownSelector = (state: ReduxState): boolean =>
+  state.allEntities.areExistsInTargetShown;
 
-export const fetchAllFetchStatusSelector = createSelector(
-  (state: ReduxState) => state.allEntities.fetchAllFetchStatus,
-  (fetchAllFetchStatus): FetchStatus => fetchAllFetchStatus,
-);
+export const fetchAllFetchStatusSelector = (state: ReduxState): FetchStatus =>
+  state.allEntities.fetchAllFetchStatus;
 
-export const pushAllChangesFetchStatusSelector = createSelector(
-  (state: ReduxState) => state.allEntities.pushAllChangesFetchStatus,
-  (pushAllChangesFetchStatus): FetchStatus => pushAllChangesFetchStatus,
-);
+export const pushAllChangesFetchStatusSelector = (
+  state: ReduxState,
+): FetchStatus => state.allEntities.pushAllChangesFetchStatus;
 
-export const toolActionSelector = createSelector(
-  (state: ReduxState) => state.allEntities.toolAction,
-  (toolAction): ToolAction => toolAction,
-);
+export const toolActionSelector = (state: ReduxState): ToolAction =>
+  state.allEntities.toolAction;
 
-export const toolNameByMappingSelector = createSelector(
-  (state: ReduxState) => state.allEntities.toolNameByMapping,
-  (toolNameByMapping): ToolNameByMapping => toolNameByMapping,
-);
+export const toolNameByMappingSelector = (
+  state: ReduxState,
+): ToolNameByMapping => state.allEntities.toolNameByMapping;
 
 export const entityGroupInProcessDisplaySelector = createSelector(
   (state: ReduxState) => state.allEntities.entityGroupInProcess,
@@ -46,11 +38,9 @@ export const entityGroupInProcessDisplaySelector = createSelector(
     getEntityGroupDisplay(entityGroupInProcess).toLowerCase(),
 );
 
-export const transferCountsByEntityGroupSelector = createSelector(
-  (state: ReduxState) => state.allEntities.transferCountsByEntityGroup,
-  (transferCountsByEntityGroup): CountsByEntityGroup =>
-    transferCountsByEntityGroup,
-);
+export const transferCountsByEntityGroupSelector = (
+  state: ReduxState,
+): CountsByEntityGroup => state.allEntities.transferCountsByEntityGroup;
 
 const findLengthOfIncluded = (
   entityRecordsById: Dictionary<AnyEntity>,

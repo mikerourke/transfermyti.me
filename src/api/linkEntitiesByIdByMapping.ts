@@ -1,4 +1,4 @@
-import differenceInMinutes from "date-fns/differenceInMinutes";
+import { differenceInMinutes } from "date-fns/differenceInMinutes";
 import { isNil, prop, sortBy } from "ramda";
 import type { SagaIterator } from "redux-saga";
 import { call, select } from "redux-saga/effects";

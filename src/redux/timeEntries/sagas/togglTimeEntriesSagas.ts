@@ -1,7 +1,7 @@
-import differenceInSeconds from "date-fns/differenceInSeconds";
-import endOfYear from "date-fns/endOfYear";
-import format from "date-fns/format";
-import startOfYear from "date-fns/startOfYear";
+import { differenceInSeconds } from "date-fns/differenceInSeconds";
+import { endOfYear } from "date-fns/endOfYear";
+import { format } from "date-fns/format";
+import { startOfYear } from "date-fns/startOfYear";
 import { isNil, propOr } from "ramda";
 import type { SagaIterator } from "redux-saga";
 import { call, delay, select } from "redux-saga/effects";

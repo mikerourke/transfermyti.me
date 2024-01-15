@@ -55,13 +55,13 @@ export type ActionType<TActionCreatorOrMap> =
   TActionCreatorOrMap extends ActionCreator<{ type: TypeConstant }>
     ? ReturnType<TActionCreatorOrMap>
     : TActionCreatorOrMap extends Record<AnyValid, AnyValid>
-    ? {
-        [K in keyof TActionCreatorOrMap]: ActionType<TActionCreatorOrMap[K]>;
-      }[keyof TActionCreatorOrMap]
-    : // eslint-disable-next-line @typescript-eslint/no-unused-vars
-    TActionCreatorOrMap extends infer R
-    ? never
-    : never;
+      ? {
+          [K in keyof TActionCreatorOrMap]: ActionType<TActionCreatorOrMap[K]>;
+        }[keyof TActionCreatorOrMap]
+      : // eslint-disable-next-line @typescript-eslint/no-unused-vars
+        TActionCreatorOrMap extends infer R
+        ? never
+        : never;
 
 export function isActionOf<
   TActionCreator extends ActionCreator<{ type: TypeConstant }>,

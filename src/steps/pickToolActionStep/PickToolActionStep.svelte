@@ -42,6 +42,7 @@
 <main data-step={WorkflowStep.PickToolAction}>
   <h1>Step 1: Pick an Action</h1>
 
+  <!-- prettier-ignore -->
   <HelpDetails open={true}>
     <p>
       Welcome to <strong>transfermyti.me</strong>! This tool can be used to

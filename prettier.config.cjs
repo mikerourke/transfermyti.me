@@ -1,10 +1,7 @@
 module.exports = {
-  bracketSpacing: true,
-  singleQuote: false,
-  printWidth: 80,
   trailingComma: "all",
-  endOfLine: "auto",
-  plugins: ["./node_modules/prettier-plugin-svelte"],
+  plugins: [require("prettier-plugin-svelte")],
+  htmlWhitespaceSensitivity: "ignore",
   overrides: [
     {
       files: "*.svelte",
