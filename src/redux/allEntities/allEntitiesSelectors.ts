@@ -113,7 +113,7 @@ export const replaceMappingWithToolNameSelector = createSelector(
     },
 );
 
-const toolDisplayNameByMappingSelector = createSelector(
+export const toolDisplayNameByMappingSelector = createSelector(
   toolNameByMappingSelector,
   (toolNameByMapping): Record<Mapping, string> => ({
     [Mapping.Source]: capitalize(toolNameByMapping.source),

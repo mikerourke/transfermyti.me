@@ -23,18 +23,18 @@ import { validStringify } from "~/utilities/textTransforms";
  * Response from Toggl API for tasks.
  * @see https://developers.track.toggl.com/docs/api/tasks#response
  */
-interface TogglTaskResponse {
-  id: number;
-  name: string;
-  workspace_id: number;
-  project_id: number;
-  user_id: number | null;
+type TogglTaskResponse = {
   active: boolean;
   at: string;
   estimated_seconds: number;
+  id: number;
+  name: string;
+  project_id: number;
   server_deleted_at: string | null;
   tracked_seconds: number;
-}
+  user_id: number | null;
+  workspace_id: number;
+};
 
 /**
  * Creates new Toggl tasks that correspond to source and returns array of

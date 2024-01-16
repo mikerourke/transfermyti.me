@@ -207,9 +207,17 @@ function* linkForMappingForTimeEntries(
       targetById[targetEntry.id] = targetEntry;
     }
 
-    sourceEntry.isIncluded = isNil(sourceEntry.linkedId);
+    // FIXME: Why is this throwing an error after the transfer?
+    try {
+      const isSourceEntryIncluded = isNil(sourceEntry.linkedId);
 
-    sourceById[sourceEntry.id] = sourceEntry;
+      sourceById[sourceEntry.id] = {
+        ...sourceEntry,
+        isIncluded: isSourceEntryIncluded,
+      };
+    } catch {
+      sourceById[sourceEntry.id] = sourceEntry;
+    }
   }
 
   return {

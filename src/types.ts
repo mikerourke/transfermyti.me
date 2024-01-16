@@ -205,4 +205,5 @@ export interface Workspace extends AnyEntity {
   name: string;
   userIds: string[];
   isAdmin: boolean | null;
+  isPaid: boolean;
 }

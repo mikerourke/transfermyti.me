@@ -63,6 +63,6 @@ build
 .cache
 dist
 .env
-creds.json
+credentials.json
 
 .stylelintcache

@@ -18,6 +18,7 @@ const MOCK_STATE = {
         name: "Test Workspace 2",
         userIds: ["6001"],
         isAdmin: true,
+        isPaid: false,
         workspaceId: "1002",
         entryCount: 20,
         linkedId: null,

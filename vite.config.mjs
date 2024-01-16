@@ -31,6 +31,7 @@ export default defineConfig(
       plugins: [
         svelte({
           configFile: path.resolve(rootDirPath, "svelte.config.mjs"),
+          hot: false,
         }),
         tsconfigPaths({ root: rootDirPath }),
       ],

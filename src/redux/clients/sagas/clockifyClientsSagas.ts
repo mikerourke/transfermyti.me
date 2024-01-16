@@ -7,11 +7,17 @@ import { deleteEntitiesForTool } from "~/api/deleteEntitiesForTool";
 import { fetchEntitiesForTool } from "~/api/fetchEntitiesForTool";
 import { EntityGroup, ToolName, type Client } from "~/types";
 
-interface ClockifyClientResponse {
+type ClockifyClientResponse = {
+  address: string | null;
+  archived: boolean;
+  currencyCode: string;
+  currencyId: string;
+  email: string | null;
   id: string;
   name: string;
+  note: string | null;
   workspaceId: string;
-}
+};
 
 /**
  * Creates new Clockify clients in all target workspaces and returns array of

@@ -46,7 +46,7 @@
   function sortTableRecords(records: TableRecord[]): TableRecord[] {
     try {
       const sortByName = sortBy<AnyValid>(
-        compose(toLower, prop<AnyValid, AnyValid>("name")),
+        compose(toLower, prop<"name">("name")),
       );
 
       return sortByName(records);

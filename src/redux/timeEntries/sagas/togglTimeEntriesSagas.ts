@@ -20,68 +20,72 @@ import { validStringify } from "~/utilities/textTransforms";
 
 const togglApiDelay = getApiDelayForTool(ToolName.Toggl);
 
-interface TogglReportsTimeEntryResponse {
-  id: number;
-  pid: number;
-  tid: number | null;
-  uid: number;
-  description: string;
-  start: string;
-  end: string;
-  updated: string;
-  dur: number;
-  user: string;
-  use_stop: boolean;
+type TogglReportsTimeEntryResponse = {
+  billable: number | null;
   client: string;
+  cur: string | null;
+  description: string;
+  dur: number;
+  end: string;
+  id: number;
+  is_billable: boolean;
+  pid: number;
   project: string;
   project_color: string;
   project_hex_color: string;
-  task: string | null; // Name of task
-  billable: number | null;
-  is_billable: boolean;
-  cur: string | null;
+  start: string;
   tags: string[];
-}
+  task: string | null;
+  tid: number | null; // Name of task
+  uid: number;
+  updated: string;
+  use_stop: boolean;
+  user: string;
+};
 
 /**
  * Response from Toggl API for time entries.
  * @see https://developers.track.toggl.com/docs/api/time_entries#response
  */
-interface TogglTrackTimeEntryResponse {
-  id: number;
-  project_id: number;
-  task_id: number | null;
-  user_id: number;
-  workspace_id: number;
-  description: string;
-  start: string;
-  stop: string;
+type TogglTrackTimeEntryResponse = {
   at: string;
-  server_deleted_at: string | null;
+  billable: boolean;
+  description: string;
   duration: number;
   duronly: boolean;
-  billable: boolean;
+  id: number;
+  pid: number;
+  project_id: number;
+  server_deleted_at: string | null;
+  start: string;
+  stop: string;
   tag_ids: number[];
   tags: string[];
-}
+  task_id: number | null;
+  tid: number;
+  uid: number;
+  user_id: number;
+  wid: number;
+  workspace_id: number;
+};
 
 type TogglTimeEntryResponse =
   | TogglTrackTimeEntryResponse
   | TogglReportsTimeEntryResponse;
 
-interface TogglTotalCurrency {
-  currency: string | null;
+type TogglTotalCurrency = {
   amount: number | null;
-}
+  currency: string | null;
+};
 
-interface TogglTimeEntriesFetchResponse {
-  total_grand: number;
-  total_billable: number | null;
-  total_currencies: TogglTotalCurrency[];
-  total_count: number;
-  per_page: number;
+type TogglTimeEntriesFetchResponse = {
   data: TogglTimeEntryResponse[];
-}
+  per_page: number;
+  total_billable: number | null;
+  total_count: number;
+  total_currencies: TogglTotalCurrency[];
+  total_grand: number;
+};
 
 /**
  * Creates Toggl time entries in all workspaces and returns array of transformed

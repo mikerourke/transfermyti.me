@@ -7,11 +7,12 @@ import { deleteEntitiesForTool } from "~/api/deleteEntitiesForTool";
 import { fetchEntitiesForTool } from "~/api/fetchEntitiesForTool";
 import { EntityGroup, ToolName, type Tag } from "~/types";
 
-export interface ClockifyTagResponse {
+export type ClockifyTagResponse = {
+  archived: boolean;
   id: string;
   name: string;
   workspaceId: string;
-}
+};
 
 /**
  * Creates new Clockify tags in all target workspaces and returns array of
