@@ -4,18 +4,18 @@ import { allEntitiesFlushed } from "~/redux/allEntities/allEntitiesActions";
 import {
   createReducer,
   isActionOf,
+  type Action,
   type ActionType,
-  type AnyAction,
 } from "~/redux/reduxTools";
 import { Mapping, type User } from "~/types";
 
 import * as usersActions from "./usersActions";
 
-export interface UsersState {
-  readonly source: Dictionary<User>;
-  readonly target: Dictionary<User>;
-  readonly isFetching: boolean;
-}
+export type UsersState = Readonly<{
+  source: Dictionary<User>;
+  target: Dictionary<User>;
+  isFetching: boolean;
+}>;
 
 export const usersInitialState: UsersState = {
   source: {},
@@ -64,7 +64,7 @@ type UsersApiRequestAction = ActionType<
 >;
 
 function isUsersApiRequestAction(
-  action: AnyAction,
+  action: Action,
 ): action is UsersApiRequestAction {
   return isActionOf(
     [
@@ -83,7 +83,7 @@ type UsersApiFailureAction = ActionType<
 >;
 
 function isUsersApiFailureAction(
-  action: AnyAction,
+  action: Action,
 ): action is UsersApiFailureAction {
   return isActionOf(
     [
@@ -100,7 +100,7 @@ type ResetUsersStateAction = ActionType<
 >;
 
 function isResetUsersStateAction(
-  action: AnyAction,
+  action: Action,
 ): action is ResetUsersStateAction {
   return isActionOf(
     [usersActions.deleteUsers.success, allEntitiesFlushed],

@@ -5,18 +5,18 @@ import { allEntitiesFlushed } from "~/redux/allEntities/allEntitiesActions";
 import {
   createReducer,
   isActionOf,
+  type Action,
   type ActionType,
-  type AnyAction,
 } from "~/redux/reduxTools";
 import { Mapping, type Project } from "~/types";
 
 import * as projectsActions from "./projectsActions";
 
-export interface ProjectsState {
-  readonly source: Dictionary<Project>;
-  readonly target: Dictionary<Project>;
-  readonly isFetching: boolean;
-}
+export type ProjectsState = Readonly<{
+  source: Dictionary<Project>;
+  target: Dictionary<Project>;
+  isFetching: boolean;
+}>;
 
 export const projectsInitialState: ProjectsState = {
   source: {},
@@ -75,7 +75,7 @@ type ProjectsCreateOrFetchSuccessAction = ActionType<
 >;
 
 function isProjectsApiSuccessAction(
-  action: AnyAction,
+  action: Action,
 ): action is ProjectsCreateOrFetchSuccessAction {
   return isActionOf(
     [
@@ -93,7 +93,7 @@ type ProjectsApiRequestAction = ActionType<
 >;
 
 function isProjectsApiRequestAction(
-  action: AnyAction,
+  action: Action,
 ): action is ProjectsApiRequestAction {
   return isActionOf(
     [
@@ -112,7 +112,7 @@ type ProjectsApiFailureAction = ActionType<
 >;
 
 function isProjectsApiFailureAction(
-  action: AnyAction,
+  action: Action,
 ): action is ProjectsApiFailureAction {
   return isActionOf(
     [
@@ -129,7 +129,7 @@ type ResetProjectsStateAction = ActionType<
 >;
 
 function isResetProjectsStateAction(
-  action: AnyAction,
+  action: Action,
 ): action is ResetProjectsStateAction {
   return isActionOf(
     [projectsActions.deleteProjects.success, allEntitiesFlushed],

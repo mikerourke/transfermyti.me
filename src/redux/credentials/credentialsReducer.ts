@@ -7,12 +7,12 @@ import {
 
 import * as credentialsActions from "./credentialsActions";
 
-export interface CredentialsState {
-  readonly source: Credentials;
-  readonly target: Credentials;
-  readonly validationErrorsByMapping: ValidationErrorsByMapping;
-  readonly validationFetchStatus: FetchStatus;
-}
+export type CredentialsState = Readonly<{
+  source: Credentials;
+  target: Credentials;
+  validationErrorsByMapping: ValidationErrorsByMapping;
+  validationFetchStatus: FetchStatus;
+}>;
 
 const DEFAULT_VALIDATION_ERRORS = {
   source: null,

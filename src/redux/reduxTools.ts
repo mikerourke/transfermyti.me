@@ -5,7 +5,7 @@ export {
   createReducer,
   createSelector,
   nanoid,
-  type AnyAction,
+  type Action,
   type Selector,
 } from "@reduxjs/toolkit";
 

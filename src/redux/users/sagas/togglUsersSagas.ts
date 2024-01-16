@@ -14,33 +14,33 @@ import { includedSourceWorkspaceIdsSelector } from "~/redux/workspaces/workspace
 import { EntityGroup, ToolName, type User } from "~/types";
 import { validStringify } from "~/utilities/textTransforms";
 
-export interface TogglUserResponse {
-  id: number;
+export type TogglUserResponse = {
   api_token: string;
+  at: string;
+  beginning_of_week: number;
+  country_id: number;
+  created_at: string;
+  default_workspace_id: number;
   email: string;
   fullname: string;
-  timezone: string;
-  default_workspace_id: number;
-  beginning_of_week: number;
+  has_password: boolean;
+  id: number;
   image_url: string;
-  created_at: string;
-  updated_at: string;
+  intercom_hash: string;
   openid_email: string | null;
   openid_enabled: boolean;
-  country_id: number;
-  at: string;
-  intercom_hash: string;
-  has_password: boolean;
-}
+  timezone: string;
+  updated_at: string;
+};
 
-interface TogglProjectUserResponse {
+type TogglProjectUserResponse = {
   id: number;
+  manager: boolean;
   pid: number;
+  rate: number;
   uid: number;
   wid: number;
-  manager: boolean;
-  rate: number;
-}
+};
 
 /**
  * Sends invites to the array of specified emails.

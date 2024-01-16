@@ -5,18 +5,18 @@ import { allEntitiesFlushed } from "~/redux/allEntities/allEntitiesActions";
 import {
   createReducer,
   isActionOf,
+  type Action,
   type ActionType,
-  type AnyAction,
 } from "~/redux/reduxTools";
 import { Mapping, type Task } from "~/types";
 
 import * as tasksActions from "./tasksActions";
 
-export interface TasksState {
-  readonly source: Dictionary<Task>;
-  readonly target: Dictionary<Task>;
-  readonly isFetching: boolean;
-}
+export type TasksState = Readonly<{
+  source: Dictionary<Task>;
+  target: Dictionary<Task>;
+  isFetching: boolean;
+}>;
 
 export const tasksInitialState: TasksState = {
   source: {},
@@ -75,7 +75,7 @@ type TasksCreateOrFetchSuccessAction = ActionType<
 >;
 
 function isTasksApiSuccessAction(
-  action: AnyAction,
+  action: Action,
 ): action is TasksCreateOrFetchSuccessAction {
   return isActionOf(
     [tasksActions.createTasks.success, tasksActions.fetchTasks.success],
@@ -90,7 +90,7 @@ type TasksApiRequestAction = ActionType<
 >;
 
 function isTasksApiRequestAction(
-  action: AnyAction,
+  action: Action,
 ): action is TasksApiRequestAction {
   return isActionOf(
     [
@@ -109,7 +109,7 @@ type TasksApiFailureAction = ActionType<
 >;
 
 function isTasksApiFailureAction(
-  action: AnyAction,
+  action: Action,
 ): action is TasksApiFailureAction {
   return isActionOf(
     [
@@ -126,7 +126,7 @@ type ResetTasksStateAction = ActionType<
 >;
 
 function isResetTasksStateAction(
-  action: AnyAction,
+  action: Action,
 ): action is ResetTasksStateAction {
   return isActionOf(
     [tasksActions.deleteTasks.success, allEntitiesFlushed],

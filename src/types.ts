@@ -10,7 +10,7 @@ import type { UserGroupsState } from "~/redux/userGroups/userGroupsReducer";
 import type { UsersState } from "~/redux/users/usersReducer";
 import type { WorkspacesState } from "~/redux/workspaces/workspacesReducer";
 
-export interface ReduxState {
+export type ReduxState = Readonly<{
   allEntities: AllEntitiesState;
   app: AppState;
   clients: ClientsState;
@@ -22,15 +22,15 @@ export interface ReduxState {
   userGroups: UserGroupsState;
   users: UsersState;
   workspaces: WorkspacesState;
-}
+}>;
 
 type NotificationType = "error" | "info" | "success";
 
-export interface Notification {
+export type Notification = {
   id: string;
   message: string;
   type: NotificationType;
-}
+};
 
 export enum ToolName {
   None = "none",
@@ -49,11 +49,11 @@ export enum ToolAction {
   Transfer = "transfer",
 }
 
-export interface ToolHelpDetails {
+export type ToolHelpDetails = {
   toolName: ToolName;
   displayName: string;
   toolLink: string;
-}
+};
 
 export enum EntityGroup {
   Clients = "clients",
@@ -95,10 +95,10 @@ export type CountsByEntityGroup = Record<
   number
 >;
 
-export interface ToolNameByMapping {
+export type ToolNameByMapping = {
   [Mapping.Source]: ToolName;
   [Mapping.Target]: ToolName;
-}
+};
 
 export interface Client extends AnyEntity {
   id: string;
@@ -110,27 +110,27 @@ export type ClientTableRecord = EntityTableRecord<Client> & {
   projectCount: number;
 };
 
-export interface Credentials {
+export type Credentials = {
   apiKey: string | null;
   email: string | null;
   userId: string | null;
-}
+};
 
 export type CredentialsByMapping = Record<Mapping, Credentials>;
 
 export type ValidationErrorsByMapping = Record<Mapping, string | null>;
 
-export interface PartialCredentialsUpdate {
+export type PartialCredentialsUpdate = {
   mapping: Mapping;
   apiKey?: string | null;
   email?: string | null;
   userId?: string | null;
-}
+};
 
-export interface Estimate {
+export type Estimate = {
   estimate: number | string;
   type: "AUTO" | "MANUAL";
-}
+};
 
 export interface Project extends AnyEntity {
   id: string;
