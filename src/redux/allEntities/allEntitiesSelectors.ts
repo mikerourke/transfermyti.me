@@ -142,11 +142,11 @@ export const toolHelpDetailsByMappingSelector = createSelector(
     };
 
     for (const [mapping, toolName] of Object.entries(toolNameByMapping)) {
-      // @ts-expect-error
-      toolHelpDetailsByMapping[mapping] = {
+      const mappingKey = mapping as keyof typeof toolHelpDetailsByMapping;
+
+      toolHelpDetailsByMapping[mappingKey] = {
         toolName,
-        // @ts-expect-error
-        displayName: displayNameByMapping[mapping],
+        displayName: displayNameByMapping[mappingKey],
         toolLink: findToolLink(toolName),
       };
     }

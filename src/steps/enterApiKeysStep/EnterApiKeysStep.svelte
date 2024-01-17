@@ -109,8 +109,7 @@
     };
 
     for (const [mapping, value] of Object.entries(values)) {
-      // @ts-expect-error
-      const { toolName } = $toolHelpDetailsByMapping[mapping];
+      const { toolName } = $toolHelpDetailsByMapping[mapping as Mapping];
 
       if (value === "" && toolName !== ToolName.None) {
         isValid = false;

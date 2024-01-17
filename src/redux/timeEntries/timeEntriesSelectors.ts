@@ -131,8 +131,7 @@ export const sourceTimeEntryCountByIdFieldSelectorFactory = (
     const timeEntryCountByIdField: Dictionary<number> = {};
 
     for (const timeEntry of sourceTimeEntries) {
-      // @ts-expect-error
-      const parentId = timeEntry[idField];
+      const parentId = timeEntry[idField as keyof typeof timeEntry] as string;
 
       if (!isNil(parentId)) {
         const currentCountForId = propOr<number, Dictionary<number>, number>(

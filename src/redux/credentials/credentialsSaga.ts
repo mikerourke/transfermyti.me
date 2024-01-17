@@ -12,7 +12,7 @@ import * as credentialsActions from "~/redux/credentials/credentialsActions";
 import { credentialsByMappingSelector } from "~/redux/credentials/credentialsSelectors";
 import { mergeCredentialsInStorage } from "~/redux/credentials/credentialsStorage";
 import type { TogglUserResponse } from "~/redux/users/sagas/togglUsersSagas";
-import { ToolName, type ValidationErrorsByMapping } from "~/types";
+import { Mapping, ToolName, type ValidationErrorsByMapping } from "~/types";
 import { isDevelopmentMode } from "~/utilities/environment";
 import { validStringify } from "~/utilities/textTransforms";
 
@@ -56,7 +56,9 @@ function* validateCredentialsSaga(): SagaIterator {
 
   const credentialsByMapping = clone(currentCredentialsByMapping);
 
-  const mappingByToolName = yield select(mappingByToolNameSelector);
+  const mappingByToolName: Record<ToolName, Mapping> = yield select(
+    mappingByToolNameSelector,
+  );
 
   const validationErrorsByMapping: ValidationErrorsByMapping = {
     source: null,
@@ -74,7 +76,6 @@ function* validateCredentialsSaga(): SagaIterator {
 
       credentialsByMapping[clockifyMapping].userId = clockifyUser.id;
     } catch {
-      // @ts-expect-error
       validationErrorsByMapping[clockifyMapping] = "Invalid API key";
 
       hasValidationErrors = true;
@@ -90,7 +91,6 @@ function* validateCredentialsSaga(): SagaIterator {
 
       credentialsByMapping[togglMapping].userId = validStringify(me?.id, null);
     } catch {
-      // @ts-expect-error
       validationErrorsByMapping[togglMapping] = "Invalid API key";
 
       hasValidationErrors = true;

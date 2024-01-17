@@ -25,20 +25,19 @@ export function* createTimeEntriesSaga(): SagaIterator {
   yield put(timeEntriesActions.createTimeEntries.request());
 
   try {
-    const toolNameByMapping = yield select(toolNameByMappingSelector);
+    const { target } = yield select(toolNameByMappingSelector);
 
-    // @ts-expect-error
-    const createSagaByToolName = {
-      [ToolName.Clockify]: clockifySagas.createClockifyTimeEntriesSaga,
-      [ToolName.Toggl]: togglSagas.createTogglTimeEntriesSaga,
-    }[toolNameByMapping.target];
+    const createSagaForTargetTool =
+      target === ToolName.Clockify
+        ? clockifySagas.createClockifyTimeEntriesSaga
+        : togglSagas.createTogglTimeEntriesSaga;
 
     const sourceTimeEntries = yield select(
       sourceTimeEntriesForTransferSelector,
     );
 
     const targetTimeEntries = yield call(
-      createSagaByToolName,
+      createSagaForTargetTool,
       sourceTimeEntries,
     );
 
@@ -64,17 +63,16 @@ export function* deleteTimeEntriesSaga(): SagaIterator {
   yield put(timeEntriesActions.deleteTimeEntries.request());
 
   try {
-    const toolNameByMapping = yield select(toolNameByMappingSelector);
+    const { source } = yield select(toolNameByMappingSelector);
 
-    // @ts-expect-error
-    const deleteSagaByToolName = {
-      [ToolName.Clockify]: clockifySagas.deleteClockifyTimeEntriesSaga,
-      [ToolName.Toggl]: togglSagas.deleteTogglTimeEntriesSaga,
-    }[toolNameByMapping.source];
+    const deleteSagaForSourceTool =
+      source === ToolName.Clockify
+        ? clockifySagas.deleteClockifyTimeEntriesSaga
+        : togglSagas.deleteTogglTimeEntriesSaga;
 
     const sourceTimeEntries = yield select(includedSourceTimeEntriesSelector);
 
-    yield call(deleteSagaByToolName, sourceTimeEntries);
+    yield call(deleteSagaForSourceTool, sourceTimeEntries);
 
     yield put(timeEntriesActions.deleteTimeEntries.success());
   } catch (err: AnyValid) {
@@ -92,16 +90,14 @@ export function* fetchTimeEntriesSaga(): SagaIterator {
   yield put(timeEntriesActions.fetchTimeEntries.request());
 
   try {
-    const fetchSagaByToolName = {
-      [ToolName.Clockify]: clockifySagas.fetchClockifyTimeEntriesSaga,
-      [ToolName.Toggl]: togglSagas.fetchTogglTimeEntriesSaga,
-    };
-
     const { source, target } = yield select(toolNameByMappingSelector);
 
-    // @ts-expect-error
-    let sourceTimeEntries = yield call(fetchSagaByToolName[source]);
+    const fetchSagaForSourceTool =
+      source === ToolName.Clockify
+        ? clockifySagas.fetchClockifyTimeEntriesSaga
+        : togglSagas.fetchTogglTimeEntriesSaga;
 
+    let sourceTimeEntries = yield call(fetchSagaForSourceTool);
     sourceTimeEntries = sortTimeEntries(sourceTimeEntries);
 
     const toolAction = yield select(toolActionSelector);
@@ -109,9 +105,12 @@ export function* fetchTimeEntriesSaga(): SagaIterator {
     let timeEntriesByIdByMapping: Record<Mapping, Dictionary<TimeEntry>>;
 
     if (toolAction === ToolAction.Transfer) {
-      // @ts-expect-error
-      let targetTimeEntries = yield call(fetchSagaByToolName[target]);
+      const fetchSagaForTargetTool =
+        target === ToolName.Clockify
+          ? clockifySagas.fetchClockifyTimeEntriesSaga
+          : togglSagas.fetchTogglTimeEntriesSaga;
 
+      let targetTimeEntries = yield call(fetchSagaForTargetTool);
       targetTimeEntries = sortTimeEntries(targetTimeEntries);
 
       timeEntriesByIdByMapping = yield call(

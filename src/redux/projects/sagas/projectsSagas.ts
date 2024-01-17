@@ -91,17 +91,15 @@ export function* createProjectsSaga(): SagaIterator {
   yield put(projectActions.createProjects.request());
 
   try {
-    const toolNameByMapping = yield select(toolNameByMappingSelector);
+    const { target } = yield select(toolNameByMappingSelector);
 
-    // @ts-expect-error
-    const createSagaByToolName = {
-      [ToolName.Clockify]: clockifySagas.createClockifyProjectsSaga,
-      [ToolName.Toggl]: togglSagas.createTogglProjectsSaga,
-    }[toolNameByMapping.target];
+    const createSagaForTargetTool =
+      target === ToolName.Clockify
+        ? clockifySagas.createClockifyProjectsSaga
+        : togglSagas.createTogglProjectsSaga;
 
     const sourceProjects = yield select(sourceProjectsForTransferSelector);
-
-    const targetProjects = yield call(createSagaByToolName, sourceProjects);
+    const targetProjects = yield call(createSagaForTargetTool, sourceProjects);
 
     const projectsByIdByMapping = yield call(
       linkEntitiesByIdByMapping,
@@ -124,17 +122,16 @@ export function* deleteProjectsSaga(): SagaIterator {
   yield put(projectActions.deleteProjects.request());
 
   try {
-    const toolNameByMapping = yield select(toolNameByMappingSelector);
+    const { source } = yield select(toolNameByMappingSelector);
 
-    // @ts-expect-error
-    const deleteSagaByToolName = {
-      [ToolName.Clockify]: clockifySagas.deleteClockifyProjectsSaga,
-      [ToolName.Toggl]: togglSagas.deleteTogglProjectsSaga,
-    }[toolNameByMapping.source];
+    const deleteSagaForSourceTool =
+      source === ToolName.Clockify
+        ? clockifySagas.deleteClockifyProjectsSaga
+        : togglSagas.deleteTogglProjectsSaga;
 
     const sourceProjects = yield select(includedSourceProjectsSelector);
 
-    yield call(deleteSagaByToolName, sourceProjects);
+    yield call(deleteSagaForSourceTool, sourceProjects);
 
     yield put(projectActions.deleteProjects.success());
   } catch (err: AnyValid) {
@@ -151,23 +148,26 @@ export function* fetchProjectsSaga(): SagaIterator {
   yield put(projectActions.fetchProjects.request());
 
   try {
-    const fetchSagaByToolName = {
-      [ToolName.Clockify]: clockifySagas.fetchClockifyProjectsSaga,
-      [ToolName.Toggl]: togglSagas.fetchTogglProjectsSaga,
-    };
-
     const { source, target } = yield select(toolNameByMappingSelector);
 
-    // @ts-expect-error
-    const sourceProjects = yield call(fetchSagaByToolName[source]);
+    const fetchSagaForSourceTool =
+      source === ToolName.Clockify
+        ? clockifySagas.fetchClockifyProjectsSaga
+        : togglSagas.fetchTogglProjectsSaga;
+
+    const sourceProjects = yield call(fetchSagaForSourceTool);
 
     const toolAction = yield select(toolActionSelector);
 
     let projectsByIdByMapping: Record<Mapping, Dictionary<Project>>;
 
+    const fetchSagaForTargetTool =
+      target === ToolName.Clockify
+        ? clockifySagas.fetchClockifyProjectsSaga
+        : togglSagas.fetchTogglProjectsSaga;
+
     if (toolAction === ToolAction.Transfer) {
-      // @ts-expect-error
-      const targetProjects = yield call(fetchSagaByToolName[target]);
+      const targetProjects = yield call(fetchSagaForTargetTool);
 
       projectsByIdByMapping = yield call(
         linkEntitiesByIdByMapping,
