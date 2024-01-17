@@ -74,6 +74,20 @@ export const targetWorkspacesSelector = createSelector(
   },
 );
 
+export const allWorkspacesByIdSelector = createSelector(
+  sourceWorkspacesSelector,
+  targetWorkspacesSelector,
+  (sourceWorkspaces, targetWorkspaces): Record<string, Workspace> => {
+    const allWorkspacesById: Record<string, Workspace> = {};
+
+    for (const workspace of [...sourceWorkspaces, ...targetWorkspaces]) {
+      allWorkspacesById[workspace.id] = workspace;
+    }
+
+    return allWorkspacesById;
+  },
+);
+
 export const missingTargetWorkspacesSelector = createSelector(
   includedSourceWorkspacesSelector,
   (includedSourceWorkspaces): Workspace[] =>

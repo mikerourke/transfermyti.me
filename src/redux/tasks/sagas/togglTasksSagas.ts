@@ -3,6 +3,7 @@ import type { SagaIterator } from "redux-saga";
 import { call, delay, select } from "redux-saga/effects";
 
 import {
+  ApiError,
   fetchArray,
   fetchEmpty,
   fetchObject,
@@ -16,6 +17,7 @@ import {
   targetProjectsByIdSelector,
 } from "~/redux/projects/projectsSelectors";
 import { userIdToLinkedIdSelector } from "~/redux/users/usersSelectors";
+import { allWorkspacesByIdSelector } from "~/redux/workspaces/workspacesSelectors";
 import { EntityGroup, ToolName, type Project, type Task } from "~/types";
 import { validStringify } from "~/utilities/textTransforms";
 
@@ -69,12 +71,24 @@ export function* fetchTogglTasksSaga(): SagaIterator<Task[]> {
 
   const togglProjectsTable = allProjectsTable[ToolName.Toggl];
 
+  // prettier-ignore
+  const tableEntries = Object.entries(togglProjectsTable) as [string, Project[]][];
+
+  const allWorkspacesById = yield select(allWorkspacesByIdSelector);
+
   const allTasks: Task[] = [];
 
   const apiDelay = getApiDelayForTool(ToolName.Toggl);
 
-  for (const entry of Object.entries(togglProjectsTable)) {
-    const [workspaceId, projects] = entry as [string, Project[]];
+  for (const [workspaceId, projects] of tableEntries) {
+    const workspace = allWorkspacesById[workspaceId] ?? { isPaid: true };
+
+    // Toggl tasks can't be fetched for paid workspaces. Rather than make a
+    // bunch of requests that return 400, we skip them:
+    const isFreeAccount = !workspace.isPaid;
+    if (isFreeAccount) {
+      continue;
+    }
 
     for (const project of projects) {
       try {
@@ -86,9 +100,11 @@ export function* fetchTogglTasksSaga(): SagaIterator<Task[]> {
 
         allTasks.push(...tasks);
       } catch (err: AnyValid) {
+        console.log(err instanceof ApiError);
+
+        // User can't create or fetch tasks because the workspace isn't paid:
         if (err.status === 402) {
-          // User can't create or fetch tasks.
-          break;
+          continue;
         }
       }
 

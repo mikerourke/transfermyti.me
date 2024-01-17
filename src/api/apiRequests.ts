@@ -177,7 +177,7 @@ function* fetchFromApi<T>(url: string, config: RequestInit): SagaIterator<T> {
   const response = yield call(fetch, fullUrl, config);
 
   if (!response.ok) {
-    throw new Error(response);
+    throw new ApiError(toolName, response);
   }
 
   const type = response.headers.get("content-type") ?? null;
@@ -265,4 +265,54 @@ function getApiUrl(
   return togglApiContext === "reports"
     ? "https://api.track.toggl.com/reports/api/v2"
     : "https://api.track.toggl.com/api/v9";
+}
+
+export class ApiError extends Error {
+  readonly #toolName: ToolName;
+  readonly #response: Response;
+
+  constructor(toolName: ToolName, response: Response) {
+    super(`API error from ${toolName} to ${response.url}: ${response.status}`);
+
+    this.name = "ApiError";
+
+    this.#toolName = toolName;
+    this.#response = response;
+  }
+
+  public get headers(): Headers {
+    return this.#response.headers;
+  }
+
+  public get statusCode(): number {
+    return this.#response.status;
+  }
+
+  public get statusText(): string {
+    return this.#response.statusText;
+  }
+
+  public get url(): string {
+    return this.#response.url;
+  }
+
+  public get toolName(): ToolName {
+    return this.#toolName;
+  }
+
+  public toJson(): Record<string, any> {
+    const headers: Record<string, string> = {};
+
+    // @ts-ignore
+    for (const [name, value] of this.#response.headers) {
+      headers[name] = value;
+    }
+
+    return {
+      statusCode: this.statusCode,
+      statusText: this.statusText,
+      url: this.url,
+      headers,
+    };
+  }
 }
