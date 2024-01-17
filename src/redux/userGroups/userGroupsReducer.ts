@@ -4,18 +4,18 @@ import { allEntitiesFlushed } from "~/redux/allEntities/allEntitiesActions";
 import {
   createReducer,
   isActionOf,
+  type Action,
   type ActionType,
-  type AnyAction,
 } from "~/redux/reduxTools";
 import { Mapping, type UserGroup } from "~/types";
 
 import * as userGroupsActions from "./userGroupsActions";
 
-export interface UserGroupsState {
-  readonly source: Dictionary<UserGroup>;
-  readonly target: Dictionary<UserGroup>;
-  readonly isFetching: boolean;
-}
+export type UserGroupsState = Readonly<{
+  source: Dictionary<UserGroup>;
+  target: Dictionary<UserGroup>;
+  isFetching: boolean;
+}>;
 
 export const userGroupsInitialState: UserGroupsState = {
   source: {},
@@ -62,7 +62,7 @@ type UserGroupsCreateOrFetchSuccessAction = ActionType<
 >;
 
 function isUserGroupsApiSuccessAction(
-  action: AnyAction,
+  action: Action,
 ): action is UserGroupsCreateOrFetchSuccessAction {
   return isActionOf(
     [
@@ -80,7 +80,7 @@ type UserGroupsApiRequestAction = ActionType<
 >;
 
 function isUserGroupsApiRequestAction(
-  action: AnyAction,
+  action: Action,
 ): action is UserGroupsApiRequestAction {
   return isActionOf(
     [
@@ -99,7 +99,7 @@ type UserGroupsApiFailureAction = ActionType<
 >;
 
 function isUserGroupsApiFailureAction(
-  action: AnyAction,
+  action: Action,
 ): action is UserGroupsApiFailureAction {
   return isActionOf(
     [
@@ -116,7 +116,7 @@ type ResetUserGroupsStateAction = ActionType<
 >;
 
 function isResetUserGroupsStateAction(
-  action: AnyAction,
+  action: Action,
 ): action is ResetUserGroupsStateAction {
   return isActionOf(
     [userGroupsActions.deleteUserGroups.success, allEntitiesFlushed],

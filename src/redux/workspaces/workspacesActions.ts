@@ -13,20 +13,20 @@ export const isWorkspaceIncludedToggled = createAction<Workspace>(
   "@workspaces/isWorkspaceIncludedToggled",
 );
 
-interface UserIdsAppendedPayload {
+type UserIdsAppendedPayload = {
   mapping: Mapping;
-  workspaceId: string;
   userIds: string[];
-}
+  workspaceId: string;
+};
 
 export const userIdsAppendedToWorkspace = createAction<UserIdsAppendedPayload>(
   "@workspaces/userIdsAppendedToWorkspace",
 );
 
-interface WorkspaceLinkingPayload {
+type WorkspaceLinkingPayload = {
   sourceId: string;
   targetId: string | null;
-}
+};
 
 export const workspaceLinkingUpdated = createAction<WorkspaceLinkingPayload>(
   "@workspaces/workspaceLinkingUpdated",

@@ -4,19 +4,19 @@ import { allEntitiesFlushed } from "~/redux/allEntities/allEntitiesActions";
 import {
   createReducer,
   isActionOf,
+  type Action,
   type ActionType,
-  type AnyAction,
 } from "~/redux/reduxTools";
 import { Mapping, type TimeEntry } from "~/types";
 
 import * as timeEntriesActions from "./timeEntriesActions";
 
-export interface TimeEntriesState {
-  readonly source: Dictionary<TimeEntry>;
-  readonly target: Dictionary<TimeEntry>;
-  readonly isFetching: boolean;
-  readonly isDuplicateCheckEnabled: boolean;
-}
+export type TimeEntriesState = Readonly<{
+  source: Dictionary<TimeEntry>;
+  target: Dictionary<TimeEntry>;
+  isFetching: boolean;
+  isDuplicateCheckEnabled: boolean;
+}>;
 
 export const timeEntriesInitialState: TimeEntriesState = {
   source: {},
@@ -91,7 +91,7 @@ type TimeEntriesCreateOrFetchSuccessAction = ActionType<
 >;
 
 function isTimeEntriesApiSuccessAction(
-  action: AnyAction,
+  action: Action,
 ): action is TimeEntriesCreateOrFetchSuccessAction {
   return isActionOf(
     [
@@ -109,7 +109,7 @@ type TimeEntriesApiRequestAction = ActionType<
 >;
 
 function isTimeEntriesApiRequestAction(
-  action: AnyAction,
+  action: Action,
 ): action is TimeEntriesApiRequestAction {
   return isActionOf(
     [
@@ -128,7 +128,7 @@ type TimeEntriesApiFailureAction = ActionType<
 >;
 
 function isTimeEntriesApiFailureAction(
-  action: AnyAction,
+  action: Action,
 ): action is TimeEntriesApiFailureAction {
   return isActionOf(
     [
@@ -146,7 +146,7 @@ type ResetTimeEntriesStateAction = ActionType<
 >;
 
 function isResetTimeEntriesStateAction(
-  action: AnyAction,
+  action: Action,
 ): action is ResetTimeEntriesStateAction {
   return isActionOf(
     [timeEntriesActions.deleteTimeEntries.success, allEntitiesFlushed],

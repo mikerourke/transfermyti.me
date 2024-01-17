@@ -9,7 +9,7 @@
   import NotificationToast from "./NotificationToast.svelte";
 
   const [send, receive] = crossfade({
-    duration: (d) => Math.sqrt(d * 200),
+    duration: (length) => Math.sqrt(length * 200),
 
     fallback(node) {
       const style = getComputedStyle(node);
@@ -19,9 +19,9 @@
       return {
         duration: 600,
         easing: quintOut,
-        css: (t) => `
-          transform: ${transform} scale(${t});
-          opacity: ${t}
+        css: (amount) => `
+          transform: ${transform} scale(${amount});
+          opacity: ${amount}
         `,
       };
     },

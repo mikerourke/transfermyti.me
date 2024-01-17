@@ -7,11 +7,11 @@ import { deleteEntitiesForTool } from "~/api/deleteEntitiesForTool";
 import { fetchEntitiesForTool } from "~/api/fetchEntitiesForTool";
 import { EntityGroup, ToolName, type UserGroup } from "~/types";
 
-interface ClockifyUserGroupResponse {
+type ClockifyUserGroupResponse = {
   id: string;
   name: string;
   userIds: string[];
-}
+};
 
 /**
  * Creates new Clockify user groups in all target workspaces and returns array of

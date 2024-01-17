@@ -5,18 +5,18 @@ import { allEntitiesFlushed } from "~/redux/allEntities/allEntitiesActions";
 import {
   createReducer,
   isActionOf,
+  type Action,
   type ActionType,
-  type AnyAction,
 } from "~/redux/reduxTools";
 import { Mapping, type Tag } from "~/types";
 
 import * as tagsActions from "./tagsActions";
 
-export interface TagsState {
-  readonly source: Dictionary<Tag>;
-  readonly target: Dictionary<Tag>;
-  readonly isFetching: boolean;
-}
+export type TagsState = Readonly<{
+  source: Dictionary<Tag>;
+  target: Dictionary<Tag>;
+  isFetching: boolean;
+}>;
 
 export const tagsInitialState: TagsState = {
   source: {},
@@ -64,7 +64,7 @@ type TagsCreateOrFetchSuccessAction = ActionType<
 >;
 
 function isTagsApiSuccessAction(
-  action: AnyAction,
+  action: Action,
 ): action is TagsCreateOrFetchSuccessAction {
   return isActionOf(
     [tagsActions.createTags.success, tagsActions.fetchTags.success],
@@ -79,7 +79,7 @@ type TagsApiRequestAction = ActionType<
 >;
 
 function isTagsApiRequestAction(
-  action: AnyAction,
+  action: Action,
 ): action is TagsApiRequestAction {
   return isActionOf(
     [
@@ -98,7 +98,7 @@ type TagsApiFailureAction = ActionType<
 >;
 
 function isTagsApiFailureAction(
-  action: AnyAction,
+  action: Action,
 ): action is TagsApiFailureAction {
   return isActionOf(
     [
@@ -115,7 +115,7 @@ type ResetTagsStateAction = ActionType<
 >;
 
 function isResetTagsStateAction(
-  action: AnyAction,
+  action: Action,
 ): action is ResetTagsStateAction {
   return isActionOf(
     [tagsActions.deleteTags.success, allEntitiesFlushed],

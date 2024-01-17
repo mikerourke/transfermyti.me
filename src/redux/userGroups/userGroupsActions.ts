@@ -1,11 +1,11 @@
 import { createAction, createAsyncAction } from "~/redux/reduxTools";
 import type { Mapping, UserGroup } from "~/types";
 
-interface UserAddedPayload {
+type UserAddedPayload = {
   mapping: Mapping;
-  userId: string;
   userGroupId: string;
-}
+  userId: string;
+};
 
 export const isUserGroupIncludedToggled = createAction<string>(
   "@userGroups/isUserGroupIncludedToggled",

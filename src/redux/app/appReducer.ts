@@ -4,9 +4,9 @@ import { isDevelopmentMode } from "~/utilities/environment";
 
 import * as appActions from "./appActions";
 
-export interface AppState {
-  readonly notifications: Notification[];
-}
+export type AppState = Readonly<{
+  notifications: Notification[];
+}>;
 
 export const appInitialState: AppState = {
   notifications: [],

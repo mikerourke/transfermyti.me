@@ -4,20 +4,19 @@ import { selectIdToLinkedId } from "~/api/selectIdToLinkedId";
 import { createSelector } from "~/redux/reduxTools";
 import type { Mapping, ReduxState, Workspace } from "~/types";
 
-export const areWorkspacesFetchingSelector = createSelector(
-  (state: ReduxState) => state.workspaces.isFetching,
-  (isFetching): boolean => isFetching,
-);
+export const areWorkspacesFetchingSelector = (state: ReduxState): boolean =>
+  state.workspaces.isFetching;
 
-export const activeWorkspaceIdSelector = createSelector(
-  (state: ReduxState) => state.workspaces.activeWorkspaceId,
-  (activeWorkspaceId): string => activeWorkspaceId,
-);
+export const activeWorkspaceIdSelector = (state: ReduxState): string =>
+  state.workspaces.activeWorkspaceId;
 
-export const sourceWorkspacesByIdSelector = createSelector(
-  (state: ReduxState): Dictionary<Workspace> => state.workspaces.source,
-  (workspacesById): Dictionary<Workspace> => workspacesById,
-);
+export const sourceWorkspacesByIdSelector = (
+  state: ReduxState,
+): Dictionary<Workspace> => state.workspaces.source;
+
+export const targetWorkspacesByIdSelector = (
+  state: ReduxState,
+): Dictionary<Workspace> => state.workspaces.target;
 
 export const sourceWorkspacesSelector = createSelector(
   sourceWorkspacesByIdSelector,
@@ -41,11 +40,6 @@ export const firstIncludedWorkspaceIdSelector = createSelector(
 
     return firstIncluded.id;
   },
-);
-
-export const targetWorkspacesByIdSelector = createSelector(
-  (state: ReduxState): Dictionary<Workspace> => state.workspaces.target,
-  (workspacesById): Dictionary<Workspace> => workspacesById,
 );
 
 export const includedSourceWorkspacesSelector = createSelector(

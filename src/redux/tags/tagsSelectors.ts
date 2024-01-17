@@ -12,20 +12,16 @@ import type {
   ToolName,
 } from "~/types";
 
-const sourceTagsByIdSelector = createSelector(
-  (state: ReduxState) => state.tags.source,
-  (sourceTagsById): Dictionary<Tag> => sourceTagsById,
-);
+const sourceTagsByIdSelector = (state: ReduxState): Dictionary<Tag> =>
+  state.tags.source;
 
 const sourceTagsSelector = createSelector(
   sourceTagsByIdSelector,
   (sourceTagsById): Tag[] => Object.values(sourceTagsById),
 );
 
-const targetTagsByIdSelector = createSelector(
-  (state: ReduxState) => state.tags.target,
-  (targetTagsById): Dictionary<Tag> => targetTagsById,
-);
+const targetTagsByIdSelector = (state: ReduxState): Dictionary<Tag> =>
+  state.tags.target;
 
 const targetTagsSelector = createSelector(
   targetTagsByIdSelector,

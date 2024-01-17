@@ -22,6 +22,7 @@
     EntityGroup,
     FetchStatus,
     ToolAction,
+    type ChildEntityGroup,
     type CountsByEntityGroup,
   } from "~/types";
   import { capitalize } from "~/utilities/textTransforms";
@@ -37,11 +38,11 @@
   const includedCountsByEntityGroup = select<CountsByEntityGroup>(
     includedCountsByEntityGroupSelector,
   );
-  const transferCountsByEntityGroup = select<any>(
+  const transferCountsByEntityGroup = select(
     transferCountsByEntityGroupSelector,
   );
 
-  const orderedEntityGroups: EntityGroup[] = getOrderedEntityGroups(
+  const orderedEntityGroups: ChildEntityGroup[] = getOrderedEntityGroups(
     $includedCountsByEntityGroup,
   );
 
@@ -65,10 +66,10 @@
 
   function getOrderedEntityGroups(
     countsByEntityGroup: CountsByEntityGroup,
-  ): EntityGroup[] {
-    const entityGroups: EntityGroup[] = [];
+  ): ChildEntityGroup[] {
+    const entityGroups: ChildEntityGroup[] = [];
 
-    const allOrdered =
+    const allOrdered: ChildEntityGroup[] =
       $toolAction === ToolAction.Delete
         ? [
             EntityGroup.TimeEntries,
@@ -77,12 +78,17 @@
             EntityGroup.Tags,
             EntityGroup.Clients,
           ]
-        : Object.keys(countsByEntityGroup);
+        : [
+            EntityGroup.Clients,
+            EntityGroup.Tags,
+            EntityGroup.Projects,
+            EntityGroup.Tasks,
+            EntityGroup.TimeEntries,
+          ];
 
     for (const entityGroup of allOrdered) {
-      // @ts-expect-error
-      if (countsByEntityGroup[entityGroup] !== 0) {
-        entityGroups.push(entityGroup as EntityGroup);
+      if (countsByEntityGroup[entityGroup as ChildEntityGroup] !== 0) {
+        entityGroups.push(entityGroup as ChildEntityGroup);
       }
     }
 
@@ -144,6 +150,7 @@
   </h1>
 
   <HelpDetails>
+    <!-- prettier-ignore -->
     <p>
       Press the <strong>Start</strong> button and confirm the action in the dialog.
     </p>

@@ -13,27 +13,46 @@ import type { ClockifyTagResponse } from "~/redux/tags/sagas/clockifyTagsSagas";
 import { targetTagIdsSelectorFactory } from "~/redux/tags/tagsSelectors";
 import type { ClockifyTaskResponse } from "~/redux/tasks/sagas/clockifyTasksSagas";
 import { taskIdToLinkedIdSelector } from "~/redux/tasks/tasksSelectors";
+import type {
+  ClockifyRateResponse,
+  ClockifyUserResponse,
+} from "~/redux/users/sagas/clockifyUsersSagas";
 import { EntityGroup, ToolName, type TimeEntry } from "~/types";
 
-interface ClockifyTimeInterval {
+type ClockifyTimeInterval = {
   duration: string;
   end: string;
   start: string;
-}
+};
 
-interface ClockifyTimeEntryResponse {
+type ClockifyCustomFieldResponse = {
+  customFieldId: string;
+  sourceType: "WORKSPACE" | "PROJECT" | "TIMEENTRY";
+  value: Record<string, unknown>;
+};
+
+type ClockifyTimeEntryResponse = {
   billable: boolean;
+  costRate: ClockifyRateResponse | null;
+  customFieldValues: ClockifyCustomFieldResponse[];
   description: string;
+  hourlyRate: ClockifyRateResponse | null;
   id: string;
   isLocked: boolean;
+  kiosk: unknown | null;
+  kioskId: string | null;
   project: ClockifyProjectResponse;
+  projectId: string;
+  tagIds: string[];
   tags: ClockifyTagResponse[];
   task: ClockifyTaskResponse | null;
+  taskId: string | null;
   timeInterval: ClockifyTimeInterval;
-  totalBillable: number | null;
+  type: string;
+  user: ClockifyUserResponse;
   userId: string;
   workspaceId: string;
-}
+};
 
 /**
  * Creates Clockify time entries in all workspaces and returns array of

@@ -24,7 +24,8 @@
     "skipLibCheck": true,
     "sourceMap": false,
     "strict": true,
-    "target": "ES2017"
+    "target": "ES2017",
+    "types": ["vitest/globals", "vitest-dom/extend-expect"]
   },
   "include": ["src/**/*.ts", "src/**/*.svelte", "src/**/*.d.ts"],
   "exclude": ["node_modules/*", "scripts/*"]

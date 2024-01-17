@@ -177,7 +177,6 @@ function* fetchFromApi<T>(url: string, config: RequestInit): SagaIterator<T> {
   const response = yield call(fetch, fullUrl, config);
 
   if (!response.ok) {
-    console.log("NOO");
     throw new Error(response);
   }
 

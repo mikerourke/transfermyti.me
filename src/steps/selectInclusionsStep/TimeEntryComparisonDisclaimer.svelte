@@ -12,6 +12,7 @@
   }
 </style>
 
+<!-- prettier-ignore -->
 <HelpDetails
   title="Show/Hide Time Entry Duplication Check Disclaimer"
   style="margin-bottom: 0;"

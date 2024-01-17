@@ -5,10 +5,8 @@ import { createSelector } from "~/redux/reduxTools";
 import { workspaceIdToLinkedIdSelector } from "~/redux/workspaces/workspacesSelectors";
 import type { ReduxState, User } from "~/types";
 
-const sourceUsersByIdSelector = createSelector(
-  (state: ReduxState) => state.users.source,
-  (sourceUsersById): Dictionary<User> => sourceUsersById,
-);
+const sourceUsersByIdSelector = (state: ReduxState): Dictionary<User> =>
+  state.users.source;
 
 export const sourceUsersSelector = createSelector(
   sourceUsersByIdSelector,

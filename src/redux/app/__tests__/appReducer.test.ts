@@ -1,4 +1,4 @@
-import { afterAll, beforeAll, describe, expect, test, vi } from "vitest";
+import { randomUUID } from "node:crypto";
 
 import * as appActions from "~/redux/app/appActions";
 import { FAKES } from "~/testUtilities";
@@ -6,7 +6,7 @@ import { FAKES } from "~/testUtilities";
 import { appReducer, appInitialState } from "../appReducer";
 
 vi.mock("nanoid", () => ({
-  nanoid: () => require("crypto").randomUUID(),
+  nanoid: () => randomUUID(),
 }));
 
 const { INVALID_ACTION } = FAKES;

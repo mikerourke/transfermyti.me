@@ -12,28 +12,48 @@ import { deleteEntitiesForTool } from "~/api/deleteEntitiesForTool";
 import { fetchEntitiesForTool } from "~/api/fetchEntitiesForTool";
 import { clientIdToLinkedIdSelector } from "~/redux/clients/clientsSelectors";
 import type {
-  ClockifyHourlyRateResponse,
   ClockifyMembershipResponse,
+  ClockifyRateResponse,
 } from "~/redux/users/sagas/clockifyUsersSagas";
 import { EntityGroup, ToolName, type Estimate, type Project } from "~/types";
 
-export interface ClockifyProjectResponse {
+type ClockifyTimeEstimateResponse = {
+  active: boolean;
+  estimate: string;
+  includeNonBillable: boolean;
+  resetOption: string | null;
+  type: "AUTO" | "MANUAL";
+};
+
+type ClockifyBudgetEstimateResponse = {
+  active: boolean;
+  estimate: string;
+  includeExpenses: boolean;
+  includesBillableExpenses: boolean;
+  resetOption: string | null;
+  type: "AUTO" | "MANUAL";
+};
+
+export type ClockifyProjectResponse = {
   archived: boolean;
   billable: boolean;
+  budgetEstimate: ClockifyBudgetEstimateResponse | null;
   clientId: string;
   clientName: string;
   color: string;
+  costRate: ClockifyRateResponse | null;
   duration: string;
   estimate: Estimate;
-  hourlyRate: ClockifyHourlyRateResponse;
+  hourlyRate: ClockifyRateResponse;
   id: string;
   memberships?: ClockifyMembershipResponse[];
   name: string;
   note: string;
   public: boolean;
   template: boolean;
+  timeEstimate: ClockifyTimeEstimateResponse;
   workspaceId: string;
-}
+};
 
 /**
  * Creates new Clockify projects in all target workspaces and returns array of

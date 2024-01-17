@@ -12,6 +12,7 @@
   }
 </style>
 
+<!-- prettier-ignore -->
 <HelpDetails>
   {#if toolAction === ToolAction.Delete}
     <p>

@@ -4,10 +4,8 @@ import { createSelector, type Selector } from "~/redux/reduxTools";
 import { activeWorkspaceIdSelector } from "~/redux/workspaces/workspacesSelectors";
 import type { ReduxState, TimeEntry, TimeEntryTableRecord } from "~/types";
 
-export const isDuplicateCheckEnabledSelector = createSelector(
-  (state: ReduxState) => state.timeEntries.isDuplicateCheckEnabled,
-  (isDuplicateCheckEnabled): boolean => isDuplicateCheckEnabled,
-);
+export const isDuplicateCheckEnabledSelector = (state: ReduxState): boolean =>
+  state.timeEntries.isDuplicateCheckEnabled;
 
 export const sourceTimeEntriesSelector = createSelector(
   (state: ReduxState) => state.timeEntries.source,
@@ -133,8 +131,7 @@ export const sourceTimeEntryCountByIdFieldSelectorFactory = (
     const timeEntryCountByIdField: Dictionary<number> = {};
 
     for (const timeEntry of sourceTimeEntries) {
-      // @ts-expect-error
-      const parentId = timeEntry[idField];
+      const parentId = timeEntry[idField as keyof typeof timeEntry] as string;
 
       if (!isNil(parentId)) {
         const currentCountForId = propOr<number, Dictionary<number>, number>(

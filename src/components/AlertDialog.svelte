@@ -17,7 +17,7 @@
   }
 
   function handleWindowKeyDown(event: KeyboardEvent): void {
-    if (event.key === "Escape" || event.key === "Enter") {
+    if (event.code === "Escape" || event.code === "Enter") {
       closeDialog();
     }
   }

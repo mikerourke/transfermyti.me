@@ -1,5 +1,4 @@
 import { lensProp, set } from "ramda";
-import { describe, expect, test } from "vitest";
 
 import * as projectsActions from "~/redux/projects/projectsActions";
 import { FAKES } from "~/testUtilities";

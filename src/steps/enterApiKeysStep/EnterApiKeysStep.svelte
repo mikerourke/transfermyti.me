@@ -109,8 +109,7 @@
     };
 
     for (const [mapping, value] of Object.entries(values)) {
-      // @ts-expect-error
-      const { toolName } = $toolHelpDetailsByMapping[mapping];
+      const { toolName } = $toolHelpDetailsByMapping[mapping as Mapping];
 
       if (value === "" && toolName !== ToolName.None) {
         isValid = false;
@@ -151,6 +150,7 @@
       transfer is complete, the values are cleared from state.
     </p>
 
+    <!-- prettier-ignore -->
     <p>
       Press the <strong>Next</strong> button to validate your keys and move on to
       the workspace selection step. If the key is invalid, an error message will

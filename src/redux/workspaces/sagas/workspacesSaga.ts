@@ -19,23 +19,26 @@ export function* workspacesSaga(): SagaIterator {
 
 function* fetchWorkspacesSaga(): SagaIterator {
   try {
-    const fetchSagaByToolName = {
-      [ToolName.Clockify]: clockifySagas.fetchClockifyWorkspacesSaga,
-      [ToolName.Toggl]: togglSagas.fetchTogglWorkspacesSaga,
-    };
-
     const { source, target } = yield select(toolNameByMappingSelector);
 
-    // @ts-expect-error
-    const sourceWorkspaces = yield call(fetchSagaByToolName[source]);
+    const fetchSagaForSourceTool =
+      source === ToolName.Clockify
+        ? clockifySagas.fetchClockifyWorkspacesSaga
+        : togglSagas.fetchTogglWorkspacesSaga;
+
+    const sourceWorkspaces = yield call(fetchSagaForSourceTool);
 
     const toolAction = yield select(toolActionSelector);
 
     let workspaceByIdByMapping: Record<Mapping, Dictionary<Workspace>>;
 
     if (toolAction === ToolAction.Transfer) {
-      // @ts-expect-error
-      const targetWorkspaces = yield call(fetchSagaByToolName[target]);
+      const fetchSagaForTargetTool =
+        target === ToolName.Clockify
+          ? clockifySagas.fetchClockifyWorkspacesSaga
+          : togglSagas.fetchTogglWorkspacesSaga;
+
+      const targetWorkspaces = yield call(fetchSagaForTargetTool);
 
       workspaceByIdByMapping = yield call(
         linkEntitiesByIdByMapping,

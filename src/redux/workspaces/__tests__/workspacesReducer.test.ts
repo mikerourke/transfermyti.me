@@ -1,5 +1,3 @@
-import { describe, expect, test } from "vitest";
-
 import { allEntitiesFlushed } from "~/redux/allEntities/allEntitiesActions";
 import * as workspacesActions from "~/redux/workspaces/workspacesActions";
 import { FAKES } from "~/testUtilities";
@@ -178,6 +176,7 @@ describe("within workspacesReducer", () => {
             name: "Test Workspace",
             userIds: [],
             isAdmin: true,
+            isPaid: false,
             workspaceId: "clock-workspace-02",
             entryCount: 0,
             linkedId: null,
@@ -241,6 +240,7 @@ describe("within workspacesReducer", () => {
         name: "Test Workspace",
         userIds: [],
         isAdmin: true,
+        isPaid: false,
         workspaceId: "clock-workspace-01",
         entryCount: 0,
         linkedId: TOGGL_WORKSPACE_ID,

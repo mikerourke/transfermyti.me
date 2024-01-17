@@ -12,12 +12,12 @@ import { validStringify } from "~/utilities/textTransforms";
  * Response from Toggl API for tags.
  * @see https://developers.track.toggl.com/docs/api/tags#response
  */
-interface TogglTagResponse {
-  id: number;
-  workspace_id: number;
-  name: string;
+type TogglTagResponse = {
   at: string;
-}
+  id: number;
+  name: string;
+  workspace_id: number;
+};
 
 /**
  * Creates new Toggl tags that correspond to source and returns array of

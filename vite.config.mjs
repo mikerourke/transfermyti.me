@@ -31,15 +31,11 @@ export default defineConfig(
       plugins: [
         svelte({
           configFile: path.resolve(rootDirPath, "svelte.config.mjs"),
+          hot: false,
         }),
         tsconfigPaths({ root: rootDirPath }),
       ],
       test: {
-        deps: {
-          // Temporary workaround to inline the package. clsx is an ES Module,
-          // but is shipped in a CommonJS package:
-          inline: ["clsx"],
-        },
         globals: true,
         environment: "jsdom",
         setupFiles: path.resolve(rootDirPath, "vitest.setup.ts"),

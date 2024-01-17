@@ -10,9 +10,6 @@
   export let expanded: boolean = false;
   export let slideDuration: number = 250;
 
-  const titleId = `accordion-title-${rowNumber}`;
-  const contentId = `accordion-content-${rowNumber}`;
-
   function handleClick(): void {
     expanded = !expanded;
   }
@@ -55,8 +52,8 @@
 <div>
   <h3>
     <button
-      id={titleId}
-      aria-controls={contentId}
+      id="accordion-title-{rowNumber}"
+      aria-controls="accordion-content-{rowNumber}"
       aria-expanded={expanded}
       class={classes.iconButton}
       on:click={handleClick}
@@ -74,9 +71,9 @@
 
   {#if expanded}
     <div
-      id={contentId}
+      id="accordion-content-{rowNumber}"
       role="region"
-      aria-labelledby={titleId}
+      aria-labelledby="accordion-title-{rowNumber}"
       aria-hidden={!expanded}
       transition:slide|local={{ duration: slideDuration }}
     >

@@ -10,16 +10,12 @@ import {
   type ValidationErrorsByMapping,
 } from "~/types";
 
-export const validationFetchStatusSelector = createSelector(
-  (state: ReduxState) => state.credentials.validationFetchStatus,
-  (validationFetchStatus): FetchStatus => validationFetchStatus,
-);
+export const validationFetchStatusSelector = (state: ReduxState): FetchStatus =>
+  state.credentials.validationFetchStatus;
 
-export const validationErrorsByMappingSelector = createSelector(
-  (state: ReduxState) => state.credentials.validationErrorsByMapping,
-  (validationErrorsByMapping): ValidationErrorsByMapping =>
-    validationErrorsByMapping,
-);
+export const validationErrorsByMappingSelector = (
+  state: ReduxState,
+): ValidationErrorsByMapping => state.credentials.validationErrorsByMapping;
 
 export const hasValidationErrorsSelector = createSelector(
   validationErrorsByMappingSelector,
@@ -27,15 +23,11 @@ export const hasValidationErrorsSelector = createSelector(
     Object.values(validationErrorsByMapping).some(Boolean),
 );
 
-const sourceCredentialsSelector = createSelector(
-  (state: ReduxState) => state.credentials.source,
-  (sourceCredentials) => sourceCredentials,
-);
+const sourceCredentialsSelector = (state: ReduxState): Credentials =>
+  state.credentials.source;
 
-const targetCredentialsSelector = createSelector(
-  (state: ReduxState) => state.credentials.target,
-  (targetCredentials) => targetCredentials,
-);
+const targetCredentialsSelector = (state: ReduxState): Credentials =>
+  state.credentials.target;
 
 export const credentialsByMappingSelector = createSelector(
   sourceCredentialsSelector,
@@ -58,5 +50,5 @@ export const credentialsByToolNameSelector = createSelector(
     ({
       [toolNameByMapping[Mapping.Source]]: sourceCredentials,
       [toolNameByMapping[Mapping.Target]]: targetCredentials,
-    } as Record<ToolName, Credentials>),
+    }) as Record<ToolName, Credentials>,
 );

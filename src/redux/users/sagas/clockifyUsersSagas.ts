@@ -11,18 +11,19 @@ import { fetchEntitiesForTool } from "~/api/fetchEntitiesForTool";
 import { entityGroupTransferCompletedCountIncremented } from "~/redux/allEntities/allEntitiesActions";
 import { EntityGroup, ToolName, type User } from "~/types";
 
-export interface ClockifyHourlyRateResponse {
+export type ClockifyRateResponse = {
   amount: number;
   currency: string;
-}
+};
 
-export interface ClockifyMembershipResponse {
-  hourlyRate: ClockifyHourlyRateResponse;
-  membershipStatus: string;
-  membershipType: string;
-  targetId: string;
+export type ClockifyMembershipResponse = {
   userId: string;
-}
+  hourlyRate: ClockifyRateResponse;
+  costRate: ClockifyRateResponse;
+  targetId: string;
+  membershipType: string;
+  membershipStatus: string;
+};
 
 type WeekStart =
   | "MONDAY"
@@ -33,7 +34,7 @@ type WeekStart =
   | "SATURDAY"
   | "SUNDAY";
 
-export interface ClockifyUserResponse {
+export type ClockifyUserResponse = {
   activeWorkspace: string;
   defaultWorkspace: string;
   email: string;
@@ -62,7 +63,7 @@ export interface ClockifyUserResponse {
     weeklyUpdates: boolean;
   };
   status: "ACTIVE" | "PENDING_EMAIL_VERIFICATION" | "DELETED";
-}
+};
 
 /**
  * Sends invites to the array of specified emails.

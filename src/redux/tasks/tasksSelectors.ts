@@ -7,15 +7,11 @@ import { sourceTimeEntryCountByIdFieldSelectorFactory } from "~/redux/timeEntrie
 import { activeWorkspaceIdSelector } from "~/redux/workspaces/workspacesSelectors";
 import type { ReduxState, Task, TaskTableRecord } from "~/types";
 
-export const sourceTasksByIdSelector = createSelector(
-  (state: ReduxState) => state.tasks.source,
-  (sourceTasksById): Dictionary<Task> => sourceTasksById,
-);
+export const sourceTasksByIdSelector = (state: ReduxState): Dictionary<Task> =>
+  state.tasks.source;
 
-const targetTasksByIdSelector = createSelector(
-  (state: ReduxState) => state.tasks.target,
-  (targetTasksById): Dictionary<Task> => targetTasksById,
-);
+const targetTasksByIdSelector = (state: ReduxState): Dictionary<Task> =>
+  state.tasks.target;
 
 export const sourceTasksSelector = createSelector(
   sourceTasksByIdSelector,

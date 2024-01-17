@@ -12,14 +12,14 @@ import { validStringify } from "~/utilities/textTransforms";
  * Response from Toggl API for clients.
  * @see https://developers.track.toggl.com/docs/api/clients#response
  */
-interface TogglClientResponse {
-  id: number;
-  wid: number;
-  name: string;
+type TogglClientResponse = {
+  archived: boolean;
   at: string;
-  foreign_id: string | null;
+  id: number;
+  name: string;
   server_deleted_at: string | null;
-}
+  wid: number;
+};
 
 /**
  * Creates new Toggl clients that correspond to source and returns array of

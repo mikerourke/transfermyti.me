@@ -3,12 +3,14 @@
     {
       "id": 3001,
       "wid": 1001,
+      "archived": false,
       "name": "Test Client A",
       "at": "2019-04-14T22:07:24+00:00"
     },
     {
       "id": 3002,
       "wid": 1001,
+      "archived": false,
       "name": "Test Client B",
       "at": "2019-04-14T22:07:24+00:00"
     }
@@ -29,14 +31,21 @@
       "template": null,
       "auto_estimates": null,
       "estimated_hours": null,
+      "estimated_seconds": null,
       "rate": null,
       "rate_last_updated": null,
       "currency": null,
       "recurring": false,
+      "template_id": null,
       "recurring_parameters": null,
-      "current_period": null,
       "fixed_fee": null,
-      "actual_hours": 6
+      "actual_hours": 6,
+      "actual_seconds": 22800,
+      "start_date": "2018-08-23",
+      "status": "active",
+      "wid": 1001,
+      "cid": 3001,
+      "permissions": []
     },
     {
       "id": 2002,
@@ -53,14 +62,21 @@
       "template": null,
       "auto_estimates": null,
       "estimated_hours": null,
+      "estimated_seconds": null,
       "rate": null,
       "rate_last_updated": null,
       "currency": null,
       "recurring": false,
+      "template_id": null,
       "recurring_parameters": null,
-      "current_period": null,
       "fixed_fee": null,
-      "actual_hours": 15
+      "actual_hours": 15,
+      "actual_seconds": 54000,
+      "start_date": "2018-08-23",
+      "status": "active",
+      "wid": 1001,
+      "cid": 3001,
+      "permissions": []
     },
     {
       "id": 2003,
@@ -77,14 +93,21 @@
       "template": null,
       "auto_estimates": null,
       "estimated_hours": null,
+      "estimated_seconds": null,
       "rate": null,
       "rate_last_updated": null,
       "currency": null,
       "recurring": false,
+      "template_id": null,
       "recurring_parameters": null,
-      "current_period": null,
       "fixed_fee": null,
-      "actual_hours": 3
+      "actual_hours": 3,
+      "actual_seconds": 10800,
+      "start_date": "2018-08-23",
+      "status": "active",
+      "wid": 1001,
+      "cid": 3001,
+      "permissions": []
     },
     {
       "id": 2004,
@@ -101,14 +124,21 @@
       "template": null,
       "auto_estimates": null,
       "estimated_hours": null,
+      "estimated_seconds": null,
       "rate": null,
       "rate_last_updated": null,
       "currency": null,
       "recurring": false,
+      "template_id": null,
       "recurring_parameters": null,
-      "current_period": null,
       "fixed_fee": null,
-      "actual_hours": 36
+      "actual_hours": 36,
+      "actual_seconds": 129600,
+      "start_date": "2018-08-23",
+      "status": "active",
+      "wid": 1001,
+      "cid": 3001,
+      "permissions": []
     },
     {
       "id": 2005,
@@ -125,14 +155,21 @@
       "template": null,
       "auto_estimates": null,
       "estimated_hours": null,
+      "estimated_seconds": null,
       "rate": null,
       "rate_last_updated": null,
       "currency": null,
       "recurring": false,
+      "template_id": null,
       "recurring_parameters": null,
-      "current_period": null,
       "fixed_fee": null,
-      "actual_hours": 360
+      "actual_hours": 360,
+      "actual_seconds": 1296000,
+      "start_date": "2018-08-23",
+      "status": "active",
+      "wid": 1001,
+      "cid": 3002,
+      "permissions": []
     },
     {
       "id": 2006,
@@ -149,14 +186,21 @@
       "template": null,
       "auto_estimates": null,
       "estimated_hours": null,
+      "estimated_seconds": null,
       "rate": null,
       "rate_last_updated": null,
       "currency": null,
       "recurring": false,
+      "template_id": null,
       "recurring_parameters": null,
-      "current_period": null,
       "fixed_fee": null,
-      "actual_hours": 2
+      "actual_hours": 2,
+      "actual_seconds": 7200,
+      "start_date": "2018-08-23",
+      "status": "active",
+      "wid": 1001,
+      "cid": 3002,
+      "permissions": []
     }
   ],
   "projectUsers": [
@@ -170,6 +214,7 @@
       "rate_last_updated": null,
       "at": "2018-08-23T19:20:58+00:00",
       "group_id": null,
+      "gid": null,
       "labour_cost": null
     }
   ],
@@ -178,64 +223,55 @@
       "id": 4001,
       "workspace_id": 1001,
       "name": "tag-a",
-      "at": "2017-07-16T16:47:11+00:00",
-      "deleted_at": null
+      "at": "2017-07-16T16:47:11+00:00"
     },
     {
       "id": 4002,
       "workspace_id": 1001,
       "name": "tag-b",
-      "at": "2017-05-20T17:58:26+00:00",
-      "deleted_at": null
+      "at": "2017-05-20T17:58:26+00:00"
     },
     {
       "id": 4003,
       "workspace_id": 1001,
       "name": "tag-c",
-      "at": "2017-05-20T17:59:51+00:00",
-      "deleted_at": null
+      "at": "2017-05-20T17:59:51+00:00"
     },
     {
       "id": 4004,
       "workspace_id": 1001,
       "name": "tag-d",
-      "at": "2016-12-20T21:29:00+00:00",
-      "deleted_at": null
+      "at": "2016-12-20T21:29:00+00:00"
     },
     {
       "id": 4005,
       "workspace_id": 1001,
       "name": "tag-e",
-      "at": "2016-12-28T15:44:42+00:00",
-      "deleted_at": null
+      "at": "2016-12-28T15:44:42+00:00"
     },
     {
       "id": 4006,
       "workspace_id": 1001,
       "name": "tag-f",
-      "at": "2016-11-01T18:15:33+00:00",
-      "deleted_at": null
+      "at": "2016-11-01T18:15:33+00:00"
     },
     {
       "id": 4007,
       "workspace_id": 1001,
       "name": "tag-g",
-      "at": "2016-12-20T21:29:25+00:00",
-      "deleted_at": null
+      "at": "2016-12-20T21:29:25+00:00"
     },
     {
       "id": 4008,
       "workspace_id": 1001,
       "name": "tag-h",
-      "at": "2016-12-20T21:30:49+00:00",
-      "deleted_at": null
+      "at": "2016-12-20T21:30:49+00:00"
     },
     {
       "id": 4009,
       "workspace_id": 1001,
       "name": "tag-i",
-      "at": "2017-04-26T14:49:12+00:00",
-      "deleted_at": null
+      "at": "2017-04-26T14:49:12+00:00"
     }
   ],
   "tasks": [
@@ -1101,6 +1137,7 @@
       "email": "test-user@test.com",
       "fullname": "Johnny Test",
       "timezone": "America/Los_Angeles",
+      "toggl_accounts_id": "account-id",
       "default_workspace_id": 1001,
       "beginning_of_week": 1,
       "image_url": "https://assets.track.toggl.com/images/profile.png",
@@ -1123,6 +1160,7 @@
       "premium": false,
       "business_ws": false,
       "admin": true,
+      "role": "admin",
       "suspended_at": null,
       "server_deleted_at": null,
       "default_hourly_rate": null,
@@ -1133,6 +1171,7 @@
       "only_admins_see_billable_rates": false,
       "only_admins_see_team_dashboard": false,
       "projects_billable_by_default": true,
+      "last_modified": "2023-11-24T00:00:00Z",
       "reports_collapse": true,
       "rounding": 1,
       "rounding_minutes": 0,
@@ -1142,7 +1181,9 @@
       "ical_url": "/ical/workspace_user/dd3dddaa819bb35dc5f15823388b9bb6",
       "ical_enabled": true,
       "csv_upload": null,
-      "subscription": null
+      "subscription": null,
+      "working_hours_in_minutes": null,
+      "permissions": []
     }
   ],
   "workspaceUsers": [

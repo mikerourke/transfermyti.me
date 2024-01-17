@@ -11,6 +11,7 @@
   <ConfirmationDialog on:cancel={() => (open = false)} on:confirm>
     <h2>Confirmation</h2>
 
+    <!-- prettier-ignore -->
     <p>
       Pressing the <strong>Confirm</strong> button will {toolAction} the records
       you selected. Would you like to continue?

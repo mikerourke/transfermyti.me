@@ -1,5 +1,3 @@
-import { describe, expect, test } from "vitest";
-
 import { FAKES } from "~/testUtilities";
 import { EntityGroup } from "~/types";
 
@@ -18,6 +16,7 @@ const MOCK_STATE = {
         name: "Test Workspace 2",
         userIds: ["6001"],
         isAdmin: true,
+        isPaid: false,
         workspaceId: "1002",
         entryCount: 20,
         linkedId: null,
@@ -118,7 +117,7 @@ describe("within workspacesSelectors", () => {
           ...MOCK_STATE.workspaces,
           source: {
             "1001": {
-              // @ts-expect-error
+              // @ts-ignore
               ...MOCK_STATE.workspaces.source["1001"],
               isIncluded: false,
             },
@@ -152,7 +151,7 @@ describe("within workspacesSelectors", () => {
           source: {
             ...MOCK_STATE.workspaces.source,
             "1001": {
-              // @ts-expect-error
+              // @ts-ignore
               ...MOCK_STATE.workspaces.source["1001"],
               linkedId: "clock-workspace-01",
             },

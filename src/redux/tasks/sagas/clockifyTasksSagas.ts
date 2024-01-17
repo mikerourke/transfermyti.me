@@ -14,19 +14,26 @@ import {
   projectIdToLinkedIdSelector,
   projectsByWorkspaceIdByToolNameSelector,
 } from "~/redux/projects/projectsSelectors";
+import type { ClockifyRateResponse } from "~/redux/users/sagas/clockifyUsersSagas";
 import { userIdToLinkedIdSelector } from "~/redux/users/usersSelectors";
 import { EntityGroup, ToolName, type Task } from "~/types";
 
 type ClockifyTaskStatus = "ACTIVE" | "DONE";
 
-export interface ClockifyTaskResponse {
+export type ClockifyTaskResponse = {
   assigneeIds: string[] | null;
+  billable: boolean;
+  budgetEstimate: number;
+  costRate: ClockifyRateResponse;
+  duration: string;
   estimate: string;
+  hourlyRate: ClockifyRateResponse;
   id: string;
   name: string;
   projectId: string;
   status: ClockifyTaskStatus;
-}
+  userGroupIds: string[];
+};
 
 /**
  * Creates new Clockify tasks in all target workspaces and returns array of

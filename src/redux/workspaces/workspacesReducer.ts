@@ -4,19 +4,19 @@ import { allEntitiesFlushed } from "~/redux/allEntities/allEntitiesActions";
 import {
   createReducer,
   isActionOf,
+  type Action,
   type ActionType,
-  type AnyAction,
 } from "~/redux/reduxTools";
 import type { Workspace } from "~/types";
 
 import * as workspacesActions from "./workspacesActions";
 
-export interface WorkspacesState {
-  readonly source: Dictionary<Workspace>;
-  readonly target: Dictionary<Workspace>;
-  readonly activeWorkspaceId: string;
-  readonly isFetching: boolean;
-}
+export type WorkspacesState = Readonly<{
+  source: Dictionary<Workspace>;
+  target: Dictionary<Workspace>;
+  activeWorkspaceId: string;
+  isFetching: boolean;
+}>;
 
 export const workspacesInitialState: WorkspacesState = {
   source: {},
@@ -156,7 +156,7 @@ type WorkspacesCreateOrFetchSuccessAction = ActionType<
 >;
 
 function isWorkspacesApiSuccessAction(
-  action: AnyAction,
+  action: Action,
 ): action is WorkspacesCreateOrFetchSuccessAction {
   return isActionOf(
     [
@@ -173,7 +173,7 @@ type WorkspacesApiRequestAction = ActionType<
 >;
 
 function isWorkspacesApiRequestAction(
-  action: AnyAction,
+  action: Action,
 ): action is WorkspacesApiRequestAction {
   return isActionOf(
     [
@@ -190,7 +190,7 @@ type WorkspacesApiFailureAction = ActionType<
 >;
 
 function isWorkspacesApiFailureAction(
-  action: AnyAction,
+  action: Action,
 ): action is WorkspacesApiFailureAction {
   return isActionOf(
     [

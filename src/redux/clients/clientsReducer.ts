@@ -5,18 +5,18 @@ import { allEntitiesFlushed } from "~/redux/allEntities/allEntitiesActions";
 import {
   createReducer,
   isActionOf,
-  type AnyAction,
+  type Action,
   type ActionType,
 } from "~/redux/reduxTools";
 import { Mapping, type Client } from "~/types";
 
 import * as clientsActions from "./clientsActions";
 
-export interface ClientsState {
-  readonly source: Dictionary<Client>;
-  readonly target: Dictionary<Client>;
-  readonly isFetching: boolean;
-}
+export type ClientsState = Readonly<{
+  source: Dictionary<Client>;
+  target: Dictionary<Client>;
+  isFetching: boolean;
+}>;
 
 export const clientsInitialState: ClientsState = {
   source: {},
@@ -68,7 +68,7 @@ type ClientsCreateOrFetchSuccessAction = ActionType<
 >;
 
 function isClientsApiSuccessAction(
-  action: AnyAction,
+  action: Action,
 ): action is ClientsCreateOrFetchSuccessAction {
   return isActionOf(
     [clientsActions.createClients.success, clientsActions.fetchClients.success],
@@ -83,7 +83,7 @@ type ClientsApiRequestAction = ActionType<
 >;
 
 function isClientsApiRequestAction(
-  action: AnyAction,
+  action: Action,
 ): action is ClientsApiRequestAction {
   return isActionOf(
     [
@@ -102,7 +102,7 @@ type ClientsApiFailureAction = ActionType<
 >;
 
 function isClientsApiFailureAction(
-  action: AnyAction,
+  action: Action,
 ): action is ClientsApiFailureAction {
   return isActionOf(
     [
@@ -119,7 +119,7 @@ type ResetClientsStateAction = ActionType<
 >;
 
 function isResetClientsStateAction(
-  action: AnyAction,
+  action: Action,
 ): action is ResetClientsStateAction {
   return isActionOf(
     [clientsActions.deleteClients.success, allEntitiesFlushed],

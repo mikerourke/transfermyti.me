@@ -10,11 +10,11 @@ export type ElementInput =
   | null
   | undefined;
 
-interface SetFocusOptions {
+type SetFocusOptions = {
   delay?: number;
   parent?: ElementInput;
   preventScroll?: boolean;
-}
+};
 
 /**
  * Returns the value associated with the specified dataset entry name. If the

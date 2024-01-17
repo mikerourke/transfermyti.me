@@ -10,6 +10,7 @@
     entityGroupInProcessDisplaySelector,
     fetchAllFetchStatusSelector,
     toolActionSelector,
+    toolDisplayNameByMappingSelector,
     totalIncludedRecordsCountSelector,
   } from "~/redux/allEntities/allEntitiesSelectors";
   import {
@@ -36,6 +37,7 @@
   const areExistsInTargetShown = select(areExistsInTargetShownSelector);
   const entityGroupDisplay = select(entityGroupInProcessDisplaySelector);
   const fetchAllFetchStatus = select(fetchAllFetchStatusSelector);
+  const toolDisplayNameByMapping = select(toolDisplayNameByMappingSelector);
   const toolAction = select(toolActionSelector);
   const totalIncludedRecordsCount = select(totalIncludedRecordsCountSelector);
 
@@ -80,10 +82,24 @@
   function handleRefreshClick(): void {
     dispatchAction(fetchAllEntities.request());
   }
+
+  function getHeader(): string {
+    const displayToolAction = capitalize($toolAction);
+
+    let suffix = "";
+
+    if ($toolAction === ToolAction.Delete) {
+      suffix = `from ${$toolDisplayNameByMapping.source}`;
+    } else {
+      suffix = `to ${$toolDisplayNameByMapping.target}`;
+    }
+
+    return `Step 4: Select Records to ${displayToolAction} ${suffix}`;
+  }
 </script>
 
 <main data-step={WorkflowStep.SelectInclusions}>
-  <h1>Step 4: Select Records to {capitalize($toolAction)}</h1>
+  <h1>{getHeader()}</h1>
 
   <HelpForToolAction toolAction={$toolAction} />
 

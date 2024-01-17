@@ -8,12 +8,12 @@ import { fetchEntitiesForTool } from "~/api/fetchEntitiesForTool";
 import { EntityGroup, ToolName, type UserGroup } from "~/types";
 import { validStringify } from "~/utilities/textTransforms";
 
-interface TogglUserGroupResponse {
-  id: number;
-  wid: number;
-  name: string;
+type TogglUserGroupResponse = {
   at: string;
-}
+  id: number;
+  name: string;
+  wid: number;
+};
 
 /**
  * Creates new Toggl user groups that correspond to source and returns an array of

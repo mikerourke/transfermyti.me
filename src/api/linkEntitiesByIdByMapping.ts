@@ -1,4 +1,4 @@
-import differenceInMinutes from "date-fns/differenceInMinutes";
+import { differenceInMinutes } from "date-fns/differenceInMinutes";
 import { isNil, prop, sortBy } from "ramda";
 import type { SagaIterator } from "redux-saga";
 import { call, select } from "redux-saga/effects";
@@ -207,9 +207,17 @@ function* linkForMappingForTimeEntries(
       targetById[targetEntry.id] = targetEntry;
     }
 
-    sourceEntry.isIncluded = isNil(sourceEntry.linkedId);
+    // FIXME: Why is this throwing an error after the transfer?
+    try {
+      const isSourceEntryIncluded = isNil(sourceEntry.linkedId);
 
-    sourceById[sourceEntry.id] = sourceEntry;
+      sourceById[sourceEntry.id] = {
+        ...sourceEntry,
+        isIncluded: isSourceEntryIncluded,
+      };
+    } catch {
+      sourceById[sourceEntry.id] = sourceEntry;
+    }
   }
 
   return {

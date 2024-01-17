@@ -124,6 +124,7 @@
 <main data-step={WorkflowStep.SelectWorkspaces}>
   <h1>Step 3: Select Workspaces</h1>
 
+  <!-- prettier-ignore -->
   <HelpDetails>
     <p>
       Toggle which workspaces you would like to include in the deletion/transfer

@@ -15,60 +15,92 @@ import { clientIdToLinkedIdSelector } from "~/redux/clients/clientsSelectors";
 import { EntityGroup, ToolName, type Project } from "~/types";
 import { validStringify } from "~/utilities/textTransforms";
 
-interface TogglRecurringParametersItem {
+type TogglRecurringParametersItem = {
   custom_period: number;
   estimated_seconds: number;
   parameter_end_date: string;
   parameter_start_date: string;
   period: string;
   project_start_date: string;
-}
+};
+
+type TogglProjectPermission =
+  | "view_assigned_organizations"
+  | "view_assigned_workspaces"
+  | "view_assigned_projects_dashboard"
+  | "view_assigned_projects"
+  | "remove_assigned_projects"
+  | "view_clients_on_public_projects"
+  | "update_tasks_on_assigned_projects"
+  | "view_clients_on_assigned_projects"
+  | "view_public_projects"
+  | "view_public_saved_reports"
+  | "view_time_entries"
+  | "update_users_on_assigned_projects"
+  | "manage_tasks_on_assigned_projects"
+  | "manage_clients_on_assigned_projects"
+  | "update_clients_on_assigned_projects"
+  | "manage_time_entries"
+  | "view_assigned_projects_reports"
+  | "view_tasks_on_public_projects"
+  | "view_tasks_on_assigned_projects"
+  | "update_assigned_projects"
+  | "view_users_on_assigned_projects";
 
 /**
  * Response from Toggl API for projects.
  * @see https://developers.track.toggl.com/docs/api/projects#response-5
  */
-interface TogglProjectResponse {
-  id: number;
-  workspace_id: number;
-  client_id: number;
-  name: string;
-  is_private: boolean;
+type TogglProjectResponse = {
   active: boolean;
+  actual_hours: number;
+  actual_seconds: number;
   at: string;
-  created_at: string;
-  server_deleted_at: string | null;
-  color: string;
-  billable: boolean | null;
-  template: boolean | null;
   auto_estimates: boolean | null;
+  billable: boolean | null;
+  cid: number;
+  client_id: number;
+  color: string;
+  created_at: string;
+  currency: string | null;
+  current_period: { end_date: string; start_date: string } | null;
   estimated_hours: number | null;
+  estimated_seconds: number | null;
+  fixed_fee: number | null;
+  id: number;
+  is_private: boolean;
+  name: string;
+  // Only present for active projects.
+  permissions?: TogglProjectPermission[];
   rate: number | null;
   rate_last_updated: string | null;
-  currency: string | null;
   recurring: boolean;
   recurring_parameters: { items: TogglRecurringParametersItem[] } | null;
-  current_period: { end_date: string; start_date: string } | null;
-  fixed_fee: number | null;
-  actual_hours: number;
-}
+  server_deleted_at: string | null;
+  start_date: string;
+  status: string;
+  template: boolean | null;
+  template_id: string | null;
+  wid: number;
+  workspace_id: number;
+};
 
 /**
  * Response from Toggl API for projects users.
  * @see https://developers.track.toggl.com/docs/api/projects#response
  */
-interface TogglProjectUserResponse {
-  id: number;
-  project_id: number;
-  user_id: number;
-  workspace_id: number;
-  manager: boolean;
-  rate: number | null;
-  rate_last_updated: string | null;
+type TogglProjectUserResponse = {
   at: string;
   group_id: number | null;
+  id: number;
   labour_cost: number | null;
-}
+  manager: boolean;
+  project_id: number;
+  rate: number | null;
+  rate_last_updated: string | null;
+  user_id: number;
+  workspace_id: number;
+};
 
 /**
  * Creates new Toggl projects that correspond to source and returns an array of

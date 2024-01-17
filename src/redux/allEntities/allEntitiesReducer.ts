@@ -3,8 +3,8 @@ import { inc, lensPath, over } from "ramda";
 import {
   createReducer,
   isActionOf,
+  type Action,
   type ActionType,
-  type AnyAction,
 } from "~/redux/reduxTools";
 import {
   EntityGroup,
@@ -17,15 +17,15 @@ import {
 
 import * as allEntitiesActions from "./allEntitiesActions";
 
-export interface AllEntitiesState {
-  readonly areExistsInTargetShown: boolean;
-  readonly entityGroupInProcess: EntityGroup | null;
-  readonly fetchAllFetchStatus: FetchStatus;
-  readonly pushAllChangesFetchStatus: FetchStatus;
-  readonly toolAction: ToolAction;
-  readonly toolNameByMapping: ToolNameByMapping;
-  readonly transferCountsByEntityGroup: CountsByEntityGroup;
-}
+export type AllEntitiesState = Readonly<{
+  areExistsInTargetShown: boolean;
+  entityGroupInProcess: EntityGroup | null;
+  fetchAllFetchStatus: FetchStatus;
+  pushAllChangesFetchStatus: FetchStatus;
+  toolAction: ToolAction;
+  toolNameByMapping: ToolNameByMapping;
+  transferCountsByEntityGroup: CountsByEntityGroup;
+}>;
 
 const DEFAULT_TRANSFER_COUNTS = {
   [EntityGroup.Clients]: 0,
@@ -143,7 +143,7 @@ type AllEntitiesApiRequestAction = ActionType<
 >;
 
 function isAllEntitiesApiRequestAction(
-  action: AnyAction,
+  action: Action,
 ): action is AllEntitiesApiRequestAction {
   return isActionOf(
     [
@@ -160,7 +160,7 @@ type AllEntitiesApiSuccessAction = ActionType<
 >;
 
 function isAllEntitiesApiSuccessAction(
-  action: AnyAction,
+  action: Action,
 ): action is AllEntitiesApiSuccessAction {
   return isActionOf(
     [
@@ -177,7 +177,7 @@ type AllEntitiesApiFailureAction = ActionType<
 >;
 
 function isAllEntitiesApiFailureAction(
-  action: AnyAction,
+  action: Action,
 ): action is AllEntitiesApiFailureAction {
   return isActionOf(
     [

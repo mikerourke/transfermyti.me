@@ -3,12 +3,24 @@
     {
       "id": "clock-client-01",
       "name": "Test Client A",
-      "workspaceId": "clock-workspace-01"
+      "email": null,
+      "workspaceId": "clock-workspace-01",
+      "archived": false,
+      "address": null,
+      "note": null,
+      "currencyId": "649bef0c84ff0d0de2ebd8b7",
+      "currencyCode": "USD"
     },
     {
       "id": "clock-client-02",
       "name": "Test Client B",
-      "workspaceId": "clock-workspace-01"
+      "email": null,
+      "workspaceId": "clock-workspace-01",
+      "archived": false,
+      "address": null,
+      "note": null,
+      "currencyId": "649bef0c84ff0d0de2ebd8b7",
+      "currencyCode": "USD"
     }
   ],
   "projects": [
@@ -26,6 +38,7 @@
         {
           "userId": "clock-user-01",
           "hourlyRate": null,
+          "costRate": null,
           "targetId": "clock-project-01",
           "membershipType": "PROJECT",
           "membershipStatus": "ACTIVE"
@@ -39,6 +52,17 @@
       "archived": false,
       "duration": "PT0S",
       "clientName": "Test Client A",
+      "note": "",
+      "costRate": null,
+      "timeEstimate": {
+        "estimate": "PT0S",
+        "type": "MANUAL",
+        "resetOption": null,
+        "active": false,
+        "includeNonBillable": true
+      },
+      "budgetEstimate": null,
+      "template": false,
       "public": false
     },
     {
@@ -55,6 +79,7 @@
         {
           "userId": "clock-user-01",
           "hourlyRate": null,
+          "costRate": null,
           "targetId": "clock-project-02",
           "membershipType": "PROJECT",
           "membershipStatus": "ACTIVE"
@@ -68,6 +93,17 @@
       "archived": false,
       "duration": "PT0S",
       "clientName": "Test Client B",
+      "note": "",
+      "costRate": null,
+      "timeEstimate": {
+        "estimate": "PT0S",
+        "type": "MANUAL",
+        "resetOption": null,
+        "active": false,
+        "includeNonBillable": true
+      },
+      "budgetEstimate": null,
+      "template": false,
       "public": false
     },
     {
@@ -84,6 +120,7 @@
         {
           "userId": "clock-user-01",
           "hourlyRate": null,
+          "costRate": null,
           "targetId": "clock-project-03",
           "membershipType": "PROJECT",
           "membershipStatus": "ACTIVE"
@@ -97,6 +134,17 @@
       "archived": true,
       "duration": "PT0S",
       "clientName": "",
+      "note": "",
+      "costRate": null,
+      "timeEstimate": {
+        "estimate": "PT0S",
+        "type": "MANUAL",
+        "resetOption": null,
+        "active": false,
+        "includeNonBillable": true
+      },
+      "budgetEstimate": null,
+      "template": false,
       "public": false
     },
     {
@@ -113,6 +161,7 @@
         {
           "userId": "clock-user-01",
           "hourlyRate": null,
+          "costRate": null,
           "targetId": "clock-project-04",
           "membershipType": "PROJECT",
           "membershipStatus": "ACTIVE"
@@ -126,6 +175,17 @@
       "archived": false,
       "duration": "PT0S",
       "clientName": "",
+      "note": "",
+      "costRate": null,
+      "timeEstimate": {
+        "estimate": "PT0S",
+        "type": "MANUAL",
+        "resetOption": null,
+        "active": false,
+        "includeNonBillable": true
+      },
+      "budgetEstimate": null,
+      "template": false,
       "public": false
     },
     {
@@ -142,6 +202,7 @@
         {
           "userId": "clock-user-01",
           "hourlyRate": null,
+          "costRate": null,
           "targetId": "clock-project-05",
           "membershipType": "PROJECT",
           "membershipStatus": "ACTIVE"
@@ -155,6 +216,17 @@
       "archived": false,
       "duration": "PT0S",
       "clientName": "",
+      "note": "",
+      "costRate": null,
+      "timeEstimate": {
+        "estimate": "PT0S",
+        "type": "MANUAL",
+        "resetOption": null,
+        "active": false,
+        "includeNonBillable": true
+      },
+      "budgetEstimate": null,
+      "template": false,
       "public": false
     },
     {
@@ -171,6 +243,7 @@
         {
           "userId": "clock-user-01",
           "hourlyRate": null,
+          "costRate": null,
           "targetId": "clock-project-06",
           "membershipType": "PROJECT",
           "membershipStatus": "ACTIVE"
@@ -184,6 +257,17 @@
       "archived": false,
       "duration": "PT0S",
       "clientName": "",
+      "note": "",
+      "costRate": null,
+      "timeEstimate": {
+        "estimate": "PT0S",
+        "type": "MANUAL",
+        "resetOption": null,
+        "active": false,
+        "includeNonBillable": true
+      },
+      "budgetEstimate": null,
+      "template": false,
       "public": false
     }
   ],
@@ -191,27 +275,32 @@
     {
       "id": "clock-tag-01",
       "name": "tag-a",
-      "workspaceId": "clock-workspace-01"
+      "workspaceId": "clock-workspace-01",
+      "archived": false
     },
     {
       "id": "clock-tag-02",
       "name": "tag-b",
-      "workspaceId": "clock-workspace-01"
+      "workspaceId": "clock-workspace-01",
+      "archived": false
     },
     {
       "id": "clock-tag-03",
       "name": "tag-c",
-      "workspaceId": "clock-workspace-01"
+      "workspaceId": "clock-workspace-01",
+      "archived": false
     },
     {
       "id": "clock-tag-04",
       "name": "tag-d",
-      "workspaceId": "clock-workspace-01"
+      "workspaceId": "clock-workspace-01",
+      "archived": false
     },
     {
       "id": "clock-tag-05",
       "name": "tag-e",
-      "workspaceId": "clock-workspace-01"
+      "workspaceId": "clock-workspace-01",
+      "archived": false
     }
   ],
   "tasks": [
@@ -700,15 +789,21 @@
       "defaultWorkspace": "clock-workspace-01",
       "settings": {
         "weekStart": "MONDAY",
-        "timeZone": "America/Chicago",
+        "timeZone": "America/Los_Angeles",
         "timeFormat": "HOUR12",
         "dateFormat": "MM/DD/YYYY",
-        "sendNewsletter": true,
+        "sendNewsletter": false,
         "weeklyUpdates": false,
         "longRunning": false,
+        "scheduledReports": true,
+        "approval": true,
+        "pto": true,
+        "alerts": true,
+        "reminders": true,
+        "timeTrackingManual": true,
         "summaryReportSettings": {
-          "group": "Project",
-          "subgroup": "Time Entry"
+          "group": "PROJECT",
+          "subgroup": "CLIENT"
         },
         "isCompactViewOn": false,
         "dashboardSelection": "ME",
@@ -717,9 +812,17 @@
         "projectListCollapse": null,
         "collapseAllProjectLists": false,
         "groupSimilarEntriesDisabled": false,
-        "timeTrackingManual": true
+        "myStartOfDay": "09:00",
+        "projectPickerTaskFilter": false,
+        "lang": null,
+        "multiFactorEnabled": false,
+        "theme": "DEFAULT",
+        "scheduling": true,
+        "onboarding": true,
+        "showOnlyWorkingDays": false
       },
-      "status": "ACTIVE"
+      "status": "ACTIVE",
+      "customFields": []
     }
   ],
   "workspaces": [
@@ -730,10 +833,12 @@
         "amount": 0,
         "currency": "USD"
       },
+      "costRate": null,
       "memberships": [
         {
           "userId": "clock-user-01",
           "hourlyRate": null,
+          "costRate": null,
           "targetId": "clock-workspace-01",
           "membershipType": "WORKSPACE",
           "membershipStatus": "ACTIVE"
@@ -741,6 +846,7 @@
         {
           "userId": "clock-user-02",
           "hourlyRate": null,
+          "costRate": null,
           "targetId": "clock-workspace-01",
           "membershipType": "WORKSPACE",
           "membershipStatus": "ACTIVE"
@@ -753,12 +859,14 @@
         "onlyAdminsSeeDashboard": false,
         "defaultBillableProjects": true,
         "lockTimeEntries": null,
+        "lockTimeZone": null,
         "round": {
           "round": "Round to nearest",
           "minutes": "15"
         },
         "projectFavorites": true,
         "canSeeTimeSheet": false,
+        "canSeeTracker": true,
         "projectPickerSpecialFilter": false,
         "forceProjects": false,
         "forceTasks": false,
@@ -770,9 +878,24 @@
         "projectGroupingLabel": "client",
         "adminOnlyPages": [],
         "automaticLock": null,
-        "onlyAdminsCreateTag": false
+        "onlyAdminsCreateTag": false,
+        "onlyAdminsCreateTask": true,
+        "timeTrackingMode": "DEFAULT",
+        "multiFactorEnabled": false,
+        "numberFormat": "COMMA_PERIOD",
+        "currencyFormat": "VALUE_SPACE_CURRENCY",
+        "isProjectPublicByDefault": true
       },
-      "imageUrl": ""
+      "imageUrl": "",
+      "featureSubscriptionType": "FREE",
+      "features": ["TIME_TRACKING", "KIOSK"],
+      "currencies": [
+        {
+          "id": "649bef0c84ff0d0de2ebd8b7",
+          "code": "USD",
+          "isDefault": true
+        }
+      ]
     }
   ]
 }

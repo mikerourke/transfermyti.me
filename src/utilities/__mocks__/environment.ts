@@ -1,5 +1,3 @@
-import { vi } from "vitest";
-
 import type { ToolName } from "~/types";
 
 export const isDevelopmentMode = vi.fn(() => false);
