@@ -93,7 +93,7 @@
   }
 </style>
 
-<div data-wrapper>
+<div data-wrapper role="status">
   <div data-cubes>
     <span />
     <span />
