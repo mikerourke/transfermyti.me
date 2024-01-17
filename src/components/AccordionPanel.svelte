@@ -1,6 +1,4 @@
 <script lang="ts">
-  import { slide } from "svelte/transition";
-
   import Icon from "~/components/Icon.svelte";
 
   import classes from "./AccordionPanel.module.css";
@@ -8,7 +6,6 @@
   export let rowNumber: number;
   export let title: string;
   export let expanded: boolean = false;
-  export let slideDuration: number = 250;
 
   function handleClick(): void {
     expanded = !expanded;
@@ -75,7 +72,6 @@
       role="region"
       aria-labelledby="accordion-title-{rowNumber}"
       aria-hidden={!expanded}
-      transition:slide|local={{ duration: slideDuration }}
     >
       <slot />
     </div>

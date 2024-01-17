@@ -39,9 +39,6 @@
     ({ existsInTarget }) => !existsInTarget,
   );
 
-  let slideDuration: number;
-  $: slideDuration = Math.min(750, recordCount * 25);
-
   function handleToggleAll(): void {
     dispatchAction(areAllTimeEntriesIncludedUpdated(!areAllToggled));
   }
@@ -55,7 +52,7 @@
   }
 </script>
 
-<AccordionPanel rowNumber={5} title="Time Entries" {slideDuration}>
+<AccordionPanel rowNumber={5} title="Time Entries">
   {#if recordCount === 0}
     <p class="no-records-found">No records found!</p>
   {:else}
