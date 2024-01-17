@@ -71,18 +71,16 @@ export function* fetchTogglTasksSaga(): SagaIterator<Task[]> {
 
   const togglProjectsTable = allProjectsTable[ToolName.Toggl];
 
-  // prettier-ignore
-  const tableEntries = Object.entries(togglProjectsTable) as [string, Project[]][];
-
-  const allFreeWorkspaceIds = yield select(allFreeWorkspaceIdsSelector);
-
   const allTasks: Task[] = [];
 
   const apiDelay = getApiDelayForTool(ToolName.Toggl);
 
+  const allFreeWorkspaceIds = yield select(allFreeWorkspaceIdsSelector);
+
   const freeWorkspaceIds = new Set<string>();
 
-  for (const [workspaceId, projects] of tableEntries) {
+  for (const entry of Object.entries(togglProjectsTable)) {
+    const [workspaceId, projects] = entry as [string, Project[]];
     // Toggl tasks can't be fetched for paid workspaces. Rather than make a
     // bunch of requests that return 402, we skip them. We add it to a set
     // rather than just continue out of the loop, so we can catch fetch errors
