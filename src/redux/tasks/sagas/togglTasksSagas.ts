@@ -17,7 +17,7 @@ import {
   targetProjectsByIdSelector,
 } from "~/redux/projects/projectsSelectors";
 import { userIdToLinkedIdSelector } from "~/redux/users/usersSelectors";
-import { allWorkspacesByIdSelector } from "~/redux/workspaces/workspacesSelectors";
+import { allFreeWorkspaceIdsSelector } from "~/redux/workspaces/workspacesSelectors";
 import { EntityGroup, ToolName, type Project, type Task } from "~/types";
 import { validStringify } from "~/utilities/textTransforms";
 
@@ -74,19 +74,24 @@ export function* fetchTogglTasksSaga(): SagaIterator<Task[]> {
   // prettier-ignore
   const tableEntries = Object.entries(togglProjectsTable) as [string, Project[]][];
 
-  const allWorkspacesById = yield select(allWorkspacesByIdSelector);
+  const allFreeWorkspaceIds = yield select(allFreeWorkspaceIdsSelector);
 
   const allTasks: Task[] = [];
 
   const apiDelay = getApiDelayForTool(ToolName.Toggl);
 
-  for (const [workspaceId, projects] of tableEntries) {
-    const workspace = allWorkspacesById[workspaceId] ?? { isPaid: true };
+  const freeWorkspaceIds = new Set<string>();
 
+  for (const [workspaceId, projects] of tableEntries) {
     // Toggl tasks can't be fetched for paid workspaces. Rather than make a
-    // bunch of requests that return 400, we skip them:
-    const isFreeAccount = !workspace.isPaid;
-    if (isFreeAccount) {
+    // bunch of requests that return 402, we skip them. We add it to a set
+    // rather than just continue out of the loop, so we can catch fetch errors
+    // as well and prevent further fetches:
+    if (allFreeWorkspaceIds.includes(workspaceId)) {
+      freeWorkspaceIds.add(workspaceId);
+    }
+
+    if (freeWorkspaceIds.has(workspaceId)) {
       continue;
     }
 
@@ -100,10 +105,12 @@ export function* fetchTogglTasksSaga(): SagaIterator<Task[]> {
 
         allTasks.push(...tasks);
       } catch (err: AnyValid) {
-        console.log(err instanceof ApiError);
-
         // User can't create or fetch tasks because the workspace isn't paid:
-        if (err.status === 402) {
+        if (err instanceof ApiError && err.statusCode === 402) {
+          // We save the workspace ID, so we can _continue_ through the loop
+          // rather than break, and we don't want to hit this error again for
+          // the workspace in the next iteration of the loop:
+          freeWorkspaceIds.add(workspaceId);
           continue;
         }
       }

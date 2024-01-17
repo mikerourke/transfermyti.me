@@ -74,17 +74,19 @@ export const targetWorkspacesSelector = createSelector(
   },
 );
 
-export const allWorkspacesByIdSelector = createSelector(
+export const allFreeWorkspaceIdsSelector = createSelector(
   sourceWorkspacesSelector,
   targetWorkspacesSelector,
-  (sourceWorkspaces, targetWorkspaces): Record<string, Workspace> => {
-    const allWorkspacesById: Record<string, Workspace> = {};
+  (sourceWorkspaces, targetWorkspaces): string[] => {
+    const allFreeWorkspaceIds: string[] = [];
 
     for (const workspace of [...sourceWorkspaces, ...targetWorkspaces]) {
-      allWorkspacesById[workspace.id] = workspace;
+      if (!workspace.isPaid) {
+        allFreeWorkspaceIds.push(workspace.id);
+      }
     }
 
-    return allWorkspacesById;
+    return allFreeWorkspaceIds;
   },
 );
 

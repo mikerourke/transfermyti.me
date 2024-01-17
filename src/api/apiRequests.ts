@@ -303,9 +303,14 @@ export class ApiError extends Error {
   public toJson(): Record<string, any> {
     const headers: Record<string, string> = {};
 
-    // @ts-ignore
-    for (const [name, value] of this.#response.headers) {
-      headers[name] = value;
+    // We don't want this to blow up the app if it fails:
+    try {
+      // @ts-ignore
+      for (const [name, value] of this.#response.headers) {
+        headers[name] = value;
+      }
+    } catch {
+      // Do nothing.
     }
 
     return {
